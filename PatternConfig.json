@@ -1,0 +1,47 @@
+{
+  "ControlPanel" : {
+    "TrackPattern" : true,
+    "PH" : 140,
+    "PW" : 2000
+  },
+  "TP" : {
+    "PL" : "",
+    "PT" : {
+    },
+    "PA" : false,
+    "PI" : false,
+    "PW" : 260,
+    "PH" : 16,
+    "ST" : "Set to:",
+    "SL": [
+      "Load Type",
+      "FD&Track"
+    ],
+    "RM": 8,
+    "RW": {
+      "Input": 6,
+      "Road" : 5,
+      "Number" : 7,
+      "Type" : 5,
+      "Length" : 7,
+      "Weight" : 7,
+      "Load" : 5,
+      "Load Type" : 10,
+      "Hazardous" : 10,
+      "Color" : 6,
+      "Kernel" : 7,
+      "Kernel Size" : 12,
+      "Owner" : 6,
+      "Track" : 6,
+      "Location" : 9,
+      "Destination" : 12,
+      "Dest&Track" : 30,
+      "Final Dest" : 11,
+      "FD&Track" : 20,
+      "Comment" : 15,
+      "SetOut Msg" : 12,
+      "PickUp Msg" : 12,
+      "RWE" : 10
+    }
+  }
+}
