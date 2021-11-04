@@ -1,4 +1,4 @@
-Yard Pattern - Documentation
+Yard Pattern  - Documentation
   "RN": Railroad Name
   "RT": Report Type
   "VT": Valid Time
