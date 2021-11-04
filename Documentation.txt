@@ -1,0 +1,62 @@
+Yard Pattern-
+  "RN": Railroad Name
+  "RT": Report Type
+  "VT": Valid Time
+  "YL": Yard Location
+  "ZZ": Track List
+      "TL": Track Length
+      "TN": Track Name
+      "TR": Track Roster of cars
+          "CD": Car Disposition, Through or Local
+          "DL": Destination Location
+          "DT": Destination Track
+          "FD": Final Destination
+          "FT": Final Track
+          "LN": car LeNgth
+          "LT": Load Type
+          "RN": Road Number
+          "RR": Railroad
+          "RT": Road Type
+          "SL": Switch List brackets [ ]
+          "TL": Through or Local symbol
+
+ypConfig.json
+{
+  "MA": false, Main - use All tracks flag
+  "MH": 20, Main - box Height
+  "MI": false, Main - Ignore track length flag
+  "ML": "\u00c7\u00edty", Main - Location name
+  "MW": 260, Main - box Width
+  "RH": 16, Report Height
+  "RM": 8, Report Multiplier
+  "RW": { Report Width
+    "Color": 6,
+    "Comment": 15,
+    "Dest&Track": 30,
+    "Destination": 12,
+    "FD&Track": 20,
+    "Final Dest": 11,
+    "Hazardous": 10,
+    "Input": 6,
+    "Kernel": 7,
+    "Kernel Size": 12,
+    "Length": 7,
+    "Load": 5,
+    "Load Type": 10,
+    "Location": 9,
+    "Number": 7,
+    "Owner": 6,
+    "PickUp Msg": 12,
+    "RWE": 10,
+    "Road": 5,
+    "SetOut Msg": 12,
+    "Track": 6,
+    "Type": 5,
+    "Weight": 7
+  },
+  "SL": [ Sort List, use RW keys
+    "Load Type",
+    "FD&Track"
+  ],
+  "ST": "Set to:"
+}
