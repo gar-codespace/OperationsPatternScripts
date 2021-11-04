@@ -3,7 +3,7 @@ import javax.swing
 import java.awt
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsTrackPattern')
-import tpModelEntities
+# import tpModelEntities
 import MainScriptEntities
 
 class TrackPatternPanel:
