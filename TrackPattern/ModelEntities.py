@@ -1,16 +1,12 @@
 # coding=utf-8
 # Extended ìÄÅÉî
-# Utilities that support the yard pattern scripts
-# by Greg Ritacco
+# Data munipulation support methods for the track pattern subroutine
+# No restrictions on use
+# © 2021 Greg Ritacco
 
 import jmri
-# import java.awt
-# import javax.swing
-# import logging
 import time
-# import json
-# from json import loads as jLoads, dumps as jDumps
-from codecs import open as cOpen
+# from codecs import open as cOpen
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
@@ -155,8 +151,7 @@ def sortCarList(carList):
     Selected key list in sort order in tpConfig UZ
     Key list can be any length'''
 
-    configFile = MainScriptEntities.readConfigFile()
-    subList = configFile['TP']
+    subList = MainScriptEntities.readConfigFile('TP')
     sortList = subList['SL']
     # carList = sorted(carList, key=lambda d: d['FD&Track'])
     for sortKey in sortList: # the list of sort keys in order is UZ
@@ -168,8 +163,7 @@ def makeSwitchlist(trackPattern, bool):
     '''Makes a text switchlist using an input pattern, conforming to config values,
     bool is set to True to include report Totals'''
 # Read in the config file
-    configFile = MainScriptEntities.readConfigFile()
-    configFile = configFile['TP']
+    configFile = MainScriptEntities.readConfigFile('TP')
     itemsList = jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
 # Make the switchlist
     switchList  = trackPattern['RT'] + '\n' \

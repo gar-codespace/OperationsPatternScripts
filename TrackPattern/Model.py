@@ -1,10 +1,10 @@
+# coding=utf-8
+# Extended ìÄÅÉî
+# Data munipulation for the track pattern subroutine
+# No restrictions on use
+# © 2021 Greg Ritacco
+
 import jmri
-# import javax.swing
-# import java.awt
-# import javax.swing
-# import java.awt
-# import json
-# from apps import Apps
 from os import path as oPath
 from shutil import copy as sCopy
 from json import loads as jLoads, dumps as jDumps
@@ -17,7 +17,7 @@ import TrackPattern.Controller
 import TrackPattern.ModelEntities
 
 def validateUserInput(controls):
-    '''Validates the user submitted location'''
+    '''Validates the user submitted location, and returns a track list for a valid location'''
 
     location = unicode(controls[0].text, MainScriptEntities.setEncoding())
     allFlag = controls[1].selected
@@ -25,20 +25,18 @@ def validateUserInput(controls):
     if (allFlag == True):
         useAll = 'Yard'
     validBool = TrackPattern.ModelEntities.checkYard(location, useAll)
-    configFile = MainScriptEntities.readConfigFile()
-    focusOn = configFile['TP']
+    focusOn = MainScriptEntities.readConfigFile('TP')
     focusOn.update({"PL": ''})
+    focusOn.update({"PA": allFlag})
     trackList = {}
     if (validBool):
         locationTracks = TrackPattern.ModelEntities.getTracksByLocation(location, useAll)
         focusOn.update({"PL": location})
-        focusOn.update({"PA": allFlag})
         for track in locationTracks:
             trackList[track] = True
     focusOn.update({"PT": trackList})
-    configFile.update({"TP": focusOn})
 
-    return configFile
+    return focusOn
 
 def getAllTracks(trackCheckBoxes):
     '''Returns a dictionary of track names and their check box status'''
@@ -52,26 +50,24 @@ def getAllTracks(trackCheckBoxes):
 def updateTrackList(trackList):
     '''Updates the config file with current track check box status'''
 
-    configFile = MainScriptEntities.readConfigFile()
-    focusOn = configFile['TP']
+    # configFile = MainScriptEntities.readConfigFile()
+    focusOn = MainScriptEntities.readConfigFile('TP')
     focusOn.update({'PT': trackList})
-    configFile.update({"TP": focusOn})
+    # configFile.update({"TP": focusOn})
 
-    return configFile
+    return focusOn
 
 def makeTrackPatternDict(trackList):
     '''Make a track pattern as a dictionary'''
 
-    configFile = MainScriptEntities.readConfigFile()
-    trackPattern = configFile['TP']
+    trackPattern = MainScriptEntities.readConfigFile('TP')
 
     return TrackPattern.ModelEntities.makeYardPattern(trackList, trackPattern['PL'])
 
 def getSelectedTracks():
     '''Makes a list of just the selected tracks'''
 
-    configFile = MainScriptEntities.readConfigFile()
-    trackPattern = configFile['TP']
+    trackPattern = MainScriptEntities.readConfigFile('TP')
     trackList = []
     for track, bool in trackPattern['PT'].items():
         if (bool):

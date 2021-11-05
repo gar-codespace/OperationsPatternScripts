@@ -1,9 +1,14 @@
+# coding=utf-8
+# Extended ìÄÅÉî
+# Creates the track pattern and its panel
+# No restrictions on use
+# © 2021 Greg Ritacco
+
 import jmri
 import javax.swing
 import java.awt
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsTrackPattern')
-# import tpModelEntities
 import MainScriptEntities
 
 class TrackPatternPanel:
@@ -13,8 +18,7 @@ class TrackPatternPanel:
 
     def __init__(self):
 
-        configFile = MainScriptEntities.readConfigFile()
-        self.configFile = configFile['TP']
+        self.configFile = MainScriptEntities.readConfigFile('TP')
         self.patternInput = javax.swing.JTextField(20) # the location is typed into this box
         self.useYardTracks = javax.swing.JCheckBox(u'Yard tracks only ', self.configFile['PA'])
         self.ignoreLength = javax.swing.JCheckBox(u'Ignore track length ', self.configFile['PI'])
@@ -38,7 +42,6 @@ class TrackPatternPanel:
         patternLabel = javax.swing.JLabel(u'  Location: ')
         patternLabel.setAlignmentX(javax.swing.JLabel.RIGHT_ALIGNMENT)
         self.patternInput.setText(self.configFile['PL']) # pattern location
-        # self.controlObjects.append(self.patternInput)
         patternInputBox = javax.swing.Box(javax.swing.BoxLayout.X_AXIS) # make a box for the label and input box
         patternInputBox.setPreferredSize(java.awt.Dimension(self.configFile['PW'], self.configFile['PH']))
         patternInputBox.add(patternLabel)
