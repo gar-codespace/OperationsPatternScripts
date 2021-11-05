@@ -10,6 +10,7 @@ path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
 import TrackPattern.View
 import TrackPattern.Model
+import TrackPattern.SetCars
 
 class StartUp:
     '''Start the the Track Pattern subroutine'''
@@ -70,12 +71,13 @@ class StartUp:
         MainScriptEntities.updateConfigFile(newConfigFile)
         selectedTracks = TrackPattern.Model.getSelectedTracks()
     # Button specific
-        destTrackList = []
-        for destTrack in self.trackBoxList:
-            destTrackList.append(destTrack.text)
-        # pass in the location, valid tracks, selected tracks, ignore length flag
-        SC.setCars(self.patternInput.text, self.useTheseTracks()).runScript()
-        
+        # destTrackList = []
+        # for destTrack in self.trackBoxList:
+        #     destTrackList.append(destTrack.text)
+        # # pass in the location, valid tracks, selected tracks, ignore length flag
+        # print(self.controls[0].text, selectedTracks)
+        TrackPattern.SetCars.makeSetCarsForm(self.controls[0].text, selectedTracks).runScript()
+
         return
 
     def makeFrame(self):
