@@ -65,7 +65,9 @@ class StartUp:
 
     # Boilerplate
         trackPatternTracks = TrackPattern.Model.getAllTracks(self.controls[3])
+        ignoreAllFlag = self.controls[2].selected # user input for ignore length flag
         updatedConfigTpValues = TrackPattern.Model.updateTrackList(trackPatternTracks)
+        updatedConfigTpValues.update({"PI": ignoreAllFlag})
         newConfigFile = MainScriptEntities.readConfigFile('all')
         newConfigFile.update({"TP": updatedConfigTpValues})
         MainScriptEntities.updateConfigFile(newConfigFile)

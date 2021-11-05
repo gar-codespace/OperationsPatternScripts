@@ -22,7 +22,7 @@ def makeWindow():
     pFrame.contentPane.setLayout(javax.swing.BoxLayout(pFrame.contentPane, javax.swing.BoxLayout.Y_AXIS))
     pFrame.contentPane.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
     pFrame.contentPane.setAlignmentX(0.0)
-    iconPath = jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsYardPattern\\decpro5.png'
+    iconPath = jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts\\decpro5.png'
     icon = java.awt.Toolkit.getDefaultToolkit().getImage(iconPath)
     pFrame.setIconImage(icon)
     return pFrame

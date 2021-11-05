@@ -61,10 +61,11 @@ class patternReportWindowManager():
         for userInput in self.jTextIn: # Read in and check the user input
             userInputList.append(unicode(userInput.getText(), MainScriptEntities.setEncoding()))
         # scLog.gpInfo('*** Set cars to track')
+
         i = 0
         for z in patternCopy['ZZ']:
             if (len(userInputList) == len(z['TR'])): # check that the lengths of the -input list- and -car roster- match
-                pass
+                print(userInputList)
                 # scLog.gpInfo('Number of input fields matches track roster length') # elaborate on this
             else:
                 # something that happens if the lengths dont match
@@ -76,7 +77,8 @@ class patternReportWindowManager():
                 if (userInputList[i] in self.allTracksAtLoc and userInputList[i] != trackName):
                     setToTrack = setToLocation.getTrackByName(unicode(userInputList[i], MainScriptEntities.setEncoding()), None)
                     setCarId = self.cm.newRS(y['Road'], y['Number'])
-                    self.cm.newRS(y['Road'], y['Number']).setLocation(setToLocation, setToTrack, self.ignoreLength)
+                    print(self.ignoreLength)
+                    setCarId.setLocation(setToLocation, setToTrack, self.ignoreLength)
                     # scLog.gpInfo('Set car (' + unicode(setCarId, MainScriptEntities.setEncoding()) + ') to track (' + unicode(setToTrack, MainScriptEntities.setEncoding()) + ')')
                     j += 1
                 i += 1
@@ -140,7 +142,7 @@ class patternReportWindowManager():
         configFile = MainScriptEntities.readConfigFile('TP')
     # Define the window
         self.setCarsWindow = TrackPattern.ViewEntities.makeWindow()
-        self.setCarsWindow.setLocation(xOffset, 200)
+        self.setCarsWindow.setLocation(xOffset, 150)
         self.setCarsWindow.setSize(400,500)
         formSeparator = javax.swing.JSeparator()
     # Define the header
@@ -260,9 +262,6 @@ class makeSetCarsForm():
     def runScript(self):
         '''Run the program'''
 
-        # print(jmri.jmrit.operations.setup.Setup.getCarAttributes())
-        # for x in jmri.jmrit.operations.setup.Setup.getDropSwitchListMessageFormat():
-        #     print(x)
     # Set initial variables
         yTimeNow = time.time()
     # Setup gplogging
