@@ -5,7 +5,6 @@
 # © 2021 Greg Ritacco
 
 import jmri
-import java
 import java.awt
 import javax.swing
 import time
@@ -17,11 +16,11 @@ import MainScriptEntities
 import TrackPattern.ViewEntities
 import TrackPattern.ModelEntities
 
-class patternReportWindowManager():
-    '''Manages an instance of each -Pattern Report for Track- window'''
+class SetCarsWindowInstance():
+    '''Manages an instance of each -Pattern Report for track- window'''
 
 # Class variables
-    scriptRev = 'patternReportWindowManagerV1 rev.20210901'
+    scriptRev = 'SetCarsWindowInstanceV1 rev.20210901'
 
     def __init__(self, pattern):
         '''Initialization variables'''
@@ -135,111 +134,44 @@ class patternReportWindowManager():
         # slLog.gpStopLogFile(scHandle)
         return
 
-    def patternReportForTrackWindow(self, xOffset):
+    def setCarsForTrackWindow(self, xOffset):
         ''' Creates and populates the -Pattern Report for Track- window'''
 
     # Read in the config file
         configFile = MainScriptEntities.readConfigFile('TP')
     # Define the window
+        trackName = self.trackData['ZZ']
+        trackName = trackName[0]
+        trackName = unicode(trackName['TN'], MainScriptEntities.setEncoding())
         self.setCarsWindow = TrackPattern.ViewEntities.makeWindow()
+        self.setCarsWindow.setTitle(u'Pattern Report for track ' + trackName)
         self.setCarsWindow.setLocation(xOffset, 150)
         self.setCarsWindow.setSize(400,500)
         formSeparator = javax.swing.JSeparator()
-    # Define the header
-        combinedHeader = javax.swing.JPanel()
-        combinedHeader.setLayout(javax.swing.BoxLayout(combinedHeader, javax.swing.BoxLayout.Y_AXIS))
-        combinedHeader.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
-    # Populate the header
-        headerRRLabel = javax.swing.JLabel(self.trackData['RN'])
-        headerRRBox = TrackPattern.ViewEntities.makeSwingBox(100, configFile['PH'])
-        headerRRBox.add(headerRRLabel)
-        headerValidLabel = javax.swing.JLabel(self.trackData['VT'])
-        headerValidBox = TrackPattern.ViewEntities.makeSwingBox(100, configFile['PH'])
-        headerValidBox.add(headerValidLabel)
-        headerYTLabel = javax.swing.JLabel()
-        headerYTBox = TrackPattern.ViewEntities.makeSwingBox(100, configFile['PH'])
-        headerYTBox.add(headerYTLabel)
-    # Construct the header
-        combinedHeader.add(headerRRBox)
-        combinedHeader.add(headerValidBox)
-        combinedHeader.add(headerYTBox)
-        combinedHeader.add(javax.swing.JSeparator())
+
     # Define the form
         combinedForm = javax.swing.JPanel()
         combinedForm.setLayout(javax.swing.BoxLayout(combinedForm, javax.swing.BoxLayout.Y_AXIS))
         combinedForm.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
-    # Define the forms header
-        combinedFormHeader = javax.swing.JPanel()
-        combinedFormHeader.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
-        reportWidth = configFile['RW']
-    # Populate the forms header
-        # Set to: input box
-        label = javax.swing.JLabel(configFile['ST'])
-        box = TrackPattern.ViewEntities.makeSwingBox(reportWidth['Input'] * configFile['RM'], configFile['PH'])
-        box.add(label)
-        combinedFormHeader.add(box)
-        # Create rest of header from user settings
-        for x in jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
-            if (x != ' '): # skips over null entries
-                label = javax.swing.JLabel(x)
-                box = TrackPattern.ViewEntities.makeSwingBox(reportWidth[x] * configFile['RM'], configFile['PH'])
-                box.add(label)
-                combinedFormHeader.add(box)
-    # Define the forms body
-        combinedFormBody = javax.swing.JPanel()
-        combinedFormBody.setLayout(javax.swing.BoxLayout(combinedFormBody, javax.swing.BoxLayout.Y_AXIS))
-        combinedFormBody.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
-    # Sort the cars
-        for j in self.trackData['ZZ']:
-            self.setCarsWindow.setTitle(u'Pattern Report for track ' + unicode(j['TN'], MainScriptEntities.setEncoding())) # have to do this here
-            headerYTLabel.setText(self.trackData['RT'] + u' for (' + self.trackData['YL'] + u') track (' + j['TN'] + ')') #have to do this here
-            carList = TrackPattern.ModelEntities.sortCarList(j['TR'])
-    # Each line of the form
-            for car in carList:
-                carId = self.cm.newRS(car['Road'], car['Number']) # returns car object
-                carDataDict = TrackPattern.ModelEntities.getCarDetailDict(carId)
-                combinedInputLine = javax.swing.JPanel()
-                combinedInputLine.setAlignmentX(0.0)
-                # set car to input box
-                inputText = javax.swing.JTextField(5)
-                self.jTextIn.append(inputText) # making a list of jTextField boxes
-                inputBox = TrackPattern.ViewEntities.makeSwingBox(reportWidth['Input'] * configFile['RM'], configFile['PH'])
-                inputBox.add(inputText)
-                combinedInputLine.add(inputBox)
-                for x in jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
-                    if (x != ' '):
-                        label = javax.swing.JLabel(carDataDict[x])
-                        box = TrackPattern.ViewEntities.makeSwingBox(reportWidth[x] * configFile['RM'], configFile['PH'])
-                        box.add(label)
-                        combinedInputLine.add(box)
-                combinedFormBody.add(combinedInputLine)
-    # Define the footer
-        combinedFooter = javax.swing.JPanel()
-        combinedFooter.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
-    # Construct the footer
-        setCarsButton = javax.swing.JButton(unicode('Set', MainScriptEntities.setEncoding()))
-        setCarsButton.actionPerformed = self.setCarsToTrack
-        ypButton = javax.swing.JButton(unicode('Print', MainScriptEntities.setEncoding()))
-        ypButton.actionPerformed = self.printYP
-    # Populate the footer
-        combinedFooter.add(ypButton)
-        combinedFooter.add(setCarsButton)
-    # Construce the form
-        combinedForm.add(combinedFormHeader)
-        combinedForm.add(combinedFormBody)
+        combinedForm.add(TrackPattern.ViewEntities.setCarsFormBodyHeader())
+        formBody, self.jTextIn = TrackPattern.ViewEntities.setCarsFormBody(self.trackData)
+        combinedForm.add(formBody)
+    # Make the footer
+        combinedFooter, tpButton, scButton = TrackPattern.ViewEntities.setCarsFormFooter()
+        tpButton.actionPerformed = self.printYP
+        scButton.actionPerformed = self.setCarsToTrack
     # Construct the window
-        self.setCarsWindow.add(combinedHeader)
-    #     # self.setCarsWindow.add(formSeparator)
+        self.setCarsWindow.add(TrackPattern.ViewEntities.setCarsFormHeader(self.trackData))
+        # self.setCarsWindow.add(formSeparator)
         self.setCarsWindow.add(combinedForm)
         self.setCarsWindow.add(formSeparator)
         self.setCarsWindow.add(combinedFooter)
         self.setCarsWindow.pack()
         self.setCarsWindow.setVisible(True)
-        print(patternReportWindowManager.scriptRev)
-        return True
+        # print(SetCarsWindowInstance.scriptRev)
+        return
 
-
-class makeSetCarsForm():
+class MakeFormWindows():
     '''Create and open a set cars window for each track selected'''
 
     scriptRev = 'setCars rev.20211101'
@@ -275,15 +207,15 @@ class makeSetCarsForm():
         # scLog.gpInfo(u'Open track windows for location ' + unicode(self.yardLoc, MainScriptEntities.setEncoding()))
         for track in self.selectedTracks:
             listForTrack = TrackPattern.ModelEntities.makeYardPattern([track], self.yardLoc) # track needs to be send in as a list
-            listForTrack.update({'RT': u'Switch List for Track'})
-            newWindow = patternReportWindowManager(listForTrack)
-            newWindow.patternReportForTrackWindow(windowOffset)
+            listForTrack.update({'RT': u'Switch List for Track '})
+            newWindow = SetCarsWindowInstance(listForTrack)
+            newWindow.setCarsForTrackWindow(windowOffset)
             # scLog.gpInfo(u'Window created for track ' + track)
             windowOffset += 50
     # wrap up the script
         computeTime = 'Script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6]
         # scLog.gpInfo(computeTime)
         # scLog.gpStopLogFile(scHandle)
-        print(makeSetCarsForm.scriptRev)
+        # print(MakeSetCarsForms.scriptRev)
         print(computeTime)
         return

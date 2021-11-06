@@ -12,7 +12,7 @@ class gpLogging():
     def __init__(self, logName):
         self.logger = logging.getLogger(logName)
         self.logger.setLevel(10)
-        self.scriptRev = '20210825-v1'
+        self.scriptRev = 'GpLogger 20211101'
         return
 
     def gpStartLogFile(self, path, level):

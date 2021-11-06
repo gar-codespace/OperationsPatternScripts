@@ -10,7 +10,7 @@ import GpLogger
 import PluginLocations
 
 class StartUp(jmri.jmrit.automat.AbstractAutomaton):
-    '''Start the the Pattern Scripts plugin and add selected modules'''
+    '''Start the the Pattern Scripts plugin and add selected subroutines'''
 
     def init(self):
         self.logger = GpLogger.gpLogging('TrackPattern')
@@ -26,7 +26,7 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
     def handle(self):
         '''Make and populate the Pattern Scripts control panel'''
 
-    # create the subroutines that go into the control panel
+    # plug in subroutines into the control panel
         frameList = []
         for subroutine, bool in self.configFile['scriptIncludes'].items():
             if (bool):
@@ -38,7 +38,7 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         controlPanel, scrollPanel = MainScriptEntities.makeControlPanel()
         for panel in frameList:
             controlPanel.add(panel)
-    # add the control panel to a location
+    # plug in the control panel to a location
         location = MainScriptEntities.readConfigFile('PluginLocation')
         pluginLocation = getattr(PluginLocations, location)()
         pluginLocation.add(scrollPanel)
