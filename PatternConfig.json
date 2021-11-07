@@ -1,6 +1,10 @@
 {
+  "PluginLocation" : "trainsTable",
   "ControlPanel" : {
-    "TrackPattern" : true,
+    "scriptIncludes" : {
+      "TrackPattern" : true,
+      "FutureSubroutines" : false
+    },
     "PH" : 140,
     "PW" : 2000
   },

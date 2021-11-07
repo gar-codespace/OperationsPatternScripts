@@ -1,8 +1,11 @@
+# coding=utf-8
+# Extended ìÄÅÉî
+# View script for the track pattern subroutine
+# No restrictions on use
+# © 2021 Greg Ritacco
+
 import jmri
-# import javax.swing
-# import java.awt
 from os import system
-# import system
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsTrackPattern')
 import MainScriptEntities
@@ -16,15 +19,14 @@ class manageGui:
     def __init__(self, panel=None, controls=None):
         '''Track Pattern panel'''
 
-        configFile = MainScriptEntities.readConfigFile()
-        self.configFile = configFile['TP']
+        self.configFile = MainScriptEntities.readConfigFile('TP')
         self.panel = panel
         self.controls = controls
 
         return
 
     def updatePanel(self, panel):
-        ''' Makes a new panel from the config file and replaces the currentpanel with the new panel'''
+        ''' Makes a new panel from the config file and replaces the current panel with the new panel'''
 
         newView, newControls = TrackPattern.MakeTrackPatternPanel.TrackPatternPanel().makePatternControls()
         panel.removeAll()
@@ -35,7 +37,7 @@ class manageGui:
         return newView, newControls
 
     def makeFrame(self):
-        '''Makes the title frame that allthe track pattern controls go into'''
+        '''Makes the title frame that all the track pattern controls go into'''
 
         return TrackPattern.MakeTrackPatternPanel.TrackPatternPanel().makePatternFrame()
 

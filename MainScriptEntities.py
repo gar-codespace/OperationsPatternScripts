@@ -1,23 +1,41 @@
-
+# coding=utf-8
+# Extended ìÄÅÉî
+# support methods for the main script
+# No restrictions on use
+# © 2021 Greg Ritacco
 
 import jmri
 import java.awt
 import javax.swing
-import logging
 import time
-# import json
 from json import loads as jLoads, dumps as jDumps
 from codecs import open as cOpen
+from os import path as oPath
+from shutil import copy as sCopy
 
+def validateConfigFile():
+    '''Checks for a config file and adds one if missing'''
 
-def readConfigFile():
+    copyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json'
+    if not (oPath.exists(copyTo)):
+        copyFrom = jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts\\PatternConfig.json'
+        sCopy(copyFrom, copyTo)
+        result = u'Configuration file created'
+    else:
+        result = u'Configuration file found'
+    return result
+
+def readConfigFile(subConfig):
     '''Read in the tpConfig.json for a profile and return it as a dictionary'''
 
     configFileLoc = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json'
     with cOpen(configFileLoc, 'r', encoding=setEncoding()) as configWorkFile:
         configFile = configWorkFile.read()
         configFile = jLoads(configFile)
-    return configFile
+    if (subConfig == 'all'):
+        return configFile
+    else:
+        return configFile[subConfig]
 
 def updateConfigFile(configFile):
     '''Updates the tpConfig.json file'''
@@ -33,24 +51,18 @@ def setEncoding():
 
     return 'utf-8' #ascii, utf-16
 
-def makeSwingBox(xWidth, xHeight):
-    ''' Makes a swing box to the desired size'''
+def makeControlPanel():
+    '''Create the control panel, with a scroll bar, that all sub panels go into
+    This holds trackPatternPanel and future panels'''
 
-    xName = javax.swing.Box(javax.swing.BoxLayout.X_AXIS)
-    xName.setPreferredSize(java.awt.Dimension(width=xWidth, height=xHeight))
-    return xName
-
-def makeWindow():
-    '''Makes a swing frame with the desired name'''
-
-    pFrame = javax.swing.JFrame()
-    pFrame.contentPane.setLayout(javax.swing.BoxLayout(pFrame.contentPane, javax.swing.BoxLayout.Y_AXIS))
-    pFrame.contentPane.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
-    pFrame.contentPane.setAlignmentX(0.0)
-    iconPath = jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsYardPattern\\decpro5.png'
-    icon = java.awt.Toolkit.getDefaultToolkit().getImage(iconPath)
-    pFrame.setIconImage(icon)
-    return pFrame
+    # configFile = readConfigFile()
+    configFile = readConfigFile('ControlPanel')
+    controlPanel = javax.swing.JPanel() # The whole panel that everything goes into
+    scrollPanel = javax.swing.JScrollPane(controlPanel) # and that goes into a scroll pane
+    scrollPanel.border = javax.swing.BorderFactory.createLineBorder(java.awt.Color.GRAY)
+    scrollPanel.setPreferredSize(java.awt.Dimension(configFile['PW'], configFile['PH']))
+    scrollPanel.setMaximumSize(scrollPanel.getPreferredSize())
+    return controlPanel, scrollPanel
 
 def validTime():
     '''Valid Time, get local time adjusted for time zone and dst'''
