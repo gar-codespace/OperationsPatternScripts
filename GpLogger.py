@@ -15,14 +15,18 @@ class gpLogging():
         self.scriptRev = 'GpLogger 20211101'
         return
 
-    def gpStartLogFile(self, path, level):
+    def gpStartLogFile(self, path, level, mode):
         self.logFileFormat = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        self.gpfh = logging.FileHandler(path, mode='w', encoding='utf-8')
+        self.gpfh = logging.FileHandler(path, mode=mode, encoding='utf-8')
         self.gpfh.setLevel(level)
         self.gpfh.setFormatter(self.logFileFormat)
         self.logger.addHandler(self.gpfh)
         print('OperationsGPLogging ' + self.scriptRev)
         return self.gpfh
+
+    def gpGetLogFile(self):
+
+        return self.logger, self.gpfh
 
     def gpStopLogFile(self, yHandle):
         self.logger.removeHandler(yHandle)

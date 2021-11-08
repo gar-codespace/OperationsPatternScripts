@@ -55,3 +55,11 @@ def displayTextSwitchlist(location):
     system(MainScriptEntities.systemInfo() + textSwitchList)
 
     return
+
+def displayPatternLog():
+    '''Opens the pattern log in notepad or other'''
+
+    textPatternLog = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternLog.txt'
+    system(MainScriptEntities.systemInfo() + textPatternLog)
+
+    return

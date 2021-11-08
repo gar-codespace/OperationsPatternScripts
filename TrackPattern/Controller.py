@@ -5,6 +5,7 @@
 # © 2021 Greg Ritacco
 
 import jmri
+import logging
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
@@ -16,7 +17,8 @@ class StartUp:
     '''Start the the Track Pattern subroutine'''
 
     def __init__(self):
-        pass
+
+        self.psLog = logging.getLogger('Pattern Scripts.tpController')
 
         return
 
@@ -28,13 +30,19 @@ class StartUp:
         newConfigFile.update({"TP": updatedConfigTpValues})
         MainScriptEntities.updateConfigFile(newConfigFile)
         self.panel, self.controls = TrackPattern.View.manageGui().updatePanel(self.panel)
+        self.psLog.info('control panel refreshed')
         self.controls[0].actionPerformed = self.whenTPEnterPressed
         self.configFile = MainScriptEntities.readConfigFile('TP')
         if (self.configFile['PL'] != ''):
             self.controls[4].setEnabled(True)
             self.controls[5].setEnabled(True)
+            self.controls[6].setEnabled(True)
             self.controls[4].actionPerformed = self.whenTPButtonPressed
             self.controls[5].actionPerformed = self.whenSCButtonPressed
+            self.controls[6].actionPerformed = self.whenPRButtonPressed
+            self.psLog.info('location ' + self.controls[0].text + ' validated, buttons activated')
+        else:
+            self.psLog.warning('invalid location entered')
 
         return
 
@@ -48,14 +56,18 @@ class StartUp:
         newConfigFile.update({"TP": updatedConfigTpValues})
         MainScriptEntities.updateConfigFile(newConfigFile)
         selectedTracks = TrackPattern.Model.getSelectedTracks()
+        self.psLog.info('tp button boilerplate completed')
     # Button specific
         trackPatternDict = TrackPattern.Model.makeTrackPatternDict(selectedTracks)
         trackPatternDict.update({'RT': u'Track Pattern for Location'})
         location = trackPatternDict['YL']
         trackPatternJson = TrackPattern.Model.writePatternJson(location, trackPatternDict)
+        self.psLog.info('Track Pattern for ' + location + ' JSON file written')
         textSwitchList = TrackPattern.Model.writeTextSwitchList(location, trackPatternDict)
+        self.psLog.info('Track Pattern for ' + location + ' switch list file written')
         if (jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled()):
             csvSwitchList = TrackPattern.Model.writeCsvSwitchList(location, trackPatternDict)
+            self.psLog.info('Track Pattern for ' + location + ' CSV file written')
         TrackPattern.View.displayTextSwitchlist(location)
 
         return
@@ -72,8 +84,17 @@ class StartUp:
         newConfigFile.update({"TP": updatedConfigTpValues})
         MainScriptEntities.updateConfigFile(newConfigFile)
         selectedTracks = TrackPattern.Model.getSelectedTracks()
+        self.psLog.info('sc button boilerplate completed')
     # Button specific
         TrackPattern.MakeSetCarsForms.MakeFormWindows(self.controls[0].text, selectedTracks).runScript()
+        self.psLog.info('Set Cars windows for ' + location + ' created')
+
+        return
+
+    def whenPRButtonPressed(self, event):
+        '''Displays the pattern report log file in a notepad window'''
+
+        TrackPattern.View.displayPatternLog()
 
         return
 
@@ -81,6 +102,7 @@ class StartUp:
         '''Makes the title boarder frame'''
 
         self.patternFrame = TrackPattern.View.manageGui().makeFrame()
+        self.psLog.info('track pattern makeFrame completed')
 
         return self.patternFrame
 
@@ -93,7 +115,11 @@ class StartUp:
         if (self.configFile['PL'] != ''):
             self.controls[4].setEnabled(True)
             self.controls[5].setEnabled(True)
+            self.controls[6].setEnabled(True)
             self.controls[4].actionPerformed = self.whenTPButtonPressed
             self.controls[5].actionPerformed = self.whenSCButtonPressed
+            self.controls[6].actionPerformed = self.whenPRButtonPressed
+            self.psLog.info('saved location validated, buttons activated')
+        self.psLog.info('track pattern makePanel completed')
 
         return self.panel

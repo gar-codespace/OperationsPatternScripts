@@ -7,6 +7,7 @@
 import jmri
 import java.awt
 import javax.swing
+import logging
 import time
 from codecs import open as cOpen
 from os import system
@@ -25,6 +26,7 @@ class SetCarsWindowInstance():
     def __init__(self, pattern):
         '''Initialization variables'''
 
+        self.psLog = logging.getLogger('Pattern Scripts.tpSetCarsForm')
     # Boilerplate
         self.lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
         self.cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
@@ -33,25 +35,14 @@ class SetCarsWindowInstance():
     # Track variables
         self.trackData = pattern # all the data for the selected track, car roster is sorted
         self.allTracksAtLoc = [] # all the tracks for that location
-        self.ignoreLength = False # force car to track regardless of track length
+        self.ignoreLength = False # initial setting, user changes this setting
     # Lists for reports
         self.jTextIn = [] # create a list jTextField objects
         self.carDataList = [] # list of sorted car objects
-    # Set up the logger
-        # self.scLogPath = logPath # passed in
-        self.scLog = 'scLog'
-        self.slLog = 'slLog'
-        self.logLevel = 10 # verbose
-        self.logMode = 'a' # append to existing log
 
     def setCarsToTrack(self, event):
-        '''Event that moves cars to the tracks entered in the pattern window
-        Can ignore track length'''
+        '''Event that moves cars to the tracks entered in the pattern window'''
 
-    # Setup gplogging
-        # gpLogPath = self.scLogPath
-        # scLog = yUtil.gpLogging(self.scLog)
-        # scHandle = scLog.gpStartLogFile(gpLogPath, self.logLevel, self.logMode)
     # set the cars to a track
         self.ignoreLength = self.configFile['PI'] # flag to ignore track length
         patternCopy = self.trackData # all the data for just one track
@@ -64,10 +55,9 @@ class SetCarsWindowInstance():
         i = 0
         for z in patternCopy['ZZ']:
             if (len(userInputList) == len(z['TR'])): # check that the lengths of the -input list- and -car roster- match
-                print(userInputList)
-                # scLog.gpInfo('Number of input fields matches track roster length') # elaborate on this
+                self.psLog.info('input list and car roster lengths match')
             else:
-                # something that happens if the lengths dont match
+                self.psLog.critical('mismatched input list and car roster lengths')
                 pass
             trackName = unicode(z['TN'], MainScriptEntities.setEncoding())
             setToLocation = self.lm.getLocationByName(unicode(patternCopy['YL'], MainScriptEntities.setEncoding()))
@@ -76,7 +66,6 @@ class SetCarsWindowInstance():
                 if (userInputList[i] in self.allTracksAtLoc and userInputList[i] != trackName):
                     setToTrack = setToLocation.getTrackByName(unicode(userInputList[i], MainScriptEntities.setEncoding()), None)
                     setCarId = self.cm.newRS(y['Road'], y['Number'])
-                    print(self.ignoreLength)
                     setCarId.setLocation(setToLocation, setToTrack, self.ignoreLength)
                     # scLog.gpInfo('Set car (' + unicode(setCarId, MainScriptEntities.setEncoding()) + ') to track (' + unicode(setToTrack, MainScriptEntities.setEncoding()) + ')')
                     j += 1
@@ -85,7 +74,6 @@ class SetCarsWindowInstance():
     # Wrap it up
         self.setCarsWindow.setVisible(False)
         # scLog.gpInfo('Time run: ' + str(time.time()))
-        # scLog.gpStopLogFile(scHandle)
         return
 
     def printYP(self, event):
@@ -131,7 +119,6 @@ class SetCarsWindowInstance():
     # Wrap it up
         # slLog.gpInfo('Make switch list for print - track (' + trackName + ')')
         # slLog.gpInfo('Time run: ' + str(time.time()))
-        # slLog.gpStopLogFile(scHandle)
         return
 
     def setCarsForTrackWindow(self, xOffset):

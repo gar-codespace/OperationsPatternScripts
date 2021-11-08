@@ -24,6 +24,7 @@ class TrackPatternPanel:
         self.ignoreLength = javax.swing.JCheckBox(u'Ignore track length ', self.configFile['PI'])
         self.ypButton = javax.swing.JButton()
         self.scButton = javax.swing.JButton()
+        self.prButton = javax.swing.JButton()
         self.trackCheckBoxes = []
         self.controlObjects = []
         return
@@ -80,12 +81,15 @@ class TrackPatternPanel:
 
         self.ypButton.text = u'Pattern'
         self.scButton.text = u'Set Cars'
+        self.prButton.text = u'View Log'
         self.ypButton.setEnabled(False)
         self.scButton.setEnabled(False)
+        self.prButton.setEnabled(False)
         buttonPanel = javax.swing.JPanel()
         buttonPanel.setAlignmentX(javax.swing.JPanel.CENTER_ALIGNMENT)
         buttonPanel.add(self.ypButton)
         buttonPanel.add(self.scButton)
+        buttonPanel.add(self.prButton)
         return buttonPanel
 
     def getPanelObjects(self):
@@ -97,6 +101,7 @@ class TrackPatternPanel:
         self.controlObjects.append(self.trackCheckBoxes)
         self.controlObjects.append(self.ypButton)
         self.controlObjects.append(self.scButton)
+        self.controlObjects.append(self.prButton)
         return self.controlObjects
 
     def makePatternControls(self):

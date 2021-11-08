@@ -5,6 +5,7 @@
 # © 2021 Greg Ritacco
 
 import jmri
+import logging
 from os import path as oPath
 from shutil import copy as sCopy
 from json import loads as jLoads, dumps as jDumps
