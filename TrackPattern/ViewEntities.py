@@ -122,7 +122,6 @@ def setCarsFormBody(trackData):
                     box.add(label)
                     combinedInputLine.add(box)
             formBody.add(combinedInputLine)
-    print(len(jTextIn))
     return formBody, jTextIn
 
 def setCarsFormFooter():

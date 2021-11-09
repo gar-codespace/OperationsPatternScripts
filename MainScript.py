@@ -8,7 +8,6 @@ import time
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
-import GpLogger
 import PluginLocations
 
 class StartUp(jmri.jmrit.automat.AbstractAutomaton):
@@ -18,16 +17,16 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
 
     # fire up logging
         logPath = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternLog.txt'
-        self.psLog = logging.getLogger('Pattern Scripts')
+        self.psLog = logging.getLogger('PS')
         self.psLog.setLevel(10)
         logFileFormat = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         psfh = logging.FileHandler(logPath, mode='w', encoding='utf-8')
         psfh.setFormatter(logFileFormat)
         self.psLog.addHandler(psfh)
+        self.psLog.info('Log File for Pattern Scripts Plugin')
     # fire up the config file
         result = MainScriptEntities.validateConfigFile()
-        self.psLog.info('Log File for Pattern Scripts Plugin')
-        self.psLog.info('PatternConfig.json file validated')
+        self.psLog.info(result)
         self.configFile = MainScriptEntities.readConfigFile('ControlPanel')
     # add the subroutines
         for subroutine, bool in self.configFile['scriptIncludes'].items():

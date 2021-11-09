@@ -12,7 +12,7 @@ path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsTrackPattern')
 import MainScriptEntities
 
 class TrackPatternPanel:
-    '''Makes the track pattern control panel'''
+    '''Makes the track pattern subroutine'''
 
     scriptRev = 'makeTrackPatternPanel rev.20211015'
 
@@ -84,7 +84,7 @@ class TrackPatternPanel:
         self.prButton.text = u'View Log'
         self.ypButton.setEnabled(False)
         self.scButton.setEnabled(False)
-        self.prButton.setEnabled(False)
+        # self.prButton.setEnabled(False)
         buttonPanel = javax.swing.JPanel()
         buttonPanel.setAlignmentX(javax.swing.JPanel.CENTER_ALIGNMENT)
         buttonPanel.add(self.ypButton)

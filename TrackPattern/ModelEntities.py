@@ -21,15 +21,24 @@ def formatText(item, length):
 def checkYard(yardLocation, useAll):
     ''' Validates the yard location'''
 
+# check that the location is valid
+    try:
+        if (jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationByName(yardLocation).getTracksByNameList(None)):
+            location = True
+        else:
+            location = False
+    except AttributeError:
+        location = False
+# check that the location/track type combination is valid
     try:
         if (jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationByName(yardLocation).getTracksByNameList(useAll)):
-            result = True
+            combo = True
         else:
-            result = False
+            combo = False
     except AttributeError:
-        result = False
+        combo = False
 
-    return result
+    return location, combo
 
 def getTracksByLocation(location, trackType):
     ''' Make a list of all the tracks for a given location and track type'''

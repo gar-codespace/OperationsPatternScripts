@@ -26,7 +26,7 @@ class SetCarsWindowInstance():
     def __init__(self, pattern):
         '''Initialization variables'''
 
-        self.psLog = logging.getLogger('Pattern Scripts.tpSetCarsForm')
+        self.psLog = logging.getLogger('PS.CarsForm')
     # Boilerplate
         self.lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
         self.cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
@@ -50,7 +50,6 @@ class SetCarsWindowInstance():
         userInputList = [] # create a list of user inputs from the text input boxes
         for userInput in self.jTextIn: # Read in and check the user input
             userInputList.append(unicode(userInput.getText(), MainScriptEntities.setEncoding()))
-        # scLog.gpInfo('*** Set cars to track')
 
         i = 0
         for z in patternCopy['ZZ']:
@@ -58,7 +57,6 @@ class SetCarsWindowInstance():
                 self.psLog.info('input list and car roster lengths match')
             else:
                 self.psLog.critical('mismatched input list and car roster lengths')
-                pass
             trackName = unicode(z['TN'], MainScriptEntities.setEncoding())
             setToLocation = self.lm.getLocationByName(unicode(patternCopy['YL'], MainScriptEntities.setEncoding()))
             j = 0
@@ -67,23 +65,16 @@ class SetCarsWindowInstance():
                     setToTrack = setToLocation.getTrackByName(unicode(userInputList[i], MainScriptEntities.setEncoding()), None)
                     setCarId = self.cm.newRS(y['Road'], y['Number'])
                     setCarId.setLocation(setToLocation, setToTrack, self.ignoreLength)
-                    # scLog.gpInfo('Set car (' + unicode(setCarId, MainScriptEntities.setEncoding()) + ') to track (' + unicode(setToTrack, MainScriptEntities.setEncoding()) + ')')
                     j += 1
                 i += 1
-            # scLog.gpInfo(str(j) + ' cars were set')
+            self.psLog.info(str(j) + ' cars were set from track ' + trackName)
     # Wrap it up
         self.setCarsWindow.setVisible(False)
-        # scLog.gpInfo('Time run: ' + str(time.time()))
         return
 
     def printYP(self, event):
         '''Event that prints the yard pattern for the selected track'''
 
-    # Set up gpLogging
-        # gpLogPath = self.scLogPath
-        # slLog = yUtil.gpLogging(self.slLog)
-        # scHandle = slLog.gpStartLogFile(gpLogPath, self.logLevel, self.logMode)
-        # slLog.gpInfo('*** Switch List, create switch list for print')
     # Make the switch list
         patternCopy = self.trackData
         userInputList = [] # create a list of user inputs for the set car destinations
@@ -92,9 +83,10 @@ class SetCarsWindowInstance():
         i = 0
         for z in patternCopy['ZZ']:
             if (len(userInputList) == len(z['TR'])): # check that the lengths of the input list and car roster match
-                pass
-                # slLog.gpInfo('Lengths of the input list and car roster match') # elaborate on this
-            trackName = z['TN']
+                self.psLog.info('input list and car roster lengths match')
+            else:
+                self.psLog.critical('mismatched input list and car roster lengths')
+            trackName = unicode(z['TN'], MainScriptEntities.setEncoding())
             self.allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(patternCopy['YL'], None)
             for y in z['TR']:
                 setTrack = unicode('Hold', MainScriptEntities.setEncoding())
@@ -115,10 +107,7 @@ class SetCarsWindowInstance():
             csvCopyTo = self.profilePath + 'operations\\csvSwitchLists\\Switch list (' + patternCopy['YL'] + ') (' + trackName + ').csv'
             with cOpen(csvCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
                 csvWorkFile.write(csvSwitchList)
-            # slLog.gpInfo('Write CSV switch list for track (' + trackName + ')')
-    # Wrap it up
-        # slLog.gpInfo('Make switch list for print - track (' + trackName + ')')
-        # slLog.gpInfo('Time run: ' + str(time.time()))
+
         return
 
     def setCarsForTrackWindow(self, xOffset):
@@ -161,21 +150,18 @@ class SetCarsWindowInstance():
 class MakeFormWindows():
     '''Create and open a set cars window for each track selected'''
 
-    scriptRev = 'setCars rev.20211101'
+    scriptRev = 'TrackPattern.ViewSetCarsForm v20211101'
 
     def __init__(self, xYard, xTracks):
         '''Initialization variables'''
 
     # Script specific
+        self.psLog = logging.getLogger('PS.CarsWindow')
         self.profilePath = jmri.util.FileUtil.getProfilePath()
         self.yardLoc = xYard
-        # self.destTracks = dTracks
         self.selectedTracks = xTracks
         self.yardTrackType = None
-    # File logger setup
-        self.logName = 'mwLog'
-        self.logLevel = 10
-        self.logMode = 'w' # write over the old log
+
         return
 
     def runScript(self):
@@ -183,26 +169,17 @@ class MakeFormWindows():
 
     # Set initial variables
         yTimeNow = time.time()
-    # Setup gplogging
-        # gpLogPath = self.profilePath + 'operations\\buildstatus\\SetCars (' + self.yardLoc + ').txt'
-        # scLog = yUtil.gpLogging(self.logName)
-        # scHandle = scLog.gpStartLogFile(gpLogPath, self.logLevel, self.logMode)
-        # scLog.gpInfo('*** Make Window, set cars window')
-        # scLog.gpInfo('Time run: ' + str(time.time()))
         windowOffset = 200
     # create an instance for each track in its own window
-        # scLog.gpInfo(u'Open track windows for location ' + unicode(self.yardLoc, MainScriptEntities.setEncoding()))
         for track in self.selectedTracks:
             listForTrack = TrackPattern.ModelEntities.makeYardPattern([track], self.yardLoc) # track needs to be send in as a list
             listForTrack.update({'RT': u'Switch List for Track '})
             newWindow = SetCarsWindowInstance(listForTrack)
             newWindow.setCarsForTrackWindow(windowOffset)
-            # scLog.gpInfo(u'Window created for track ' + track)
+            self.psLog.info(u'Set Cars Window created for track ' + track)
             windowOffset += 50
     # wrap up the script
-        computeTime = 'Script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6]
-        # scLog.gpInfo(computeTime)
-        # scLog.gpStopLogFile(scHandle)
-        # print(MakeSetCarsForms.scriptRev)
-        print(computeTime)
+        computeTime = u'Set Cars windows run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6]
+        self.psLog.info(computeTime)
+        print(self.scriptRev)
         return

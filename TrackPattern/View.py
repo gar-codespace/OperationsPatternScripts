@@ -5,6 +5,7 @@
 # © 2021 Greg Ritacco
 
 import jmri
+import logging
 from os import system
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsTrackPattern')
@@ -19,6 +20,7 @@ class manageGui:
     def __init__(self, panel=None, controls=None):
         '''Track Pattern panel'''
 
+        self.psLog = logging.getLogger('PS.View')
         self.configFile = MainScriptEntities.readConfigFile('TP')
         self.panel = panel
         self.controls = controls

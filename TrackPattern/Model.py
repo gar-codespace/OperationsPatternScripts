@@ -17,27 +17,37 @@ import TrackPattern.View
 import TrackPattern.Controller
 import TrackPattern.ModelEntities
 
+psLog = logging.getLogger('PS.Model')
+
 def validateUserInput(controls):
-    '''Validates the user submitted location, and returns a track list for a valid location'''
+    '''Validates the user submitted locations and returns a track list for a valid location'''
 
     location = unicode(controls[0].text, MainScriptEntities.setEncoding())
-    allFlag = controls[1].selected
     useAll = None
-    if (allFlag == True):
+    if (controls[1].selected):
         useAll = 'Yard'
-    validBool = TrackPattern.ModelEntities.checkYard(location, useAll)
     focusOn = MainScriptEntities.readConfigFile('TP')
-    focusOn.update({"PL": ''})
-    focusOn.update({"PA": allFlag})
+    focusOn.update({"PL": location})
+    focusOn.update({"PA": controls[1].selected})
+    focusOn.update({"PI": controls[2].selected})
     trackList = {}
-    if (validBool):
-        locationTracks = TrackPattern.ModelEntities.getTracksByLocation(location, useAll)
-        focusOn.update({"PL": location})
-        for track in locationTracks:
-            trackList[track] = True
     focusOn.update({"PT": trackList})
+    validLoc, validCombo = TrackPattern.ModelEntities.checkYard(location, useAll)
+    if (validLoc):
+        psLog.info('location ' + location + ' is valid')
+        if (validCombo):
+            psLog.info('track type verified for ' + location)
+            locationTracks = TrackPattern.ModelEntities.getTracksByLocation(location, useAll)
+            focusOn.update({"PL": location})
+            for track in locationTracks:
+                trackList[track] = True
+            focusOn.update({"PT": trackList})
+        else:
+            psLog.warning('location ' + location + ' does not have yard tracks')
+    else:
+        psLog.warning('location ' + location + ' is not valid')
 
-    return focusOn
+    return focusOn, validCombo
 
 def getAllTracks(trackCheckBoxes):
     '''Returns a dictionary of track names and their check box status'''
@@ -47,23 +57,23 @@ def getAllTracks(trackCheckBoxes):
         dict[unicode(item.text, MainScriptEntities.setEncoding())] = item.selected
 
     return dict
-
-def updateTrackList(trackList):
-    '''Updates the config file with current track check box status'''
-
-    # configFile = MainScriptEntities.readConfigFile()
-    focusOn = MainScriptEntities.readConfigFile('TP')
-    focusOn.update({'PT': trackList})
-    # configFile.update({"TP": focusOn})
-
-    return focusOn
+# 
+# def updateTrackList(trackList):
+#     '''Updates the config file with current track check box status'''
+#
+#     focusOn = MainScriptEntities.readConfigFile('TP')
+#     focusOn.update({'PT': trackList})
+#
+#     return focusOn
 
 def makeTrackPatternDict(trackList):
     '''Make a track pattern as a dictionary'''
 
     trackPattern = MainScriptEntities.readConfigFile('TP')
+    patternDict = TrackPattern.ModelEntities.makeYardPattern(trackList, trackPattern['PL'])
+    psLog.info('dictionary for ' + trackPattern['PL'] + ' created')
 
-    return TrackPattern.ModelEntities.makeYardPattern(trackList, trackPattern['PL'])
+    return patternDict
 
 def getSelectedTracks():
     '''Makes a list of just the selected tracks'''
