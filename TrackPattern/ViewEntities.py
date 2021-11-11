@@ -39,7 +39,7 @@ def setCarsFormHeader(trackData):
 # Define the header
     combinedHeader = javax.swing.JPanel()
     combinedHeader.setLayout(javax.swing.BoxLayout(combinedHeader, javax.swing.BoxLayout.Y_AXIS))
-    combinedHeader.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
+    # combinedHeader.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT)
 # Populate the header
     headerRRLabel = javax.swing.JLabel(trackData['RN'])
     headerRRBox = makeSwingBox(100, configFile['PH'])
@@ -60,7 +60,7 @@ def setCarsFormHeader(trackData):
     combinedHeader.add(headerRRBox)
     combinedHeader.add(headerValidBox)
     combinedHeader.add(headerYTBox)
-    combinedHeader.add(javax.swing.JSeparator())
+    # combinedHeader.add(javax.swing.JSeparator())
     return combinedHeader
 
 def setCarsFormBodyHeader():
@@ -79,14 +79,17 @@ def setCarsFormBodyHeader():
     box = makeSwingBox(reportWidth['Input'] * configFile['RM'], configFile['PH'])
     box.add(label)
     bodyHeader.add(box)
-    # Create rest of header from user settings
+# Create rest of header from user settings
+    headerWidth = 0
     for x in jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
         if (x != ' '): # skips over null entries
             label = javax.swing.JLabel(x)
             box = makeSwingBox(reportWidth[x] * configFile['RM'], configFile['PH'])
             box.add(label)
             bodyHeader.add(box)
-    return bodyHeader
+            headerWidth = headerWidth + reportWidth[x]
+    headerWidth = headerWidth * 10
+    return bodyHeader, headerWidth
 
 def setCarsFormBody(trackData):
     '''Creates the body of the Set cars form'''
@@ -104,6 +107,7 @@ def setCarsFormBody(trackData):
     for j in trackData['ZZ']:
         carList = TrackPattern.ModelEntities.sortCarList(j['TR'])
 # Each line of the form
+        headerWidth = 0
         for car in carList:
             carId = cm.newRS(car['Road'], car['Number']) # returns car object
             carDataDict = TrackPattern.ModelEntities.getCarDetailDict(carId)
@@ -121,6 +125,7 @@ def setCarsFormBody(trackData):
                     box = makeSwingBox(reportWidth[x] * configFile['RM'], configFile['PH'])
                     box.add(label)
                     combinedInputLine.add(box)
+                    headerWidth = headerWidth + reportWidth[x]
             formBody.add(combinedInputLine)
     return formBody, jTextIn
 
@@ -129,7 +134,7 @@ def setCarsFormFooter():
 
 # Define the footer
     footer = javax.swing.JPanel()
-    footer.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
+    # footer.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
 # Construct the footer
     scButton = javax.swing.JButton(unicode('Set', MainScriptEntities.setEncoding()))
     tpButton = javax.swing.JButton(unicode('Print', MainScriptEntities.setEncoding()))

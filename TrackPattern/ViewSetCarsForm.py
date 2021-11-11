@@ -2,7 +2,7 @@
 # Extended ìÄÅÉî
 # Makes a set cars form for each selected track
 # No restrictions on use
-# © 2021 Greg Ritacco 
+# © 2021 Greg Ritacco
 
 import jmri
 import java.awt
@@ -121,28 +121,35 @@ class SetCarsWindowInstance():
         trackName = unicode(trackName['TN'], MainScriptEntities.setEncoding())
         self.setCarsWindow = TrackPattern.ViewEntities.makeWindow()
         self.setCarsWindow.setTitle(u'Pattern Report for track ' + trackName)
-        self.setCarsWindow.setLocation(xOffset, 150)
-        self.setCarsWindow.setSize(400,500)
         formSeparator = javax.swing.JSeparator()
 
     # Define the form
         combinedForm = javax.swing.JPanel()
         combinedForm.setLayout(javax.swing.BoxLayout(combinedForm, javax.swing.BoxLayout.Y_AXIS))
-        combinedForm.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
-        combinedForm.add(TrackPattern.ViewEntities.setCarsFormBodyHeader())
+        combinedForm.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT)
+        bodyHeader, headerWidth = TrackPattern.ViewEntities.setCarsFormBodyHeader()
+        combinedForm.add(bodyHeader)
         formBody, self.jTextIn = TrackPattern.ViewEntities.setCarsFormBody(self.trackData)
         combinedForm.add(formBody)
+        scrollPanel = javax.swing.JScrollPane(combinedForm)
+        scrollPanel.border = javax.swing.BorderFactory.createEmptyBorder()
     # Make the footer
         combinedFooter, tpButton, scButton = TrackPattern.ViewEntities.setCarsFormFooter()
         tpButton.actionPerformed = self.printYP
         scButton.actionPerformed = self.setCarsToTrack
     # Construct the window
+        # self.setCarsWindow.setBounds(xOffset, 150, headerWidth+25, 800)
+        self.setCarsWindow.setLocation(xOffset, 150)
+        # self.setCarsWindow.setMaximumSize(java.awt.Dimension(headerWidth+25, 800))
         self.setCarsWindow.add(TrackPattern.ViewEntities.setCarsFormHeader(self.trackData))
-        # self.setCarsWindow.add(formSeparator)
-        self.setCarsWindow.add(combinedForm)
-        self.setCarsWindow.add(formSeparator)
+        self.setCarsWindow.add(javax.swing.JSeparator())
+        self.setCarsWindow.add(scrollPanel)
+        self.setCarsWindow.add(javax.swing.JSeparator())
         self.setCarsWindow.add(combinedFooter)
         self.setCarsWindow.pack()
+        # self.setCarsWindow.maximumSize(headerWidth+25, 500)
+        # self.setCarsWindow.setMaximumSize(java.awt.Dimension(headerWidth+25, 500))
+        print(self.setCarsWindow)
         self.setCarsWindow.setVisible(True)
         # print(SetCarsWindowInstance.scriptRev)
         return
