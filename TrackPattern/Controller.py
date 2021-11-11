@@ -12,6 +12,7 @@ import MainScriptEntities
 import TrackPattern.View
 import TrackPattern.Model
 import TrackPattern.ViewSetCarsForm
+# import TrackPattern.ControllerEntities
 
 class StartUp:
     '''Start the the Track Pattern subroutine'''
@@ -41,8 +42,8 @@ class StartUp:
         '''Makes a track pattern based on the config file'''
 
     # Boilerplate - update the config file
-        self.buttonBoilerplate()
-        self.psLog.info('Button boilerplate completed - config file updated')
+        TrackPattern.Model.updateButtons(self.controls)
+        self.psLog.info('Button update completed - config file updated')
     # Button specific
         selectedTracks = TrackPattern.Model.getSelectedTracks()
         trackPatternDict = TrackPattern.Model.makeTrackPatternDict(selectedTracks)
@@ -64,8 +65,8 @@ class StartUp:
         '''Opens a set cars window for each checked track'''
 
     # Boilerplate - update the config file
-        self.buttonBoilerplate()
-        self.psLog.info('Button boilerplate completed - config file updated')
+        self.controls = TrackPattern.Model.updateButtons(self.controls)
+        self.psLog.info('Button update completed - config file updated')
     # Button specific
         selectedTracks = TrackPattern.Model.getSelectedTracks()
         TrackPattern.ViewSetCarsForm.MakeFormWindows(self.controls[0].text, selectedTracks).runScript()
@@ -81,28 +82,15 @@ class StartUp:
 
         return
 
-    def buttonBoilerplate(self):
-        '''Boilerplate calls when a button is pressed'''
-
-        focusOn = MainScriptEntities.readConfigFile('TP')
-        focusOn.update({"PL": self.controls[0].text})
-        focusOn.update({"PA": self.controls[1].selected})
-        focusOn.update({"PI": self.controls[2].selected})
-        focusOn.update({"PT": TrackPattern.Model.getAllTracks(self.controls[3])})
-        newConfigFile = MainScriptEntities.readConfigFile('all')
-        newConfigFile.update({"TP": focusOn})
-        MainScriptEntities.updateConfigFile(newConfigFile)
-
-        return
-
     def clickOrEnter(self):
-        '''Bolierplate method for the text box and check box'''
+        '''Refreshes the subroutine gui based on user changes'''
 
         updatedConfigTpValues, validCombo = TrackPattern.Model.validateUserInput(self.controls)
         newConfigFile = MainScriptEntities.readConfigFile('all')
         newConfigFile.update({"TP": updatedConfigTpValues})
         MainScriptEntities.updateConfigFile(newConfigFile)
-        self.panel, self.controls = TrackPattern.View.manageGui().updatePanel(self.panel)
+        self.controls = TrackPattern.View.manageGui().updatePanel(self.panel)
+
         self.controls[0].actionPerformed = self.whenTPEnterPressed
         self.controls[1].actionPerformed = self.whenPABoxClicked
         self.controls[6].actionPerformed = self.whenPRButtonPressed # the log button is always active
@@ -112,6 +100,7 @@ class StartUp:
             self.controls[4].actionPerformed = self.whenTPButtonPressed
             self.controls[5].actionPerformed = self.whenSCButtonPressed
             self.psLog.info('location ' + self.controls[0].text + ' validated, buttons activated')
+
         print(self.rev)
         return
 

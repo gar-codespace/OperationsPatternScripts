@@ -2,7 +2,7 @@
 # Extended ìÄÅÉî
 # View script for the track pattern subroutine
 # No restrictions on use
-# © 2021 Greg Ritacco
+# © 2021 Greg Ritacco 
 
 import jmri
 import logging
@@ -10,7 +10,7 @@ from os import system
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsTrackPattern')
 import MainScriptEntities
-import TrackPattern.MakeTrackPatternPanel
+import TrackPattern.ViewTrackPatternPanel
 
 class manageGui:
     '''At startup create the GUI elements'''
@@ -30,23 +30,23 @@ class manageGui:
     def updatePanel(self, panel):
         ''' Makes a new panel from the config file and replaces the current panel with the new panel'''
 
-        newView, newControls = TrackPattern.MakeTrackPatternPanel.TrackPatternPanel().makePatternControls()
+        newView, newControls = TrackPattern.ViewTrackPatternPanel.TrackPatternPanel().makePatternControls()
         panel.removeAll()
         panel.add(newView)
         panel.revalidate()
         # panel.repaint()
 
-        return newView, newControls
+        return newControls
 
     def makeFrame(self):
         '''Makes the title frame that all the track pattern controls go into'''
 
-        return TrackPattern.MakeTrackPatternPanel.TrackPatternPanel().makePatternFrame()
+        return TrackPattern.ViewTrackPatternPanel.TrackPatternPanel().makePatternFrame()
 
     def makePanel(self):
         '''Make the track pattern controls'''
 
-        return TrackPattern.MakeTrackPatternPanel.TrackPatternPanel().makePatternControls()
+        return TrackPattern.ViewTrackPatternPanel.TrackPatternPanel().makePatternControls()
 
     print(scriptRev)
 

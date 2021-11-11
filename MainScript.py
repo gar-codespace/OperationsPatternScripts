@@ -57,6 +57,7 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         location = MainScriptEntities.readConfigFile('PluginLocation')
         pluginLocation = getattr(PluginLocations, location)()
         pluginLocation.add(scrollPanel)
+        # pluginLocation.revalidate()
         self.psLog.info('control panel added to ' + location)
         self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
         return False

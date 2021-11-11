@@ -137,3 +137,29 @@ def setCarsFormFooter():
     footer.add(tpButton)
     footer.add(scButton)
     return footer, tpButton, scButton
+
+def makeFrame():
+    '''Makes the title boarder frame'''
+
+    patternFrame = TrackPattern.View.manageGui().makeFrame()
+    # self.psLog.info('track pattern makeFrame completed')
+
+    return patternFrame
+
+def makePanel(self):
+    '''Make and activate the Track Pattern objects'''
+
+    panel, controls = TrackPattern.View.manageGui().makePanel()
+    controls[0].actionPerformed = whenTPEnterPressed
+    controls[1].actionPerformed = whenPABoxClicked
+    self.controls[6].actionPerformed = self.whenPRButtonPressed
+    self.configFile = MainScriptEntities.readConfigFile('TP')
+    if (self.configFile['PL'] != ''):
+        self.controls[4].setEnabled(True)
+        self.controls[5].setEnabled(True)
+        self.controls[4].actionPerformed = self.whenTPButtonPressed
+        self.controls[5].actionPerformed = self.whenSCButtonPressed
+        self.psLog.info('saved location validated, buttons activated')
+    self.psLog.info('track pattern makePanel completed')
+
+    return self.panel

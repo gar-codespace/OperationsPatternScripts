@@ -49,6 +49,20 @@ def validateUserInput(controls):
 
     return focusOn, validCombo
 
+def updateButtons(controls):
+    '''Updates the config file when a button is pressed'''
+
+    focusOn = MainScriptEntities.readConfigFile('TP')
+    focusOn.update({"PL": controls[0].text})
+    focusOn.update({"PA": controls[1].selected})
+    focusOn.update({"PI": controls[2].selected})
+    focusOn.update({"PT": TrackPattern.Model.getAllTracks(controls[3])})
+    newConfigFile = MainScriptEntities.readConfigFile('all')
+    newConfigFile.update({"TP": focusOn})
+    MainScriptEntities.updateConfigFile(newConfigFile)
+
+    return controls
+
 def getAllTracks(trackCheckBoxes):
     '''Returns a dictionary of track names and their check box status'''
 
@@ -57,14 +71,6 @@ def getAllTracks(trackCheckBoxes):
         dict[unicode(item.text, MainScriptEntities.setEncoding())] = item.selected
 
     return dict
-# 
-# def updateTrackList(trackList):
-#     '''Updates the config file with current track check box status'''
-#
-#     focusOn = MainScriptEntities.readConfigFile('TP')
-#     focusOn.update({'PT': trackList})
-#
-#     return focusOn
 
 def makeTrackPatternDict(trackList):
     '''Make a track pattern as a dictionary'''
