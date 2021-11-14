@@ -19,6 +19,15 @@ import TrackPattern.ModelEntities
 
 psLog = logging.getLogger('PS.Model')
 
+def getSetCarsData(location, track):
+    '''Creates the data needed for a Set Cars to Track window'''
+
+    trackSchedule = TrackPattern.ModelEntities.isTrackASpur(location, track)
+    listForTrack = TrackPattern.ModelEntities.makeYardPattern(location, [track]) # track needs to be send in as a list
+    listForTrack.update({'RT': u'Switch List for Track '})
+
+    return listForTrack, trackSchedule
+
 def validateUserInput(controls):
     '''Validates the user submitted locations and returns a track list for a valid location'''
 
@@ -76,7 +85,7 @@ def makeTrackPatternDict(trackList):
     '''Make a track pattern as a dictionary'''
 
     trackPattern = MainScriptEntities.readConfigFile('TP')
-    patternDict = TrackPattern.ModelEntities.makeYardPattern(trackList, trackPattern['PL'])
+    patternDict = TrackPattern.ModelEntities.makeYardPattern(trackPattern['PL'], trackList)
     psLog.info('dictionary for ' + trackPattern['PL'] + ' created')
 
     return patternDict

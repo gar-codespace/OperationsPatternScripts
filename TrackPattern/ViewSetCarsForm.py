@@ -21,9 +21,9 @@ class SetCarsWindowInstance():
     '''Manages an instance of each -Pattern Report for track- window'''
 
 # Class variables
-    scriptRev = 'SetCarsWindowInstanceV1 rev.20210901'
+    scriptRev = 'SetCarsWindowInstance v20210901'
 
-    def __init__(self, pattern):
+    def __init__(self, pattern, schedule):
         '''Initialization variables'''
 
         self.psLog = logging.getLogger('PS.CarsForm')
@@ -34,6 +34,7 @@ class SetCarsWindowInstance():
         self.configFile = MainScriptEntities.readConfigFile('TP')
     # Track variables
         self.trackData = pattern # all the data for the selected track, car roster is sorted
+        self.trackSchedule = schedule
         self.allTracksAtLoc = [] # all the tracks for that location
         self.ignoreLength = False # initial setting, user changes this setting
     # Lists for reports
@@ -46,7 +47,7 @@ class SetCarsWindowInstance():
     # set the cars to a track
         self.ignoreLength = self.configFile['PI'] # flag to ignore track length
         patternCopy = self.trackData # all the data for just one track
-        self.allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(patternCopy['YL'], None)
+        # self.allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(patternCopy['YL'], None)
         userInputList = [] # create a list of user inputs from the text input boxes
         for userInput in self.jTextIn: # Read in and check the user input
             userInputList.append(unicode(userInput.getText(), MainScriptEntities.setEncoding()))
@@ -87,7 +88,7 @@ class SetCarsWindowInstance():
             else:
                 self.psLog.critical('mismatched input list and car roster lengths')
             trackName = unicode(z['TN'], MainScriptEntities.setEncoding())
-            self.allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(patternCopy['YL'], None)
+            # self.allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(patternCopy['YL'], None)
             for y in z['TR']:
                 setTrack = unicode('Hold', MainScriptEntities.setEncoding())
                 if (userInputList[i] in self.allTracksAtLoc and userInputList[i] != trackName):
@@ -110,19 +111,33 @@ class SetCarsWindowInstance():
 
         return
 
+    def trackButton(self, event):
+        '''When any one of the track buttons is pressed'''
+        print(self)
+        # print(self.getUIClassID())
+        return
+
     def setCarsForTrackWindow(self, xOffset):
         ''' Creates and populates the -Pattern Report for Track- window'''
 
     # Read in the config file
         configFile = MainScriptEntities.readConfigFile('TP')
+    # Make a button for every track at the location
+        self.allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(self.trackData['YL'], None)
+        buttonPanel = javax.swing.JPanel()
+        buttonPanel.setLayout(java.awt.FlowLayout())
+        # buttonPanel.setMaximumSize(14, 600)
+        # buttonPanel.getMaximumSize()
+        self.trackButtonList = []
+        for track in self.allTracksAtLoc:
+            jButton = javax.swing.JButton(track)
+            buttonPanel.add(jButton)
+            self.trackButtonList.append(jButton)
+            jButton.actionPerformed = self.trackButton
     # Define the window
         trackName = self.trackData['ZZ']
         trackName = trackName[0]
         trackName = unicode(trackName['TN'], MainScriptEntities.setEncoding())
-        self.setCarsWindow = TrackPattern.ViewEntities.makeWindow()
-        self.setCarsWindow.setTitle(u'Pattern Report for track ' + trackName)
-        formSeparator = javax.swing.JSeparator()
-
     # Define the form
         combinedForm = javax.swing.JPanel()
         combinedForm.setLayout(javax.swing.BoxLayout(combinedForm, javax.swing.BoxLayout.Y_AXIS))
@@ -138,55 +153,26 @@ class SetCarsWindowInstance():
         tpButton.actionPerformed = self.printYP
         scButton.actionPerformed = self.setCarsToTrack
     # Construct the window
-        # self.setCarsWindow.setBounds(xOffset, 150, headerWidth+25, 800)
+        self.setCarsWindow = TrackPattern.ViewEntities.makeWindow()
+        self.setCarsWindow.setTitle(u'Pattern Report for track ' + trackName)
         self.setCarsWindow.setLocation(xOffset, 150)
-        # self.setCarsWindow.setMaximumSize(java.awt.Dimension(headerWidth+25, 800))
-        self.setCarsWindow.add(TrackPattern.ViewEntities.setCarsFormHeader(self.trackData))
+        formHeader = TrackPattern.ViewEntities.setCarsFormHeader(self.trackData)
+        # formHeader.add(javax.swing.JLabel(u'Schedule: ' + deg.getName()))
+        self.setCarsWindow.add(formHeader)
+        self.setCarsWindow.add(javax.swing.JSeparator())
+        self.setCarsWindow.add(buttonPanel)
         self.setCarsWindow.add(javax.swing.JSeparator())
         self.setCarsWindow.add(scrollPanel)
         self.setCarsWindow.add(javax.swing.JSeparator())
+        if (self.trackSchedule):
+            scheduleName = self.trackSchedule.getName()
+            schedulePanel = javax.swing.JPanel()
+            schedulePanel.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT)
+            schedulePanel.add(javax.swing.JLabel(u'Schedule: ' + scheduleName))
+            self.setCarsWindow.add(schedulePanel)
+            self.setCarsWindow.add(javax.swing.JSeparator())
         self.setCarsWindow.add(combinedFooter)
         self.setCarsWindow.pack()
-        # self.setCarsWindow.maximumSize(headerWidth+25, 500)
-        # self.setCarsWindow.setMaximumSize(java.awt.Dimension(headerWidth+25, 500))
-        print(self.setCarsWindow)
         self.setCarsWindow.setVisible(True)
         # print(SetCarsWindowInstance.scriptRev)
-        return
-
-class MakeFormWindows():
-    '''Create and open a set cars window for each track selected'''
-
-    scriptRev = 'TrackPattern.ViewSetCarsForm v20211101'
-
-    def __init__(self, xYard, xTracks):
-        '''Initialization variables'''
-
-    # Script specific
-        self.psLog = logging.getLogger('PS.CarsWindow')
-        self.profilePath = jmri.util.FileUtil.getProfilePath()
-        self.yardLoc = xYard
-        self.selectedTracks = xTracks
-        self.yardTrackType = None
-
-        return
-
-    def runScript(self):
-        '''Run the program'''
-
-    # Set initial variables
-        yTimeNow = time.time()
-        windowOffset = 200
-    # create an instance for each track in its own window
-        for track in self.selectedTracks:
-            listForTrack = TrackPattern.ModelEntities.makeYardPattern([track], self.yardLoc) # track needs to be send in as a list
-            listForTrack.update({'RT': u'Switch List for Track '})
-            newWindow = SetCarsWindowInstance(listForTrack)
-            newWindow.setCarsForTrackWindow(windowOffset)
-            self.psLog.info(u'Set Cars Window created for track ' + track)
-            windowOffset += 50
-    # wrap up the script
-        computeTime = u'Set Cars windows run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6]
-        self.psLog.info(computeTime)
-        print(self.scriptRev)
         return

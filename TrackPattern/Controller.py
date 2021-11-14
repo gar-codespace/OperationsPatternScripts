@@ -12,7 +12,7 @@ import MainScriptEntities
 import TrackPattern.View
 import TrackPattern.Model
 import TrackPattern.ViewSetCarsForm
-# import TrackPattern.ControllerEntities
+# import TrackPattern.ViewSetCarsForm
 
 class StartUp:
     '''Start the the Track Pattern subroutine'''
@@ -69,7 +69,14 @@ class StartUp:
         self.psLog.info('Button update completed - config file updated')
     # Button specific
         selectedTracks = TrackPattern.Model.getSelectedTracks()
-        TrackPattern.ViewSetCarsForm.MakeFormWindows(self.controls[0].text, selectedTracks).runScript()
+        windowOffset = 200
+    # create an instance for each track in its own window
+        for track in selectedTracks:
+            listForTrack, trackSchedule = TrackPattern.Model.getSetCarsData(self.controls[0].text, track)
+            newWindow = TrackPattern.ViewSetCarsForm.SetCarsWindowInstance(listForTrack, trackSchedule)
+            newWindow.setCarsForTrackWindow(windowOffset)
+            self.psLog.info(u'Set Cars Window created for track ' + track)
+            windowOffset += 50
         self.psLog.info('Set Cars Windows for ' + self.controls[0].text + ' completed')
         print(self.rev)
 
@@ -86,7 +93,7 @@ class StartUp:
         '''Refreshes the subroutine gui based on user changes'''
 
         updatedConfigTpValues, validCombo = TrackPattern.Model.validateUserInput(self.controls)
-        newConfigFile = MainScriptEntities.readConfigFile('all')
+        newConfigFile = MainScriptEntities.readConfigFile()
         newConfigFile.update({"TP": updatedConfigTpValues})
         MainScriptEntities.updateConfigFile(newConfigFile)
         self.controls = TrackPattern.View.manageGui().updatePanel(self.panel)
