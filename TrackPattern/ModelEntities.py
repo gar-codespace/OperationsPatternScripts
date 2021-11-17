@@ -11,6 +11,16 @@ from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
 
+def getAllLocations():
+    '''returns a list of all locations for this profile. JMRI sorts the list'''
+
+    allLocs = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationsByNameList()
+    locList = []
+    for item in allLocs:
+        locList.append(unicode(item.getName(), MainScriptEntities.setEncoding()))
+
+    return locList
+
 def formatText(item, length):
     '''Left justify string to a specified length'''
 
@@ -39,6 +49,7 @@ def checkYard(yardLocation, useAll):
         combo = False
 
     return location, combo
+
 
 def getTracksByLocation(location, trackType):
     ''' Make a list of all the tracks for a given location and track type'''

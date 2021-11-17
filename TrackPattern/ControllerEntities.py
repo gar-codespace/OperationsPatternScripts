@@ -23,6 +23,6 @@ def buttonBoilerplate(controls):
     focusOn.update({"PT": TrackPattern.Model.getAllTracks(controls[3])})
     newConfigFile = MainScriptEntities.readConfigFile('all')
     newConfigFile.update({"TP": focusOn})
-    MainScriptEntities.updateConfigFile(newConfigFile)
+    MainScriptEntities.writeConfigFile(newConfigFile)
 
     return

@@ -19,6 +19,45 @@ import TrackPattern.ModelEntities
 
 psLog = logging.getLogger('PS.Model')
 
+def updateLocations():
+    '''Updates the config file with a list of all locations for this profile'''
+
+    newConfigFile = MainScriptEntities.readConfigFile()
+    subConfigfile = newConfigFile['TP']
+    subConfigfile.update({'AL': TrackPattern.ModelEntities.getAllLocations()})
+    newConfigFile.update({'TP': subConfigfile})
+    MainScriptEntities.writeConfigFile(newConfigFile)
+    psLog.info('List of locations for this profile has been updated')
+
+    return
+
+def updatePatternLocation(location):
+    '''Updates the config file value PL with the currently selected location'''
+
+    newConfigFile = MainScriptEntities.readConfigFile()
+    subConfigfile = newConfigFile['TP']
+    subConfigfile.update({'PL': location})
+    newConfigFile.update({'TP': subConfigfile})
+    psLog.info('The current location for this profile has been set to ' + location)
+
+    return newConfigFile
+
+def updatePatternTracks(location):
+    '''Updates the config file value PT with the tracks for the selected location'''
+
+    allTracks = TrackPattern.ModelEntities.getTracksByLocation(location, None)
+    trackDict = {}
+    for track in allTracks:
+        trackDict[track] = False
+    newConfigFile = MainScriptEntities.readConfigFile()
+    subConfigfile = newConfigFile['TP']
+    subConfigfile.update({'PT': trackDict})
+    subConfigfile.update({'PA': False})
+    newConfigFile.update({'TP': subConfigfile})
+    psLog.info('The track list for location ' + location + ' has been updated')
+
+    return newConfigFile
+
 def getSetCarsData(location, track):
     '''Creates the data needed for a Set Cars to Track window'''
 
@@ -62,13 +101,13 @@ def updateButtons(controls):
     '''Updates the config file when a button is pressed'''
 
     focusOn = MainScriptEntities.readConfigFile('TP')
-    focusOn.update({"PL": controls[0].text})
+    focusOn.update({"PL": controls[0].getSelectedItem()})
     focusOn.update({"PA": controls[1].selected})
     focusOn.update({"PI": controls[2].selected})
     focusOn.update({"PT": TrackPattern.Model.getAllTracks(controls[3])})
     newConfigFile = MainScriptEntities.readConfigFile('all')
     newConfigFile.update({"TP": focusOn})
-    MainScriptEntities.updateConfigFile(newConfigFile)
+    MainScriptEntities.writeConfigFile(newConfigFile)
 
     return controls
 

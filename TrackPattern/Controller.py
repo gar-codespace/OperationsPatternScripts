@@ -6,35 +6,52 @@
 
 import jmri
 import logging
+import java.awt.event
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
 import TrackPattern.View
 import TrackPattern.Model
 import TrackPattern.ViewSetCarsForm
-# import TrackPattern.ViewSetCarsForm
 
 class StartUp:
     '''Start the the Track Pattern subroutine'''
 
+    # panel, controls = TrackPattern.View.manageGui().makePanel()
+    rev = 'TrackPattern.Controller v20211101'
+
     def __init__(self):
 
         self.psLog = logging.getLogger('PS.Control')
-        self.rev = 'TrackPattern.Controller v20211101'
+        # self.rev = 'TrackPattern.Controller v20211101'
 
         return
 
-    def whenTPEnterPressed(self, event):
-        '''When enter is pressed for Yard Pattern box'''
+    class ComboBoxListener(java.awt.event.ActionListener):
+        '''Event triggered from location combobox selection'''
 
-        self.clickOrEnter()
+        def __init__(self, panel):
+            self.panel = panel
 
-        return
+        def actionPerformed(self, event):
+            newConfigFile = TrackPattern.Model.updatePatternLocation(event.getSource().getSelectedItem())
+            MainScriptEntities.writeConfigFile(newConfigFile)
+            newConfigFile = TrackPattern.Model.updatePatternTracks(event.getSource().getSelectedItem())
+            MainScriptEntities.writeConfigFile(newConfigFile)
+            print('Yipee')
+            self.controls = TrackPattern.View.manageGui().updatePanel(self.panel)
+            # StartUp().activateButtons(newControls)
+            self.controls[0].addActionListener(StartUp().ComboBoxListener(self.panel))
+            # newControls[1].actionPerformed = StartUp().whenPABoxClicked
+            self.controls[4].actionPerformed = StartUp().whenTPButtonPressed
+            # newControls[5].actionPerformed = self.whenSCButtonPressed
+            # newControls[6].actionPerformed = self.whenPRButtonPressed
 
+            return
     def whenPABoxClicked(self, event):
         '''When the Yard Tracks Only box is clicked'''
 
-        self.clickOrEnter()
+        self.onCheck()
 
         return
 
@@ -89,29 +106,37 @@ class StartUp:
 
         return
 
-    def clickOrEnter(self):
+    def activateButtons(self, controls):
+        '''Assigns actions to the subroutine widgets'''
+
+        controls[0].addActionListener(self.ComboBoxListener(self.panel))
+        controls[1].actionPerformed = self.whenPABoxClicked
+        controls[4].actionPerformed = self.whenTPButtonPressed
+        controls[5].actionPerformed = self.whenSCButtonPressed
+        controls[6].actionPerformed = self.whenPRButtonPressed
+
+        return
+
+    def onCheck(self):
         '''Refreshes the subroutine gui based on user changes'''
 
-        updatedConfigTpValues, validCombo = TrackPattern.Model.validateUserInput(self.controls)
-        newConfigFile = MainScriptEntities.readConfigFile()
-        newConfigFile.update({"TP": updatedConfigTpValues})
-        MainScriptEntities.updateConfigFile(newConfigFile)
+        newConfigFile = TrackPattern.Model.updatePatternLocation(self.controls[0].getSelectedItem())
+        MainScriptEntities.writeConfigFile(newConfigFile)
+        newConfigFile = TrackPattern.Model.updatePatternTracks(self.controls[0].getSelectedItem())
+        MainScriptEntities.writeConfigFile(newConfigFile)
         self.controls = TrackPattern.View.manageGui().updatePanel(self.panel)
 
-        self.controls[0].actionPerformed = self.whenTPEnterPressed
+        self.controls[0].addActionListener(self.ComboBoxListener(self.panel))
         self.controls[1].actionPerformed = self.whenPABoxClicked
-        self.controls[6].actionPerformed = self.whenPRButtonPressed # the log button is always active
-        if (validCombo):
-            self.controls[4].setEnabled(True)
-            self.controls[5].setEnabled(True)
-            self.controls[4].actionPerformed = self.whenTPButtonPressed
-            self.controls[5].actionPerformed = self.whenSCButtonPressed
-            self.psLog.info('location ' + self.controls[0].text + ' validated, buttons activated')
+        self.controls[4].actionPerformed = self.whenTPButtonPressed
+        self.controls[5].actionPerformed = self.whenSCButtonPressed
+        self.controls[6].actionPerformed = self.whenPRButtonPressed
 
+        # self.psLog.info('location ' + self.controls[0].text + ' validated, buttons activated')
         print(self.rev)
         return
 
-    def makeFrame(self):
+    def makeSubroutineFrame(self):
         '''Makes the title boarder frame'''
 
         self.patternFrame = TrackPattern.View.manageGui().makeFrame()
@@ -119,20 +144,18 @@ class StartUp:
 
         return self.patternFrame
 
-    def makePanel(self):
+    def makeSubroutinePanel(self):
         '''Make and activate the Track Pattern objects'''
-
+        TrackPattern.Model.updateLocations()
         self.panel, self.controls = TrackPattern.View.manageGui().makePanel()
-        self.controls[0].actionPerformed = self.whenTPEnterPressed
-        self.controls[1].actionPerformed = self.whenPABoxClicked
-        self.controls[6].actionPerformed = self.whenPRButtonPressed
-        self.configFile = MainScriptEntities.readConfigFile('TP')
-        if (self.configFile['PL'] != ''):
-            self.controls[4].setEnabled(True)
-            self.controls[5].setEnabled(True)
-            self.controls[4].actionPerformed = self.whenTPButtonPressed
-            self.controls[5].actionPerformed = self.whenSCButtonPressed
-            self.psLog.info('saved location validated, buttons activated')
-        self.psLog.info('track pattern makePanel completed')
+        self.activateButtons(self.controls)
+        # self.controls[0].addActionListener(self.ComboBoxListener(self.panel))
+        # self.controls[1].actionPerformed = self.whenPABoxClicked
+        # self.controls[4].actionPerformed = self.whenTPButtonPressed
+        # self.controls[5].actionPerformed = self.whenSCButtonPressed
+        # self.controls[6].actionPerformed = self.whenPRButtonPressed
+
+        self.psLog.info('saved location validated, buttons activated')
+        self.psLog.info('track pattern makeSubroutinePanel completed')
 
         return self.panel

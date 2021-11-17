@@ -37,7 +37,7 @@ def readConfigFile(subConfig='all'):
     else:
         return configFile[subConfig]
 
-def updateConfigFile(configFile):
+def writeConfigFile(configFile):
     '''Updates the PatternConfig.json file'''
 
     jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json'

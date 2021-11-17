@@ -20,13 +20,12 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         self.psLog = logging.getLogger('PS')
         self.psLog.setLevel(10)
         logFileFormat = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        psfh = logging.FileHandler(logPath, mode='w', encoding='utf-8')
-        psfh.setFormatter(logFileFormat)
-        self.psLog.addHandler(psfh)
+        psFileHandler = logging.FileHandler(logPath, mode='w', encoding='utf-8')
+        psFileHandler.setFormatter(logFileFormat)
+        self.psLog.addHandler(psFileHandler)
         self.psLog.info('Log File for Pattern Scripts Plugin')
     # fire up the config file
-        result = MainScriptEntities.validateConfigFile()
-        self.psLog.info(result)
+        self.psLog.info(MainScriptEntities.validateConfigFile())
         self.configFile = MainScriptEntities.readConfigFile('ControlPanel')
     # add the subroutines
         for subroutine, bool in self.configFile['scriptIncludes'].items():
@@ -40,26 +39,30 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         '''Make and populate the Pattern Scripts control panel'''
 
         yTimeNow = time.time()
-    # plug in subroutines into the control panel
+    # create the subroutines for the control panel
         frameList = []
         for subroutine, bool in self.configFile['scriptIncludes'].items():
             if (bool):
-                xPatternFrame = __import__(subroutine).Controller.StartUp().makeFrame()
-                xPatternPanel = __import__(subroutine).Controller.StartUp().makePanel()
+                xPatternFrame = __import__(subroutine).Controller.StartUp().makeSubroutineFrame()
+                xPatternPanel = __import__(subroutine).Controller.StartUp().makeSubroutinePanel()
                 xPatternFrame.add(xPatternPanel)
                 frameList.append(xPatternFrame)
                 self.psLog.info(subroutine + ' subroutine added to control panel')
-    # populate the control panel
+    # plug in subroutines into the control panel
         controlPanel, scrollPanel = MainScriptEntities.makeControlPanel()
         for panel in frameList:
             controlPanel.add(panel)
     # plug in the control panel to a location
         location = MainScriptEntities.readConfigFile('PluginLocation')
-        pluginLocation = getattr(PluginLocations, location)()
-        pluginLocation.add(scrollPanel)
-        # pluginLocation.revalidate()
-        self.psLog.info('control panel added to ' + location)
-        self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
+        try:
+            pluginLocation = getattr(PluginLocations, location)()
+            pluginLocation.add(scrollPanel)
+            # pluginLocation.revalidate()
+            self.psLog.info('control panel added to ' + location)
+            self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
+        except AttributeError:
+            print('No valid location found, plugin terminated')
+
         return False
 
 StartUp().start()

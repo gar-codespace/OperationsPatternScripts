@@ -10,6 +10,8 @@ import java.awt
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsTrackPattern')
 import MainScriptEntities
+import TrackPattern.Model
+import TrackPattern.View
 
 class TrackPatternPanel:
     '''Makes the track pattern subroutine'''
@@ -49,6 +51,20 @@ class TrackPatternPanel:
         patternInputBox.add(self.patternInput)
         return patternInputBox
 
+    def makeLocationComboBox(self):
+        '''make the combo box of user selectable locations'''
+
+        patternLabel = javax.swing.JLabel(u'Location:')
+        locationList = self.configFile['AL']
+        self.locationComboBox = javax.swing.JComboBox(locationList)
+        self.locationComboBox.setSelectedItem(self.configFile['PL'])
+        # self.locationComboBox.addActionListener(ComboBoxListener())
+        patternComboBox = javax.swing.Box(javax.swing.BoxLayout.X_AXIS)
+        patternComboBox.add(patternLabel)
+        patternComboBox.add(javax.swing.Box.createRigidArea(java.awt.Dimension(8,0)))
+        patternComboBox.add(self.locationComboBox)
+        return patternComboBox
+
     def makeLocationCheckBoxes(self):
         '''Any tarck type and ignore length flags'''
 
@@ -82,9 +98,6 @@ class TrackPatternPanel:
         self.ypButton.text = u'Pattern'
         self.scButton.text = u'Set Cars'
         self.prButton.text = u'View Log'
-        self.ypButton.setEnabled(False)
-        self.scButton.setEnabled(False)
-        # self.prButton.setEnabled(False)
         buttonPanel = javax.swing.JPanel()
         buttonPanel.setAlignmentX(javax.swing.JPanel.CENTER_ALIGNMENT)
         buttonPanel.add(self.ypButton)
@@ -95,7 +108,7 @@ class TrackPatternPanel:
     def getPanelObjects(self):
         '''A list of the objects created by this class'''
 
-        self.controlObjects.append(self.patternInput)
+        self.controlObjects.append(self.locationComboBox)
         self.controlObjects.append(self.useYardTracks)
         self.controlObjects.append(self.ignoreLength)
         self.controlObjects.append(self.trackCheckBoxes)
@@ -111,7 +124,9 @@ class TrackPatternPanel:
         tpPanel.setLayout(javax.swing.BoxLayout(tpPanel, javax.swing.BoxLayout.Y_AXIS))
         inputRow = javax.swing.JPanel()
         inputRow.setLayout(javax.swing.BoxLayout(inputRow, javax.swing.BoxLayout.X_AXIS))
-        inputRow.add(self.makeLocationInputBox())
+        inputRow.add(javax.swing.Box.createRigidArea(java.awt.Dimension(12,0)))
+        inputRow.add(self.makeLocationComboBox())
+        inputRow.add(javax.swing.Box.createRigidArea(java.awt.Dimension(8,0)))
         inputRow.add(self.makeLocationCheckBoxes())
         trackCheckBoxes = self.makeTrackCheckBoxes()
         buttonPanel = self.makeButtonPanel()

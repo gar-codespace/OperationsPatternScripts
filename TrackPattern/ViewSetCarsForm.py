@@ -113,27 +113,26 @@ class SetCarsWindowInstance():
 
     def trackButton(self, event):
         '''When any one of the track buttons is pressed'''
-        print(self)
-        # print(self.getUIClassID())
+
+        thisButton = event.getSource().getText()
+        print(thisButton)
         return
 
     def setCarsForTrackWindow(self, xOffset):
         ''' Creates and populates the -Pattern Report for Track- window'''
 
-    # Read in the config file
         configFile = MainScriptEntities.readConfigFile('TP')
     # Make a button for every track at the location
         self.allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(self.trackData['YL'], None)
         buttonPanel = javax.swing.JPanel()
-        buttonPanel.setLayout(java.awt.FlowLayout())
-        # buttonPanel.setMaximumSize(14, 600)
-        # buttonPanel.getMaximumSize()
+        buttonPanel.setLayout(javax.swing.BoxLayout(buttonPanel, javax.swing.BoxLayout.X_AXIS))
         self.trackButtonList = []
         for track in self.allTracksAtLoc:
-            jButton = javax.swing.JButton(track)
-            buttonPanel.add(jButton)
-            self.trackButtonList.append(jButton)
-            jButton.actionPerformed = self.trackButton
+            selectTrackButton = javax.swing.JButton(track)
+            selectTrackButton.setPreferredSize(java.awt.Dimension(0,18))
+            buttonPanel.add(selectTrackButton)
+            self.trackButtonList.append(selectTrackButton)
+            selectTrackButton.actionPerformed = self.trackButton
     # Define the window
         trackName = self.trackData['ZZ']
         trackName = trackName[0]
@@ -147,7 +146,7 @@ class SetCarsWindowInstance():
         formBody, self.jTextIn = TrackPattern.ViewEntities.setCarsFormBody(self.trackData)
         combinedForm.add(formBody)
         scrollPanel = javax.swing.JScrollPane(combinedForm)
-        scrollPanel.border = javax.swing.BorderFactory.createEmptyBorder()
+        scrollPanel.border = javax.swing.BorderFactory.createEmptyBorder(2,2,2,2)
     # Make the footer
         combinedFooter, tpButton, scButton = TrackPattern.ViewEntities.setCarsFormFooter()
         tpButton.actionPerformed = self.printYP
@@ -157,6 +156,7 @@ class SetCarsWindowInstance():
         self.setCarsWindow.setTitle(u'Pattern Report for track ' + trackName)
         self.setCarsWindow.setLocation(xOffset, 150)
         formHeader = TrackPattern.ViewEntities.setCarsFormHeader(self.trackData)
+        formHeader.border = javax.swing.BorderFactory.createEmptyBorder(5,0,5,0)
         # formHeader.add(javax.swing.JLabel(u'Schedule: ' + deg.getName()))
         self.setCarsWindow.add(formHeader)
         self.setCarsWindow.add(javax.swing.JSeparator())
