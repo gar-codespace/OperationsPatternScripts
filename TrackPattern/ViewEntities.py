@@ -39,7 +39,7 @@ def setCarsFormHeader(trackData):
 # Define the header
     combinedHeader = javax.swing.JPanel()
     combinedHeader.setLayout(javax.swing.BoxLayout(combinedHeader, javax.swing.BoxLayout.Y_AXIS))
-    combinedHeader.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
+    # combinedHeader.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT)
 # Populate the header
     headerRRLabel = javax.swing.JLabel(trackData['RN'])
     headerRRBox = makeSwingBox(100, configFile['PH'])
@@ -60,7 +60,7 @@ def setCarsFormHeader(trackData):
     combinedHeader.add(headerRRBox)
     combinedHeader.add(headerValidBox)
     combinedHeader.add(headerYTBox)
-    combinedHeader.add(javax.swing.JSeparator())
+    # combinedHeader.add(javax.swing.JSeparator())
     return combinedHeader
 
 def setCarsFormBodyHeader():
@@ -79,14 +79,17 @@ def setCarsFormBodyHeader():
     box = makeSwingBox(reportWidth['Input'] * configFile['RM'], configFile['PH'])
     box.add(label)
     bodyHeader.add(box)
-    # Create rest of header from user settings
+# Create rest of header from user settings
+    headerWidth = 0
     for x in jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
         if (x != ' '): # skips over null entries
             label = javax.swing.JLabel(x)
             box = makeSwingBox(reportWidth[x] * configFile['RM'], configFile['PH'])
             box.add(label)
             bodyHeader.add(box)
-    return bodyHeader
+            headerWidth = headerWidth + reportWidth[x]
+    headerWidth = headerWidth * 10
+    return bodyHeader, headerWidth
 
 def setCarsFormBody(trackData):
     '''Creates the body of the Set cars form'''
@@ -104,6 +107,7 @@ def setCarsFormBody(trackData):
     for j in trackData['ZZ']:
         carList = TrackPattern.ModelEntities.sortCarList(j['TR'])
 # Each line of the form
+        headerWidth = 0
         for car in carList:
             carId = cm.newRS(car['Road'], car['Number']) # returns car object
             carDataDict = TrackPattern.ModelEntities.getCarDetailDict(carId)
@@ -121,8 +125,8 @@ def setCarsFormBody(trackData):
                     box = makeSwingBox(reportWidth[x] * configFile['RM'], configFile['PH'])
                     box.add(label)
                     combinedInputLine.add(box)
+                    headerWidth = headerWidth + reportWidth[x]
             formBody.add(combinedInputLine)
-    print(len(jTextIn))
     return formBody, jTextIn
 
 def setCarsFormFooter():
@@ -130,7 +134,7 @@ def setCarsFormFooter():
 
 # Define the footer
     footer = javax.swing.JPanel()
-    footer.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
+    # footer.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
 # Construct the footer
     scButton = javax.swing.JButton(unicode('Set', MainScriptEntities.setEncoding()))
     tpButton = javax.swing.JButton(unicode('Print', MainScriptEntities.setEncoding()))
@@ -138,3 +142,29 @@ def setCarsFormFooter():
     footer.add(tpButton)
     footer.add(scButton)
     return footer, tpButton, scButton
+
+def makeFrame():
+    '''Makes the title boarder frame'''
+
+    patternFrame = TrackPattern.View.manageGui().makeFrame()
+    # self.psLog.info('track pattern makeFrame completed')
+
+    return patternFrame
+
+def makePanel(self):
+    '''Make and activate the Track Pattern objects'''
+
+    panel, controls = TrackPattern.View.manageGui().makePanel()
+    controls[0].actionPerformed = whenTPEnterPressed
+    controls[1].actionPerformed = whenPABoxClicked
+    self.controls[6].actionPerformed = self.whenPRButtonPressed
+    self.configFile = MainScriptEntities.readConfigFile('TP')
+    if (self.configFile['PL'] != ''):
+        self.controls[4].setEnabled(True)
+        self.controls[5].setEnabled(True)
+        self.controls[4].actionPerformed = self.whenTPButtonPressed
+        self.controls[5].actionPerformed = self.whenSCButtonPressed
+        self.psLog.info('saved location validated, buttons activated')
+    self.psLog.info('track pattern makePanel completed')
+
+    return self.panel

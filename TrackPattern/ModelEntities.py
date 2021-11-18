@@ -11,6 +11,16 @@ from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
 
+def getAllLocations():
+    '''returns a list of all locations for this profile. JMRI sorts the list'''
+
+    allLocs = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationsByNameList()
+    locList = []
+    for item in allLocs:
+        locList.append(unicode(item.getName(), MainScriptEntities.setEncoding()))
+
+    return locList
+
 def formatText(item, length):
     '''Left justify string to a specified length'''
 
@@ -21,15 +31,25 @@ def formatText(item, length):
 def checkYard(yardLocation, useAll):
     ''' Validates the yard location'''
 
+# check that the location is valid
+    try:
+        if (jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationByName(yardLocation).getTracksByNameList(None)):
+            location = True
+        else:
+            location = False
+    except AttributeError:
+        location = False
+# check that the location/track type combination is valid
     try:
         if (jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationByName(yardLocation).getTracksByNameList(useAll)):
-            result = True
+            combo = True
         else:
-            result = False
+            combo = False
     except AttributeError:
-        result = False
+        combo = False
 
-    return result
+    return location, combo
+
 
 def getTracksByLocation(location, trackType):
     ''' Make a list of all the tracks for a given location and track type'''
@@ -117,7 +137,7 @@ def getCarDetailDict(carObject):
 
     return carDetailDict
 
-def makeYardPattern(trackList, yardLocation):
+def makeYardPattern(yardLocation, trackList):
     '''Make a dictionary yard pattern
     The car rosters are sorted at this level'''
 
@@ -140,7 +160,7 @@ def makeYardPattern(trackList, yardLocation):
     yardPatternDict['RT'] = u'Report Type' # Report Type, value replaced when called
     yardPatternDict['RN'] = unicode(jmri.jmrit.operations.setup.Setup.getRailroadName(), MainScriptEntities.setEncoding())
     yardPatternDict['YL'] = yardLocation
-    yardPatternDict['VT'] = unicode(MainScriptEntities.validTime(), MainScriptEntities.setEncoding()) # The clock time this script is run in seconds plus the offset
+    yardPatternDict['VT'] = unicode(MainScriptEntities.timeStamp(), MainScriptEntities.setEncoding()) # The clock time this script is run in seconds plus the offset
     yardPatternDict['ZZ'] = patternList
 
     return yardPatternDict
@@ -248,64 +268,16 @@ def makeCsvSwitchlist(trackPattern):
 
     return csvSwitchList
 
-def getCarAttributes(pattern):
-    '''Gets attributes for car objects in a list and returns a list of lists of cars selected attributes
-    Not Used at this time'''
+def isTrackASpur(location, track):
+    '''Returns the tracks schedule object if the track is defined as a spur'''
 
-    lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
-    cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
-    carDisposition = [] # list of car attributes for a car, both through and local
-    for yCar in pattern:
-        yDest = u'NA'
-        yDestTrack = u'NA'
-        dispo = u''
-        if yCar.getDestination():
-            yDest = unicode(yCar.getDestination(), setEncoding())
-            yDestTrack = unicode(yCar.getDestinationTrack(), setEncoding())
-        if yCar.getFinalDestinationName(): # car has a FD
-            dispo = u'Through'
-            if yCar.getFinalDestinationTrackName(): # car has a FD and FD track
-                dispo = u'Local'
-        carDisposition.append([u' [  ] ',  u'TC', dispo, yCar.getRoadName(), yCar.getNumber(), yCar.getTypeName(), yCar.getLoadType(), yDest, yDestTrack, yCar.getFinalDestinationName(), yCar.getFinalDestinationTrackName()])
-
-    return carDisposition
-
-def getCarsForTrack(location, track):
-    '''Get all the car objects for a specified location and track
-    Not used at this time'''
-
-    cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
-    listOfCarObjects = []
-    allCarObjects = cm.getByIdList()
-    for car in allCarObjects:
-        if (car.getLocationName() == location and car.getTrackName() == track):
-            listOfCarObjects.append(car)
-
-    return listOfCarObjects
-
-def checkTracks(list, reference):
-    '''Check that the submitted tracks exist and return a list
-    Not used at this time'''
-
-    tracklist = []
-    for x in list:
-        x = unicode(x, setEncoding())
-        if (x in reference):
-            tracklist.append(x)
-
-    return tracklist
-
-def getTrackTuples(location, trackType):
-    ''' Make a list of tuples of all the tracks for a given location and track type
-    Not used at this time'''
-
-    allTracksList = []
-    if not (trackType):
-        trackTypeList = ['Staging', 'Yard', 'Interchange', 'Spur']
+    isASpur = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationByName(location).getTrackByName(track, 'Spur')
+    if (isASpur):
+        return isASpur.getSchedule()
     else:
-        trackTypeList = ['Yard']
-    for type in trackTypeList:
-        for track in jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationByName(location).getTracksByNameList(type): # returns object
-            allTracksList.append((type, unicode(track.getName(), setEncoding()))) # list of all yard tracks for the validated location
+        return None
 
-    return allTracksList # a list of tuples
+def getScheduleMetricsByItem(schedule, item):
+
+    pass
+    return

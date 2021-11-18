@@ -25,20 +25,20 @@ def validateConfigFile():
         result = u'Configuration file found'
     return result
 
-def readConfigFile(subConfig):
-    '''Read in the tpConfig.json for a profile and return it as a dictionary'''
+def readConfigFile(subConfig='all'):
+    '''Read in the PatternConfig.json for a profile and return it as a dictionary
+    This needs error handling built into it'''
 
     configFileLoc = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json'
     with cOpen(configFileLoc, 'r', encoding=setEncoding()) as configWorkFile:
-        configFile = configWorkFile.read()
-        configFile = jLoads(configFile)
+        configFile = jLoads(configWorkFile.read())
     if (subConfig == 'all'):
         return configFile
     else:
         return configFile[subConfig]
 
-def updateConfigFile(configFile):
-    '''Updates the tpConfig.json file'''
+def writeConfigFile(configFile):
+    '''Updates the PatternConfig.json file'''
 
     jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json'
     jsonObject = jDumps(configFile, indent=2, sort_keys=True)
@@ -55,7 +55,6 @@ def makeControlPanel():
     '''Create the control panel, with a scroll bar, that all sub panels go into
     This holds trackPatternPanel and future panels'''
 
-    # configFile = readConfigFile()
     configFile = readConfigFile('ControlPanel')
     controlPanel = javax.swing.JPanel() # The whole panel that everything goes into
     scrollPanel = javax.swing.JScrollPane(controlPanel) # and that goes into a scroll pane
@@ -64,15 +63,15 @@ def makeControlPanel():
     scrollPanel.setMaximumSize(scrollPanel.getPreferredSize())
     return controlPanel, scrollPanel
 
-def validTime():
+def timeStamp():
     '''Valid Time, get local time adjusted for time zone and dst'''
 
-    jT = time.time()
-    if time.localtime(jT).tm_isdst and time.daylight: # If local dst and dst are both 1
-        jTO = time.altzone
+    epochTime = time.time()
+    if time.localtime(epochTime).tm_isdst and time.daylight: # If local dst and dst are both 1
+        timeOffset = time.altzone
     else:
-        jTO = time.timezone # in seconds
-    return time.strftime('%a %b %d %Y %I:%M %p %Z', time.gmtime(jT - jTO))
+        timeOffset = time.timezone # in seconds
+    return time.strftime('%a %b %d %Y %I:%M %p %Z', time.gmtime(epochTime - timeOffset))
 
 def systemInfo():
     '''Which computer type is this script run on'''
