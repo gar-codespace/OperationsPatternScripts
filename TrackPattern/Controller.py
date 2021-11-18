@@ -14,7 +14,7 @@ import TrackPattern.View
 import TrackPattern.Model
 import TrackPattern.ViewSetCarsForm
 
-class StartUp(object):
+class StartUp():
     '''Start the the Track Pattern subroutine'''
 
     # panel, controls = TrackPattern.View.manageGui().makePanel()
@@ -43,9 +43,9 @@ class StartUp(object):
             MainScriptEntities.writeConfigFile(newConfigFile)
             self.controls = TrackPattern.View.manageGui().updatePanel(self.panel)
             print('Yipee')
-            # super(StartUp.activateButtons(self.controls))
-            self.controls[0].addActionListener(StartUp().ComboBoxListener(self.panel, self.controls))
-            self.controls[1].actionPerformed = super(StartUp, whenPABoxClicked)
+            StartUp().activateButtons(self.panel, self.controls)
+            # self.controls[0].addActionListener(StartUp().ComboBoxListener(self.panel, self.controls))
+            # self.controls[1].actionPerformed = super(StartUp, whenPABoxClicked)
             # self.controls[4].actionPerformed = StartUp().whenTPButtonPressed
             # newControls[5].actionPerformed = self.whenSCButtonPressed
             # newControls[6].actionPerformed = self.whenPRButtonPressed
@@ -66,7 +66,7 @@ class StartUp(object):
         newConfigFile = TrackPattern.Model.updateCheckBoxStatus(self.controls[1].selected, self.controls[2].selected)
         MainScriptEntities.writeConfigFile(newConfigFile)
         self.controls = TrackPattern.View.manageGui().updatePanel(self.panel)
-        self.activateButtons(self.controls)
+        self.activateButtons(self.panel, self.controls)
 
         return
 
@@ -121,14 +121,16 @@ class StartUp(object):
 
         return
 
-    def activateButtons(self, controls):
+    def activateButtons(self, panel, controls):
         '''Assigns actions to the subroutine widgets'''
 
-        controls[0].addActionListener(self.ComboBoxListener(self.panel, self.controls))
-        controls[1].actionPerformed = self.whenPABoxClicked
-        controls[4].actionPerformed = self.whenTPButtonPressed
-        controls[5].actionPerformed = self.whenSCButtonPressed
-        controls[6].actionPerformed = self.whenPRButtonPressed
+        self.panel = panel
+        self.controls = controls
+        self.controls[0].addActionListener(self.ComboBoxListener(self.panel, self.controls))
+        self.controls[1].actionPerformed = self.whenPABoxClicked
+        self.controls[4].actionPerformed = self.whenTPButtonPressed
+        self.controls[5].actionPerformed = self.whenSCButtonPressed
+        self.controls[6].actionPerformed = self.whenPRButtonPressed
 
         return
 
@@ -144,7 +146,7 @@ class StartUp(object):
         '''Make and activate the Track Pattern objects'''
         TrackPattern.Model.updateLocations()
         self.panel, self.controls = TrackPattern.View.manageGui().makePanel()
-        self.activateButtons(self.controls)
+        self.activateButtons(self.panel, self.controls)
         self.psLog.info('saved location validated, buttons activated')
         self.psLog.info('track pattern makeSubroutinePanel completed')
 
