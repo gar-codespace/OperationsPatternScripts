@@ -2,7 +2,7 @@
 # Extended ìÄÅÉî
 # Data munipulation for the track pattern subroutine
 # No restrictions on use
-# © 2021 Greg Ritacco
+# © 2021 Greg Ritacco 
 
 import jmri
 import logging
@@ -68,7 +68,7 @@ def getPatternTracks(location):
     subConfigfile.update({'PT': trackDict})
     newConfigFile.update({'TP': subConfigfile})
     # psLog.info('The track list for location ' + location + ' has been updated')
-    
+
     return newConfigFile
 
 def updateCheckBoxStatus(all, ignore):

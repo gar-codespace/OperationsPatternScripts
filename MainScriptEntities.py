@@ -2,7 +2,7 @@
 # Extended ìÄÅÉî
 # support methods for the main script
 # No restrictions on use
-# © 2021 Greg Ritacco
+# © 2021 Greg Ritacco 
 
 import jmri
 import java.awt

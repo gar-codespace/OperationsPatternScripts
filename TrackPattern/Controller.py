@@ -2,7 +2,7 @@
 # Extended ìÄÅÉî
 # Controller script for the track pattern subroutine
 # No restrictions on use
-# © 2021 Greg Ritacco
+# © 2021 Greg Ritacco w
 
 import jmri
 import logging

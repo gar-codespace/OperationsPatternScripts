@@ -2,7 +2,7 @@
 # Extended ìÄÅÉî
 # Creates the track pattern and its panel
 # No restrictions on use
-# © 2021 Greg Ritacco
+# © 2021 Greg Ritacco 
 
 import jmri
 import javax.swing
@@ -11,7 +11,7 @@ from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsTrackPattern')
 import MainScriptEntities
 # import TrackPattern.Model
-# import TrackPattern.View 
+# import TrackPattern.View
 
 class TrackPatternPanel:
     '''Makes the track pattern subroutine panel'''

@@ -1,6 +1,6 @@
 # Main script that starts the plugin
 # No restrictions on use
-# © 2021 Greg Ritacco
+# © 2021 Greg Ritacco 
 
 import jmri
 import logging
