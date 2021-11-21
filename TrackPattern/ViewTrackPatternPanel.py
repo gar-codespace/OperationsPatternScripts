@@ -2,7 +2,7 @@
 # Extended ìÄÅÉî
 # Creates the track pattern and its panel
 # No restrictions on use
-# © 2021 Greg Ritacco 
+# © 2021 Greg Ritacco
 
 import jmri
 import javax.swing
@@ -10,13 +10,11 @@ import java.awt
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsTrackPattern')
 import MainScriptEntities
-# import TrackPattern.Model
-# import TrackPattern.View
 
 class TrackPatternPanel:
     '''Makes the track pattern subroutine panel'''
 
-    scriptRev = 'makeTrackPatternPanel rev.20211015'
+    scriptRev = 'TrackPattern.ViewTrackPatternPanel v20211101'
 
     def __init__(self):
 
@@ -29,6 +27,7 @@ class TrackPatternPanel:
         self.prButton = javax.swing.JButton()
         self.trackCheckBoxes = []
         self.controlObjects = []
+
         return
 
     def makePatternFrame(self):
@@ -37,6 +36,7 @@ class TrackPatternPanel:
         tpFrame = javax.swing.JPanel() # the track pattern panel
         tpFrame.setLayout(javax.swing.BoxLayout(tpFrame, javax.swing.BoxLayout.Y_AXIS))
         tpFrame.border = javax.swing.BorderFactory.createTitledBorder(u'Track Pattern')
+
         return tpFrame
 
     def makeLocationInputBox(self):
@@ -49,6 +49,7 @@ class TrackPatternPanel:
         patternInputBox.setPreferredSize(java.awt.Dimension(self.configFile['PW'], self.configFile['PH']))
         patternInputBox.add(patternLabel)
         patternInputBox.add(self.patternInput)
+
         return patternInputBox
 
     def makeLocationComboBox(self):
@@ -63,6 +64,7 @@ class TrackPatternPanel:
         patternComboBox.add(patternLabel)
         patternComboBox.add(javax.swing.Box.createRigidArea(java.awt.Dimension(8,0)))
         patternComboBox.add(self.locationComboBox)
+
         return patternComboBox
 
     def makeLocationCheckBoxes(self):
@@ -72,6 +74,7 @@ class TrackPatternPanel:
         flagInputBox.setPreferredSize(java.awt.Dimension(self.configFile['PW'], self.configFile['PH']))
         flagInputBox.add(self.useYardTracks)
         flagInputBox.add(self.ignoreLength)
+
         return flagInputBox
 
     def makeTrackCheckBoxes(self):
@@ -94,6 +97,7 @@ class TrackPatternPanel:
             self.ypButton.setEnabled(False)
             self.scButton.setEnabled(False)
             rowLabel.text = u'TThere are no yard tracks for this location'
+
         return tracksPanel
 
     def makeButtonPanel(self):
@@ -107,6 +111,7 @@ class TrackPatternPanel:
         buttonPanel.add(self.ypButton)
         buttonPanel.add(self.scButton)
         buttonPanel.add(self.prButton)
+
         return buttonPanel
 
     def getPanelWidgets(self):
@@ -119,6 +124,7 @@ class TrackPatternPanel:
         self.controlObjects.append(self.ypButton)
         self.controlObjects.append(self.scButton)
         self.controlObjects.append(self.prButton)
+
         return self.controlObjects
 
     def makePatternControls(self):
@@ -138,6 +144,7 @@ class TrackPatternPanel:
         tpPanel.add(trackCheckBoxes)
         tpPanel.add(buttonPanel)
         controlObjects = self.getPanelWidgets()
+
         return tpPanel, controlObjects
 
     print(scriptRev)

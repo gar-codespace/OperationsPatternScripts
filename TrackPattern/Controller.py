@@ -2,7 +2,7 @@
 # Extended ìÄÅÉî
 # Controller script for the track pattern subroutine
 # No restrictions on use
-# © 2021 Greg Ritacco w
+# © 2021 Greg Ritacco
 
 import jmri
 import logging
@@ -10,20 +10,19 @@ import java.awt.event
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
-import TrackPattern.View
 import TrackPattern.Model
+import TrackPattern.View
+import TrackPattern.Controller
 import TrackPattern.ViewSetCarsForm
 
 class StartUp():
     '''Start the the Track Pattern subroutine'''
 
-    # panel, controls = TrackPattern.View.manageGui().makePanel()
-    rev = 'TrackPattern.Controller v20211101'
+    scriptRev = 'TrackPattern.Controller v20211101'
 
     def __init__(self):
 
         self.psLog = logging.getLogger('PS.Control')
-        # self.rev = 'TrackPattern.Controller v20211101'
 
         return
 
@@ -42,13 +41,7 @@ class StartUp():
             newConfigFile = TrackPattern.Model.updateCheckBoxStatus(False, self.controls[2].selected)
             MainScriptEntities.writeConfigFile(newConfigFile)
             self.controls = TrackPattern.View.manageGui().updatePanel(self.panel)
-            print('Yipee')
             StartUp().activateButtons(self.panel, self.controls)
-            # self.controls[0].addActionListener(StartUp().ComboBoxListener(self.panel, self.controls))
-            # self.controls[1].actionPerformed = super(StartUp, whenPABoxClicked)
-            # self.controls[4].actionPerformed = StartUp().whenTPButtonPressed
-            # newControls[5].actionPerformed = self.whenSCButtonPressed
-            # newControls[6].actionPerformed = self.whenPRButtonPressed
 
             return
 
@@ -144,10 +137,10 @@ class StartUp():
 
     def makeSubroutinePanel(self):
         '''Make and activate the Track Pattern objects'''
-        TrackPattern.Model.updateLocations()
+
+        MainScriptEntities.writeConfigFile(TrackPattern.Model.updateLocations())
         self.panel, self.controls = TrackPattern.View.manageGui().makePanel()
         self.activateButtons(self.panel, self.controls)
-        self.psLog.info('saved location validated, buttons activated')
         self.psLog.info('track pattern makeSubroutinePanel completed')
 
         return self.panel

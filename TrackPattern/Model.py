@@ -2,7 +2,7 @@
 # Extended ìÄÅÉî
 # Data munipulation for the track pattern subroutine
 # No restrictions on use
-# © 2021 Greg Ritacco 
+# © 2021 Greg Ritacco
 
 import jmri
 import logging
@@ -13,10 +13,10 @@ from codecs import open as cOpen
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
-import TrackPattern.View
-import TrackPattern.Controller
+# import TrackPattern.Controller
 import TrackPattern.ModelEntities
-
+import Model
+scriptRev = 'TrackPattern.Model v20211101'
 psLog = logging.getLogger('PS.Model')
 
 def updateLocations():
@@ -24,12 +24,16 @@ def updateLocations():
 
     newConfigFile = MainScriptEntities.readConfigFile()
     subConfigfile = newConfigFile['TP']
-    subConfigfile.update({'AL': TrackPattern.ModelEntities.getAllLocations()})
+    allLocations  = TrackPattern.ModelEntities.getAllLocations()
+    if not (subConfigfile['AL']): # when this sub is used for the first tims
+        subConfigfile.update({'PL': allLocations[0]})
+        MainScriptEntities.writeConfigFile(Model.getPatternTracks(allLocations[0]))
+    subConfigfile.update({'AL': allLocations})
     newConfigFile.update({'TP': subConfigfile})
-    MainScriptEntities.writeConfigFile(newConfigFile)
+    # MainScriptEntities.writeConfigFile(newConfigFile)
     psLog.info('List of locations for this profile has been updated')
 
-    return
+    return newConfigFile
 
 def updatePatternLocation(location):
     '''Updates the config file value PL with the currently selected location'''

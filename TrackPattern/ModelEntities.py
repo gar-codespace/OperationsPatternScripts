@@ -2,7 +2,7 @@
 # Extended ìÄÅÉî
 # Data munipulation support methods for the track pattern subroutine
 # No restrictions on use
-# © 2021 Greg Ritacco 
+# © 2021 Greg Ritacco
 
 import jmri
 import time
@@ -10,6 +10,8 @@ import time
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
+
+scriptRev = 'TrackPattern.ModelEntities v20211101'
 
 def getAllLocations():
     '''returns a list of all locations for this profile. JMRI sorts the list'''

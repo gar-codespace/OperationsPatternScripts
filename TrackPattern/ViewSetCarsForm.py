@@ -2,7 +2,7 @@
 # Extended ìÄÅÉî
 # Makes a set cars form for each selected track
 # No restrictions on use
-# © 2021 Greg Ritacco 
+# © 2021 Greg Ritacco
 
 import jmri
 import java.awt
@@ -21,7 +21,7 @@ class SetCarsWindowInstance():
     '''Manages an instance of each -Pattern Report for track- window'''
 
 # Class variables
-    scriptRev = 'SetCarsWindowInstance v20210901'
+    scriptRev = 'TrackPattern.ViewSetCarsForm v20211101'
 
     def __init__(self, pattern, schedule):
         '''Initialization variables'''
@@ -41,6 +41,8 @@ class SetCarsWindowInstance():
         self.jTextIn = [] # create a list jTextField objects
         self.carDataList = [] # list of sorted car objects
 
+        return
+
     def setCarsToTrack(self, event):
         '''Event that moves cars to the tracks entered in the pattern window'''
 
@@ -51,7 +53,6 @@ class SetCarsWindowInstance():
         userInputList = [] # create a list of user inputs from the text input boxes
         for userInput in self.jTextIn: # Read in and check the user input
             userInputList.append(unicode(userInput.getText(), MainScriptEntities.setEncoding()))
-
         i = 0
         for z in patternCopy['ZZ']:
             if (len(userInputList) == len(z['TR'])): # check that the lengths of the -input list- and -car roster- match
@@ -71,6 +72,7 @@ class SetCarsWindowInstance():
             self.psLog.info(str(j) + ' cars were set from track ' + trackName)
     # Wrap it up
         self.setCarsWindow.setVisible(False)
+
         return
 
     def printYP(self, event):
@@ -116,6 +118,7 @@ class SetCarsWindowInstance():
 
         thisButton = event.getSource().getText()
         print(thisButton)
+
         return
 
     def setCarsForTrackWindow(self, xOffset):
@@ -175,4 +178,5 @@ class SetCarsWindowInstance():
         self.setCarsWindow.pack()
         self.setCarsWindow.setVisible(True)
         # print(SetCarsWindowInstance.scriptRev)
+        
         return

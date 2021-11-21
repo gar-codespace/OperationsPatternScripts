@@ -2,7 +2,7 @@
 # Extended ìÄÅÉî
 # View script for the track pattern subroutine
 # No restrictions on use
-# © 2021 Greg Ritacco  
+# © 2021 Greg Ritacco
 
 import jmri
 import logging
@@ -10,12 +10,13 @@ from os import system
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsTrackPattern')
 import MainScriptEntities
+# import TrackPattern.Controller
 import TrackPattern.ViewTrackPatternPanel
 
 class manageGui:
     '''At startup create the GUI elements'''
 
-    scriptRev = 'View/manageGui rev.20211015'
+    scriptRev = 'TrackPattern.View v20211101'
 
     def __init__(self, panel=None, controls=None):
         '''Track Pattern panel'''

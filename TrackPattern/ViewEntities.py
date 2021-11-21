@@ -2,7 +2,7 @@
 # Extended ìÄÅÉî
 # support methods for the view script
 # No restrictions on use
-# © 2021 Greg Ritacco 
+# © 2021 Greg Ritacco
 
 import jmri
 import java.awt
@@ -12,11 +12,14 @@ path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsYardPattern')
 import MainScriptEntities
 import TrackPattern.ModelEntities
 
+scriptRev = 'TrackPattern.ViewEntities v20211101'
+
 def makeSwingBox(xWidth, xHeight):
     ''' Makes a swing box to the desired size'''
 
     xName = javax.swing.Box(javax.swing.BoxLayout.X_AXIS)
     xName.setPreferredSize(java.awt.Dimension(width=xWidth, height=xHeight))
+
     return xName
 
 def makeWindow():
@@ -29,6 +32,7 @@ def makeWindow():
     iconPath = jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts\\decpro5.png'
     icon = java.awt.Toolkit.getDefaultToolkit().getImage(iconPath)
     pFrame.setIconImage(icon)
+
     return pFrame
 
 def setCarsFormHeader(trackData):
@@ -60,7 +64,7 @@ def setCarsFormHeader(trackData):
     combinedHeader.add(headerRRBox)
     combinedHeader.add(headerValidBox)
     combinedHeader.add(headerYTBox)
-    # combinedHeader.add(javax.swing.JSeparator())
+
     return combinedHeader
 
 def setCarsFormBodyHeader():
@@ -89,6 +93,7 @@ def setCarsFormBodyHeader():
             bodyHeader.add(box)
             headerWidth = headerWidth + reportWidth[x]
     headerWidth = headerWidth * 10
+
     return bodyHeader, headerWidth
 
 def setCarsFormBody(trackData):
@@ -127,6 +132,7 @@ def setCarsFormBody(trackData):
                     combinedInputLine.add(box)
                     headerWidth = headerWidth + reportWidth[x]
             formBody.add(combinedInputLine)
+
     return formBody, jTextIn
 
 def setCarsFormFooter():

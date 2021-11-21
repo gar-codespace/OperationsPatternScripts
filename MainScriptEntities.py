@@ -2,7 +2,7 @@
 # Extended ìÄÅÉî
 # support methods for the main script
 # No restrictions on use
-# © 2021 Greg Ritacco 
+# © 2021 Greg Ritacco
 
 import jmri
 import java.awt
@@ -12,6 +12,8 @@ from json import loads as jLoads, dumps as jDumps
 from codecs import open as cOpen
 from os import path as oPath
 from shutil import copy as sCopy
+
+scriptRev = 'OperationsPatternScripts.MainScriptEntities v20211120'
 
 def validateConfigFile():
     '''Checks for a config file and adds one if missing'''
