@@ -56,14 +56,11 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
             controlPanel.add(subroutine)
     # plug in the control panel to a location
         location = MainScriptEntities.readConfigFile('PluginLocation')
-        try:
-            pluginLocation = getattr(PluginLocations, location)()
-            pluginLocation.add(scrollPanel)
-            # pluginLocation.revalidate()
-            self.psLog.info('control panel added to ' + location)
-            self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
-        except AttributeError:
-            print('No valid location found, plugin terminated')
+        pluginLocation = getattr(PluginLocations, location)()
+        pluginLocation.add(scrollPanel)
+        # pluginLocation.revalidate()
+        self.psLog.info('control panel added to ' + location)
+        self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
 
         return False
 

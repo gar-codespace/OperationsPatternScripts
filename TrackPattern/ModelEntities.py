@@ -30,38 +30,42 @@ def formatText(item, length):
 
     return format(item, pad)
 
-def checkYard(yardLocation, useAll):
-    ''' Validates the yard location'''
+# def checkYard(yardLocation, useAll):
+#     ''' Validates the yard location'''
+#
+# # check that the location is valid
+#     try:
+#         if (jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationByName(yardLocation).getTracksByNameList(None)):
+#             location = True
+#         else:
+#             location = False
+#     except AttributeError:
+#         location = False
+# # check that the location/track type combination is valid
+#     try:
+#         if (jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationByName(yardLocation).getTracksByNameList(useAll)):
+#             combo = True
+#         else:
+#             combo = False
+#     except AttributeError:
+#         combo = False
+#
+#     return location, combo
 
-# check that the location is valid
-    try:
-        if (jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationByName(yardLocation).getTracksByNameList(None)):
-            location = True
-        else:
-            location = False
-    except AttributeError:
-        location = False
-# check that the location/track type combination is valid
-    try:
-        if (jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationByName(yardLocation).getTracksByNameList(useAll)):
-            combo = True
-        else:
-            combo = False
-    except AttributeError:
-        combo = False
+def makeInitialTrackList(location):
 
-    return location, combo
+    trackDict = {}
+    for track in jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationByName(location).getTracksByNameList(None):
+        trackDict[unicode(track, MainScriptEntities.setEncoding())] = False
 
+    return trackDict
 
 def getTracksByLocation(location, trackType):
     ''' Make a list of all the tracks for a given location and track type'''
 
     allTracksList = []
-    try:
-        for x in jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationByName(location).getTracksByNameList(trackType): # returns object
-            allTracksList.append(unicode(x.getName(), MainScriptEntities.setEncoding())) # list of all yard tracks for the validated location
-    except AttributeError:
-        pass
+    for x in jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationByName(location).getTracksByNameList(trackType): # returns object
+        allTracksList.append(unicode(x.getName(), MainScriptEntities.setEncoding())) # list of all yard tracks for the validated location
 
     return allTracksList
 

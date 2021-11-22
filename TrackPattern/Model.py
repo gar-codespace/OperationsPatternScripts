@@ -13,11 +13,23 @@ from codecs import open as cOpen
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
-# import TrackPattern.Controller
 import TrackPattern.ModelEntities
-import Model
+
 scriptRev = 'TrackPattern.Model v20211101'
 psLog = logging.getLogger('PS.Model')
+
+def initializeConfigFile():
+    '''initialize or reinitialize the config file on first use, reset, or edit of a location name'''
+
+    newConfigFile = MainScriptEntities.readConfigFile()
+    subConfigfile = newConfigFile['TP']
+    allLocations  = TrackPattern.ModelEntities.getAllLocations()
+    subConfigfile.update({'AL': allLocations})
+    subConfigfile.update({'PT': TrackPattern.ModelEntities.makeInitialTrackList(allLocations[0])})
+    newConfigFile.update({'TP': subConfigfile})
+    MainScriptEntities.writeConfigFile(newConfigFile)
+
+    return
 
 def updateLocations():
     '''Updates the config file with a list of all locations for this profile'''
@@ -27,10 +39,11 @@ def updateLocations():
     allLocations  = TrackPattern.ModelEntities.getAllLocations()
     if not (subConfigfile['AL']): # when this sub is used for the first tims
         subConfigfile.update({'PL': allLocations[0]})
-        MainScriptEntities.writeConfigFile(Model.getPatternTracks(allLocations[0]))
+        subConfigfile.update({'PT': TrackPattern.ModelEntities.makeInitialTrackList(allLocations[0])})
+        # print(TrackPattern.ModelEntities.getTracksByLocation(allLocations[0], None))
     subConfigfile.update({'AL': allLocations})
     newConfigFile.update({'TP': subConfigfile})
-    # MainScriptEntities.writeConfigFile(newConfigFile)
+    MainScriptEntities.writeConfigFile(newConfigFile)
     psLog.info('List of locations for this profile has been updated')
 
     return newConfigFile
@@ -95,35 +108,35 @@ def getSetCarsData(location, track):
 
     return listForTrack, trackSchedule
 
-def validateUserInput(controls):
-    '''Validates the user submitted locations and returns a track list for a valid location'''
-
-    location = unicode(controls[0].text, MainScriptEntities.setEncoding())
-    useAll = None
-    if (controls[1].selected):
-        useAll = 'Yard'
-    focusOn = MainScriptEntities.readConfigFile('TP')
-    focusOn.update({"PL": location})
-    focusOn.update({"PA": controls[1].selected})
-    focusOn.update({"PI": controls[2].selected})
-    trackList = {}
-    focusOn.update({"PT": trackList})
-    validLoc, validCombo = TrackPattern.ModelEntities.checkYard(location, useAll)
-    if (validLoc):
-        psLog.info('location ' + location + ' is valid')
-        if (validCombo):
-            psLog.info('track type verified for ' + location)
-            locationTracks = TrackPattern.ModelEntities.getTracksByLocation(location, useAll)
-            focusOn.update({"PL": location})
-            for track in locationTracks:
-                trackList[track] = True
-            focusOn.update({"PT": trackList})
-        else:
-            psLog.warning('location ' + location + ' does not have yard tracks')
-    else:
-        psLog.warning('location ' + location + ' is not valid')
-
-    return focusOn, validCombo
+# def validateUserInput(controls):
+#     '''Validates the user submitted locations and returns a track list for a valid location'''
+#
+#     location = unicode(controls[0].text, MainScriptEntities.setEncoding())
+#     useAll = None
+#     if (controls[1].selected):
+#         useAll = 'Yard'
+#     focusOn = MainScriptEntities.readConfigFile('TP')
+#     focusOn.update({"PL": location})
+#     focusOn.update({"PA": controls[1].selected})
+#     focusOn.update({"PI": controls[2].selected})
+#     trackList = {}
+#     focusOn.update({"PT": trackList})
+#     validLoc, validCombo = TrackPattern.ModelEntities.checkYard(location, useAll)
+#     if (validLoc):
+#         psLog.info('location ' + location + ' is valid')
+#         if (validCombo):
+#             psLog.info('track type verified for ' + location)
+#             locationTracks = TrackPattern.ModelEntities.getTracksByLocation(location, useAll)
+#             focusOn.update({"PL": location})
+#             for track in locationTracks:
+#                 trackList[track] = True
+#             focusOn.update({"PT": trackList})
+#         else:
+#             psLog.warning('location ' + location + ' does not have yard tracks')
+#     else:
+#         psLog.warning('location ' + location + ' is not valid')
+#
+#     return focusOn, validCombo
 
 def updateButtons(controls):
     '''Updates the config file when a button is pressed'''
@@ -167,7 +180,7 @@ def getSelectedTracks():
 
     trackPattern = MainScriptEntities.readConfigFile('TP')
     trackList = []
-    for track, bool in trackPattern['PT'].items():
+    for track, bool in sorted(trackPattern['PT'].items()):
         if (bool):
             trackList.append(track)
 

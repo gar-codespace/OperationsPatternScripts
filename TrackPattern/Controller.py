@@ -12,7 +12,7 @@ path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
 import TrackPattern.Model
 import TrackPattern.View
-import TrackPattern.Controller
+import TrackPattern.Controller # this has to be here so __import__ in main script works
 import TrackPattern.ViewSetCarsForm
 
 class StartUp():
@@ -34,15 +34,25 @@ class StartUp():
             self.controls = controls
 
         def actionPerformed(self, event):
-            newConfigFile = TrackPattern.Model.updatePatternLocation(event.getSource().getSelectedItem())
-            MainScriptEntities.writeConfigFile(newConfigFile)
-            newConfigFile = TrackPattern.Model.getPatternTracks(event.getSource().getSelectedItem())
-            MainScriptEntities.writeConfigFile(newConfigFile)
-            newConfigFile = TrackPattern.Model.updateCheckBoxStatus(False, self.controls[2].selected)
-            MainScriptEntities.writeConfigFile(newConfigFile)
-            self.controls = TrackPattern.View.manageGui().updatePanel(self.panel)
-            StartUp().activateButtons(self.panel, self.controls)
+            try:
+                newConfigFile = TrackPattern.Model.updatePatternLocation(event.getSource().getSelectedItem())
+                MainScriptEntities.writeConfigFile(newConfigFile)
+                newConfigFile = TrackPattern.Model.getPatternTracks(event.getSource().getSelectedItem())
+                MainScriptEntities.writeConfigFile(newConfigFile)
+                newConfigFile = TrackPattern.Model.updateCheckBoxStatus(False, self.controls[2].selected)
+                MainScriptEntities.writeConfigFile(newConfigFile)
+                self.controls = TrackPattern.View.manageGui().updatePanel(self.panel)
+                StartUp().activateButtons(self.panel, self.controls)
+            # catch the error when the user edits the location name
+            except AttributeError:
+                TrackPattern.Model.initializeConfigFile()
+                self.controls = TrackPattern.View.manageGui().updatePanel(self.panel)
+                StartUp().activateButtons(self.panel, self.controls)
+                print('error')
+            return
 
+        def itemStateChanged(self, event):
+            print('jjfjdteyeheh')
             return
 
     def whenPABoxClicked(self, event):
@@ -52,6 +62,7 @@ class StartUp():
             trackList = TrackPattern.Model.getTracksByType(self.controls[0].getSelectedItem(), 'Yard')
         else:
             trackList = TrackPattern.Model.getTracksByType(self.controls[0].getSelectedItem(), None)
+        print(trackList)
         newConfigFile = TrackPattern.Model.updatePatternLocation(self.controls[0].getSelectedItem())
         MainScriptEntities.writeConfigFile(newConfigFile)
         newConfigFile = TrackPattern.Model.updatePatternTracks(trackList)
@@ -82,7 +93,7 @@ class StartUp():
             csvSwitchList = TrackPattern.Model.writeCsvSwitchList(location, trackPatternDict)
             self.psLog.info('Track Pattern for ' + location + ' CSV file written')
         TrackPattern.View.displayTextSwitchlist(location)
-        print(self.rev)
+        # print(self.rev)
 
         return
 
@@ -119,6 +130,7 @@ class StartUp():
 
         self.panel = panel
         self.controls = controls
+
         self.controls[0].addActionListener(self.ComboBoxListener(self.panel, self.controls))
         self.controls[1].actionPerformed = self.whenPABoxClicked
         self.controls[4].actionPerformed = self.whenTPButtonPressed

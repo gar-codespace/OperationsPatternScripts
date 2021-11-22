@@ -87,7 +87,7 @@ class TrackPatternPanel:
         trackDict = self.configFile['PT'] # pattern tracks
         if (trackDict):
             rowLabel.text = u'Track List: '
-            for track, flag in trackDict.items():
+            for track, flag in sorted(trackDict.items()):
                 x = javax.swing.JCheckBox(track, flag)
                 tracksPanel.add(x)
                 self.trackCheckBoxes.append(x)
