@@ -1,45 +1,66 @@
 Documentation for scripts
 Description of PatternConfig.JSON file
-  "ControlPanel" : { These are settings used for the main script
-    "TrackPattern" : true, True means use the track pattern scripts - not implemented
-    "PH" : 140, Panel Height
-    "PW" : 2000 Pane Width
-  },
-  "TP" : { Track Pattern script values
-    "PL" : "", Pattern Location, a valid JMRI location
-    "PT" : { Pattern Tracks, a list of tracks for the valid location and their selected status
-    },
-    "PA" : false, Yard Tracks Only flag
-    "PI" : false, Ignore track length flag
-    "PW" : 260, Pattern Width, text box width
-    "PH" : 16, Pattern Height, height of all pattern elements
-    "ST" : "Set to:", Input box form header
-    "SL": [ Sort List, the switch lists are sorted on these items
-      "Load Type",
-      "FD&Track"
-    ],
-    "RM": 8, Report Multiplier
-    "RW": { Report Width for each item
-      "Color": 6,
-      "Comment": 15,
-      "Dest&Track": 30,
-      "Destination": 12,
-      "FD&Track": 20,
-      "Final Dest": 11,
-      "Hazardous": 10,
-      "Input": 6,
-      "Kernel": 7,
-      "Kernel Size": 12,
-      "Length": 7,
-      "Load": 5,
-      "Load Type": 10,
-      "Location": 9,
-      "Number": 7,
-      "Owner": 6,
-      "PickUp Msg": 12,
-      "RWE": 10,
-      "Road": 5,
-      "SetOut Msg": 12,
-      "Track": 6,
-      "Type": 5,
-      "Weight": 7
+  Common for all subroutines
+        "PluginLocation": { This group is data on where the plugin is located
+          "PL": "3", Plugin Location, where the plugin will be plugged into, hand edit the json to change
+          "WX": 300, Window X value, depricated
+          "WY": 200, Window Y value, depricated
+          "locationOptions": { These are the plugin location options
+            "1": "trainsTable",
+            "2": "homeScreen",
+            "3": "uniqueWindow"
+          }
+        },
+        "ControlPanel" : { This group lists and chooses which subroutines will be part of the plugin
+          "scriptIncludes" : {
+            "TrackPattern" : true, True means the sub will be included
+            "FutureSubroutines" : false
+          },
+          "PH" : 140, Panel height, of the control panel
+          "PW" : 2000 Panel width
+        },
+
+    Docs for the Track Pattern sub
+        "TP" : { Track Pattern, this group has all the settings for the TP subroutine
+          "AL" : [ All Locations, all the locations for the current profile, the program sets this
+          ],
+          "PL" : "", Pattern Location, the currently selected location, set by user
+          "PT" : { Pattern Tracks, list of tracks for the selected location and their selected flag, set by user, written by program
+          },
+          "PA" : false, Yard Tracks only flag, set by user
+          "PI" : false, Ignore Track Length flag, set by user
+          "PW" : 260, Pattern Width, depricated
+          "PH" : 16, Pattern Height, height of all javax boxes used in all windows
+          "ST" : "Set to:", Part of Set Cars to Track header
+          "SL": [ Sort List, sort column and order for all reports, this can be hand edited by the user, selected from RW fields. Sort order is top down
+            "Load Type",
+            "FD&Track"
+          ],
+          "RM": 8, Row Multiplier, "Translater" value to convert character width to pixels
+          "RW": { Report Width, This is a list of JMRI fields and their default report character lengths
+            "Input": 6,
+            "Road" : 5,
+            "Number" : 7,
+            "Type" : 5,
+            "Length" : 7,
+            "Weight" : 7,
+            "Load" : 5,
+            "Load Type" : 10,
+            "Hazardous" : 10,
+            "Color" : 6,
+            "Kernel" : 7,
+            "Kernel Size" : 12,
+            "Owner" : 6,
+            "Track" : 6,
+            "Location" : 9,
+            "Destination" : 12,
+            "Dest&Track" : 30,
+            "Final Dest" : 11,
+            "FD&Track" : 20,
+            "Comment" : 15,
+            "SetOut Msg" : 12,
+            "PickUp Msg" : 12,
+            "RWE" : 10
+          }
+        }
+      }

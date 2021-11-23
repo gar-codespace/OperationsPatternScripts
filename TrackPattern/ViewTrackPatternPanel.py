@@ -14,7 +14,7 @@ import MainScriptEntities
 class TrackPatternPanel:
     '''Makes the track pattern subroutine panel'''
 
-    scriptRev = 'TrackPattern.ViewTrackPatternPanel v20211101'
+    scriptRev = 'TrackPattern.ViewTrackPatternPanel v20211125'
 
     def __init__(self):
 
@@ -59,7 +59,6 @@ class TrackPatternPanel:
         locationList = self.configFile['AL']
         self.locationComboBox = javax.swing.JComboBox(locationList)
         self.locationComboBox.setSelectedItem(self.configFile['PL'])
-        # self.locationComboBox.addActionListener(ComboBoxListener())
         patternComboBox = javax.swing.Box(javax.swing.BoxLayout.X_AXIS)
         patternComboBox.add(patternLabel)
         patternComboBox.add(javax.swing.Box.createRigidArea(java.awt.Dimension(8,0)))
@@ -96,7 +95,7 @@ class TrackPatternPanel:
         else:
             self.ypButton.setEnabled(False)
             self.scButton.setEnabled(False)
-            rowLabel.text = u'TThere are no yard tracks for this location'
+            rowLabel.text = u'There are no yard tracks for this location'
 
         return tracksPanel
 

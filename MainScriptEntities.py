@@ -13,20 +13,27 @@ from codecs import open as cOpen
 from os import path as oPath
 from shutil import copy as sCopy
 
-scriptRev = 'OperationsPatternScripts.MainScriptEntities v20211120'
+scriptRev = 'OperationsPatternScripts.MainScriptEntities v20211125'
 
 def validateConfigFile():
     '''Checks for a config file and adds one if missing'''
 
-    copyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json'
-    if not (oPath.exists(copyTo)):
-        copyFrom = jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts\\PatternConfig.json'
-        sCopy(copyFrom, copyTo)
-        result = u'Configuration file created'
-    else:
-        result = u'Configuration file found'
+    try:
+        configFileLoc = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json'
+        with cOpen(configFileLoc, 'r', encoding=setEncoding()) as configWorkFile:
+            configFile = jLoads(configWorkFile.read())
+        return True
+    except:
+        return False
 
-    return result
+def writeNewConfigFile():
+    '''Copies the default config file to the profile location'''
+
+    copyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json'
+    copyFrom = jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts\\PatternConfig.json'
+    sCopy(copyFrom, copyTo)
+
+    return 'New PatternConfig.json file for this profile created'
 
 def readConfigFile(subConfig='all'):
     '''Read in the PatternConfig.json for a profile and return it as a dictionary
@@ -47,6 +54,7 @@ def writeConfigFile(configFile):
     jsonObject = jDumps(configFile, indent=2, sort_keys=True)
     with cOpen(jsonCopyTo, 'wb', encoding=setEncoding()) as jsonWorkFile:
         jsonWorkFile.write(jsonObject)
+
     return 'Configuration file updated'
 
 def setEncoding():
@@ -70,7 +78,7 @@ def makeControlPanel():
 def makeButton():
 
     piButton = javax.swing.JButton()
-    piButton.text = u'PatternScripts'
+    piButton.text = u'Pattern Scripts'
 
     return piButton
 

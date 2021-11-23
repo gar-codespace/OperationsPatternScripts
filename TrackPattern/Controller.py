@@ -18,11 +18,11 @@ import TrackPattern.ViewSetCarsForm
 class StartUp():
     '''Start the the Track Pattern subroutine'''
 
-    scriptRev = 'TrackPattern.Controller v20211101'
+    scriptRev = 'TrackPattern.Controller v20211125'
 
     def __init__(self):
 
-        self.psLog = logging.getLogger('PS.Control')
+        self.psLog = logging.getLogger('PS.TP.Control')
 
         return
 
@@ -48,7 +48,9 @@ class StartUp():
                 TrackPattern.Model.initializeConfigFile()
                 self.controls = TrackPattern.View.manageGui().updatePanel(self.panel)
                 StartUp().activateButtons(self.panel, self.controls)
+                self.psLog.info('Location list changed, config file updated')
 
+            print(StartUp.scriptRev)
             return
 
     def whenPABoxClicked(self, event):
@@ -73,8 +75,8 @@ class StartUp():
         '''Makes a track pattern based on the config file'''
 
     # Boilerplate - update the config file
-        TrackPattern.Model.updateButtons(self.controls)
-        self.psLog.info('Button update completed - config file updated')
+        TrackPattern.Model.updateSettings(self.controls)
+        self.psLog.info('Configuration file updated with new settings')
     # Button specific
         selectedTracks = TrackPattern.Model.getSelectedTracks()
         trackPatternDict = TrackPattern.Model.makeTrackPatternDict(selectedTracks)
@@ -96,19 +98,24 @@ class StartUp():
         '''Opens a set cars window for each checked track'''
 
     # Boilerplate - update the config file
-        self.controls = TrackPattern.Model.updateButtons(self.controls)
-        self.psLog.info('Button update completed - config file updated')
+        self.controls = TrackPattern.Model.updateSettings(self.controls)
+        self.psLog.info('Configuration file updated with new settings')
     # Button specific
         selectedTracks = TrackPattern.Model.getSelectedTracks()
         windowOffset = 200
     # create an instance for each track in its own window
-        for track in selectedTracks:
-            listForTrack, trackSchedule = TrackPattern.Model.getSetCarsData(self.controls[0].getSelectedItem(), track)
-            newWindow = TrackPattern.ViewSetCarsForm.SetCarsWindowInstance(listForTrack, trackSchedule)
-            newWindow.setCarsForTrackWindow(windowOffset)
-            self.psLog.info(u'Set Cars Window created for track ' + track)
-            windowOffset += 50
-        self.psLog.info('Set Cars Windows for ' + self.controls[0].getSelectedItem() + ' completed')
+        if (selectedTracks):
+            i = 0
+            for track in selectedTracks:
+                listForTrack, trackSchedule = TrackPattern.Model.getSetCarsData(self.controls[0].getSelectedItem(), track)
+                newWindow = TrackPattern.ViewSetCarsForm.SetCarsWindowInstance(listForTrack, trackSchedule)
+                newWindow.setCarsForTrackWindow(windowOffset)
+                self.psLog.info(u'Set Cars Window created for track ' + track)
+                windowOffset += 50
+                i += 1
+            self.psLog.info(str(i) + ' Set Cars windows for ' + self.controls[0].getSelectedItem() + ' created')
+        else:
+            self.psLog.info('No tracks were selected')
         print(StartUp().scriptRev)
 
         return

@@ -18,8 +18,6 @@ import MainScriptEntities
 import TrackPattern.ViewEntities
 import TrackPattern.ModelEntities
 
-# xyzzy = 'hjkl'
-
 class SetTrackBoxMouseListener(java.awt.event.MouseAdapter):
     '''When any of the Set Cars to Track text boxes is clicked on'''
 
@@ -27,11 +25,15 @@ class SetTrackBoxMouseListener(java.awt.event.MouseAdapter):
         pass
 
     def mouseClicked(self, event):
-        event.getSource().setText(xyzzy)
 
+        try:
+            event.getSource().setText(xyzzy)
+        except NameError:
+            # add some loggong stuff
+            print('No track was selected')
         return
 
-class TrackButtonPressed(java.awt.event.ActionListener):
+class TrackButtonPressedListener(java.awt.event.ActionListener):
     '''When any one of the track buttons is pressed'''
 
     def __init__(self):
@@ -39,7 +41,6 @@ class TrackButtonPressed(java.awt.event.ActionListener):
 
     def trackButton(self, event):
 
-        # trackClip = unicode(event.getSource().getText(), MainScriptEntities.setEncoding())
         global xyzzy
         xyzzy = unicode(event.getSource().getText(), MainScriptEntities.setEncoding())
         return
@@ -48,12 +49,12 @@ class SetCarsWindowInstance():
     '''Manages an instance of each -Pattern Report for track- window'''
 
 # Class variables
-    scriptRev = 'TrackPattern.ViewSetCarsForm v20211101'
+    scriptRev = 'TrackPattern.ViewSetCarsForm v20211125'
 
     def __init__(self, pattern, schedule):
         '''Initialization variables'''
 
-        self.psLog = logging.getLogger('PS.CarsForm')
+        self.psLog = logging.getLogger('PS.TP.CarsForm')
     # Boilerplate
         self.lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
         self.cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
@@ -77,7 +78,6 @@ class SetCarsWindowInstance():
     # set the cars to a track
         self.ignoreLength = self.configFile['PI'] # flag to ignore track length
         patternCopy = self.trackData # all the data for just one track
-        # self.allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(patternCopy['YL'], None)
         userInputList = [] # create a list of user inputs from the text input boxes
         for userInput in self.jTextIn: # Read in and check the user input
             userInputList.append(unicode(userInput.getText(), MainScriptEntities.setEncoding()))
@@ -95,11 +95,14 @@ class SetCarsWindowInstance():
                     setToTrack = setToLocation.getTrackByName(unicode(userInputList[i], MainScriptEntities.setEncoding()), None)
                     setCarId = self.cm.newRS(y['Road'], y['Number'])
                     setCarId.setLocation(setToLocation, setToTrack, self.ignoreLength)
+                    if (setCarId.getTrack() != setToTrack):
+                        self.psLog.info(setCarId.getRoadName() + ' ' + setCarId.getNumber() + ' not set, track capacity exception')
                     j += 1
                 i += 1
-            self.psLog.info(str(j) + ' cars were set from track ' + trackName)
+            self.psLog.info(str(j) + ' cars were processed from track ' + trackName)
     # Wrap it up
         self.setCarsWindow.setVisible(False)
+        print(SetCarsWindowInstance.scriptRev)
 
         return
 
@@ -138,6 +141,7 @@ class SetCarsWindowInstance():
             csvCopyTo = self.profilePath + 'operations\\csvSwitchLists\\Switch list (' + patternCopy['YL'] + ') (' + trackName + ').csv'
             with cOpen(csvCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
                 csvWorkFile.write(csvSwitchList)
+        print(SetCarsWindowInstance.scriptRev)
 
         return
 
@@ -146,7 +150,6 @@ class SetCarsWindowInstance():
         '''When any one of the track buttons is pressed'''
 
         self.trackClip = unicode(event.getSource().getText(), MainScriptEntities.setEncoding())
-        print(self.trackClip)
 
         return
 
@@ -165,7 +168,7 @@ class SetCarsWindowInstance():
             buttonPanel.add(selectTrackButton)
             self.trackButtonList.append(selectTrackButton)
             # selectTrackButton.actionPerformed = TrackPattern.ViewEntities.trackButton
-            selectTrackButton.actionPerformed = TrackButtonPressed().trackButton
+            selectTrackButton.actionPerformed = TrackButtonPressedListener().trackButton
     # Define the window
         trackName = self.trackData['ZZ']
         trackName = trackName[0]

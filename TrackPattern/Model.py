@@ -15,8 +15,8 @@ path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
 import TrackPattern.ModelEntities
 
-scriptRev = 'TrackPattern.Model v20211101'
-psLog = logging.getLogger('PS.Model')
+scriptRev = 'TrackPattern.Model v20211125'
+psLog = logging.getLogger('PS.TP.Model')
 
 def initializeConfigFile():
     '''initialize or reinitialize the config file on first use, reset, or edit of a location name'''
@@ -60,7 +60,7 @@ def updatePatternLocation(location):
     return newConfigFile
 
 def updatePatternTracks(trackList):
-    '''Updates the config file value PT with the tracks for the selected location'''
+    '''Updates the config file value PT with the appropriate tracks as Yard Tracks Only is toggled'''
 
     trackDict = {}
     for track in trackList:
@@ -69,12 +69,15 @@ def updatePatternTracks(trackList):
     subConfigfile = newConfigFile['TP']
     subConfigfile.update({'PT': trackDict})
     newConfigFile.update({'TP': subConfigfile})
-    # psLog.info('The track list for location ' + location + ' has been updated')
+    if (trackDict):
+        psLog.info('The track list for this location has changed')
+    else:
+        psLog.info('There are no yard tracks for this location')
 
     return newConfigFile
 
 def getPatternTracks(location):
-    '''Updates the config file value PT with the tracks for the selected location'''
+    '''Updates the config file value PT with all the tracks for the selected location'''
 
     allTracks = TrackPattern.ModelEntities.getTracksByLocation(location, None)
     trackDict = {}
@@ -84,12 +87,12 @@ def getPatternTracks(location):
     subConfigfile = newConfigFile['TP']
     subConfigfile.update({'PT': trackDict})
     newConfigFile.update({'TP': subConfigfile})
-    # psLog.info('The track list for location ' + location + ' has been updated')
+    psLog.info('The track list for location ' + location + ' has been updated')
 
     return newConfigFile
 
 def updateCheckBoxStatus(all, ignore):
-    '''Updates the config file with the checked status of use all and ignore check boxes'''
+    '''Updates the config file with the checked status of Yard Tracks Only and Ignore Track Length check boxes'''
 
     newConfigFile = MainScriptEntities.readConfigFile()
     subConfigfile = newConfigFile['TP']
@@ -108,7 +111,7 @@ def getSetCarsData(location, track):
 
     return listForTrack, trackSchedule
 
-def updateButtons(controls):
+def updateSettings(controls):
     '''Updates the config file when a button is pressed'''
 
     focusOn = MainScriptEntities.readConfigFile('TP')

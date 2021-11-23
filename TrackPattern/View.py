@@ -16,12 +16,12 @@ import TrackPattern.ViewTrackPatternPanel
 class manageGui:
     '''Manages all the GUI elements for the Pattern Scripts subroutine'''
 
-    scriptRev = 'TrackPattern.View v20211101'
+    scriptRev = 'TrackPattern.View v20211125'
 
     def __init__(self, panel=None, controls=None):
         '''Track Pattern panel'''
 
-        self.psLog = logging.getLogger('PS.View')
+        self.psLog = logging.getLogger('PS.TP.View')
         self.configFile = MainScriptEntities.readConfigFile('TP')
         self.panel = panel
         self.controls = controls
@@ -36,6 +36,7 @@ class manageGui:
         panel.add(newView)
         panel.revalidate()
         # panel.repaint()
+        self.psLog.info('Track Pattern panel updated')
 
         return newControls
 

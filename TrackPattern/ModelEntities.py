@@ -6,12 +6,11 @@
 
 import jmri
 import time
-# from codecs import open as cOpen
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
 
-scriptRev = 'TrackPattern.ModelEntities v20211101'
+scriptRev = 'TrackPattern.ModelEntities v20211125'
 
 def getAllLocations():
     '''returns a list of all locations for this profile. JMRI sorts the list'''

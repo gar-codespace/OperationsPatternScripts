@@ -14,7 +14,7 @@ import PluginLocations
 class StartUp(jmri.jmrit.automat.AbstractAutomaton):
     '''Start the the Pattern Scripts plugin and add selected subroutines'''
 
-    scriptRev = 'OperationsPatternScripts.MainScript v20211120'
+    scriptRev = 'OperationsPatternScripts.MainScript v20211125'
 
     def init(self):
 
@@ -28,9 +28,11 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         self.psLog.addHandler(psFileHandler)
         self.psLog.info('Log File for Pattern Scripts Plugin')
     # fire up the config file
-        self.psLog.info(MainScriptEntities.validateConfigFile())
+        if not (MainScriptEntities.validateConfigFile()):
+            MainScriptEntities.writeNewConfigFile() # No love, just start over
+            self.psLog.warning('PatternConfig.json missing or corrupt, new file created')
         self.configFile = MainScriptEntities.readConfigFile('ControlPanel')
-    # add the subroutines
+    # import the subroutines
         for subroutine, bool in self.configFile['scriptIncludes'].items():
             if (bool):
                 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts\\' + subroutine)
@@ -41,7 +43,7 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
 
     def homeButtonClick(self, event):
         '''The Pattern Scripts button on the Panel Pro home screen'''
-        
+
         piList = MainScriptEntities.readConfigFile('PluginLocation')
         piOptions = piList['locationOptions']
         piLocation = piList['PL']
@@ -49,6 +51,7 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         piWindowLocation.add(self.scrollPanel)
         piWindowLocation.setVisible(True)
         self.psLog.info('Subroutine control panel created on ' + piOptions[piLocation])
+        print(StartUp.scriptRev)
 
         return
 

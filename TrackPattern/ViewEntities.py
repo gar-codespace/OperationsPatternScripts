@@ -13,7 +13,7 @@ import MainScriptEntities
 import TrackPattern.ModelEntities
 import TrackPattern.ViewSetCarsForm
 
-scriptRev = 'TrackPattern.ViewEntities v20211101'
+scriptRev = 'TrackPattern.ViewEntities v20211125'
 
 def makeSwingBox(xWidth, xHeight):
     ''' Makes a swing box to the desired size'''
@@ -96,19 +96,6 @@ def setCarsFormBodyHeader():
     headerWidth = headerWidth * 10
 
     return bodyHeader, headerWidth
-
-class TrackButtonPressed(java.awt.event.ActionListener):
-
-    def __init__(self):
-        # self.trackName = trackName
-        pass
-
-    def trackButton(self, event):
-        '''When any one of the track buttons is pressed'''
-
-        self.trackClip = unicode(event.getSource().getText(), MainScriptEntities.setEncoding())
-
-        return self.trackClip
 
 def setCarsFormBody(trackData):
     '''Creates the body of the Set cars form'''
