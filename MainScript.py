@@ -32,12 +32,6 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
             MainScriptEntities.writeNewConfigFile() # No love, just start over
             self.psLog.warning('PatternConfig.json missing or corrupt, new file created')
         self.configFile = MainScriptEntities.readConfigFile('ControlPanel')
-    # import the subroutines
-        for subroutine, bool in self.configFile['scriptIncludes'].items():
-            if (bool):
-                path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts\\' + subroutine)
-                import Controller
-                self.psLog.info(subroutine + ' subroutine imported')
 
         return
 
@@ -63,8 +57,13 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         subroutineList = []
         for subroutine, bool in self.configFile['scriptIncludes'].items():
             if (bool):
-                subroutineFrame = __import__(subroutine).Controller.StartUp().makeSubroutineFrame()
-                subroutinePanel = __import__(subroutine).Controller.StartUp().makeSubroutinePanel()
+            # import the sub
+                xModule = __import__(subroutine, fromlist=['Controller'])
+            # add the sub to the control panel
+                # subroutineFrame = __import__(subroutine).Controller.StartUp().makeSubroutineFrame()
+                # subroutinePanel = __import__(subroutine).Controller.StartUp().makeSubroutinePanel()
+                subroutineFrame = xModule.Controller.StartUp().makeSubroutineFrame()
+                subroutinePanel = xModule.Controller.StartUp().makeSubroutinePanel()
                 subroutineFrame.add(subroutinePanel)
                 subroutineList.append(subroutineFrame)
                 self.psLog.info(subroutine + ' subroutine added to control panel')

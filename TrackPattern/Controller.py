@@ -12,8 +12,8 @@ path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
 import TrackPattern.Model
 import TrackPattern.View
-import TrackPattern.Controller # this has to be here so __import__ in main script works
-import TrackPattern.ViewSetCarsForm
+# import TrackPattern.Controller # this has to be here so __import__ in main script works
+import TrackPattern.ControllerSetCarsForm
 
 class StartUp():
     '''Start the the Track Pattern subroutine'''
@@ -108,7 +108,7 @@ class StartUp():
             i = 0
             for track in selectedTracks:
                 listForTrack, trackSchedule = TrackPattern.Model.getSetCarsData(self.controls[0].getSelectedItem(), track)
-                newWindow = TrackPattern.ViewSetCarsForm.SetCarsWindowInstance(listForTrack, trackSchedule)
+                newWindow = TrackPattern.ControllerSetCarsForm.SetCarsWindowInstance(listForTrack, trackSchedule)
                 newWindow.setCarsForTrackWindow(windowOffset)
                 self.psLog.info(u'Set Cars Window created for track ' + track)
                 windowOffset += 50

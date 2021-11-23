@@ -121,7 +121,6 @@ class SetCarsWindowInstance():
             else:
                 self.psLog.critical('mismatched input list and car roster lengths')
             trackName = unicode(z['TN'], MainScriptEntities.setEncoding())
-            # self.allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(patternCopy['YL'], None)
             for y in z['TR']:
                 setTrack = unicode('Hold', MainScriptEntities.setEncoding())
                 if (userInputList[i] in self.allTracksAtLoc and userInputList[i] != trackName):
