@@ -43,16 +43,12 @@ class StartUp():
                 MainScriptEntities.writeConfigFile(newConfigFile)
                 self.controls = TrackPattern.View.manageGui().updatePanel(self.panel)
                 StartUp().activateButtons(self.panel, self.controls)
-            # catch the error when the user edits the location name
+        # catch the error when the user edits the location name
             except AttributeError:
                 TrackPattern.Model.initializeConfigFile()
                 self.controls = TrackPattern.View.manageGui().updatePanel(self.panel)
                 StartUp().activateButtons(self.panel, self.controls)
-                print('error')
-            return
 
-        def itemStateChanged(self, event):
-            print('jjfjdteyeheh')
             return
 
     def whenPABoxClicked(self, event):
@@ -62,7 +58,6 @@ class StartUp():
             trackList = TrackPattern.Model.getTracksByType(self.controls[0].getSelectedItem(), 'Yard')
         else:
             trackList = TrackPattern.Model.getTracksByType(self.controls[0].getSelectedItem(), None)
-        print(trackList)
         newConfigFile = TrackPattern.Model.updatePatternLocation(self.controls[0].getSelectedItem())
         MainScriptEntities.writeConfigFile(newConfigFile)
         newConfigFile = TrackPattern.Model.updatePatternTracks(trackList)
@@ -93,7 +88,7 @@ class StartUp():
             csvSwitchList = TrackPattern.Model.writeCsvSwitchList(location, trackPatternDict)
             self.psLog.info('Track Pattern for ' + location + ' CSV file written')
         TrackPattern.View.displayTextSwitchlist(location)
-        # print(self.rev)
+        print(StartUp().scriptRev)
 
         return
 
@@ -114,7 +109,7 @@ class StartUp():
             self.psLog.info(u'Set Cars Window created for track ' + track)
             windowOffset += 50
         self.psLog.info('Set Cars Windows for ' + self.controls[0].getSelectedItem() + ' completed')
-        print(self.rev)
+        print(StartUp().scriptRev)
 
         return
 
@@ -122,6 +117,7 @@ class StartUp():
         '''Displays the pattern report log file in a notepad window'''
 
         TrackPattern.View.displayPatternLog()
+        print(StartUp().scriptRev)
 
         return
 
@@ -130,7 +126,6 @@ class StartUp():
 
         self.panel = panel
         self.controls = controls
-
         self.controls[0].addActionListener(self.ComboBoxListener(self.panel, self.controls))
         self.controls[1].actionPerformed = self.whenPABoxClicked
         self.controls[4].actionPerformed = self.whenTPButtonPressed

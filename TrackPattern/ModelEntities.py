@@ -30,27 +30,6 @@ def formatText(item, length):
 
     return format(item, pad)
 
-# def checkYard(yardLocation, useAll):
-#     ''' Validates the yard location'''
-#
-# # check that the location is valid
-#     try:
-#         if (jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationByName(yardLocation).getTracksByNameList(None)):
-#             location = True
-#         else:
-#             location = False
-#     except AttributeError:
-#         location = False
-# # check that the location/track type combination is valid
-#     try:
-#         if (jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationByName(yardLocation).getTracksByNameList(useAll)):
-#             combo = True
-#         else:
-#             combo = False
-#     except AttributeError:
-#         combo = False
-#
-#     return location, combo
 
 def makeInitialTrackList(location):
 
@@ -95,7 +74,7 @@ def occuranceTally(listOfOccurances):
 
     return dict
 
-def getCarDetailDict(carObject):
+def makeCarDetailDict(carObject):
     '''makes a dictionary of attributes for one car based on the requirements of
     jmri.jmrit.operations.setup.Setup.getCarAttributes()'''
 
@@ -154,7 +133,7 @@ def makeYardPattern(yardLocation, trackList):
         j = getCarObjects(yardLocation, i) # list of car objects for a track
         trackRoster = [] # list of dictionaries
         for car in j:
-            carDetail = getCarDetailDict(car)
+            carDetail = makeCarDetailDict(car)
             trackRoster.append(carDetail)
         roster2 = sortCarList(trackRoster)
         trackDict = {}
@@ -173,13 +152,12 @@ def makeYardPattern(yardLocation, trackList):
 
 def sortCarList(carList):
     '''Returns a sorted car list of the one submitted
-    Available sort keys in tpConfig UY
-    Selected key list in sort order in tpConfig UZ
+    Available sort keys in PatternConfig RW
+    Selected key list in sort order in PatternConfig SL
     Key list can be any length'''
 
     subList = MainScriptEntities.readConfigFile('TP')
     sortList = subList['SL']
-    # carList = sorted(carList, key=lambda d: d['FD&Track'])
     for sortKey in sortList: # the list of sort keys in order is UZ
         carList.sort(key=lambda row: row[sortKey])
 

@@ -14,7 +14,7 @@ import MainScriptEntities
 import TrackPattern.ViewTrackPatternPanel
 
 class manageGui:
-    '''At startup create the GUI elements'''
+    '''Manages all the GUI elements for the Pattern Scripts subroutine'''
 
     scriptRev = 'TrackPattern.View v20211101'
 
@@ -29,7 +29,7 @@ class manageGui:
         return
 
     def updatePanel(self, panel):
-        ''' Makes a new panel from the config file and replaces the current panel with the new panel'''
+        ''' Replaces the current panel with a new updated panel'''
 
         newView, newControls = TrackPattern.ViewTrackPatternPanel.TrackPatternPanel().makePatternControls()
         panel.removeAll()

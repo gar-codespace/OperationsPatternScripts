@@ -25,6 +25,7 @@ def validateConfigFile():
         result = u'Configuration file created'
     else:
         result = u'Configuration file found'
+
     return result
 
 def readConfigFile(subConfig='all'):
@@ -54,7 +55,7 @@ def setEncoding():
     return 'utf-8' #ascii, utf-16
 
 def makeControlPanel():
-    '''Create the control panel, with a scroll bar, that all sub panels go into
+    '''Create the control panel, with a scroll bar, that all subroutines go into
     This holds trackPatternPanel and future panels'''
 
     configFile = readConfigFile('ControlPanel')
@@ -63,7 +64,15 @@ def makeControlPanel():
     scrollPanel.border = javax.swing.BorderFactory.createLineBorder(java.awt.Color.GRAY)
     scrollPanel.setPreferredSize(java.awt.Dimension(configFile['PW'], configFile['PH']))
     scrollPanel.setMaximumSize(scrollPanel.getPreferredSize())
+
     return controlPanel, scrollPanel
+
+def makeButton():
+
+    piButton = javax.swing.JButton()
+    piButton.text = u'PatternScripts'
+
+    return piButton
 
 def timeStamp():
     '''Valid Time, get local time adjusted for time zone and dst'''
@@ -73,10 +82,11 @@ def timeStamp():
         timeOffset = time.altzone
     else:
         timeOffset = time.timezone # in seconds
+
     return time.strftime('%a %b %d %Y %I:%M %p %Z', time.gmtime(epochTime - timeOffset))
 
 def systemInfo():
-    '''Which computer type is this script run on'''
+    '''Which type of computer is being used'''
 
     osName = jmri.util.SystemType.getType()
     textEdit = {
@@ -87,4 +97,5 @@ def systemInfo():
         6: 'OS2 ',
         7: 'Unix ', # Unix
         }
+
     return textEdit[osName]

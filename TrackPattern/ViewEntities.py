@@ -11,6 +11,7 @@ from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsYardPattern')
 import MainScriptEntities
 import TrackPattern.ModelEntities
+import TrackPattern.ViewSetCarsForm
 
 scriptRev = 'TrackPattern.ViewEntities v20211101'
 
@@ -96,6 +97,19 @@ def setCarsFormBodyHeader():
 
     return bodyHeader, headerWidth
 
+class TrackButtonPressed(java.awt.event.ActionListener):
+
+    def __init__(self):
+        # self.trackName = trackName
+        pass
+
+    def trackButton(self, event):
+        '''When any one of the track buttons is pressed'''
+
+        self.trackClip = unicode(event.getSource().getText(), MainScriptEntities.setEncoding())
+
+        return self.trackClip
+
 def setCarsFormBody(trackData):
     '''Creates the body of the Set cars form'''
 
@@ -115,11 +129,12 @@ def setCarsFormBody(trackData):
         headerWidth = 0
         for car in carList:
             carId = cm.newRS(car['Road'], car['Number']) # returns car object
-            carDataDict = TrackPattern.ModelEntities.getCarDetailDict(carId)
+            carDataDict = TrackPattern.ModelEntities.makeCarDetailDict(carId)
             combinedInputLine = javax.swing.JPanel()
             combinedInputLine.setAlignmentX(0.0)
-            # set car to input box
+        # set car to input box
             inputText = javax.swing.JTextField(5)
+            inputText.addMouseListener(TrackPattern.ViewSetCarsForm.SetTrackBoxMouseListener())
             jTextIn.append(inputText) # making a list of jTextField boxes
             inputBox = makeSwingBox(reportWidth['Input'] * configFile['RM'], configFile['PH'])
             inputBox.add(inputText)
@@ -140,7 +155,6 @@ def setCarsFormFooter():
 
 # Define the footer
     footer = javax.swing.JPanel()
-    # footer.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
 # Construct the footer
     scButton = javax.swing.JButton(unicode('Set', MainScriptEntities.setEncoding()))
     tpButton = javax.swing.JButton(unicode('Print', MainScriptEntities.setEncoding()))
@@ -153,7 +167,6 @@ def makeFrame():
     '''Makes the title boarder frame'''
 
     patternFrame = TrackPattern.View.manageGui().makeFrame()
-    # self.psLog.info('track pattern makeFrame completed')
 
     return patternFrame
 

@@ -3,6 +3,7 @@
 # © 2021 Greg Ritacco
 
 import jmri
+from apps import Apps
 import logging
 import time
 from sys import path
@@ -35,6 +36,20 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
                 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts\\' + subroutine)
                 import Controller
                 self.psLog.info(subroutine + ' subroutine imported')
+
+        return
+
+    def homeButtonClick(self, event):
+        '''The Pattern Scripts button on the Panel Pro home screen'''
+        
+        piList = MainScriptEntities.readConfigFile('PluginLocation')
+        piOptions = piList['locationOptions']
+        piLocation = piList['PL']
+        piWindowLocation = getattr(PluginLocations, piOptions[piLocation])()
+        piWindowLocation.add(self.scrollPanel)
+        piWindowLocation.setVisible(True)
+        self.psLog.info('Subroutine control panel created on ' + piOptions[piLocation])
+
         return
 
     def handle(self):
@@ -51,15 +66,14 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
                 subroutineList.append(subroutineFrame)
                 self.psLog.info(subroutine + ' subroutine added to control panel')
     # plug in subroutines into the control panel
-        controlPanel, scrollPanel = MainScriptEntities.makeControlPanel()
+        controlPanel, self.scrollPanel = MainScriptEntities.makeControlPanel()
         for subroutine in subroutineList:
             controlPanel.add(subroutine)
     # plug in the control panel to a location
-        location = MainScriptEntities.readConfigFile('PluginLocation')
-        pluginLocation = getattr(PluginLocations, location)()
-        pluginLocation.add(scrollPanel)
-        # pluginLocation.revalidate()
-        self.psLog.info('control panel added to ' + location)
+        homePanelButton = MainScriptEntities.makeButton()
+        homePanelButton.actionPerformed = self.homeButtonClick
+        Apps.buttonSpace().add(homePanelButton)
+        Apps.buttonSpace().revalidate()
         self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
 
         return False

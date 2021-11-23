@@ -108,36 +108,6 @@ def getSetCarsData(location, track):
 
     return listForTrack, trackSchedule
 
-# def validateUserInput(controls):
-#     '''Validates the user submitted locations and returns a track list for a valid location'''
-#
-#     location = unicode(controls[0].text, MainScriptEntities.setEncoding())
-#     useAll = None
-#     if (controls[1].selected):
-#         useAll = 'Yard'
-#     focusOn = MainScriptEntities.readConfigFile('TP')
-#     focusOn.update({"PL": location})
-#     focusOn.update({"PA": controls[1].selected})
-#     focusOn.update({"PI": controls[2].selected})
-#     trackList = {}
-#     focusOn.update({"PT": trackList})
-#     validLoc, validCombo = TrackPattern.ModelEntities.checkYard(location, useAll)
-#     if (validLoc):
-#         psLog.info('location ' + location + ' is valid')
-#         if (validCombo):
-#             psLog.info('track type verified for ' + location)
-#             locationTracks = TrackPattern.ModelEntities.getTracksByLocation(location, useAll)
-#             focusOn.update({"PL": location})
-#             for track in locationTracks:
-#                 trackList[track] = True
-#             focusOn.update({"PT": trackList})
-#         else:
-#             psLog.warning('location ' + location + ' does not have yard tracks')
-#     else:
-#         psLog.warning('location ' + location + ' is not valid')
-#
-#     return focusOn, validCombo
-
 def updateButtons(controls):
     '''Updates the config file when a button is pressed'''
 

@@ -1,5 +1,14 @@
 {
-  "PluginLocation" : "trainsTable",
+  "PluginLocation": {
+    "PL": "3",
+    "WX": 300,
+    "WY": 200, 
+    "locationOptions": {
+      "1": "trainsTable",
+      "2": "homeScreen",
+      "3": "uniqueWindow"
+    }
+  },
   "ControlPanel" : {
     "scriptIncludes" : {
       "TrackPattern" : true,

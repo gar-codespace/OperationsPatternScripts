@@ -6,6 +6,7 @@
 
 import jmri
 import java.awt
+import java.awt.event
 import javax.swing
 import logging
 import time
@@ -16,6 +17,32 @@ path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsYardPattern')
 import MainScriptEntities
 import TrackPattern.ViewEntities
 import TrackPattern.ModelEntities
+
+# xyzzy = 'hjkl'
+
+class SetTrackBoxMouseListener(java.awt.event.MouseAdapter):
+    '''When any of the Set Cars to Track text boxes is clicked on'''
+
+    def __init__(self):
+        pass
+
+    def mouseClicked(self, event):
+        event.getSource().setText(xyzzy)
+
+        return
+
+class TrackButtonPressed(java.awt.event.ActionListener):
+    '''When any one of the track buttons is pressed'''
+
+    def __init__(self):
+        pass
+
+    def trackButton(self, event):
+
+        # trackClip = unicode(event.getSource().getText(), MainScriptEntities.setEncoding())
+        global xyzzy
+        xyzzy = unicode(event.getSource().getText(), MainScriptEntities.setEncoding())
+        return
 
 class SetCarsWindowInstance():
     '''Manages an instance of each -Pattern Report for track- window'''
@@ -40,6 +67,7 @@ class SetCarsWindowInstance():
     # Lists for reports
         self.jTextIn = [] # create a list jTextField objects
         self.carDataList = [] # list of sorted car objects
+        self.trackClip = u''
 
         return
 
@@ -113,11 +141,12 @@ class SetCarsWindowInstance():
 
         return
 
+
     def trackButton(self, event):
         '''When any one of the track buttons is pressed'''
 
-        thisButton = event.getSource().getText()
-        print(thisButton)
+        self.trackClip = unicode(event.getSource().getText(), MainScriptEntities.setEncoding())
+        print(self.trackClip)
 
         return
 
@@ -135,7 +164,8 @@ class SetCarsWindowInstance():
             selectTrackButton.setPreferredSize(java.awt.Dimension(0,18))
             buttonPanel.add(selectTrackButton)
             self.trackButtonList.append(selectTrackButton)
-            selectTrackButton.actionPerformed = self.trackButton
+            # selectTrackButton.actionPerformed = TrackPattern.ViewEntities.trackButton
+            selectTrackButton.actionPerformed = TrackButtonPressed().trackButton
     # Define the window
         trackName = self.trackData['ZZ']
         trackName = trackName[0]
@@ -178,5 +208,5 @@ class SetCarsWindowInstance():
         self.setCarsWindow.pack()
         self.setCarsWindow.setVisible(True)
         # print(SetCarsWindowInstance.scriptRev)
-        
+
         return
