@@ -10,7 +10,6 @@ from os import system
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsTrackPattern')
 import MainScriptEntities
-# import TrackPattern.Controller
 import TrackPattern.ViewTrackPatternPanel
 
 class manageGui:

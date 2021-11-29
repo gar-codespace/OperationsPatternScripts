@@ -43,6 +43,7 @@ class TrackButtonPressedListener(java.awt.event.ActionListener):
 
         global xyzzy
         xyzzy = unicode(event.getSource().getText(), MainScriptEntities.setEncoding())
+
         return
 
 class SetCarsWindowInstance():

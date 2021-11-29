@@ -5,9 +5,13 @@
 # © 2021 Greg Ritacco
 
 import jmri
+import jmri.util
 import java.awt
 import javax.swing
 from apps import Apps
+from sys import path
+path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
+import MainScriptEntities
 
 scriptRev = 'OperationsPatternScripts.PluginLocations v20211125'
 
@@ -15,7 +19,7 @@ def trainsTable():
     '''Add the plugin to the bottom of the trains window'''
 
     print(scriptRev)
-    
+
     return  jmri.jmrit.operations.trains.TrainsTableFrame()
 
 def homeScreen():
@@ -29,13 +33,6 @@ NOTE: This location does not support DecoderPro'''
 def uniqueWindow():
     '''Add the plugin to its own window'''
 
-    piFrame = javax.swing.JFrame(u'Pattern Scripts')
-    iconPath = jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts\\decpro5.png'
-    icon = java.awt.Toolkit.getDefaultToolkit().getImage(iconPath)
-    piFrame.setIconImage(icon)
-    piFrame.setLocationRelativeTo(Apps.buttonSpace())
-    piFrame.setSize(600,200)
-    piFrame.setDefaultCloseOperation(javax.swing.JFrame.HIDE_ON_CLOSE)
     print(scriptRev)
 
-    return piFrame
+    return jmri.util.JmriJFrame(u'Pattern Scripts')

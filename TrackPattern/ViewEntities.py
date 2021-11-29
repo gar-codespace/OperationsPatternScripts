@@ -121,7 +121,7 @@ def setCarsFormBody(trackData):
             combinedInputLine.setAlignmentX(0.0)
         # set car to input box
             inputText = javax.swing.JTextField(5)
-            inputText.addMouseListener(TrackPattern.ViewSetCarsForm.SetTrackBoxMouseListener())
+            inputText.addMouseListener(TrackPattern.ControllerSetCarsForm.SetTrackBoxMouseListener())
             jTextIn.append(inputText) # making a list of jTextField boxes
             inputBox = makeSwingBox(reportWidth['Input'] * configFile['RM'], configFile['PH'])
             inputBox.add(inputText)

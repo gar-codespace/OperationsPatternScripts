@@ -19,7 +19,6 @@ class TrackPatternPanel:
     def __init__(self):
 
         self.configFile = MainScriptEntities.readConfigFile('TP')
-        self.patternInput = javax.swing.JTextField(20) # the location is typed into this box
         self.useYardTracks = javax.swing.JCheckBox(u'Yard tracks only ', self.configFile['PA'])
         self.ignoreLength = javax.swing.JCheckBox(u'Ignore track length ', self.configFile['PI'])
         self.ypButton = javax.swing.JButton()
@@ -39,19 +38,6 @@ class TrackPatternPanel:
 
         return tpFrame
 
-    def makeLocationInputBox(self):
-        '''Make the field that the user types the location into'''
-
-        patternLabel = javax.swing.JLabel(u'  Location: ')
-        patternLabel.setAlignmentX(javax.swing.JLabel.RIGHT_ALIGNMENT)
-        self.patternInput.setText(self.configFile['PL']) # pattern location
-        patternInputBox = javax.swing.Box(javax.swing.BoxLayout.X_AXIS) # make a box for the label and input box
-        patternInputBox.setPreferredSize(java.awt.Dimension(self.configFile['PW'], self.configFile['PH']))
-        patternInputBox.add(patternLabel)
-        patternInputBox.add(self.patternInput)
-
-        return patternInputBox
-
     def makeLocationComboBox(self):
         '''make the combo box of user selectable locations'''
 
@@ -67,7 +53,7 @@ class TrackPatternPanel:
         return patternComboBox
 
     def makeLocationCheckBoxes(self):
-        '''Any tarck type and ignore length flags'''
+        '''Any track type and ignore length flags'''
 
         flagInputBox = javax.swing.Box(javax.swing.BoxLayout.X_AXIS) # make a box for the label and input box
         flagInputBox.setPreferredSize(java.awt.Dimension(self.configFile['PW'], self.configFile['PH']))
@@ -87,9 +73,8 @@ class TrackPatternPanel:
         if (trackDict):
             rowLabel.text = u'Track List: '
             for track, flag in sorted(trackDict.items()):
-                x = javax.swing.JCheckBox(track, flag)
-                tracksPanel.add(x)
-                self.trackCheckBoxes.append(x)
+                trackCheckBox = tracksPanel.add(javax.swing.JCheckBox(track, flag))
+                self.trackCheckBoxes.append(trackCheckBox)
             self.ypButton.setEnabled(True)
             self.scButton.setEnabled(True)
         else:
@@ -142,8 +127,7 @@ class TrackPatternPanel:
         tpPanel.add(inputRow)
         tpPanel.add(trackCheckBoxes)
         tpPanel.add(buttonPanel)
-        controlObjects = self.getPanelWidgets()
 
-        return tpPanel, controlObjects
+        return tpPanel, self.getPanelWidgets()
 
     print(scriptRev)

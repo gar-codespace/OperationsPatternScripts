@@ -6,6 +6,11 @@
 
 import jmri
 import java.awt
+import java.awt.event
+import java.awt.event.WindowListener
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
+# import java.awt.EventListener
 import javax.swing
 import time
 from json import loads as jLoads, dumps as jDumps
@@ -14,6 +19,34 @@ from os import path as oPath
 from shutil import copy as sCopy
 
 scriptRev = 'OperationsPatternScripts.MainScriptEntities v20211125'
+
+class GenericWindowListener(java.awt.event.WindowListener):
+    '''Listener to respond to window operations'''
+
+    def __init__(self):
+        pass
+
+    def windowOpened(WINDOW_OPENED, event):
+        print('window opened')
+    def windowActivated(WINDOW_ACTIVATED, event):
+        print('activated')
+    def windowDeactivated(WINDOW_DEACTIVATED, event):
+        print('window deactivated')
+    def windowClosed(WINDOW_CLOSED, event):
+        print('window closed')
+    def windowClosing(WINDOW_CLOSING, event):
+        print('window closing')
+    # def windowDeactivated(WINDOW_DEACTIVATED, event):
+    #     print('window')
+class genericMouseListener(java.awt.event.MouseAdapter):
+    '''Listens for mouse clicks'''
+
+    def __init__(self):
+        pass
+    def leftClick(self, event):
+        print('left click')
+    def addMouseListener(event):
+        print('left click')
 
 def validateConfigFile():
     '''Checks for a config file and adds one if missing'''
@@ -99,7 +132,7 @@ def systemInfo():
     osName = jmri.util.SystemType.getType()
     textEdit = {
         1: 'Mac Classic ',
-        2: 'open -t ', # OSX
+        2: 'open -a TextEdit ', # OSX
         4: 'start notepad.exe ', # Windows
         5: 'nano ', # Linux
         6: 'OS2 ',

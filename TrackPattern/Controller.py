@@ -12,7 +12,6 @@ path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
 import TrackPattern.Model
 import TrackPattern.View
-# import TrackPattern.Controller # this has to be here so __import__ in main script works
 import TrackPattern.ControllerSetCarsForm
 
 class StartUp():
