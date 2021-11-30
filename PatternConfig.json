@@ -1,16 +1,27 @@
 {
-  "PluginLocation": {
-    "PL": "3",
-    "WX": 300,
-    "WY": 200, 
-    "locationOptions": {
-      "1": "trainsTable",
-      "2": "homeScreen",
-      "3": "uniqueWindow"
-    }
+  "LM": {
+    "LO": {
+      "0": [
+        "Pattern Scripts plugin is turned off",
+        null
+      ],
+      "1": [
+        "Display the Control Panel on the PanelPro frame",
+        "panelPro"
+      ],
+      "2": [
+        "Control Panel added to its own window",
+        "uniqueWindow"
+      ],
+      "3": [
+        "Control Panel added to the Trains window",
+        "trainsTable"
+      ]
+    },
+    "PL": "2"
   },
-  "ControlPanel" : {
-    "scriptIncludes" : {
+  "CP" : {
+    "SI" : {
       "TrackPattern" : true,
       "FutureSubroutines" : false
     },

@@ -6,11 +6,38 @@
 
 import jmri
 import time
+import java.awt
+import java.awt.event
+import javax.swing
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
+import TrackPattern.Config
 
 scriptRev = 'TrackPattern.ModelEntities v20211125'
+
+class SetTrackBoxMouseListener(java.awt.event.MouseAdapter):
+    '''When any of the Set Cars to Track text boxes is clicked on'''
+
+    def __init__(self):
+        pass
+
+    def mouseClicked(self, MOUSE_CLICKED):
+
+        try:
+            MOUSE_CLICKED.getSource().setText(TrackPattern.Config.trackNameClickedOn)
+        except NameError:
+            # add some loggong stuff
+            print('No track was selected')
+        return
+
+def makeSwingBox(xWidth, xHeight):
+    ''' Makes a swing box to the desired size'''
+
+    xName = javax.swing.Box(javax.swing.BoxLayout.X_AXIS)
+    xName.setPreferredSize(java.awt.Dimension(width=xWidth, height=xHeight))
+
+    return xName
 
 def getAllLocations():
     '''returns a list of all locations for this profile. JMRI sorts the list'''
@@ -72,6 +99,46 @@ def occuranceTally(listOfOccurances):
         dict[occurance] = tally
 
     return dict
+
+def setCarsFormBody(trackData):
+    '''Creates the body of the Set cars form'''
+
+# Set up
+    cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
+    configFile = MainScriptEntities.readConfigFile('TP')
+    reportWidth = configFile['RW']
+    jTextIn = []
+# define the forms body
+    formBody = javax.swing.JPanel()
+    formBody.setLayout(javax.swing.BoxLayout(formBody, javax.swing.BoxLayout.Y_AXIS))
+    formBody.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
+# Sort the cars
+    for j in trackData['ZZ']:
+        carList = sortCarList(j['TR'])
+# Each line of the form
+        headerWidth = 0
+        for car in carList:
+            carId = cm.newRS(car['Road'], car['Number']) # returns car object
+            carDataDict = makeCarDetailDict(carId)
+            combinedInputLine = javax.swing.JPanel()
+            combinedInputLine.setAlignmentX(0.0)
+        # set car to input box
+            inputText = javax.swing.JTextField(5)
+            inputText.addMouseListener(SetTrackBoxMouseListener())
+            jTextIn.append(inputText) # making a list of jTextField boxes
+            inputBox = makeSwingBox(reportWidth['Input'] * configFile['RM'], configFile['PH'])
+            inputBox.add(inputText)
+            combinedInputLine.add(inputBox)
+            for x in jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
+                if (x != ' '):
+                    label = javax.swing.JLabel(carDataDict[x])
+                    box = makeSwingBox(reportWidth[x] * configFile['RM'], configFile['PH'])
+                    box.add(label)
+                    combinedInputLine.add(box)
+                    headerWidth = headerWidth + reportWidth[x]
+            formBody.add(combinedInputLine)
+
+    return formBody, jTextIn
 
 def makeCarDetailDict(carObject):
     '''makes a dictionary of attributes for one car based on the requirements of

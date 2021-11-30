@@ -9,7 +9,6 @@ import java.awt
 import java.awt.event
 import javax.swing
 import logging
-import time
 from codecs import open as cOpen
 from os import system
 from sys import path
@@ -17,21 +16,7 @@ path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsYardPattern')
 import MainScriptEntities
 import TrackPattern.ViewEntities
 import TrackPattern.ModelEntities
-
-class SetTrackBoxMouseListener(java.awt.event.MouseAdapter):
-    '''When any of the Set Cars to Track text boxes is clicked on'''
-
-    def __init__(self):
-        pass
-
-    def mouseClicked(self, event):
-
-        try:
-            event.getSource().setText(xyzzy)
-        except NameError:
-            # add some loggong stuff
-            print('No track was selected')
-        return
+import TrackPattern.Config
 
 class TrackButtonPressedListener(java.awt.event.ActionListener):
     '''When any one of the track buttons is pressed'''
@@ -39,10 +24,9 @@ class TrackButtonPressedListener(java.awt.event.ActionListener):
     def __init__(self):
         pass
 
-    def trackButton(self, event):
+    def trackButton(self, MOUSE_CLICKED):
 
-        global xyzzy
-        xyzzy = unicode(event.getSource().getText(), MainScriptEntities.setEncoding())
+        TrackPattern.Config.trackNameClickedOn = unicode(MOUSE_CLICKED.getSource().getText(), MainScriptEntities.setEncoding())
 
         return
 
@@ -95,11 +79,12 @@ class SetCarsWindowInstance():
                 if (userInputList[i] in self.allTracksAtLoc and userInputList[i] != trackName):
                     setToTrack = setToLocation.getTrackByName(unicode(userInputList[i], MainScriptEntities.setEncoding()), None)
                     setCarId = self.cm.newRS(y['Road'], y['Number'])
-                    setCarId.setLocation(setToLocation, setToTrack, self.ignoreLength)
-                    if (setCarId.getTrack() != setToTrack):
-                        self.psLog.info(setCarId.getRoadName() + ' ' + setCarId.getNumber() + ' not set, track capacity exception')
+                    setResult = setCarId.setLocation(setToLocation, setToTrack, self.ignoreLength)
+                    if (setResult != 'okay'):
+                        self.psLog.warning(setCarId.getRoadName() + ' ' + setCarId.getNumber() + ' not set exception: ' + setResult)
                     j += 1
                 i += 1
+            jmri.jmrit.operations.rollingstock.cars.CarManagerXml.save()
             self.psLog.info(str(j) + ' cars were processed from track ' + trackName)
     # Wrap it up
         self.setCarsWindow.setVisible(False)
@@ -179,7 +164,7 @@ class SetCarsWindowInstance():
         combinedForm.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT)
         bodyHeader, headerWidth = TrackPattern.ViewEntities.setCarsFormBodyHeader()
         combinedForm.add(bodyHeader)
-        formBody, self.jTextIn = TrackPattern.ViewEntities.setCarsFormBody(self.trackData)
+        formBody, self.jTextIn = TrackPattern.ModelEntities.setCarsFormBody(self.trackData)
         combinedForm.add(formBody)
         scrollPanel = javax.swing.JScrollPane(combinedForm)
         scrollPanel.border = javax.swing.BorderFactory.createEmptyBorder(2,2,2,2)

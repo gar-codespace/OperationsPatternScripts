@@ -3,12 +3,6 @@
 # © 2021 Greg Ritacco
 
 import jmri
-import jmri.util.JmriJFrame
-import javax.swing
-import java.awt.event
-# import java.awt.Window
-# import java.awt.event.MouseAdapter
-from apps import Apps
 import logging
 import time
 from sys import path
@@ -38,57 +32,7 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         if not (MainScriptEntities.validateConfigFile()):
             MainScriptEntities.writeNewConfigFile() # No love, just start over
             self.psLog.warning('PatternConfig.json missing or corrupt, new file created')
-        self.configFile = MainScriptEntities.readConfigFile('ControlPanel')
-        self.homePanelButton = MainScriptEntities.makeButton()
 
-        return
-
-    class PatternScriptsWindowListener(java.awt.event.WindowListener):
-        '''Listener to respond to window operations'''
-
-        def __init__(self, button):
-
-            self.homePanelButton = button
-            return
-
-        def windowOpened(self, WINDOW_OPENED):
-            print('window opened')
-            return
-        def windowActivated(self, WINDOW_ACTIVATED):
-            print('activated')
-            return
-        def windowDeactivated(self, WINDOW_DEACTIVATED):
-            print('window deactivated')
-            return
-        def windowClosed(self, WINDOW_CLOSED):
-
-            StartUp().activateButton(self.homePanelButton)
-
-            return
-        def windowClosing(self, WINDOW_CLOSING):
-            print('window closing')
-            return
-
-    def activateButton(self, button):
-        button.setEnabled(True)
-        return
-
-    def homeButtonClick(self, event):
-        '''The Pattern Scripts button on the Panel Pro home screen'''
-
-        piList = MainScriptEntities.readConfigFile('PluginLocation')
-        piOptions = piList['locationOptions']
-        piLocation = piList['PL']
-        piWindowLocation = getattr(PluginLocations, piOptions[piLocation])()
-        piWindowLocation.addWindowListener(self.PatternScriptsWindowListener(self.homePanelButton))
-        piWindowLocation.setLocationRelativeTo(Apps.buttonSpace())
-        piWindowLocation.add(self.scrollPanel)
-        piWindowLocation.setVisible(True)
-        self.psLog.info('Subroutine control panel created on ' + piOptions[piLocation])
-        self.homePanelButton.setEnabled(False)
-        print(StartUp.scriptRev)
-        for xFrame in jmri.util.JmriJFrame.getFrameList():
-            print(xFrame.getTitle())
         return
 
     def handle(self):
@@ -97,32 +41,28 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         yTimeNow = time.time()
     # create the subroutines for the control panel
         subroutineList = []
-        for subroutine, bool in self.configFile['scriptIncludes'].items():
+        configFile = MainScriptEntities.readConfigFile('CP')
+        for subroutine, bool in configFile['SI'].items():
             if (bool):
-            # import the sub
+            # import selected subroutines and add them to a list
                 xModule = __import__(subroutine, fromlist=['Controller'])
-            # add the sub to the control panel
-                # subroutineFrame = __import__(subroutine).Controller.StartUp().makeSubroutineFrame()
-                # subroutinePanel = __import__(subroutine).Controller.StartUp().makeSubroutinePanel()
                 subroutineFrame = xModule.Controller.StartUp().makeSubroutineFrame()
                 subroutinePanel = xModule.Controller.StartUp().makeSubroutinePanel()
                 subroutineFrame.add(subroutinePanel)
                 subroutineList.append(subroutineFrame)
                 self.psLog.info(subroutine + ' subroutine added to control panel')
-    # plug in subroutines into the control panel
-        controlPanel, self.scrollPanel = MainScriptEntities.makeControlPanel()
+    # plug in the subroutine list into the control panel
+        controlPanel, scrollPanel = MainScriptEntities.makeControlPanel()
         for subroutine in subroutineList:
             controlPanel.add(subroutine)
-
-        # xtxtxt = PluginLocations.trainsTable()
-        # xtxtxt.addWindowListener(MainScriptEntities.TrainsWindowListener())
-        # tttjjj = MainScriptEntities.genericMouseListener()
-        # tttjjj.addMouseListener()
     # plug in the control panel to a location
+        locationMatrix = MainScriptEntities.readConfigFile('LM')
+        panelLocation = locationMatrix['PL']
+        locationOptions = locationMatrix['LO']
+        if (locationOptions[panelLocation][1]):
+            getattr(PluginLocations, locationOptions[panelLocation][1])(scrollPanel)
 
-        self.homePanelButton.actionPerformed = self.homeButtonClick
-        Apps.buttonSpace().add(self.homePanelButton)
-        Apps.buttonSpace().revalidate()
+        self.psLog.info(locationOptions[panelLocation][0])
         self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
 
         return False

@@ -5,34 +5,79 @@
 # © 2021 Greg Ritacco
 
 import jmri
+# import jmri.jmrit
 import jmri.util
-import java.awt
+import java.awt.event
 import javax.swing
 from apps import Apps
-from sys import path
-path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
-import MainScriptEntities
 
 scriptRev = 'OperationsPatternScripts.PluginLocations v20211125'
 
-def trainsTable():
-    '''Add the plugin to the bottom of the trains window'''
+class PatternScriptsWindowListener(java.awt.event.WindowListener):
+    '''Listener to respond to window operations'''
 
-    print(scriptRev)
+    def __init__(self, button):
 
-    return  jmri.jmrit.operations.trains.TrainsTableFrame()
+        self.homePanelButton = button
+        return
 
-def homeScreen():
+    def windowOpened(self, WINDOW_OPENED):
+        for xFrame in jmri.util.JmriJFrame.getFrameList(): # tonsil
+            print(xFrame.getTitle())
+        return
+    def windowActivated(self, WINDOW_ACTIVATED):
+        return
+    def windowDeactivated(self, WINDOW_DEACTIVATED):
+        return
+    def windowClosed(self, WINDOW_CLOSED):
+        self.homePanelButton.setEnabled(True)
+        return
+    def windowClosing(self, WINDOW_CLOSING):
+        return
+
+def makeButton():
+
+    return javax.swing.JButton(text = u'Pattern Scripts')
+
+def panelPro(scrollPanel):
     '''Add the plugin to the Panel Pro home screen
 NOTE: This location does not support DecoderPro'''
 
+    Apps.buttonSpace().add(scrollPanel)
+    Apps.buttonSpace().revalidate()
     print(scriptRev)
 
-    return Apps.buttonSpace()
+    return
 
-def uniqueWindow():
-    '''Add the plugin to its own window'''
+def uniqueWindow(scrollPanel):
+    '''makes a window to display the control panel'''
+
+    def homeButtonClick(MOUSE_CLICKED):
+        '''The Pattern Scripts button on the Panel Pro frame'''
+
+        homePanelButton.setEnabled(False)
+        uniqueWindow.setVisible(True)
+        return
+
+    homePanelButton = makeButton()
+    homePanelButton.actionPerformed = homeButtonClick
+    Apps.buttonSpace().add(homePanelButton)
+    Apps.buttonSpace().revalidate()
+
+    uniqueWindow = jmri.util.JmriJFrame(u'Pattern Scripts')
+    uniqueWindow.addWindowListener(PatternScriptsWindowListener(homePanelButton))
+    uniqueWindow.setSize(600, 180)
+    uniqueWindow.setLocationRelativeTo(Apps.buttonSpace())
+    uniqueWindow.add(scrollPanel)
 
     print(scriptRev)
 
-    return jmri.util.JmriJFrame(u'Pattern Scripts')
+    return
+
+def trainsTable(scrollPanel):
+    '''Add the plugin to the bottom of the trains window'''
+
+    jmri.jmrit.operations.trains.TrainsTableFrame().add(scrollPanel)
+    print(scriptRev)
+
+    return

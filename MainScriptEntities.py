@@ -5,12 +5,9 @@
 # © 2021 Greg Ritacco
 
 import jmri
+# import jmri.util
 import java.awt
 import java.awt.event
-import java.awt.event.WindowListener
-import java.awt.event.MouseAdapter
-import java.awt.event.MouseEvent
-# import java.awt.EventListener
 import javax.swing
 import time
 from json import loads as jLoads, dumps as jDumps
@@ -19,34 +16,6 @@ from os import path as oPath
 from shutil import copy as sCopy
 
 scriptRev = 'OperationsPatternScripts.MainScriptEntities v20211125'
-
-class GenericWindowListener(java.awt.event.WindowListener):
-    '''Listener to respond to window operations'''
-
-    def __init__(self):
-        pass
-
-    def windowOpened(WINDOW_OPENED, event):
-        print('window opened')
-    def windowActivated(WINDOW_ACTIVATED, event):
-        print('activated')
-    def windowDeactivated(WINDOW_DEACTIVATED, event):
-        print('window deactivated')
-    def windowClosed(WINDOW_CLOSED, event):
-        print('window closed')
-    def windowClosing(WINDOW_CLOSING, event):
-        print('window closing')
-    # def windowDeactivated(WINDOW_DEACTIVATED, event):
-    #     print('window')
-class genericMouseListener(java.awt.event.MouseAdapter):
-    '''Listens for mouse clicks'''
-
-    def __init__(self):
-        pass
-    def leftClick(self, event):
-        print('left click')
-    def addMouseListener(event):
-        print('left click')
 
 def validateConfigFile():
     '''Checks for a config file and adds one if missing'''
@@ -99,7 +68,7 @@ def makeControlPanel():
     '''Create the control panel, with a scroll bar, that all subroutines go into
     This holds trackPatternPanel and future panels'''
 
-    configFile = readConfigFile('ControlPanel')
+    configFile = readConfigFile('CP')
     controlPanel = javax.swing.JPanel() # The whole panel that everything goes into
     scrollPanel = javax.swing.JScrollPane(controlPanel) # and that goes into a scroll pane
     scrollPanel.border = javax.swing.BorderFactory.createLineBorder(java.awt.Color.GRAY)
@@ -107,13 +76,6 @@ def makeControlPanel():
     scrollPanel.setMaximumSize(scrollPanel.getPreferredSize())
 
     return controlPanel, scrollPanel
-
-def makeButton():
-
-    piButton = javax.swing.JButton()
-    piButton.text = u'Pattern Scripts'
-
-    return piButton
 
 def timeStamp():
     '''Valid Time, get local time adjusted for time zone and dst'''

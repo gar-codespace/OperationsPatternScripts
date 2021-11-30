@@ -1,66 +1,79 @@
-Documentation for scripts
 Description of PatternConfig.JSON file
-  Common for all subroutines
-        "PluginLocation": { This group is data on where the plugin is located
-          "PL": "3", Plugin Location, where the plugin will be plugged into, hand edit the json to change
-          "WX": 300, Window X value, depricated
-          "WY": 200, Window Y value, depricated
-          "locationOptions": { These are the plugin location options
-            "1": "trainsTable",
-            "2": "homeScreen",
-            "3": "uniqueWindow"
-          }
-        },
-        "ControlPanel" : { This group lists and chooses which subroutines will be part of the plugin
-          "scriptIncludes" : {
-            "TrackPattern" : true, True means the sub will be included
-            "FutureSubroutines" : false
-          },
-          "PH" : 140, Panel height, of the control panel
-          "PW" : 2000 Panel width
-        },
 
-    Docs for the Track Pattern sub
-        "TP" : { Track Pattern, this group has all the settings for the TP subroutine
-          "AL" : [ All Locations, all the locations for the current profile, the program sets this
-          ],
-          "PL" : "", Pattern Location, the currently selected location, set by user
-          "PT" : { Pattern Tracks, list of tracks for the selected location and their selected flag, set by user, written by program
-          },
-          "PA" : false, Yard Tracks only flag, set by user
-          "PI" : false, Ignore Track Length flag, set by user
-          "PW" : 260, Pattern Width, depricated
-          "PH" : 16, Pattern Height, height of all javax boxes used in all windows
-          "ST" : "Set to:", Part of Set Cars to Track header
-          "SL": [ Sort List, sort column and order for all reports, this can be hand edited by the user, selected from RW fields. Sort order is top down
-            "Load Type",
-            "FD&Track"
-          ],
-          "RM": 8, Row Multiplier, "Translater" value to convert character width to pixels
-          "RW": { Report Width, This is a list of JMRI fields and their default report character lengths
-            "Input": 6,
-            "Road" : 5,
-            "Number" : 7,
-            "Type" : 5,
-            "Length" : 7,
-            "Weight" : 7,
-            "Load" : 5,
-            "Load Type" : 10,
-            "Hazardous" : 10,
-            "Color" : 6,
-            "Kernel" : 7,
-            "Kernel Size" : 12,
-            "Owner" : 6,
-            "Track" : 6,
-            "Location" : 9,
-            "Destination" : 12,
-            "Dest&Track" : 30,
-            "Final Dest" : 11,
-            "FD&Track" : 20,
-            "Comment" : 15,
-            "SetOut Msg" : 12,
-            "PickUp Msg" : 12,
-            "RWE" : 10
-          }
-        }
-      }
+  ***Common for all subroutines
+
+  "CP": { This group lists and chooses which subroutines will be part of the plugin
+    "PH": 140, Panel Height
+    "PW": 2000, Panel Width
+    "SI": { Subroutine Includes
+      "FutureSubroutines": false,
+      "TrackPattern": true True means the sub will be included
+    }
+  },
+  "LM": { Location Matrix - dictionary of locations where the control panel can be displayed
+    "LO": { Location Options - values for each possible display location
+      "0": [
+        "Pattern Scripts plugin is turned off",
+        null
+      ],
+      "1": [
+        "Display the Control Panel on the PanelPro frame",
+        "panelPro"
+      ],
+      "2": [
+        "Control Panel added to its own window",
+        "uniqueWindow"
+      ],
+      "3": [
+        "Control Panel added to the Trains window",
+        "trainsTable"
+      ]
+    },
+    "PL": "2" Plugin Location, enter 0 to turn off, 1, 2, or 3 to change the display location
+  },
+
+  ***Docs for the Track Pattern sub
+
+  "TP" : { Track Pattern, this group has all the settings for the TP subroutine
+    "AL" : [ All Locations, all the locations for the current profile, the program sets this
+    ],
+    "PL" : "", Pattern Location, the currently selected location, set by user
+    "PT" : { Pattern Tracks, list of tracks for the selected location and their selected flag, set by user, written by program
+    },
+    "PA" : false, Yard Tracks only flag, set by user
+    "PI" : false, Ignore Track Length flag, set by user
+    "PW" : 260, Pattern Width, depricated
+    "PH" : 16, Pattern Height, height of all javax boxes used in all windows
+    "ST" : "Set to:", Part of Set Cars to Track header
+    "SL": [ Sort List, sort column and order for all reports, this can be hand edited by the user, selected from RW fields. Sort order is top down
+      "Load Type",
+      "FD&Track"
+    ],
+    "RM": 8, Row Multiplier, "Translater" value to convert character width to pixels
+    "RW": { Report Width, This is a list of JMRI fields and their default report character lengths
+      "Input": 6,
+      "Road" : 5,
+      "Number" : 7,
+      "Type" : 5,
+      "Length" : 7,
+      "Weight" : 7,
+      "Load" : 5,
+      "Load Type" : 10,
+      "Hazardous" : 10,
+      "Color" : 6,
+      "Kernel" : 7,
+      "Kernel Size" : 12,
+      "Owner" : 6,
+      "Track" : 6,
+      "Location" : 9,
+      "Destination" : 12,
+      "Dest&Track" : 30,
+      "Final Dest" : 11,
+      "FD&Track" : 20,
+      "Comment" : 15,
+      "SetOut Msg" : 12,
+      "PickUp Msg" : 12,
+      "RWE" : 10
+    }
+  }
+}
