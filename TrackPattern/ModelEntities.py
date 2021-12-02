@@ -12,7 +12,7 @@ import javax.swing
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
-import TrackPattern.Config
+# import TrackPattern.Config
 
 scriptRev = 'TrackPattern.ModelEntities v20211125'
 
@@ -25,7 +25,7 @@ class SetTrackBoxMouseListener(java.awt.event.MouseAdapter):
     def mouseClicked(self, MOUSE_CLICKED):
 
         try:
-            MOUSE_CLICKED.getSource().setText(TrackPattern.Config.trackNameClickedOn)
+            MOUSE_CLICKED.getSource().setText(MainScriptEntities.trackNameClickedOn)
         except NameError:
             # add some loggong stuff
             print('No track was selected')
@@ -139,6 +139,14 @@ def setCarsFormBody(trackData):
             formBody.add(combinedInputLine)
 
     return formBody, jTextIn
+
+def getSetCarsData(location, track):
+    '''Creates the data needed for a Set Cars to Track window'''
+
+    listForTrack = TrackPattern.ModelEntities.makeYardPattern(location, [track]) # track needs to be send in as a list
+    listForTrack.update({'RT': u'Switch List for Track '})
+
+    return listForTrack
 
 def makeCarDetailDict(carObject):
     '''makes a dictionary of attributes for one car based on the requirements of
@@ -318,16 +326,61 @@ def makeCsvSwitchlist(trackPattern):
 
     return csvSwitchList
 
-def isTrackASpur(location, track):
-    '''Returns the tracks schedule object if the track is defined as a spur'''
+def getScheduleName(locationString, trackString):
+    '''Returns the tracks schedule name string'''
+
+    scheduleName = 'No Schedule'
+    isASpur = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationByName(locationString).getTrackByName(trackString, 'Spur')
+    if (isASpur):
+        scheduleName = isASpur.getSchedule().getName()
+
+    return scheduleName
+
+def makeSpurScheduleMatrix(location, track):
+    '''For a track, returns bool for isASpur and scheduleToggle'''
 
     isASpur = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationByName(location).getTrackByName(track, 'Spur')
     if (isASpur):
-        return isASpur.getSchedule()
+        spurToggle = True
+        if (isASpur.getSchedule()):
+            scheduleToggle = True
     else:
-        return None
+        spurToggle = False
+        scheduleToggle = False
 
-def getScheduleMetricsByItem(schedule, item):
+    return spurToggle, scheduleToggle
 
-    pass
+def applyTrackSchedule(carObject, scheduleString, hasASchedule):
+    '''For spurs only loads or unloads per the track schedule, if no schedule toggles load state'''
+
+    carType = carObject.getTypeName()
+    # carLoadType = carObject.getLoadType()
+    # carLoadName = carObject.getLoadName()
+    if (hasASchedule):
+        sm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.schedules.ScheduleManager)
+        cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
+        lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
+        scheduleObject = sm.getScheduleByName(scheduleString)
+        carObject.setLoadName(scheduleObject.getItemByType(carType).getShipLoadName())
+
+        finalDestination = lm.getLocationByName(scheduleObject.getItemByType(carType).getDestinationName())
+        finalDestinationTrack = lm.getLocationByName(scheduleObject.getItemByType(carType).getDestinationTrack())
+        try:
+
+            carObject.setFinalDestination(finalDestination)
+            # print(scheduleObject.getItemByType(carType).getDestinationTrack())
+            try:
+            #     finalDestinationTrack = finalDestination.getTrackByName(scheduleObject.getItemByType(carType).getDestinationTrack(), None)
+                carObject.setFinalDestinationTrack(finalDestinationTrack)
+            except NoneType:
+                carObject.setFinalDestinationTrack(None)
+        except NoneType:
+            carObject.setFinalDestination(None)
+            # carObject.setFinalDestinationTrack(None)
+
+        # carObject.setFinalDestinationTrack(scheduleObject.getItemByType(carType).getDestinationTrack())
+        scheduleObject.getItemByType(carType).setHits(scheduleObject.getItemByType(carType).getHits() + 1)
+    else:
+        pass
+
     return

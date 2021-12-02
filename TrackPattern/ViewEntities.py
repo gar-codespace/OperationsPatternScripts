@@ -11,25 +11,8 @@ import javax.swing
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsYardPattern')
 import MainScriptEntities
-# import TrackPattern.ModelEntities
-import TrackPattern.Config
 
 scriptRev = 'TrackPattern.ViewEntities v20211125'
-
-# class SetTrackBoxMouseListener(java.awt.event.MouseAdapter):
-#     '''When any of the Set Cars to Track text boxes is clicked on'''
-#
-#     def __init__(self):
-#         pass
-#
-#     def mouseClicked(self, MOUSE_CLICKED):
-#
-#         try:
-#             MOUSE_CLICKED.getSource().setText(TrackPattern.Config.trackNameClickedOn)
-#         except NameError:
-#             # add some loggong stuff
-#             print('No track was selected')
-#         return
 
 def makeSwingBox(xWidth, xHeight):
     ''' Makes a swing box to the desired size'''
@@ -48,6 +31,17 @@ def makeWindow():
     pFrame.contentPane.setAlignmentX(0.0)
 
     return pFrame
+
+def makeTrackButtonRow(allTracksAtLoc):
+    '''Makes a row of buttons, one for each track'''
+
+    trackButtonRowList = []
+    for track in allTracksAtLoc:
+        selectTrackButton = javax.swing.JButton(track)
+        selectTrackButton.setPreferredSize(java.awt.Dimension(0,18))
+        trackButtonRowList.append(selectTrackButton)
+
+    return trackButtonRowList
 
 def setCarsFormHeader(trackData):
     ''' Creates the Set Cars forms header'''
@@ -109,46 +103,6 @@ def setCarsFormBodyHeader():
     headerWidth = headerWidth * 10
 
     return bodyHeader, headerWidth
-#
-# def setCarsFormBody(trackData):
-#     '''Creates the body of the Set cars form'''
-#
-# # Set up
-#     cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
-#     configFile = MainScriptEntities.readConfigFile('TP')
-#     reportWidth = configFile['RW']
-#     jTextIn = []
-# # define the forms body
-#     formBody = javax.swing.JPanel()
-#     formBody.setLayout(javax.swing.BoxLayout(formBody, javax.swing.BoxLayout.Y_AXIS))
-#     formBody.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
-# # Sort the cars
-#     for j in trackData['ZZ']:
-#         carList = TrackPattern.ModelEntities.sortCarList(j['TR'])
-# # Each line of the form
-#         headerWidth = 0
-#         for car in carList:
-#             carId = cm.newRS(car['Road'], car['Number']) # returns car object
-#             carDataDict = TrackPattern.ModelEntities.makeCarDetailDict(carId)
-#             combinedInputLine = javax.swing.JPanel()
-#             combinedInputLine.setAlignmentX(0.0)
-#         # set car to input box
-#             inputText = javax.swing.JTextField(5)
-#             inputText.addMouseListener(SetTrackBoxMouseListener())
-#             jTextIn.append(inputText) # making a list of jTextField boxes
-#             inputBox = makeSwingBox(reportWidth['Input'] * configFile['RM'], configFile['PH'])
-#             inputBox.add(inputText)
-#             combinedInputLine.add(inputBox)
-#             for x in jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
-#                 if (x != ' '):
-#                     label = javax.swing.JLabel(carDataDict[x])
-#                     box = makeSwingBox(reportWidth[x] * configFile['RM'], configFile['PH'])
-#                     box.add(label)
-#                     combinedInputLine.add(box)
-#                     headerWidth = headerWidth + reportWidth[x]
-#             formBody.add(combinedInputLine)
-#
-#     return formBody, jTextIn
 
 def setCarsFormFooter():
     '''Creates the Set Cars forms footer'''

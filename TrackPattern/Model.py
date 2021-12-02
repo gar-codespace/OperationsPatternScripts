@@ -105,11 +105,10 @@ def updateCheckBoxStatus(all, ignore):
 def getSetCarsData(location, track):
     '''Creates the data needed for a Set Cars to Track window'''
 
-    trackSchedule = TrackPattern.ModelEntities.isTrackASpur(location, track)
     listForTrack = TrackPattern.ModelEntities.makeYardPattern(location, [track]) # track needs to be send in as a list
     listForTrack.update({'RT': u'Switch List for Track '})
 
-    return listForTrack, trackSchedule
+    return listForTrack
 
 def updateSettings(controls):
     '''Updates the config file when a button is pressed'''

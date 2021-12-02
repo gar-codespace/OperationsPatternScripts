@@ -16,7 +16,6 @@ path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsYardPattern')
 import MainScriptEntities
 import TrackPattern.ViewEntities
 import TrackPattern.ModelEntities
-import TrackPattern.Config
 
 class TrackButtonPressedListener(java.awt.event.ActionListener):
     '''When any one of the track buttons is pressed'''
@@ -26,7 +25,7 @@ class TrackButtonPressedListener(java.awt.event.ActionListener):
 
     def trackButton(self, MOUSE_CLICKED):
 
-        TrackPattern.Config.trackNameClickedOn = unicode(MOUSE_CLICKED.getSource().getText(), MainScriptEntities.setEncoding())
+        MainScriptEntities.trackNameClickedOn = unicode(MOUSE_CLICKED.getSource().getText(), MainScriptEntities.setEncoding())
 
         return
 
@@ -36,8 +35,7 @@ class SetCarsWindowInstance():
 # Class variables
     scriptRev = 'TrackPattern.ViewSetCarsForm v20211125'
 
-    def __init__(self, pattern, schedule):
-        '''Initialization variables'''
+    def __init__(self, pattern):
 
         self.psLog = logging.getLogger('PS.TP.CarsForm')
     # Boilerplate
@@ -47,17 +45,20 @@ class SetCarsWindowInstance():
         self.configFile = MainScriptEntities.readConfigFile('TP')
     # Track variables
         self.trackData = pattern # all the data for the selected track, car roster is sorted
-        self.trackSchedule = schedule
-        self.allTracksAtLoc = [] # all the tracks for that location
-        self.ignoreLength = False # initial setting, user changes this setting
+        # self.trackSchedule = schedule
+        self.allTracksAtLoc = [] # all the tracks for this location
+        # self.trackButtonList = []
+        self.ignoreLength = False # initial setting, user changes this
+        self.isASpur = False
+        self.hasASchedule = False
     # Lists for reports
         self.jTextIn = [] # create a list jTextField objects
         self.carDataList = [] # list of sorted car objects
-        self.trackClip = u''
+        # self.trackClip = u''
 
         return
 
-    def setCarsToTrack(self, event):
+    def setCarsToTrack(self, MOUSE_CLICK):
         '''Event that moves cars to the tracks entered in the pattern window'''
 
     # set the cars to a track
@@ -70,29 +71,34 @@ class SetCarsWindowInstance():
         for z in patternCopy['ZZ']:
             if (len(userInputList) == len(z['TR'])): # check that the lengths of the -input list- and -car roster- match
                 self.psLog.info('input list and car roster lengths match')
+                trackName = unicode(z['TN'], MainScriptEntities.setEncoding())
+                setToLocation = self.lm.getLocationByName(unicode(patternCopy['YL'], MainScriptEntities.setEncoding()))
+                scheduleName = TrackPattern.ModelEntities.getScheduleName(patternCopy['YL'], trackName)
+                # print(TrackPattern.ModelEntities.makeSpurScheduleMatrix(setToLocation.getName(), trackName))
+                j = 0
+                for y in z['TR']:
+                    if (userInputList[i] in self.allTracksAtLoc and userInputList[i] != trackName):
+                        setToTrack = setToLocation.getTrackByName(unicode(userInputList[i], MainScriptEntities.setEncoding()), None)
+                        setCarId = self.cm.newRS(y['Road'], y['Number'])
+                        setResult = setCarId.setLocation(setToLocation, setToTrack, self.ignoreLength)
+                        if (setResult == 'okay'):
+                            if (self.isASpur):
+                                TrackPattern.ModelEntities.applyTrackSchedule(setCarId, scheduleName, self.hasASchedule)
+                        else:
+                            self.psLog.warning(setCarId.getRoadName() + ' ' + setCarId.getNumber() + ' not set exception: ' + setResult)
+                        j += 1
+                    i += 1
+                self.psLog.info(str(j) + ' cars were processed from track ' + trackName)
+                jmri.jmrit.operations.rollingstock.cars.CarManagerXml.save()
             else:
                 self.psLog.critical('mismatched input list and car roster lengths')
-            trackName = unicode(z['TN'], MainScriptEntities.setEncoding())
-            setToLocation = self.lm.getLocationByName(unicode(patternCopy['YL'], MainScriptEntities.setEncoding()))
-            j = 0
-            for y in z['TR']:
-                if (userInputList[i] in self.allTracksAtLoc and userInputList[i] != trackName):
-                    setToTrack = setToLocation.getTrackByName(unicode(userInputList[i], MainScriptEntities.setEncoding()), None)
-                    setCarId = self.cm.newRS(y['Road'], y['Number'])
-                    setResult = setCarId.setLocation(setToLocation, setToTrack, self.ignoreLength)
-                    if (setResult != 'okay'):
-                        self.psLog.warning(setCarId.getRoadName() + ' ' + setCarId.getNumber() + ' not set exception: ' + setResult)
-                    j += 1
-                i += 1
-            jmri.jmrit.operations.rollingstock.cars.CarManagerXml.save()
-            self.psLog.info(str(j) + ' cars were processed from track ' + trackName)
     # Wrap it up
         self.setCarsWindow.setVisible(False)
         print(SetCarsWindowInstance.scriptRev)
 
         return
 
-    def printYP(self, event):
+    def printYP(self, MOUSE_CLICK):
         '''Event that prints the yard pattern for the selected track'''
 
     # Make the switch list
@@ -130,35 +136,28 @@ class SetCarsWindowInstance():
 
         return
 
-
-    def trackButton(self, event):
-        '''When any one of the track buttons is pressed'''
-
-        self.trackClip = unicode(event.getSource().getText(), MainScriptEntities.setEncoding())
-
-        return
-
     def setCarsForTrackWindow(self, xOffset):
         ''' Creates and populates the -Pattern Report for Track- window'''
 
         configFile = MainScriptEntities.readConfigFile('TP')
-    # Make a button for every track at the location
-        self.allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(self.trackData['YL'], None)
-        buttonPanel = javax.swing.JPanel()
-        buttonPanel.setLayout(javax.swing.BoxLayout(buttonPanel, javax.swing.BoxLayout.X_AXIS))
-        self.trackButtonList = []
-        for track in self.allTracksAtLoc:
-            selectTrackButton = javax.swing.JButton(track)
-            selectTrackButton.setPreferredSize(java.awt.Dimension(0,18))
-            buttonPanel.add(selectTrackButton)
-            self.trackButtonList.append(selectTrackButton)
-            # selectTrackButton.actionPerformed = TrackPattern.ViewEntities.trackButton
-            selectTrackButton.actionPerformed = TrackButtonPressedListener().trackButton
-    # Define the window
+
+    #Boilerplate
         trackName = self.trackData['ZZ']
         trackName = trackName[0]
         trackName = unicode(trackName['TN'], MainScriptEntities.setEncoding())
-    # Define the form
+        trackLocation = unicode(self.trackData['YL'], MainScriptEntities.setEncoding())
+        self.allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(trackLocation, None)
+        self.isASpur, self.hasASchedule = TrackPattern.ModelEntities.makeSpurScheduleMatrix(trackLocation, trackName)
+    # Create the forms header
+        formHeader = TrackPattern.ViewEntities.setCarsFormHeader(self.trackData)
+        formHeader.border = javax.swing.BorderFactory.createEmptyBorder(5,0,5,0)
+    # create the row of track buttons
+        buttonPanel = javax.swing.JPanel()
+        buttonPanel.setLayout(javax.swing.BoxLayout(buttonPanel, javax.swing.BoxLayout.X_AXIS))
+        for trackButton in TrackPattern.ViewEntities.makeTrackButtonRow(self.allTracksAtLoc):
+            buttonPanel.add(trackButton)
+            trackButton.actionPerformed = TrackButtonPressedListener().trackButton
+    # Create the car list part of the form
         combinedForm = javax.swing.JPanel()
         combinedForm.setLayout(javax.swing.BoxLayout(combinedForm, javax.swing.BoxLayout.Y_AXIS))
         combinedForm.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT)
@@ -168,33 +167,28 @@ class SetCarsWindowInstance():
         combinedForm.add(formBody)
         scrollPanel = javax.swing.JScrollPane(combinedForm)
         scrollPanel.border = javax.swing.BorderFactory.createEmptyBorder(2,2,2,2)
-    # Make the footer
+    # Create the schedule row
+        schedulePanel = javax.swing.JPanel()
+        schedulePanel.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT)
+        schedulePanel.add(javax.swing.JLabel(u'Schedule: ' + TrackPattern.ModelEntities.getScheduleName(trackLocation, trackName)))
+    # Create the footer
         combinedFooter, tpButton, scButton = TrackPattern.ViewEntities.setCarsFormFooter()
         tpButton.actionPerformed = self.printYP
         scButton.actionPerformed = self.setCarsToTrack
-    # Construct the window
+    # Put it all together
         self.setCarsWindow = TrackPattern.ViewEntities.makeWindow()
         self.setCarsWindow.setTitle(u'Pattern Report for track ' + trackName)
         self.setCarsWindow.setLocation(xOffset, 150)
-        formHeader = TrackPattern.ViewEntities.setCarsFormHeader(self.trackData)
-        formHeader.border = javax.swing.BorderFactory.createEmptyBorder(5,0,5,0)
-        # formHeader.add(javax.swing.JLabel(u'Schedule: ' + deg.getName()))
         self.setCarsWindow.add(formHeader)
         self.setCarsWindow.add(javax.swing.JSeparator())
         self.setCarsWindow.add(buttonPanel)
         self.setCarsWindow.add(javax.swing.JSeparator())
         self.setCarsWindow.add(scrollPanel)
         self.setCarsWindow.add(javax.swing.JSeparator())
-        if (self.trackSchedule):
-            scheduleName = self.trackSchedule.getName()
-            schedulePanel = javax.swing.JPanel()
-            schedulePanel.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT)
-            schedulePanel.add(javax.swing.JLabel(u'Schedule: ' + scheduleName))
-            self.setCarsWindow.add(schedulePanel)
-            self.setCarsWindow.add(javax.swing.JSeparator())
+        self.setCarsWindow.add(schedulePanel)
+        self.setCarsWindow.add(javax.swing.JSeparator())
         self.setCarsWindow.add(combinedFooter)
         self.setCarsWindow.pack()
         self.setCarsWindow.setVisible(True)
-        # print(SetCarsWindowInstance.scriptRev)
 
         return

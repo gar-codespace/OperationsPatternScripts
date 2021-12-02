@@ -102,12 +102,12 @@ class StartUp():
     # Button specific
         selectedTracks = TrackPattern.Model.getSelectedTracks()
         windowOffset = 200
-    # create an instance for each track in its own window
+    # create a set cars form for each track in its own window
         if (selectedTracks):
             i = 0
             for track in selectedTracks:
-                listForTrack, trackSchedule = TrackPattern.Model.getSetCarsData(self.controls[0].getSelectedItem(), track)
-                newWindow = TrackPattern.ControllerSetCarsForm.SetCarsWindowInstance(listForTrack, trackSchedule)
+                listForTrack = TrackPattern.Model.getSetCarsData(self.controls[0].getSelectedItem(), track)
+                newWindow = TrackPattern.ControllerSetCarsForm.SetCarsWindowInstance(listForTrack)
                 newWindow.setCarsForTrackWindow(windowOffset)
                 self.psLog.info(u'Set Cars Window created for track ' + track)
                 windowOffset += 50
