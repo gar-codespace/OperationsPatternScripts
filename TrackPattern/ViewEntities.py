@@ -23,12 +23,12 @@ def makeSwingBox(xWidth, xHeight):
     return xName
 
 def makeWindow():
-    '''Makes a swing frame with the desired name'''
+    '''Makes a JMRI style swing frame'''
 
     pFrame = jmri.util.JmriJFrame()
     pFrame.contentPane.setLayout(javax.swing.BoxLayout(pFrame.contentPane, javax.swing.BoxLayout.Y_AXIS))
-    pFrame.contentPane.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
-    pFrame.contentPane.setAlignmentX(0.0)
+    # pFrame.contentPane.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
+    # pFrame.contentPane.setAlignmentX(0.0)
 
     return pFrame
 

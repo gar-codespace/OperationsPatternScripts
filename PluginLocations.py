@@ -66,9 +66,10 @@ def uniqueWindow(scrollPanel):
 
     uniqueWindow = jmri.util.JmriJFrame(u'Pattern Scripts')
     uniqueWindow.addWindowListener(PatternScriptsWindowListener(homePanelButton))
-    uniqueWindow.setSize(600, 180)
-    uniqueWindow.setLocationRelativeTo(Apps.buttonSpace())
+    # uniqueWindow.setSize(600, 180)
+    # uniqueWindow.setLocationRelativeTo(Apps.buttonSpace())
     uniqueWindow.add(scrollPanel)
+    uniqueWindow.pack()
 
     print(scriptRev)
 

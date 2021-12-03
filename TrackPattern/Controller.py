@@ -116,7 +116,7 @@ class StartUp():
         else:
             self.psLog.info('No tracks were selected')
         print(StartUp().scriptRev)
-
+        
         return
 
     def whenPRButtonPressed(self, event):

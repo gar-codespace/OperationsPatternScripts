@@ -18,6 +18,7 @@ from shutil import copy as sCopy
 scriptRev = 'OperationsPatternScripts.MainScriptEntities v20211125'
 
 trackNameClickedOn = u'Track Name' # variable passed between modules
+carEmptyDict = {}
 
 def validateConfigFile():
     '''Checks for a config file and adds one if missing'''
