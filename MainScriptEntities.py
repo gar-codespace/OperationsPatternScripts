@@ -5,7 +5,6 @@
 # © 2021 Greg Ritacco
 
 import jmri
-# import jmri.util
 import java.awt
 import java.awt.event
 import javax.swing
@@ -17,8 +16,10 @@ from shutil import copy as sCopy
 
 scriptRev = 'OperationsPatternScripts.MainScriptEntities v20211125'
 
-trackNameClickedOn = u'Track Name' # variable passed between modules
-carEmptyDict = {}
+# 'global' variables passed between modules
+trackNameClickedOn = u''
+carTypeByEmptyDict = {}
+defaultLoadEmpty = u''
 
 def validateConfigFile():
     '''Checks for a config file and adds one if missing'''
@@ -99,9 +100,9 @@ def systemInfo():
         1: 'Mac Classic ',
         2: 'open -a TextEdit ', # OSX
         4: 'start notepad.exe ', # Windows
-        5: 'nano ', # Linux
+        5: 'gedit ', # Linux
         6: 'OS2 ',
-        7: 'Unix ', # Unix
+        7: 'kwrite ', # Unix
         }
 
     return textEdit[osName]

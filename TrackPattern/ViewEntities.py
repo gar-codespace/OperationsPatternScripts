@@ -137,7 +137,7 @@ def makePanel(self):
         self.controls[5].setEnabled(True)
         self.controls[4].actionPerformed = self.whenTPButtonPressed
         self.controls[5].actionPerformed = self.whenSCButtonPressed
-        self.psLog.info('saved location validated, buttons activated')
-    self.psLog.info('track pattern makePanel completed')
+        self.psLog.debug('saved location validated, buttons activated')
+    self.psLog.debug('track pattern makePanel completed')
 
     return self.panel

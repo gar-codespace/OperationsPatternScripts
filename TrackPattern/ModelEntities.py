@@ -327,33 +327,19 @@ def makeCsvSwitchlist(trackPattern):
 
     return csvSwitchList
 
-def makeListOfCarTypes():
-    '''Reads the car roster and returns a list of all the car types'''
-
-    cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManagerXml)
-    opsFileName = jmri.util.FileUtil.getProfilePath() + 'operations\\' + cm.getOperationsFileName()
-    with cOpen(opsFileName, 'r', encoding=MainScriptEntities.setEncoding()) as opsWorkFile:
-        carXml = ET.parse(opsWorkFile)
-        root = carXml.getroot()
-        listOfCarTypes = []
-        for xElement in carXml.getroot()[1]:
-            listOfCarTypes.append(xElement.attrib['name'])
-
-    return listOfCarTypes
-
 def makeCarTypeByEmptyDict():
-    '''Creates a dictionary car types and their empty name'''
+    '''Writes the default empty designation and creates a dictionary of car types and their empty name'''
 
     cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManagerXml)
     opsFileName = jmri.util.FileUtil.getProfilePath() + 'operations\\' + cm.getOperationsFileName()
     with cOpen(opsFileName, 'r', encoding=MainScriptEntities.setEncoding()) as opsWorkFile:
         carXml = ET.parse(opsWorkFile)
-        listOfCarTypes = []
-        for xElement in carXml.getroot()[5]:
-            carType = xElement.attrib
-            print(carType)
-            # listOfCarTypes.append(xElement.attrib['name'])
-
+        MainScriptEntities.defaultLoadEmpty = carXml.getroot()[5][0].attrib['empty']
+        for loadElement in carXml.getroot()[5]:
+            carType = loadElement.attrib
+            for loadDetail in loadElement:
+                if (loadDetail.attrib['loadType'] == 'Empty'):
+                    MainScriptEntities.carTypeByEmptyDict[carType['type']] = loadDetail.attrib['name']
     return
 
 def getScheduleForTrack(locationString, trackString):
@@ -377,64 +363,46 @@ def makeSpurScheduleMatrix(location, track):
         spurToggle = True
         if (isASpur.getSchedule()):
             scheduleToggle = True
-    # else:
-    #     spurToggle = False
-    #     scheduleToggle = False
 
     return spurToggle, scheduleToggle
 
-def getCustomEmptyName(carObject):
-    pass
-    return
-
-def applyShippingRubric(carObject, scheduleObject):
+def applyLoadRubric(carObject, scheduleObject=None):
     '''For spurs only, sets the values for shipped cars by priority'''
 
     carType = carObject.getTypeName()
-    if (scheduleObject):
-        try: # custom loadtype from schedule
-            carObject.setLoadName(scheduleObject.getItemByType(carType).getShipLoadName())
-        except NoneType:
-            try: # apply values from RWE or RWL
-                pass
-            except NoneType:
-                try: # apply values from custom empty
-                    pass
-                except NoneType:
-                    pass
-                    # apply default empty
+
+    try: # first try to apply the schedule
+        carObject.setLoadName(scheduleObject.getItemByType(carType).getShipLoadName())
+    except:
+        try: # apply values from RWE or RWL
+            if (carObject.getLoadType() == 'Empty'): # toggle the load
+                carObject.setLoadName(carObject.getReturnWhenLoadedLoadName())
+            else:
+                carObject.setLoadName(carObject.getReturnWhenEmptyLoadName())
+        except:
+            try: # apply values from custom empty
+                carObject.setLoadName(MainScriptEntities.carTypeByEmptyDict.get(carType))
+            except: # when all else fails, apply the default empty
+                carObject.setLoadName(MainScriptEntities.defaultLoadEmpty)
 
     return
 
-def applyTrackSchedule(carObject, scheduleObject, hasASchedule):
-    '''For spurs only, loads or unloads per the track schedule, if no schedule toggles load state'''
+def applyFdRubric(carObject, scheduleObject=None, ignoreLength=False):
+    '''For spurs only, sets the values for the cars final destination and FD track'''
 
     carType = carObject.getTypeName()
-    # carLoadType = carObject.getLoadType()
-    # carLoadName = carObject.getLoadName()
-    if (hasASchedule):
-        # sm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.schedules.ScheduleManager)
-        # cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
+    carObject.setFinalDestination(None)
+    carObject.setFinalDestinationTrack(None)
 
-        try: # if there is no entry for ship, load car with custom empty
-            carObject.setLoadName(scheduleObject.getItemByType(carType).getShipLoadName())
-        except NoneType:
-            emptyName = getCustomEmptyName(carObject)
-
-        lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
-        finalDestination = lm.getLocationByName(scheduleObject.getItemByType(carType).getDestinationName())
-        finalDestinationTrack = lm.getLocationByName(scheduleObject.getItemByType(carType).getDestinationTrack())
-        try:
-            carObject.setFinalDestination(finalDestination)
-            try:
-                carObject.setFinalDestinationTrack(finalDestinationTrack)
-            except NoneType:
-                carObject.setFinalDestinationTrack(None)
-        except NoneType:
-            carObject.setFinalDestination(None)
-
-        scheduleObject.getItemByType(carType).setHits(scheduleObject.getItemByType(carType).getHits() + 1)
-    else:
-        pass
+    try: # first try to apply the schedule
+        carObject.setDestination(scheduleObject.getItemByType(carType).getDestination(), scheduleObject.getItemByType(carType).getDestinationTrack(), ignoreLength)
+    except:
+        try: # apply values from RWE or RWL
+            if (carObject.getLoadType() == 'Load'): # load has already been toggled
+                carObject.setDestination(carObject.getReturnWhenLoadedDestination(), carObject.getReturnWhenLoadedDestTrack(), ignoreLength)
+            else:
+                carObject.setDestination(carObject.getReturnWhenEmptyDestination(), carObject.getReturnWhenEmptyDestTrack(), ignoreLength)
+        except: # nothing is set if there are no fd entries anywhere
+            pass
 
     return

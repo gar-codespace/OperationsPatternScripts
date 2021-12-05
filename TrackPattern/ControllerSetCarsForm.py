@@ -27,12 +27,14 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
         return
 
     def trackButton(self, MOUSE_CLICKED):
+        '''Any of the track buttons on the set cars window - row of track buttons'''
 
         MainScriptEntities.trackNameClickedOn = unicode(MOUSE_CLICKED.getSource().getText(), MainScriptEntities.setEncoding())
 
         return
 
     def scheduleButton(self, MOUSE_CLICKED):
+        '''The named schedule button if displayed on any set cars window'''
 
         jmri.jmrit.operations.locations.schedules.ScheduleEditFrame(self.scheduleObject, self.trackObject)
 
@@ -67,6 +69,10 @@ class SetCarsWindowInstance():
     def setCarsToTrack(self, MOUSE_CLICK):
         '''Event that moves cars to the tracks entered in the pattern window'''
 
+    # Set logging level
+        configFile = MainScriptEntities.readConfigFile('LL')
+        logLevel = configFile[str(jmri.jmrit.operations.setup.Setup.getBuildReportLevel())]
+        self.psLog.setLevel(logLevel)
     # set the cars to a track
         self.ignoreLength = self.configFile['PI'] # flag to ignore track length
         patternCopy = self.trackData # all the data for just one track
@@ -76,7 +82,7 @@ class SetCarsWindowInstance():
         i = 0
         for z in patternCopy['ZZ']:
             if (len(userInputList) == len(z['TR'])): # check that the lengths of the -input list- and -car roster- match
-                self.psLog.info('input list and car roster lengths match')
+                self.psLog.debug('input list and car roster lengths match')
                 trackName = unicode(z['TN'], MainScriptEntities.setEncoding())
                 setToLocation = self.lm.getLocationByName(unicode(patternCopy['YL'], MainScriptEntities.setEncoding()))
                 scheduleObject, trackObject = TrackPattern.ModelEntities.getScheduleForTrack(patternCopy['YL'], trackName)
@@ -88,10 +94,12 @@ class SetCarsWindowInstance():
                         setResult = setCarId.setLocation(setToLocation, setToTrack, self.ignoreLength)
                         if (setResult == 'okay'):
                             if (self.isASpur):
-                                TrackPattern.ModelEntities.applyShippingRubric(setCarId, scheduleObject)
+                                TrackPattern.ModelEntities.applyLoadRubric(setCarId, scheduleObject)
+                                TrackPattern.ModelEntities.applyFdRubric(setCarId, scheduleObject, self.ignoreLength)
+                                j += 1
                         else:
                             self.psLog.warning(setCarId.getRoadName() + ' ' + setCarId.getNumber() + ' not set exception: ' + setResult)
-                        j += 1
+
                     i += 1
                 self.psLog.info(str(j) + ' cars were processed from track ' + trackName)
                 jmri.jmrit.operations.rollingstock.cars.CarManagerXml.save()
@@ -106,7 +114,10 @@ class SetCarsWindowInstance():
     def printYP(self, MOUSE_CLICK):
         '''Event that prints the yard pattern for the selected track'''
 
-        TrackPattern.ModelEntities.makeCarTypeByEmptyDict()
+    # Set logging level
+        configFile = MainScriptEntities.readConfigFile('LL')
+        logLevel = configFile[str(jmri.jmrit.operations.setup.Setup.getBuildReportLevel())]
+        self.psLog.setLevel(logLevel)
     # Make the switch list
         patternCopy = self.trackData
         userInputList = [] # create a list of user inputs for the set car destinations
@@ -115,7 +126,7 @@ class SetCarsWindowInstance():
         i = 0
         for z in patternCopy['ZZ']:
             if (len(userInputList) == len(z['TR'])): # check that the lengths of the input list and car roster match
-                self.psLog.info('input list and car roster lengths match')
+                self.psLog.debug('input list and car roster lengths match')
             else:
                 self.psLog.critical('mismatched input list and car roster lengths')
             trackName = unicode(z['TN'], MainScriptEntities.setEncoding())
