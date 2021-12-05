@@ -14,7 +14,7 @@ A yardmaster would use a yard pattern to:
 * Redefine a yard tracks use throughout an operating session.  
 
 ## Intra-Plant Switching
-Track patterns can also be used for intra-plant switching, which are switching movements confined to a single location.  
+Track patterns can also be used for intra-plant switching, which are switching movements confined to a single location, often done by a private railroad or plant equipment.  
 Examples of this would include:  
 * A mill operator moving coal and coke to and from a furnace.  
 * A mine operator loading hoppers from a pool of empties.  
@@ -24,7 +24,7 @@ Examples of this would include:
 ## Plugin Notables
 Moving cars around a yard, the yard pattern, generally involves working with JMRI 'Yards.'  
 Moving cars around a location, Intra-Plant swtiching, generally involves JMRI 'Classification/Interchange' tracks, and 'Spurs.'
-Moving cars FROM a spur by using this plugin will apply the spur's schedule, setting the appropriate load and FD.  
+Moving cars FROM a spur by using this plugin will apply the spur's schedule, setting the appropriate load and Final Destination.  
 If there is no schedule the plugin will attempt to apply the car's RWE or RWL parameters.
 If no RWE or RWL, the plugin will then try to load the car with the custom designation for 'Empty' for that cars' load type.  
 If none of the above, a car moved from a spur will have the default empty designation applied.  
@@ -35,8 +35,8 @@ Not Yet But Soon :)
 How to add this plugin to JMRI.  
 How to set up and use this plugin.  
 Yard pattern example.  
-Intra-Plant switching example.
-How to modify this plugin  
+Intra-Plant switching example.  
+How to modify this plugin.  
 
 ## Testing
 This plugin has been tested with:
