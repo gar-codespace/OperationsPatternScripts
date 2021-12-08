@@ -10,6 +10,12 @@ Description of PatternConfig.JSON file
       "TrackPattern": true True means the sub will be included
     }
   },
+  "LL": { Log Level, the plugin can dynamically change its logging level indexed to Settings/Tools/Build Report Options/Detail Level
+    "1": 40, critical
+    "3": 30, warning
+    "5": 20, info
+    "7": 10  debug
+  },
   "LM": { Location Matrix - dictionary of locations where the control panel can be displayed
     "LO": { Location Options - values for each possible display location
       "0": [

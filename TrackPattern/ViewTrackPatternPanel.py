@@ -2,7 +2,7 @@
 # Extended ìÄÅÉî
 # Creates the track pattern and its panel
 # No restrictions on use
-# © 2021 Greg Ritacco
+# © 2021 Greg Ritacco 
 
 import jmri
 import javax.swing

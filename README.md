@@ -48,4 +48,6 @@ This plugin has been tested with:
 The scripts included in this plugin are © 2021 Greg Ritacco.  
 Other then that, there are no restrictions on use.
 
+
 ![GitHub repo file count](https://img.shields.io/github/directory-file-count/GregRitacco/JMRI-Operations---Pattern-Scripts?style=flat-square)
+![GitHub repo file count](https://img.shields.io/github/directory-file-count/GregRitacco/JMRI-Operations---Pattern-Scripts)

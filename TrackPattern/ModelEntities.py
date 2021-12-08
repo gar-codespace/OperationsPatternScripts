@@ -40,6 +40,29 @@ def makeSwingBox(xWidth, xHeight):
 
     return xName
 
+def occuranceTally(listOfOccurances):
+    '''Tally the occurances of a word in a list and return a dictionary'''
+
+    dict = {}
+    while len(listOfOccurances):
+        occurance = listOfOccurances[-1]
+        tally = 0
+        for i in xrange(len(listOfOccurances) - 1, -1, -1): # run list from bottom up
+            if (listOfOccurances[i] == occurance):
+                tally += 1
+                listOfOccurances.pop(i)
+        dict[occurance] = tally
+
+    return dict
+
+def formatText(item, length):
+    '''Left justify string to a specified length'''
+
+    pad = '<' + str(length)
+
+    return format(item, pad)
+
+
 def getAllLocations():
     '''returns a list of all locations for this profile. JMRI sorts the list'''
 
@@ -49,14 +72,6 @@ def getAllLocations():
         locList.append(unicode(item.getName(), MainScriptEntities.setEncoding()))
 
     return locList
-
-def formatText(item, length):
-    '''Left justify string to a specified length'''
-
-    pad = '<' + str(length)
-
-    return format(item, pad)
-
 
 def makeInitialTrackList(location):
 
@@ -86,21 +101,6 @@ def getCarObjects(yard, track):
 
     return carYardPattern # a list of objects
 
-def occuranceTally(listOfOccurances):
-    '''Tally the occurances of a word in a list and return a dictionary'''
-
-    dict = {}
-    while len(listOfOccurances):
-        occurance = listOfOccurances[-1]
-        tally = 0
-        for i in xrange(len(listOfOccurances) - 1, -1, -1): # run list from bottom up
-            if (listOfOccurances[i] == occurance):
-                tally += 1
-                listOfOccurances.pop(i)
-        dict[occurance] = tally
-
-    return dict
-
 def setCarsFormBody(trackData):
     '''Creates the body of the Set cars form'''
 
@@ -120,7 +120,7 @@ def setCarsFormBody(trackData):
         headerWidth = 0
         for car in carList:
             carId = cm.newRS(car['Road'], car['Number']) # returns car object
-            carDataDict = makeCarDetailDict(carId)
+            carDataDict = getDetailsForCarAsDict(carId)
             combinedInputLine = javax.swing.JPanel()
             combinedInputLine.setAlignmentX(0.0)
         # set car to input box
@@ -141,15 +141,15 @@ def setCarsFormBody(trackData):
 
     return formBody, jTextIn
 
-def getSetCarsData(location, track):
-    '''Creates the data needed for a Set Cars to Track window'''
+# def getSetCarsData(location, track):
+#     '''Creates the data needed for a Set Cars to Track window'''
+#
+#     listForTrack = TrackPattern.ModelEntities.makeYardPattern(location, [track]) # track needs to be send in as a list
+#     listForTrack.update({'RT': u'Switch List for Track '})
+#
+#     return listForTrack
 
-    listForTrack = TrackPattern.ModelEntities.makeYardPattern(location, [track]) # track needs to be send in as a list
-    listForTrack.update({'RT': u'Switch List for Track '})
-
-    return listForTrack
-
-def makeCarDetailDict(carObject):
+def getDetailsForCarAsDict(carObject):
     '''makes a dictionary of attributes for one car based on the requirements of
     jmri.jmrit.operations.setup.Setup.getCarAttributes()'''
 
@@ -197,33 +197,33 @@ def makeCarDetailDict(carObject):
 
     return carDetailDict
 
-def makeYardPattern(yardLocation, trackList):
-    '''Make a dictionary yard pattern
-    The car rosters are sorted at this level'''
-
-    lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
-
-    patternList = []
-    for i in trackList:
-        j = getCarObjects(yardLocation, i) # list of car objects for a track
-        trackRoster = [] # list of dictionaries
-        for car in j:
-            carDetail = makeCarDetailDict(car)
-            trackRoster.append(carDetail)
-        roster2 = sortCarList(trackRoster)
-        trackDict = {}
-        trackDict['TN'] = i # track name
-        trackDict['TL'] = lm.getLocationByName(yardLocation).getTrackByName(i, None).getLength() # track length
-        trackDict['TR'] = roster2 # list of car dictionaries
-        patternList.append(trackDict)
-    yardPatternDict = {}
-    yardPatternDict['RT'] = u'Report Type' # Report Type, value replaced when called
-    yardPatternDict['RN'] = unicode(jmri.jmrit.operations.setup.Setup.getRailroadName(), MainScriptEntities.setEncoding())
-    yardPatternDict['YL'] = yardLocation
-    yardPatternDict['VT'] = unicode(MainScriptEntities.timeStamp(), MainScriptEntities.setEncoding()) # The clock time this script is run in seconds plus the offset
-    yardPatternDict['ZZ'] = patternList
-
-    return yardPatternDict
+# def makeYardPattern(yardLocation, trackList):
+#     '''Make a dictionary yard pattern
+#     The car rosters are sorted at this level'''
+#
+#     lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
+#
+#     patternList = []
+#     for i in trackList:
+#         j = getCarObjects(yardLocation, i) # list of car objects for a track
+#         trackRoster = [] # list of dictionaries
+#         for car in j:
+#             carDetail = getDetailsForCarAsDict(car)
+#             trackRoster.append(carDetail)
+#         roster2 = sortCarList(trackRoster)
+#         trackDict = {}
+#         trackDict['TN'] = i # track name
+#         trackDict['TL'] = lm.getLocationByName(yardLocation).getTrackByName(i, None).getLength() # track length
+#         trackDict['TR'] = roster2 # list of car dictionaries
+#         patternList.append(trackDict)
+#     yardPatternDict = {}
+#     yardPatternDict['RT'] = u'Report Type' # Report Type, value replaced when called
+#     yardPatternDict['RN'] = unicode(jmri.jmrit.operations.setup.Setup.getRailroadName(), MainScriptEntities.setEncoding())
+#     yardPatternDict['YL'] = yardLocation
+#     yardPatternDict['VT'] = unicode(MainScriptEntities.timeStamp(), MainScriptEntities.setEncoding()) # The clock time this script is run in seconds plus the offset
+#     yardPatternDict['ZZ'] = patternList
+#
+#     return yardPatternDict
 
 def sortCarList(carList):
     '''Returns a sorted car list of the one submitted
@@ -327,20 +327,21 @@ def makeCsvSwitchlist(trackPattern):
 
     return csvSwitchList
 
-def makeCarTypeByEmptyDict():
-    '''Writes the default empty designation and creates a dictionary of car types and their empty name'''
+def getcustomEmptyForCarType():
+    '''Returns the default empty designation and a dictionary of car types by custom empty name'''
 
     cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManagerXml)
     opsFileName = jmri.util.FileUtil.getProfilePath() + 'operations\\' + cm.getOperationsFileName()
     with cOpen(opsFileName, 'r', encoding=MainScriptEntities.setEncoding()) as opsWorkFile:
         carXml = ET.parse(opsWorkFile)
-        MainScriptEntities.defaultLoadEmpty = carXml.getroot()[5][0].attrib['empty']
+        defaultLoadEmpty = carXml.getroot()[5][0].attrib['empty']
+        customEmptyForCarTypes = {}
         for loadElement in carXml.getroot()[5]:
             carType = loadElement.attrib
             for loadDetail in loadElement:
                 if (loadDetail.attrib['loadType'] == 'Empty'):
-                    MainScriptEntities.carTypeByEmptyDict[carType['type']] = loadDetail.attrib['name']
-    return
+                    customEmptyForCarTypes[carType['type']] = loadDetail.attrib['name']
+    return defaultLoadEmpty, customEmptyForCarTypes
 
 def getScheduleForTrack(locationString, trackString):
     '''Returns the tracks schedule object'''
@@ -353,7 +354,18 @@ def getScheduleForTrack(locationString, trackString):
 
     return scheduleObject, trackObject
 
-def makeSpurScheduleMatrix(location, track):
+def getSelectedTracks():
+    '''Makes a list of just the selected tracks'''
+
+    trackPattern = MainScriptEntities.readConfigFile('TP')
+    trackList = []
+    for track, bool in sorted(trackPattern['PT'].items()):
+        if (bool):
+            trackList.append(track)
+
+    return trackList
+
+def getTrackTypeAndSchedule(location, track):
     '''For a track, returns bool for isASpur and scheduleToggle'''
 
     spurToggle = False
@@ -384,11 +396,12 @@ def applyLoadRubric(carObject, scheduleObject=None):
                 carObject.setLoadName(MainScriptEntities.carTypeByEmptyDict.get(carType))
             except: # when all else fails, apply the default empty
                 carObject.setLoadName(MainScriptEntities.defaultLoadEmpty)
+    scheduleObject.getItemByType(carType).setHits(scheduleObject.getItemByType(carType).getHits() + 1)
 
     return
 
 def applyFdRubric(carObject, scheduleObject=None, ignoreLength=False):
-    '''For spurs only, sets the values for the cars final destination and FD track'''
+    '''For spurs only, sets the values for the cars destination and track'''
 
     carType = carObject.getTypeName()
     carObject.setFinalDestination(None)

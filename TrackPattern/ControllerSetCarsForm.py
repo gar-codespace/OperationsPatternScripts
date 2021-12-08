@@ -70,9 +70,8 @@ class SetCarsWindowInstance():
         '''Event that moves cars to the tracks entered in the pattern window'''
 
     # Set logging level
-        configFile = MainScriptEntities.readConfigFile('LL')
-        logLevel = configFile[str(jmri.jmrit.operations.setup.Setup.getBuildReportLevel())]
-        self.psLog.setLevel(logLevel)
+        MainScriptEntities.setLoggingLevel(self.psLog)
+        # self.psLog.setLevel(logLevel)
     # set the cars to a track
         self.ignoreLength = self.configFile['PI'] # flag to ignore track length
         patternCopy = self.trackData # all the data for just one track
@@ -96,10 +95,10 @@ class SetCarsWindowInstance():
                             if (self.isASpur):
                                 TrackPattern.ModelEntities.applyLoadRubric(setCarId, scheduleObject)
                                 TrackPattern.ModelEntities.applyFdRubric(setCarId, scheduleObject, self.ignoreLength)
-                                j += 1
+
                         else:
                             self.psLog.warning(setCarId.getRoadName() + ' ' + setCarId.getNumber() + ' not set exception: ' + setResult)
-
+                        j += 1
                     i += 1
                 self.psLog.info(str(j) + ' cars were processed from track ' + trackName)
                 jmri.jmrit.operations.rollingstock.cars.CarManagerXml.save()
@@ -115,9 +114,8 @@ class SetCarsWindowInstance():
         '''Event that prints the yard pattern for the selected track'''
 
     # Set logging level
-        configFile = MainScriptEntities.readConfigFile('LL')
-        logLevel = configFile[str(jmri.jmrit.operations.setup.Setup.getBuildReportLevel())]
-        self.psLog.setLevel(logLevel)
+        MainScriptEntities.setLoggingLevel(self.psLog)
+        # self.psLog.setLevel(logLevel)
     # Make the switch list
         patternCopy = self.trackData
         userInputList = [] # create a list of user inputs for the set car destinations
@@ -164,7 +162,7 @@ class SetCarsWindowInstance():
         trackName = unicode(trackName['TN'], MainScriptEntities.setEncoding())
         trackLocation = unicode(self.trackData['YL'], MainScriptEntities.setEncoding())
         self.allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(trackLocation, None)
-        self.isASpur, self.hasASchedule = TrackPattern.ModelEntities.makeSpurScheduleMatrix(trackLocation, trackName)
+        self.isASpur, self.hasASchedule = TrackPattern.ModelEntities.getTrackTypeAndSchedule(trackLocation, trackName)
     # Create the forms header
         formHeader = TrackPattern.ViewEntities.setCarsFormHeader(self.trackData)
         formHeader.border = javax.swing.BorderFactory.createEmptyBorder(5,0,5,0)

@@ -12,10 +12,11 @@ path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsTrackPattern')
 import MainScriptEntities
 import TrackPattern.ViewTrackPatternPanel
 
+scriptRev = 'TrackPattern.View v20211125'
+psLog = logging.getLogger('PS.TP.View')
+
 class manageGui:
     '''Manages all the GUI elements for the Pattern Scripts subroutine'''
-
-    scriptRev = 'TrackPattern.View v20211125'
 
     def __init__(self, panel=None, controls=None):
         '''Track Pattern panel'''
@@ -30,12 +31,12 @@ class manageGui:
     def updatePanel(self, panel):
         ''' Replaces the current panel with a new updated panel'''
 
+        self.psLog.debug('updatePanel')
         newView, newControls = TrackPattern.ViewTrackPatternPanel.TrackPatternPanel().makePatternControls()
         panel.removeAll()
         panel.add(newView)
         panel.revalidate()
         # panel.repaint()
-        self.psLog.info('Track Pattern panel updated')
 
         return newControls
 
@@ -54,6 +55,7 @@ class manageGui:
 def displayTextSwitchlist(location):
     '''Opens the text switchlist to Notepad or other'''
 
+    psLog.debug('displayTextSwitchlist')
     textSwitchList = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\Track Pattern (' + location + ').txt'
     system(MainScriptEntities.systemInfo() + textSwitchList)
 
@@ -62,6 +64,7 @@ def displayTextSwitchlist(location):
 def displayPatternLog():
     '''Opens the pattern log in notepad or other'''
 
+    psLog.debug('displayPatternLog')
     textPatternLog = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternLog.txt'
     system(MainScriptEntities.systemInfo() + textPatternLog)
 

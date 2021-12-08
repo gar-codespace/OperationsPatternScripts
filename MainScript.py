@@ -10,7 +10,7 @@ path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
 import PluginLocations
 
-
+'''Pattern Scripts Version 2.0.0'''
 
 class StartUp(jmri.jmrit.automat.AbstractAutomaton):
     '''Start the the Pattern Scripts plugin and add selected subroutines'''
@@ -23,7 +23,6 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         logPath = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternLog.txt'
         self.psLog = logging.getLogger('PS')
         self.psLog.setLevel(20)
-        print(jmri.jmrit.operations.setup.Setup.getBuildReportLevel()) # 1, 3, 5, 7
         logFileFormat = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         psFileHandler = logging.FileHandler(logPath, mode='w', encoding='utf-8')
         psFileHandler.setFormatter(logFileFormat)
