@@ -2,7 +2,7 @@
 # Extended ìÄÅÉî
 # Creates the track pattern and its panel
 # No restrictions on use
-# © 2021 Greg Ritacco 
+# © 2021 Greg Ritacco
 
 import jmri
 import javax.swing
@@ -14,7 +14,7 @@ import MainScriptEntities
 class TrackPatternPanel:
     '''Makes the track pattern subroutine panel'''
 
-    scriptRev = 'TrackPattern.ViewTrackPatternPanel v20211125'
+    scriptRev = 'TrackPattern.ViewTrackPatternPanel v20211210'
 
     def __init__(self):
 

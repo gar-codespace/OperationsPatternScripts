@@ -6,7 +6,7 @@
 
 import jmri
 import java.awt
-import java.awt.event
+# import java.awt.event
 import javax.swing
 import logging
 import time
@@ -15,7 +15,7 @@ from codecs import open as cOpen
 from os import path as oPath
 from shutil import copy as sCopy
 
-scriptRev = 'OperationsPatternScripts.MainScriptEntities v20211125'
+scriptRev = 'OperationsPatternScripts.MainScriptEntities v20211210'
 
 # 'global' variables passed between modules
 trackNameClickedOn = u''

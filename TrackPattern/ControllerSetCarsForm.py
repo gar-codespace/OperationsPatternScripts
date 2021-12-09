@@ -6,7 +6,7 @@
 
 import jmri
 import java.awt
-import java.awt.event
+# import java.awt.event
 import javax.swing
 import logging
 from codecs import open as cOpen
@@ -18,6 +18,8 @@ import TrackPattern.ViewEntities
 import TrackPattern.ModelEntities
 
 class AnyButtonPressedListener(java.awt.event.ActionListener):
+
+    scriptRev = 'TrackPattern.ViewSetCarsForm v20211210'
 
     def __init__(self, scheduleObject=None, trackObject=None):
 
@@ -43,8 +45,7 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
 class SetCarsWindowInstance():
     '''Manages an instance of each -Pattern Report for track- window'''
 
-# Class variables
-    scriptRev = 'TrackPattern.ViewSetCarsForm v20211125'
+    scriptRev = 'TrackPattern.ViewSetCarsForm v20211210'
 
     def __init__(self, pattern):
 
@@ -71,7 +72,6 @@ class SetCarsWindowInstance():
 
     # Set logging level
         MainScriptEntities.setLoggingLevel(self.psLog)
-        # self.psLog.setLevel(logLevel)
     # set the cars to a track
         self.ignoreLength = self.configFile['PI'] # flag to ignore track length
         patternCopy = self.trackData # all the data for just one track

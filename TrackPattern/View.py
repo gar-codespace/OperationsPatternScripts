@@ -12,7 +12,7 @@ path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsTrackPattern')
 import MainScriptEntities
 import TrackPattern.ViewTrackPatternPanel
 
-scriptRev = 'TrackPattern.View v20211125'
+scriptRev = 'TrackPattern.View v20211210'
 psLog = logging.getLogger('PS.TP.View')
 
 class manageGui:
@@ -43,11 +43,13 @@ class manageGui:
     def makeFrame(self):
         '''Makes the title frame that all the track pattern controls go into'''
 
+        self.psLog.debug('makeFrame')
         return TrackPattern.ViewTrackPatternPanel.TrackPatternPanel().makePatternFrame()
 
     def makePanel(self):
         '''Make the track pattern controls'''
 
+        self.psLog.debug('makePanel')
         return TrackPattern.ViewTrackPatternPanel.TrackPatternPanel().makePatternControls()
 
     print(scriptRev)

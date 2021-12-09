@@ -7,7 +7,7 @@
 import jmri
 import time
 import java.awt
-import java.awt.event
+# import java.awt.event
 import javax.swing
 from codecs import open as cOpen
 from xml.etree import ElementTree as ET
@@ -15,7 +15,7 @@ from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
 
-scriptRev = 'TrackPattern.ModelEntities v20211125'
+scriptRev = 'TrackPattern.ModelEntities v20211210'
 
 class SetTrackBoxMouseListener(java.awt.event.MouseAdapter):
     '''When any of the Set Cars to Track text boxes is clicked on'''

@@ -2,7 +2,7 @@
 # Extended ìÄÅÉî
 # support methods for the view script
 # No restrictions on use
-# © 2021 Greg Ritacco 
+# © 2021 Greg Ritacco
 
 import jmri
 import jmri.util
@@ -12,7 +12,7 @@ from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsYardPattern')
 import MainScriptEntities
 
-scriptRev = 'TrackPattern.ViewEntities v20211125'
+scriptRev = 'TrackPattern.ViewEntities v20211210'
 
 def makeSwingBox(xWidth, xHeight):
     ''' Makes a swing box to the desired size'''

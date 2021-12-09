@@ -15,7 +15,7 @@ import PluginLocations
 class StartUp(jmri.jmrit.automat.AbstractAutomaton):
     '''Start the the Pattern Scripts plugin and add selected subroutines'''
 
-    scriptRev = 'OperationsPatternScripts.MainScript v20211125'
+    scriptRev = 'OperationsPatternScripts.MainScript v20211210'
 
     def init(self):
 
@@ -39,18 +39,18 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         '''Make and populate the Pattern Scripts control panel'''
 
         yTimeNow = time.time()
-    # create the subroutines for the control panel
+    # make a list of subroutines for the control panel
         subroutineList = []
-        configFile = MainScriptEntities.readConfigFile('CP')
-        for subroutine, bool in configFile['SI'].items():
+        controlPanelConfig = MainScriptEntities.readConfigFile('CP')
+        for subroutineIncludes, bool in controlPanelConfig['SI'].items():
             if (bool):
             # import selected subroutines and add them to a list
-                xModule = __import__(subroutine, fromlist=['Controller'])
+                xModule = __import__(subroutineIncludes, fromlist=['Controller'])
                 subroutineFrame = xModule.Controller.StartUp().makeSubroutineFrame()
                 subroutinePanel = xModule.Controller.StartUp().makeSubroutinePanel()
                 subroutineFrame.add(subroutinePanel)
                 subroutineList.append(subroutineFrame)
-                self.psLog.info(subroutine + ' subroutine added to control panel')
+                self.psLog.info(subroutineIncludes + ' subroutine added to control panel')
     # plug in the subroutine list into the control panel
         controlPanel, scrollPanel = MainScriptEntities.makeControlPanel()
         for subroutine in subroutineList:

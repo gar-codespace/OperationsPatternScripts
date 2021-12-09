@@ -10,7 +10,7 @@ Description of PatternConfig.JSON file
       "TrackPattern": true True means the sub will be included
     }
   },
-  "LL": { Log Level, the plugin can dynamically change its logging level indexed to Settings/Tools/Build Report Options/Detail Level
+  "LL": { Log Level, the plugin can dynamically change its logging level, indexed to Settings/Tools/Build Report Options/Detail Level
     "1": 40, critical
     "3": 30, warning
     "5": 20, info

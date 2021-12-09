@@ -17,7 +17,7 @@ import TrackPattern.ControllerSetCarsForm
 class StartUp():
     '''Start the the Track Pattern subroutine'''
 
-    scriptRev = 'TrackPattern.Controller v20211125'
+    scriptRev = 'TrackPattern.Controller v20211210'
 
     def __init__(self):
 
@@ -38,6 +38,7 @@ class StartUp():
                 newConfigFile = TrackPattern.Model.updatePatternLocation(event.getSource().getSelectedItem())
                 MainScriptEntities.writeConfigFile(newConfigFile)
                 newConfigFile = TrackPattern.Model.makeNewPatternTracks(event.getSource().getSelectedItem())
+                self.psLog.info('The track list for location ' + event.getSource().getSelectedItem() + ' has been created')
                 MainScriptEntities.writeConfigFile(newConfigFile)
                 newConfigFile = TrackPattern.Model.updateCheckBoxStatus(False, self.controls[2].selected)
                 MainScriptEntities.writeConfigFile(newConfigFile)
@@ -83,11 +84,12 @@ class StartUp():
     # Button specific
         selectedTracks = TrackPattern.ModelEntities.getSelectedTracks()
         trackPatternDict = TrackPattern.Model.makeTrackPatternDict(selectedTracks)
+        self.psLog.info('Track Pattern dictionary created')
         trackPatternDict.update({'RT': u'Track Pattern for Location'})
         location = trackPatternDict['YL']
-        makeNewPatternTracksJson = TrackPattern.Model.writePatternJson(location, trackPatternDict)
+        TrackPattern.Model.writePatternJson(location, trackPatternDict)
         self.psLog.info('Track Pattern for ' + location + ' JSON written')
-        textSwitchList = TrackPattern.Model.writeTextSwitchList(location, trackPatternDict)
+        TrackPattern.Model.writeTextSwitchList(location, trackPatternDict)
         self.psLog.info('Track Pattern for ' + location + ' TXT switch list written')
         if (jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled()):
             csvSwitchList = TrackPattern.Model.writeCsvSwitchList(location, trackPatternDict)

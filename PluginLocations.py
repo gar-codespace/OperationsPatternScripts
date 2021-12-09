@@ -5,7 +5,6 @@
 # © 2021 Greg Ritacco
 
 import jmri
-# import jmri.jmrit
 import jmri.util
 import java.awt.event
 import javax.swing
@@ -23,6 +22,7 @@ class PatternScriptsWindowListener(java.awt.event.WindowListener):
 
     def windowOpened(self, WINDOW_OPENED):
         for xFrame in jmri.util.JmriJFrame.getFrameList(): # tonsil
+            pass
             # print(xFrame.getTitle())
         return
     def windowActivated(self, WINDOW_ACTIVATED):
