@@ -117,7 +117,7 @@ class StartUp():
             i = 0
             for track in selectedTracks:
                 listForTrack = TrackPattern.Model.makeListForTrack(self.controls[0].getSelectedItem(), track)
-                newWindow = TrackPattern.ControllerSetCarsForm.SetCarsWindowInstance(listForTrack)
+                newWindow = TrackPattern.ControllerSetCarsForm.ManageGui(listForTrack)
                 newWindow.setCarsForTrackWindow(windowOffset)
                 self.psLog.info(u'Set Cars Window created for track ' + track)
                 windowOffset += 50

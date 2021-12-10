@@ -1,143 +1,133 @@
 # coding=utf-8
 # Extended ìÄÅÉî
-# support methods for the view script
+# Creates the track pattern and its panel
 # No restrictions on use
 # © 2021 Greg Ritacco
 
 import jmri
-import jmri.util
-import java.awt
 import javax.swing
+import java.awt
 from sys import path
-path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsYardPattern')
+path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsTrackPattern')
 import MainScriptEntities
 
-scriptRev = 'TrackPattern.ViewEntities v20211210'
+class TrackPatternPanel:
+    '''Makes the track pattern subroutine panel'''
 
-def makeSwingBox(xWidth, xHeight):
-    ''' Makes a swing box to the desired size'''
+    scriptRev = 'TrackPattern.ViewTrackPatternPanel v20211210'
 
-    xName = javax.swing.Box(javax.swing.BoxLayout.X_AXIS)
-    xName.setPreferredSize(java.awt.Dimension(width=xWidth, height=xHeight))
+    def __init__(self):
 
-    return xName
+        self.configFile = MainScriptEntities.readConfigFile('TP')
+        self.useYardTracks = javax.swing.JCheckBox(u'Yard tracks only ', self.configFile['PA'])
+        self.ignoreLength = javax.swing.JCheckBox(u'Ignore track length ', self.configFile['PI'])
+        self.ypButton = javax.swing.JButton()
+        self.scButton = javax.swing.JButton()
+        self.prButton = javax.swing.JButton()
+        self.trackCheckBoxes = []
+        self.controlObjects = []
 
-def makeWindow():
-    '''Makes a JMRI style swing frame'''
+        return
 
-    pFrame = jmri.util.JmriJFrame()
-    pFrame.contentPane.setLayout(javax.swing.BoxLayout(pFrame.contentPane, javax.swing.BoxLayout.Y_AXIS))
-    # pFrame.contentPane.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
-    # pFrame.contentPane.setAlignmentX(0.0)
+    def makePatternFrame(self):
+        '''Make the panel that all the track pattern controls are added to'''
 
-    return pFrame
+        tpFrame = javax.swing.JPanel() # the track pattern panel
+        tpFrame.setLayout(javax.swing.BoxLayout(tpFrame, javax.swing.BoxLayout.Y_AXIS))
+        tpFrame.border = javax.swing.BorderFactory.createTitledBorder(u'Track Pattern')
 
-def makeTrackButtonRow(allTracksAtLoc):
-    '''Makes a row of buttons, one for each track'''
+        return tpFrame
 
-    trackButtonRowList = []
-    for track in allTracksAtLoc:
-        selectTrackButton = javax.swing.JButton(track)
-        selectTrackButton.setPreferredSize(java.awt.Dimension(0,18))
-        trackButtonRowList.append(selectTrackButton)
+    def makeLocationComboBox(self):
+        '''make the combo box of user selectable locations'''
 
-    return trackButtonRowList
+        patternLabel = javax.swing.JLabel(u'Location:')
+        locationList = self.configFile['AL']
+        self.locationComboBox = javax.swing.JComboBox(locationList)
+        self.locationComboBox.setSelectedItem(self.configFile['PL'])
+        patternComboBox = javax.swing.Box(javax.swing.BoxLayout.X_AXIS)
+        patternComboBox.add(patternLabel)
+        patternComboBox.add(javax.swing.Box.createRigidArea(java.awt.Dimension(8,0)))
+        patternComboBox.add(self.locationComboBox)
 
-def setCarsFormHeader(trackData):
-    ''' Creates the Set Cars forms header'''
+        return patternComboBox
 
-# Read in the config file
-    configFile = MainScriptEntities.readConfigFile('TP')
-# Define the header
-    combinedHeader = javax.swing.JPanel()
-    combinedHeader.setLayout(javax.swing.BoxLayout(combinedHeader, javax.swing.BoxLayout.Y_AXIS))
-    # combinedHeader.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT)
-# Populate the header
-    headerRRLabel = javax.swing.JLabel(trackData['RN'])
-    headerRRBox = makeSwingBox(100, configFile['PH'])
-    headerRRBox.add(headerRRLabel)
+    def makeLocationCheckBoxes(self):
+        '''Any track type and ignore length flags'''
 
-    headerValidLabel = javax.swing.JLabel(trackData['VT'])
-    headerValidBox = makeSwingBox(100, configFile['PH'])
-    headerValidBox.add(headerValidLabel)
-    # Dig out the track name
-    trackName = trackData['ZZ']
-    trackName = trackName[0]
-    trackName = unicode(trackName['TN'], MainScriptEntities.setEncoding())
-    headerYTLabel = javax.swing.JLabel()
-    headerYTLabel.setText(trackData['RT'] + trackName + ' at ' + trackData['YL'])
-    headerYTBox = makeSwingBox(100, configFile['PH'])
-    headerYTBox.add(headerYTLabel)
-# Construct the header
-    combinedHeader.add(headerRRBox)
-    combinedHeader.add(headerValidBox)
-    combinedHeader.add(headerYTBox)
+        flagInputBox = javax.swing.Box(javax.swing.BoxLayout.X_AXIS) # make a box for the label and input box
+        flagInputBox.setPreferredSize(java.awt.Dimension(self.configFile['PW'], self.configFile['PH']))
+        flagInputBox.add(self.useYardTracks)
+        flagInputBox.add(self.ignoreLength)
 
-    return combinedHeader
+        return flagInputBox
 
-def setCarsFormBodyHeader():
-    '''Creates the header for the Set Cars forms body'''
+    def makeTrackCheckBoxes(self):
+        '''Make a panel of check boxes, one for each track'''
 
-# Read in the config file
-    configFile = MainScriptEntities.readConfigFile('TP')
-    reportWidth = configFile['RW']
-# Define the forms header
-    bodyHeader = javax.swing.JPanel()
-    bodyHeader.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
+        rowLabel = javax.swing.JLabel()
+        tracksPanel = javax.swing.JPanel()
+        tracksPanel.setAlignmentX(javax.swing.JPanel.CENTER_ALIGNMENT)
+        tracksPanel.add(rowLabel)
+        trackDict = self.configFile['PT'] # pattern tracks
+        if (trackDict):
+            rowLabel.text = u'Track List: '
+            for track, flag in sorted(trackDict.items()):
+                trackCheckBox = tracksPanel.add(javax.swing.JCheckBox(track, flag))
+                self.trackCheckBoxes.append(trackCheckBox)
+            self.ypButton.setEnabled(True)
+            self.scButton.setEnabled(True)
+        else:
+            self.ypButton.setEnabled(False)
+            self.scButton.setEnabled(False)
+            rowLabel.text = u'There are no yard tracks for this location'
 
-# Populate the forms header
-    # Set to: input box
-    label = javax.swing.JLabel(configFile['ST'])
-    box = makeSwingBox(reportWidth['Input'] * configFile['RM'], configFile['PH'])
-    box.add(label)
-    bodyHeader.add(box)
-# Create rest of header from user settings
-    headerWidth = 0
-    for x in jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
-        if (x != ' '): # skips over null entries
-            label = javax.swing.JLabel(x)
-            box = makeSwingBox(reportWidth[x] * configFile['RM'], configFile['PH'])
-            box.add(label)
-            bodyHeader.add(box)
-            headerWidth = headerWidth + reportWidth[x]
-    headerWidth = headerWidth * 10
+        return tracksPanel
 
-    return bodyHeader, headerWidth
+    def makeButtonPanel(self):
+        '''button panel added to makeTrackPatternPanel'''
 
-def setCarsFormFooter():
-    '''Creates the Set Cars forms footer'''
+        self.ypButton.text = u'Pattern'
+        self.scButton.text = u'Set Cars'
+        self.prButton.text = u'View Log'
+        buttonPanel = javax.swing.JPanel()
+        buttonPanel.setAlignmentX(javax.swing.JPanel.CENTER_ALIGNMENT)
+        buttonPanel.add(self.ypButton)
+        buttonPanel.add(self.scButton)
+        buttonPanel.add(self.prButton)
 
-# Define the footer
-    footer = javax.swing.JPanel()
-# Construct the footer
-    scButton = javax.swing.JButton(unicode('Set', MainScriptEntities.setEncoding()))
-    tpButton = javax.swing.JButton(unicode('Print', MainScriptEntities.setEncoding()))
-# Populate the footer
-    footer.add(tpButton)
-    footer.add(scButton)
-    return footer, tpButton, scButton
+        return buttonPanel
 
-def makeFrame():
-    '''Makes the title boarder frame'''
+    def getPanelWidgets(self):
+        '''A list of the widgets created by this class'''
 
-    patternFrame = TrackPattern.View.manageGui().makeFrame()
+        self.controlObjects.append(self.locationComboBox)
+        self.controlObjects.append(self.useYardTracks)
+        self.controlObjects.append(self.ignoreLength)
+        self.controlObjects.append(self.trackCheckBoxes)
+        self.controlObjects.append(self.ypButton)
+        self.controlObjects.append(self.scButton)
+        self.controlObjects.append(self.prButton)
 
-    return patternFrame
+        return self.controlObjects
 
-def makePanel(self):
-    '''Make and activate the Track Pattern objects'''
+    def makePatternControls(self):
+        '''Make the Track Pattern panel object'''
 
-    panel, controls = TrackPattern.View.manageGui().makePanel()
-    controls[0].actionPerformed = whenTPEnterPressed
-    controls[1].actionPerformed = whenPABoxClicked
-    self.controls[6].actionPerformed = self.whenPRButtonPressed
-    self.configFile = MainScriptEntities.readConfigFile('TP')
-    if (self.configFile['PL'] != ''):
-        self.controls[4].setEnabled(True)
-        self.controls[5].setEnabled(True)
-        self.controls[4].actionPerformed = self.whenTPButtonPressed
-        self.controls[5].actionPerformed = self.whenSCButtonPressed
-        self.psLog.debug('saved location validated, buttons activated')
-    self.psLog.debug('track pattern makePanel completed')
+        tpPanel = javax.swing.JPanel() # the track pattern panel
+        tpPanel.setLayout(javax.swing.BoxLayout(tpPanel, javax.swing.BoxLayout.Y_AXIS))
+        inputRow = javax.swing.JPanel()
+        inputRow.setLayout(javax.swing.BoxLayout(inputRow, javax.swing.BoxLayout.X_AXIS))
+        inputRow.add(javax.swing.Box.createRigidArea(java.awt.Dimension(12,0)))
+        inputRow.add(self.makeLocationComboBox())
+        inputRow.add(javax.swing.Box.createRigidArea(java.awt.Dimension(8,0)))
+        inputRow.add(self.makeLocationCheckBoxes())
+        trackCheckBoxes = self.makeTrackCheckBoxes()
+        buttonPanel = self.makeButtonPanel()
+        tpPanel.add(inputRow)
+        tpPanel.add(trackCheckBoxes)
+        tpPanel.add(buttonPanel)
 
-    return self.panel
+        return tpPanel, self.getPanelWidgets()
+
+    print(scriptRev)

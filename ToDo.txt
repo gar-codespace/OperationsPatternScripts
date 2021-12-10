@@ -1,0 +1,10 @@
+jmri.util.JmirJFrame.getFrameList() to find open windows?
+log no FD set due to track length exception
+
+test if Ignore Track Length works with schedules.
+Add logging to SetTrackBoxMouseListener
+mis calculating available footage for track used length
+maybe use trackobject.getUsedLength
+set cars window (15 cars were processed from track 703) counting the wrong thing
+set cars to track button is not working properly anymore
+change View.manageGui to View.ManageGui

@@ -32,14 +32,6 @@ class SetTrackBoxMouseListener(java.awt.event.MouseAdapter):
             print('No track was selected')
         return
 
-def makeSwingBox(xWidth, xHeight):
-    ''' Makes a swing box to the desired size'''
-
-    xName = javax.swing.Box(javax.swing.BoxLayout.X_AXIS)
-    xName.setPreferredSize(java.awt.Dimension(width=xWidth, height=xHeight))
-
-    return xName
-
 def occuranceTally(listOfOccurances):
     '''Tally the occurances of a word in a list and return a dictionary'''
 
@@ -101,53 +93,7 @@ def getCarObjects(yard, track):
 
     return carYardPattern # a list of objects
 
-def setCarsFormBody(trackData):
-    '''Creates the body of the Set cars form'''
 
-# Set up
-    cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
-    configFile = MainScriptEntities.readConfigFile('TP')
-    reportWidth = configFile['RW']
-    jTextIn = []
-# define the forms body
-    formBody = javax.swing.JPanel()
-    formBody.setLayout(javax.swing.BoxLayout(formBody, javax.swing.BoxLayout.Y_AXIS))
-    formBody.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
-# Sort the cars
-    for j in trackData['ZZ']:
-        carList = sortCarList(j['TR'])
-# Each line of the form
-        headerWidth = 0
-        for car in carList:
-            carId = cm.newRS(car['Road'], car['Number']) # returns car object
-            carDataDict = getDetailsForCarAsDict(carId)
-            combinedInputLine = javax.swing.JPanel()
-            combinedInputLine.setAlignmentX(0.0)
-        # set car to input box
-            inputText = javax.swing.JTextField(5)
-            inputText.addMouseListener(SetTrackBoxMouseListener())
-            jTextIn.append(inputText) # making a list of jTextField boxes
-            inputBox = makeSwingBox(reportWidth['Input'] * configFile['RM'], configFile['PH'])
-            inputBox.add(inputText)
-            combinedInputLine.add(inputBox)
-            for x in jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
-                if (x != ' '):
-                    label = javax.swing.JLabel(carDataDict[x])
-                    box = makeSwingBox(reportWidth[x] * configFile['RM'], configFile['PH'])
-                    box.add(label)
-                    combinedInputLine.add(box)
-                    headerWidth = headerWidth + reportWidth[x]
-            formBody.add(combinedInputLine)
-
-    return formBody, jTextIn
-
-# def getSetCarsData(location, track):
-#     '''Creates the data needed for a Set Cars to Track window'''
-#
-#     listForTrack = TrackPattern.ModelEntities.makeYardPattern(location, [track]) # track needs to be send in as a list
-#     listForTrack.update({'RT': u'Switch List for Track '})
-#
-#     return listForTrack
 
 def getDetailsForCarAsDict(carObject):
     '''makes a dictionary of attributes for one car based on the requirements of
@@ -196,34 +142,6 @@ def getDetailsForCarAsDict(carObject):
     carDetailDict[u'RWE'] = carObject.getReturnWhenEmptyDestinationName()
 
     return carDetailDict
-
-# def makeYardPattern(yardLocation, trackList):
-#     '''Make a dictionary yard pattern
-#     The car rosters are sorted at this level'''
-#
-#     lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
-#
-#     patternList = []
-#     for i in trackList:
-#         j = getCarObjects(yardLocation, i) # list of car objects for a track
-#         trackRoster = [] # list of dictionaries
-#         for car in j:
-#             carDetail = getDetailsForCarAsDict(car)
-#             trackRoster.append(carDetail)
-#         roster2 = sortCarList(trackRoster)
-#         trackDict = {}
-#         trackDict['TN'] = i # track name
-#         trackDict['TL'] = lm.getLocationByName(yardLocation).getTrackByName(i, None).getLength() # track length
-#         trackDict['TR'] = roster2 # list of car dictionaries
-#         patternList.append(trackDict)
-#     yardPatternDict = {}
-#     yardPatternDict['RT'] = u'Report Type' # Report Type, value replaced when called
-#     yardPatternDict['RN'] = unicode(jmri.jmrit.operations.setup.Setup.getRailroadName(), MainScriptEntities.setEncoding())
-#     yardPatternDict['YL'] = yardLocation
-#     yardPatternDict['VT'] = unicode(MainScriptEntities.timeStamp(), MainScriptEntities.setEncoding()) # The clock time this script is run in seconds plus the offset
-#     yardPatternDict['ZZ'] = patternList
-#
-#     return yardPatternDict
 
 def sortCarList(carList):
     '''Returns a sorted car list of the one submitted

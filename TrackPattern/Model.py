@@ -165,17 +165,6 @@ def makeTrackList(location, type):
 
     return TrackPattern.ModelEntities.getTracksByLocation(location, type)
 
-# def getSelectedTracks():
-#     '''Makes a list of just the selected tracks'''
-#
-#     trackPattern = MainScriptEntities.readConfigFile('TP')
-#     trackList = []
-#     for track, bool in sorted(trackPattern['PT'].items()):
-#         if (bool):
-#             trackList.append(track)
-#
-#     return trackList
-
 def makeYardPattern(yardLocation, trackList):
     '''Make a dictionary yard pattern
     The car rosters are sorted at this level'''
