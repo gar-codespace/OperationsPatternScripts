@@ -42,13 +42,13 @@ class StartUp():
                 MainScriptEntities.writeConfigFile(newConfigFile)
                 newConfigFile = TrackPattern.Model.updateCheckBoxStatus(False, self.controls[2].selected)
                 MainScriptEntities.writeConfigFile(newConfigFile)
-                self.controls = TrackPattern.View.manageGui().updatePanel(self.panel)
+                self.controls = TrackPattern.View.ManageGui().updatePanel(self.panel)
                 StartUp().activateButtons(self.panel, self.controls)
         # catch the error when the user edits the location name
             except AttributeError:
                 newConfigFile = TrackPattern.Model.initializeConfigFile()
                 MainScriptEntities.writeConfigFile(newConfigFile)
-                self.controls = TrackPattern.View.manageGui().updatePanel(self.panel)
+                self.controls = TrackPattern.View.ManageGui().updatePanel(self.panel)
                 StartUp().activateButtons(self.panel, self.controls)
                 self.psLog.info('Location list changed, config file updated')
 
@@ -68,7 +68,7 @@ class StartUp():
         MainScriptEntities.writeConfigFile(newConfigFile)
         newConfigFile = TrackPattern.Model.updateCheckBoxStatus(self.controls[1].selected, self.controls[2].selected)
         MainScriptEntities.writeConfigFile(newConfigFile)
-        self.controls = TrackPattern.View.manageGui().updatePanel(self.panel)
+        self.controls = TrackPattern.View.ManageGui().updatePanel(self.panel)
         self.activateButtons(self.panel, self.controls)
 
         return
@@ -118,7 +118,7 @@ class StartUp():
             for track in selectedTracks:
                 listForTrack = TrackPattern.Model.makeListForTrack(self.controls[0].getSelectedItem(), track)
                 newWindow = TrackPattern.ControllerSetCarsForm.ManageGui(listForTrack)
-                newWindow.setCarsForTrackWindow(windowOffset)
+                newWindow.makeFrame(windowOffset)
                 self.psLog.info(u'Set Cars Window created for track ' + track)
                 windowOffset += 50
                 i += 1
@@ -153,7 +153,7 @@ class StartUp():
     def makeSubroutineFrame(self):
         '''Makes the title boarder frame'''
 
-        self.patternFrame = TrackPattern.View.manageGui().makeFrame()
+        self.patternFrame = TrackPattern.View.ManageGui().makeFrame()
         self.psLog.info('track pattern makeFrame completed')
 
         return self.patternFrame
@@ -162,7 +162,7 @@ class StartUp():
         '''Make and activate the Track Pattern objects'''
 
         MainScriptEntities.writeConfigFile(TrackPattern.Model.updateLocations())
-        self.panel, self.controls = TrackPattern.View.manageGui().makePanel()
+        self.panel, self.controls = TrackPattern.View.ManageGui().makePanel()
         self.activateButtons(self.panel, self.controls)
         self.psLog.info('track pattern makeSubroutinePanel completed')
 

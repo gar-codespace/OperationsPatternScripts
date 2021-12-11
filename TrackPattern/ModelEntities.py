@@ -9,6 +9,7 @@ import time
 import java.awt
 # import java.awt.event
 import javax.swing
+from os import system
 from codecs import open as cOpen
 from xml.etree import ElementTree as ET
 from sys import path
@@ -17,20 +18,20 @@ import MainScriptEntities
 
 scriptRev = 'TrackPattern.ModelEntities v20211210'
 
-class SetTrackBoxMouseListener(java.awt.event.MouseAdapter):
-    '''When any of the Set Cars to Track text boxes is clicked on'''
-
-    def __init__(self):
-        pass
-
-    def mouseClicked(self, MOUSE_CLICKED):
-
-        try:
-            MOUSE_CLICKED.getSource().setText(MainScriptEntities.trackNameClickedOn)
-        except NameError:
-            # add some loggong stuff
-            print('No track was selected')
-        return
+# class SetTrackBoxMouseListener(java.awt.event.MouseAdapter):
+#     '''When any of the Set Cars to Track text boxes is clicked on'''
+#
+#     def __init__(self):
+#         pass
+#
+#     def mouseClicked(self, MOUSE_CLICKED):
+#
+#         try:
+#             MOUSE_CLICKED.getSource().setText(MainScriptEntities.trackNameClickedOn)
+#         except NameError:
+#             # add some loggong stuff
+#             print('No track was selected')
+#         return
 
 def occuranceTally(listOfOccurances):
     '''Tally the occurances of a word in a list and return a dictionary'''
@@ -244,6 +245,26 @@ def makeCsvSwitchlist(trackPattern):
                                             + car['RWE'] + '\n'
 
     return csvSwitchList
+
+def printSwitchList(trackData):
+    '''Sends the TXT switch list to notepad and optionally creates the CSV switch list'''
+
+
+    for track in trackData['ZZ']:
+        trackName = track['TN']
+# Print the switch list
+    textSwitchList = makeSwitchlist(trackData, False)
+    textCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\Switch list (' + trackData['YL'] + ') (' + trackName + ').txt'
+    with cOpen(textCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as textWorkFile:
+        textWorkFile.write(textSwitchList)
+    system(MainScriptEntities.systemInfo() + textCopyTo)
+# Print the CSV switch list
+    if (jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled()):
+        csvSwitchList = makeCsvSwitchlist(trackData)
+        csvCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\csvSwitchLists\\Switch list (' + trackData['YL'] + ') (' + trackName + ').csv'
+        with cOpen(csvCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
+            csvWorkFile.write(csvSwitchList)
+    return
 
 def getcustomEmptyForCarType():
     '''Returns the default empty designation and a dictionary of car types by custom empty name'''

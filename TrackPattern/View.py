@@ -15,7 +15,7 @@ import TrackPattern.ViewEntities
 scriptRev = 'TrackPattern.View v20211210'
 psLog = logging.getLogger('PS.TP.View')
 
-class manageGui:
+class ManageGui:
     '''Manages all the GUI elements for the Pattern Scripts subroutine'''
 
     def __init__(self, panel=None, controls=None):
