@@ -18,7 +18,7 @@ from shutil import copy as sCopy
 scriptRev = 'OperationsPatternScripts.MainScriptEntities v20211210'
 
 # 'global' variables passed between modules
-trackNameClickedOn = u''
+trackNameClickedOn = None
 carTypeByEmptyDict = {}
 defaultLoadEmpty = u''
 

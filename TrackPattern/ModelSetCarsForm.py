@@ -6,62 +6,170 @@
 
 import jmri
 import java.awt
-# import java.awt.event
-import javax.swing
 import logging
-from codecs import open as cOpen
-from os import system
+# from codecs import open as cOpen
+# from os import system
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsYardPattern')
 import MainScriptEntities
 import TrackPattern.ModelEntities
 
+scriptRev = 'TrackPattern.ModelSetCarsForm v20211210'
+psLog = logging.getLogger('PS.TP.ModelSetCarsForm')
 
-def setCarsToTrack(self, MOUSE_CLICK):
-    '''Event that moves cars to the tracks entered in the pattern window'''
-
-# Set logging level
-    MainScriptEntities.setLoggingLevel(self.psLog)
-# set the cars to a track
-    self.ignoreLength = self.configFile['PI'] # flag to ignore track length
-    patternCopy = self.trackData # all the data for just one track
-    userInputList = [] # create a list of user inputs from the text input boxes
-    for userInput in self.jTextIn: # Read in and check the user input
+def processYpForPrint(trackData, textBoxEntry):
+    psLog.debug('processYpForPrint')
+    userInputList = [] # create a list of user inputs for the set car destinations
+    for userInput in textBoxEntry: # Read in the user input
         userInputList.append(unicode(userInput.getText(), MainScriptEntities.setEncoding()))
     i = 0
-    for z in patternCopy['ZZ']:
-        if (len(userInputList) == len(z['TR'])): # check that the lengths of the -input list- and -car roster- match
-            self.psLog.debug('input list and car roster lengths match')
-            trackName = unicode(z['TN'], MainScriptEntities.setEncoding())
-            setToLocation = self.lm.getLocationByName(unicode(patternCopy['YL'], MainScriptEntities.setEncoding()))
-            scheduleObject, trackObject = TrackPattern.ModelEntities.getScheduleForTrack(patternCopy['YL'], trackName)
-            j = 0
-            for y in z['TR']:
-                if (userInputList[i] in self.allTracksAtLoc and userInputList[i] != trackName):
-                    setToTrack = setToLocation.getTrackByName(unicode(userInputList[i], MainScriptEntities.setEncoding()), None)
-                    setCarId = self.cm.newRS(y['Road'], y['Number'])
-                    testCarDestination = setCarId.testDestination(setToLocation, setToTrack)
-                    if (testCarDestination == 'okay'):
-                        setCarId.setLocation(setToLocation, setToTrack)
-                        j += 1
-                        continue
-                    if (testCarDestination.startswith('track') and self.ignoreLength):
-                        trackLength = setToTrack.getLength()
-                        setToTrack.setLength(9999)
-                        setCarId.setLocation(setToLocation, setToTrack)
-                        setToTrack.setLength(trackLength)
-                        self.psLog.warning('Track length exceeded for ' + setToTrack.getName())
-                        j += 1
-                    else:
-                        self.psLog.warning(setCarId.getRoadName() + ' ' + setCarId.getNumber() + ' not set exception: ' + testCarDestination)
+    track = trackData['ZZ'][0] # There is only one track in trackData
+    if (len(userInputList) == len(track['TR'])): # check that the lengths of the input list and car roster match
+        psLog.debug('input list and car roster lengths match')
+        trackLocation = trackData['YL']
+        trackName = unicode(track['TN'], MainScriptEntities.setEncoding())
+        allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(trackLocation, None)
+        for setTo in track['TR']:
+            setTrack = unicode('Hold', MainScriptEntities.setEncoding())
+            if (userInputList[i] in allTracksAtLoc and userInputList[i] != trackName):
+                setTrack = unicode(userInputList[i], MainScriptEntities.setEncoding())
+            setTrack = TrackPattern.ModelEntities.formatText(' [' + setTrack + '] ', 8)
+            setTo.update({'Set to': setTrack}) # replaces empty brackets with the marked ones
+            i += 1
+    else:
+        psLog.critical('mismatched input list and car roster lengths')
+        trackData = []
 
-                i += 1
-            self.psLog.info(str(j) + ' cars were processed from track ' + trackName)
-            jmri.jmrit.operations.rollingstock.cars.CarManagerXml.save()
-        else:
-            self.psLog.critical('mismatched input list and car roster lengths')
-# Wrap it up
-    self.setCarsWindow.setVisible(False)
-    print(SetCarsWindowInstance.scriptRev)
+    return trackData
+
+def setCarsToTrack(trackData, textBoxEntry):
+    cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
+    # rs = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.RollingStockManager)
+    lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
+    configFile = MainScriptEntities.readConfigFile('TP')
+    ignoreLength = configFile['PI'] # flag to ignore track length
+
+    userInputList = [] # create a list of user inputs from the text input boxes
+    for userInput in textBoxEntry: # Read in and check the user input
+        userInputList.append(unicode(userInput.getText(), MainScriptEntities.setEncoding()))
+    i = 0
+    track = trackData['ZZ'][0]
+    if (len(userInputList) == len(track['TR'])): # check that the lengths of the -input list- and -car roster- match
+        psLog.debug('input list and car roster lengths match')
+        locationString = trackData['YL']
+        fromTrackString = unicode(track['TN'], MainScriptEntities.setEncoding())
+        allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(locationString, None)
+        locationObject = lm.getLocationByName(unicode(trackData['YL'], MainScriptEntities.setEncoding()))
+        # fromTrackObject = locationObject.getTrackByName(unicode(fromTrackString, MainScriptEntities.setEncoding()), None)
+        scheduleObject, fromTrackObject = getScheduleForTrack(locationString, fromTrackString)
+        j = 0
+        for car in track['TR']:
+            if (userInputList[i] in allTracksAtLoc and userInputList[i] != fromTrackString):
+                toTrackObject = locationObject.getTrackByName(unicode(userInputList[i], MainScriptEntities.setEncoding()), None)
+                carObject = cm.newRS(car['Road'], car['Number'])
+                testCarDestination = carObject.testDestination(locationObject, toTrackObject) # This is a JMRI method
+                if (testCarDestination == 'okay'):
+                    applySchedule(carObject, fromTrackObject, scheduleObject)
+                    carObject.setLocation(locationObject, toTrackObject)
+                    j += 1
+                if (testCarDestination.startswith('rolling') and ignoreLength):
+                    trackLength = toTrackObject.getLength()
+                    toTrackObject.setLength(9999)
+                    applySchedule(carObject, fromTrackObject, scheduleObject)
+                    carObject.setLocation(locationObject, toTrackObject)
+                    toTrackObject.setLength(trackLength)
+                    psLog.warning('Track length exceeded for ' + toTrackObject.getName())
+                    j += 1
+                else:
+                    psLog.warning(carObject.getRoadName() + ' ' + carObject.getNumber() + ' not set exception: ' + testCarDestination)
+            i += 1
+        psLog.info(str(j) + ' cars were processed from track ' + fromTrackString)
+        jmri.jmrit.operations.rollingstock.cars.CarManagerXml.save()
+    else:
+        psLog.critical('mismatched input list and car roster lengths')
 
     return
+
+def getScheduleForTrack(locationString, trackString):
+    '''Returns the tracks schedule object'''
+
+    psLog.debug('getScheduleForTrack')
+
+    lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
+    sm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.schedules.ScheduleManager)
+    scheduleObject = None
+    trackObject = lm.getLocationByName(locationString).getTrackByName(trackString, 'Spur')
+
+    if (trackObject):
+        scheduleObject = sm.getScheduleByName(trackObject.getScheduleName())
+
+    return scheduleObject, trackObject
+    
+def applySchedule(carObject, fromTrackObject, scheduleObject):
+    '''Mini "controller" to apply loads and destinations to cars'''
+
+    try:
+        if (fromTrackObject.getTrackType() == 'Spur'):
+            applyLoadRubric(carObject, scheduleObject)
+            applyFdRubric(carObject, scheduleObject)
+    except:
+        pass
+    return
+
+
+def applyLoadRubric(carObject, scheduleObject=None):
+    '''For spurs only, sets the values for shipped cars by priority'''
+
+    carType = carObject.getTypeName()
+
+    try: # first try to apply the schedule
+        carObject.setLoadName(scheduleObject.getItemByType(carType).getShipLoadName())
+        scheduleObject.getItemByType(carType).setHits(scheduleObject.getItemByType(carType).getHits() + 1)
+    except:
+        try: # apply values from RWE or RWL
+            if (carObject.getLoadType() == 'Empty'): # toggle the load
+                carObject.setLoadName(carObject.getReturnWhenLoadedLoadName())
+            else:
+                carObject.setLoadName(carObject.getReturnWhenEmptyLoadName())
+        except:
+            try: # apply values from custom empty
+                carObject.setLoadName(MainScriptEntities.carTypeByEmptyDict.get(carType))
+            except: # when all else fails, apply the default empty
+                carObject.setLoadName(MainScriptEntities.defaultLoadEmpty)
+
+    return
+
+def applyFdRubric(carObject, scheduleObject=None):
+    '''For spurs only, sets the values for the cars destination and track'''
+
+    # configFile = MainScriptEntities.readConfigFile('TP')
+    patternIgnore = MainScriptEntities.readConfigFile('TP')['PI']
+    carType = carObject.getTypeName()
+    carObject.setFinalDestination(None)
+    carObject.setFinalDestinationTrack(None)
+
+    try: # first try to apply the schedule
+        carObject.setDestination(scheduleObject.getItemByType(carType).getDestination(), scheduleObject.getItemByType(carType).getDestinationTrack(), patternIgnore)
+    except:
+        try: # apply values from RWE or RWL
+            if (carObject.getLoadType() == 'Load'): # load has already been toggled
+                carObject.setDestination(carObject.getReturnWhenLoadedDestination(), carObject.getReturnWhenLoadedDestTrack(), patternIgnore)
+            else:
+                carObject.setDestination(carObject.getReturnWhenEmptyDestination(), carObject.getReturnWhenEmptyDestTrack(), patternIgnore)
+        except: # nothing is set if there are no fd entries anywhere
+            pass
+
+    return
+
+def getTrackTypeAndSchedule(location, track):
+    '''For a track, returns bool for isASpur and scheduleToggle'''
+
+    spurToggle = False
+    scheduleToggle = False
+    isASpur = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationByName(location).getTrackByName(track, 'Spur')
+    if (isASpur):
+        spurToggle = True
+        if (isASpur.getSchedule()):
+            scheduleToggle = True
+
+    return spurToggle, scheduleToggle

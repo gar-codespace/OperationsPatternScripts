@@ -18,21 +18,6 @@ import MainScriptEntities
 
 scriptRev = 'TrackPattern.ModelEntities v20211210'
 
-# class SetTrackBoxMouseListener(java.awt.event.MouseAdapter):
-#     '''When any of the Set Cars to Track text boxes is clicked on'''
-#
-#     def __init__(self):
-#         pass
-#
-#     def mouseClicked(self, MOUSE_CLICKED):
-#
-#         try:
-#             MOUSE_CLICKED.getSource().setText(MainScriptEntities.trackNameClickedOn)
-#         except NameError:
-#             # add some loggong stuff
-#             print('No track was selected')
-#         return
-
 def occuranceTally(listOfOccurances):
     '''Tally the occurances of a word in a list and return a dictionary'''
 
@@ -93,8 +78,6 @@ def getCarObjects(yard, track):
             carYardPattern.append(car)
 
     return carYardPattern # a list of objects
-
-
 
 def getDetailsForCarAsDict(carObject):
     '''makes a dictionary of attributes for one car based on the requirements of
@@ -249,7 +232,6 @@ def makeCsvSwitchlist(trackPattern):
 def printSwitchList(trackData):
     '''Sends the TXT switch list to notepad and optionally creates the CSV switch list'''
 
-
     for track in trackData['ZZ']:
         trackName = track['TN']
 # Print the switch list
@@ -282,17 +264,6 @@ def getcustomEmptyForCarType():
                     customEmptyForCarTypes[carType['type']] = loadDetail.attrib['name']
     return defaultLoadEmpty, customEmptyForCarTypes
 
-def getScheduleForTrack(locationString, trackString):
-    '''Returns the tracks schedule object'''
-
-    scheduleObject = None
-    trackObject = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationByName(locationString).getTrackByName(trackString, 'Spur')
-    if (trackObject):
-
-        scheduleObject = trackObject.getSchedule()
-
-    return scheduleObject, trackObject
-
 def getSelectedTracks():
     '''Makes a list of just the selected tracks'''
 
@@ -303,58 +274,3 @@ def getSelectedTracks():
             trackList.append(track)
 
     return trackList
-
-def getTrackTypeAndSchedule(location, track):
-    '''For a track, returns bool for isASpur and scheduleToggle'''
-
-    spurToggle = False
-    scheduleToggle = False
-    isASpur = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationByName(location).getTrackByName(track, 'Spur')
-    if (isASpur):
-        spurToggle = True
-        if (isASpur.getSchedule()):
-            scheduleToggle = True
-
-    return spurToggle, scheduleToggle
-
-def applyLoadRubric(carObject, scheduleObject=None):
-    '''For spurs only, sets the values for shipped cars by priority'''
-
-    carType = carObject.getTypeName()
-
-    try: # first try to apply the schedule
-        carObject.setLoadName(scheduleObject.getItemByType(carType).getShipLoadName())
-    except:
-        try: # apply values from RWE or RWL
-            if (carObject.getLoadType() == 'Empty'): # toggle the load
-                carObject.setLoadName(carObject.getReturnWhenLoadedLoadName())
-            else:
-                carObject.setLoadName(carObject.getReturnWhenEmptyLoadName())
-        except:
-            try: # apply values from custom empty
-                carObject.setLoadName(MainScriptEntities.carTypeByEmptyDict.get(carType))
-            except: # when all else fails, apply the default empty
-                carObject.setLoadName(MainScriptEntities.defaultLoadEmpty)
-    scheduleObject.getItemByType(carType).setHits(scheduleObject.getItemByType(carType).getHits() + 1)
-
-    return
-
-def applyFdRubric(carObject, scheduleObject=None, ignoreLength=False):
-    '''For spurs only, sets the values for the cars destination and track'''
-
-    carType = carObject.getTypeName()
-    carObject.setFinalDestination(None)
-    carObject.setFinalDestinationTrack(None)
-
-    try: # first try to apply the schedule
-        carObject.setDestination(scheduleObject.getItemByType(carType).getDestination(), scheduleObject.getItemByType(carType).getDestinationTrack(), ignoreLength)
-    except:
-        try: # apply values from RWE or RWL
-            if (carObject.getLoadType() == 'Load'): # load has already been toggled
-                carObject.setDestination(carObject.getReturnWhenLoadedDestination(), carObject.getReturnWhenLoadedDestTrack(), ignoreLength)
-            else:
-                carObject.setDestination(carObject.getReturnWhenEmptyDestination(), carObject.getReturnWhenEmptyDestTrack(), ignoreLength)
-        except: # nothing is set if there are no fd entries anywhere
-            pass
-
-    return
