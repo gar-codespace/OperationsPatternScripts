@@ -20,7 +20,9 @@ scriptRev = 'OperationsPatternScripts.MainScriptEntities v20211210'
 # 'global' variables passed between modules
 trackNameClickedOn = None
 carTypeByEmptyDict = {}
+carTypeByLoadDict = {}
 defaultLoadEmpty = u''
+defaultLoadLoad = u''
 
 def setEncoding():
     '''Expand on this later'''

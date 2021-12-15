@@ -12,7 +12,7 @@ path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
 import TrackPattern.Model
 import TrackPattern.View
-import TrackPattern.ControllerSetCarsForm
+# import TrackPattern.ControllerSetCarsForm
 
 class StartUp():
     '''Start the the Track Pattern subroutine'''
@@ -76,24 +76,20 @@ class StartUp():
     def whenTPButtonPressed(self, event):
         '''Makes a track pattern based on the config file'''
 
+        # rs = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.RollingStockManager(jmri.jmrit.operations.rollingstock.cars))
+        # rs = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.RollingStockManager)
+        # jmri.jmrit.operations.rollingstock.cars.CarManager
+        # rs = jmri.jmrit.operations.rollingstock.RollingStockManager(jmri.jmrit.operations.rollingstock.cars)
+        # xCar = jmri.jmrit.operations.rollingstock.RollingStock('H', 'K31').getComment()
+        # cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
+        # cm.newRS('H', 'K273')
     # Set logging level
         MainScriptEntities.setLoggingLevel(self.psLog)
     # Boilerplate - update the config file
         TrackPattern.Model.updateConfigFile(self.controls)
-        self.psLog.info('Configuration file updated with new settings')
+        self.psLog.info('Configuration file updated with new settings for controls')
     # Button specific
-        selectedTracks = TrackPattern.ModelEntities.getSelectedTracks()
-        trackPatternDict = TrackPattern.Model.makeTrackPatternDict(selectedTracks)
-        self.psLog.info('Track Pattern dictionary created')
-        trackPatternDict.update({'RT': u'Track Pattern for Location'})
-        location = trackPatternDict['YL']
-        TrackPattern.Model.writePatternJson(location, trackPatternDict)
-        self.psLog.info('Track Pattern for ' + location + ' JSON written')
-        TrackPattern.Model.writeTextSwitchList(location, trackPatternDict)
-        self.psLog.info('Track Pattern for ' + location + ' TXT switch list written')
-        if (jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled()):
-            csvSwitchList = TrackPattern.Model.writeCsvSwitchList(location, trackPatternDict)
-            self.psLog.info('Track Pattern for ' + location + ' CSV written')
+        location = TrackPattern.Model.onTpButtonPress()
         TrackPattern.View.displayTextSwitchlist(location)
         print(StartUp().scriptRev)
 
@@ -106,25 +102,11 @@ class StartUp():
         MainScriptEntities.setLoggingLevel(self.psLog)
     # Boilerplate - update the config file
         self.controls = TrackPattern.Model.updateConfigFile(self.controls)
-        self.psLog.info('Configuration file updated with new settings')
+        self.psLog.info('Configuration file updated with new settings for controls')
     # Find all the empty load designations
         TrackPattern.Model.makeLoadEmptyDesignationsDict()
     # Button specific
-        selectedTracks = TrackPattern.ModelEntities.getSelectedTracks()
-        windowOffset = 200
-    # create a set cars form for each track in its own window
-        if (selectedTracks):
-            i = 0
-            for track in selectedTracks:
-                listForTrack = TrackPattern.Model.makeListForTrack(self.controls[0].getSelectedItem(), track)
-                newWindow = TrackPattern.ControllerSetCarsForm.ManageGui(listForTrack)
-                newWindow.makeFrame(windowOffset)
-                self.psLog.info(u'Set Cars Window created for track ' + track)
-                windowOffset += 50
-                i += 1
-            self.psLog.info(str(i) + ' Set Cars windows for ' + self.controls[0].getSelectedItem() + ' created')
-        else:
-            self.psLog.info('No tracks were selected')
+        TrackPattern.Model.onScButtonPress(self.controls[0])
         print(StartUp().scriptRev)
 
         return
@@ -142,7 +124,7 @@ class StartUp():
 
         self.panel = panel
         self.controls = controls
-        self.controls[0].addActionListener(self.ComboBoxListener(self.panel, self.controls))
+        self.controls[0].addActionListener(self.ComboBoxListener(panel, controls))
         self.controls[1].actionPerformed = self.whenPABoxClicked
         self.controls[4].actionPerformed = self.whenTPButtonPressed
         self.controls[5].actionPerformed = self.whenSCButtonPressed
@@ -153,17 +135,17 @@ class StartUp():
     def makeSubroutineFrame(self):
         '''Makes the title boarder frame'''
 
-        self.patternFrame = TrackPattern.View.ManageGui().makeFrame()
+        patternFrame = TrackPattern.View.ManageGui().makeFrame()
         self.psLog.info('track pattern makeFrame completed')
 
-        return self.patternFrame
+        return patternFrame
 
     def makeSubroutinePanel(self):
         '''Make and activate the Track Pattern objects'''
 
         MainScriptEntities.writeConfigFile(TrackPattern.Model.updateLocations())
-        self.panel, self.controls = TrackPattern.View.ManageGui().makePanel()
-        self.activateButtons(self.panel, self.controls)
+        panel, controls = TrackPattern.View.ManageGui().makePanel()
+        self.activateButtons(panel, controls)
         self.psLog.info('track pattern makeSubroutinePanel completed')
 
-        return self.panel
+        return panel

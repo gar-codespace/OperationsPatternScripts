@@ -7,8 +7,6 @@
 import jmri
 import java.awt
 import logging
-# from codecs import open as cOpen
-# from os import system
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsYardPattern')
 import MainScriptEntities
@@ -43,47 +41,55 @@ def processYpForPrint(trackData, textBoxEntry):
     return trackData
 
 def setCarsToTrack(trackData, textBoxEntry):
+# Boilerplate
     cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
-    # rs = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.RollingStockManager)
     lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
-    configFile = MainScriptEntities.readConfigFile('TP')
-    ignoreLength = configFile['PI'] # flag to ignore track length
-
+    ignoreLength =  MainScriptEntities.readConfigFile('TP')['PI'] # flag to ignore track length
+# Get user inputs
     userInputList = [] # create a list of user inputs from the text input boxes
     for userInput in textBoxEntry: # Read in and check the user input
         userInputList.append(unicode(userInput.getText(), MainScriptEntities.setEncoding()))
+# Set cars
     i = 0
     track = trackData['ZZ'][0]
     if (len(userInputList) == len(track['TR'])): # check that the lengths of the -input list- and -car roster- match
         psLog.debug('input list and car roster lengths match')
         locationString = trackData['YL']
+        locationObject = lm.getLocationByName(unicode(trackData['YL'], MainScriptEntities.setEncoding()))
         fromTrackString = unicode(track['TN'], MainScriptEntities.setEncoding())
         allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(locationString, None)
-        locationObject = lm.getLocationByName(unicode(trackData['YL'], MainScriptEntities.setEncoding()))
-        # fromTrackObject = locationObject.getTrackByName(unicode(fromTrackString, MainScriptEntities.setEncoding()), None)
         scheduleObject, fromTrackObject = getScheduleForTrack(locationString, fromTrackString)
-        j = 0
+        setCount = 0
         for car in track['TR']:
             if (userInputList[i] in allTracksAtLoc and userInputList[i] != fromTrackString):
-                toTrackObject = locationObject.getTrackByName(unicode(userInputList[i], MainScriptEntities.setEncoding()), None)
                 carObject = cm.newRS(car['Road'], car['Number'])
-                testCarDestination = carObject.testDestination(locationObject, toTrackObject) # This is a JMRI method
-                if (testCarDestination == 'okay'):
-                    applySchedule(carObject, fromTrackObject, scheduleObject)
+                toTrackObject = locationObject.getTrackByName(unicode(userInputList[i], MainScriptEntities.setEncoding()), None)
+                locationObject.setStatus(carObject.testDestination(locationObject, toTrackObject))
+
+                if (locationObject.getStatus() == 'okay' or locationObject.getStatus().startswith('car has')):
                     carObject.setLocation(locationObject, toTrackObject)
-                    j += 1
-                if (testCarDestination.startswith('rolling') and ignoreLength):
+                    applySchedule(carObject, fromTrackObject, scheduleObject)
+                    carObject.setMoves(carObject.getMoves() + 1)
+                    print('Car set length exception')
+                    setCount += 1
+                if (locationObject.getStatus().startswith('rolling') and ignoreLength):
                     trackLength = toTrackObject.getLength()
                     toTrackObject.setLength(9999)
-                    applySchedule(carObject, fromTrackObject, scheduleObject)
-                    carObject.setLocation(locationObject, toTrackObject)
+                    locationObject.setStatus(carObject.testDestination(locationObject, toTrackObject))
+                    if (locationObject.getStatus() == 'okay' or locationObject.getStatus().startswith('car has')):
+                        carObject.setLocation(locationObject, toTrackObject)
+                        applySchedule(carObject, fromTrackObject, scheduleObject)
+                        carObject.setMoves(carObject.getMoves() + 1)
+                        print('Car set ignore track length')
+                        setCount += 1
                     toTrackObject.setLength(trackLength)
                     psLog.warning('Track length exceeded for ' + toTrackObject.getName())
-                    j += 1
+                    setCount += 1
                 else:
-                    psLog.warning(carObject.getRoadName() + ' ' + carObject.getNumber() + ' not set exception: ' + testCarDestination)
+                    print('Car not set')
+                    # psLog.warning(carObject.getRoadName() + ' ' + carObject.getNumber() + ' not set exception: ' + carObject.testDestination(locationObject, toTrackObject))
             i += 1
-        psLog.info(str(j) + ' cars were processed from track ' + fromTrackString)
+        psLog.info(str(setCount) + ' cars were processed from track ' + fromTrackString)
         jmri.jmrit.operations.rollingstock.cars.CarManagerXml.save()
     else:
         psLog.critical('mismatched input list and car roster lengths')
@@ -104,9 +110,9 @@ def getScheduleForTrack(locationString, trackString):
         scheduleObject = sm.getScheduleByName(trackObject.getScheduleName())
 
     return scheduleObject, trackObject
-    
+
 def applySchedule(carObject, fromTrackObject, scheduleObject):
-    '''Mini "controller" to apply loads and destinations to cars'''
+    '''Mini "controller" to plugin additional schedule methods'''
 
     try:
         if (fromTrackObject.getTrackType() == 'Spur'):
@@ -114,6 +120,7 @@ def applySchedule(carObject, fromTrackObject, scheduleObject):
             applyFdRubric(carObject, scheduleObject)
     except:
         pass
+
     return
 
 
@@ -121,7 +128,12 @@ def applyLoadRubric(carObject, scheduleObject=None):
     '''For spurs only, sets the values for shipped cars by priority'''
 
     carType = carObject.getTypeName()
-
+# Toggle the default loads if used
+    if (carObject.getLoadName() == MainScriptEntities.defaultLoadLoad):
+        carObject.setLoadName(MainScriptEntities.defaultLoadEmpty)
+    elif (carObject.getLoadName() == MainScriptEntities.defaultLoadEmpty):
+        carObject.setLoadName(MainScriptEntities.defaultLoadLoad)
+# Toggle the custom loads
     try: # first try to apply the schedule
         carObject.setLoadName(scheduleObject.getItemByType(carType).getShipLoadName())
         scheduleObject.getItemByType(carType).setHits(scheduleObject.getItemByType(carType).getHits() + 1)
@@ -133,14 +145,20 @@ def applyLoadRubric(carObject, scheduleObject=None):
                 carObject.setLoadName(carObject.getReturnWhenEmptyLoadName())
         except:
             try: # apply values from custom empty
-                carObject.setLoadName(MainScriptEntities.carTypeByEmptyDict.get(carType))
-            except: # when all else fails, apply the default empty
-                carObject.setLoadName(MainScriptEntities.defaultLoadEmpty)
+                if (carObject.getLoadType() == 'Empty'): # toggle the load
+                    carObject.setLoadName(MainScriptEntities.carTypeByLoadDict.get(carType))
+                else:
+                    carObject.setLoadName(MainScriptEntities.carTypeByEmptyDict.get(carType))
+            except: # when all else fails, apply the default loads
+                if (carObject.getLoadType() == 'Empty'): # toggle the load
+                    carObject.setLoadName(MainScriptEntities.defaultLoadLoad)
+                else:
+                    carObject.setLoadName(MainScriptEntities.defaultLoadEmpty)
 
     return
 
 def applyFdRubric(carObject, scheduleObject=None):
-    '''For spurs only, sets the values for the cars destination and track'''
+    '''For spurs only, sets the values for the cars destination and track from the schedule or RWE/RWL'''
 
     # configFile = MainScriptEntities.readConfigFile('TP')
     patternIgnore = MainScriptEntities.readConfigFile('TP')['PI']
@@ -149,15 +167,18 @@ def applyFdRubric(carObject, scheduleObject=None):
     carObject.setFinalDestinationTrack(None)
 
     try: # first try to apply the schedule
-        carObject.setDestination(scheduleObject.getItemByType(carType).getDestination(), scheduleObject.getItemByType(carType).getDestinationTrack(), patternIgnore)
+        applySchedule = carObject.setDestination(scheduleObject.getItemByType(carType).getDestination(), scheduleObject.getItemByType(carType).getDestinationTrack(), patternIgnore)
+        if (applySchedule != 'okay'):
+            psLog.info('Schedule not applied: ' + applySchedule)
     except:
-        try: # apply values from RWE or RWL
-            if (carObject.getLoadType() == 'Load'): # load has already been toggled
-                carObject.setDestination(carObject.getReturnWhenLoadedDestination(), carObject.getReturnWhenLoadedDestTrack(), patternIgnore)
-            else:
-                carObject.setDestination(carObject.getReturnWhenEmptyDestination(), carObject.getReturnWhenEmptyDestTrack(), patternIgnore)
-        except: # nothing is set if there are no fd entries anywhere
-            pass
+        if (carObject.getLoadType() == 'Load'): # load has already been toggled
+            applyRWL = carObject.setDestination(carObject.getReturnWhenLoadedDestination(), carObject.getReturnWhenLoadedDestTrack(), patternIgnore)
+            if (applyRWL != 'okay'):
+                psLog.info('RWL destination not applied: ' + applyRWL)
+        if (carObject.getLoadType() == 'Empty'): # load has already been toggled
+            applyRWE = carObject.setDestination(carObject.getReturnWhenEmptyDestination(), carObject.getReturnWhenEmptyDestTrack(), patternIgnore)
+            if (applyRWE != 'okay'):
+                psLog.info('RWE destination not applied: ' + applyRWE)
 
     return
 

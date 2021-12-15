@@ -7,16 +7,55 @@
 import jmri
 import logging
 from os import path as oPath
-from shutil import copy as sCopy
+# from shutil import copy as sCopy
 from json import loads as jLoads, dumps as jDumps
 from codecs import open as cOpen
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
 import TrackPattern.ModelEntities
+import TrackPattern.ControllerSetCarsForm
 
 scriptRev = 'TrackPattern.Model v20211210'
 psLog = logging.getLogger('PS.TP.Model')
+
+def onTpButtonPress():
+    '''When the "Pattern" button on the Control Panel is pressed'''
+
+    selectedTracks = TrackPattern.ModelEntities.getSelectedTracks()
+    trackPatternDict = makeTrackPatternDict(selectedTracks)
+    trackPatternDict.update({'RT': u'Track Pattern for Location'})
+    psLog.info('Track Pattern dictionary created')
+    location = trackPatternDict['YL']
+    writePatternJson(location, trackPatternDict)
+    psLog.info('Track Pattern for ' + location + ' JSON written')
+    writeTextSwitchList(location, trackPatternDict)
+    psLog.info('Track Pattern for ' + location + ' TXT switch list written')
+    if (jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled()):
+        csvSwitchList = TrackPattern.Model.writeCsvSwitchList(location, trackPatternDict)
+        psLog.info('Track Pattern for ' + location + ' CSV written')
+
+    return location
+
+def onScButtonPress(comboBox):
+    '''When the "Set Cars" button on the Control Panel is pressed'''
+
+    selectedTracks = TrackPattern.ModelEntities.getSelectedTracks()
+    windowOffset = 200
+    if (selectedTracks):
+        i = 0
+        for track in selectedTracks:
+            listForTrack = makeListForTrack(comboBox.getSelectedItem(), track)
+            newWindow = TrackPattern.ControllerSetCarsForm.ManageGui(listForTrack)
+            newWindow.makeFrame(windowOffset)
+            psLog.info(u'Set Cars Window created for track ' + track)
+            windowOffset += 50
+            i += 1
+        psLog.info(str(i) + ' Set Cars windows for ' + comboBox.getSelectedItem() + ' created')
+    else:
+        psLog.info('No tracks were selected')
+
+    return
 
 def initializeConfigFile():
     '''initialize or reinitialize the track pattern part of the config file on first use, reset, or edit of a location name'''
@@ -134,19 +173,24 @@ def makeLoadEmptyDesignationsDict():
 
     psLog.debug('makeLoadEmptyDesignationsDict')
     defaultLoadEmpty, customEmptyForCarTypes = TrackPattern.ModelEntities.getcustomEmptyForCarType()
+    defaultLoadLoad, customLoadForCarTypes = TrackPattern.ModelEntities.getcustomEmptyForCarType()
     try:
         MainScriptEntities.defaultLoadEmpty = defaultLoadEmpty
-        psLog.info('Default empty designation saved')
+        MainScriptEntities.defaultLoadLoad = defaultLoadLoad
+        psLog.info('Default load and empty designations saved')
     except:
         psLog.critical('Default empty designation not saved')
         MainScriptEntities.defaultLoadEmpty = 'E'
+        MainScriptEntities.defaultLoadLoad = 'L'
     try:
-        MainScriptEntities.carTypeByEmptyDict = {}
+        # MainScriptEntities.carTypeByEmptyDict = {}
         MainScriptEntities.carTypeByEmptyDict = customEmptyForCarTypes
-        psLog.info('Default custon load (empty) by car type designations saved')
+        MainScriptEntities.carTypeByLoadDict = customLoadForCarTypes
+        psLog.info('Default custon loads for (empty) and (load) by car type designations saved')
     except:
         psLog.critical('Custom car empty designations not saved')
         MainScriptEntities.carTypeByEmptyDict = {}
+        MainScriptEntities.carTypeByLoadDict = {}
 
     return
 

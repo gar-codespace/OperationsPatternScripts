@@ -248,6 +248,22 @@ def printSwitchList(trackData):
             csvWorkFile.write(csvSwitchList)
     return
 
+def getcustomLoadForCarType():
+    '''Returns the default empty designation and a dictionary of car types by custom empty name'''
+
+    cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManagerXml)
+    opsFileName = jmri.util.FileUtil.getProfilePath() + 'operations\\' + cm.getOperationsFileName()
+    with cOpen(opsFileName, 'r', encoding=MainScriptEntities.setEncoding()) as opsWorkFile:
+        carXml = ET.parse(opsWorkFile)
+        defaultLoadLoad = carXml.getroot()[5][0].attrib['load']
+        customLoadForCarTypes = {}
+        for loadElement in carXml.getroot()[5]:
+            carType = loadElement.attrib
+            for loadDetail in loadElement:
+                if (loadDetail.attrib['loadType'] == 'Load'):
+                    customLoadForCarTypes[carType['type']] = loadDetail.attrib['name']
+    return defaultLoadLoad, customLoadForCarTypes
+
 def getcustomEmptyForCarType():
     '''Returns the default empty designation and a dictionary of car types by custom empty name'''
 

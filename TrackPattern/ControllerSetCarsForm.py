@@ -6,7 +6,7 @@
 
 import jmri
 import java.awt
-import java.awt.event
+# import java.awt.event
 import javax.swing
 import logging
 from codecs import open as cOpen
@@ -92,15 +92,15 @@ class ManageGui():
     '''Manages an instance of each -Pattern Report for track- window'''
 
     def __init__(self, pattern):
-    # Track variables
-        self.trackData = pattern # all the data for the selected track, car roster is sorted
+
+        self.trackPattern = pattern # all the data for the selected track, car roster is sorted
 
         return
 
     def makeFrame(self, offSet):
         '''Creates each of the Pattern Report for Track windows'''
 
-        patternReportForTrackWindow = TrackPattern.ViewSetCarsForm.patternReportForTrackWindow(self.trackData, offSet)
+        patternReportForTrackWindow = TrackPattern.ViewSetCarsForm.patternReportForTrackWindow(self.trackPattern, offSet)
         patternReportForTrackWindow.pack()
         patternReportForTrackWindow.setVisible(True)
 

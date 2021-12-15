@@ -1,12 +1,13 @@
-jmri.util.JmirJFrame.getFrameList() to find open windows?
-log no FD set due to track length exception
+Stuff that's OK or comments:
+  jmri.util.JmirJFrame.getFrameList() to find open windows?
+  maybe use trackobject.getUsedLength
+  why isnt jmri.jmrit.operations.rollingstock.cars.Car.testDestination()being used?
+  RWE and RWL seems to work ok
+  Schedule overrides RWE/RWL OK
+  no schedule, no RWE/RWL load toggles ok
+  default load/empty toggling ok
+  Ignore Track Length works with schedules
 
-test if Ignore Track Length works with schedules.
 
-maybe use trackobject.getUsedLength
-
-change View.manageGui to View.ManageGui
-
-RWE and RWL are not being set
-
-why isnt jmri.jmrit.operations.rollingstock.cars.Car.testDestination()being used?
+Stuff to fix:
+  log no FD set due to track length exception
