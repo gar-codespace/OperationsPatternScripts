@@ -8,6 +8,9 @@ Stuff that's OK or comments:
   default load/empty toggling ok
   Ignore Track Length works with schedules
 
-
 Stuff to fix:
-  log no FD set due to track length exception
+  Check all logging levels
+
+Wish List:
+  Pattern Tracks window automatically resizes
+  set cars window automatically resizes

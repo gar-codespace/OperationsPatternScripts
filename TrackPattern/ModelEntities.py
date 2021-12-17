@@ -165,7 +165,7 @@ def makeSwitchlist(trackPattern, bool):
                     itemWidth = reportWidth[item]
                     switchListRow = switchListRow + formatText(car[item], itemWidth)
             switchList = switchList + switchListRow + '\n'
-            carLength = carLength + int(car['Length'])
+            carLength = carLength + int(car['Length']) + 4
             trackTally.append(car['Final Dest'])
             reportTally.append(car['Final Dest'])
         switchList = switchList + u'Total Cars: ' \

@@ -49,8 +49,6 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
     def printPrButton(self, MOUSE_CLICK):
         '''Event that prints the yard pattern for the selected track'''
 
-    # Set logging level
-        MainScriptEntities.setLoggingLevel(self.psLog)
     # Make the switch list
         processedTrackData = TrackPattern.ModelSetCarsForm.processYpForPrint(self.trackData, self.textBoxEntry)
     # Print the switch list
@@ -62,8 +60,6 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
     def setPrButton(self, MOUSE_CLICK):
         '''Event that moves cars to the tracks entered in the pattern window'''
 
-    # Set logging level
-        MainScriptEntities.setLoggingLevel(self.psLog)
     # set the cars to a track
         TrackPattern.ModelSetCarsForm.setCarsToTrack(self.trackData, self.textBoxEntry)
     # Wrap it up
@@ -83,7 +79,6 @@ class textBoxEntryListener(java.awt.event.MouseAdapter):
         if (MainScriptEntities.trackNameClickedOn):
             MOUSE_CLICKED.getSource().setText(MainScriptEntities.trackNameClickedOn)
         else:
-            MainScriptEntities.setLoggingLevel(self.psLog)
             self.psLog.warning('No track was selected')
 
         return

@@ -150,7 +150,6 @@ def setCarsFormBodyHeader():
     bodyHeader.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
 
 # Populate the forms header
-    # Set to: input box
     label = javax.swing.JLabel(configFile['ST'])
     box = makeSwingBox(reportWidth['Input'] * configFile['RM'], configFile['PH'])
     box.add(label)

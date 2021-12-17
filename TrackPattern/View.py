@@ -63,11 +63,11 @@ def displayTextSwitchlist(location):
 
     return
 
-def displayPatternLog():
+def printPatternLog():
     '''Opens the pattern log in notepad or other'''
 
     psLog.debug('displayPatternLog')
-    textPatternLog = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternLog.txt'
-    system(MainScriptEntities.systemInfo() + textPatternLog)
+    tempPatternLog = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternLog_temp.txt'
+    system(MainScriptEntities.systemInfo() + tempPatternLog)
 
     return

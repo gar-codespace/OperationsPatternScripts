@@ -7,7 +7,6 @@
 import jmri
 import logging
 from os import path as oPath
-# from shutil import copy as sCopy
 from json import loads as jLoads, dumps as jDumps
 from codecs import open as cOpen
 from sys import path
@@ -23,17 +22,20 @@ def onTpButtonPress():
     '''When the "Pattern" button on the Control Panel is pressed'''
 
     selectedTracks = TrackPattern.ModelEntities.getSelectedTracks()
-    trackPatternDict = makeTrackPatternDict(selectedTracks)
-    trackPatternDict.update({'RT': u'Track Pattern for Location'})
-    psLog.info('Track Pattern dictionary created')
-    location = trackPatternDict['YL']
-    writePatternJson(location, trackPatternDict)
-    psLog.info('Track Pattern for ' + location + ' JSON written')
-    writeTextSwitchList(location, trackPatternDict)
-    psLog.info('Track Pattern for ' + location + ' TXT switch list written')
-    if (jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled()):
-        csvSwitchList = TrackPattern.Model.writeCsvSwitchList(location, trackPatternDict)
-        psLog.info('Track Pattern for ' + location + ' CSV written')
+    if (selectedTracks):
+        trackPatternDict = makeTrackPatternDict(selectedTracks)
+        trackPatternDict.update({'RT': u'Track Pattern for Location'})
+        psLog.info('Track Pattern dictionary created')
+        location = trackPatternDict['YL']
+        writePatternJson(location, trackPatternDict)
+        psLog.info('Track Pattern for ' + location + ' JSON written')
+        writeTextSwitchList(location, trackPatternDict)
+        psLog.info('Track Pattern for ' + location + ' TXT switch list written')
+        if (jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled()):
+            csvSwitchList = TrackPattern.Model.writeCsvSwitchList(location, trackPatternDict)
+            psLog.info('Track Pattern for ' + location + ' CSV written')
+    else:
+        psLog.warning('No tracks were selected for the Pattern button')
 
     return location
 
@@ -53,7 +55,7 @@ def onScButtonPress(comboBox):
             i += 1
         psLog.info(str(i) + ' Set Cars windows for ' + comboBox.getSelectedItem() + ' created')
     else:
-        psLog.info('No tracks were selected')
+        psLog.warning('No tracks were selected for the Set Cars button')
 
     return
 
@@ -125,6 +127,33 @@ def updatePatternTracks(trackList):
         psLog.warning('There are no yard tracks for this location')
 
     return newConfigFile
+
+def makePatternLog():
+    '''creates a pattern log for display based on the log level, as set by the getBuildReportLevel'''
+
+    outputPatternLog = ''
+    buildReportLevel = int(jmri.jmrit.operations.setup.Setup.getBuildReportLevel())
+    configLoggingIndex = MainScriptEntities.readConfigFile('LI')
+    logLevel = configLoggingIndex[jmri.jmrit.operations.setup.Setup.getBuildReportLevel()]
+    logFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternLog.txt'
+    with cOpen(logFileLocation, 'r', encoding=MainScriptEntities.setEncoding()) as patternLogFile:
+        while True:
+            thisLine = patternLogFile.readline()
+            if not (thisLine):
+                break
+            if (configLoggingIndex['7'] in thisLine and buildReportLevel > 6): # debug
+                outputPatternLog = outputPatternLog + thisLine
+            if (configLoggingIndex['5'] in thisLine and buildReportLevel > 4): # info
+                outputPatternLog = outputPatternLog + thisLine
+            if (configLoggingIndex['3'] in thisLine and buildReportLevel > 2): # warning
+                outputPatternLog = outputPatternLog + thisLine
+            if (configLoggingIndex['1'] in thisLine and buildReportLevel > 0): # error
+                outputPatternLog = outputPatternLog + thisLine
+
+    tempLogFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternLog_temp.txt'
+    with cOpen(tempLogFileLocation, 'w', encoding=MainScriptEntities.setEncoding()) as tempPatternLogFile:
+        tempPatternLogFile.write(outputPatternLog)
+    return
 
 def makeNewPatternTracks(location):
     '''Makes a new list of all tracks for a location'''

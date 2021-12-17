@@ -61,17 +61,16 @@ def setCarsToTrack(trackData, textBoxEntry):
         scheduleObject, fromTrackObject = getScheduleForTrack(locationString, fromTrackString)
         setCount = 0
         for car in track['TR']:
+            carObject = cm.newRS(car['Road'], car['Number'])
             if (userInputList[i] in allTracksAtLoc and userInputList[i] != fromTrackString):
-                carObject = cm.newRS(car['Road'], car['Number'])
                 toTrackObject = locationObject.getTrackByName(unicode(userInputList[i], MainScriptEntities.setEncoding()), None)
                 locationObject.setStatus(carObject.testDestination(locationObject, toTrackObject))
-
                 if (locationObject.getStatus() == 'okay' or locationObject.getStatus().startswith('car has')):
                     carObject.setLocation(locationObject, toTrackObject)
                     applySchedule(carObject, fromTrackObject, scheduleObject)
-                    carObject.setMoves(carObject.getMoves() + 1)
-                    print('Car set length exception')
                     setCount += 1
+                else:
+                    psLog.warning(carObject.getRoadName() + ' ' + carObject.getNumber() + ' not set exception: ' + carObject.testDestination(locationObject, toTrackObject))
                 if (locationObject.getStatus().startswith('rolling') and ignoreLength):
                     trackLength = toTrackObject.getLength()
                     toTrackObject.setLength(9999)
@@ -79,15 +78,12 @@ def setCarsToTrack(trackData, textBoxEntry):
                     if (locationObject.getStatus() == 'okay' or locationObject.getStatus().startswith('car has')):
                         carObject.setLocation(locationObject, toTrackObject)
                         applySchedule(carObject, fromTrackObject, scheduleObject)
-                        carObject.setMoves(carObject.getMoves() + 1)
-                        print('Car set ignore track length')
+                        psLog.warning('Track length exceeded for ' + toTrackObject.getName())
                         setCount += 1
+                    else:
+                        psLog.warning(carObject.getRoadName() + ' ' + carObject.getNumber() + ' not set exception: ' + carObject.testDestination(locationObject, toTrackObject))
                     toTrackObject.setLength(trackLength)
-                    psLog.warning('Track length exceeded for ' + toTrackObject.getName())
                     setCount += 1
-                else:
-                    print('Car not set')
-                    # psLog.warning(carObject.getRoadName() + ' ' + carObject.getNumber() + ' not set exception: ' + carObject.testDestination(locationObject, toTrackObject))
             i += 1
         psLog.info(str(setCount) + ' cars were processed from track ' + fromTrackString)
         jmri.jmrit.operations.rollingstock.cars.CarManagerXml.save()
@@ -112,12 +108,14 @@ def getScheduleForTrack(locationString, trackString):
     return scheduleObject, trackObject
 
 def applySchedule(carObject, fromTrackObject, scheduleObject):
-    '''Mini "controller" to plugin additional schedule methods'''
+    '''Mini "controller" to plugin additional schedule methods
+    Increment move count only when set from a spur'''
 
     try:
         if (fromTrackObject.getTrackType() == 'Spur'):
             applyLoadRubric(carObject, scheduleObject)
             applyFdRubric(carObject, scheduleObject)
+            carObject.setMoves(carObject.getMoves() + 1)
     except:
         pass
 
@@ -160,16 +158,19 @@ def applyLoadRubric(carObject, scheduleObject=None):
 def applyFdRubric(carObject, scheduleObject=None):
     '''For spurs only, sets the values for the cars destination and track from the schedule or RWE/RWL'''
 
-    # configFile = MainScriptEntities.readConfigFile('TP')
     patternIgnore = MainScriptEntities.readConfigFile('TP')['PI']
     carType = carObject.getTypeName()
     carObject.setFinalDestination(None)
     carObject.setFinalDestinationTrack(None)
 
     try: # first try to apply the schedule
-        applySchedule = carObject.setDestination(scheduleObject.getItemByType(carType).getDestination(), scheduleObject.getItemByType(carType).getDestinationTrack(), patternIgnore)
-        if (applySchedule != 'okay'):
-            psLog.info('Schedule not applied: ' + applySchedule)
+        applySchedule = carObject.setDestination(scheduleObject.getItemByType(carType).getDestination(), scheduleObject.getItemByType(carType).getDestinationTrack())
+        if (applySchedule.startswith('rolling')):
+            applySchedule = carObject.setDestination(scheduleObject.getItemByType(carType).getDestination(), scheduleObject.getItemByType(carType).getDestinationTrack(), patternIgnore)
+            if (applySchedule != 'okay'):
+                psLog.warning('Schedule destination not applied: ' + applySchedule)
+        elif (applySchedule != 'okay'):
+            psLog.warning('Schedule destination not applied: ' + applySchedule)
     except:
         if (carObject.getLoadType() == 'Load'): # load has already been toggled
             applyRWL = carObject.setDestination(carObject.getReturnWhenLoadedDestination(), carObject.getReturnWhenLoadedDestTrack(), patternIgnore)

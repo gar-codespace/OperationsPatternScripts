@@ -2,19 +2,20 @@ Description of PatternConfig.JSON file
 
   ***Common for all subroutines
 
-  "CP": { This group lists and chooses which subroutines will be part of the plugin
+  "CP": { Control Panel, Settings common for the control panel and all subroutines
     "PH": 140, Panel Height
     "PW": 2000, Panel Width
-    "SI": { Subroutine Includes
+    "SI": { Subroutine Includes. This dictionary lists and chooses which subroutines will be part of the plugin
       "FutureSubroutines": false,
       "TrackPattern": true True means the sub will be included
     }
   },
-  "LL": { Log Level, the plugin can dynamically change its logging level, indexed to Settings/Tools/Build Report Options/Detail Level
-    "1": 40, critical
-    "3": 30, warning
-    "5": 20, info
-    "7": 10  debug
+  "LI": { Logging Index, maps JMRI log levels to Python logging levels
+    "1": "- ERROR -",
+    "3": "- WARNING -",
+    "5": "- INFO -",
+    "7": "- DEBUG -"
+  },
   },
   "LM": { Location Matrix - dictionary of locations where the control panel can be displayed
     "LO": { Location Options - values for each possible display location

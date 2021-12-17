@@ -29,13 +29,6 @@ def setEncoding():
 
     return 'utf-8' #ascii, utf-16
 
-def setLoggingLevel(loggerObject):
-
-    configLogLevel = readConfigFile('LL')
-    logLevel = configLogLevel[str(jmri.jmrit.operations.setup.Setup.getBuildReportLevel())]
-    loggerObject.parent.setLevel(logLevel)
-
-    return
 
 def timeStamp():
     '''Valid Time, get local time adjusted for time zone and dst'''

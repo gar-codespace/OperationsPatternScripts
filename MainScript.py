@@ -22,7 +22,7 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
     # fire up logging
         logPath = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternLog.txt'
         self.psLog = logging.getLogger('PS')
-        self.psLog.setLevel(20)
+        self.psLog.setLevel(10)
         logFileFormat = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         psFileHandler = logging.FileHandler(logPath, mode='w', encoding='utf-8')
         psFileHandler.setFormatter(logFileFormat)

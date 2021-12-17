@@ -12,7 +12,6 @@ path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
 import TrackPattern.Model
 import TrackPattern.View
-# import TrackPattern.ControllerSetCarsForm
 
 class StartUp():
     '''Start the the Track Pattern subroutine'''
@@ -50,7 +49,7 @@ class StartUp():
                 MainScriptEntities.writeConfigFile(newConfigFile)
                 self.controls = TrackPattern.View.ManageGui().updatePanel(self.panel)
                 StartUp().activateButtons(self.panel, self.controls)
-                self.psLog.info('Location list changed, config file updated')
+                self.psLog.wwarning('Location list changed, config file updated')
 
             print(StartUp.scriptRev)
             return
@@ -76,21 +75,15 @@ class StartUp():
     def whenTPButtonPressed(self, event):
         '''Makes a track pattern based on the config file'''
 
-        # rs = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.RollingStockManager(jmri.jmrit.operations.rollingstock.cars))
-        # rs = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.RollingStockManager)
-        # jmri.jmrit.operations.rollingstock.cars.CarManager
-        # rs = jmri.jmrit.operations.rollingstock.RollingStockManager(jmri.jmrit.operations.rollingstock.cars)
-        # xCar = jmri.jmrit.operations.rollingstock.RollingStock('H', 'K31').getComment()
-        # cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
-        # cm.newRS('H', 'K273')
-    # Set logging level
-        MainScriptEntities.setLoggingLevel(self.psLog)
     # Boilerplate - update the config file
         TrackPattern.Model.updateConfigFile(self.controls)
         self.psLog.info('Configuration file updated with new settings for controls')
     # Button specific
-        location = TrackPattern.Model.onTpButtonPress()
-        TrackPattern.View.displayTextSwitchlist(location)
+        try:
+            location = TrackPattern.Model.onTpButtonPress()
+            TrackPattern.View.displayTextSwitchlist(location)
+        except:
+            pass
         print(StartUp().scriptRev)
 
         return
@@ -98,12 +91,10 @@ class StartUp():
     def whenSCButtonPressed(self, event):
         '''Opens a set cars window for each checked track'''
 
-    # Set logging level
-        MainScriptEntities.setLoggingLevel(self.psLog)
     # Boilerplate - update the config file
         self.controls = TrackPattern.Model.updateConfigFile(self.controls)
         self.psLog.info('Configuration file updated with new settings for controls')
-    # Find all the empty load designations
+    # Find all the custom empty/load designations
         TrackPattern.Model.makeLoadEmptyDesignationsDict()
     # Button specific
         TrackPattern.Model.onScButtonPress(self.controls[0])
@@ -114,7 +105,8 @@ class StartUp():
     def whenPRButtonPressed(self, event):
         '''Displays the pattern report log file in a notepad window'''
 
-        TrackPattern.View.displayPatternLog()
+        TrackPattern.Model.makePatternLog()
+        TrackPattern.View.printPatternLog()
         print(StartUp().scriptRev)
 
         return
