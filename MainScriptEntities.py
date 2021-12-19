@@ -12,10 +12,11 @@ import logging
 import time
 from json import loads as jLoads, dumps as jDumps
 from codecs import open as cOpen
-from os import path as oPath
+from os import mkdir as mkDir, path as oPath
 from shutil import copy as sCopy
 
 scriptRev = 'OperationsPatternScripts.MainScriptEntities v20211210'
+psLog = logging.getLogger('PS.TP.MainScriptEntities')
 
 # 'global' variables passed between modules
 trackNameClickedOn = None
@@ -28,7 +29,6 @@ def setEncoding():
     '''Expand on this later'''
 
     return 'utf-8' #ascii, utf-16
-
 
 def timeStamp():
     '''Valid Time, get local time adjusted for time zone and dst'''
@@ -55,6 +55,29 @@ def systemInfo():
         }
 
     return textEdit[osName]
+
+def validateDestinationDirestories():
+
+    destDirPath = jmri.util.FileUtil.getProfilePath() + 'operations\\'
+    try:
+        mkDir(destDirPath + 'buildstatus')
+    except OSError:
+        print('OK')
+    try:
+        mkDir(destDirPath + 'csvSwitchLists')
+    except OSError:
+        print('OK')
+    try:
+        mkDir(destDirPath + 'jsonManifests')
+    except OSError:
+        print('OK')
+    try:        
+        mkDir(destDirPath + 'switchLists')
+    except OSError:
+        print('OK')
+
+
+    return
 
 def validateConfigFile():
     '''Checks for a config file and adds one if missing'''

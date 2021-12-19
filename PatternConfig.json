@@ -42,6 +42,7 @@
     },
     "PA" : false,
     "PI" : false,
+    "AS" : true,
     "PW" : 260,
     "PH" : 16,
     "ST" : "Set to:",

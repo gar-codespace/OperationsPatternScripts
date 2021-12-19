@@ -40,7 +40,7 @@ How to modify this plugin.
 
 ## Testing
 This plugin has been tested with:
-* JMRI 4.25.4
+* JMRI 4.25.4 with Java 8u301
 * Java 8u301
 * Windows 10 Pro and Home
 

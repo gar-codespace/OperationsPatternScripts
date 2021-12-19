@@ -108,13 +108,15 @@ def getScheduleForTrack(locationString, trackString):
     return scheduleObject, trackObject
 
 def applySchedule(carObject, fromTrackObject, scheduleObject):
-    '''Mini "controller" to plugin additional schedule methods
+    '''Mini "controller" to plug in additional schedule methods
     Increment move count only when set from a spur'''
 
     try:
         if (fromTrackObject.getTrackType() == 'Spur'):
-            applyLoadRubric(carObject, scheduleObject)
-            applyFdRubric(carObject, scheduleObject)
+            trackPatternConfig = MainScriptEntities.readConfigFile('TP')
+            if (trackPatternConfig['AS']):
+                applyLoadRubric(carObject, scheduleObject)
+                applyFdRubric(carObject, scheduleObject)
             carObject.setMoves(carObject.getMoves() + 1)
     except:
         pass
@@ -164,13 +166,13 @@ def applyFdRubric(carObject, scheduleObject=None):
     carObject.setFinalDestinationTrack(None)
 
     try: # first try to apply the schedule
-        applySchedule = carObject.setDestination(scheduleObject.getItemByType(carType).getDestination(), scheduleObject.getItemByType(carType).getDestinationTrack())
-        if (applySchedule.startswith('rolling')):
-            applySchedule = carObject.setDestination(scheduleObject.getItemByType(carType).getDestination(), scheduleObject.getItemByType(carType).getDestinationTrack(), patternIgnore)
-            if (applySchedule != 'okay'):
-                psLog.warning('Schedule destination not applied: ' + applySchedule)
-        elif (applySchedule != 'okay'):
-            psLog.warning('Schedule destination not applied: ' + applySchedule)
+        trySchedule = carObject.setDestination(scheduleObject.getItemByType(carType).getDestination(), scheduleObject.getItemByType(carType).getDestinationTrack())
+        if (trySchedule.startswith('rolling')):
+            trySchedule = carObject.setDestination(scheduleObject.getItemByType(carType).getDestination(), scheduleObject.getItemByType(carType).getDestinationTrack(), patternIgnore)
+            if (trySchedule != 'okay'):
+                psLog.warning('Schedule destination not applied: ' + trySchedule)
+        elif (trySchedule != 'okay'):
+            psLog.warning('Schedule destination not applied: ' + trySchedule)
     except:
         if (carObject.getLoadType() == 'Load'): # load has already been toggled
             applyRWL = carObject.setDestination(carObject.getReturnWhenLoadedDestination(), carObject.getReturnWhenLoadedDestTrack(), patternIgnore)
@@ -183,15 +185,15 @@ def applyFdRubric(carObject, scheduleObject=None):
 
     return
 
-def getTrackTypeAndSchedule(location, track):
-    '''For a track, returns bool for isASpur and scheduleToggle'''
-
-    spurToggle = False
-    scheduleToggle = False
-    isASpur = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationByName(location).getTrackByName(track, 'Spur')
-    if (isASpur):
-        spurToggle = True
-        if (isASpur.getSchedule()):
-            scheduleToggle = True
-
-    return spurToggle, scheduleToggle
+# def getTrackTypeAndSchedule(location, track):
+#     '''For a track, returns bool for isASpur and scheduleToggle'''
+#
+#     spurToggle = False
+#     scheduleToggle = False
+#     isASpur = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationByName(location).getTrackByName(track, 'Spur')
+#     if (isASpur):
+#         spurToggle = True
+#         if (isASpur.getSchedule()):
+#             scheduleToggle = True
+#
+#     return spurToggle, scheduleToggle

@@ -26,7 +26,7 @@ def patternReportForTrackWindow(trackPattern, offset):
     trackName = unicode(trackPattern['ZZ'][0]['TN'], MainScriptEntities.setEncoding())
     trackLocation = unicode(trackPattern['YL'], MainScriptEntities.setEncoding())
     allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(trackLocation, None)
-    isASpur, hasASchedule = TrackPattern.ModelSetCarsForm.getTrackTypeAndSchedule(trackLocation, trackName)
+    # isASpur, hasASchedule = TrackPattern.ModelSetCarsForm.getTrackTypeAndSchedule(trackLocation, trackName)
 # Define the window
     setCarsWindow = TrackPattern.ViewSetCarsForm.makeWindow()
 # Create the forms header

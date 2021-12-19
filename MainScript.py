@@ -39,6 +39,7 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         '''Make and populate the Pattern Scripts control panel'''
 
         yTimeNow = time.time()
+        MainScriptEntities.validateDestinationDirestories()
     # make a list of subroutines for the control panel
         subroutineList = []
         controlPanelConfig = MainScriptEntities.readConfigFile('CP')

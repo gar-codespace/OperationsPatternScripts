@@ -265,7 +265,7 @@ def getcustomLoadForCarType():
     return defaultLoadLoad, customLoadForCarTypes
 
 def getcustomEmptyForCarType():
-    '''Returns the default empty designation and a dictionary of car types by custom empty name'''
+    '''Returns the default load designation and a dictionary of car types by custom load name'''
 
     cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManagerXml)
     opsFileName = jmri.util.FileUtil.getProfilePath() + 'operations\\' + cm.getOperationsFileName()

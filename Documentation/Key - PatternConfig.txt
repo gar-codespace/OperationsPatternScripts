@@ -11,9 +11,9 @@ Description of PatternConfig.JSON file
     }
   },
   "LI": { Logging Index, maps JMRI log levels to Python logging levels
-    "1": "- ERROR -",
-    "3": "- WARNING -",
-    "5": "- INFO -",
+    "1": "- WARNING -",
+    "3": "- INFO -",
+    "5": "- DEBUG -",
     "7": "- DEBUG -"
   },
   },
@@ -49,6 +49,7 @@ Description of PatternConfig.JSON file
     },
     "PA" : false, Yard Tracks only flag, set by user
     "PI" : false, Ignore Track Length flag, set by user
+    "AS" : true, Apply Schedule. Applies a spurs schedule when a car is moved from a spur.
     "PW" : 260, Pattern Width, depricated
     "PH" : 16, Pattern Height, height of all javax boxes used in all windows
     "ST" : "Set to:", Part of Set Cars to Track header
