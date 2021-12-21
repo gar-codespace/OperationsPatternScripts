@@ -1,6 +1,5 @@
 # coding=utf-8
 # Extended ìÄÅÉî
-# Creates the track pattern and its panel
 # No restrictions on use
 # © 2021 Greg Ritacco
 
@@ -11,10 +10,14 @@ from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsTrackPattern')
 import MainScriptEntities
 
+'''Creates the track pattern and its panel'''
+
+scriptRev = 'TrackPattern.ViewEntities v20211210'
+
 class TrackPatternPanel:
     '''Makes the track pattern subroutine panel'''
 
-    scriptRev = 'TrackPattern.ViewTrackPatternPanel v20211210'
+    # scriptRev = 'TrackPattern.ViewTrackPatternPanel v20211210'
 
     def __init__(self):
 
@@ -127,7 +130,6 @@ class TrackPatternPanel:
         tpPanel.add(inputRow)
         tpPanel.add(trackCheckBoxes)
         tpPanel.add(buttonPanel)
+        print(scriptRev)
 
         return tpPanel, self.getPanelWidgets()
-
-    print(scriptRev)

@@ -1,6 +1,5 @@
 # coding=utf-8
 # Extended ìÄÅÉî
-# View script for the track pattern subroutine
 # No restrictions on use
 # © 2021 Greg Ritacco
 
@@ -11,6 +10,8 @@ from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsTrackPattern')
 import MainScriptEntities
 import TrackPattern.ViewEntities
+
+'''View script for the track pattern subroutine'''
 
 scriptRev = 'TrackPattern.View v20211210'
 psLog = logging.getLogger('PS.TP.View')
@@ -59,7 +60,7 @@ def displayTextSwitchlist(location):
 
     psLog.debug('displayTextSwitchlist')
     textSwitchList = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\Track Pattern (' + location + ').txt'
-    system(MainScriptEntities.systemInfo() + textSwitchList)
+    system(MainScriptEntities.systemInfo(textSwitchList))
 
     return
 
@@ -68,6 +69,6 @@ def printPatternLog():
 
     psLog.debug('displayPatternLog')
     tempPatternLog = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternLog_temp.txt'
-    system(MainScriptEntities.systemInfo() + tempPatternLog)
+    system(MainScriptEntities.systemInfo(tempPatternLog))
 
     return

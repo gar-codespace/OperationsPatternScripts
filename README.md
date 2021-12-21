@@ -19,7 +19,7 @@ Examples of this would include:
 * A mill operator moving coal and coke to and from a furnace.  
 * A mine operator loading hoppers from a pool of empties.  
 * An inter-modal operator selecting certain types of well cars to load.  
-* A grain exchange selling loaded hoppers to grangers.  
+* A grain exchange selling loaded hoppers to brokers.  
 
 ## Plugin Notables
 Moving cars around a yard, the yard pattern, generally involves working with JMRI 'Yards.'  
@@ -41,7 +41,7 @@ How to modify this plugin.
 ## Testing
 This plugin has been tested with:
 * JMRI 4.25.4 with Java 8u301
-* Java 8u301
+* JMRI 4.26 with Java 8u311
 * Windows 10 Pro and Home
 
 ## License

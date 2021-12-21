@@ -1,6 +1,5 @@
 # coding=utf-8
 # Extended ìÄÅÉî
-# Data munipulation for the track pattern subroutine
 # No restrictions on use
 # © 2021 Greg Ritacco
 
@@ -15,6 +14,8 @@ import MainScriptEntities
 import TrackPattern.ModelEntities
 import TrackPattern.ControllerSetCarsForm
 
+'''Data munipulation for the track pattern subroutine'''
+
 scriptRev = 'TrackPattern.Model v20211210'
 psLog = logging.getLogger('PS.TP.Model')
 
@@ -26,7 +27,7 @@ def onTpButtonPress():
         trackPatternDict = makeTrackPatternDict(selectedTracks)
         trackPatternDict.update({'RT': u'Track Pattern for Location'})
         psLog.info('Track Pattern dictionary created')
-        location = trackPatternDict['YL']
+        location = unicode(trackPatternDict['YL'], MainScriptEntities.setEncoding())
         writePatternJson(location, trackPatternDict)
         psLog.info('Track Pattern for ' + location + ' JSON written')
         writeTextSwitchList(location, trackPatternDict)
@@ -37,7 +38,7 @@ def onTpButtonPress():
     else:
         psLog.warning('No tracks were selected for the Pattern button')
 
-    return location
+    return trackPatternDict['YL']
 
 def onScButtonPress(comboBox):
     '''When the "Set Cars" button on the Control Panel is pressed'''

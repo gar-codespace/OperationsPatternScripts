@@ -1,6 +1,5 @@
 # coding=utf-8
 # Extended ìÄÅÉî
-# support methods for the main script
 # No restrictions on use
 # © 2021 Greg Ritacco
 
@@ -14,6 +13,8 @@ from json import loads as jLoads, dumps as jDumps
 from codecs import open as cOpen
 from os import mkdir as mkDir, path as oPath
 from shutil import copy as sCopy
+
+'''Support methods for the main script'''
 
 scriptRev = 'OperationsPatternScripts.MainScriptEntities v20211210'
 psLog = logging.getLogger('PS.TP.MainScriptEntities')
@@ -41,14 +42,14 @@ def timeStamp():
 
     return time.strftime('%a %b %d %Y %I:%M %p %Z', time.gmtime(epochTime - timeOffset))
 
-def systemInfo():
+def systemInfo(switchListLocation=None):
     '''Which type of computer is being used'''
 
     osName = jmri.util.SystemType.getType()
     textEdit = {
         1: 'Mac Classic ',
-        2: 'open -a TextEdit ', # OSX
-        4: 'start notepad.exe ', # Windows
+        2: 'open -a TextEdit '+ switchListLocation, # OSX
+        4: 'start notepad.exe "' + switchListLocation + '"', # put the switchListLocation in quotes to work around names with &
         5: 'gedit ', # Linux
         6: 'OS2 ',
         7: 'kwrite ', # Unix
@@ -57,25 +58,33 @@ def systemInfo():
     return textEdit[osName]
 
 def validateDestinationDirestories():
+    '''Checks that the folders this plugin writ to exist'''
 
+    x = 0
     destDirPath = jmri.util.FileUtil.getProfilePath() + 'operations\\'
     try:
         mkDir(destDirPath + 'buildstatus')
+        psLog.warning('buildstatus folder created')
     except OSError:
-        print('OK')
+        x += 1
     try:
         mkDir(destDirPath + 'csvSwitchLists')
+        psLog.warning('csvSwitchLists folder created')
     except OSError:
-        print('OK')
+        x += 1
     try:
         mkDir(destDirPath + 'jsonManifests')
+        psLog.warning('jsonManifests folder created')
     except OSError:
-        print('OK')
-    try:        
+        x += 1
+    try:
         mkDir(destDirPath + 'switchLists')
+        psLog.warning('switchLists folder created')
     except OSError:
-        print('OK')
+        x += 1
 
+    if (x == 4):
+        psLog.info('Destination folders check OK')
 
     return
 

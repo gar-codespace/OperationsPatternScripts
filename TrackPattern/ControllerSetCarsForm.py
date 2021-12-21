@@ -1,6 +1,5 @@
 # coding=utf-8
 # Extended ìÄÅÉî
-# Makes a set cars form for each selected track
 # No restrictions on use
 # © 2021 Greg Ritacco
 
@@ -17,9 +16,13 @@ import TrackPattern.ModelSetCarsForm
 import TrackPattern.ViewSetCarsForm
 import MainScriptEntities
 
+'''Makes a set cars form for each selected track'''
+
+scriptRev = 'TrackPattern.ViewSetCarsForm v20211210'
+
 class AnyButtonPressedListener(java.awt.event.ActionListener):
 
-    scriptRev = 'TrackPattern.ViewSetCarsForm v20211210'
+    # scriptRev = 'TrackPattern.ViewSetCarsForm v20211210'
 
     def __init__(self, object1=None, object2=None, object3=None, object4=None):
 
@@ -51,9 +54,12 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
 
     # Make the switch list
         processedTrackData = TrackPattern.ModelSetCarsForm.processYpForPrint(self.trackData, self.textBoxEntry)
+    # write the switch list
+        switchListLocation = TrackPattern.ModelSetCarsForm.writeSwitchList(processedTrackData)
     # Print the switch list
-        TrackPattern.ModelEntities.printSwitchList(processedTrackData)
-        print(AnyButtonPressedListener.scriptRev)
+        system(MainScriptEntities.systemInfo(switchListLocation))
+
+        print(scriptRev)
 
         return
 
@@ -64,7 +70,7 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
         TrackPattern.ModelSetCarsForm.setCarsToTrack(self.trackData, self.textBoxEntry)
     # Wrap it up
         self.setCarsWindow.setVisible(False)
-        print(AnyButtonPressedListener.scriptRev)
+        print(scriptRev)
 
         return
 

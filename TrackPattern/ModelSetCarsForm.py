@@ -1,16 +1,18 @@
 # coding=utf-8
 # Extended ìÄÅÉî
-# Makes a set cars form for each selected track
 # No restrictions on use
 # © 2021 Greg Ritacco
 
 import jmri
 import java.awt
 import logging
+from codecs import open as cOpen
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsYardPattern')
 import MainScriptEntities
 import TrackPattern.ModelEntities
+
+'''Data crunching for the Set Cars Form'''
 
 scriptRev = 'TrackPattern.ModelSetCarsForm v20211210'
 psLog = logging.getLogger('PS.TP.ModelSetCarsForm')
@@ -40,6 +42,24 @@ def processYpForPrint(trackData, textBoxEntry):
 
     return trackData
 
+def writeSwitchList(trackData):
+    '''Writes the TXT switch list to notepad and optionally creates the CSV switch list '''
+
+    for track in trackData['ZZ']:
+        trackName = track['TN']
+# Write the switch list
+    textSwitchList = TrackPattern.ModelEntities.makeSwitchlist(trackData, False)
+    textCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\Switch list (' + trackData['YL'] + ') (' + trackName + ').txt'
+    with cOpen(textCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as textWorkFile:
+        textWorkFile.write(textSwitchList)
+# Write the CSV switch list
+    if (jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled()):
+        csvSwitchList = TrackPattern.ModelEntities.makeCsvSwitchlist(trackData)
+        csvCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\csvSwitchLists\\Switch list (' + trackData['YL'] + ') (' + trackName + ').csv'
+        with cOpen(csvCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
+            csvWorkFile.write(csvSwitchList)
+    return textCopyTo
+
 def setCarsToTrack(trackData, textBoxEntry):
 # Boilerplate
     cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
@@ -58,7 +78,7 @@ def setCarsToTrack(trackData, textBoxEntry):
         locationObject = lm.getLocationByName(unicode(trackData['YL'], MainScriptEntities.setEncoding()))
         fromTrackString = unicode(track['TN'], MainScriptEntities.setEncoding())
         allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(locationString, None)
-        scheduleObject, fromTrackObject = getScheduleForTrack(locationString, fromTrackString)
+        # scheduleObject, fromTrackObject = getScheduleAndTrack(locationString, fromTrackString)
         setCount = 0
         for car in track['TR']:
             carObject = cm.newRS(car['Road'], car['Number'])
@@ -67,7 +87,8 @@ def setCarsToTrack(trackData, textBoxEntry):
                 locationObject.setStatus(carObject.testDestination(locationObject, toTrackObject))
                 if (locationObject.getStatus() == 'okay' or locationObject.getStatus().startswith('car has')):
                     carObject.setLocation(locationObject, toTrackObject)
-                    applySchedule(carObject, fromTrackObject, scheduleObject)
+                    scheduleObject = getToTrackSchedule(toTrackObject)
+                    applySchedule(carObject, toTrackObject, scheduleObject)
                     setCount += 1
                 else:
                     psLog.warning(carObject.getRoadName() + ' ' + carObject.getNumber() + ' not set exception: ' + carObject.testDestination(locationObject, toTrackObject))
@@ -77,7 +98,8 @@ def setCarsToTrack(trackData, textBoxEntry):
                     locationObject.setStatus(carObject.testDestination(locationObject, toTrackObject))
                     if (locationObject.getStatus() == 'okay' or locationObject.getStatus().startswith('car has')):
                         carObject.setLocation(locationObject, toTrackObject)
-                        applySchedule(carObject, fromTrackObject, scheduleObject)
+                        scheduleObject = getToTrackSchedule(toTrackObject)
+                        applySchedule(carObject, toTrackObject, scheduleObject)
                         psLog.warning('Track length exceeded for ' + toTrackObject.getName())
                         setCount += 1
                     else:
@@ -92,10 +114,21 @@ def setCarsToTrack(trackData, textBoxEntry):
 
     return
 
-def getScheduleForTrack(locationString, trackString):
+def getToTrackSchedule(toTrackObject):
     '''Returns the tracks schedule object'''
 
-    psLog.debug('getScheduleForTrack')
+    psLog.debug('getToTrackSchedule')
+
+    sm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.schedules.ScheduleManager)
+    scheduleObject = None
+    scheduleObject = sm.getScheduleByName(toTrackObject.getScheduleName())
+
+    return scheduleObject
+
+def getScheduleAndTrack(locationString, trackString):
+    '''Returns a schedule object and track object'''
+
+    psLog.debug('getScheduleAndTrack')
 
     lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
     sm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.schedules.ScheduleManager)
@@ -107,12 +140,12 @@ def getScheduleForTrack(locationString, trackString):
 
     return scheduleObject, trackObject
 
-def applySchedule(carObject, fromTrackObject, scheduleObject):
+def applySchedule(carObject, toTrackObject, scheduleObject):
     '''Mini "controller" to plug in additional schedule methods
-    Increment move count only when set from a spur'''
+    Increment move count only when set to a spur'''
 
     try:
-        if (fromTrackObject.getTrackType() == 'Spur'):
+        if (toTrackObject.getTrackType() == 'Spur'):
             trackPatternConfig = MainScriptEntities.readConfigFile('TP')
             if (trackPatternConfig['AS']):
                 applyLoadRubric(carObject, scheduleObject)

@@ -1,6 +1,5 @@
 # coding=utf-8
 # Extended ìÄÅÉî
-# Data munipulation support methods for the track pattern subroutine
 # No restrictions on use
 # © 2021 Greg Ritacco
 
@@ -15,6 +14,8 @@ from xml.etree import ElementTree as ET
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
+
+'''Data munipulation support methods for the track pattern subroutine'''
 
 scriptRev = 'TrackPattern.ModelEntities v20211210'
 
@@ -34,12 +35,11 @@ def occuranceTally(listOfOccurances):
     return dict
 
 def formatText(item, length):
-    '''Left justify string to a specified length'''
+    '''Truncate each item to its defined length and add a space at the end'''
 
-    pad = '<' + str(length)
+    pad = '{:<' + str(length + 1) + '}'
 
-    return format(item, pad)
-
+    return pad.format(item[:length])
 
 def getAllLocations():
     '''returns a list of all locations for this profile. JMRI sorts the list'''
@@ -83,6 +83,7 @@ def getDetailsForCarAsDict(carObject):
     '''makes a dictionary of attributes for one car based on the requirements of
     jmri.jmrit.operations.setup.Setup.getCarAttributes()'''
 
+    fdStandIn = MainScriptEntities.readConfigFile('TP')
     cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
     lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
 
@@ -108,14 +109,14 @@ def getDetailsForCarAsDict(carObject):
     carDetailDict[u'Track'] = carObject.getTrackName()
     carDetailDict[u'Location'] = carObject.getLocationName()
     if not (carObject.getDestinationName()):
-        carDetailDict[u'Destination'] = '*No Destination'
-        carDetailDict[u'Dest&Track'] = '*No Destination'
+        carDetailDict[u'Destination'] = fdStandIn['DS']
+        carDetailDict[u'Dest&Track'] = fdStandIn['DT']
     else:
         carDetailDict[u'Destination'] = carObject.getDestinationName()
         carDetailDict[u'Dest&Track'] = carObject.getDestinationName() + ', ' + carObject.getDestinationTrackName()
     if not (carObject.getFinalDestinationName()):
-        carDetailDict[u'Final Dest'] = '*No Final Destination'
-        carDetailDict[u'FD&Track'] = '*No Final Destination'
+        carDetailDict[u'Final Dest'] = fdStandIn['FD']
+        carDetailDict[u'FD&Track'] = fdStandIn['FT']
     else:
         carDetailDict[u'Final Dest'] = carObject.getFinalDestinationName()
         carDetailDict[u'FD&Track'] = carObject.getFinalDestinationName() + ', ' + carObject.getFinalDestinationTrackName()
@@ -229,24 +230,27 @@ def makeCsvSwitchlist(trackPattern):
 
     return csvSwitchList
 
-def printSwitchList(trackData):
-    '''Sends the TXT switch list to notepad and optionally creates the CSV switch list'''
+# def writeSwitchList(trackData):
+#     '''Writes the TXT switch list to notepad and optionally creates the CSV switch list '''
+#
+#     for track in trackData['ZZ']:
+#         trackName = track['TN']
+# # Write the switch list
+#     textSwitchList = makeSwitchlist(trackData, False)
+#     textCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\Switch list (' + trackData['YL'] + ') (' + trackName + ').txt'
+#     with cOpen(textCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as textWorkFile:
+#         textWorkFile.write(textSwitchList)
+# # Write the CSV switch list
+#     if (jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled()):
+#         csvSwitchList = makeCsvSwitchlist(trackData)
+#         csvCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\csvSwitchLists\\Switch list (' + trackData['YL'] + ') (' + trackName + ').csv'
+#         with cOpen(csvCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
+#             csvWorkFile.write(csvSwitchList)
 
-    for track in trackData['ZZ']:
-        trackName = track['TN']
-# Print the switch list
-    textSwitchList = makeSwitchlist(trackData, False)
-    textCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\Switch list (' + trackData['YL'] + ') (' + trackName + ').txt'
-    with cOpen(textCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as textWorkFile:
-        textWorkFile.write(textSwitchList)
-    system(MainScriptEntities.systemInfo() + textCopyTo)
-# Print the CSV switch list
-    if (jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled()):
-        csvSwitchList = makeCsvSwitchlist(trackData)
-        csvCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\csvSwitchLists\\Switch list (' + trackData['YL'] + ') (' + trackName + ').csv'
-        with cOpen(csvCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
-            csvWorkFile.write(csvSwitchList)
-    return
+    # textCopyTo = textCopyTo.replace("&", "^&")
+    # system(MainScriptEntities.systemInfo() + textCopyTo)
+
+    return textCopyTo
 
 def getcustomLoadForCarType():
     '''Returns the default empty designation and a dictionary of car types by custom empty name'''

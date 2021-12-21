@@ -1,4 +1,3 @@
-# Main script that starts the plugin
 # No restrictions on use
 # © 2021 Greg Ritacco
 
@@ -12,10 +11,10 @@ import PluginLocations
 
 '''Pattern Scripts Version 2.0.0'''
 
+scriptRev = 'OperationsPatternScripts.MainScript v20211210'
+
 class StartUp(jmri.jmrit.automat.AbstractAutomaton):
     '''Start the the Pattern Scripts plugin and add selected subroutines'''
-
-    scriptRev = 'OperationsPatternScripts.MainScript v20211210'
 
     def init(self):
 

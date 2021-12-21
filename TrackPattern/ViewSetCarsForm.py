@@ -1,6 +1,5 @@
 # coding=utf-8
 # Extended ìÄÅÉî
-# support methods for the view script
 # No restrictions on use
 # © 2021 Greg Ritacco
 
@@ -14,6 +13,8 @@ import MainScriptEntities
 import TrackPattern.ControllerSetCarsForm
 import TrackPattern.ViewEntities
 import TrackPattern.ModelEntities
+
+'''Display methods for the Set Cars form'''
 
 scriptRev = 'TrackPattern.ViewSetCarsForm v20211210'
 
@@ -49,7 +50,7 @@ def patternReportForTrackWindow(trackPattern, offset):
     scrollPanel = javax.swing.JScrollPane(combinedForm)
     scrollPanel.border = javax.swing.BorderFactory.createEmptyBorder(2,2,2,2)
 # Create the schedule row
-    scheduleObject, trackObject = TrackPattern.ModelSetCarsForm.getScheduleForTrack(trackLocation, trackName)
+    scheduleObject, trackObject = TrackPattern.ModelSetCarsForm.getScheduleAndTrack(trackLocation, trackName)
     if (scheduleObject):
         schedulePanel = javax.swing.JPanel()
         schedulePanel.setLayout(javax.swing.BoxLayout(schedulePanel, javax.swing.BoxLayout.X_AXIS))

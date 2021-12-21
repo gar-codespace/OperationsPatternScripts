@@ -1,6 +1,5 @@
 # coding=utf-8
 # Extended ìÄÅÉî
-# build the plugin into different locations
 # No restrictions on use
 # © 2021 Greg Ritacco
 
@@ -9,6 +8,8 @@ import jmri.util
 import java.awt.event
 import javax.swing
 from apps import Apps
+
+'''Different locations for this plugin'''
 
 scriptRev = 'OperationsPatternScripts.PluginLocations v20211125'
 

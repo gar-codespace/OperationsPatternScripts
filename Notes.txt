@@ -7,15 +7,13 @@ Stuff that's OK or comments:
   no schedule, no RWE/RWL load toggles ok
   default load/empty toggling ok
   Ignore Track Length works with schedules
+  formatText works OK
 
 Stuff to fix:
-  Check all logging levels
-  Docs/set cars pdf needs schedule button added
-  on startup check all destination folders
+  Catch up with the latest JMRI stuff like text color
 
 Wish List:
   Pattern Tracks window automatically resizes
-  set cars window automatically resizes
   plugin added to button in trains window
   set cars window for trainplayer compatability
-  add a Apply Schedule check box to set cars window maybe?
+  add a Apply Schedule check box to set cars window maybe? Probably not.

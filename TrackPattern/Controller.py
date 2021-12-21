@@ -1,6 +1,5 @@
 # coding=utf-8
 # Extended ìÄÅÉî
-# Controller script for the track pattern subroutine
 # No restrictions on use
 # © 2021 Greg Ritacco
 
@@ -13,10 +12,14 @@ import MainScriptEntities
 import TrackPattern.Model
 import TrackPattern.View
 
+'''Controller script for the track pattern subroutine'''
+
+scriptRev = 'TrackPattern.Controller v20211210'
+
 class StartUp():
     '''Start the the Track Pattern subroutine'''
 
-    scriptRev = 'TrackPattern.Controller v20211210'
+    # scriptRev = 'TrackPattern.Controller v20211210'
 
     def __init__(self):
 
@@ -51,7 +54,7 @@ class StartUp():
                 StartUp().activateButtons(self.panel, self.controls)
                 self.psLog.wwarning('Location list changed, config file updated')
 
-            print(StartUp.scriptRev)
+            print(scriptRev)
             return
 
     def whenPABoxClicked(self, event):
@@ -81,10 +84,11 @@ class StartUp():
     # Button specific
         try:
             location = TrackPattern.Model.onTpButtonPress()
+            print(location)
             TrackPattern.View.displayTextSwitchlist(location)
         except:
             pass
-        print(StartUp().scriptRev)
+        print(scriptRev)
 
         return
 
@@ -98,7 +102,7 @@ class StartUp():
         TrackPattern.Model.makeLoadEmptyDesignationsDict()
     # Button specific
         TrackPattern.Model.onScButtonPress(self.controls[0])
-        print(StartUp().scriptRev)
+        print(scriptRev)
 
         return
 
@@ -107,7 +111,7 @@ class StartUp():
 
         TrackPattern.Model.makePatternLog()
         TrackPattern.View.printPatternLog()
-        print(StartUp().scriptRev)
+        print(scriptRev)
 
         return
 
