@@ -48,9 +48,9 @@ def systemInfo(switchListLocation=None):
     osName = jmri.util.SystemType.getType()
     textEdit = {
         1: 'Mac Classic ',
-        2: 'open -a TextEdit '+ switchListLocation, # OSX
+        2: 'open -a TextEdit "' + switchListLocation + '"', # OSX
         4: 'start notepad.exe "' + switchListLocation + '"', # put the switchListLocation in quotes to work around names with &
-        5: 'gedit ', # Linux
+        5: 'nano "' + switchListLocation + '"', # Linux
         6: 'OS2 ',
         7: 'kwrite ', # Unix
         }
@@ -58,7 +58,7 @@ def systemInfo(switchListLocation=None):
     return textEdit[osName]
 
 def validateDestinationDirestories():
-    '''Checks that the folders this plugin writ to exist'''
+    '''Checks that the folders this plugin writes to exist'''
 
     x = 0
     destDirPath = jmri.util.FileUtil.getProfilePath() + 'operations\\'

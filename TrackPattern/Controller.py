@@ -52,7 +52,7 @@ class StartUp():
                 MainScriptEntities.writeConfigFile(newConfigFile)
                 self.controls = TrackPattern.View.ManageGui().updatePanel(self.panel)
                 StartUp().activateButtons(self.panel, self.controls)
-                self.psLog.wwarning('Location list changed, config file updated')
+                self.psLog.warning('Location list changed, config file updated')
 
             print(scriptRev)
             return
