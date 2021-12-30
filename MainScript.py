@@ -61,6 +61,8 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         locationOptions = locationMatrix['LO']
         if (locationOptions[panelLocation][1]):
             getattr(PluginLocations, locationOptions[panelLocation][1])(scrollPanel)
+    # fire up the help File
+        MainScriptEntities.validateStubFile(scrollPanel.getLocale())
 
         self.psLog.info(locationOptions[panelLocation][0])
         self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])

@@ -19,7 +19,7 @@ from shutil import copy as sCopy
 scriptRev = 'OperationsPatternScripts.MainScriptEntities v20211210'
 psLog = logging.getLogger('PS.TP.MainScriptEntities')
 
-# 'global' variables passed between modules
+# 'global' variables
 trackNameClickedOn = None
 carTypeByEmptyDict = {}
 carTypeByLoadDict = {}
@@ -56,6 +56,27 @@ def systemInfo(switchListLocation=None):
         }
 
     return textEdit[osName]
+
+def validateStubFile(locale=None):
+    '''Copy of the JMRI Java version'''
+
+    preferencesPath = jmri.util.FileUtil.getPreferencesPath()
+    stubLocation = preferencesPath + '\\jmrihelp\\stub\\'
+    jmri.util.FileUtil.createDirectory(stubLocation)
+    psLog.debug('stub location created at: ' + stubLocation)
+    stubFileName = stubLocation + 'psStub.html'
+
+    helpFilePath = preferencesPath + 'OperationsPatternScripts\\Support\\psHelp.html'
+
+    stubTemplateLocation = jmri.util.FileUtil.getProgramPath() + 'help\\en\\local\\stub_template.html'
+    psLog.debug('html location at: ' + stubTemplateLocation)
+    with cOpen(stubTemplateLocation, 'r', encoding=setEncoding()) as template:
+        contents = template.read()
+        newContents = contents.replace("../index.html#<!--HELP_KEY-->", helpFilePath)
+        with cOpen(stubFileName, 'wb', encoding=setEncoding()) as stubWorkFile:
+            stubWorkFile.write(newContents)
+
+    return
 
 def validateDestinationDirestories():
     '''Checks that the folders this plugin writes to exist'''

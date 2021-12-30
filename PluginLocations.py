@@ -5,6 +5,7 @@
 
 import jmri
 import jmri.util
+import jmri.util.HelpUtil
 import java.awt
 import java.awt.event
 import javax.swing
@@ -58,8 +59,8 @@ def uniqueWindow(scrollPanel):
 
         homePanelButton.setEnabled(False)
         uniqueWindow.setVisible(True)
-        print(jmri.util.JmriJFrame.getFrameList())
-        print(scrollPanel.getSize())
+        # print(jmri.util.JmriJFrame.getFrameList())
+        # print(scrollPanel.getSize())
         return
 
     homePanelButton = makeButton()
@@ -67,11 +68,10 @@ def uniqueWindow(scrollPanel):
     Apps.buttonSpace().add(homePanelButton)
     Apps.buttonSpace().revalidate()
 
+    # jmri.util.HelpUtil.createStubFile('ttt.rrr.sss', 'en')
     uniqueWindow = jmri.util.JmriJFrame(u'Pattern Scripts')
     uniqueWindow.addWindowListener(PatternScriptsWindowListener(homePanelButton))
-    xRef = 'C:/Program%20Files%20(x86)/JMRI/help/en/local/index.html#package.jmri.jmrit.operations.Operations_Cars'
-
-
+    uniqueWindow.addHelpMenu('stub', False) # false means only window help
     uniqueWindow.add(scrollPanel)
     uniqueWindow.pack()
 
