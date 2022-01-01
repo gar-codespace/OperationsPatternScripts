@@ -57,22 +57,21 @@ def systemInfo(switchListLocation=None):
 
     return textEdit[osName]
 
-def validateStubFile(locale=None):
+def validateStubFile(locale='en'):
     '''Copy of the JMRI Java version'''
 
     preferencesPath = jmri.util.FileUtil.getPreferencesPath()
-    stubLocation = preferencesPath + '\\jmrihelp\\stub\\'
+    stubLocation = preferencesPath + '\\jmrihelp\\'
     jmri.util.FileUtil.createDirectory(stubLocation)
     psLog.debug('stub location created at: ' + stubLocation)
     stubFileName = stubLocation + 'psStub.html'
 
-    helpFilePath = preferencesPath + 'OperationsPatternScripts\\Support\\psHelp.html'
-
-    stubTemplateLocation = jmri.util.FileUtil.getProgramPath() + 'help\\en\\local\\stub_template.html'
+    helpFilePath = 'file:///' + preferencesPath + 'OperationsPatternScripts\\Support\\psHelp.html'
+    stubTemplateLocation = jmri.util.FileUtil.getProgramPath() + 'help\\' + locale + '\\local\\stub_template.html'
     psLog.debug('html location at: ' + stubTemplateLocation)
     with cOpen(stubTemplateLocation, 'r', encoding=setEncoding()) as template:
         contents = template.read()
-        newContents = contents.replace("../index.html#<!--HELP_KEY-->", helpFilePath)
+        newContents = contents.replace("<!--HELP_KEY-->", helpFilePath)
         with cOpen(stubFileName, 'wb', encoding=setEncoding()) as stubWorkFile:
             stubWorkFile.write(newContents)
 

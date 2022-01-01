@@ -32,6 +32,7 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
             MainScriptEntities.writeNewConfigFile() # No love, just start over
             self.psLog.warning('PatternConfig.json missing or corrupt, new file created')
 
+
         return
 
     def handle(self):
@@ -53,6 +54,8 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
                 self.psLog.info(subroutineIncludes + ' subroutine added to control panel')
     # plug in the subroutine list into the control panel
         controlPanel, scrollPanel = MainScriptEntities.makeControlPanel()
+    # fire up the help File
+        MainScriptEntities.validateStubFile(scrollPanel.getLocale())
         for subroutine in subroutineList:
             controlPanel.add(subroutine)
     # plug in the control panel to a location
@@ -61,8 +64,6 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         locationOptions = locationMatrix['LO']
         if (locationOptions[panelLocation][1]):
             getattr(PluginLocations, locationOptions[panelLocation][1])(scrollPanel)
-    # fire up the help File
-        MainScriptEntities.validateStubFile(scrollPanel.getLocale())
 
         self.psLog.info(locationOptions[panelLocation][0])
         self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
