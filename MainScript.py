@@ -26,12 +26,13 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         psFileHandler = logging.FileHandler(logPath, mode='w', encoding='utf-8')
         psFileHandler.setFormatter(logFileFormat)
         self.psLog.addHandler(psFileHandler)
-        self.psLog.info('Log File for Pattern Scripts Plugin')
+        self.psLog.debug('Log File for Pattern Scripts Plugin - debug level initialized')
+        self.psLog.info('Log File for Pattern Scripts Plugin - info level initialized')
+        self.psLog.warning('Log File for Pattern Scripts Plugin - warning level initialized')
     # fire up the config file
         if not (MainScriptEntities.validateConfigFile()):
             MainScriptEntities.writeNewConfigFile() # No love, just start over
-            self.psLog.warning('PatternConfig.json missing or corrupt, new file created')
-
+            self.psLog.warning('New PatternConfig.json file created')
 
         return
 

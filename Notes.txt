@@ -15,6 +15,6 @@ Stuff to fix:
 Wish List:
   Pattern Tracks window automatically resizes
   plugin added to button in trains window
-  set cars window for trainplayer compatability
+  set cars window add trainplayer compatability
   add a Apply Schedule check box to set cars window maybe? Probably not.
   jmri.util.swing.JMenuUtil.replaceMenuItem() to replace the trains window with a new trains window that includes a ps button

@@ -11,7 +11,7 @@
       ],
       "2": [
         "Control Panel added to its own window",
-        "panelProWindow"
+        "panelProButton"
       ],
       "3": [
         "Control Panel added to the Trains window",
@@ -30,7 +30,8 @@
       "FutureSubroutines" : false
     },
     "PH" : 140,
-    "PW" : 2000
+    "PW" : 2000,
+    "RV" : 20220101
   },
   "LI": {
     "1": "- WARNING -",
@@ -49,7 +50,7 @@
     "AS" : true,
     "PW" : 260,
     "PH" : 16,
-    "DS" : "*panelProWindow",
+    "DS" : "*No Waybill",
     "DT" : "*No Waybill",
     "FD" : "*Via Staging",
     "FT" : "*Via Staging",

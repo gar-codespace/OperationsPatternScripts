@@ -217,16 +217,4 @@ def applyFdRubric(carObject, scheduleObject=None):
                 psLog.info('RWE destination not applied: ' + applyRWE)
 
     return
-
-# def getTrackTypeAndSchedule(location, track):
-#     '''For a track, returns bool for isASpur and scheduleToggle'''
-#
-#     spurToggle = False
-#     scheduleToggle = False
-#     isASpur = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationByName(location).getTrackByName(track, 'Spur')
-#     if (isASpur):
-#         spurToggle = True
-#         if (isASpur.getSchedule()):
-#             scheduleToggle = True
-#
-#     return spurToggle, scheduleToggle
+    

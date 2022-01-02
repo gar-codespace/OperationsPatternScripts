@@ -3,11 +3,12 @@
 <HEAD>
 	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
 	<TITLE></TITLE>
-	<META NAME="GENERATOR" CONTENT="OpenOffice 4.1.7  (Win32)">
+	<META NAME="GENERATOR" CONTENT="OpenOffice 4.1.11  (Win32)">
 	<META NAME="AUTHOR" CONTENT="Greg Ritacco">
 	<META NAME="CREATED" CONTENT="20211230;15202509">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGED" CONTENT="20211231;8235700">
+	<META NAME="CHANGEDBY" CONTENT="Jennifer Judge">
+	<META NAME="CHANGED" CONTENT="20220102;13172028">
+	<META NAME="CHANGEDBY" CONTENT="Jennifer Judge">
 	<STYLE TYPE="text/css">
 	<!--
 		@page { margin: 0.79in }
@@ -17,21 +18,397 @@
 	</STYLE>
 </HEAD>
 <BODY LANG="en-US" DIR="LTR">
-<P ALIGN=CENTER STYLE="margin-bottom: 0in"><FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=4 STYLE="font-size: 16pt"><B>Pattern
+<P ALIGN=LEFT STYLE="margin-left: 0.3in; margin-bottom: 0in"><FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=5><B>Pattern
 Scripts plugin for JMRI</B></FONT></FONT></P>
-<P ALIGN=CENTER STYLE="margin-bottom: 0in"><FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3><B>Help
+<P ALIGN=LEFT STYLE="margin-left: 0.3in; margin-bottom: 0in"><FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=4><B>Help
 File</B></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="margin-bottom: 0in"><FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3><B><SPAN LANG="fr-FR">Flo</SPAN><SPAN LANG="en-US">w
-Chart:</SPAN></B></FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.3in; margin-bottom: 0in"><BR>
+</P>
+<P ALIGN=LEFT STYLE="margin-left: 0.3in; margin-bottom: 0in"><FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=4><B>Videos:</B></FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.3in; margin-bottom: 0in"><BR>
+</P>
+<P ALIGN=LEFT STYLE="margin-left: 0.3in; margin-bottom: 0in"><FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=4><B>Organization:</B></FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.3in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>The following chart
+shows the code structure of this plugin.</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-bottom: 0in"><IMG SRC="Flow%20Chart.png" NAME="FlowChart" ALIGN=LEFT WIDTH=739 HEIGHT=414 BORDER=0><BR CLEAR=LEFT><BR>
+</P>
+<P ALIGN=LEFT STYLE="margin-left: 0.29in; margin-bottom: 0in; page-break-before: auto; page-break-after: auto">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=4><B>Key &ndash;
+PatternConfig.JSON:</B></FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.29in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>Description of the
+elements:</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.29in; margin-bottom: 0in"><BR>
+</P>
+<P ALIGN=LEFT STYLE="margin-left: 0.29in; margin-bottom: 0in; page-break-before: auto; page-break-after: auto">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=4><B>***Common for
+all subroutines</B></FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.5in; margin-bottom: 0in"><BR>
+</P>
+<P ALIGN=LEFT STYLE="margin-left: 0.5in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;CP&quot;: {
+Control Panel, Settings common for the control panel and all
+subroutines</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.72in; margin-bottom: 0in; font-weight: normal; page-break-before: auto; page-break-after: auto">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;PH&quot;:
+140, Panel Height</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.72in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;PW&quot;:
+2000, Panel Width</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.71in; margin-bottom: 0in; font-weight: normal; page-break-before: auto; page-break-after: auto">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;SI&quot;: {
+Subroutine Includes. This dictionary lists and chooses which
+subroutines will be part of the plugin</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal; page-break-before: auto; page-break-after: auto">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;FutureSubroutines&quot;:
+false,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal; page-break-before: auto; page-break-after: auto">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;TrackPattern&quot;:
+true True means the sub will be included</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal; page-break-before: auto; page-break-after: auto">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>}</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.5in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>},</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.5in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;LI&quot;: {
+Logging Index, maps JMRI log levels to Python logging levels</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal; page-break-before: auto; page-break-after: auto">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;1&quot;: &quot;-
+WARNING -&quot;,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal; page-break-before: auto; page-break-after: auto">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;3&quot;: &quot;-
+INFO -&quot;,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;5&quot;: &quot;-
+DEBUG -&quot;,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal; page-break-before: auto; page-break-after: auto">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;7&quot;: &quot;-
+DEBUG -&quot;</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>},</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.5in; margin-bottom: 0in; font-weight: normal; page-break-before: auto; page-break-after: auto">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>},</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.5in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;LM&quot;: {
+Location Matrix - dictionary of locations where the control panel can
+be displayed</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal; page-break-before: auto; page-break-after: auto">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;LO&quot;: {
+Location Options - values for each possible display location</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal; page-break-before: auto; page-break-after: auto">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;0&quot;: [</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;Pattern
+Scripts plugin is turned off&quot;,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>null</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>],</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;1&quot;: [</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;Display the
+Control Panel on the PanelPro frame&quot;,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;panelPro&quot;</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>],</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;2&quot;: [</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;Control Panel
+added to its own window&quot;,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;uniqueWindow&quot;</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>],</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;3&quot;: [</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;Control Panel
+added to the Trains window&quot;,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;trainsTable&quot;</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>]</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>},</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal; page-break-before: auto; page-break-after: auto">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;PL&quot;: &quot;2&quot;
+Plugin Location, enter 0 to turn off, 1, 2, or 3 to change the
+display location</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>},</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.5in; margin-bottom: 0in"><BR>
+</P>
+<P ALIGN=LEFT STYLE="margin-left: 0.29in; margin-bottom: 0in; page-break-before: auto; page-break-after: auto">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=4><B>***Elements for
+the Track Pattern sub</B></FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.5in; margin-bottom: 0in"><BR>
+</P>
+<P ALIGN=LEFT STYLE="margin-left: 0.5in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;TP&quot; : {
+Track Pattern, this group has all the settings for the TP subroutine</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal; page-break-before: auto; page-break-after: auto">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;AL&quot; : [
+All Locations, all the locations for the current profile, the program
+sets this</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>],</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;PL&quot; :
+&quot;&quot;, Pattern Location, the currently selected location, set
+by user</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;PT&quot; : {
+Pattern Tracks, list of tracks for the selected location and their
+selected flag, set by user, written by program</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>},</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;PA&quot; :
+false, Yard Tracks only flag, set by user</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;PI&quot; :
+false, Ignore Track Length flag, set by user</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;AS&quot; :
+true, Apply Schedule. Applies a spurs schedule when a car is moved
+from a spur.</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;PW&quot; :
+260, Pattern Width</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;PH&quot; :
+16, Pattern Height, height of all javax boxes used in all windows</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;DS&quot; :
+&quot;*No Waybill&quot;, Standin message if no DeStination</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;DT&quot; :
+&quot;*No Waybill&quot;, Standin message if no Destination Track</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;FD&quot; :
+&quot;*Via Staging&quot;, Standin message if no Final Destination</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;FT&quot; :
+&quot;*Via Staging&quot;, Standin message if no Final destination
+Track</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;ST&quot; :
+&quot;Set to:&quot;, Part of Set Cars to Track header</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;SL&quot;: [
+Sort List, sort column and order for all reports, this can be hand
+edited by the user, selected from RW fields. Sort order is top down</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal; page-break-before: auto; page-break-after: auto">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;Load Type&quot;,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;FD&amp;Track&quot;</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>],</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;RM&quot;: 8,
+Row Multiplier, &quot;Translator&quot; value to convert character
+width to pixels</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;RW&quot;: {
+Report Width, This is a list of JMRI fields and their respective
+report character lengths</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal; page-break-before: auto; page-break-after: auto">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;Input&quot;:
+6,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;Road&quot; :
+5,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;Number&quot;
+: 7,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;Type&quot; :
+5,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;Length&quot;
+: 7,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;Weight&quot;
+: 7,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;Load&quot; :
+5,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;Load Type&quot;
+: 10,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;Hazardous&quot;
+: 10,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;Color&quot; :
+6,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;Kernel&quot;
+: 7,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;Kernel Size&quot;
+: 12,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;Owner&quot; :
+6,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;Track&quot; :
+6,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;Location&quot;
+: 9,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;Destination&quot;
+: 12,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;Dest&amp;Track&quot;
+: 30,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;Final Dest&quot;
+: 11,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;FD&amp;Track&quot;
+: 20,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;Comment&quot;
+: 15,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;SetOut Msg&quot;
+: 12,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;PickUp Msg&quot;
+: 12,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>&quot;RWE&quot; :
+10</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.9in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>}</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>}</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.5in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>}</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.5in; margin-bottom: 0in"><BR>
+</P>
+<P ALIGN=LEFT STYLE="margin-left: 0.3in; margin-bottom: 0in; page-break-before: auto; page-break-after: auto">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=4><B>Key &ndash;
+trackPatternDict object:</B></FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.3in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>Object generated by
+the plugin, it's the data for the print reports:</FONT></FONT></P>
 <P ALIGN=LEFT STYLE="margin-bottom: 0in"><BR>
 </P>
-<P ALIGN=LEFT STYLE="margin-bottom: 0in"><IMG SRC="psHelp_html_4c03107b.png" NAME="graphics1" ALIGN=LEFT WIDTH=612 HEIGHT=342 BORDER=0><BR CLEAR=LEFT><BR>
+<P ALIGN=LEFT STYLE="margin-left: 0.5in; margin-bottom: 0in; font-weight: normal; page-break-before: auto; page-break-after: auto">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>'RT': u'Report
+Type',</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.5in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>'YL': u'Yard
+Location',</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.5in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>'RN': u'Railroad
+Name',</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.5in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>'VT': u'Valid
+Time'}</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.5in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>'ZZ':</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal; page-break-before: auto; page-break-after: auto">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>[{'TL': Track
+length,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>'TN': u'Track
+Name',</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.7in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>'TR': Track Roster</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal; page-break-before: auto; page-break-after: auto">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>[{u'Destination':
+'Destination',</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>u'Comment':u'Comment',</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>u'RWE': u'Return
+When Empty',</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>u'Load': u'Load',</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>u'Owner': u'Owner',</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>u'FD&amp;Track':
+u'Final Destination and Track',</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>u'PickUp Msg':
+u'PickUp Message',</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>u'Road': u'Road
+Name',</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>u'Color': u'Color',</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>u'Load Type':
+u'Load Type',</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>u'Weight':
+u'Weight',</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>u'Dest&amp;Track':
+'Destination and Track',</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>u'SetOut Msg':
+u'SetOut Message',</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>u'Type': u'Car
+Type',</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>u'Number': u'Car
+Number',</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>u'Length':
+u'Length',</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>u'Kernel Size':
+'1',</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>u'Kernel': u'Kernel
+Name',</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>u'Hazardous':
+False,</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>u'Track': u'Current
+Track',</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>u'Final Dest':
+u'Final Destination',</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>u'Set to': '[ ] ',
+Special for this plugin, to pre-mark switch list</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>u'Location':
+u'Location Name'}]</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.91in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>}],</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-bottom: 0in"><BR>
 </P>
-<P ALIGN=CENTER STYLE="margin-bottom: 0in"><BR>
+<P ALIGN=LEFT STYLE="margin-left: 0.3in; margin-bottom: 0in; page-break-before: auto; page-break-after: auto">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=4><B>Pattern Scripts
+window:</B></FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.3in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>Layout of methods
+for:</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.3in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>TrackPattern.ViewEntities.TrackPatternPanel().makePatternControls()</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.3in; margin-bottom: 0in"><BR>
 </P>
-<P ALIGN=CENTER STYLE="margin-bottom: 0in"><BR>
-</P>
-<P ALIGN=CENTER STYLE="margin-bottom: 0in"><BR>
-</P>
+<P ALIGN=LEFT STYLE="margin-left: 0.3in; margin-bottom: 0in"><FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=4><B>Pattern
+Report for Track window:</B></FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.3in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>Layout of methods
+for:</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.3in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>TrackPattern.ViewSetCarsForm.patternReportForTrackWindow(self.trackPattern,
+offSet)</FONT></FONT></P>
 </BODY>
 </HTML>

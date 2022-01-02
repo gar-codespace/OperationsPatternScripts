@@ -50,8 +50,10 @@ class MakePatternScriptsWindow():
 
     def helpItemSelected(self, ACTION_PERFORMED):
 
-        print('Yipee')
-        jmri.util.HelpUtil.openWebPage('file:///C:/Users/Greg/JMRI/jmrihelp/psStub.html')
+        helpStubPath = 'file:///' + jmri.util.FileUtil.getPreferencesPath() + 'jmrihelp\psStub.html'
+        fixPath1 = helpStubPath.replace('\\', '/')
+        fixPath2 = fixPath1.replace(' ', '%20')
+        jmri.util.HelpUtil.openWebPage(fixPath2)
 
         return
 
@@ -63,15 +65,20 @@ class MakePatternScriptsWindow():
         helpMenu = javax.swing.JMenu(u'Help')
         helpMenu.add(helpMenuItem)
 
-        helpMenuBar = javax.swing.JMenuBar()
+        toolsMenu = javax.swing.JMenu(u'Tools')
+        toolsMenu.add(jmri.jmrit.operations.setup.OptionAction())
+        toolsMenu.add(jmri.jmrit.operations.setup.PrintOptionAction())
+        toolsMenu.add(jmri.jmrit.operations.setup.BuildReportOptionAction())
 
-        helpMenuBar.add(jmri.jmrit.operations.OperationsMenu())
-        helpMenuBar.add(jmri.util.WindowMenu(self.uniqueWindow))
-        helpMenuBar.add(helpMenu)
-        # jmri.util.HelpUtil.helpMenu(helpMenuBar, 'psStub', False)
+        psMenuBar = javax.swing.JMenuBar()
+        psMenuBar.add(jmri.jmrit.operations.OperationsMenu())
+        psMenuBar.add(toolsMenu)
+        psMenuBar.add(jmri.util.WindowMenu(self.uniqueWindow))
+        psMenuBar.add(helpMenu)
+        # jmri.util.HelpUtil.helpMenu(psMenuBar, 'psStub', False)
 
         self.uniqueWindow.addWindowListener(PatternScriptsWindowListener(self.button))
-        self.uniqueWindow.setJMenuBar(helpMenuBar)
+        self.uniqueWindow.setJMenuBar(psMenuBar)
         self.uniqueWindow.add(self.controlPanel)
         self.uniqueWindow.pack()
 
@@ -87,11 +94,10 @@ NOTE: This location does not support DecoderPro'''
 
     return
 
-def panelProWindow(scrollPanel):
-    '''makes a window to display the control panel'''
+def panelProButton(scrollPanel):
+    '''makes a button on the PanelPro frame'''
 
     def homeButtonClick(MOUSE_CLICKED):
-        '''The Pattern Scripts button on the Panel Pro frame'''
 
         homePanelButton.setEnabled(False)
         psWindow = MakePatternScriptsWindow(scrollPanel, homePanelButton)

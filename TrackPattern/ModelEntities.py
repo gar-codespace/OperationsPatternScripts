@@ -230,28 +230,6 @@ def makeCsvSwitchlist(trackPattern):
 
     return csvSwitchList
 
-# def writeSwitchList(trackData):
-#     '''Writes the TXT switch list to notepad and optionally creates the CSV switch list '''
-#
-#     for track in trackData['ZZ']:
-#         trackName = track['TN']
-# # Write the switch list
-#     textSwitchList = makeSwitchlist(trackData, False)
-#     textCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\Switch list (' + trackData['YL'] + ') (' + trackName + ').txt'
-#     with cOpen(textCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as textWorkFile:
-#         textWorkFile.write(textSwitchList)
-# # Write the CSV switch list
-#     if (jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled()):
-#         csvSwitchList = makeCsvSwitchlist(trackData)
-#         csvCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\csvSwitchLists\\Switch list (' + trackData['YL'] + ') (' + trackName + ').csv'
-#         with cOpen(csvCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
-#             csvWorkFile.write(csvSwitchList)
-
-    # textCopyTo = textCopyTo.replace("&", "^&")
-    # system(MainScriptEntities.systemInfo() + textCopyTo)
-
-    return textCopyTo
-
 def getcustomLoadForCarType():
     '''Returns the default empty designation and a dictionary of car types by custom empty name'''
 

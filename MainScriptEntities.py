@@ -58,22 +58,22 @@ def systemInfo(switchListLocation=None):
     return textEdit[osName]
 
 def validateStubFile(locale='en'):
-    '''Copy of the JMRI Java version'''
+    '''Copy of the JMRI Java version of createStubFile'''
 
-    preferencesPath = jmri.util.FileUtil.getPreferencesPath()
-    stubLocation = preferencesPath + '\\jmrihelp\\'
+    stubLocation = jmri.util.FileUtil.getPreferencesPath() + '\\jmrihelp\\'
     jmri.util.FileUtil.createDirectory(stubLocation)
     psLog.debug('stub location created at: ' + stubLocation)
     stubFileName = stubLocation + 'psStub.html'
-
-    helpFilePath = 'file:///' + preferencesPath + 'OperationsPatternScripts\\Support\\psHelp.html'
+    locale = unicode(locale, setEncoding())
+    helpFilePath = jmri.util.FileUtil.getPreferencesPath() + 'OperationsPatternScripts/Support/psHelp.html'
     stubTemplateLocation = jmri.util.FileUtil.getProgramPath() + 'help\\' + locale + '\\local\\stub_template.html'
-    psLog.debug('html location at: ' + stubTemplateLocation)
     with cOpen(stubTemplateLocation, 'r', encoding=setEncoding()) as template:
         contents = template.read()
-        newContents = contents.replace("<!--HELP_KEY-->", helpFilePath)
+        replaceContents1 = contents.replace("../index.html#", "")
+        replaceContents2 = replaceContents1.replace("<!--HELP_KEY-->", helpFilePath)
         with cOpen(stubFileName, 'wb', encoding=setEncoding()) as stubWorkFile:
-            stubWorkFile.write(newContents)
+            stubWorkFile.write(replaceContents2)
+            psLog.debug('psStub writen from stub_template')
 
     return
 
@@ -109,14 +109,29 @@ def validateDestinationDirestories():
     return
 
 def validateConfigFile():
-    '''Checks for a config file and adds one if missing'''
+    '''Checks for an up to date, missing or ureadable config file'''
+
+    with cOpen(jmri.util.FileUtil.getPreferencesPath() + 'OperationsPatternScripts\\PatternConfig.json', 'r', encoding=setEncoding()) as validConfigFileLoc:
+        validConfigFile = jLoads(validConfigFileLoc.read())
+        upToDate = validConfigFile['CP']['RV']
 
     try:
         configFileLoc = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json'
         with cOpen(configFileLoc, 'r', encoding=setEncoding()) as configWorkFile:
             configFile = jLoads(configWorkFile.read())
-        return True
+            if (configFile['CP']['RV'] == upToDate):
+                psLog.info('PatternConfig.json file is up to date')
+                return True
+            else:
+                psLog.warning('PatternConfig.json file is out of date')
+                jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json.bak'
+                jsonObject = jDumps(configFile, indent=2, sort_keys=True)
+                with cOpen(jsonCopyTo, 'wb', encoding=setEncoding()) as jsonWorkFile:
+                    jsonWorkFile.write(jsonObject)
+                    # Overwrites previous bak file
+                return False
     except:
+        psLog.warning('No PatternConfig.json found or is unreadable')
         return False
 
 def readConfigFile(subConfig='all'):

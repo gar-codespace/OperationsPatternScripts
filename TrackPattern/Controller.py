@@ -19,8 +19,6 @@ scriptRev = 'TrackPattern.Controller v20211210'
 class StartUp():
     '''Start the the Track Pattern subroutine'''
 
-    # scriptRev = 'TrackPattern.Controller v20211210'
-
     def __init__(self):
 
         self.psLog = logging.getLogger('PS.TP.Control')
@@ -55,6 +53,7 @@ class StartUp():
                 self.psLog.warning('Location list changed, config file updated')
 
             print(scriptRev)
+            
             return
 
     def whenPABoxClicked(self, event):
@@ -84,7 +83,6 @@ class StartUp():
     # Button specific
         try:
             location = TrackPattern.Model.onTpButtonPress()
-            print(location)
             TrackPattern.View.displayTextSwitchlist(location)
         except:
             pass
