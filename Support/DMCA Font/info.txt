@@ -1,0 +1,6 @@
+﻿The use of a monospaced font is highly recommended for the display of Pattern Scripts reports.
+The included font works well for that and is public domain.
+
+
+license: Public Domain
+link: https://www.fontspace.com/dmca-sans-serif-font-f40060
