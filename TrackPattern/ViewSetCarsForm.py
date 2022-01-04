@@ -214,10 +214,13 @@ def setCarsFormFooter():
 # Define the footer
     footer = javax.swing.JPanel()
 # Construct the footer
-    scButton = javax.swing.JButton(unicode('Set', MainScriptEntities.setEncoding()))
     tpButton = javax.swing.JButton(unicode('Print', MainScriptEntities.setEncoding()))
+    scButton = javax.swing.JButton(unicode('Set', MainScriptEntities.setEncoding()))
+    trainPlayerButton = javax.swing.JButton(unicode('TrainPlayer', MainScriptEntities.setEncoding()))
+    trainPlayerButton.setEnabled(False)
 # Populate the footer
     footer.add(tpButton)
     footer.add(scButton)
+    footer.add(trainPlayerButton)
 
     return footer, tpButton, scButton

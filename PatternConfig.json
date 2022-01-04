@@ -12,14 +12,6 @@
       "2": [
         "Control Panel added to its own window",
         "panelProButton"
-      ],
-      "3": [
-        "Control Panel added to the Trains window",
-        "trainsTable"
-      ],
-      "4": [
-        "Control Panel added to the OperationsPro drop down menu",
-        "opsProMenu"
       ]
     },
     "PL": "2"

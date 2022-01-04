@@ -5,7 +5,6 @@
 
 import jmri
 import java.awt
-# import java.awt.event
 import javax.swing
 import logging
 from codecs import open as cOpen
@@ -21,8 +20,6 @@ import MainScriptEntities
 scriptRev = 'TrackPattern.ViewSetCarsForm v20211210'
 
 class AnyButtonPressedListener(java.awt.event.ActionListener):
-
-    # scriptRev = 'TrackPattern.ViewSetCarsForm v20211210'
 
     def __init__(self, object1=None, object2=None, object3=None, object4=None):
 
@@ -104,6 +101,5 @@ class ManageGui():
         patternReportForTrackWindow = TrackPattern.ViewSetCarsForm.patternReportForTrackWindow(self.trackPattern, offSet)
         patternReportForTrackWindow.pack()
         patternReportForTrackWindow.setVisible(True)
-
 
         return

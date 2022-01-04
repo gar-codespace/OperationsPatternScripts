@@ -1,6 +1,4 @@
 Stuff that's OK or comments:
-  jmri.util.JmirJFrame.getFrameList() to find open windows?
-  maybe use trackobject.getUsedLength
   why isnt jmri.jmrit.operations.rollingstock.cars.Car.testDestination()being used?
   RWE and RWL seems to work ok
   Schedule overrides RWE/RWL OK
@@ -16,5 +14,4 @@ Wish List:
   Pattern Tracks window automatically resizes
   plugin added to button in trains window
   set cars window add trainplayer compatability
-  add a Apply Schedule check box to set cars window maybe? Probably not.
   jmri.util.swing.JMenuUtil.replaceMenuItem() to replace the trains window with a new trains window that includes a ps button

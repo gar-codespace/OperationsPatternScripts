@@ -50,7 +50,7 @@ class MakePatternScriptsWindow():
 
     def helpItemSelected(self, ACTION_PERFORMED):
 
-        helpStubPath = 'file:///' + jmri.util.FileUtil.getPreferencesPath() + 'jmrihelp\psStub.html'
+        helpStubPath = 'file:///' + jmri.util.FileUtil.getPreferencesPath() + 'jmrihelp\\psStub.html'
         fixPath1 = helpStubPath.replace('\\', '/')
         fixPath2 = fixPath1.replace(' ', '%20')
         jmri.util.HelpUtil.openWebPage(fixPath2)
@@ -71,8 +71,8 @@ class MakePatternScriptsWindow():
         toolsMenu.add(jmri.jmrit.operations.setup.BuildReportOptionAction())
 
         psMenuBar = javax.swing.JMenuBar()
-        psMenuBar.add(jmri.jmrit.operations.OperationsMenu())
         psMenuBar.add(toolsMenu)
+        psMenuBar.add(jmri.jmrit.operations.OperationsMenu())
         psMenuBar.add(jmri.util.WindowMenu(self.uniqueWindow))
         psMenuBar.add(helpMenu)
         # jmri.util.HelpUtil.helpMenu(psMenuBar, 'psStub', False)
@@ -110,28 +110,5 @@ def panelProButton(scrollPanel):
     Apps.buttonSpace().revalidate()
 
     print(scriptRev)
-
-    return
-
-def trainsTable(scrollPanel):
-    '''Add the plugin to the bottom of the trains window'''
-
-    jmri.jmrit.operations.trains.TrainsTableFrame().add(scrollPanel)
-    print(scriptRev)
-
-    return
-
-def opsProMenu(scrollPanel):
-    '''Add the plugin to the Operations Pro dropdown menu'''
-
-    def menuItemSelected(ACTION_PERFORMED):
-
-        print('Yipee')
-
-        return
-    psMenuItem = javax.swing.JMenuItem(u'Pattern Scripts')
-    psMenuItem.addActionListener(menuItemSelected)
-    opsProMenu = jmri.jmrit.operations.OperationsMenu()
-    opsProMenu.add(psMenuItem)
 
     return

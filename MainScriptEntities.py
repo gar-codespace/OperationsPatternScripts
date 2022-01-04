@@ -61,18 +61,24 @@ def validateStubFile(locale='en'):
     '''Copy of the JMRI Java version of createStubFile'''
 
     stubLocation = jmri.util.FileUtil.getPreferencesPath() + '\\jmrihelp\\'
-    jmri.util.FileUtil.createDirectory(stubLocation)
-    psLog.debug('stub location created at: ' + stubLocation)
+    try:
+        mkDir(stubLocation)
+        psLog.warning('stub location created at: ' + stubLocation)
+    except OSError:
+        psLog.info('stub location already exists')
     stubFileName = stubLocation + 'psStub.html'
     locale = unicode(locale, setEncoding())
-    helpFilePath = jmri.util.FileUtil.getPreferencesPath() + 'OperationsPatternScripts/Support/psHelp.html'
-    stubTemplateLocation = jmri.util.FileUtil.getProgramPath() + 'help\\' + locale + '\\local\\stub_template.html'
+    helpFilePath = 'file:///' + jmri.util.FileUtil.getPreferencesPath() + 'OperationsPatternScripts/Support/psHelp.html'
+    helpFilePath = helpFilePath.replace('\\', '/')
+    helpFilePath = helpFilePath.replace(' ', '%20')
+    stubTemplateLocation = jmri.util.FileUtil.getProgramPath() + 'help\\' + locale[:2] + '\\local\\stub_template.html'
     with cOpen(stubTemplateLocation, 'r', encoding=setEncoding()) as template:
         contents = template.read()
-        replaceContents1 = contents.replace("../index.html#", "")
-        replaceContents2 = replaceContents1.replace("<!--HELP_KEY-->", helpFilePath)
+        replaceContents = contents.replace("../index.html#", "")
+        replaceContents = replaceContents.replace("<!--HELP_KEY-->", helpFilePath)
+        replaceContents = replaceContents.replace("<!--URL_HELP_KEY-->", "")
         with cOpen(stubFileName, 'wb', encoding=setEncoding()) as stubWorkFile:
-            stubWorkFile.write(replaceContents2)
+            stubWorkFile.write(replaceContents)
             psLog.debug('psStub writen from stub_template')
 
     return
