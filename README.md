@@ -35,15 +35,13 @@ The following are YouTube videos covering the use of this plugin:
   
 How to add this plugin to JMRI.  
 [How to use this plugin](https://youtu.be/GjPtXk3oKmc)  
-Yard Pattern example.  
-Intra-Plant switch example.  
-How to modify this plugin.  
+Switch a yard example  
+Switch a steel mill example  
+How to modify this plugin  
 
 ## Testing
 This plugin has been tested with:
-* JMRI 4.25.4 with Java 8u301
-* JMRI 4.26 with Java 8u311
-* Windows 10 Pro and Home
+* JMRI 4.25.4 with Java 8u301, JMRI 4.26 with Java 8u311, Windows 10 Pro and Home  
 
 ## License
 The scripts included in this plugin are © 2021 Greg Ritacco.  
