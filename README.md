@@ -24,7 +24,7 @@ Examples of this would include:
 
 ## Plugin Notables
 Moving cars around a yard, the yard pattern, generally involves working with JMRI 'Yards.'  
-Moving cars around a location, Intra-Plant swtiching, generally involves JMRI 'Classification/Interchange' tracks, and 'Spurs.'
+Moving cars around a location, Intra-Plant swtiching, generally involves JMRI 'Classification/Interchange' tracks, and 'Spurs.'  
 Moving cars TO a spur by using this plugin will apply the spur's schedule, setting the appropriate load and destination.  
 If there is no schedule the plugin will attempt to apply the car's RWE or RWL parameters.
 If no RWE or RWL, the plugin will then try to load the car with the custom designation for 'Empty' or 'Load' for that cars' load type.  
