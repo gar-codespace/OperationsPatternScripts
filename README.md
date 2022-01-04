@@ -32,7 +32,7 @@ If none of the above, a car moved from a spur will toggle default load/empty des
 
 ## How To Use This Plugin
 The following are YouTube videos covering the use of this plugin:  
-Not Yet But Soon :)  
+  
 How to add this plugin to JMRI.  
 [How to use this plugin](https://youtu.be/GjPtXk3oKmc)  
 Yard Pattern example.  
