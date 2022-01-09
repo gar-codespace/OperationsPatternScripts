@@ -5,7 +5,6 @@
 
 import jmri
 import jmri.util
-import jmri.util.HelpUtil
 import java.awt
 import java.awt.event
 import javax.swing

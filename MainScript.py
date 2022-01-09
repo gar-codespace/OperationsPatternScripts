@@ -56,7 +56,8 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
     # plug in the subroutine list into the control panel
         controlPanel, scrollPanel = MainScriptEntities.makeControlPanel()
     # fire up the help File
-        MainScriptEntities.validateStubFile(scrollPanel.getLocale())
+        locale = str(scrollPanel.getLocale())[:2]
+        MainScriptEntities.validateStubFile(str(scrollPanel.getLocale())[:2])
         for subroutine in subroutineList:
             controlPanel.add(subroutine)
     # plug in the control panel to a location

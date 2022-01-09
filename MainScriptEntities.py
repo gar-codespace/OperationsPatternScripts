@@ -5,7 +5,6 @@
 
 import jmri
 import java.awt
-# import java.awt.event
 import javax.swing
 import logging
 import time
@@ -67,7 +66,6 @@ def validateStubFile(locale='en'):
     except OSError:
         psLog.info('stub location already exists')
     stubFileName = stubLocation + 'psStub.html'
-    locale = unicode(locale, setEncoding())
     helpFilePath = 'file:///' + jmri.util.FileUtil.getPreferencesPath() + 'OperationsPatternScripts/Support/psHelp.html'
     helpFilePath = helpFilePath.replace('\\', '/')
     helpFilePath = helpFilePath.replace(' ', '%20')
