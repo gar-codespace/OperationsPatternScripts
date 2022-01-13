@@ -162,10 +162,10 @@ def applyLoadRubric(carObject, scheduleObject=None):
 
     carType = carObject.getTypeName()
 # Toggle the default loads if used
-    if (carObject.getLoadName() == MainScriptEntities.defaultLoadLoad):
-        carObject.setLoadName(MainScriptEntities.defaultLoadEmpty)
-    elif (carObject.getLoadName() == MainScriptEntities.defaultLoadEmpty):
-        carObject.setLoadName(MainScriptEntities.defaultLoadLoad)
+    if (carObject.getLoadName() == MainScriptEntities._defaultLoadLoad):
+        carObject.setLoadName(MainScriptEntities._defaultLoadEmpty)
+    elif (carObject.getLoadName() == MainScriptEntities._defaultLoadEmpty):
+        carObject.setLoadName(MainScriptEntities._defaultLoadLoad)
 # Toggle the custom loads
     try: # first try to apply the schedule
         carObject.setLoadName(scheduleObject.getItemByType(carType).getShipLoadName())
@@ -179,14 +179,14 @@ def applyLoadRubric(carObject, scheduleObject=None):
         except:
             try: # apply values from custom empty
                 if (carObject.getLoadType() == 'Empty'): # toggle the load
-                    carObject.setLoadName(MainScriptEntities.carTypeByLoadDict.get(carType))
+                    carObject.setLoadName(MainScriptEntities._carTypeByLoadDict.get(carType))
                 else:
-                    carObject.setLoadName(MainScriptEntities.carTypeByEmptyDict.get(carType))
+                    carObject.setLoadName(MainScriptEntities._carTypeByEmptyDict.get(carType))
             except: # when all else fails, apply the default loads
                 if (carObject.getLoadType() == 'Empty'): # toggle the load
-                    carObject.setLoadName(MainScriptEntities.defaultLoadLoad)
+                    carObject.setLoadName(MainScriptEntities._defaultLoadLoad)
                 else:
-                    carObject.setLoadName(MainScriptEntities.defaultLoadEmpty)
+                    carObject.setLoadName(MainScriptEntities._defaultLoadEmpty)
 
     return
 
@@ -217,4 +217,3 @@ def applyFdRubric(carObject, scheduleObject=None):
                 psLog.info('RWE destination not applied: ' + applyRWE)
 
     return
-    

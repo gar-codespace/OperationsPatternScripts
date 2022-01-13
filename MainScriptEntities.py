@@ -19,11 +19,11 @@ scriptRev = 'OperationsPatternScripts.MainScriptEntities v20211210'
 psLog = logging.getLogger('PS.TP.MainScriptEntities')
 
 # 'global' variables
-trackNameClickedOn = None
-carTypeByEmptyDict = {}
-carTypeByLoadDict = {}
-defaultLoadEmpty = u''
-defaultLoadLoad = u''
+_trackNameClickedOn = None
+_carTypeByEmptyDict = {}
+_carTypeByLoadDict = {}
+_defaultLoadEmpty = u''
+_defaultLoadLoad = u''
 
 def setEncoding():
     '''Expand on this later'''

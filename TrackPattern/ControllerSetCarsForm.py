@@ -35,7 +35,7 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
     def trackRowButton(self, MOUSE_CLICKED):
         '''Any of the track buttons on the set cars window - row of track buttons'''
 
-        MainScriptEntities.trackNameClickedOn = unicode(MOUSE_CLICKED.getSource().getText(), MainScriptEntities.setEncoding())
+        MainScriptEntities._trackNameClickedOn = unicode(MOUSE_CLICKED.getSource().getText(), MainScriptEntities.setEncoding())
 
         return
 
@@ -67,6 +67,7 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
         TrackPattern.ModelSetCarsForm.setCarsToTrack(self.trackData, self.textBoxEntry)
     # Wrap it up
         self.setCarsWindow.setVisible(False)
+        self.setCarsWindow.dispose()
         print(scriptRev)
 
         return
@@ -79,8 +80,8 @@ class textBoxEntryListener(java.awt.event.MouseAdapter):
 
     def mouseClicked(self, MOUSE_CLICKED):
 
-        if (MainScriptEntities.trackNameClickedOn):
-            MOUSE_CLICKED.getSource().setText(MainScriptEntities.trackNameClickedOn)
+        if (MainScriptEntities._trackNameClickedOn):
+            MOUSE_CLICKED.getSource().setText(MainScriptEntities._trackNameClickedOn)
         else:
             self.psLog.warning('No track was selected')
 
