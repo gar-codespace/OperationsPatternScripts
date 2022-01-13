@@ -205,22 +205,21 @@ def makeLoadEmptyDesignationsDict():
     defaultLoadEmpty, customEmptyForCarTypes = TrackPattern.ModelEntities.getcustomEmptyForCarType()
     defaultLoadLoad, customLoadForCarTypes = TrackPattern.ModelEntities.getcustomEmptyForCarType()
     try:
-        MainScriptEntities.defaultLoadEmpty = defaultLoadEmpty
-        MainScriptEntities.defaultLoadLoad = defaultLoadLoad
+        MainScriptEntities._defaultLoadEmpty = defaultLoadEmpty
+        MainScriptEntities._defaultLoadLoad = defaultLoadLoad
         psLog.info('Default load and empty designations saved')
     except:
         psLog.critical('Default empty designation not saved')
-        MainScriptEntities.defaultLoadEmpty = 'E'
-        MainScriptEntities.defaultLoadLoad = 'L'
+        MainScriptEntities._defaultLoadEmpty = 'E'
+        MainScriptEntities._defaultLoadLoad = 'L'
     try:
-        # MainScriptEntities.carTypeByEmptyDict = {}
-        MainScriptEntities.carTypeByEmptyDict = customEmptyForCarTypes
-        MainScriptEntities.carTypeByLoadDict = customLoadForCarTypes
+        MainScriptEntities._carTypeByEmptyDict = customEmptyForCarTypes
+        MainScriptEntities._carTypeByLoadDict = customLoadForCarTypes
         psLog.info('Default custon loads for (empty) and (load) by car type designations saved')
     except:
         psLog.critical('Custom car empty designations not saved')
-        MainScriptEntities.carTypeByEmptyDict = {}
-        MainScriptEntities.carTypeByLoadDict = {}
+        MainScriptEntities._carTypeByEmptyDict = {}
+        MainScriptEntities._carTypeByLoadDict = {}
 
     return
 
