@@ -7,7 +7,7 @@ import jmri
 import logging
 from os import path as oPath
 from json import loads as jLoads, dumps as jDumps
-from codecs import open as cOpen
+from codecs import open as codecsOpen
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
@@ -40,21 +40,26 @@ def onTpButtonPress():
 
     return trackPatternDict['YL']
 
-def onScButtonPress(comboBox):
+def onScButtonPress():
     '''When the "Set Cars" button on the Control Panel is pressed'''
 
+    patternLocation = MainScriptEntities.readConfigFile('TP')['PL']
     selectedTracks = TrackPattern.ModelEntities.getSelectedTracks()
     windowOffset = 200
-    if (selectedTracks):
+    if selectedTracks:
         i = 0
         for track in selectedTracks:
-            listForTrack = makeListForTrack(comboBox.getSelectedItem(), track)
-            newWindow = TrackPattern.ControllerSetCarsForm.ManageGui(listForTrack)
-            newWindow.makeFrame(windowOffset)
+            listForTrack = makeListForTrack(patternLocation, track)
+            newFrame = TrackPattern.ControllerSetCarsForm.CreatePatternReportGui(listForTrack)
+            newWindow = newFrame.makeFrame()
+            newWindow.setTitle(u'Pattern Report for track ' + track)
+            newWindow.setLocation(windowOffset, 180)
+            newWindow.pack()
+            newWindow.setVisible(True)
             psLog.info(u'Set Cars Window created for track ' + track)
             windowOffset += 50
             i += 1
-        psLog.info(str(i) + ' Set Cars windows for ' + comboBox.getSelectedItem() + ' created')
+        psLog.info(str(i) + ' Set Cars windows for ' + patternLocation + ' created')
     else:
         psLog.warning('No tracks were selected for the Set Cars button')
 
@@ -137,7 +142,7 @@ def makePatternLog():
     configLoggingIndex = MainScriptEntities.readConfigFile('LI')
     logLevel = configLoggingIndex[jmri.jmrit.operations.setup.Setup.getBuildReportLevel()]
     logFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternLog.txt'
-    with cOpen(logFileLocation, 'r', encoding=MainScriptEntities.setEncoding()) as patternLogFile:
+    with codecsOpen(logFileLocation, 'r', encoding=MainScriptEntities.setEncoding()) as patternLogFile:
         while True:
             thisLine = patternLogFile.readline()
             if not (thisLine):
@@ -152,7 +157,7 @@ def makePatternLog():
                 outputPatternLog = outputPatternLog + thisLine
 
     tempLogFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternLog_temp.txt'
-    with cOpen(tempLogFileLocation, 'w', encoding=MainScriptEntities.setEncoding()) as tempPatternLogFile:
+    with codecsOpen(tempLogFileLocation, 'w', encoding=MainScriptEntities.setEncoding()) as tempPatternLogFile:
         tempPatternLogFile.write(outputPatternLog)
     return
 
@@ -198,12 +203,13 @@ def updateConfigFile(controls):
 
     return controls
 
-def makeLoadEmptyDesignationsDict():
-    '''Stores the custom car load for (empty) by type designations and the default empty designation as global variables'''
+def makeLoadEmptyDesignationsDicts():
+    '''Stores the custom car load for Load and Empty by type designations and the default load and empty designation as global variables'''
 
-    psLog.debug('makeLoadEmptyDesignationsDict')
-    defaultLoadEmpty, customEmptyForCarTypes = TrackPattern.ModelEntities.getcustomEmptyForCarType()
-    defaultLoadLoad, customLoadForCarTypes = TrackPattern.ModelEntities.getcustomEmptyForCarType()
+    psLog.debug('makeLoadEmptyDesignationsDicts')
+    defaultLoadEmpty, customEmptyForCarTypes = TrackPattern.ModelEntities.getCustomEmptyForCarType()
+    defaultLoadLoad, customLoadForCarTypes = TrackPattern.ModelEntities.getCustomLoadForCarType()
+    # Set the default L/E
     try:
         MainScriptEntities._defaultLoadEmpty = defaultLoadEmpty
         MainScriptEntities._defaultLoadLoad = defaultLoadLoad
@@ -212,6 +218,7 @@ def makeLoadEmptyDesignationsDict():
         psLog.critical('Default empty designation not saved')
         MainScriptEntities._defaultLoadEmpty = 'E'
         MainScriptEntities._defaultLoadLoad = 'L'
+    # Set custom L/E
     try:
         MainScriptEntities._carTypeByEmptyDict = customEmptyForCarTypes
         MainScriptEntities._carTypeByLoadDict = customLoadForCarTypes
@@ -282,7 +289,7 @@ def writePatternJson(location, trackPatternDict):
     psLog.debug('writePatternJson')
     jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\Track Pattern (' + location + ').json'
     jsonObject = jDumps(trackPatternDict, indent=2, sort_keys=True) #trackPatternDict
-    with cOpen(jsonCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
+    with codecsOpen(jsonCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
         jsonWorkFile.write(jsonObject)
 
     return# jsonObject
@@ -293,7 +300,7 @@ def writeTextSwitchList(location, trackPatternDict):
     psLog.debug('writeTextSwitchList')
     textCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\Track Pattern (' + location + ').txt'
     textObject = TrackPattern.ModelEntities.makeSwitchlist(trackPatternDict, True)
-    with cOpen(textCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as textWorkFile:
+    with codecsOpen(textCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as textWorkFile:
         textWorkFile.write(textObject)
 
     return# textObject
@@ -307,7 +314,7 @@ def writeCsvSwitchList(location, trackPatternDict):
         mkdir(csvSwitchlistPath)
     csvCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\csvSwitchLists\\Track Pattern (' + location + ').csv'
     csvObject = TrackPattern.ModelEntities.makeCsvSwitchlist(trackPatternDict)
-    with cOpen(csvCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
+    with codecsOpen(csvCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
         csvWorkFile.write(csvObject)
 
     return
