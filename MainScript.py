@@ -4,10 +4,27 @@
 import jmri
 import logging
 import time
-from sys import path
-path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
+import os
+from sys import path as sysPath
+# print(os.getcwd() + 'jjjjjjjjjjjjjj')
+# print(oPath.dirname(oPath.abspath(__file__)) + ' *@@@@@@@@@@@@@@@@@@@@*****')
+
+sysPath.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
 import PluginLocations
+
+class verifyPath():
+    def __init__(self):
+        from os import path as oPath
+
+        return
+
+    def main(self):
+        from os import path as oPath
+        print(oPath.dirname(oPath.abspath(__main__)) + ' *@@@@@@@@@@@@@@@@@@@@*****')
+        return
+verifyPath().main()
+# print(dir(MainScriptEntities))
 
 '''Pattern Scripts Version 2.0.0'''
 

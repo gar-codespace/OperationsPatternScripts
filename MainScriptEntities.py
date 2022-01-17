@@ -14,6 +14,8 @@ from codecs import open as cOpen
 from os import mkdir as mkDir, path as oPath
 from shutil import copy as sCopy
 
+# print(oPath.dirname(oPath.abspath(__file__)) + ' *************')
+
 '''Support methods for the main script'''
 
 scriptRev = 'OperationsPatternScripts.MainScriptEntities v20211210'

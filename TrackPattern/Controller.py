@@ -6,6 +6,9 @@
 import jmri
 import logging
 import java.awt.event
+from os import path as oPath
+
+print(oPath.dirname(oPath.abspath(__file__)) + ' ***^^^^^^^^^^^^****')
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
 import MainScriptEntities
@@ -53,7 +56,7 @@ class StartUp():
                 self.psLog.warning('Location list changed, config file updated')
 
             print(scriptRev)
-            
+
             return
 
     def whenPABoxClicked(self, event):
@@ -75,9 +78,8 @@ class StartUp():
         return
 
     def whenTPButtonPressed(self, event):
-        '''Makes a track pattern based on the config file'''
+        '''Makes a track pattern report based on the config file'''
 
-    # Boilerplate - update the config file
         TrackPattern.Model.updateConfigFile(self.controls)
         self.psLog.info('Configuration file updated with new settings for controls')
     # Button specific
@@ -85,6 +87,7 @@ class StartUp():
             location = TrackPattern.Model.onTpButtonPress()
             TrackPattern.View.displayTextSwitchlist(location)
         except:
+            # error handled in Model.onTpButtonPress()
             pass
         print(scriptRev)
 
@@ -93,13 +96,12 @@ class StartUp():
     def whenSCButtonPressed(self, event):
         '''Opens a set cars window for each checked track'''
 
-    # Boilerplate - update the config file
         self.controls = TrackPattern.Model.updateConfigFile(self.controls)
         self.psLog.info('Configuration file updated with new settings for controls')
-    # Find all the custom empty/load designations
-        TrackPattern.Model.makeLoadEmptyDesignationsDict()
+
+        TrackPattern.Model.makeLoadEmptyDesignationsDicts()
     # Button specific
-        TrackPattern.Model.onScButtonPress(self.controls[0])
+        TrackPattern.Model.onScButtonPress()
         print(scriptRev)
 
         return
@@ -127,7 +129,7 @@ class StartUp():
         return
 
     def makeSubroutineFrame(self):
-        '''Makes the title boarder frame'''
+        '''Makes the title border frame'''
 
         patternFrame = TrackPattern.View.ManageGui().makeFrame()
         self.psLog.info('track pattern makeFrame completed')

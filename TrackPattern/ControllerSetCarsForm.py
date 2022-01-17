@@ -7,7 +7,7 @@ import jmri
 import java.awt
 import javax.swing
 import logging
-from codecs import open as cOpen
+# from codecs import open as cOpen
 from os import system
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsYardPattern')
@@ -21,19 +21,20 @@ scriptRev = 'TrackPattern.ViewSetCarsForm v20211210'
 
 class AnyButtonPressedListener(java.awt.event.ActionListener):
 
-    def __init__(self, object1=None, object2=None, object3=None, object4=None):
+    def __init__(self, object1=None, object2=None, object3=None):
 
         self.psLog = logging.getLogger('PS.TP.AnyButtonPressedListener')
+    # scheduleButton
         self.scheduleObject = object1
-        self.trackData = object1
         self.trackObject = object2
-        self.textBoxEntry = object3
-        self.setCarsWindow = object4
+    # printPrButton, setPrButton
+        self.trackData = object1
+        self.textBoxEntry = object2
 
         return
 
     def trackRowButton(self, MOUSE_CLICKED):
-        '''Any of the track buttons on the set cars window - row of track buttons'''
+        '''Any of the "Pattern Report for Track X" - row of track buttons'''
 
         MainScriptEntities._trackNameClickedOn = unicode(MOUSE_CLICKED.getSource().getText(), MainScriptEntities.setEncoding())
 
@@ -61,22 +62,23 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
         return
 
     def setPrButton(self, MOUSE_CLICK):
-        '''Event that moves cars to the tracks entered in the pattern window'''
+        '''Event that moves cars to the tracks entered in the text box of the "Pattern Report for Track X" form'''
 
     # set the cars to a track
         TrackPattern.ModelSetCarsForm.setCarsToTrack(self.trackData, self.textBoxEntry)
     # Wrap it up
+        self.setCarsWindow = MOUSE_CLICK.getSource().getParent().getTopLevelAncestor()
         self.setCarsWindow.setVisible(False)
         self.setCarsWindow.dispose()
         print(scriptRev)
 
         return
 
-class textBoxEntryListener(java.awt.event.MouseAdapter):
-    '''When any of the Set Cars to Track text boxes is clicked on'''
+class TextBoxEntryListener(java.awt.event.MouseAdapter):
+    '''When any of the "Pattern Report for Track X" text boxes is clicked on'''
 
     def __init__(self):
-        self.psLog = logging.getLogger('PS.TP.textBoxEntryListener')
+        self.psLog = logging.getLogger('PS.TP.TextBoxEntryListener')
 
     def mouseClicked(self, MOUSE_CLICKED):
 
@@ -87,8 +89,8 @@ class textBoxEntryListener(java.awt.event.MouseAdapter):
 
         return
 
-class ManageGui():
-    '''Manages an instance of each -Pattern Report for track- window'''
+class CreatePatternReportGui():
+    '''Creates an instance of each "Pattern Report for Track X" window'''
 
     def __init__(self, pattern):
 
@@ -96,11 +98,11 @@ class ManageGui():
 
         return
 
-    def makeFrame(self, offSet):
-        '''Creates each of the Pattern Report for Track windows'''
+    def makeFrame(self):
+        '''Create the windows'''
 
-        patternReportForTrackWindow = TrackPattern.ViewSetCarsForm.patternReportForTrackWindow(self.trackPattern, offSet)
-        patternReportForTrackWindow.pack()
-        patternReportForTrackWindow.setVisible(True)
+        patternReportForTrackForm = TrackPattern.ViewSetCarsForm.patternReportForTrackForm(self.trackPattern)
+        patternReportForTrackWindow = TrackPattern.ViewSetCarsForm.patternReportForTrackWindow(patternReportForTrackForm)
 
-        return
+
+        return patternReportForTrackWindow

@@ -18,8 +18,8 @@ import TrackPattern.ModelEntities
 
 scriptRev = 'TrackPattern.ViewSetCarsForm v20211210'
 
-def patternReportForTrackWindow(trackPattern, offset):
-    '''Creates and populates the -Pattern Report for Track- window'''
+def patternReportForTrackForm(trackPattern):
+    '''Creates and populates the "Pattern Report for Track X" form'''
 
     configFile = MainScriptEntities.readConfigFile('TP')
 
@@ -28,8 +28,9 @@ def patternReportForTrackWindow(trackPattern, offset):
     trackLocation = unicode(trackPattern['YL'], MainScriptEntities.setEncoding())
     allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(trackLocation, None)
     # isASpur, hasASchedule = TrackPattern.ModelSetCarsForm.getTrackTypeAndSchedule(trackLocation, trackName)
-# Define the window
-    setCarsWindow = TrackPattern.ViewSetCarsForm.makeWindow()
+# Define the form
+    setCarsForm = javax.swing.JPanel()
+    setCarsForm.setLayout(javax.swing.BoxLayout(setCarsForm, javax.swing.BoxLayout.Y_AXIS))
 # Create the forms header
     formHeader = setCarsFormHeader(trackPattern)
     formHeader.border = javax.swing.BorderFactory.createEmptyBorder(5,0,5,0)
@@ -38,7 +39,7 @@ def patternReportForTrackWindow(trackPattern, offset):
     buttonPanel.setLayout(javax.swing.BoxLayout(buttonPanel, javax.swing.BoxLayout.X_AXIS))
     for trackButton in makeTrackButtonRow(allTracksAtLoc):
         buttonPanel.add(trackButton)
-        trackButton.actionPerformed = TrackPattern.ControllerSetCarsForm.AnyButtonPressedListener(None, None, None, None).trackRowButton
+        trackButton.actionPerformed = TrackPattern.ControllerSetCarsForm.AnyButtonPressedListener().trackRowButton
 # Create the car list part of the form
     combinedForm = javax.swing.JPanel()
     combinedForm.setLayout(javax.swing.BoxLayout(combinedForm, javax.swing.BoxLayout.Y_AXIS))
@@ -56,27 +57,31 @@ def patternReportForTrackWindow(trackPattern, offset):
         schedulePanel.setLayout(javax.swing.BoxLayout(schedulePanel, javax.swing.BoxLayout.X_AXIS))
         scheduleButton = javax.swing.JButton(scheduleObject.getName())
         scheduleButton.setPreferredSize(java.awt.Dimension(0,18))
-        scheduleButton.actionPerformed = TrackPattern.ControllerSetCarsForm.AnyButtonPressedListener(scheduleObject, trackObject, None, None).scheduleButton
+        scheduleButton.actionPerformed = TrackPattern.ControllerSetCarsForm.AnyButtonPressedListener(scheduleObject, trackObject).scheduleButton
         schedulePanel.add(javax.swing.JLabel(u'Schedule: '))
         schedulePanel.add(scheduleButton)
 # Create the footer
-    combinedFooter, tpButton, scButton = TrackPattern.ViewSetCarsForm.setCarsFormFooter()
-    tpButton.actionPerformed = TrackPattern.ControllerSetCarsForm.AnyButtonPressedListener(trackPattern, None, textBoxEntry, None).printPrButton
-    scButton.actionPerformed = TrackPattern.ControllerSetCarsForm.AnyButtonPressedListener(trackPattern, trackObject, textBoxEntry, setCarsWindow).setPrButton
+    combinedFooter, footerButtonSet = TrackPattern.ViewSetCarsForm.setCarsFormFooter()
+    footerButtonSet[0].actionPerformed = TrackPattern.ControllerSetCarsForm.AnyButtonPressedListener(trackPattern, textBoxEntry).printPrButton
+    footerButtonSet[1].actionPerformed = TrackPattern.ControllerSetCarsForm.AnyButtonPressedListener(trackPattern, textBoxEntry).setPrButton
 # Put it all together
-    setCarsWindow.setTitle(u'Pattern Report for track ' + trackName)
-    setCarsWindow.setLocation(offset, 180)
-    setCarsWindow.add(formHeader)
-    setCarsWindow.add(javax.swing.JSeparator())
-    setCarsWindow.add(buttonPanel)
-    setCarsWindow.add(javax.swing.JSeparator())
-    setCarsWindow.add(scrollPanel)
-    setCarsWindow.add(javax.swing.JSeparator())
+    setCarsForm.add(formHeader)
+    setCarsForm.add(javax.swing.JSeparator())
+    setCarsForm.add(buttonPanel)
+    setCarsForm.add(javax.swing.JSeparator())
+    setCarsForm.add(scrollPanel)
+    setCarsForm.add(javax.swing.JSeparator())
     if (scheduleObject):
-        setCarsWindow.add(schedulePanel)
-        setCarsWindow.add(javax.swing.JSeparator())
-    setCarsWindow.add(combinedFooter)
+        setCarsForm.add(schedulePanel)
+        setCarsForm.add(javax.swing.JSeparator())
+    setCarsForm.add(combinedFooter)
 
+    return setCarsForm
+
+def patternReportForTrackWindow(patternReportForTrackForm):
+
+    setCarsWindow = setCarsWindow = TrackPattern.ViewSetCarsForm.makeWindow()
+    setCarsWindow.add(patternReportForTrackForm)
     return setCarsWindow
 
 def makeSwingBox(xWidth, yHeight):
@@ -192,7 +197,7 @@ def setCarsFormBody(trackData):
             combinedInputLine.setAlignmentX(0.0)
         # set car to input box
             inputText = javax.swing.JTextField(5)
-            inputText.addMouseListener(TrackPattern.ControllerSetCarsForm.textBoxEntryListener())
+            inputText.addMouseListener(TrackPattern.ControllerSetCarsForm.TextBoxEntryListener())
             textBoxEntry.append(inputText) # making a list of jTextField boxes
             inputBox = TrackPattern.ViewSetCarsForm.makeSwingBox(reportWidth['Input'] * configFile['RM'], configFile['PH'])
             inputBox.add(inputText)
@@ -213,6 +218,7 @@ def setCarsFormFooter():
 
 # Define the footer
     footer = javax.swing.JPanel()
+    footerButtonSet = []
 # Construct the footer
     tpButton = javax.swing.JButton(unicode('Print', MainScriptEntities.setEncoding()))
     scButton = javax.swing.JButton(unicode('Set', MainScriptEntities.setEncoding()))
@@ -220,7 +226,10 @@ def setCarsFormFooter():
     trainPlayerButton.setEnabled(False)
 # Populate the footer
     footer.add(tpButton)
+    footerButtonSet.append(tpButton)
     footer.add(scButton)
+    footerButtonSet.append(scButton)
     footer.add(trainPlayerButton)
+    footerButtonSet.append(trainPlayerButton)
 
-    return footer, tpButton, scButton
+    return footer, footerButtonSet

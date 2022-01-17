@@ -4,12 +4,11 @@
 # © 2021 Greg Ritacco
 
 import jmri
-import time
 import java.awt
-# import java.awt.event
 import javax.swing
+import time
 from os import system
-from codecs import open as cOpen
+from codecs import open as codecsOpen
 from xml.etree import ElementTree as ET
 from sys import path
 path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
@@ -42,7 +41,7 @@ def formatText(item, length):
     return pad.format(item[:length])
 
 def getAllLocations():
-    '''returns a list of all locations for this profile. JMRI sorts the list'''
+    '''JMRI sorts the list'''
 
     allLocs = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationsByNameList()
     locList = []
@@ -60,7 +59,6 @@ def makeInitialTrackList(location):
     return trackDict
 
 def getTracksByLocation(location, trackType):
-    ''' Make a list of all the tracks for a given location and track type'''
 
     allTracksList = []
     for x in jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager).getLocationByName(location).getTracksByNameList(trackType): # returns object
@@ -68,13 +66,22 @@ def getTracksByLocation(location, trackType):
 
     return allTracksList
 
-def getCarObjects(yard, track):
-    '''Make a list of car objects at the specified yard and track'''
+def getSelectedTracks():
+
+    trackPattern = MainScriptEntities.readConfigFile('TP')
+    trackList = []
+    for track, bool in sorted(trackPattern['PT'].items()):
+        if (bool):
+            trackList.append(track)
+
+    return trackList
+
+def getCarObjects(location, track):
 
     carYardPattern = []
     allCars = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager).getByIdList() # a list of objects
     for car in allCars:
-        if (car.getLocationName() == yard and car.getTrackName() == track):
+        if (car.getLocationName() == location and car.getTrackName() == track):
             carYardPattern.append(car)
 
     return carYardPattern # a list of objects
@@ -134,17 +141,16 @@ def sortCarList(carList):
     Selected key list in sort order in PatternConfig SL
     Key list can be any length'''
 
-    subList = MainScriptEntities.readConfigFile('TP')
-    sortList = subList['SL']
+    sortList = MainScriptEntities.readConfigFile('TP')['SL']
     for sortKey in sortList: # the list of sort keys in order is UZ
         carList.sort(key=lambda row: row[sortKey])
 
     return carList
 
-def makeSwitchlist(trackPattern, bool):
+def makeSwitchlist(trackPattern, bool=True):
     '''Makes a text switchlist using an input pattern, conforming to config values,
     bool is set to True to include report Totals'''
-# Read in the config file
+
     configFile = MainScriptEntities.readConfigFile('TP')
     itemsList = jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
 # Make the switchlist
@@ -230,12 +236,12 @@ def makeCsvSwitchlist(trackPattern):
 
     return csvSwitchList
 
-def getcustomLoadForCarType():
-    '''Returns the default empty designation and a dictionary of car types by custom empty name'''
+def getCustomLoadForCarType():
+    '''Returns the default load designation and a dictionary of custon loads by car type'''
 
     cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManagerXml)
     opsFileName = jmri.util.FileUtil.getProfilePath() + 'operations\\' + cm.getOperationsFileName()
-    with cOpen(opsFileName, 'r', encoding=MainScriptEntities.setEncoding()) as opsWorkFile:
+    with codecsOpen(opsFileName, 'r', encoding=MainScriptEntities.setEncoding()) as opsWorkFile:
         carXml = ET.parse(opsWorkFile)
         defaultLoadLoad = carXml.getroot()[5][0].attrib['load']
         customLoadForCarTypes = {}
@@ -246,12 +252,12 @@ def getcustomLoadForCarType():
                     customLoadForCarTypes[carType['type']] = loadDetail.attrib['name']
     return defaultLoadLoad, customLoadForCarTypes
 
-def getcustomEmptyForCarType():
-    '''Returns the default load designation and a dictionary of car types by custom load name'''
+def getCustomEmptyForCarType():
+    '''Returns the default empty designation and a dictionary of custon empties by car type'''
 
     cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManagerXml)
     opsFileName = jmri.util.FileUtil.getProfilePath() + 'operations\\' + cm.getOperationsFileName()
-    with cOpen(opsFileName, 'r', encoding=MainScriptEntities.setEncoding()) as opsWorkFile:
+    with codecsOpen(opsFileName, 'r', encoding=MainScriptEntities.setEncoding()) as opsWorkFile:
         carXml = ET.parse(opsWorkFile)
         defaultLoadEmpty = carXml.getroot()[5][0].attrib['empty']
         customEmptyForCarTypes = {}
@@ -261,14 +267,3 @@ def getcustomEmptyForCarType():
                 if (loadDetail.attrib['loadType'] == 'Empty'):
                     customEmptyForCarTypes[carType['type']] = loadDetail.attrib['name']
     return defaultLoadEmpty, customEmptyForCarTypes
-
-def getSelectedTracks():
-    '''Makes a list of just the selected tracks'''
-
-    trackPattern = MainScriptEntities.readConfigFile('TP')
-    trackList = []
-    for track, bool in sorted(trackPattern['PT'].items()):
-        if (bool):
-            trackList.append(track)
-
-    return trackList
