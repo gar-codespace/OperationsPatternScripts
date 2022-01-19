@@ -6,33 +6,37 @@
 import jmri
 import java.awt
 import logging
-from codecs import open as cOpen
-from sys import path
-path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsYardPattern')
-import MainScriptEntities
+from codecs import open as codecsOpen
+# from sys import path
+# path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsYardPattern')
+# import psEntities.MainScriptEntities
+# import TrackPattern.ModelEntities
+import psEntities.MainScriptEntities
 import TrackPattern.ModelEntities
+
 
 '''Data crunching for the Set Cars Form'''
 
-scriptRev = 'TrackPattern.ModelSetCarsForm v20211210'
+scriptName = 'OperationsPatternScripts.TrackPattern.ModelSetCarsForm'
+scriptRev = 20211210
 psLog = logging.getLogger('PS.TP.ModelSetCarsForm')
 
 def processYpForPrint(trackData, textBoxEntry):
     psLog.debug('processYpForPrint')
     userInputList = [] # create a list of user inputs for the set car destinations
     for userInput in textBoxEntry: # Read in the user input
-        userInputList.append(unicode(userInput.getText(), MainScriptEntities.setEncoding()))
+        userInputList.append(unicode(userInput.getText(), psEntities.MainScriptEntities.setEncoding()))
     i = 0
     track = trackData['ZZ'][0] # There is only one track in trackData
     if (len(userInputList) == len(track['TR'])): # check that the lengths of the input list and car roster match
         psLog.debug('input list and car roster lengths match')
         trackLocation = trackData['YL']
-        trackName = unicode(track['TN'], MainScriptEntities.setEncoding())
+        trackName = unicode(track['TN'], psEntities.MainScriptEntities.setEncoding())
         allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(trackLocation, None)
         for setTo in track['TR']:
-            setTrack = unicode('Hold', MainScriptEntities.setEncoding())
+            setTrack = unicode('Hold', psEntities.MainScriptEntities.setEncoding())
             if (userInputList[i] in allTracksAtLoc and userInputList[i] != trackName):
-                setTrack = unicode(userInputList[i], MainScriptEntities.setEncoding())
+                setTrack = unicode(userInputList[i], psEntities.MainScriptEntities.setEncoding())
             setTrack = TrackPattern.ModelEntities.formatText(' [' + setTrack + '] ', 8)
             setTo.update({'Set to': setTrack}) # replaces empty brackets with the marked ones
             i += 1
@@ -50,13 +54,13 @@ def writeSwitchList(trackData):
 # Write the switch list
     textSwitchList = TrackPattern.ModelEntities.makeSwitchlist(trackData, False)
     textCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\Switch list (' + trackData['YL'] + ') (' + trackName + ').txt'
-    with cOpen(textCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as textWorkFile:
+    with codecsOpen(textCopyTo, 'wb', encoding=psEntities.MainScriptEntities.setEncoding()) as textWorkFile:
         textWorkFile.write(textSwitchList)
 # Write the CSV switch list
     if (jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled()):
         csvSwitchList = TrackPattern.ModelEntities.makeCsvSwitchlist(trackData)
         csvCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\csvSwitchLists\\Switch list (' + trackData['YL'] + ') (' + trackName + ').csv'
-        with cOpen(csvCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
+        with codecsOpen(csvCopyTo, 'wb', encoding=psEntities.MainScriptEntities.setEncoding()) as csvWorkFile:
             csvWorkFile.write(csvSwitchList)
     return textCopyTo
 
@@ -64,26 +68,26 @@ def setCarsToTrack(trackData, textBoxEntry):
 # Boilerplate
     cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
     lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
-    ignoreLength =  MainScriptEntities.readConfigFile('TP')['PI'] # flag to ignore track length
+    ignoreLength =  psEntities.MainScriptEntities.readConfigFile('TP')['PI'] # flag to ignore track length
 # Get user inputs
     userInputList = [] # create a list of user inputs from the text input boxes
     for userInput in textBoxEntry: # Read in and check the user input
-        userInputList.append(unicode(userInput.getText(), MainScriptEntities.setEncoding()))
+        userInputList.append(unicode(userInput.getText(), psEntities.MainScriptEntities.setEncoding()))
 # Set cars
     i = 0
     track = trackData['ZZ'][0]
     if (len(userInputList) == len(track['TR'])): # check that the lengths of the -input list- and -car roster- match
         psLog.debug('input list and car roster lengths match')
         locationString = trackData['YL']
-        locationObject = lm.getLocationByName(unicode(trackData['YL'], MainScriptEntities.setEncoding()))
-        fromTrackString = unicode(track['TN'], MainScriptEntities.setEncoding())
+        locationObject = lm.getLocationByName(unicode(trackData['YL'], psEntities.MainScriptEntities.setEncoding()))
+        fromTrackString = unicode(track['TN'], psEntities.MainScriptEntities.setEncoding())
         allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(locationString, None)
         # scheduleObject, fromTrackObject = getScheduleAndTrack(locationString, fromTrackString)
         setCount = 0
         for car in track['TR']:
             carObject = cm.newRS(car['Road'], car['Number'])
             if (userInputList[i] in allTracksAtLoc and userInputList[i] != fromTrackString):
-                toTrackObject = locationObject.getTrackByName(unicode(userInputList[i], MainScriptEntities.setEncoding()), None)
+                toTrackObject = locationObject.getTrackByName(unicode(userInputList[i], psEntities.MainScriptEntities.setEncoding()), None)
                 locationObject.setStatus(carObject.testDestination(locationObject, toTrackObject))
                 if (locationObject.getStatus() == 'okay' or locationObject.getStatus().startswith('car has')):
                     carObject.setLocation(locationObject, toTrackObject)
@@ -146,7 +150,7 @@ def applySchedule(carObject, toTrackObject, scheduleObject):
 
     try:
         if (toTrackObject.getTrackType() == 'Spur'):
-            trackPatternConfig = MainScriptEntities.readConfigFile('TP')
+            trackPatternConfig = psEntities.MainScriptEntities.readConfigFile('TP')
             if (trackPatternConfig['AS']):
                 applyLoadRubric(carObject, scheduleObject)
                 applyFdRubric(carObject, scheduleObject)
@@ -162,10 +166,10 @@ def applyLoadRubric(carObject, scheduleObject=None):
 
     carType = carObject.getTypeName()
 # Toggle the default loads if used
-    if (carObject.getLoadName() == MainScriptEntities._defaultLoadLoad):
-        carObject.setLoadName(MainScriptEntities._defaultLoadEmpty)
-    elif (carObject.getLoadName() == MainScriptEntities._defaultLoadEmpty):
-        carObject.setLoadName(MainScriptEntities._defaultLoadLoad)
+    if (carObject.getLoadName() == TrackPattern._defaultLoadLoad):
+        carObject.setLoadName(TrackPattern._defaultLoadEmpty)
+    elif (carObject.getLoadName() == TrackPattern._defaultLoadEmpty):
+        carObject.setLoadName(TrackPattern._defaultLoadLoad)
 # Toggle the custom loads
     try: # first try to apply the schedule
         carObject.setLoadName(scheduleObject.getItemByType(carType).getShipLoadName())
@@ -179,21 +183,21 @@ def applyLoadRubric(carObject, scheduleObject=None):
         except:
             try: # apply values from custom empty
                 if (carObject.getLoadType() == 'Empty'): # toggle the load
-                    carObject.setLoadName(MainScriptEntities._carTypeByLoadDict.get(carType))
+                    carObject.setLoadName(TrackPattern._carTypeByLoadDict.get(carType))
                 else:
-                    carObject.setLoadName(MainScriptEntities._carTypeByEmptyDict.get(carType))
+                    carObject.setLoadName(TrackPattern._carTypeByEmptyDict.get(carType))
             except: # when all else fails, apply the default loads
                 if (carObject.getLoadType() == 'Empty'): # toggle the load
-                    carObject.setLoadName(MainScriptEntities._defaultLoadLoad)
+                    carObject.setLoadName(TrackPattern._defaultLoadLoad)
                 else:
-                    carObject.setLoadName(MainScriptEntities._defaultLoadEmpty)
+                    carObject.setLoadName(TrackPattern._defaultLoadEmpty)
 
     return
 
 def applyFdRubric(carObject, scheduleObject=None):
     '''For spurs only, sets the values for the cars destination and track from the schedule or RWE/RWL'''
 
-    patternIgnore = MainScriptEntities.readConfigFile('TP')['PI']
+    patternIgnore = psEntities.MainScriptEntities.readConfigFile('TP')['PI']
     carType = carObject.getTypeName()
     carObject.setFinalDestination(None)
     carObject.setFinalDestinationTrack(None)

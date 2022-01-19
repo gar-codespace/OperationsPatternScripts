@@ -8,15 +8,17 @@ import logging
 from os import path as oPath
 from json import loads as jLoads, dumps as jDumps
 from codecs import open as codecsOpen
-from sys import path
-path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts')
-import MainScriptEntities
+
+import psEntities.MainScriptEntities
+import TrackPattern.Model
 import TrackPattern.ModelEntities
 import TrackPattern.ControllerSetCarsForm
 
+
 '''Data munipulation for the track pattern subroutine'''
 
-scriptRev = 'TrackPattern.Model v20211210'
+scriptName = 'OperationsPatternScripts.TrackPattern.Model'
+scriptRev = 20211210
 psLog = logging.getLogger('PS.TP.Model')
 
 def onTpButtonPress():
@@ -27,7 +29,7 @@ def onTpButtonPress():
         trackPatternDict = makeTrackPatternDict(selectedTracks)
         trackPatternDict.update({'RT': u'Track Pattern for Location'})
         psLog.info('Track Pattern dictionary created')
-        location = unicode(trackPatternDict['YL'], MainScriptEntities.setEncoding())
+        location = unicode(trackPatternDict['YL'], psEntities.MainScriptEntities.setEncoding())
         writePatternJson(location, trackPatternDict)
         psLog.info('Track Pattern for ' + location + ' JSON written')
         writeTextSwitchList(location, trackPatternDict)
@@ -43,7 +45,7 @@ def onTpButtonPress():
 def onScButtonPress():
     '''When the "Set Cars" button on the Control Panel is pressed'''
 
-    patternLocation = MainScriptEntities.readConfigFile('TP')['PL']
+    patternLocation = psEntities.MainScriptEntities.readConfigFile('TP')['PL']
     selectedTracks = TrackPattern.ModelEntities.getSelectedTracks()
     windowOffset = 200
     if selectedTracks:
@@ -69,7 +71,7 @@ def initializeConfigFile():
     '''initialize or reinitialize the track pattern part of the config file on first use, reset, or edit of a location name'''
 
     psLog.debug('initializeConfigFile')
-    newConfigFile = MainScriptEntities.readConfigFile()
+    newConfigFile = psEntities.MainScriptEntities.readConfigFile()
     subConfigfile = newConfigFile['TP']
     allLocations  = TrackPattern.ModelEntities.getAllLocations()
     subConfigfile.update({'AL': allLocations})
@@ -82,7 +84,7 @@ def updateLocations():
     '''Updates the config file with a list of all locations for this profile'''
 
     psLog.debug('updateLocations')
-    newConfigFile = MainScriptEntities.readConfigFile()
+    newConfigFile = psEntities.MainScriptEntities.readConfigFile()
     subConfigfile = newConfigFile['TP']
     allLocations  = TrackPattern.ModelEntities.getAllLocations()
     if not (subConfigfile['AL']): # when this sub is used for the first tims
@@ -90,7 +92,7 @@ def updateLocations():
         subConfigfile.update({'PT': TrackPattern.ModelEntities.makeInitialTrackList(allLocations[0])})
     subConfigfile.update({'AL': allLocations})
     newConfigFile.update({'TP': subConfigfile})
-    MainScriptEntities.writeConfigFile(newConfigFile)
+    psEntities.MainScriptEntities.writeConfigFile(newConfigFile)
 
     return newConfigFile
 
@@ -98,7 +100,7 @@ def updatePatternLocation(location):
     '''Updates the config file value PL with the currently selected location'''
 
     psLog.debug('updatePatternLocation')
-    newConfigFile = MainScriptEntities.readConfigFile()
+    newConfigFile = psEntities.MainScriptEntities.readConfigFile()
     subConfigfile = newConfigFile['TP']
     subConfigfile.update({'PL': location})
     newConfigFile.update({'TP': subConfigfile})
@@ -112,7 +114,7 @@ def updateTrackCheckBoxes(trackCheckBoxes):
     psLog.debug('updateTrackCheckBoxes')
     dict = {}
     for item in trackCheckBoxes:
-        dict[unicode(item.text, MainScriptEntities.setEncoding())] = item.selected
+        dict[unicode(item.text, psEntities.MainScriptEntities.setEncoding())] = item.selected
 
     return dict
 
@@ -123,7 +125,7 @@ def updatePatternTracks(trackList):
     trackDict = {}
     for track in trackList:
         trackDict[track] = False
-    newConfigFile = MainScriptEntities.readConfigFile()
+    newConfigFile = psEntities.MainScriptEntities.readConfigFile()
     subConfigfile = newConfigFile['TP']
     subConfigfile.update({'PT': trackDict})
     newConfigFile.update({'TP': subConfigfile})
@@ -139,10 +141,10 @@ def makePatternLog():
 
     outputPatternLog = ''
     buildReportLevel = int(jmri.jmrit.operations.setup.Setup.getBuildReportLevel())
-    configLoggingIndex = MainScriptEntities.readConfigFile('LI')
+    configLoggingIndex = psEntities.MainScriptEntities.readConfigFile('LI')
     logLevel = configLoggingIndex[jmri.jmrit.operations.setup.Setup.getBuildReportLevel()]
     logFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternLog.txt'
-    with codecsOpen(logFileLocation, 'r', encoding=MainScriptEntities.setEncoding()) as patternLogFile:
+    with codecsOpen(logFileLocation, 'r', encoding=psEntities.MainScriptEntities.setEncoding()) as patternLogFile:
         while True:
             thisLine = patternLogFile.readline()
             if not (thisLine):
@@ -157,7 +159,7 @@ def makePatternLog():
                 outputPatternLog = outputPatternLog + thisLine
 
     tempLogFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternLog_temp.txt'
-    with codecsOpen(tempLogFileLocation, 'w', encoding=MainScriptEntities.setEncoding()) as tempPatternLogFile:
+    with codecsOpen(tempLogFileLocation, 'w', encoding=psEntities.MainScriptEntities.setEncoding()) as tempPatternLogFile:
         tempPatternLogFile.write(outputPatternLog)
     return
 
@@ -169,7 +171,7 @@ def makeNewPatternTracks(location):
     trackDict = {}
     for track in allTracks:
         trackDict[track] = False
-    newConfigFile = MainScriptEntities.readConfigFile()
+    newConfigFile = psEntities.MainScriptEntities.readConfigFile()
     subConfigfile = newConfigFile['TP']
     subConfigfile.update({'PT': trackDict})
     newConfigFile.update({'TP': subConfigfile})
@@ -180,7 +182,7 @@ def updateCheckBoxStatus(all, ignore):
     '''Updates the config file with the checked status of Yard Tracks Only and Ignore Track Length check boxes'''
 
     psLog.debug('updateCheckBoxStatus')
-    newConfigFile = MainScriptEntities.readConfigFile()
+    newConfigFile = psEntities.MainScriptEntities.readConfigFile()
     subConfigfile = newConfigFile['TP']
     subConfigfile.update({'PA': all})
     subConfigfile.update({'PI': ignore})
@@ -192,14 +194,14 @@ def updateConfigFile(controls):
     '''Updates the track pattern part of the config file'''
 
     psLog.debug('updateConfigFile')
-    focusOn = MainScriptEntities.readConfigFile('TP')
+    focusOn = psEntities.MainScriptEntities.readConfigFile('TP')
     focusOn.update({"PL": controls[0].getSelectedItem()})
     focusOn.update({"PA": controls[1].selected})
     focusOn.update({"PI": controls[2].selected})
     focusOn.update({"PT": TrackPattern.Model.updateTrackCheckBoxes(controls[3])})
-    newConfigFile = MainScriptEntities.readConfigFile('all')
+    newConfigFile = psEntities.MainScriptEntities.readConfigFile('all')
     newConfigFile.update({"TP": focusOn})
-    MainScriptEntities.writeConfigFile(newConfigFile)
+    psEntities.MainScriptEntities.writeConfigFile(newConfigFile)
 
     return controls
 
@@ -211,22 +213,22 @@ def makeLoadEmptyDesignationsDicts():
     defaultLoadLoad, customLoadForCarTypes = TrackPattern.ModelEntities.getCustomLoadForCarType()
     # Set the default L/E
     try:
-        MainScriptEntities._defaultLoadEmpty = defaultLoadEmpty
-        MainScriptEntities._defaultLoadLoad = defaultLoadLoad
+        TrackPattern._defaultLoadEmpty = defaultLoadEmpty
+        TrackPattern._defaultLoadLoad = defaultLoadLoad
         psLog.info('Default load and empty designations saved')
     except:
         psLog.critical('Default empty designation not saved')
-        MainScriptEntities._defaultLoadEmpty = 'E'
-        MainScriptEntities._defaultLoadLoad = 'L'
+        TrackPattern._defaultLoadEmpty = 'E'
+        TrackPattern._defaultLoadLoad = 'L'
     # Set custom L/E
     try:
-        MainScriptEntities._carTypeByEmptyDict = customEmptyForCarTypes
-        MainScriptEntities._carTypeByLoadDict = customLoadForCarTypes
+        TrackPattern._carTypeByEmptyDict = customEmptyForCarTypes
+        TrackPattern._carTypeByLoadDict = customLoadForCarTypes
         psLog.info('Default custon loads for (empty) and (load) by car type designations saved')
     except:
         psLog.critical('Custom car empty designations not saved')
-        MainScriptEntities._carTypeByEmptyDict = {}
-        MainScriptEntities._carTypeByLoadDict = {}
+        TrackPattern._carTypeByEmptyDict = {}
+        TrackPattern._carTypeByLoadDict = {}
 
     return
 
@@ -267,9 +269,9 @@ def makeYardPattern(yardLocation, trackList):
         patternList.append(trackDict)
     yardPatternDict = {}
     yardPatternDict['RT'] = u'Report Type' # Report Type, value replaced when called
-    yardPatternDict['RN'] = unicode(jmri.jmrit.operations.setup.Setup.getRailroadName(), MainScriptEntities.setEncoding())
+    yardPatternDict['RN'] = unicode(jmri.jmrit.operations.setup.Setup.getRailroadName(), psEntities.MainScriptEntities.setEncoding())
     yardPatternDict['YL'] = yardLocation
-    yardPatternDict['VT'] = unicode(MainScriptEntities.timeStamp(), MainScriptEntities.setEncoding()) # The clock time this script is run in seconds plus the offset
+    yardPatternDict['VT'] = unicode(psEntities.MainScriptEntities.timeStamp(), psEntities.MainScriptEntities.setEncoding()) # The clock time this script is run in seconds plus the offset
     yardPatternDict['ZZ'] = patternList
 
     return yardPatternDict
@@ -278,7 +280,7 @@ def makeTrackPatternDict(trackList):
     '''Make a track pattern as a dictionary'''
 
     psLog.debug('makeTrackPatternDict')
-    trackPattern = MainScriptEntities.readConfigFile('TP')
+    trackPattern = psEntities.MainScriptEntities.readConfigFile('TP')
     patternDict = TrackPattern.Model.makeYardPattern(trackPattern['PL'], trackList)
 
     return patternDict
@@ -289,7 +291,7 @@ def writePatternJson(location, trackPatternDict):
     psLog.debug('writePatternJson')
     jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\Track Pattern (' + location + ').json'
     jsonObject = jDumps(trackPatternDict, indent=2, sort_keys=True) #trackPatternDict
-    with codecsOpen(jsonCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
+    with codecsOpen(jsonCopyTo, 'wb', encoding=psEntities.MainScriptEntities.setEncoding()) as jsonWorkFile:
         jsonWorkFile.write(jsonObject)
 
     return# jsonObject
@@ -300,7 +302,7 @@ def writeTextSwitchList(location, trackPatternDict):
     psLog.debug('writeTextSwitchList')
     textCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\Track Pattern (' + location + ').txt'
     textObject = TrackPattern.ModelEntities.makeSwitchlist(trackPatternDict, True)
-    with codecsOpen(textCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as textWorkFile:
+    with codecsOpen(textCopyTo, 'wb', encoding=psEntities.MainScriptEntities.setEncoding()) as textWorkFile:
         textWorkFile.write(textObject)
 
     return# textObject
@@ -314,7 +316,7 @@ def writeCsvSwitchList(location, trackPatternDict):
         mkdir(csvSwitchlistPath)
     csvCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\csvSwitchLists\\Track Pattern (' + location + ').csv'
     csvObject = TrackPattern.ModelEntities.makeCsvSwitchlist(trackPatternDict)
-    with codecsOpen(csvCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
+    with codecsOpen(csvCopyTo, 'wb', encoding=psEntities.MainScriptEntities.setEncoding()) as csvWorkFile:
         csvWorkFile.write(csvObject)
 
     return

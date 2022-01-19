@@ -9,7 +9,8 @@ Stuff that's OK or comments:
 
 Stuff to fix:
   Catch up with the latest JMRI stuff like text color
-  Big Bug**** Fix the path import to find any version of this plugin
+  not a valid track selected message set at warning level
+  conform more to java.io
 
 Wish List:
   Pattern Tracks window automatically resizes

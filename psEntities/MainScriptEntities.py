@@ -4,29 +4,22 @@
 # © 2021 Greg Ritacco
 
 import jmri
+import java
 import java.awt
-# import java.awt.event
 import javax.swing
 import logging
 import time
-from json import loads as jLoads, dumps as jDumps
-from codecs import open as cOpen
-from os import mkdir as mkDir, path as oPath
-from shutil import copy as sCopy
+from json import loads as jsonLoads, dumps as jsonDumps
+from codecs import open as codecsOpen
+from os import mkdir as osMakeDir
+from shutil import copy as shutilCopy
 
-# print(oPath.dirname(oPath.abspath(__file__)) + ' *************')
+'''Support methods for any script'''
 
-'''Support methods for the main script'''
-
-scriptRev = 'OperationsPatternScripts.MainScriptEntities v20211210'
+_currentPath = ''
+scriptName = 'OperationsPatternScripts.psEntities.MainScriptEntities'
+scriptRev = 20211210
 psLog = logging.getLogger('PS.TP.MainScriptEntities')
-
-# 'global' variables
-_trackNameClickedOn = None
-_carTypeByEmptyDict = {}
-_carTypeByLoadDict = {}
-_defaultLoadEmpty = u''
-_defaultLoadLoad = u''
 
 def setEncoding():
     '''Expand on this later'''
@@ -64,7 +57,7 @@ def validateStubFile(locale='en'):
 
     stubLocation = jmri.util.FileUtil.getPreferencesPath() + '\\jmrihelp\\'
     try:
-        mkDir(stubLocation)
+        osMakeDir(stubLocation)
         psLog.warning('stub location created at: ' + stubLocation)
     except OSError:
         psLog.info('stub location already exists')
@@ -74,39 +67,39 @@ def validateStubFile(locale='en'):
     helpFilePath = helpFilePath.replace('\\', '/')
     helpFilePath = helpFilePath.replace(' ', '%20')
     stubTemplateLocation = jmri.util.FileUtil.getProgramPath() + 'help\\' + locale[:2] + '\\local\\stub_template.html'
-    with cOpen(stubTemplateLocation, 'r', encoding=setEncoding()) as template:
+    with codecsOpen(stubTemplateLocation, 'r', encoding=setEncoding()) as template:
         contents = template.read()
         replaceContents = contents.replace("../index.html#", "")
         replaceContents = replaceContents.replace("<!--HELP_KEY-->", helpFilePath)
         replaceContents = replaceContents.replace("<!--URL_HELP_KEY-->", "")
-        with cOpen(stubFileName, 'wb', encoding=setEncoding()) as stubWorkFile:
+        with codecsOpen(stubFileName, 'wb', encoding=setEncoding()) as stubWorkFile:
             stubWorkFile.write(replaceContents)
             psLog.debug('psStub writen from stub_template')
 
     return
 
-def validateDestinationDirestories():
+def validateFileDestinationDirestories():
     '''Checks that the folders this plugin writes to exist'''
-
+# Can't use jmri.util.FileUtil.createDirectory().... does not return anything
     x = 0
     destDirPath = jmri.util.FileUtil.getProfilePath() + 'operations\\'
     try:
-        mkDir(destDirPath + 'buildstatus')
+        osMakeDir(destDirPath + 'buildstatus')
         psLog.warning('buildstatus folder created')
     except OSError:
         x += 1
     try:
-        mkDir(destDirPath + 'csvSwitchLists')
+        osMakeDir(destDirPath + 'csvSwitchLists')
         psLog.warning('csvSwitchLists folder created')
     except OSError:
         x += 1
     try:
-        mkDir(destDirPath + 'jsonManifests')
+        osMakeDir(destDirPath + 'jsonManifests')
         psLog.warning('jsonManifests folder created')
     except OSError:
         x += 1
     try:
-        mkDir(destDirPath + 'switchLists')
+        osMakeDir(destDirPath + 'switchLists')
         psLog.warning('switchLists folder created')
     except OSError:
         x += 1
@@ -119,24 +112,25 @@ def validateDestinationDirestories():
 def validateConfigFile():
     '''Checks for an up to date, missing or ureadable config file'''
 
-    with cOpen(jmri.util.FileUtil.getPreferencesPath() + 'OperationsPatternScripts\\PatternConfig.json', 'r', encoding=setEncoding()) as validConfigFileLoc:
-        validConfigFile = jLoads(validConfigFileLoc.read())
+    with codecsOpen(jmri.util.FileUtil.getPreferencesPath() + 'OperationsPatternScripts\\PatternConfig.json', 'r', encoding=setEncoding()) as validConfigFileLoc:
+        validConfigFile = jsonLoads(validConfigFileLoc.read())
         upToDate = validConfigFile['CP']['RV']
 
     try:
         configFileLoc = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json'
-        with cOpen(configFileLoc, 'r', encoding=setEncoding()) as configWorkFile:
-            configFile = jLoads(configWorkFile.read())
+        with codecsOpen(configFileLoc, 'r', encoding=setEncoding()) as configWorkFile:
+            configFile = jsonLoads(configWorkFile.read())
             if (configFile['CP']['RV'] == upToDate):
                 psLog.info('PatternConfig.json file is up to date')
                 return True
             else:
                 psLog.warning('PatternConfig.json file is out of date')
                 jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json.bak'
-                jsonObject = jDumps(configFile, indent=2, sort_keys=True)
-                with cOpen(jsonCopyTo, 'wb', encoding=setEncoding()) as jsonWorkFile:
-                    jsonWorkFile.write(jsonObject)
-                    # Overwrites previous bak file
+                jsonFile = jsonDumps(configFile, indent=2, sort_keys=True)
+                with codecsOpen(jsonCopyTo, 'wb', encoding=setEncoding()) as jsonWorkFile:
+                    jsonWorkFile.write(jsonFile)
+                    psLog.warning('PatternConfig.json.bak file written')
+                # Overwrites previous bak file
                 return False
     except:
         psLog.warning('No PatternConfig.json found or is unreadable')
@@ -147,8 +141,8 @@ def readConfigFile(subConfig='all'):
     This needs error handling built into it'''
 
     configFileLoc = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json'
-    with cOpen(configFileLoc, 'r', encoding=setEncoding()) as configWorkFile:
-        configFile = jLoads(configWorkFile.read())
+    with codecsOpen(configFileLoc, 'r', encoding=setEncoding()) as configWorkFile:
+        configFile = jsonLoads(configWorkFile.read())
     if (subConfig == 'all'):
         return configFile
     else:
@@ -158,8 +152,8 @@ def writeConfigFile(configFile):
     '''Updates the PatternConfig.json file'''
 
     jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json'
-    jsonObject = jDumps(configFile, indent=2, sort_keys=True)
-    with cOpen(jsonCopyTo, 'wb', encoding=setEncoding()) as jsonWorkFile:
+    jsonObject = jsonDumps(configFile, indent=2, sort_keys=True)
+    with codecsOpen(jsonCopyTo, 'wb', encoding=setEncoding()) as jsonWorkFile:
         jsonWorkFile.write(jsonObject)
 
     return 'Configuration file updated'
@@ -167,9 +161,9 @@ def writeConfigFile(configFile):
 def writeNewConfigFile():
     '''Copies the default config file to the profile location'''
 
-    copyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json'
-    copyFrom = jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsPatternScripts\\PatternConfig.json'
-    sCopy(copyFrom, copyTo)
+    copyTo = java.io.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json')
+    copyFrom = java.io.File(_currentPath + '\\PatternConfig.json')
+    jmri.util.FileUtil.copy(copyFrom, copyTo)
 
     return 'New PatternConfig.json file for this profile created'
 
