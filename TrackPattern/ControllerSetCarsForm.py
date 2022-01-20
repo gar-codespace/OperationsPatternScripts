@@ -7,17 +7,15 @@ import jmri
 import java.awt
 import javax.swing
 import logging
-# from codecs import open as cOpen
 from os import system
-from sys import path
-path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsYardPattern')
-import TrackPattern.ModelSetCarsForm
-import TrackPattern.ViewSetCarsForm
-import MainScriptEntities
+
+import psEntities.MainScriptEntities
+import TrackPattern
 
 '''Makes a set cars form for each selected track'''
 
-scriptRev = 'TrackPattern.ViewSetCarsForm v20211210'
+scriptName = 'OperationsPatternScripts.TrackPattern.ControllerSetCarsForm'
+scriptRev = 20211210
 
 class AnyButtonPressedListener(java.awt.event.ActionListener):
 
@@ -36,7 +34,7 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
     def trackRowButton(self, MOUSE_CLICKED):
         '''Any of the "Pattern Report for Track X" - row of track buttons'''
 
-        MainScriptEntities._trackNameClickedOn = unicode(MOUSE_CLICKED.getSource().getText(), MainScriptEntities.setEncoding())
+        TrackPattern._trackNameClickedOn = unicode(MOUSE_CLICKED.getSource().getText(), psEntities.MainScriptEntities.setEncoding())
 
         return
 
@@ -55,9 +53,9 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
     # write the switch list
         switchListLocation = TrackPattern.ModelSetCarsForm.writeSwitchList(processedTrackData)
     # Print the switch list
-        system(MainScriptEntities.systemInfo(switchListLocation))
+        system(psEntities.MainScriptEntities.systemInfo(switchListLocation))
 
-        print(scriptRev)
+        print(scriptName + ' ' + str(scriptRev))
 
         return
 
@@ -70,7 +68,7 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
         self.setCarsWindow = MOUSE_CLICK.getSource().getParent().getTopLevelAncestor()
         self.setCarsWindow.setVisible(False)
         self.setCarsWindow.dispose()
-        print(scriptRev)
+        print(scriptName + ' ' + str(scriptRev))
 
         return
 
@@ -82,8 +80,8 @@ class TextBoxEntryListener(java.awt.event.MouseAdapter):
 
     def mouseClicked(self, MOUSE_CLICKED):
 
-        if (MainScriptEntities._trackNameClickedOn):
-            MOUSE_CLICKED.getSource().setText(MainScriptEntities._trackNameClickedOn)
+        if (TrackPattern._trackNameClickedOn):
+            MOUSE_CLICKED.getSource().setText(TrackPattern._trackNameClickedOn)
         else:
             self.psLog.warning('No track was selected')
 

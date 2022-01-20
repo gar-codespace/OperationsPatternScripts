@@ -6,22 +6,23 @@
 import jmri
 import javax.swing
 import java.awt
-from sys import path
-path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsTrackPattern')
-import MainScriptEntities
+# from sys import path
+# path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsTrackPattern')
+# import psEntities.MainScriptEntities
+
+import psEntities.MainScriptEntities
 
 '''Creates the track pattern and its panel'''
 
-scriptRev = 'TrackPattern.ViewEntities v20211210'
+scriptName = 'OperationsPatternScripts.TrackPattern.ViewEntities'
+scriptRev = 20211210
 
 class TrackPatternPanel:
     '''Makes the track pattern subroutine panel'''
 
-    # scriptRev = 'TrackPattern.ViewTrackPatternPanel v20211210'
-
     def __init__(self):
 
-        self.configFile = MainScriptEntities.readConfigFile('TP')
+        self.configFile = psEntities.MainScriptEntities.readConfigFile('TP')
         self.useYardTracks = javax.swing.JCheckBox(u'Yard tracks only ', self.configFile['PA'])
         self.ignoreLength = javax.swing.JCheckBox(u'Ignore track length ', self.configFile['PI'])
         self.ypButton = javax.swing.JButton()
@@ -130,6 +131,6 @@ class TrackPatternPanel:
         tpPanel.add(inputRow)
         tpPanel.add(trackCheckBoxes)
         tpPanel.add(buttonPanel)
-        print(scriptRev)
+        print(scriptName + ' ' + str(scriptRev))
 
         return tpPanel, self.getPanelWidgets()

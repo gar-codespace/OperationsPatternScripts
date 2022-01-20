@@ -7,25 +7,31 @@ import jmri
 import jmri.util
 import java.awt
 import javax.swing
-from sys import path
-path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsYardPattern')
-import MainScriptEntities
-import TrackPattern.ControllerSetCarsForm
+# from sys import path
+# path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsYardPattern')
+# import psEntities.MainScriptEntities
+# import TrackPattern.ControllerSetCarsForm
+# import TrackPattern.ViewEntities
+# import TrackPattern.ModelEntities
+
+import psEntities.MainScriptEntities
 import TrackPattern.ViewEntities
 import TrackPattern.ModelEntities
+import TrackPattern.ControllerSetCarsForm
 
 '''Display methods for the Set Cars form'''
 
-scriptRev = 'TrackPattern.ViewSetCarsForm v20211210'
+scriptName = 'OperationsPatternScripts.TrackPattern.ViewSetCarsForm'
+scriptRev = 20211210
 
 def patternReportForTrackForm(trackPattern):
     '''Creates and populates the "Pattern Report for Track X" form'''
 
-    configFile = MainScriptEntities.readConfigFile('TP')
+    configFile = psEntities.MainScriptEntities.readConfigFile('TP')
 
 #Boilerplate
-    trackName = unicode(trackPattern['ZZ'][0]['TN'], MainScriptEntities.setEncoding())
-    trackLocation = unicode(trackPattern['YL'], MainScriptEntities.setEncoding())
+    trackName = unicode(trackPattern['ZZ'][0]['TN'], psEntities.MainScriptEntities.setEncoding())
+    trackLocation = unicode(trackPattern['YL'], psEntities.MainScriptEntities.setEncoding())
     allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(trackLocation, None)
     # isASpur, hasASchedule = TrackPattern.ModelSetCarsForm.getTrackTypeAndSchedule(trackLocation, trackName)
 # Define the form
@@ -117,7 +123,7 @@ def setCarsFormHeader(trackData):
     '''Creates the Set Cars forms header'''
 
 # Read in the config file
-    configFile = MainScriptEntities.readConfigFile('TP')
+    configFile = psEntities.MainScriptEntities.readConfigFile('TP')
 # Define the header
     combinedHeader = javax.swing.JPanel()
     combinedHeader.setLayout(javax.swing.BoxLayout(combinedHeader, javax.swing.BoxLayout.Y_AXIS))
@@ -133,7 +139,7 @@ def setCarsFormHeader(trackData):
     # Dig out the track name
     trackName = trackData['ZZ']
     trackName = trackName[0]
-    trackName = unicode(trackName['TN'], MainScriptEntities.setEncoding())
+    trackName = unicode(trackName['TN'], psEntities.MainScriptEntities.setEncoding())
     headerYTLabel = javax.swing.JLabel()
     headerYTLabel.setText(trackData['RT'] + trackName + ' at ' + trackData['YL'])
     headerYTBox = makeSwingBox(100, configFile['PH'])
@@ -149,7 +155,7 @@ def setCarsFormBodyHeader():
     '''Creates the header for the Set Cars forms body'''
 
 # Read in the config file
-    configFile = MainScriptEntities.readConfigFile('TP')
+    configFile = psEntities.MainScriptEntities.readConfigFile('TP')
     reportWidth = configFile['RW']
 # Define the forms header
     bodyHeader = javax.swing.JPanel()
@@ -178,7 +184,7 @@ def setCarsFormBody(trackData):
 
 # Set up
     cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
-    configFile = MainScriptEntities.readConfigFile('TP')
+    configFile = psEntities.MainScriptEntities.readConfigFile('TP')
     reportWidth = configFile['RW']
     textBoxEntry = []
 # define the forms body
@@ -220,9 +226,9 @@ def setCarsFormFooter():
     footer = javax.swing.JPanel()
     footerButtonSet = []
 # Construct the footer
-    tpButton = javax.swing.JButton(unicode('Print', MainScriptEntities.setEncoding()))
-    scButton = javax.swing.JButton(unicode('Set', MainScriptEntities.setEncoding()))
-    trainPlayerButton = javax.swing.JButton(unicode('TrainPlayer', MainScriptEntities.setEncoding()))
+    tpButton = javax.swing.JButton(unicode('Print', psEntities.MainScriptEntities.setEncoding()))
+    scButton = javax.swing.JButton(unicode('Set', psEntities.MainScriptEntities.setEncoding()))
+    trainPlayerButton = javax.swing.JButton(unicode('TrainPlayer', psEntities.MainScriptEntities.setEncoding()))
     trainPlayerButton.setEnabled(False)
 # Populate the footer
     footer.add(tpButton)

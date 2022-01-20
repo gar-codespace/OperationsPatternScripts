@@ -13,7 +13,8 @@ from apps import Apps
 '''Different locations for the Pattern Script plugin.
 This script must be self contained.'''
 
-scriptRev = 'OperationsPatternScripts.PluginLocations v20211125'
+scriptName = 'OperationsPatternScripts.psEntities.PluginLocations'
+scriptRev = 20211125
 
 class PatternScriptsWindowListener(java.awt.event.WindowListener):
     '''Listener to respond to window operations'''
@@ -89,7 +90,7 @@ NOTE: This location does not support DecoderPro'''
 
     Apps.buttonSpace().add(scrollPanel)
     Apps.buttonSpace().revalidate()
-    print(scriptRev)
+    print(scriptName + ' ' + str(scriptRev))
 
     return
 
@@ -108,6 +109,6 @@ def panelProButton(scrollPanel):
     Apps.buttonSpace().add(homePanelButton)
     Apps.buttonSpace().revalidate()
 
-    print(scriptRev)
+    print(scriptName + ' ' + str(scriptRev))
 
     return
