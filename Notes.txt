@@ -6,14 +6,15 @@ Stuff that's OK or comments:
   default load/empty toggling ok
   Ignore Track Length works with schedules
   formatText works OK
+  handle multiple versions OK
+  test for file write locations OK
+  config json version check OK
 
 Stuff to fix:
   Catch up with the latest JMRI stuff like text color
-  not a valid track selected message set at warning level
-  conform more to java.io
 
 Wish List:
-  Pattern Tracks window automatically resizes
+  CBB ViewsetCarsForm.makeTrackButtonRow(allTracksAtLoc) relies on too much hardcoding
   plugin added to button in trains window
   set cars window add trainplayer compatability
   jmri.util.swing.JMenuUtil.replaceMenuItem() to replace the trains window with a new trains window that includes a ps button

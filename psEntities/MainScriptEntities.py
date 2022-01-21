@@ -14,7 +14,7 @@ from codecs import open as codecsOpen
 from os import mkdir as osMakeDir
 from shutil import copy as shutilCopy
 
-'''Support methods for any script'''
+'''Support methods for any Pattern Script'''
 
 _currentPath = ''
 scriptName = 'OperationsPatternScripts.psEntities.MainScriptEntities'
@@ -52,7 +52,7 @@ def systemInfo(switchListLocation=None):
 
     return textEdit[osName]
 
-def validateStubFile(locale='en'):
+def validateStubFile(locale=u'en'):
     '''Copy of the JMRI Java version of createStubFile'''
 
     stubLocation = jmri.util.FileUtil.getPreferencesPath() + '\\jmrihelp\\'
@@ -116,22 +116,20 @@ def validateConfigFile():
         upToDate = validConfigFile['CP']['RV']
 
     try:
-        configFileLoc = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json'
-        with codecsOpen(configFileLoc, 'r', encoding=setEncoding()) as configWorkFile:
-            configFile = jsonLoads(configWorkFile.read())
-            if (configFile['CP']['RV'] == upToDate):
-                psLog.info('PatternConfig.json file is up to date')
-                return True
-            else:
-                psLog.warning('PatternConfig.json file is out of date')
-                jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json.bak'
-                jsonFile = jsonDumps(configFile, indent=2, sort_keys=True)
-                with codecsOpen(jsonCopyTo, 'wb', encoding=setEncoding()) as jsonWorkFile:
-                    jsonWorkFile.write(jsonFile)
-                    psLog.warning('PatternConfig.json.bak file written')
-                # Overwrites previous bak file
-                return False
-    except:
+        currentConfigFile = readConfigFile('CP')
+        if (currentConfigFile['RV'] == upToDate):
+            psLog.info('PatternConfig.json file is up to date')
+            return True
+        else:
+            psLog.warning('PatternConfig.json version mismatch')
+            jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json.bak'
+            jsonFile = jsonDumps(currentConfigFile, indent=2, sort_keys=True)
+            with codecsOpen(jsonCopyTo, 'wb', encoding=setEncoding()) as jsonWorkFile:
+                jsonWorkFile.write(jsonFile)
+                psLog.warning('PatternConfig.json.bak file written')
+            # Overwrites previous bak file
+            return False
+    except IOError:
         psLog.warning('No PatternConfig.json found or is unreadable')
         return False
 

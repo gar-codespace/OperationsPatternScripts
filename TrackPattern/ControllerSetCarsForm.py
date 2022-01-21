@@ -7,7 +7,7 @@ import jmri
 import java.awt
 import javax.swing
 import logging
-from os import system
+from os import system as osSystem
 
 import psEntities.MainScriptEntities
 import TrackPattern
@@ -45,7 +45,7 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
 
         return
 
-    def printPrButton(self, MOUSE_CLICK):
+    def printPrButton(self, MOUSE_CLICKED):
         '''Event that prints the yard pattern for the selected track'''
 
     # Make the switch list
@@ -53,19 +53,19 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
     # write the switch list
         switchListLocation = TrackPattern.ModelSetCarsForm.writeSwitchList(processedTrackData)
     # Print the switch list
-        system(psEntities.MainScriptEntities.systemInfo(switchListLocation))
+        osSystem(psEntities.MainScriptEntities.systemInfo(switchListLocation))
 
         print(scriptName + ' ' + str(scriptRev))
 
         return
 
-    def setPrButton(self, MOUSE_CLICK):
+    def setPrButton(self, MOUSE_CLICKED):
         '''Event that moves cars to the tracks entered in the text box of the "Pattern Report for Track X" form'''
 
     # set the cars to a track
         TrackPattern.ModelSetCarsForm.setCarsToTrack(self.trackData, self.textBoxEntry)
     # Wrap it up
-        self.setCarsWindow = MOUSE_CLICK.getSource().getParent().getTopLevelAncestor()
+        self.setCarsWindow = MOUSE_CLICKED.getSource().getParent().getTopLevelAncestor()
         self.setCarsWindow.setVisible(False)
         self.setCarsWindow.dispose()
         print(scriptName + ' ' + str(scriptRev))

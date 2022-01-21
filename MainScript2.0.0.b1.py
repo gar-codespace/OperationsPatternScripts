@@ -8,16 +8,18 @@ import time
 from sys import path as sysPath
 
 def useCurrentVersion():
-    '''Only use the modules in this package'''
+    '''Keep multiple versions of this plugin sorted out'''
 
     fileRoot = jmri.util.FileUtil.getPreferencesPath()
     currentFile = str(jmri.util.FileUtil.findFiles('MainScript2.0.0.b1.py', fileRoot).pop())
     currentDir = java.io.File(currentFile).getParent()
+
     return currentDir
 
-sysPath.append(useCurrentVersion())
+_currentDir = useCurrentVersion()
+sysPath.append(_currentDir)
 import psEntities
-psEntities.MainScriptEntities._currentPath = useCurrentVersion()
+psEntities.MainScriptEntities._currentPath = _currentDir
 
 '''Pattern Scripts Version 2.0.0 Pre Release b1'''
 
@@ -75,7 +77,8 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         if (locationOptions[panelLocation][1]):
             getattr(psEntities.PluginLocations, locationOptions[panelLocation][1])(scrollPanel)
     # fire up the help File
-        psEntities.MainScriptEntities.validateStubFile(scrollPanel.getLocale())
+        psLocale = unicode(controlPanel.getLocale(), psEntities.MainScriptEntities.setEncoding())
+        psEntities.MainScriptEntities.validateStubFile(psLocale)
         self.psLog.info(locationOptions[panelLocation][0])
         self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
 

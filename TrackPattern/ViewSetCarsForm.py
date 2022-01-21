@@ -43,9 +43,11 @@ def patternReportForTrackForm(trackPattern):
 # create the row of track buttons
     buttonPanel = javax.swing.JPanel()
     buttonPanel.setLayout(javax.swing.BoxLayout(buttonPanel, javax.swing.BoxLayout.X_AXIS))
-    for trackButton in makeTrackButtonRow(allTracksAtLoc):
+    trackButtonList, trackButtonWidth = makeTrackButtonRow(allTracksAtLoc)
+    for trackButton in trackButtonList:
         buttonPanel.add(trackButton)
         trackButton.actionPerformed = TrackPattern.ControllerSetCarsForm.AnyButtonPressedListener().trackRowButton
+    buttonPanel.setPreferredSize(java.awt.Dimension(trackButtonWidth*8,20))
 # Create the car list part of the form
     combinedForm = javax.swing.JPanel()
     combinedForm.setLayout(javax.swing.BoxLayout(combinedForm, javax.swing.BoxLayout.Y_AXIS))
@@ -109,15 +111,17 @@ def makeWindow():
     return jFrame
 
 def makeTrackButtonRow(allTracksAtLoc):
-    '''Makes a row of buttons, one for each track'''
+    '''Makes a row of track buttons, returns the list of buttons and its width in characters'''
 
+    buttonWidth = len(allTracksAtLoc)
     trackButtonRowList = []
     for track in allTracksAtLoc:
         selectTrackButton = javax.swing.JButton(track)
         selectTrackButton.setPreferredSize(java.awt.Dimension(0,18))
         trackButtonRowList.append(selectTrackButton)
+        buttonWidth = buttonWidth + len(unicode(track, psEntities.MainScriptEntities.setEncoding())) + 3
 
-    return trackButtonRowList
+    return trackButtonRowList, buttonWidth
 
 def setCarsFormHeader(trackData):
     '''Creates the Set Cars forms header'''

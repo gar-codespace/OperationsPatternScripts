@@ -91,7 +91,7 @@ class StartUp():
         return
 
     def whenSCButtonPressed(self, event):
-        '''Opens a set cars window for each checked track'''
+        '''Opens a "Pattern Report for Track X" window for each checked track'''
 
         self.controls = TrackPattern.Model.updateConfigFile(self.controls)
         self.psLog.info('Configuration file updated with new settings for controls')

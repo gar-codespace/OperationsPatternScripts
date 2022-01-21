@@ -10,8 +10,7 @@ import java.awt.event
 import javax.swing
 from apps import Apps
 
-'''Different locations for the Pattern Script plugin.
-This script must be self contained.'''
+'''Different locations for the Pattern Script plugin.'''
 
 scriptName = 'OperationsPatternScripts.psEntities.PluginLocations'
 scriptRev = 20211125
