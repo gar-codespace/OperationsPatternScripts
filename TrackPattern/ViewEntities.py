@@ -6,16 +6,13 @@
 import jmri
 import javax.swing
 import java.awt
-# from sys import path
-# path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsTrackPattern')
-# import psEntities.MainScriptEntities
 
 import psEntities.MainScriptEntities
 
 '''Creates the track pattern and its panel'''
 
 scriptName = 'OperationsPatternScripts.TrackPattern.ViewEntities'
-scriptRev = 20211210
+scriptRev = 20220101
 
 class TrackPatternPanel:
     '''Makes the track pattern subroutine panel'''
@@ -24,10 +21,10 @@ class TrackPatternPanel:
 
         self.configFile = psEntities.MainScriptEntities.readConfigFile('TP')
         self.useYardTracks = javax.swing.JCheckBox(u'Yard tracks only ', self.configFile['PA'])
-        self.ignoreLength = javax.swing.JCheckBox(u'Ignore track length ', self.configFile['PI'])
+        self.ignoreTrackLength = javax.swing.JCheckBox(u'Ignore track length ', self.configFile['PI'])
         self.ypButton = javax.swing.JButton()
         self.scButton = javax.swing.JButton()
-        self.prButton = javax.swing.JButton()
+        self.vlButton = javax.swing.JButton()
         self.trackCheckBoxes = []
         self.controlObjects = []
 
@@ -62,7 +59,7 @@ class TrackPatternPanel:
         flagInputBox = javax.swing.Box(javax.swing.BoxLayout.X_AXIS) # make a box for the label and input box
         flagInputBox.setPreferredSize(java.awt.Dimension(self.configFile['PW'], self.configFile['PH']))
         flagInputBox.add(self.useYardTracks)
-        flagInputBox.add(self.ignoreLength)
+        flagInputBox.add(self.ignoreTrackLength)
 
         return flagInputBox
 
@@ -93,12 +90,12 @@ class TrackPatternPanel:
 
         self.ypButton.text = u'Pattern'
         self.scButton.text = u'Set Cars'
-        self.prButton.text = u'View Log'
+        self.vlButton.text = u'View Log'
         buttonPanel = javax.swing.JPanel()
         buttonPanel.setAlignmentX(javax.swing.JPanel.CENTER_ALIGNMENT)
         buttonPanel.add(self.ypButton)
         buttonPanel.add(self.scButton)
-        buttonPanel.add(self.prButton)
+        buttonPanel.add(self.vlButton)
 
         return buttonPanel
 
@@ -107,11 +104,11 @@ class TrackPatternPanel:
 
         self.controlObjects.append(self.locationComboBox)
         self.controlObjects.append(self.useYardTracks)
-        self.controlObjects.append(self.ignoreLength)
+        self.controlObjects.append(self.ignoreTrackLength)
         self.controlObjects.append(self.trackCheckBoxes)
         self.controlObjects.append(self.ypButton)
         self.controlObjects.append(self.scButton)
-        self.controlObjects.append(self.prButton)
+        self.controlObjects.append(self.vlButton)
 
         return self.controlObjects
 

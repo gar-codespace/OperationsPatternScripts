@@ -24,7 +24,7 @@ psEntities.MainScriptEntities._currentPath = _currentDir
 '''Pattern Scripts Version 2.0.0 Pre Release b1'''
 
 scriptName = 'OperationsPatternScripts.MainScript'
-scriptRev = 20211210
+scriptRev = 20220101
 
 class StartUp(jmri.jmrit.automat.AbstractAutomaton):
     '''Start the the Pattern Scripts plugin and add selected subroutines'''
@@ -77,8 +77,7 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         if (locationOptions[panelLocation][1]):
             getattr(psEntities.PluginLocations, locationOptions[panelLocation][1])(scrollPanel)
     # fire up the help File
-        psLocale = unicode(controlPanel.getLocale(), psEntities.MainScriptEntities.setEncoding())
-        psEntities.MainScriptEntities.validateStubFile(psLocale)
+        psEntities.MainScriptEntities.validateStubFile()
         self.psLog.info(locationOptions[panelLocation][0])
         self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
 

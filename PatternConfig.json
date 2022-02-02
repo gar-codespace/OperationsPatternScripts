@@ -37,9 +37,11 @@
     "PL" : "",
     "PT" : {
     },
+    "TP" : false,
     "PA" : false,
     "PI" : false,
     "AS" : true,
+    "TP" : true,
     "PW" : 260,
     "PH" : 16,
     "DS" : "*No Waybill",

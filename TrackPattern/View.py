@@ -1,22 +1,17 @@
 # coding=utf-8
-# Extended ìÄÅÉî
-# No restrictions on use
 # © 2021 Greg Ritacco
 
 import jmri
 import logging
-from os import system
-# from sys import path
-# path.append(jmri.util.FileUtil.getHomePath() + 'JMRI\\OperationsTrackPattern')
-# import psEntities.MainScriptEntities
-# import TrackPattern.ViewEntities
+from os import system as osSystem
+
 import psEntities.MainScriptEntities
 import TrackPattern.ViewEntities
 
 '''View script for the track pattern subroutine'''
 
 scriptName = 'OperationsPatternScripts.TrackPattern.View'
-scriptRev = 20211210
+scriptRev = 20220101
 psLog = logging.getLogger('PS.TP.View')
 
 class ManageGui:
@@ -40,7 +35,6 @@ class ManageGui:
         panel.removeAll()
         panel.add(newView)
         panel.revalidate()
-        # panel.repaint()
 
         return newControls
 
@@ -63,15 +57,22 @@ def displayTextSwitchlist(location):
 
     psLog.debug('displayTextSwitchlist')
     textSwitchList = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\Track Pattern (' + location + ').txt'
-    system(psEntities.MainScriptEntities.systemInfo(textSwitchList))
+    osSystem(psEntities.MainScriptEntities.openEditorByComputerType(textSwitchList))
 
     return
+
+def displayTextSwitchList(textSwitchList):
+    '''Opens the text switchlist to Notepad or other'''
+
+    fileToDisplay = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + textSwitchList.splitlines()[0] + '.txt'
+
+    return osSystem(psEntities.MainScriptEntities.openEditorByComputerType(fileToDisplay))
 
 def printPatternLog():
     '''Opens the pattern log in notepad or other'''
 
     psLog.debug('displayPatternLog')
     tempPatternLog = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternLog_temp.txt'
-    system(psEntities.MainScriptEntities.systemInfo(tempPatternLog))
+    osSystem(psEntities.MainScriptEntities.openEditorByComputerType(tempPatternLog))
 
     return

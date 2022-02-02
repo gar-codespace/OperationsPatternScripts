@@ -10,24 +10,29 @@ import logging
 from os import system as osSystem
 
 import psEntities.MainScriptEntities
-import TrackPattern
+import TrackPattern.Model
+import TrackPattern.View
+import TrackPattern.ModelEntities
+import TrackPattern.ModelSetCarsForm
+import TrackPattern.ViewSetCarsForm
 
-'''Makes a set cars form for each selected track'''
+'''Makes a "Pattern Report for Track X" form for each selected track'''
 
 scriptName = 'OperationsPatternScripts.TrackPattern.ControllerSetCarsForm'
-scriptRev = 20211210
+scriptRev = 20220101
 
 class AnyButtonPressedListener(java.awt.event.ActionListener):
 
-    def __init__(self, object1=None, object2=None, object3=None):
+    def __init__(self, object1=None, object2=None):
 
         self.psLog = logging.getLogger('PS.TP.AnyButtonPressedListener')
+        self.sm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.schedules.ScheduleManager)
     # scheduleButton
-        self.scheduleObject = object1
-        self.trackObject = object2
-    # printPrButton, setPrButton
+        self.trackObject = object1
+    # printButton, setButton
         self.trackData = object1
         self.textBoxEntry = object2
+    # TrainPlayer button
 
         return
 
@@ -39,35 +44,55 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
         return
 
     def scheduleButton(self, MOUSE_CLICKED):
-        '''The named schedule button if displayed on any set cars window'''
+        '''The named schedule button if displayed on any "Pattern Report for Track X" window'''
 
-        jmri.jmrit.operations.locations.schedules.ScheduleEditFrame(self.scheduleObject, self.trackObject)
+        scheduleName = MOUSE_CLICKED.getSource().getText()
+        scheduleObject = self.sm.getScheduleByName(scheduleName)
+        jmri.jmrit.operations.locations.schedules.ScheduleEditFrame(scheduleObject, self.trackObject)
 
         return
 
-    def printPrButton(self, MOUSE_CLICKED):
-        '''Event that prints the yard pattern for the selected track'''
+    def printButton(self, MOUSE_CLICKED):
+        '''Print a switch list for each "Pattern Report for Track X" window'''
 
-    # Make the switch list
-        processedTrackData = TrackPattern.ModelSetCarsForm.processYpForPrint(self.trackData, self.textBoxEntry)
-    # write the switch list
-        switchListLocation = TrackPattern.ModelSetCarsForm.writeSwitchList(processedTrackData)
-    # Print the switch list
-        osSystem(psEntities.MainScriptEntities.systemInfo(switchListLocation))
+        try:
+            body = TrackPattern.ModelSetCarsForm.makeSetCarsSwitchList(self.trackData, self.textBoxEntry)
+        except:
+            self.psLog.critical('Could not create switch list')
+            return
+        switchList = TrackPattern.ModelEntities.createSwitchListHeader()
+        switchList['tracks'].append(body)
+        trackName = switchList['tracks'][0]['Name']
+        switchList['description'] = u'Switch List for track ' + unicode(trackName, psEntities.MainScriptEntities.setEncoding())
+
+        switchListname = TrackPattern.Model.writeSwitchlistAsJson(switchList)
+        textSwitchListHeader = TrackPattern.Model.makeTextSwitchListHeader(switchListname)
+        textSwitchListBody = TrackPattern.Model.makeTextSwitchListBody(switchListname)
+        textSwitchList = textSwitchListHeader + textSwitchListBody
+        TrackPattern.Model.writeTextSwitchList(textSwitchList)
+        TrackPattern.View.displayTextSwitchList(textSwitchList)
 
         print(scriptName + ' ' + str(scriptRev))
 
         return
 
-    def setPrButton(self, MOUSE_CLICKED):
+    def setButton(self, MOUSE_CLICKED):
         '''Event that moves cars to the tracks entered in the text box of the "Pattern Report for Track X" form'''
 
-    # set the cars to a track
         TrackPattern.ModelSetCarsForm.setCarsToTrack(self.trackData, self.textBoxEntry)
-    # Wrap it up
-        self.setCarsWindow = MOUSE_CLICKED.getSource().getParent().getTopLevelAncestor()
-        self.setCarsWindow.setVisible(False)
-        self.setCarsWindow.dispose()
+        setCarsWindow = MOUSE_CLICKED.getSource().getTopLevelAncestor()
+        setCarsWindow.setVisible(False)
+        setCarsWindow.dispose()
+        print(scriptName + ' ' + str(scriptRev))
+
+        return
+
+    def trainPlayerButton(self, MOUSE_CLICKED):
+        '''Accumulate switch lists into one TrainPlayer switch list'''
+
+        trainPlayerSwitchList = TrackPattern.ModelEntities.createJsonBody(self.trackData, self.textBoxEntry)
+        TrackPattern.ModelEntities.appendJsonBody(trainPlayerSwitchList)
+
         print(scriptName + ' ' + str(scriptRev))
 
         return
@@ -90,17 +115,17 @@ class TextBoxEntryListener(java.awt.event.MouseAdapter):
 class CreatePatternReportGui():
     '''Creates an instance of each "Pattern Report for Track X" window'''
 
-    def __init__(self, pattern):
+    def __init__(self, header, body):
 
-        self.trackPattern = pattern # all the data for the selected track, car roster is sorted
+        self.header = header
+        self.body = body
 
         return
 
     def makeFrame(self):
         '''Create the windows'''
 
-        patternReportForTrackForm = TrackPattern.ViewSetCarsForm.patternReportForTrackForm(self.trackPattern)
+        patternReportForTrackForm = TrackPattern.ViewSetCarsForm.patternReportForTrackForm(self.header, self.body)
         patternReportForTrackWindow = TrackPattern.ViewSetCarsForm.patternReportForTrackWindow(patternReportForTrackForm)
-
 
         return patternReportForTrackWindow

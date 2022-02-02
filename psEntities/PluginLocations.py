@@ -13,7 +13,7 @@ from apps import Apps
 '''Different locations for the Pattern Script plugin.'''
 
 scriptName = 'OperationsPatternScripts.psEntities.PluginLocations'
-scriptRev = 20211125
+scriptRev = 20220101
 
 class PatternScriptsWindowListener(java.awt.event.WindowListener):
     '''Listener to respond to window operations'''

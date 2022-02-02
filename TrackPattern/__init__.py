@@ -1,3 +1,7 @@
+# coding=utf-8
+# No restrictions on use
+# © 2021 Greg Ritacco
+
 '''Track Pattern imports and global variables'''
 
 import TrackPattern.Model as Model
@@ -11,7 +15,6 @@ import TrackPattern.ControllerSetCarsForm as ControllerSetCarsForm
 
 __all__ = ['Model', 'View', 'Controller', 'ModelEntities', 'ViewEntities', 'ModelSetCarsForm', 'ViewSetCarsForm', 'ControllerSetCarsForm']
 
-# 'global' variables for the Track Pattern module
 _trackNameClickedOn = None
 _carTypeByEmptyDict = {}
 _carTypeByLoadDict = {}

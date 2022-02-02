@@ -18,7 +18,7 @@ from shutil import copy as shutilCopy
 
 _currentPath = ''
 scriptName = 'OperationsPatternScripts.psEntities.MainScriptEntities'
-scriptRev = 20211210
+scriptRev = 20220101
 psLog = logging.getLogger('PS.TP.MainScriptEntities')
 
 def setEncoding():
@@ -37,8 +37,8 @@ def timeStamp():
 
     return time.strftime('%a %b %d %Y %I:%M %p %Z', time.gmtime(epochTime - timeOffset))
 
-def systemInfo(switchListLocation=None):
-    '''Which type of computer is being used'''
+def openEditorByComputerType(switchListLocation=None):
+    '''Opens a text file in a text editor for each type of computer.'''
 
     osName = jmri.util.SystemType.getType()
     textEdit = {
@@ -52,9 +52,12 @@ def systemInfo(switchListLocation=None):
 
     return textEdit[osName]
 
-def validateStubFile(locale=u'en'):
+def validateStubFile():
     '''Copy of the JMRI Java version of createStubFile'''
 
+    locale = u'en'
+    gm = jmri.InstanceManager.getDefault(jmri.util.gui.GuiLafPreferencesManager)
+    locale = unicode(gm.getLocale(), setEncoding())
     stubLocation = jmri.util.FileUtil.getPreferencesPath() + '\\jmrihelp\\'
     try:
         osMakeDir(stubLocation)
@@ -62,9 +65,8 @@ def validateStubFile(locale=u'en'):
     except OSError:
         psLog.info('stub location already exists')
     stubFileName = stubLocation + 'psStub.html'
-    helpFilePath = 'file:///' + jmri.util.FileUtil.getPreferencesPath() + 'OperationsPatternScripts/Support/psHelp.html'
-    helpFilePath = helpFilePath.replace('\\', '/')
-    helpFilePath = helpFilePath.replace(' ', '%20')
+    helpFilePath = java.io.File(_currentPath + '/Support/psHelp.html').toURI()
+    helpFilePath = unicode(helpFilePath, setEncoding())
     stubTemplateLocation = jmri.util.FileUtil.getProgramPath() + 'help\\' + locale[:2] + '\\local\\stub_template.html'
     with codecsOpen(stubTemplateLocation, 'r', encoding=setEncoding()) as template:
         contents = template.read()
@@ -111,7 +113,7 @@ def validateFileDestinationDirestories():
 def validateConfigFile():
     '''Checks for an up to date, missing or ureadable config file'''
 
-    with codecsOpen(jmri.util.FileUtil.getPreferencesPath() + 'OperationsPatternScripts\\PatternConfig.json', 'r', encoding=setEncoding()) as validConfigFileLoc:
+    with codecsOpen(_currentPath + '\\PatternConfig.json', 'r', encoding=setEncoding()) as validConfigFileLoc:
         validConfigFile = jsonLoads(validConfigFileLoc.read())
         upToDate = validConfigFile['CP']['RV']
 
@@ -122,22 +124,21 @@ def validateConfigFile():
             return True
         else:
             psLog.warning('PatternConfig.json version mismatch')
-            jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json.bak'
-            jsonFile = jsonDumps(currentConfigFile, indent=2, sort_keys=True)
-            with codecsOpen(jsonCopyTo, 'wb', encoding=setEncoding()) as jsonWorkFile:
-                jsonWorkFile.write(jsonFile)
-                psLog.warning('PatternConfig.json.bak file written')
-            # Overwrites previous bak file
+            copyTo = java.io.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json.bak')
+            copyFrom = java.io.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json')
+            jmri.util.FileUtil.copy(copyFrom, copyTo)
+            psLog.warning('PatternConfig.json.bak file written')
             return False
     except IOError:
         psLog.warning('No PatternConfig.json found or is unreadable')
         return False
 
 def readConfigFile(subConfig='all'):
-    '''Read in the PatternConfig.json for a profile and return it as a dictionary
-    This needs error handling built into it'''
+    '''Read in the PatternConfig.json for a profile and return it as a dictionary'''
 
     configFileLoc = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json'
+    if not (java.io.File(configFileLoc).isFile()):
+        writeNewConfigFile()
     with codecsOpen(configFileLoc, 'r', encoding=setEncoding()) as configWorkFile:
         configFile = jsonLoads(configWorkFile.read())
     if (subConfig == 'all'):

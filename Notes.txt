@@ -4,17 +4,24 @@ Stuff that's OK or comments:
   Schedule overrides RWE/RWL OK
   no schedule, no RWE/RWL load toggles ok
   default load/empty toggling ok
+  Ignore Track Length works with yard tracks
   Ignore Track Length works with schedules
   formatText works OK
   handle multiple versions OK
   test for file write locations OK
-  config json version check OK
+  config.json version check OK
+  create JSON header OK
+  create JSON body OK
+  append JSON switchlist OK
 
 Stuff to fix:
   Catch up with the latest JMRI stuff like text color
+  new errors applying schedules
+  catch error when no tracks selected and pattern button pressed
+  does each pattern report for track window need text formatting?
+  toggle trainplayer support with config file?
 
 Wish List:
-  CBB ViewsetCarsForm.makeTrackButtonRow(allTracksAtLoc) relies on too much hardcoding
   plugin added to button in trains window
   set cars window add trainplayer compatability
   jmri.util.swing.JMenuUtil.replaceMenuItem() to replace the trains window with a new trains window that includes a ps button
