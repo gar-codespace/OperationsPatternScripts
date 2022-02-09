@@ -17,11 +17,15 @@ scriptName = 'OperationsPatternScripts.TrackPattern.ModelEntities'
 scriptRev = 20220101
 
 def formatText(item, length):
-    '''Truncate each item to its defined length and add a space at the end'''
+    '''Truncate each item to its defined length in PatternConfig.json and add a space at the end'''
+    # This version works with utf-8
 
-    pad = '{:<' + str(length + 1) + '}'
+    if len(item) < length:
+        xItem = item.ljust(length)
+    else:
+        xItem = item[:length]
 
-    return pad.format(item[:length])
+    return xItem + u' '
 
 def occuranceTally(listOfOccurances):
     '''Tally the occurances of a word in a list and return a dictionary'''
@@ -67,6 +71,8 @@ def createSwitchlistForTrack(track):
         carDetail = getDetailsForCarAsDict(car)
         carDetailList.append(carDetail)
     trackDetails['Cars'] = carDetailList
+
+    trackDetails['Locos'] = []
 
     return trackDetails
 
@@ -126,6 +132,7 @@ def getDetailsForCarAsDict(carObject):
     carDetailDict[u'SetOut Msg'] = trackId.getCommentSetout()
     carDetailDict[u'PickUp Msg'] = trackId.getCommentPickup()
     carDetailDict[u'RWE'] = carObject.getReturnWhenEmptyDestinationName()
+    carDetailDict[u'PUSO'] = u'SC'
 
     return carDetailDict
 
@@ -313,100 +320,3 @@ def getCustomEmptyForCarType():
                 if (loadDetail.attrib['loadType'] == 'Empty'):
                     customEmptyForCarTypes[carType['type']] = loadDetail.attrib['name']
     return defaultLoadEmpty, customEmptyForCarTypes
-
-# def makeSwitchlist(trackPattern, bool=True):
-#     '''Makes a text switchlist using an input pattern, conforming to config values,
-#     bool is set to True to include report Totals'''
-#
-#     configFile = psEntities.MainScriptEntities.readConfigFile('TP')
-#     itemsList = jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
-# # Make the switchlist
-#     switchList  = trackPattern['RT'] + '\n' \
-#                 + trackPattern['RN'] + '\n' \
-#                 + u'Valid time: ' + trackPattern['VT'] + '\n' \
-#                 + u'Location: ' + trackPattern['YL'] + '\n\n'
-#     reportTally = [] # running total for all tracks
-#     for j in trackPattern['ZZ']:
-#         switchList = switchList + u'Track: ' + j['TN'] + '\n'
-#         trackRoster = j['TR']
-#         carLength = 0
-#         trackTally = []
-#         for car in trackRoster:
-#             switchListRow = car['Set to']
-#             for item in itemsList:
-#                 if (item != ' '): # skips over null items
-#                     reportWidth = configFile['RW']
-#                     itemWidth = reportWidth[item]
-#                     switchListRow = switchListRow + formatText(car[item], itemWidth)
-#             switchList = switchList + switchListRow + '\n'
-#             carLength = carLength + int(car['Length']) + 4
-#             trackTally.append(car['Final Dest'])
-#             reportTally.append(car['Final Dest'])
-#         switchList = switchList + u'Total Cars: ' \
-#                                 + str(len(trackRoster)) \
-#                                 + u' Track Length: ' \
-#                                 + str(j['TL']) \
-#                                 + u' Car Length: ' \
-#                                 + str(carLength) \
-#                                 + u' Available: ' \
-#                                 + str(j['TL'] - carLength) + '\n'
-#         if (bool):
-#             switchList = switchList + u'Track Totals:\n'
-#             tallySummary = occuranceTally(trackTally)
-#             for track, count in sorted(tallySummary.items()):
-#                 switchList = switchList + ' ' + track + ' - ' + str(count) + '\n'
-#             switchList = switchList + '\n'
-#     if (bool):
-#         switchList = switchList + u'\nReport Totals:\n'
-#         for track, count in sorted(occuranceTally(reportTally).items()):
-#             switchList = switchList + ' ' + track + ' - ' + str(count) + '\n'
-#
-#     return switchList
-
-# def createJsonBody(trackData, textBoxEntry):
-#     '''Makes the body [locations] of the JSON switch list'''
-#
-#     # psLog.debug('makeTrainPlayerSwitchList')
-#     userInputList = []
-#     for userInput in textBoxEntry: # Read in the user input
-#         userInputList.append(unicode(userInput.getText(), psEntities.MainScriptEntities.setEncoding()))
-#     i = 0
-#     track = trackData['ZZ'][0] # There is only one track in trackData
-#     if (len(userInputList) == len(track['TR'])): # check that the lengths of the input list and car roster match
-#         # psLog.debug('input list and car roster lengths match')
-#         trackLocation = trackData['YL']
-#         setTrack = unicode(track['TN'], psEntities.MainScriptEntities.setEncoding())
-#         allTracksAtLoc = getTracksByLocation(trackLocation, None)
-#         for setTo in track['TR']:
-#             if (userInputList[i] in allTracksAtLoc):
-#                 setTrack = unicode(userInputList[i], psEntities.MainScriptEntities.setEncoding())
-#             setTo.update({'Set to': setTrack}) # replaces empty brackets with the marked ones
-#             i += 1
-#     else:
-#         # psLog.critical('mismatched input list and car roster lengths')
-#         trackData = []
-#
-#     return trackData['ZZ'][0]
-
-# def createSwitchlistBody():
-#     '''Creates a generic switch list used to make the JSON file'''
-#
-#     lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
-#
-#     switchList = []
-#     location = psEntities.MainScriptEntities.readConfigFile('TP')['PL']
-#     trackList = getSelectedTracks()
-#     trackDetailList = []
-#     for track in trackList:
-#         trackDetails = {}
-#         trackDetails['Name'] = track
-#         trackDetails['Length'] = lm.getLocationByName(location).getTrackByName(track, None).getLength()
-#         carList = getCarObjects(location, track)
-#         carDetailList = []
-#         for car in carList:
-#             carDetail = getDetailsForCarAsDict(car)
-#             carDetailList.append(carDetail)
-#         trackDetails['Cars'] = carDetailList
-#         trackDetailList.append(trackDetails)
-#
-#     return trackDetailList

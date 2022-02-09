@@ -51,6 +51,8 @@ def makeSwitchList(fileName=u'test'):
     switchList['description'] = fileName
 
     trackList = TrackPattern.ModelEntities.getSelectedTracks()
+    if not trackList:
+        return
     carRoster = []
     for track in trackList:
         carRoster.append(TrackPattern.ModelEntities.createSwitchlistForTrack(track))
@@ -64,7 +66,7 @@ def writeSwitchlistAsJson(switchList):
 
     switchListName = switchList['description']
     jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + switchListName + '.json'
-    jsonObject = jsonDumps(switchList, indent=2, sort_keys=True) #trackPatternDict
+    jsonObject = jsonDumps(switchList, indent=2, sort_keys=True)
     with codecsOpen(jsonCopyTo, 'wb', encoding=psEntities.MainScriptEntities.setEncoding()) as jsonWorkFile:
         jsonWorkFile.write(jsonObject)
 
@@ -96,7 +98,7 @@ def makeTextSwitchListBody(switchListName, includeTotals=False):
 
 def writeTextSwitchList(textSwitchList):
 
-    psLog.debug('printTextSwitchList')
+    psLog.debug('writeTextSwitchList')
     switchListCopy = textSwitchList
     fileName = switchListCopy.splitlines()
     textCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + fileName[0] + '.txt'
@@ -109,10 +111,12 @@ def resetTrainPlayerSwitchlist():
     '''Overwrites the existing file with the header info for the next switch list'''
 
     psLog.debug('resetTrainPlayerSwitchlist')
-    tpPatternHeader = TrackPattern.ModelEntities.createJsonHeader()
-    tpPatternHeader['description'] = u'TrainPlayer Switchlist'
 
-    jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\TrainPlayerSwitchlist.json'
+    reportTitle = psEntities.MainScriptEntities.readConfigFile('TP')['RT']['TP']
+    tpPatternHeader = TrackPattern.ModelEntities.createSwitchListHeader()
+    tpPatternHeader['description'] = reportTitle
+
+    jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
     jsonObject = jsonDumps(tpPatternHeader, indent=2, sort_keys=True) #trackPatternDict
     with codecsOpen(jsonCopyTo, 'wb', encoding=psEntities.MainScriptEntities.setEncoding()) as jsonWorkFile:
         jsonWorkFile.write(jsonObject)
@@ -324,109 +328,3 @@ def writeCsvSwitchList(location, trackPatternDict):
         csvWorkFile.write(csvObject)
 
     return
-
-# def makeListForTrack(location, track):
-#     '''Creates the switch list data for a Set Cars to Track window'''
-#
-#     psLog.debug('makeListForTrack')
-#     listForTrack = TrackPattern.Model.makeYardPattern(location, [track]) # track needs to be send in as a list
-#     listForTrack.update({'RT': u'Switch List for Track '})
-#
-#     return listForTrack
-
-# def onTpButtonPress():
-#     '''When the "Pattern" button on the Control Panel is pressed'''
-#
-#     selectedTracks = TrackPattern.ModelEntities.getSelectedTracks()
-#     if (selectedTracks):
-#         trackPatternDict = makeTrackPatternDict(selectedTracks)
-#         trackPatternDict.update({'RT': u'Track Pattern for Location'})
-#         psLog.info('Track Pattern dictionary created')
-#         location = unicode(trackPatternDict['YL'], psEntities.MainScriptEntities.setEncoding())
-#         writePatternJson(location, trackPatternDict)
-#         psLog.info('Track Pattern for ' + location + ' JSON written')
-#         writeTextSwitchList(location, trackPatternDict)
-#         psLog.info('Track Pattern for ' + location + ' TXT switch list written')
-#         if (jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled()):
-#             csvSwitchList = TrackPattern.Model.writeCsvSwitchList(location, trackPatternDict)
-#             psLog.info('Track Pattern for ' + location + ' CSV written')
-#     else:
-#         psLog.warning('No tracks were selected for the Pattern button')
-#
-#     return trackPatternDict['YL']
-
-# def makeYardPattern(yardLocation, trackList):
-#     '''Make a dictionary yard pattern
-#     The car rosters are sorted at this level'''
-#
-#     psLog.debug('makeYardPattern')
-#     lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
-#
-#     patternList = []
-#     for i in trackList:
-#         j = TrackPattern.ModelEntities.getCarObjects(yardLocation, i) # list of car objects for a track
-#         trackRoster = [] # list of dictionaries
-#         for car in j:
-#             carDetail = TrackPattern.ModelEntities.getDetailsForCarAsDict(car)
-#             trackRoster.append(carDetail)
-#         roster2 = TrackPattern.ModelEntities.sortCarList(trackRoster)
-#         trackDict = {}
-#         trackDict['TN'] = i # track name
-#         trackDict['TL'] = lm.getLocationByName(yardLocation).getTrackByName(i, None).getLength() # track length
-#         trackDict['TR'] = roster2 # list of car dictionaries
-#         patternList.append(trackDict)
-#     yardPatternDict = {}
-#     yardPatternDict['RT'] = u'Report Type' # Report Type, value replaced when called
-#     yardPatternDict['RN'] = unicode(jmri.jmrit.operations.setup.Setup.getRailroadName(), psEntities.MainScriptEntities.setEncoding())
-#     yardPatternDict['YL'] = yardLocation
-#     yardPatternDict['VT'] = unicode(psEntities.MainScriptEntities.timeStamp(), psEntities.MainScriptEntities.setEncoding()) # The clock time this script is run in seconds plus the offset
-#     yardPatternDict['ZZ'] = patternList
-#
-#     return yardPatternDict
-
-# def makeTrackPatternDict(trackList):
-#     '''Make a track pattern as a dictionary'''
-#
-#     psLog.debug('makeTrackPatternDict')
-#     trackPattern = psEntities.MainScriptEntities.readConfigFile('TP')
-#     patternDict = TrackPattern.Model.makeYardPattern(trackPattern['PL'], trackList)
-#
-#     return patternDict
-
-# def writeTextSwitchList(location, trackPatternDict):
-#     '''Write the track pattern dictionary as a text switch list'''
-#
-#     psLog.debug('writeTextSwitchList')
-#     textCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\Track Pattern (' + location + ').txt'
-#     textObject = TrackPattern.ModelEntities.makeSwitchlist(trackPatternDict, True)
-#     with codecsOpen(textCopyTo, 'wb', encoding=psEntities.MainScriptEntities.setEncoding()) as textWorkFile:
-#         textWorkFile.write(textObject)
-#
-#     return# textObject
-
-# def createSwitchlistBody():
-#     '''Creates a generic switch list used to make the JSON file'''
-#
-#     psLog.debug('createJsonSwitchlist')
-#     lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
-#
-#     # switchList = TrackPattern.ModelEntities.createSwitchListHeader()
-#     switchList = []
-#     # switchList['description'] = fileName
-#     location = TrackPattern.ModelEntities.getLocation()
-#     trackList = TrackPattern.ModelEntities.getSelectedTracks()
-#     trackDetailList = []
-#     for track in trackList:
-#         trackDetails = {}
-#         trackDetails['Name'] = track
-#         trackDetails['Length'] = lm.getLocationByName(location).getTrackByName(track, None).getLength()
-#         carList = TrackPattern.ModelEntities.getCarObjects(location, track)
-#         carDetailList = []
-#         for car in carList:
-#             carDetail = TrackPattern.ModelEntities.getDetailsForCarAsDict(car)
-#             carDetailList.append(carDetail)
-#         trackDetails['Cars'] = carDetailList
-#         trackDetailList.append(trackDetails)
-#     # switchList['tracks'] = trackDetailList
-#
-#     return trackDetailList

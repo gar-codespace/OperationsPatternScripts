@@ -1,10 +1,7 @@
 # coding=utf-8
-# Extended ìÄÅÉî
-# No restrictions on use
 # © 2021 Greg Ritacco
 
 import jmri
-import jmri.util
 import java.awt
 import java.awt.event
 import javax.swing
@@ -74,7 +71,6 @@ class MakePatternScriptsWindow():
         psMenuBar.add(jmri.jmrit.operations.OperationsMenu())
         psMenuBar.add(jmri.util.WindowMenu(self.uniqueWindow))
         psMenuBar.add(helpMenu)
-        # jmri.util.HelpUtil.helpMenu(psMenuBar, 'psStub', False)
 
         self.uniqueWindow.addWindowListener(PatternScriptsWindowListener(self.button))
         self.uniqueWindow.setJMenuBar(psMenuBar)

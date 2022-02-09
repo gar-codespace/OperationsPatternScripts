@@ -2,8 +2,8 @@
 # © 2021 Greg Ritacco
 
 import jmri
-import logging
 import java.awt.event
+import logging
 
 import psEntities.MainScriptEntities
 import TrackPattern.Model
@@ -67,8 +67,12 @@ class StartUp():
 
         TrackPattern.Model.updateConfigFile(self.controls)
         self.psLog.info('Configuration file updated with new settings for controls')
+        reportTitle = psEntities.MainScriptEntities.readConfigFile('TP')['RT']['PR']
         try:
-            switchList = TrackPattern.Model.makeSwitchList(u'Track Pattern')
+            switchList = TrackPattern.Model.makeSwitchList(reportTitle)
+            if not switchList:
+                self.psLog.info('No tracks were selected')
+                return
         except:
             self.psLog.critical('Could not create switch list')
             return
@@ -90,8 +94,9 @@ class StartUp():
         self.psLog.info('Configuration file updated with new settings for controls')
 
         TrackPattern.Model.makeLoadEmptyDesignationsDicts()
-        # TrackPattern.Model.resetTrainPlayerSwitchlist()
         TrackPattern.Model.onScButtonPress()
+        if psEntities.MainScriptEntities.readConfigFile('TP')['TP']:
+            TrackPattern.Model.resetTrainPlayerSwitchlist()
         print(scriptName + ' ' + str(scriptRev))
 
         return

@@ -1,6 +1,4 @@
 # coding=utf-8
-# Extended ìÄÅÉî
-# No restrictions on use
 # © 2021 Greg Ritacco
 
 import jmri
@@ -52,6 +50,17 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
 
         return
 
+    def setButton(self, MOUSE_CLICKED):
+        '''Event that moves cars to the tracks entered in the text box of the "Pattern Report for Track X" form'''
+
+        TrackPattern.ModelSetCarsForm.setCarsToTrack(self.trackData, self.textBoxEntry)
+        setCarsWindow = MOUSE_CLICKED.getSource().getTopLevelAncestor()
+        setCarsWindow.setVisible(False)
+        setCarsWindow.dispose()
+        print(scriptName + ' ' + str(scriptRev))
+
+        return
+
     def printButton(self, MOUSE_CLICKED):
         '''Print a switch list for each "Pattern Report for Track X" window'''
 
@@ -60,10 +69,13 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
         except:
             self.psLog.critical('Could not create switch list')
             return
+        body = TrackPattern.ModelSetCarsForm.modifySwitchListForPrint(body)
         switchList = TrackPattern.ModelEntities.createSwitchListHeader()
+        # switchList = TrackPattern.ModelEntities.createSwitchListHeader()
         switchList['tracks'].append(body)
         trackName = switchList['tracks'][0]['Name']
-        switchList['description'] = u'Switch List for track ' + unicode(trackName, psEntities.MainScriptEntities.setEncoding())
+        reportTitle = psEntities.MainScriptEntities.readConfigFile('TP')['RT']['SC']
+        switchList['description'] = reportTitle + ' ' + unicode(trackName, psEntities.MainScriptEntities.setEncoding())
 
         switchListname = TrackPattern.Model.writeSwitchlistAsJson(switchList)
         textSwitchListHeader = TrackPattern.Model.makeTextSwitchListHeader(switchListname)
@@ -76,22 +88,18 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
 
         return
 
-    def setButton(self, MOUSE_CLICKED):
-        '''Event that moves cars to the tracks entered in the text box of the "Pattern Report for Track X" form'''
-
-        TrackPattern.ModelSetCarsForm.setCarsToTrack(self.trackData, self.textBoxEntry)
-        setCarsWindow = MOUSE_CLICKED.getSource().getTopLevelAncestor()
-        setCarsWindow.setVisible(False)
-        setCarsWindow.dispose()
-        print(scriptName + ' ' + str(scriptRev))
-
-        return
-
     def trainPlayerButton(self, MOUSE_CLICKED):
         '''Accumulate switch lists into one TrainPlayer switch list'''
 
-        trainPlayerSwitchList = TrackPattern.ModelEntities.createJsonBody(self.trackData, self.textBoxEntry)
-        TrackPattern.ModelEntities.appendJsonBody(trainPlayerSwitchList)
+        MOUSE_CLICKED.getSource().setBackground(java.awt.Color.GREEN)
+        try:
+            body = TrackPattern.ModelSetCarsForm.makeSetCarsSwitchList(self.trackData, self.textBoxEntry)
+        except:
+            self.psLog.critical('Could not create switch list')
+            return
+        body = TrackPattern.ModelSetCarsForm.modifySwitchListForTp(body)
+        switchListName = TrackPattern.ModelSetCarsForm.appendSwitchListForTp(body)
+        TrackPattern.ModelSetCarsForm.writeTpSwitchListFromJson(switchListName)
 
         print(scriptName + ' ' + str(scriptRev))
 

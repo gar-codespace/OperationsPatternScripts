@@ -1,5 +1,4 @@
 # coding=utf-8
-# No restrictions on use
 # © 2021 Greg Ritacco
 
 import MainScriptEntities

@@ -7,7 +7,7 @@ import logging
 import time
 from sys import path as sysPath
 
-def useCurrentVersion():
+def useThisVersion():
     '''Keep multiple versions of this plugin sorted out'''
 
     fileRoot = jmri.util.FileUtil.getPreferencesPath()
@@ -16,7 +16,7 @@ def useCurrentVersion():
 
     return currentDir
 
-_currentDir = useCurrentVersion()
+_currentDir = useThisVersion()
 sysPath.append(_currentDir)
 import psEntities
 psEntities.MainScriptEntities._currentPath = _currentDir
@@ -57,8 +57,8 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
     # make a list of subroutines for the control panel
         subroutineList = []
         controlPanelConfig = psEntities.MainScriptEntities.readConfigFile('CP')
-        for subroutineIncludes, bool in controlPanelConfig['SI'].items():
-            if (bool):
+        for subroutineIncludes, isIncluded in controlPanelConfig['SI'].items():
+            if (isIncluded):
             # import selected subroutines and add them to a list
                 xModule = __import__(subroutineIncludes, fromlist=['Controller'])
                 subroutineFrame = xModule.Controller.StartUp().makeSubroutineFrame()

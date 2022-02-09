@@ -37,7 +37,11 @@
     "PL" : "",
     "PT" : {
     },
-    "TP" : false,
+    "RT" : {
+      "PR" : "Track Pattern",
+      "SC" : "Switch List for track",
+      "TP" : "TrainPlayer Work Events"
+    },
     "PA" : false,
     "PI" : false,
     "AS" : true,
