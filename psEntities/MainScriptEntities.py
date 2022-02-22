@@ -15,6 +15,11 @@ from shutil import copy as shutilCopy
 '''Support methods for any Pattern Script'''
 
 _currentPath = ''
+
+DUST = java.awt.Color(245,242,233)
+PALE = java.awt.Color(237,243,250)
+LICHEN = java.awt.Color(244,255,236)
+
 scriptName = 'OperationsPatternScripts.psEntities.MainScriptEntities'
 scriptRev = 20220101
 psLog = logging.getLogger('PS.TP.MainScriptEntities')

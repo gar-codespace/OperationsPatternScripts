@@ -30,7 +30,9 @@ Stuff to fix:
   Catch up with the latest JMRI stuff like text color
   add locos to json
   add internal logging to ExportToTrainPlayer.py
-  set cars hold are being sent to (0)
+  set cars hold are being sent to (0). More tests, seems ok
+  update help screen
+  manifest print options empty box crashes
 
 Wish List:
   add Pattern Scripts to Operations Pro combo box

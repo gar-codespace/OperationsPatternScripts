@@ -26,10 +26,11 @@
     "RV" : 20220109
   },
   "LI": {
-    "1": "- WARNING -",
+    "9": "- CRITICAL -",
+    "7": "- ERROR -",
+    "5": "- WARNING -",
     "3": "- INFO -",
-    "5": "- DEBUG -",
-    "7": "- DEBUG -"
+    "1": "- DEBUG -"
   },
   "TP" : {
     "AL" : [
@@ -54,12 +55,16 @@
     "FT" : "*Via Staging",
     "ST" : "Set to:",
     "SL": [
+      "Model"
+    ],
+    "SC": [
       "Load Type",
       "FD&Track"
     ],
     "RM": 8,
     "RW": {
       "Input": 6,
+      "Model": 5,
       "Road" : 5,
       "Number" : 7,
       "Type" : 6,
@@ -67,6 +72,7 @@
       "Weight" : 7,
       "Load" : 6,
       "Load Type" : 10,
+      "Loco Type" : 18,
       "Hazardous" : 10,
       "Color" : 6,
       "Kernel" : 7,

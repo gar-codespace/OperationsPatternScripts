@@ -42,6 +42,8 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         self.psLog.debug('Log File for Pattern Scripts Plugin - debug level initialized')
         self.psLog.info('Log File for Pattern Scripts Plugin - info level initialized')
         self.psLog.warning('Log File for Pattern Scripts Plugin - warning level initialized')
+        self.psLog.error('Log File for Pattern Scripts Plugin - error level initialized')
+        self.psLog.critical('Log File for Pattern Scripts Plugin - critical level initialized')
     # fire up the config file
         if not (psEntities.MainScriptEntities.validateConfigFile()):
             psEntities.MainScriptEntities.writeNewConfigFile() # No love, just start over

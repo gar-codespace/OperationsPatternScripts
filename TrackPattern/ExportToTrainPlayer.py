@@ -70,6 +70,57 @@ class JmriLocationsToTrainPlayer():
         print(self.scriptName + ' ' + str(scriptRev))
 
         return
+class JmriTranslationToTp():
+
+    def __init__(self, body):
+
+        self.body = body
+        self.scriptName ='OperationsPatternScripts.TrackPattern.ExportToTrainPlayer.JmriTranslationToTp'
+        self.scriptRev = 20220101
+
+        return
+
+    def modifyJmriSwitchListForTp(self):
+        '''Replaces car['Set to'] = [ ] with the track comment'''
+
+        psLog.debug('modifySwitchListForTp')
+        location = psEntities.MainScriptEntities.readConfigFile('TP')['PL']
+        lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
+
+        for car in self.body['Cars']:
+            if 'Hold' in car['Set to']:
+                car['Set to'] = lm.getLocationByName(location).getTrackByName(car['Track'], None).getComment()
+            else:
+                car['Set to'] = lm.getLocationByName(location).getTrackByName(car['Set to'], None).getComment()
+
+        return self.body
+
+    def appendSwitchListForTp(self):
+
+        psLog.debug('appendSwitchListForTp')
+        reportTitle = psEntities.MainScriptEntities.readConfigFile('TP')['RT']['TP']
+        jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
+        with codecsOpen(jsonFile, 'r', encoding=psEntities.MainScriptEntities.setEncoding()) as jsonWorkFile:
+            jsonSwitchList = jsonWorkFile.read()
+        switchList = jsonLoads(jsonSwitchList)
+        switchListName = switchList['description']
+        print(self.body)
+        # trackDetailList = self.body['tracks']
+        # if not trackDetailList:
+        #     self.body['Name'] = 'TrainPlayer'
+        #     self.body['Length'] = 0
+        #     trackDetailList.append(self.body)
+        # else:
+        #     carList = trackDetailList[0]['Cars']
+        #     carList += self.body['Cars']
+        #     trackDetailList[0]['Cars'] = carList
+        # switchList['tracks'] = trackDetailList
+
+        # jsonObject = jsonDumps(switchList, indent=2, sort_keys=True)
+        # with codecsOpen(jsonFile, 'wb', encoding=psEntities.MainScriptEntities.setEncoding()) as jsonWorkFile:
+        #     jsonWorkFile.write(jsonObject)
+
+        return switchList
 
 class WorkEventListForTrainPlayer():
 
@@ -80,6 +131,20 @@ class WorkEventListForTrainPlayer():
         self.scriptRev = 20220101
 
         return
+
+    def modifyJmriSwitchListForTp(self):
+        '''Replaces car['Set to'] = [ ] with the track comment'''
+
+        psLog.debug('modifySwitchListForTp')
+        location = psEntities.MainScriptEntities.readConfigFile('TP')['PL']
+        lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
+        for car in body['Cars']:
+            if 'Hold' in car['Set to']:
+                car['Set to'] = lm.getLocationByName(location).getTrackByName(car['Track'], None).getComment()
+            else:
+                car['Set to'] = lm.getLocationByName(location).getTrackByName(car['Set to'], None).getComment()
+
+        return body
 
     def readFromFile(self):
 

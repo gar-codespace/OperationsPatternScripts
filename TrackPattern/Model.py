@@ -27,8 +27,10 @@ def onScButtonPress():
     if selectedTracks:
         i = 0
         for track in selectedTracks:
-            trackHeader = TrackPattern.ModelEntities.createSwitchListHeader()
-            trackBody = TrackPattern.ModelEntities.createSwitchlistForTrack(track)
+            trackHeader = TrackPattern.Model.makeSwitchListHeader()
+            trackBody = TrackPattern.ModelEntities.getTrackDetails(track)
+            trackBody['Locos'] = TrackPattern.ModelEntities.getLocoListForTrack(track)
+            trackBody['Cars'] = TrackPattern.ModelEntities.getCarListForTrack(track)
             newFrame = TrackPattern.ControllerSetCarsForm.CreatePatternReportGui(trackHeader, trackBody)
             newWindow = newFrame.makeFrame()
             newWindow.setTitle(u'Pattern Report for track ' + track)
@@ -47,17 +49,23 @@ def onScButtonPress():
 def makeSwitchList(fileName=u'test'):
 
     psLog.debug('makeSwitchList')
-    switchList = TrackPattern.ModelEntities.createSwitchListHeader()
+    switchList = TrackPattern.Model.makeSwitchListHeader()
     switchList['description'] = fileName
 
     trackList = TrackPattern.ModelEntities.getSelectedTracks()
     if not trackList:
         return
+
+    tracks = []
+    locoRoster = []
     carRoster = []
     for track in trackList:
-        carRoster.append(TrackPattern.ModelEntities.createSwitchlistForTrack(track))
+        trackDetails = TrackPattern.ModelEntities.getTrackDetails(track)
+        trackDetails['Locos'] = TrackPattern.ModelEntities.getLocoListForTrack(track)
+        trackDetails['Cars'] = TrackPattern.ModelEntities.getCarListForTrack(track)
+        tracks.append(trackDetails)
 
-    switchList['tracks'] = carRoster
+    switchList['tracks'] = tracks
 
     return switchList
 
@@ -71,6 +79,19 @@ def writeSwitchlistAsJson(switchList):
         jsonWorkFile.write(jsonObject)
 
     return switchListName
+
+def makeSwitchListHeader():
+    '''The header info for any switch list, used to make the JSON file'''
+
+    switchListHeader = {}
+    switchListHeader['railroad'] = unicode(jmri.jmrit.operations.setup.Setup.getRailroadName(), psEntities.MainScriptEntities.setEncoding())
+    switchListHeader['userName'] = u'Report Type Placeholder'
+    switchListHeader['description'] = u'Report Description'
+    switchListHeader['location'] = psEntities.MainScriptEntities.readConfigFile('TP')['PL']
+    switchListHeader['date'] = unicode(psEntities.MainScriptEntities.timeStamp(), psEntities.MainScriptEntities.setEncoding())
+    # switchListHeader['tracks'] = []
+
+    return switchListHeader
 
 def makeTextSwitchListHeader(switchListName):
     '''The JSON switch list is read in and processed'''
@@ -113,7 +134,7 @@ def resetTrainPlayerSwitchlist():
     psLog.debug('resetTrainPlayerSwitchlist')
 
     reportTitle = psEntities.MainScriptEntities.readConfigFile('TP')['RT']['TP']
-    tpPatternHeader = TrackPattern.ModelEntities.createSwitchListHeader()
+    tpPatternHeader = TrackPattern.Model.makeSwitchListHeader()
     tpPatternHeader['description'] = reportTitle
 
     jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
@@ -215,13 +236,15 @@ def makePatternLog():
             thisLine = patternLogFile.readline()
             if not (thisLine):
                 break
-            if (configLoggingIndex['7'] in thisLine and buildReportLevel > 6): # debug
+            if (configLoggingIndex['9'] in thisLine and buildReportLevel > 0): # critical
                 outputPatternLog = outputPatternLog + thisLine
-            if (configLoggingIndex['5'] in thisLine and buildReportLevel > 4): # info
+            if (configLoggingIndex['7'] in thisLine and buildReportLevel > 0): # error
                 outputPatternLog = outputPatternLog + thisLine
-            if (configLoggingIndex['3'] in thisLine and buildReportLevel > 2): # warning
+            if (configLoggingIndex['5'] in thisLine and buildReportLevel > 0): # warning
                 outputPatternLog = outputPatternLog + thisLine
-            if (configLoggingIndex['1'] in thisLine and buildReportLevel > 0): # error
+            if (configLoggingIndex['3'] in thisLine and buildReportLevel > 2): # info
+                outputPatternLog = outputPatternLog + thisLine
+            if (configLoggingIndex['1'] in thisLine and buildReportLevel > 4): # debug
                 outputPatternLog = outputPatternLog + thisLine
 
     tempLogFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternLog_temp.txt'

@@ -11,11 +11,91 @@ import psEntities.MainScriptEntities
 import TrackPattern.ModelEntities
 import TrackPattern.ExportToTrainPlayer
 
-'''Data crunching for the Set Cars Form'''
+'''Data crunching for the Pattern Reprot for Track X Form'''
 
 scriptName = 'OperationsPatternScripts.TrackPattern.ModelSetCarsForm'
 scriptRev = 20220101
 psLog = logging.getLogger('PS.TP.ModelSetCarsForm')
+
+def testFormValidity(body, textBoxEntry):
+
+    if len(textBoxEntry) == len(body['Locos']) + len(body['Cars']):
+        return True
+    else:
+        psLog.critical('mismatched input list and car roster lengths')
+        return False
+
+def setCarsToTrack(body, textBoxEntry):
+
+    psLog.debug('setCarsToTrack')
+    trackData = []
+
+    em = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.engines.EngineManager)
+    cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
+    lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
+
+    ignoreTrackLength = psEntities.MainScriptEntities.readConfigFile('TP')['PI']
+    location = psEntities.MainScriptEntities.readConfigFile('TP')['PL']
+    locationObject = lm.getLocationByName(unicode(location, psEntities.MainScriptEntities.setEncoding()))
+    allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(location, None)
+    fromTrack = unicode(body['Name'], psEntities.MainScriptEntities.setEncoding())
+
+    userInputList = []
+    for userInput in textBoxEntry:
+        userInputList.append(unicode(userInput.getText(), psEntities.MainScriptEntities.setEncoding()))
+
+    i = 0
+    setCount = 0
+
+    for loco in body['Locos']:
+
+        toTrack = fromTrack
+        if userInputList[i]:
+            toTrack = userInputList[i]
+
+        locoObject = em.newRS(loco['Road'], loco['Number'])
+        toTrackObject = locationObject.getTrackByName(unicode(toTrack, psEntities.MainScriptEntities.setEncoding()), None)
+        if ignoreTrackLength:
+            trackLength = toTrackObject.getLength()
+            toTrackObject.setLength(9999)
+            setResult = locoObject.setLocation(locationObject, toTrackObject)
+            toTrackObject.setLength(trackLength)
+        else:
+            setResult = locoObject.setLocation(locationObject, toTrackObject)
+
+        if setResult == 'okay' and toTrack != fromTrack:
+            setCount += 1
+
+        i += 1
+    jmri.jmrit.operations.rollingstock.engines.EngineManagerXml.save()
+
+    for car in body['Cars']:
+
+        toTrack = fromTrack
+        if userInputList[i]:
+            toTrack = userInputList[i]
+
+        carObject = cm.newRS(car['Road'], car['Number'])
+        toTrackObject = locationObject.getTrackByName(unicode(toTrack, psEntities.MainScriptEntities.setEncoding()), None)
+        if ignoreTrackLength:
+            trackLength = toTrackObject.getLength()
+            toTrackObject.setLength(9999)
+            setResult = carObject.setLocation(locationObject, toTrackObject)
+            toTrackObject.setLength(trackLength)
+        else:
+            setResult = carObject.setLocation(locationObject, toTrackObject)
+
+        if setResult == 'okay' and toTrack != fromTrack:
+            setCount += 1
+            schedule = getSchedule(location, toTrack)
+            applySchedule(carObject, schedule)
+
+        i += 1
+
+    psLog.info('Rolling stock count: ' + str(setCount) + ', processed from track: ' + fromTrack)
+    jmri.jmrit.operations.rollingstock.cars.CarManagerXml.save()
+
+    return
 
 def writeTpSwitchListFromJson(switchListName):
     '''Writes the switch list for TrainPlayer'''
@@ -32,14 +112,12 @@ def writeTpSwitchListFromJson(switchListName):
     return
 
 def makeSetCarsSwitchList(body, textBoxEntry):
-    '''The "Set to:" box is filled in with user input'''
 
     psLog.debug('makeSetCarsSwitchList')
-    trackData = []
 
-    if len(textBoxEntry) != len(body['Cars']):
+    if len(textBoxEntry) != len(body['Locos']) + len(body['Cars']):
         psLog.critical('mismatched input list and car roster lengths')
-        return trackData
+        return None
 
     userInputList = []
     for userInput in textBoxEntry:
@@ -49,12 +127,18 @@ def makeSetCarsSwitchList(body, textBoxEntry):
     allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(location, None)
     trackName = unicode(body['Name'], psEntities.MainScriptEntities.setEncoding())
     i = 0
+    for loco in body['Locos']:
+        setTrack = unicode('Hold', psEntities.MainScriptEntities.setEncoding())
+        userInput = unicode(userInputList[i], psEntities.MainScriptEntities.setEncoding())
+        if userInput in allTracksAtLoc and userInput != trackName:
+            setTrack = userInput
+        loco['Set to'] = setTrack
+        i += 1
     for car in body['Cars']:
         setTrack = unicode('Hold', psEntities.MainScriptEntities.setEncoding())
         userInput = unicode(userInputList[i], psEntities.MainScriptEntities.setEncoding())
         if userInput in allTracksAtLoc and userInput != trackName:
             setTrack = userInput
-        # setTrack = TrackPattern.ModelEntities.formatText(' [' + setTrack + '] ', 8)
         car['Set to'] = setTrack
         i += 1
 
@@ -69,100 +153,60 @@ def modifySwitchListForPrint(body):
         if len(track) > longestTrackString:
             longestTrackString = len(track)
 
+    if longestTrackString < 7:
+        longestTrackString = 6
+
+    for loco in body['Locos']:
+        carSetTo = unicode(loco['Set to'], psEntities.MainScriptEntities.setEncoding())
+        loco['Set to'] = TrackPattern.ModelEntities.formatText('[' + carSetTo + ']', longestTrackString + 2)
+
     for car in body['Cars']:
         carSetTo = unicode(car['Set to'], psEntities.MainScriptEntities.setEncoding())
         car['Set to'] = TrackPattern.ModelEntities.formatText('[' + carSetTo + ']', longestTrackString + 2)
 
     return body
 
-def modifySwitchListForTp(body):
-    '''Replaces car['Set to'] = [ ] with the track comment'''
+# def modifySwitchListForTp(body):
+#     '''Replaces car['Set to'] = [ ] with the track comment'''
+#
+#     psLog.debug('modifySwitchListForTp')
+#     location = psEntities.MainScriptEntities.readConfigFile('TP')['PL']
+#     lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
+#     for car in body['Cars']:
+#         if 'Hold' in car['Set to']:
+#             car['Set to'] = lm.getLocationByName(location).getTrackByName(car['Track'], None).getComment()
+#         else:
+#             car['Set to'] = lm.getLocationByName(location).getTrackByName(car['Set to'], None).getComment()
+#
+#     return body
 
-    psLog.debug('modifySwitchListForTp')
-    location = psEntities.MainScriptEntities.readConfigFile('TP')['PL']
-    lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
-    for car in body['Cars']:
-        if 'Hold' in car['Set to']:
-            car['Set to'] = lm.getLocationByName(location).getTrackByName(car['Track'], None).getComment()
-        else:
-            car['Set to'] = lm.getLocationByName(location).getTrackByName(car['Set to'], None).getComment()
-
-    return body
-
-def appendSwitchListForTp(body):
-
-    reportTitle = psEntities.MainScriptEntities.readConfigFile('TP')['RT']['TP']
-    jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
-    with codecsOpen(jsonFile, 'r', encoding=psEntities.MainScriptEntities.setEncoding()) as jsonWorkFile:
-        jsonSwitchList = jsonWorkFile.read()
-    switchList = jsonLoads(jsonSwitchList)
-    switchListName = switchList['description']
-    trackDetailList = switchList['tracks']
-
-    if not trackDetailList:
-        body['Name'] = 'TrainPlayer'
-        body['Length'] = 0
-        trackDetailList.append(body)
-    else:
-        carList = trackDetailList[0]['Cars']
-        # carList.append(body['Cars'])
-        carList += body['Cars']
-        trackDetailList[0]['Cars'] = carList
-    switchList['tracks'] = trackDetailList
-
-    jsonObject = jsonDumps(switchList, indent=2, sort_keys=True)
-    with codecsOpen(jsonFile, 'wb', encoding=psEntities.MainScriptEntities.setEncoding()) as jsonWorkFile:
-        jsonWorkFile.write(jsonObject)
-
-    return reportTitle
-
-def setCarsToTrack(body, textBoxEntry):
-
-    psLog.debug('setCarsToTrack')
-    trackData = []
-
-    if len(textBoxEntry) != len(body['Cars']):
-        psLog.critical('mismatched input list and car roster lengths')
-        return trackData
-
-    cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
-    lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
-
-    ignoreTrackLength = psEntities.MainScriptEntities.readConfigFile('TP')['PI']
-    location = psEntities.MainScriptEntities.readConfigFile('TP')['PL']
-    locationObject = lm.getLocationByName(unicode(location, psEntities.MainScriptEntities.setEncoding()))
-    allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(location, None)
-    fromTrack = unicode(body['Name'], psEntities.MainScriptEntities.setEncoding())
-
-    userInputList = []
-    for userInput in textBoxEntry:
-        userInputList.append(unicode(userInput.getText(), psEntities.MainScriptEntities.setEncoding()))
-# Set cars
-    i = 0
-    setCount = 0
-    for car in body['Cars']:
-        carObject = cm.newRS(car['Road'], car['Number'])
-        toTrack = userInputList[i]
-        if not toTrack:
-            toTrack = fromTrack
-        toTrackObject = locationObject.getTrackByName(unicode(toTrack, psEntities.MainScriptEntities.setEncoding()), None)
-        if ignoreTrackLength:
-            trackLength = toTrackObject.getLength()
-            toTrackObject.setLength(9999)
-            setResult = carObject.setLocation(locationObject, toTrackObject)
-            toTrackObject.setLength(trackLength)
-        else:
-            setResult = carObject.setLocation(locationObject, toTrackObject)
-        if setResult == 'okay' and toTrack != fromTrack:
-            setCount += 1
-            schedule = getSchedule(location, toTrack)
-            applySchedule(carObject, schedule)
-        i += 1
-
-    psLog.info(str(setCount) + ' cars were processed from track ' + fromTrack)
-    jmri.jmrit.operations.rollingstock.cars.CarManagerXml.save()
-
-    return
+# def appendSwitchListForTp(body):
+#
+#     psLog.debug('appendSwitchListForTp')
+#     reportTitle = psEntities.MainScriptEntities.readConfigFile('TP')['RT']['TP']
+#     jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
+#     with codecsOpen(jsonFile, 'r', encoding=psEntities.MainScriptEntities.setEncoding()) as jsonWorkFile:
+#         jsonSwitchList = jsonWorkFile.read()
+#     switchList = jsonLoads(jsonSwitchList)
+#     switchListName = switchList['description']
+#     trackDetailList = switchList['tracks']
+#
+#     if not trackDetailList:
+#         body['Name'] = 'TrainPlayer'
+#         body['Length'] = 0
+#         trackDetailList.append(body)
+#     else:
+#         carList = trackDetailList[0]['Cars']
+#         # carList.append(body['Cars'])
+#         carList += body['Cars']
+#         trackDetailList[0]['Cars'] = carList
+#     switchList['tracks'] = trackDetailList
+#
+#     jsonObject = jsonDumps(switchList, indent=2, sort_keys=True)
+#     with codecsOpen(jsonFile, 'wb', encoding=psEntities.MainScriptEntities.setEncoding()) as jsonWorkFile:
+#         jsonWorkFile.write(jsonObject)
+#
+#     return reportTitle
 
 def getSchedule(locationString, trackString):
     '''Returns a schedule if there is one'''

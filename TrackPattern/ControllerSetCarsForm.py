@@ -3,16 +3,17 @@
 
 import jmri
 import java.awt
-import javax.swing
+# import javax.swing
 import logging
 from os import system as osSystem
 
 import psEntities.MainScriptEntities
 import TrackPattern.Model
 import TrackPattern.View
-import TrackPattern.ModelEntities
+# import TrackPattern.ModelEntities
 import TrackPattern.ModelSetCarsForm
 import TrackPattern.ViewSetCarsForm
+import TrackPattern.ExportToTrainPlayer
 
 '''Makes a "Pattern Report for Track X" form for each selected track'''
 
@@ -27,10 +28,9 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
         self.sm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.schedules.ScheduleManager)
     # scheduleButton
         self.trackObject = object1
-    # printButton, setButton
+    # printButton, setButton, TrainPlayerButton
         self.trackData = object1
         self.textBoxEntry = object2
-    # TrainPlayer button
 
         return
 
@@ -50,40 +50,42 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
 
         return
 
-    def setButton(self, MOUSE_CLICKED):
-        '''Event that moves cars to the tracks entered in the text box of the "Pattern Report for Track X" form'''
+    def printButton(self, MOUSE_CLICKED):
+        '''Print a switch list for each "Pattern Report for Track X" window'''
 
-        TrackPattern.ModelSetCarsForm.setCarsToTrack(self.trackData, self.textBoxEntry)
-        setCarsWindow = MOUSE_CLICKED.getSource().getTopLevelAncestor()
-        setCarsWindow.setVisible(False)
-        setCarsWindow.dispose()
+        if TrackPattern.ModelSetCarsForm.testFormValidity(self.trackData, self.textBoxEntry):
+            testSwitchListBody = TrackPattern.ModelSetCarsForm.makeSetCarsSwitchList(self.trackData, self.textBoxEntry)
+            switchListBody = TrackPattern.ModelSetCarsForm.modifySwitchListForPrint(testSwitchListBody)
+            switchList = TrackPattern.Model.makeSwitchListHeader()
+            switchList['tracks'] = [switchListBody]
+            # switchListBody has to be added as a one element list to be compatable with TrackPattern.Model.makeTextSwitchListBody(switchListname)
+            trackName = switchList['tracks'][0]['Name']
+            reportTitle = psEntities.MainScriptEntities.readConfigFile('TP')['RT']['SC']
+            switchList['description'] = reportTitle + ' ' + unicode(trackName, psEntities.MainScriptEntities.setEncoding())
+            switchListname = TrackPattern.Model.writeSwitchlistAsJson(switchList)
+            textSwitchListHeader = TrackPattern.Model.makeTextSwitchListHeader(switchListname)
+            textSwitchListBody = TrackPattern.Model.makeTextSwitchListBody(switchListname)
+            textSwitchList = textSwitchListHeader + textSwitchListBody
+            TrackPattern.Model.writeTextSwitchList(textSwitchList)
+            TrackPattern.View.displayTextSwitchList(textSwitchList)
+        else:
+            self.psLog.critical('Could not create switch list')
+
         print(scriptName + ' ' + str(scriptRev))
 
         return
 
-    def printButton(self, MOUSE_CLICKED):
-        '''Print a switch list for each "Pattern Report for Track X" window'''
+    def setButton(self, MOUSE_CLICKED):
+        '''Event that moves cars to the tracks entered in the text box of the "Pattern Report for Track X" form'''
 
-        try:
-            body = TrackPattern.ModelSetCarsForm.makeSetCarsSwitchList(self.trackData, self.textBoxEntry)
-        except:
-            self.psLog.critical('Could not create switch list')
-            return
-        body = TrackPattern.ModelSetCarsForm.modifySwitchListForPrint(body)
-        switchList = TrackPattern.ModelEntities.createSwitchListHeader()
-        # switchList = TrackPattern.ModelEntities.createSwitchListHeader()
-        switchList['tracks'].append(body)
-        trackName = switchList['tracks'][0]['Name']
-        reportTitle = psEntities.MainScriptEntities.readConfigFile('TP')['RT']['SC']
-        switchList['description'] = reportTitle + ' ' + unicode(trackName, psEntities.MainScriptEntities.setEncoding())
+        if TrackPattern.ModelSetCarsForm.testFormValidity(self.trackData, self.textBoxEntry):
+            TrackPattern.ModelSetCarsForm.setCarsToTrack(self.trackData, self.textBoxEntry)
+        else:
+            self.psLog.critical('Could not set cars to track')
 
-        switchListname = TrackPattern.Model.writeSwitchlistAsJson(switchList)
-        textSwitchListHeader = TrackPattern.Model.makeTextSwitchListHeader(switchListname)
-        textSwitchListBody = TrackPattern.Model.makeTextSwitchListBody(switchListname)
-        textSwitchList = textSwitchListHeader + textSwitchListBody
-        TrackPattern.Model.writeTextSwitchList(textSwitchList)
-        TrackPattern.View.displayTextSwitchList(textSwitchList)
-
+        setCarsWindow = MOUSE_CLICKED.getSource().getTopLevelAncestor()
+        setCarsWindow.setVisible(False)
+        setCarsWindow.dispose()
         print(scriptName + ' ' + str(scriptRev))
 
         return
@@ -97,9 +99,9 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
         except:
             self.psLog.critical('Could not create switch list')
             return
-        body = TrackPattern.ModelSetCarsForm.modifySwitchListForTp(body)
-        switchListName = TrackPattern.ModelSetCarsForm.appendSwitchListForTp(body)
-        TrackPattern.ModelSetCarsForm.writeTpSwitchListFromJson(switchListName)
+        tpBody = TrackPattern.ExportToTrainPlayer.JmriTranslationToTp(body).modifyJmriSwitchListForTp()
+        appendedTpSwitchList = TrackPattern.ExportToTrainPlayer.JmriTranslationToTp(tpBody).appendSwitchListForTp()
+        # TrackPattern.ModelSetCarsForm.writeTpSwitchListFromJson(switchListName)
 
         print(scriptName + ' ' + str(scriptRev))
 
