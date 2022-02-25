@@ -11,7 +11,7 @@ import TrackPattern.ViewEntities
 import TrackPattern.ModelEntities
 import TrackPattern.ControllerSetCarsForm
 
-'''Display methods for the Set Cars form'''
+'''Display methods for the Pattern Report for Track X form'''
 
 scriptName = 'OperationsPatternScripts.TrackPattern.ViewSetCarsForm'
 scriptRev = 20220101
@@ -143,7 +143,7 @@ def patternReportLocosBody(body):
     sortedLocoList = TrackPattern.ModelEntities.sortLocoList(body['Locos'])
     for loco in sortedLocoList:
         combinedInputLine = javax.swing.JPanel()
-        combinedInputLine.setBackground(psEntities.MainScriptEntities.LICHEN)
+        combinedInputLine.setBackground(psEntities.FADED)
         # combinedInputLine.setAlignmentX(java.awt.BorderLayout.WEST)
 
         inputText = javax.swing.JTextField(5)
@@ -190,7 +190,7 @@ def patternReportCarsBody(body):
     sortedCarList = TrackPattern.ModelEntities.sortCarList(body['Cars'])
     for car in sortedCarList:
         combinedInputLine = javax.swing.JPanel()
-        combinedInputLine.setBackground(psEntities.MainScriptEntities.DUST)
+        combinedInputLine.setBackground(psEntities.DUST)
         # combinedInputLine.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
         inputText = javax.swing.JTextField(5)
         inputText.addMouseListener(TrackPattern.ControllerSetCarsForm.TextBoxEntryListener())

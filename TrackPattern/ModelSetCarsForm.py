@@ -55,16 +55,17 @@ def setCarsToTrack(body, textBoxEntry):
 
         locoObject = em.newRS(loco['Road'], loco['Number'])
         toTrackObject = locationObject.getTrackByName(unicode(toTrack, psEntities.MainScriptEntities.setEncoding()), None)
-        if ignoreTrackLength:
-            trackLength = toTrackObject.getLength()
-            toTrackObject.setLength(9999)
-            setResult = locoObject.setLocation(locationObject, toTrackObject)
-            toTrackObject.setLength(trackLength)
-        else:
-            setResult = locoObject.setLocation(locationObject, toTrackObject)
+        if unicode(locoObject.getTrack().getName(), psEntities.MainScriptEntities.setEncoding()) in allTracksAtLoc: # Catches invalid track typed into box
+            if ignoreTrackLength:
+                trackLength = toTrackObject.getLength()
+                toTrackObject.setLength(9999)
+                setResult = locoObject.setLocation(locationObject, toTrackObject)
+                toTrackObject.setLength(trackLength)
+            else:
+                setResult = locoObject.setLocation(locationObject, toTrackObject)
 
-        if setResult == 'okay' and toTrack != fromTrack:
-            setCount += 1
+            if setResult == 'okay' and toTrack != fromTrack:
+                setCount += 1
 
         i += 1
     jmri.jmrit.operations.rollingstock.engines.EngineManagerXml.save()
@@ -77,18 +78,19 @@ def setCarsToTrack(body, textBoxEntry):
 
         carObject = cm.newRS(car['Road'], car['Number'])
         toTrackObject = locationObject.getTrackByName(unicode(toTrack, psEntities.MainScriptEntities.setEncoding()), None)
-        if ignoreTrackLength:
-            trackLength = toTrackObject.getLength()
-            toTrackObject.setLength(9999)
-            setResult = carObject.setLocation(locationObject, toTrackObject)
-            toTrackObject.setLength(trackLength)
-        else:
-            setResult = carObject.setLocation(locationObject, toTrackObject)
+        if unicode(carObject.getTrack().getName(), psEntities.MainScriptEntities.setEncoding()) in allTracksAtLoc: # Catches invalid track typed into box
+            if ignoreTrackLength:
+                trackLength = toTrackObject.getLength()
+                toTrackObject.setLength(9999)
+                setResult = carObject.setLocation(locationObject, toTrackObject)
+                toTrackObject.setLength(trackLength)
+            else:
+                setResult = carObject.setLocation(locationObject, toTrackObject)
 
-        if setResult == 'okay' and toTrack != fromTrack:
-            setCount += 1
-            schedule = getSchedule(location, toTrack)
-            applySchedule(carObject, schedule)
+            if setResult == 'okay' and toTrack != fromTrack:
+                setCount += 1
+                schedule = getSchedule(location, toTrack)
+                applySchedule(carObject, schedule)
 
         i += 1
 
@@ -210,8 +212,6 @@ def modifySwitchListForPrint(body):
 
 def getSchedule(locationString, trackString):
     '''Returns a schedule if there is one'''
-
-    psLog.debug('getSchedule')
 
     lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
     sm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.schedules.ScheduleManager)

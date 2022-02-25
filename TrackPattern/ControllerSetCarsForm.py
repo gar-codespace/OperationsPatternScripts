@@ -99,9 +99,16 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
         except:
             self.psLog.critical('Could not create switch list')
             return
-        tpBody = TrackPattern.ExportToTrainPlayer.JmriTranslationToTp(body).modifyJmriSwitchListForTp()
-        appendedTpSwitchList = TrackPattern.ExportToTrainPlayer.JmriTranslationToTp(tpBody).appendSwitchListForTp()
-        # TrackPattern.ModelSetCarsForm.writeTpSwitchListFromJson(switchListName)
+        tpBody = TrackPattern.ExportToTrainPlayer.TrackPatternTranslationToTp(body).modifySwitchList()
+        appendedTpSwitchList = TrackPattern.ExportToTrainPlayer.TrackPatternTranslationToTp(tpBody).appendSwitchList()
+        switchListName = TrackPattern.ExportToTrainPlayer.ProcessWorkEventList(appendedTpSwitchList).writeWorkEventListAsJson()
+        jsonSwitchList = TrackPattern.ExportToTrainPlayer.ProcessWorkEventList(switchListName).readFromFile()
+        tpSwitchList = TrackPattern.ExportToTrainPlayer.ProcessWorkEventList(jsonSwitchList)
+        tpSwitchListHeader = tpSwitchList.makeHeader()
+        tpSwitchListBody = tpSwitchList.makeBody()
+        TrackPattern.ExportToTrainPlayer.CheckTpDestination().directoryExists()
+        TrackPattern.ExportToTrainPlayer.WriteWorkEventListToTp(tpSwitchListHeader + tpSwitchListBody).asCsv()
+        TrackPattern.ExportToTrainPlayer.ExportJmriLocations().toTrainPlayer()
 
         print(scriptName + ' ' + str(scriptRev))
 

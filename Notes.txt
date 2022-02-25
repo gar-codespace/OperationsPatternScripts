@@ -25,16 +25,19 @@ Stuff that's OK:
   Catches pattern report no tracks selected OK
   TrainPlayer support implements OK
   formatText() works with utf-8 OK
+  set cars to 'Hold' works OK
+  catches empty boxes added to jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat() OK
+  catches invalid track typed into set cars box OK
 
-Stuff to fix:
+Todo:
   Catch up with the latest JMRI stuff like text color
-  add locos to json
   add internal logging to ExportToTrainPlayer.py
-  set cars hold are being sent to (0). More tests, seems ok
   update help screen
-  manifest print options empty box crashes
+  Make log messages more explicit
 
 Wish List:
+  maybe move the colors to the config file?
+  add loco include elements to the json config file similar to: jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
   add Pattern Scripts to Operations Pro combo box
   plugin added to button in trains window (AWT.getComponents())
   jmri.util.swing.JMenuUtil.replaceMenuItem() to replace the trains window with a new trains window that includes a ps button

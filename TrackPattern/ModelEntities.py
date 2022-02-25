@@ -42,19 +42,6 @@ def occuranceTally(listOfOccurances):
 
     return dict
 
-# def createSwitchListHeader():
-#     '''The header info for any switch list, used to make the JSON file'''
-#
-#     switchListHeader = {}
-#     switchListHeader['railroad'] = unicode(jmri.jmrit.operations.setup.Setup.getRailroadName(), psEntities.MainScriptEntities.setEncoding())
-#     switchListHeader['userName'] = u'Report Type Placeholder'
-#     switchListHeader['description'] = u'Report Description'
-#     switchListHeader['location'] = psEntities.MainScriptEntities.readConfigFile('TP')['PL']
-#     switchListHeader['date'] = unicode(psEntities.MainScriptEntities.timeStamp(), psEntities.MainScriptEntities.setEncoding())
-#     # switchListHeader['tracks'] = []
-#
-#     return switchListHeader
-
 def getTrackDetails(track):
 
     lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
@@ -86,9 +73,10 @@ def getLocoObjects(location, track):
             locoList.append(loco)
 
     return locoList
-def getDetailsForLocoAsDict(locoObject):
-    '''A dictionary of locomotive attributes'''
 
+def getDetailsForLocoAsDict(locoObject):
+    '''A dictionary of locomotive attributes, hard coded selection'''
+    # @Todo move this to the json config file
     locoDetailDict = {}
     locoDetailDict[u'Set to'] = '[  ] '
     locoDetailDict[u'Road'] = locoObject.getRoadName()
@@ -97,6 +85,8 @@ def getDetailsForLocoAsDict(locoObject):
     locoDetailDict[u'Length'] = locoObject.getLength()
     locoDetailDict[u'Weight'] = locoObject.getWeightTons()
     locoDetailDict[u'Model'] = locoObject.getModel()
+    locoDetailDict[u'PUSO'] = u'SL'
+    locoDetailDict[u'Track'] = locoObject.getTrackName()
 
     return locoDetailDict
 
@@ -111,25 +101,6 @@ def getCarListForTrack(track):
 
     return trackCarList
 
-# def createSwitchlistForTrack(track):
-#     '''Creates a generic switch list for a track, used to make the JSON file'''
-#
-#     lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
-#
-#     location = psEntities.MainScriptEntities.readConfigFile('TP')['PL']
-#     trackDetailList = []
-#     trackDetails = {}
-#     trackDetails['Name'] = track
-#     trackDetails['Length'] = lm.getLocationByName(location).getTrackByName(track, None).getLength()
-#     carList = getCarObjects(location, track)
-#     carDetailList = []
-#     for car in carList:
-#         carDetail = getDetailsForCarAsDict(car)
-#         carDetailList.append(carDetail)
-#     trackDetails['Cars'] = carDetailList
-#
-#     return trackDetails
-
 def getCarObjects(location, track):
 
     carList = []
@@ -141,7 +112,7 @@ def getCarObjects(location, track):
     return carList
 
 def getDetailsForCarAsDict(carObject):
-    '''makes a dictionary of attributes for one car based on the requirements of
+    '''makes a dictionary of attributes for one car that includes all the fields possible from:
     jmri.jmrit.operations.setup.Setup.getCarAttributes()'''
 
     fdStandIn = psEntities.MainScriptEntities.readConfigFile('TP')
@@ -187,6 +158,7 @@ def getDetailsForCarAsDict(carObject):
     carDetailDict[u'PickUp Msg'] = trackId.getCommentPickup()
     carDetailDict[u'RWE'] = carObject.getReturnWhenEmptyDestinationName()
     carDetailDict[u'PUSO'] = u'SC'
+    carDetailDict[u' '] = u' ' # Catches empty box added to getLocalSwitchListMessageFormat KeyError
 
     return carDetailDict
 

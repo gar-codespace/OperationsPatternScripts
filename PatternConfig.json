@@ -87,7 +87,8 @@
       "Comment" : 15,
       "SetOut Msg" : 12,
       "PickUp Msg" : 12,
-      "RWE" : 10
+      "RWE" : 10,
+      " " : 0
     }
   }
 }
