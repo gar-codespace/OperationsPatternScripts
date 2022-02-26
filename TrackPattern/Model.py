@@ -65,7 +65,7 @@ def makeSwitchList(fileName=u'test'):
         trackDetails['Cars'] = TrackPattern.ModelEntities.getCarListForTrack(track)
         tracks.append(trackDetails)
 
-    switchList['tracks'] = tracks
+    switchList['locations'] = tracks
 
     return switchList
 

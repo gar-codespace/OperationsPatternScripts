@@ -57,9 +57,9 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
             testSwitchListBody = TrackPattern.ModelSetCarsForm.makeSetCarsSwitchList(self.trackData, self.textBoxEntry)
             switchListBody = TrackPattern.ModelSetCarsForm.modifySwitchListForPrint(testSwitchListBody)
             switchList = TrackPattern.Model.makeSwitchListHeader()
-            switchList['tracks'] = [switchListBody]
+            switchList['locations'] = [switchListBody]
             # switchListBody has to be added as a one element list to be compatable with TrackPattern.Model.makeTextSwitchListBody(switchListname)
-            trackName = switchList['tracks'][0]['Name']
+            trackName = switchList['locations'][0]['Name']
             reportTitle = psEntities.MainScriptEntities.readConfigFile('TP')['RT']['SC']
             switchList['description'] = reportTitle + ' ' + unicode(trackName, psEntities.MainScriptEntities.setEncoding())
             switchListname = TrackPattern.Model.writeSwitchlistAsJson(switchList)

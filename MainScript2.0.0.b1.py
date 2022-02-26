@@ -32,7 +32,7 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
     def init(self):
 
     # fire up logging
-        logPath = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternLog.txt'
+        logPath = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog.txt'
         self.psLog = logging.getLogger('PS')
         self.psLog.setLevel(10)
         logFileFormat = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')

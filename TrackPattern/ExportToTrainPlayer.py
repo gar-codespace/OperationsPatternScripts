@@ -1,8 +1,6 @@
-# coding=utf-8
-# © 2021 Greg Ritacco
-
 import jmri
 import logging
+import time
 from json import loads as jsonLoads, load as jsonLoad, dumps as jsonDumps
 from HTMLParser import HTMLParser
 from codecs import open as codecsOpen
@@ -17,6 +15,8 @@ except ImportError:
 scriptName ='OperationsPatternScripts.TrackPattern.ExportToTrainPlayer'
 scriptRev = 20220101
 
+jmriLocationsPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Locations.csv"
+jmriManifestPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Work Events.csv"
 
 class CheckTpDestination():
     '''Verify or create a TrainPlayer destination directory'''
@@ -25,6 +25,7 @@ class CheckTpDestination():
         self.scriptName = 'OperationsPatternScripts.TrackPattern.ExportToTrainPlayer.CheckTpDestination'
         self.scriptRev = 20220101
         self.psLog = logging.getLogger('PS.EX.CheckTpDestination')
+        self.tpLog = logging.getLogger('TP.EX.CheckTpDestination')
 
         return
 
@@ -35,6 +36,7 @@ class CheckTpDestination():
             self.psLog.warning('TrainPlayer destination directory created')
         except OSError:
             self.psLog.info('TrainPlayer destination directory OK')
+            self.tpLog.info('TrainPlayer destination directory OK')
 
         print(scriptName + ' ' + str(scriptRev))
 
@@ -48,7 +50,6 @@ class ExportJmriLocations():
         self.scriptRev = 20220101
         self.psLog = logging.getLogger('PS.EX.ExportJmriLocations')
         self.jLM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
-        self.toLoc = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Locations.csv"
 
         return
 
@@ -57,7 +58,7 @@ class ExportJmriLocations():
 
         eMessage = 'No missing entries for location export for TrainPlayer'
         locationList = self.jLM.getLocationsByIdList()
-        with codecsOpen(self.toLoc, 'wb', encoding=setEncoding) as csvWorkFile:
+        with codecsOpen(jmriLocationsPath, 'wb', encoding=setEncoding) as csvWorkFile:
             csvLocations = u'Locale,Industry\n'
             for location in locationList:
                 jLocTrackList = location.getTrackIdsByIdList()
@@ -116,31 +117,34 @@ class TrackPatternTranslationToTp():
         with codecsOpen(jsonFile, 'r', encoding=psEntities.MainScriptEntities.setEncoding()) as jsonWorkFile:
             jsonSwitchList = jsonWorkFile.read()
         switchList = jsonLoads(jsonSwitchList)
-        switchListName = switchList['description']
+        # switchListName = switchList['description']
+        switchList['comment'] = 'TrainPlayer Switch List'
         try:
-            trackDetailList = switchList['tracks']
-            locoList = trackDetailList[0]['Locos']
-            locoList += self.body['Locos']
-            trackDetailList[0]['Locos'] = locoList
-            carList = trackDetailList[0]['Cars']
-            carList += self.body['Cars']
-            trackDetailList[0]['Cars'] = carList
+            trackDetailList = switchList['locations']
         except KeyError:
-            switchList['tracks'] = [self.body]
+            switchList['locations'] = [self.body]
+            return switchList
+
+        locoList = trackDetailList[0]['Locos']
+        locoList += self.body['Locos']
+        trackDetailList[0]['Locos'] = locoList
+        carList = trackDetailList[0]['Cars']
+        carList += self.body['Cars']
+        trackDetailList[0]['Cars'] = carList
 
         return switchList
 
 class JmriTranslationToTp():
     '''Translate manifests from JMRI to TrainPlayer format'''
 
-    def __init__(self, inputList=None):
+    def __init__(self):
 
-        self.inputList = inputList
+        # self.inputList = inputList
         self.scriptName ='OperationsPatternScripts.TrackPattern.ExportToTrainPlayer.JmriTranslationToTp'
         self.scriptRev = 20220101
         self.psLog = logging.getLogger('PS.EX.JmriTranslationToTp')
 
-        self.comment = u'Train comment place holder'
+        # self.comment = u'TrainPlayer Switch List'
         self.jTM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.trains.TrainManager)
 
         return
@@ -148,6 +152,8 @@ class JmriTranslationToTp():
     def findNewestManifest(self):
         '''If more than 1 train is built, pick the newest one'''
 
+        newestTrain = ''
+        trainComment = ''
         if self.jTM.isAnyTrainBuilt():
             trainListByStatus = self.jTM.getTrainsByStatusList()
             newestBuildTime = ''
@@ -159,12 +165,120 @@ class JmriTranslationToTp():
                     if workEventList[u'date'] > newestBuildTime:
                         newestBuildTime = workEventList[u'date']
                         newestTrain = workEventList
-                        trainComment = train.getComment()
-            self.psLog.info('Train ' + newestTrain['userName'] + ' is newest')
+                        newestTrain['comment'] = train.getComment()
+            self.psLog.info('Train ' + newestTrain[u'userName'] + ' is newest')
         else:
             self.psLog.info('No trains are built')
 
-        return newestTrain, trainComment
+        return newestTrain
+
+    def translateManifestHeader(self, completeJmriManifest):
+
+        jmriDateAsEpoch = self.convertJmriDateToEpoch(completeJmriManifest[u'date'])
+        completeJmriManifest[u'date'] = self.jmriTimeStamp(jmriDateAsEpoch)
+        completeJmriManifest[u'description'] = 'TrainPlayer Work Events'
+
+        return completeJmriManifest
+
+    def translateManifestBody(self, completeJmriManifest):
+
+        locationList = []
+        for location in completeJmriManifest[u'locations']:
+            locationDict = {}
+            locos = []
+            cars = []
+            for loco in location[u'engines'][u'add']:
+                line = self.parseRollingStockAsDict(loco)
+                line['PUSO'] = 'PL'
+                locos.append(line)
+            for loco in location[u'engines'][u'remove']:
+                line = self.parseRollingStockAsDict(loco)
+                line['PUSO'] = 'SL'
+                locos.append(line)
+            for car in location['cars']['add']:
+                line = self.parseRollingStockAsDict(car)
+                line['PUSO'] = 'PC'
+                cars.append(line)
+            for car in location['cars']['remove']:
+                line = self.parseRollingStockAsDict(car)
+                line['PUSO'] = 'SC'
+                cars.append(line)
+            locationDict['Name'] = location['userName']
+            locationDict['Locos'] = locos
+            locationDict['Cars'] = cars
+            locationList.append(locationDict)
+        completeJmriManifest[u'locations'] = locationList
+
+        return completeJmriManifest
+
+    def parseRollingStockAsDict(self, rS):
+        rsDict = {}
+        rsDict['Road'] = rS[u'road']
+        rsDict['Number'] = rS[u'number']
+        try:
+            rsDict[u'Model'] = rS[u'model']
+        except KeyError:
+            rsDict[u'Model'] = 'N/A'
+        try:
+            rsDict[u'Type'] = rS[u'carType'] + "-" + rS[u'carSubType']
+        except:
+            rsDict[u'Type'] = rS[u'carType']
+        try:
+            rsDict[u'Load'] = rS['load']
+        except:
+            rsDict[u'Load'] = 'O'
+        rsDict[u'Length'] = rS[u'length']
+        rsDict[u'Weight'] = rS[u'weightTons']
+        rsDict[u'Track'] = rS[u'location'][u'track'][u'userName']
+        rsDict[u'Set to'] = rS[u'destination'][u'track'][u'userName']
+        try:
+            jFinalDestination = rS[u'finalDestination'][u'userName']
+            try:
+                jFinalTrack = rS[u'finalDestination'][u'track'][u'userName']
+            except KeyError:
+                jFinalTrack = 'Any'
+            rsDict[u'FD&Track'] = jFinalDestination + ';' + jFinalTrack
+        except:
+            rsDict[u'FD&Track'] = rS[u'destination'][u'userName'] + ';' + rS[u'destination'][u'track'][u'userName']
+
+        return rsDict
+
+    # def parseCar(self, xCar):
+    #     fdMissing = ' - no missing FDs'
+    #     if not xCar[u'finalDestination']:
+    #         jFinalDestination = 'None'
+    #         jFinalTrack = 'None'
+    #         fdMissing = ' with some FDs not defined'
+    #     else:
+    #         jFinalDestination = xCar[u'finalDestination'][u'userName']
+    #         try:
+    #             jFinalTrack = xCar[u'finalDestination'][u'track'][u'userName']
+    #         except KeyError:
+    #             jFinalTrack = 'Any'
+    #             fdMissing = ' with some FD tracks not defined'
+    #     jFrom = xCar[u'location'][u'userName'] + ';' + xCar[u'location'][u'track'][u'userName']
+    #     jTo = xCar[u'destination'][u'userName'] + ';' + xCar[u'destination'][u'track'][u'userName']
+    #     jFD = jFinalDestination + ';' + jFinalTrack
+    #     jLoad = xCar[u'load']
+    #     if xCar[u'caboose'] or xCar[u'passenger']:
+    #         jLoad = 'O'
+    #
+    #     return [xCar[u'name'], xCar[u'road'], xCar[u'number'], jLoad, jFrom, jTo, jFD]
+
+    def convertJmriDateToEpoch(self, jmriTime):
+        '''2022-02-26T17:16:17.807+0000'''
+
+        return time.mktime(time.strptime(jmriTime, "%Y-%m-%dT%H:%M:%S.%f+0000"))
+
+    def jmriTimeStamp(self, jmriTime):
+        '''Valid Time, get local time adjusted for time zone and dst'''
+
+        if time.localtime(jmriTime).tm_isdst and time.daylight: # If local dst and dst are both 1
+            timeOffset = time.altzone
+        else:
+            timeOffset = time.timezone # in seconds
+
+        return time.strftime('%a %b %d %Y %I:%M %p %Z', time.gmtime(jmriTime + timeOffset))
 
 class ProcessWorkEventList():
     '''Process the translated work event lists as a CSV list formatted for the TrainPlayer side scripts'''
@@ -177,21 +291,9 @@ class ProcessWorkEventList():
         self.scriptRev = 20220101
         self.psLog = logging.getLogger('PS.EX.ProcessWorkEventList')
 
-        self.comment = u'Train comment place holder'
         self.jTM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.trains.TrainManager)
 
         return
-
-    def writeWorkEventListAsJson(self):
-
-        self.psLog.debug('writeWorkEventListAsJson')
-        reportTitle = self.inputList['description']
-        jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
-        jsonObject = jsonDumps(self.inputList, indent=2, sort_keys=True)
-        with codecsOpen(jsonFile, 'wb', encoding=psEntities.MainScriptEntities.setEncoding()) as jsonWorkFile:
-            jsonWorkFile.write(jsonObject)
-
-        return reportTitle
 
     def readFromFile(self):
 
@@ -211,50 +313,58 @@ class ProcessWorkEventList():
         return jsonLoads(jsonSwitchList)
 
     def makeHeader(self):
+        '''The jason manifest is encoded in HTML Entity'''
+        # csv writer does not encode utf-8
 
         self.psLog.debug('makeHeader')
         # https://stackoverflow.com/questions/2087370/decode-html-entities-in-python-string
         header = 'HN,' + HTMLParser().unescape(self.inputList['railroad']) + '\n'
         header += 'HT,' + HTMLParser().unescape(self.inputList['userName']) + '\n'
         header += 'HD,' + HTMLParser().unescape(self.inputList['description']) + '\n'
-        header += 'HC,' + self.comment + '\n'
+        header += 'HC,' + HTMLParser().unescape(self.inputList['comment']) + '\n'
         header += 'HV,' + HTMLParser().unescape(self.inputList['date']) + '\n'
-        header += u'WT,' + str(len(self.inputList['tracks'])) + '\n'
+        header += u'WT,' + str(len(self.inputList['locations'])) + '\n'
 
         return header
 
     def makeBody(self):
+        '''The jason manifest is encoded in HTML Entity'''
+        # csv writer does not encode utf-8
 
         self.psLog.debug('makeBody')
-        locoLines = ''
-        carLines = ''
+        body = ''
         x = 1
-        for track in self.inputList['tracks']:
-            workEventNumber = u'WE,' + str(x) + ',' + HTMLParser().unescape(track['Name'])
+        for location in self.inputList['locations']:
 
-            if track['Locos']:
-                for loco in track['Locos']:
-                    locoLines += '\n' + ",".join(self.parseLoco(loco))
-            else:
-                self.psLog.info('No locomotives in list')
+            workEventNumber = u'WE,' + str(x) + ',' + HTMLParser().unescape(location['Name'])
 
-            if track['Cars']:
-                for car in track['Cars']:
-                    carLines += '\n' + ",".join(self.parseCar(car))
-            else:
-                self.psLog.info('No cars in list')
+            locoLines = ''
+            for loco in location['Locos']:
+                locoLines += '\n' + ",".join(self.makeLine(loco))
+
+            carLines = ''
+            for car in location['Cars']:
+                carLines += '\n' + ",".join(self.makeLine(car))
 
             x += 1
+            body += workEventNumber + locoLines + carLines + '\n'
 
-        return workEventNumber + locoLines + carLines
+        return body
 
-    def parseLoco(self, xLoco):
+    def makeLine(self, rS):
 
-        return [xLoco[u'PUSO'], xLoco[u'Road'] + xLoco[u'Number'], xLoco[u'Road'], xLoco[u'Number'], u'O', xLoco[u'Track'], xLoco[u'Set to']]
+        return [rS[u'PUSO'], rS[u'Road'] + rS[u'Number'], rS[u'Road'], rS[u'Number'], rS[u'Load'], rS[u'Track'], rS[u'Set to'], rS['FD&Track']]
 
-    def parseCar(self, xCar):
+    def writeWorkEventListAsJson(self):
 
-        return [xCar[u'PUSO'], xCar[u'Road'] + xCar[u'Number'], xCar[u'Road'], xCar[u'Number'], xCar[u'Load'], xCar[u'Track'], xCar[u'Set to']]
+        self.psLog.debug('writeWorkEventListAsJson')
+        reportTitle = self.inputList['description']
+        jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
+        jsonObject = jsonDumps(self.inputList, indent=2, sort_keys=True)
+        with codecsOpen(jsonFile, 'wb', encoding=psEntities.MainScriptEntities.setEncoding()) as jsonWorkFile:
+            jsonWorkFile.write(jsonObject)
+
+        return reportTitle
 
 class WriteWorkEventListToTp():
 
@@ -269,8 +379,7 @@ class WriteWorkEventListToTp():
     def asCsv(self):
 
         self.psLog.debug('asCsv')
-        weCopyTo = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Work Events.csv"
-        with codecsOpen(weCopyTo, 'wb', encoding=setEncoding) as csvWorkFile:
+        with codecsOpen(jmriManifestPath, 'wb', encoding=setEncoding) as csvWorkFile:
             csvWorkFile.write(self.workEventList)
 
         return
@@ -282,19 +391,21 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
         self.scriptName = 'OperationsExportToTrainPlayer.ManifestForTrainPlayer'
         self.scriptRev = 20220101
     # fire up logging
-        logPath = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\ManifestScript.txt'
-        self.psLog = logging.getLogger('MS')
-        self.psLog.setLevel(10)
+        logPath = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\TrainPlayerScriptsLog.txt'
+        # logPath = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternLog.txt'
+        # self.psLog = logging.getLogger('MS')
+        self.tpLog = logging.getLogger('TP')
+        self.tpLog.setLevel(10)
         logFileFormat = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        msFileHandler = logging.FileHandler(logPath, mode='w', encoding='utf-8')
-        psFileHandler.setFormatter(logFileFormat)
-        self.psLog.addHandler(msFileHandler)
-        self.psLog.debug('Log File for Pattern Scripts Plugin - debug level initialized')
-        self.psLog.info('Log File for Pattern Scripts Plugin - info level initialized')
-        self.psLog.warning('Log File for Pattern Scripts Plugin - warning level initialized')
-        self.psLog.error('Log File for Pattern Scripts Plugin - error level initialized')
-        self.psLog.critical('Log File for Pattern Scripts Plugin - critical level initialized')
-    # Boilerplate
+        self.tpFileHandler = logging.FileHandler(logPath, mode='w', encoding=setEncoding)
+        self.tpFileHandler.setFormatter(logFileFormat)
+        self.tpLog.addHandler(self.tpFileHandler)
+        self.tpLog.debug('Log File for Pattern Scripts Plugin - debug level initialized')
+        self.tpLog.info('Log File for Pattern Scripts Plugin - info level initialized')
+        self.tpLog.warning('Log File for Pattern Scripts Plugin - warning level initialized')
+        self.tpLog.error('Log File for Pattern Scripts Plugin - error level initialized')
+        self.tpLog.critical('Log File for Pattern Scripts Plugin - critical level initialized')
+    # # Boilerplate
         self.jTM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.trains.TrainManager)
         self.jProfilePath = jmri.util.FileUtil.getProfilePath()
 
@@ -302,8 +413,20 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
 
     def handle(self):
 
-        OperationsExportToTrainPlayer.CheckTpDestination().directoryExists()
+        CheckTpDestination().directoryExists()
+        ExportJmriLocations().toTrainPlayer()
 
-        self.psLog.removeHandler(msFileHandler)
+        newestTrain = JmriTranslationToTp().findNewestManifest()
+        completeManifest = JmriTranslationToTp().translateManifestHeader(newestTrain)
+        completeManifest = JmriTranslationToTp().translateManifestBody(completeManifest)
+
+        processedManifest = ProcessWorkEventList(completeManifest)
+        processedManifest.writeWorkEventListAsJson()
+
+        WriteWorkEventListToTp(processedManifest.makeHeader() + processedManifest.makeBody()).asCsv()
+        # self.psLog.removeHandler(self.msFileHandler)
 
         return False
+
+if __name__ == "__builtin__":
+    ManifestForTrainPlayer().start()

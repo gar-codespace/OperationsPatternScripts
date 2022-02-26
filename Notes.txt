@@ -28,15 +28,15 @@ Stuff that's OK:
   set cars to 'Hold' works OK
   catches empty boxes added to jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat() OK
   catches invalid track typed into set cars box OK
+  ExportToTrainPlayer.py works as module OK
+  ExportToTrainPlayer.py works as script OK
 
 Todo:
   Catch up with the latest JMRI stuff like text color
-  add internal logging to ExportToTrainPlayer.py
+  add internal logging to ExportToTrainPlayer.py that works
   update help screen
-  Make log messages more explicit
 
 Wish List:
-  maybe move the colors to the config file?
   add loco include elements to the json config file similar to: jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
   add Pattern Scripts to Operations Pro combo box
   plugin added to button in trains window (AWT.getComponents())

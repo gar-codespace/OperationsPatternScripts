@@ -232,7 +232,7 @@ def makeReportSwitchList(switchList, includeTotals=False):
 
     reportSwitchList = ''
     reportTally = [] # running total for all tracks
-    for track in switchList['tracks']:
+    for track in switchList['locations']:
         lengthOfLocos = 0
         lengthOfCars = 0
         trackTally = []
