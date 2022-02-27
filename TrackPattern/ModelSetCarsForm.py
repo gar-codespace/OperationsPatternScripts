@@ -25,6 +25,19 @@ def testFormValidity(body, textBoxEntry):
         psLog.critical('mismatched input list and car roster lengths')
         return False
 
+def exportToTrainPlayer(body):
+
+    tpBody = TrackPattern.ExportToTrainPlayer.TrackPatternTranslationToTp(body).modifySwitchList()
+    appendedTpSwitchList = TrackPattern.ExportToTrainPlayer.TrackPatternTranslationToTp(tpBody).appendSwitchList()
+    switchListName = TrackPattern.ExportToTrainPlayer.ProcessWorkEventList(appendedTpSwitchList).writeWorkEventListAsJson()
+    jsonSwitchList = TrackPattern.ExportToTrainPlayer.ProcessWorkEventList(switchListName).readFromFile()
+    tpSwitchList = TrackPattern.ExportToTrainPlayer.ProcessWorkEventList(jsonSwitchList)
+    tpSwitchListHeader = tpSwitchList.makeHeader()
+    tpSwitchListBody = tpSwitchList.makeBody()
+    TrackPattern.ExportToTrainPlayer.CheckTpDestination().directoryExists()
+    TrackPattern.ExportToTrainPlayer.WriteWorkEventListToTp(tpSwitchListHeader + tpSwitchListBody).asCsv()
+    TrackPattern.ExportToTrainPlayer.ExportJmriLocations().toTrainPlayer()
+
 def setCarsToTrack(body, textBoxEntry):
 
     psLog.debug('setCarsToTrack')
@@ -167,48 +180,6 @@ def modifySwitchListForPrint(body):
         car['Set to'] = TrackPattern.ModelEntities.formatText('[' + carSetTo + ']', longestTrackString + 2)
 
     return body
-
-# def modifySwitchListForTp(body):
-#     '''Replaces car['Set to'] = [ ] with the track comment'''
-#
-#     psLog.debug('modifySwitchListForTp')
-#     location = psEntities.MainScriptEntities.readConfigFile('TP')['PL']
-#     lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
-#     for car in body['Cars']:
-#         if 'Hold' in car['Set to']:
-#             car['Set to'] = lm.getLocationByName(location).getTrackByName(car['Track'], None).getComment()
-#         else:
-#             car['Set to'] = lm.getLocationByName(location).getTrackByName(car['Set to'], None).getComment()
-#
-#     return body
-
-# def appendSwitchListForTp(body):
-#
-#     psLog.debug('appendSwitchListForTp')
-#     reportTitle = psEntities.MainScriptEntities.readConfigFile('TP')['RT']['TP']
-#     jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
-#     with codecsOpen(jsonFile, 'r', encoding=psEntities.MainScriptEntities.setEncoding()) as jsonWorkFile:
-#         jsonSwitchList = jsonWorkFile.read()
-#     switchList = jsonLoads(jsonSwitchList)
-#     switchListName = switchList['description']
-#     trackDetailList = switchList['tracks']
-#
-#     if not trackDetailList:
-#         body['Name'] = 'TrainPlayer'
-#         body['Length'] = 0
-#         trackDetailList.append(body)
-#     else:
-#         carList = trackDetailList[0]['Cars']
-#         # carList.append(body['Cars'])
-#         carList += body['Cars']
-#         trackDetailList[0]['Cars'] = carList
-#     switchList['tracks'] = trackDetailList
-#
-#     jsonObject = jsonDumps(switchList, indent=2, sort_keys=True)
-#     with codecsOpen(jsonFile, 'wb', encoding=psEntities.MainScriptEntities.setEncoding()) as jsonWorkFile:
-#         jsonWorkFile.write(jsonObject)
-#
-#     return reportTitle
 
 def getSchedule(locationString, trackString):
     '''Returns a schedule if there is one'''

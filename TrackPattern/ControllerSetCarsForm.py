@@ -3,17 +3,14 @@
 
 import jmri
 import java.awt
-# import javax.swing
 import logging
 from os import system as osSystem
 
 import psEntities.MainScriptEntities
 import TrackPattern.Model
 import TrackPattern.View
-# import TrackPattern.ModelEntities
 import TrackPattern.ModelSetCarsForm
 import TrackPattern.ViewSetCarsForm
-import TrackPattern.ExportToTrainPlayer
 
 '''Makes a "Pattern Report for Track X" form for each selected track'''
 
@@ -99,16 +96,8 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
         except:
             self.psLog.critical('Could not create switch list')
             return
-        tpBody = TrackPattern.ExportToTrainPlayer.TrackPatternTranslationToTp(body).modifySwitchList()
-        appendedTpSwitchList = TrackPattern.ExportToTrainPlayer.TrackPatternTranslationToTp(tpBody).appendSwitchList()
-        switchListName = TrackPattern.ExportToTrainPlayer.ProcessWorkEventList(appendedTpSwitchList).writeWorkEventListAsJson()
-        jsonSwitchList = TrackPattern.ExportToTrainPlayer.ProcessWorkEventList(switchListName).readFromFile()
-        tpSwitchList = TrackPattern.ExportToTrainPlayer.ProcessWorkEventList(jsonSwitchList)
-        tpSwitchListHeader = tpSwitchList.makeHeader()
-        tpSwitchListBody = tpSwitchList.makeBody()
-        TrackPattern.ExportToTrainPlayer.CheckTpDestination().directoryExists()
-        TrackPattern.ExportToTrainPlayer.WriteWorkEventListToTp(tpSwitchListHeader + tpSwitchListBody).asCsv()
-        TrackPattern.ExportToTrainPlayer.ExportJmriLocations().toTrainPlayer()
+
+        TrackPattern.ModelSetCarsForm.exportToTrainPlayer(body)
 
         print(scriptName + ' ' + str(scriptRev))
 

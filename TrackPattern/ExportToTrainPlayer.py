@@ -1,7 +1,7 @@
 import jmri
 import logging
 import time
-from json import loads as jsonLoads, load as jsonLoad, dumps as jsonDumps
+from json import loads as jsonLoads, dumps as jsonDumps
 from HTMLParser import HTMLParser
 from codecs import open as codecsOpen
 from os import mkdir as osMakeDir
@@ -25,7 +25,7 @@ class CheckTpDestination():
         self.scriptName = 'OperationsPatternScripts.TrackPattern.ExportToTrainPlayer.CheckTpDestination'
         self.scriptRev = 20220101
         self.psLog = logging.getLogger('PS.EX.CheckTpDestination')
-        self.tpLog = logging.getLogger('TP.EX.CheckTpDestination')
+        self.tpLog = logging.getLogger('TP.CheckTpDestination')
 
         return
 
@@ -34,6 +34,7 @@ class CheckTpDestination():
         try:
             osMakeDir(jmri.util.FileUtil.getHomePath() + 'AppData\\Roaming\\TrainPlayer\\Reports')
             self.psLog.warning('TrainPlayer destination directory created')
+            self.tpLog.warning('TrainPlayer destination directory created')
         except OSError:
             self.psLog.info('TrainPlayer destination directory OK')
             self.tpLog.info('TrainPlayer destination directory OK')
@@ -97,15 +98,15 @@ class TrackPatternTranslationToTp():
 
         for loco in self.body['Locos']:
             if 'Hold' in loco['Set to']:
-                loco['Set to'] = lm.getLocationByName(location).getTrackByName(loco['Track'], None).getComment()
+                loco['Set to'] = location + ';' + lm.getLocationByName(location).getTrackByName(loco['Track'], None).getName()
             else:
-                loco['Set to'] = lm.getLocationByName(location).getTrackByName(loco['Set to'], None).getComment()
+                loco['Set to'] = location + ';' + lm.getLocationByName(location).getTrackByName(loco['Set to'], None).getName()
 
         for car in self.body['Cars']:
             if 'Hold' in car['Set to']:
-                car['Set to'] = lm.getLocationByName(location).getTrackByName(car['Track'], None).getComment()
+                car['Set to'] = location + ';' + lm.getLocationByName(location).getTrackByName(car['Track'], None).getName()
             else:
-                car['Set to'] = lm.getLocationByName(location).getTrackByName(car['Set to'], None).getComment()
+                car['Set to'] = location + ';' + lm.getLocationByName(location).getTrackByName(car['Set to'], None).getName()
 
         return self.body
 
@@ -117,8 +118,8 @@ class TrackPatternTranslationToTp():
         with codecsOpen(jsonFile, 'r', encoding=psEntities.MainScriptEntities.setEncoding()) as jsonWorkFile:
             jsonSwitchList = jsonWorkFile.read()
         switchList = jsonLoads(jsonSwitchList)
-        # switchListName = switchList['description']
         switchList['comment'] = 'TrainPlayer Switch List'
+        
         try:
             trackDetailList = switchList['locations']
         except KeyError:
@@ -160,8 +161,9 @@ class JmriTranslationToTp():
             for train in trainListByStatus:
                 if train.isBuilt():
                     workEventFile =  jmri.util.FileUtil.getProfilePath() + 'operations\jsonManifests\\train-' + train.getName() + ".json"
-                    with open(workEventFile) as workEventObject:
-                        workEventList = jsonLoad(workEventObject)
+                    with codecsOpen(workEventFile, 'r', encoding=psEntities.MainScriptEntities.setEncoding()) as workEventObject:
+                        switchList = workEventObject.read()
+                        workEventList = jsonLoads(switchList)
                     if workEventList[u'date'] > newestBuildTime:
                         newestBuildTime = workEventList[u'date']
                         newestTrain = workEventList
@@ -184,23 +186,24 @@ class JmriTranslationToTp():
 
         locationList = []
         for location in completeJmriManifest[u'locations']:
+            locationName = location['userName']
             locationDict = {}
             locos = []
             cars = []
             for loco in location[u'engines'][u'add']:
-                line = self.parseRollingStockAsDict(loco)
+                line = self.parseRollingStockAsDict(loco, locationName)
                 line['PUSO'] = 'PL'
                 locos.append(line)
             for loco in location[u'engines'][u'remove']:
-                line = self.parseRollingStockAsDict(loco)
+                line = self.parseRollingStockAsDict(loco, locationName)
                 line['PUSO'] = 'SL'
                 locos.append(line)
             for car in location['cars']['add']:
-                line = self.parseRollingStockAsDict(car)
+                line = self.parseRollingStockAsDict(car, locationName)
                 line['PUSO'] = 'PC'
                 cars.append(line)
             for car in location['cars']['remove']:
-                line = self.parseRollingStockAsDict(car)
+                line = self.parseRollingStockAsDict(car, locationName)
                 line['PUSO'] = 'SC'
                 cars.append(line)
             locationDict['Name'] = location['userName']
@@ -211,7 +214,7 @@ class JmriTranslationToTp():
 
         return completeJmriManifest
 
-    def parseRollingStockAsDict(self, rS):
+    def parseRollingStockAsDict(self, rS, lN):
         rsDict = {}
         rsDict['Road'] = rS[u'road']
         rsDict['Number'] = rS[u'number']
@@ -230,7 +233,7 @@ class JmriTranslationToTp():
         rsDict[u'Length'] = rS[u'length']
         rsDict[u'Weight'] = rS[u'weightTons']
         rsDict[u'Track'] = rS[u'location'][u'track'][u'userName']
-        rsDict[u'Set to'] = rS[u'destination'][u'track'][u'userName']
+        rsDict[u'Set to'] = lN + ';' + rS[u'destination'][u'track'][u'userName']
         try:
             jFinalDestination = rS[u'finalDestination'][u'userName']
             try:
@@ -242,28 +245,6 @@ class JmriTranslationToTp():
             rsDict[u'FD&Track'] = rS[u'destination'][u'userName'] + ';' + rS[u'destination'][u'track'][u'userName']
 
         return rsDict
-
-    # def parseCar(self, xCar):
-    #     fdMissing = ' - no missing FDs'
-    #     if not xCar[u'finalDestination']:
-    #         jFinalDestination = 'None'
-    #         jFinalTrack = 'None'
-    #         fdMissing = ' with some FDs not defined'
-    #     else:
-    #         jFinalDestination = xCar[u'finalDestination'][u'userName']
-    #         try:
-    #             jFinalTrack = xCar[u'finalDestination'][u'track'][u'userName']
-    #         except KeyError:
-    #             jFinalTrack = 'Any'
-    #             fdMissing = ' with some FD tracks not defined'
-    #     jFrom = xCar[u'location'][u'userName'] + ';' + xCar[u'location'][u'track'][u'userName']
-    #     jTo = xCar[u'destination'][u'userName'] + ';' + xCar[u'destination'][u'track'][u'userName']
-    #     jFD = jFinalDestination + ';' + jFinalTrack
-    #     jLoad = xCar[u'load']
-    #     if xCar[u'caboose'] or xCar[u'passenger']:
-    #         jLoad = 'O'
-    #
-    #     return [xCar[u'name'], xCar[u'road'], xCar[u'number'], jLoad, jFrom, jTo, jFD]
 
     def convertJmriDateToEpoch(self, jmriTime):
         '''2022-02-26T17:16:17.807+0000'''

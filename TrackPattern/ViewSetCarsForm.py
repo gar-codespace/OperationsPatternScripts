@@ -8,7 +8,6 @@ import javax.swing.GroupLayout
 
 import psEntities.MainScriptEntities
 import TrackPattern.ViewEntities
-import TrackPattern.ModelEntities
 import TrackPattern.ControllerSetCarsForm
 
 '''Display methods for the Pattern Report for Track X form'''
@@ -28,17 +27,17 @@ def patternReportForTrackForm(header, body):
 
     configFile = psEntities.MainScriptEntities.readConfigFile('TP')
 
-    trackName = unicode(body['Name'], psEntities.MainScriptEntities.setEncoding())
-    trackLocation = unicode(header['location'], psEntities.MainScriptEntities.setEncoding())
-    allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(trackLocation, None)
-
     patternReportForm = javax.swing.JPanel()
     patternReportForm.setLayout(javax.swing.BoxLayout(patternReportForm, javax.swing.BoxLayout.PAGE_AXIS))
 
+    trackName = unicode(body['Name'], psEntities.MainScriptEntities.setEncoding())
     patternReportFormHeader = TrackPattern.ViewSetCarsForm.patternReportFormHeader(header, trackName)
     patternReportForm.add(patternReportFormHeader)
     patternReportForm.add(javax.swing.JSeparator())
 
+    trackLocation = unicode(header['location'], psEntities.MainScriptEntities.setEncoding())
+    lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
+    allTracksAtLoc = lm.getLocationByName(trackLocation).getTracksByNameList(None)
     patternReportRowOfTracks = TrackPattern.ViewSetCarsForm.patternReportRowOfTracks(allTracksAtLoc)
     patternReportForm.add(patternReportRowOfTracks)
     patternReportForm.add(javax.swing.JSeparator())
@@ -125,7 +124,7 @@ def patternReportRowOfTracks(allTracksAtLoc):
 
     buttonPanel = javax.swing.JPanel()
     for track in allTracksAtLoc:
-        selectTrackButton = javax.swing.JButton(track)
+        selectTrackButton = javax.swing.JButton(track.getName())
         selectTrackButton.actionPerformed = TrackPattern.ControllerSetCarsForm.AnyButtonPressedListener().trackRowButton
         buttonPanel.add(selectTrackButton)
 
@@ -140,8 +139,7 @@ def patternReportLocosBody(body):
     listOfLocoRows = []
     textBoxEntry = []
 
-    sortedLocoList = TrackPattern.ModelEntities.sortLocoList(body['Locos'])
-    for loco in sortedLocoList:
+    for loco in body['Locos']:
         combinedInputLine = javax.swing.JPanel()
         combinedInputLine.setBackground(psEntities.FADED)
         # combinedInputLine.setAlignmentX(java.awt.BorderLayout.WEST)
@@ -187,8 +185,7 @@ def patternReportCarsBody(body):
     listOfCarRows = []
     textBoxEntry = []
 
-    sortedCarList = TrackPattern.ModelEntities.sortCarList(body['Cars'])
-    for car in sortedCarList:
+    for car in body['Cars']:
         combinedInputLine = javax.swing.JPanel()
         combinedInputLine.setBackground(psEntities.DUST)
         # combinedInputLine.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)

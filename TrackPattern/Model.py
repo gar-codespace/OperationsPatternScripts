@@ -61,8 +61,12 @@ def makeSwitchList(fileName=u'test'):
     carRoster = []
     for track in trackList:
         trackDetails = TrackPattern.ModelEntities.getTrackDetails(track)
-        trackDetails['Locos'] = TrackPattern.ModelEntities.getLocoListForTrack(track)
-        trackDetails['Cars'] = TrackPattern.ModelEntities.getCarListForTrack(track)
+
+        locoList = TrackPattern.ModelEntities.getLocoListForTrack(track)
+        trackDetails['Locos'] = TrackPattern.ModelEntities.sortLocoList(locoList)
+
+        carList = TrackPattern.ModelEntities.getCarListForTrack(track)
+        trackDetails['Cars'] = TrackPattern.ModelEntities.sortCarList(carList)
         tracks.append(trackDetails)
 
     switchList['locations'] = tracks

@@ -86,6 +86,8 @@ def getDetailsForLocoAsDict(locoObject):
     locoDetailDict[u'Weight'] = locoObject.getWeightTons()
     locoDetailDict[u'Model'] = locoObject.getModel()
     locoDetailDict[u'PUSO'] = u'SL'
+    locoDetailDict[u'Load'] = u'O'
+    locoDetailDict[u'FD&Track'] = psEntities.MainScriptEntities.readConfigFile('TP')['DS']
     locoDetailDict[u'Track'] = locoObject.getTrackName()
 
     return locoDetailDict
