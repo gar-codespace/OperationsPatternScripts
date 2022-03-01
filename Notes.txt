@@ -36,6 +36,7 @@ Todo:
   add internal logging to ExportToTrainPlayer.py that works
   update help screen
   update pattern scripts with locations properly implemented
+  Clean up the way track totals are included or not in the print report
 
 Wish List:
   for getDetailsForLocoAsDict(locoObject) add loco include elements to the json config file similar to: jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()

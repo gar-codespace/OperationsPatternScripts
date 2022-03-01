@@ -36,17 +36,18 @@
     "AL" : [
     ],
     "PL" : "",
+    "IT" : true,
     "PT" : {
     },
     "RT" : {
-      "PR" : "Track Pattern",
+      "PR" : "Track Pattern Report",
       "SC" : "Switch List for track",
       "TP" : "TrainPlayer Work Events"
     },
     "PA" : false,
     "PI" : false,
     "AS" : true,
-    "TP" : true,
+    "TI" : true,
     "PW" : 260,
     "PH" : 16,
     "DS" : "*No Waybill",

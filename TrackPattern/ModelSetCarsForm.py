@@ -17,9 +17,12 @@ scriptName = 'OperationsPatternScripts.TrackPattern.ModelSetCarsForm'
 scriptRev = 20220101
 psLog = logging.getLogger('PS.TP.ModelSetCarsForm')
 
-def testFormValidity(body, textBoxEntry):
+def testFormValidity(setCarsForm, textBoxEntry):
 
-    if len(textBoxEntry) == len(body['Locos']) + len(body['Cars']):
+    locoCount = len(setCarsForm['locations'][0]['tracks'][0]['locos'])
+    carCount = len(setCarsForm['locations'][0]['tracks'][0]['cars'])
+
+    if len(textBoxEntry) == locoCount + carCount:
         return True
     else:
         psLog.critical('mismatched input list and car roster lengths')
@@ -38,7 +41,7 @@ def exportToTrainPlayer(body):
     TrackPattern.ExportToTrainPlayer.WriteWorkEventListToTp(tpSwitchListHeader + tpSwitchListBody).asCsv()
     TrackPattern.ExportToTrainPlayer.ExportJmriLocations().toTrainPlayer()
 
-def setCarsToTrack(body, textBoxEntry):
+def setCarsToTrack(setCarsForm, textBoxEntry):
 
     psLog.debug('setCarsToTrack')
     trackData = []
@@ -46,12 +49,12 @@ def setCarsToTrack(body, textBoxEntry):
     em = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.engines.EngineManager)
     cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
     lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
-
     ignoreTrackLength = psEntities.MainScriptEntities.readConfigFile('TP')['PI']
-    location = psEntities.MainScriptEntities.readConfigFile('TP')['PL']
+
+    location = setCarsForm['locations'][0]['locationName']
     locationObject = lm.getLocationByName(unicode(location, psEntities.MainScriptEntities.setEncoding()))
     allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(location, None)
-    fromTrack = unicode(body['Name'], psEntities.MainScriptEntities.setEncoding())
+    fromTrack = unicode(setCarsForm['locations'][0]['tracks'][0]['trackName'], psEntities.MainScriptEntities.setEncoding())
 
     userInputList = []
     for userInput in textBoxEntry:
@@ -60,7 +63,7 @@ def setCarsToTrack(body, textBoxEntry):
     i = 0
     setCount = 0
 
-    for loco in body['Locos']:
+    for loco in setCarsForm['locations'][0]['tracks'][0]['locos']:
 
         toTrack = fromTrack
         if userInputList[i]:
@@ -68,7 +71,8 @@ def setCarsToTrack(body, textBoxEntry):
 
         locoObject = em.newRS(loco['Road'], loco['Number'])
         toTrackObject = locationObject.getTrackByName(unicode(toTrack, psEntities.MainScriptEntities.setEncoding()), None)
-        if unicode(locoObject.getTrack().getName(), psEntities.MainScriptEntities.setEncoding()) in allTracksAtLoc: # Catches invalid track typed into box
+
+        if unicode(toTrack, psEntities.MainScriptEntities.setEncoding()) in allTracksAtLoc: # Catches invalid track typed into box
             if ignoreTrackLength:
                 trackLength = toTrackObject.getLength()
                 toTrackObject.setLength(9999)
@@ -83,7 +87,7 @@ def setCarsToTrack(body, textBoxEntry):
         i += 1
     jmri.jmrit.operations.rollingstock.engines.EngineManagerXml.save()
 
-    for car in body['Cars']:
+    for car in setCarsForm['locations'][0]['tracks'][0]['cars']:
 
         toTrack = fromTrack
         if userInputList[i]:
@@ -91,7 +95,8 @@ def setCarsToTrack(body, textBoxEntry):
 
         carObject = cm.newRS(car['Road'], car['Number'])
         toTrackObject = locationObject.getTrackByName(unicode(toTrack, psEntities.MainScriptEntities.setEncoding()), None)
-        if unicode(carObject.getTrack().getName(), psEntities.MainScriptEntities.setEncoding()) in allTracksAtLoc: # Catches invalid track typed into box
+
+        if unicode(toTrack, psEntities.MainScriptEntities.setEncoding()) in allTracksAtLoc: # Catches invalid track typed into box
             if ignoreTrackLength:
                 trackLength = toTrackObject.getLength()
                 toTrackObject.setLength(9999)
@@ -106,9 +111,9 @@ def setCarsToTrack(body, textBoxEntry):
                 applySchedule(carObject, schedule)
 
         i += 1
+    jmri.jmrit.operations.rollingstock.cars.CarManagerXml.save()
 
     psLog.info('Rolling stock count: ' + str(setCount) + ', processed from track: ' + fromTrack)
-    jmri.jmrit.operations.rollingstock.cars.CarManagerXml.save()
 
     return
 
@@ -126,13 +131,18 @@ def writeTpSwitchListFromJson(switchListName):
 
     return
 
-def makeSetCarsSwitchList(body, textBoxEntry):
+def modifySetCarsList(listLocations, textBoxEntry):
+    '''Replaces car['Set to'] = [ ] with either [Hold] or ["some other valid track"]'''
 
-    psLog.debug('makeSetCarsSwitchList')
+    psLog.debug('modifySetCarsList')
 
-    if len(textBoxEntry) != len(body['Locos']) + len(body['Cars']):
-        psLog.critical('mismatched input list and car roster lengths')
-        return None
+    longestTrackString = 1
+    for track in psEntities.MainScriptEntities.readConfigFile('TP')['PT']: # Pattern Tracks
+        if len(track) > longestTrackString:
+            longestTrackString = len(track)
+
+    if longestTrackString < 6:
+        longestTrackString = 6
 
     userInputList = []
     for userInput in textBoxEntry:
@@ -140,46 +150,32 @@ def makeSetCarsSwitchList(body, textBoxEntry):
 
     location = psEntities.MainScriptEntities.readConfigFile('TP')['PL']
     allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(location, None)
-    trackName = unicode(body['Name'], psEntities.MainScriptEntities.setEncoding())
+
+    trackName = listLocations[0]['tracks'][0]['trackName']
+    trackName = unicode(listLocations[0]['tracks'][0]['trackName'], psEntities.MainScriptEntities.setEncoding())
+
     i = 0
-    for loco in body['Locos']:
-        setTrack = unicode('Hold', psEntities.MainScriptEntities.setEncoding())
+    locoList = listLocations[0]['tracks'][0]['locos']
+    for loco in locoList:
+        setTrack = u'Hold'
         userInput = unicode(userInputList[i], psEntities.MainScriptEntities.setEncoding())
         if userInput in allTracksAtLoc and userInput != trackName:
             setTrack = userInput
-        loco['Set to'] = setTrack
+        loco['Set to'] = TrackPattern.ModelEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
         i += 1
-    for car in body['Cars']:
-        setTrack = unicode('Hold', psEntities.MainScriptEntities.setEncoding())
+    listLocations[0]['tracks'][0]['locos'] = locoList
+
+    carList = listLocations[0]['tracks'][0]['cars']
+    for car in carList:
+        setTrack = u'Hold'
         userInput = unicode(userInputList[i], psEntities.MainScriptEntities.setEncoding())
         if userInput in allTracksAtLoc and userInput != trackName:
             setTrack = userInput
-        car['Set to'] = setTrack
+        car['Set to'] = TrackPattern.ModelEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
         i += 1
+    listLocations[0]['tracks'][0]['cars'] = carList
 
-    return body
-
-def modifySwitchListForPrint(body):
-    '''Replaces car['Set to'] = [ ] with either [Hold] or ["some other track"]'''
-
-    psLog.debug('modifySwitchListForPrint')
-    longestTrackString = 1
-    for track in psEntities.MainScriptEntities.readConfigFile('TP')['PT']: # Pattern Tracks
-        if len(track) > longestTrackString:
-            longestTrackString = len(track)
-
-    if longestTrackString < 7:
-        longestTrackString = 6
-
-    for loco in body['Locos']:
-        carSetTo = unicode(loco['Set to'], psEntities.MainScriptEntities.setEncoding())
-        loco['Set to'] = TrackPattern.ModelEntities.formatText('[' + carSetTo + ']', longestTrackString + 2)
-
-    for car in body['Cars']:
-        carSetTo = unicode(car['Set to'], psEntities.MainScriptEntities.setEncoding())
-        car['Set to'] = TrackPattern.ModelEntities.formatText('[' + carSetTo + ']', longestTrackString + 2)
-
-    return body
+    return listLocations
 
 def getSchedule(locationString, trackString):
     '''Returns a schedule if there is one'''

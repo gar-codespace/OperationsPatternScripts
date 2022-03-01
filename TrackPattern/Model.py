@@ -21,32 +21,63 @@ psLog = logging.getLogger('PS.TP.Model')
 def onScButtonPress():
     '''"Set Cars" button opens a window for each selected track'''
 
-    patternLocation = psEntities.MainScriptEntities.readConfigFile('TP')['PL']
+    locationName = psEntities.MainScriptEntities.readConfigFile('TP')['PL']
     selectedTracks = TrackPattern.ModelEntities.getSelectedTracks()
     windowOffset = 200
     if selectedTracks:
         i = 0
-        for track in selectedTracks:
-            trackHeader = TrackPattern.Model.makeSwitchListHeader()
-            trackBody = TrackPattern.ModelEntities.getTrackDetails(track)
-            trackBody['Locos'] = TrackPattern.ModelEntities.getLocoListForTrack(track)
-            trackBody['Cars'] = TrackPattern.ModelEntities.getCarListForTrack(track)
-            newFrame = TrackPattern.ControllerSetCarsForm.CreatePatternReportGui(trackHeader, trackBody)
+        for trackName in selectedTracks:
+            setCarsForm = TrackPattern.ModelEntities.makeGenericHeader()
+            locationDict = {}
+            locationDict['locationName'] = locationName
+            locationDict['tracks'] = [TrackPattern.ModelEntities.getGenericTrackDetails(locationName, trackName)]
+            setCarsForm['locations'] = [locationDict]
+            # The above two lines are sent in as lists to maintain consistancy with the generic JSON file format
+            newFrame = TrackPattern.ControllerSetCarsForm.CreatePatternReportGui(setCarsForm)
             newWindow = newFrame.makeFrame()
-            newWindow.setTitle(u'Pattern Report for track ' + track)
+            newWindow.setTitle(u'Pattern Report for track ' + trackName)
             newWindow.setLocation(windowOffset, 180)
             newWindow.pack()
             newWindow.setVisible(True)
-            psLog.info(u'Set Cars Window created for track ' + track)
+
+            psLog.info(u'Set Cars Window created for track ' + trackName)
             windowOffset += 50
             i += 1
-        psLog.info(str(i) + ' Set Cars windows for ' + patternLocation + ' created')
+        psLog.info(str(i) + ' Set Cars windows for ' + locationName + ' created')
     else:
         psLog.warning('No tracks were selected for the Set Cars button')
 
     return
 
-def makeSwitchList(fileName=u'test'):
+def makePatternHeader():
+
+    psLog.debug('makePatternHeader')
+
+    return TrackPattern.ModelEntities.makeGenericHeader()
+
+def makePatternLocations(trackList=None):
+    '''Simplified since there is only one location for the pattern buton'''
+
+    psLog.debug('makePatternLocations')
+
+    # trackList = TrackPattern.ModelEntities.getSelectedTracks()
+    if not trackList:
+        trackList = TrackPattern.ModelEntities.getSelectedTracks()
+
+    tracks = []
+    locationName = psEntities.MainScriptEntities.readConfigFile('TP')['PL']
+    for trackName in trackList:
+        tracks.append(TrackPattern.ModelEntities.getGenericTrackDetails(locationName, trackName))
+
+    locationDict = {}
+    locationDict['locationName'] = locationName
+    locationDict['tracks'] = tracks
+
+    locations = [locationDict]
+
+    return locations # locations is a list of dictionaries
+
+def makeSwitchList(fileName=u'test'): ##
 
     psLog.debug('makeSwitchList')
     switchList = TrackPattern.Model.makeSwitchListHeader()
@@ -73,16 +104,38 @@ def makeSwitchList(fileName=u'test'):
 
     return switchList
 
-def writeSwitchlistAsJson(switchList):
+def writeWorkEventListAsJson(switchList):
     '''The generic switch list is written as a JSON'''
 
-    switchListName = switchList['description']
+    psLog.debug('writeWorkEventListAsJson')
+
+    switchListName = switchList['trainDescription']
     jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + switchListName + '.json'
     jsonObject = jsonDumps(switchList, indent=2, sort_keys=True)
     with codecsOpen(jsonCopyTo, 'wb', encoding=psEntities.MainScriptEntities.setEncoding()) as jsonWorkFile:
         jsonWorkFile.write(jsonObject)
 
     return switchListName
+
+def readJsonWorkEventList(workEventName):
+
+    psLog.debug('readJsonWorkEventList')
+
+    jsonCopyFrom = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + workEventName + '.json'
+    with codecsOpen(jsonCopyFrom, 'r', encoding=psEntities.MainScriptEntities.setEncoding()) as jsonWorkFile:
+        jsonEventList = jsonWorkFile.read()
+    textWorkEventList = jsonLoads(jsonEventList)
+
+    return textWorkEventList
+
+def makeTextListForPrint(textWorkEventList, trackTotals=False):
+
+    psLog.debug('makeTextListForPrint')
+
+    reportHeader = TrackPattern.ModelEntities.makeTextReportHeader(textWorkEventList)
+    reportLocations = TrackPattern.ModelEntities.makeTextReportLocations(textWorkEventList, trackTotals)
+
+    return reportHeader + reportLocations
 
 def makeSwitchListHeader():
     '''The header info for any switch list, used to make the JSON file'''
@@ -121,12 +174,11 @@ def makeTextSwitchListBody(switchListName, includeTotals=False):
 
     return reportSwitchList
 
-def writeTextSwitchList(textSwitchList):
+def writeTextSwitchList(fileName, textSwitchList):
 
     psLog.debug('writeTextSwitchList')
-    switchListCopy = textSwitchList
-    fileName = switchListCopy.splitlines()
-    textCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + fileName[0] + '.txt'
+
+    textCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + fileName + '.txt'
     with codecsOpen(textCopyTo, 'wb', encoding=psEntities.MainScriptEntities.setEncoding()) as textWorkFile:
         textWorkFile.write(textSwitchList)
 
@@ -234,7 +286,7 @@ def makePatternLog():
     buildReportLevel = int(jmri.jmrit.operations.setup.Setup.getBuildReportLevel())
     configLoggingIndex = psEntities.MainScriptEntities.readConfigFile('LI')
     logLevel = configLoggingIndex[jmri.jmrit.operations.setup.Setup.getBuildReportLevel()]
-    logFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternLog.txt'
+    logFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog.txt'
     with codecsOpen(logFileLocation, 'r', encoding=psEntities.MainScriptEntities.setEncoding()) as patternLogFile:
         while True:
             thisLine = patternLogFile.readline()
@@ -251,7 +303,7 @@ def makePatternLog():
             if (configLoggingIndex['1'] in thisLine and buildReportLevel > 4): # debug
                 outputPatternLog = outputPatternLog + thisLine
 
-    tempLogFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternLog_temp.txt'
+    tempLogFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
     with codecsOpen(tempLogFileLocation, 'w', encoding=psEntities.MainScriptEntities.setEncoding()) as tempPatternLogFile:
         tempPatternLogFile.write(outputPatternLog)
     return

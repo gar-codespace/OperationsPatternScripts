@@ -72,7 +72,7 @@ def printPatternLog():
     '''Opens the pattern log in notepad or other'''
 
     psLog.debug('displayPatternLog')
-    tempPatternLog = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternLog_temp.txt'
+    tempPatternLog = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
     osSystem(psEntities.MainScriptEntities.openEditorByComputerType(tempPatternLog))
 
     return

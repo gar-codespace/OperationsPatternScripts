@@ -26,7 +26,7 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
     # scheduleButton
         self.trackObject = object1
     # printButton, setButton, TrainPlayerButton
-        self.trackData = object1
+        self.setCarsForm = object1
         self.textBoxEntry = object2
 
         return
@@ -50,23 +50,22 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
     def printButton(self, MOUSE_CLICKED):
         '''Print a switch list for each "Pattern Report for Track X" window'''
 
-        if TrackPattern.ModelSetCarsForm.testFormValidity(self.trackData, self.textBoxEntry):
-            testSwitchListBody = TrackPattern.ModelSetCarsForm.makeSetCarsSwitchList(self.trackData, self.textBoxEntry)
-            switchListBody = TrackPattern.ModelSetCarsForm.modifySwitchListForPrint(testSwitchListBody)
-            switchList = TrackPattern.Model.makeSwitchListHeader()
-            switchList['locations'] = [switchListBody]
-            # switchListBody has to be added as a one element list to be compatable with TrackPattern.Model.makeTextSwitchListBody(switchListname)
-            trackName = switchList['locations'][0]['Name']
-            reportTitle = psEntities.MainScriptEntities.readConfigFile('TP')['RT']['SC']
-            switchList['description'] = reportTitle + ' ' + unicode(trackName, psEntities.MainScriptEntities.setEncoding())
-            switchListname = TrackPattern.Model.writeSwitchlistAsJson(switchList)
-            textSwitchListHeader = TrackPattern.Model.makeTextSwitchListHeader(switchListname)
-            textSwitchListBody = TrackPattern.Model.makeTextSwitchListBody(switchListname)
-            textSwitchList = textSwitchListHeader + textSwitchListBody
-            TrackPattern.Model.writeTextSwitchList(textSwitchList)
-            TrackPattern.View.displayTextSwitchList(textSwitchList)
-        else:
+        if not TrackPattern.ModelSetCarsForm.testFormValidity(self.setCarsForm, self.textBoxEntry):
             self.psLog.critical('Could not create switch list')
+            return
+
+        trackName = self.setCarsForm['locations'][0]['tracks'][0]['trackName']
+        listLocations = TrackPattern.Model.makePatternLocations([trackName])
+        modifiedListLocations = TrackPattern.ModelSetCarsForm.modifySetCarsList(listLocations, self.textBoxEntry)
+
+        patternListForJson = TrackPattern.Model.makePatternHeader()
+        patternListForJson['trainDescription'] = psEntities.MainScriptEntities.readConfigFile('TP')['RT']['SC']
+        patternListForJson['locations'] = modifiedListLocations
+        workEventName = TrackPattern.Model.writeWorkEventListAsJson(patternListForJson)
+        textWorkEventList = TrackPattern.Model.readJsonWorkEventList(workEventName)
+        textListForPrint = TrackPattern.Model.makeTextListForPrint(textWorkEventList)
+        TrackPattern.Model.writeTextSwitchList(workEventName, textListForPrint)
+        TrackPattern.View.displayTextSwitchList(workEventName)
 
         print(scriptName + ' ' + str(scriptRev))
 
@@ -75,10 +74,11 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
     def setButton(self, MOUSE_CLICKED):
         '''Event that moves cars to the tracks entered in the text box of the "Pattern Report for Track X" form'''
 
-        if TrackPattern.ModelSetCarsForm.testFormValidity(self.trackData, self.textBoxEntry):
-            TrackPattern.ModelSetCarsForm.setCarsToTrack(self.trackData, self.textBoxEntry)
-        else:
+        if not TrackPattern.ModelSetCarsForm.testFormValidity(self.setCarsForm, self.textBoxEntry):
             self.psLog.critical('Could not set cars to track')
+            return
+
+        TrackPattern.ModelSetCarsForm.setCarsToTrack(self.setCarsForm, self.textBoxEntry)
 
         setCarsWindow = MOUSE_CLICKED.getSource().getTopLevelAncestor()
         setCarsWindow.setVisible(False)
@@ -121,17 +121,16 @@ class TextBoxEntryListener(java.awt.event.MouseAdapter):
 class CreatePatternReportGui():
     '''Creates an instance of each "Pattern Report for Track X" window'''
 
-    def __init__(self, header, body):
+    def __init__(self, setCarsForm):
 
-        self.header = header
-        self.body = body
+        self.setCarsForm = setCarsForm
 
         return
 
     def makeFrame(self):
-        '''Create the windows'''
+        '''Create a JMRI jFrame window'''
 
-        patternReportForTrackForm = TrackPattern.ViewSetCarsForm.patternReportForTrackForm(self.header, self.body)
+        patternReportForTrackForm = TrackPattern.ViewSetCarsForm.patternReportForTrackForm(self.setCarsForm)
         patternReportForTrackWindow = TrackPattern.ViewSetCarsForm.patternReportForTrackWindow(patternReportForTrackForm)
 
         return patternReportForTrackWindow

@@ -65,23 +65,22 @@ class StartUp():
     def patternButton(self, event):
         '''Makes a track pattern report based on the config file'''
 
-        TrackPattern.Model.updateConfigFile(self.controls)
         self.psLog.info('Configuration file updated with new settings for controls')
-        reportTitle = psEntities.MainScriptEntities.readConfigFile('TP')['RT']['PR']
-        try:
-            switchList = TrackPattern.Model.makeSwitchList(reportTitle)
-            if not switchList:
-                self.psLog.info('No tracks were selected')
-                return
-        except:
-            self.psLog.critical('Could not create switch list')
+        TrackPattern.Model.updateConfigFile(self.controls)
+
+        listLocations = TrackPattern.Model.makePatternLocations()
+        if not listLocations:
+            self.psLog.info('No tracks were selected')
             return
-        switchListname = TrackPattern.Model.writeSwitchlistAsJson(switchList)
-        textSwitchListHeader = TrackPattern.Model.makeTextSwitchListHeader(switchListname)
-        textSwitchListBody = TrackPattern.Model.makeTextSwitchListBody(switchListname, 'includeTotals')
-        textSwitchList = textSwitchListHeader + textSwitchListBody
-        TrackPattern.Model.writeTextSwitchList(textSwitchList)
-        TrackPattern.View.displayTextSwitchList(textSwitchList)
+
+        patternListForJson = TrackPattern.Model.makePatternHeader()
+        patternListForJson['trainDescription'] = psEntities.MainScriptEntities.readConfigFile('TP')['RT']['PR']
+        patternListForJson['locations'] = listLocations
+        workEventName = TrackPattern.Model.writeWorkEventListAsJson(patternListForJson)
+        textWorkEventList = TrackPattern.Model.readJsonWorkEventList(workEventName)
+        textListForPrint = TrackPattern.Model.makeTextListForPrint(textWorkEventList, trackTotals=True)
+        TrackPattern.Model.writeTextSwitchList(workEventName, textListForPrint)
+        TrackPattern.View.displayTextSwitchList(workEventName)
 
         print(scriptName + ' ' + str(scriptRev))
 
@@ -95,7 +94,7 @@ class StartUp():
 
         TrackPattern.Model.makeLoadEmptyDesignationsDicts()
         TrackPattern.Model.onScButtonPress()
-        if psEntities.MainScriptEntities.readConfigFile('TP')['TP']:
+        if psEntities.MainScriptEntities.readConfigFile('TP')['TI']: # TrainPlayer Include
             TrackPattern.Model.resetTrainPlayerSwitchlist()
         print(scriptName + ' ' + str(scriptRev))
 

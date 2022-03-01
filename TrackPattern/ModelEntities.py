@@ -16,6 +16,34 @@ import psEntities.MainScriptEntities
 scriptName = 'OperationsPatternScripts.TrackPattern.ModelEntities'
 scriptRev = 20220101
 
+def makeGenericHeader():
+    '''A generic header info for any switch list, used to make the JSON file'''
+
+    listHeader = {}
+    listHeader['railroad'] = unicode(jmri.jmrit.operations.setup.Setup.getRailroadName(), psEntities.MainScriptEntities.setEncoding())
+    listHeader['trainName'] = u'Report Type Placeholder'
+    listHeader['trainDescription'] = u'Report Description'
+    listHeader['trainComment'] = u'Train Comment Placeholder'
+    listHeader['date'] = unicode(psEntities.MainScriptEntities.timeStamp(), psEntities.MainScriptEntities.setEncoding())
+    listHeader['locations'] = []
+
+    return listHeader
+
+def getGenericTrackDetails(locationName, trackName):
+    '''The loco and car lists are sorted at this level'''
+
+    lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
+
+    genericTrackDetails = {}
+    genericTrackDetails['trackName'] = trackName
+    genericTrackDetails['length'] = lm.getLocationByName(locationName).getTrackByName(trackName, None).getLength()
+
+    genericTrackDetails['locos'] = sortLocoList(getLocoListForTrack(trackName))
+
+    genericTrackDetails['cars'] = sortCarList(getCarListForTrack(trackName))
+
+    return genericTrackDetails
+
 def formatText(item, length):
     '''Truncate each item to its defined length in PatternConfig.json and add a space at the end'''
     # This version works with utf-8
@@ -218,12 +246,60 @@ def getSelectedTracks():
 
     return trackList
 
-def makeReportHeader(switchList):
+def makeTextReportHeader(textWorkEventList):
 
-    reportSwitchList    = switchList['description'] + '\n' \
-                        + switchList['railroad'] + '\n' \
-                        + u'Valid time: ' + switchList['date'] + '\n' \
-                        + u'Location: ' + switchList['location'] + '\n\n'
+    textReportHeader    = textWorkEventList['railroad'] + '\n' \
+                        + textWorkEventList['trainName'] + '\n' \
+                        + textWorkEventList['trainDescription'] + '\n' \
+                        + u'Comment: ' + textWorkEventList['trainComment'] + '\n' \
+                        + u'Valid time: ' + textWorkEventList['date'] + '\n\n'
+
+    return textReportHeader
+
+def makeTextReportLocations(textWorkEventList, trackTotals):
+
+    itemsList = jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
+    reportWidth = psEntities.MainScriptEntities.readConfigFile('TP')['RW']
+    includeTotals = psEntities.MainScriptEntities.readConfigFile('TP')['IT']
+
+    reportSwitchList = ''
+    reportTally = [] # running total for all tracks
+    for location in textWorkEventList['locations']:
+        reportSwitchList += 'Location: ' + location['locationName'] + '\n'
+        for track in location['tracks']:
+            lengthOfLocos = 0
+            lengthOfCars = 0
+            trackTally = []
+            trackName = track['trackName']
+            trackLength = track['length']
+            reportSwitchList += 'Track: ' + trackName + '\n'
+
+            for loco in track['locos']:
+                lengthOfLocos += int(loco['Length']) + 4
+                reportSwitchList += loco['Set to'] + formatText(loco['Road'], reportWidth['Road']) + formatText(loco['Number'],  reportWidth['Number']) + formatText(loco['Model'], reportWidth['Model']) + formatText(loco['Type'], reportWidth['Loco Type']) + '\n'
+
+            for car in track['cars']:
+                lengthOfCars += int(car['Length']) + 4
+                switchListRow = car['Set to']
+                trackTally.append(car['Final Dest'])
+                reportTally.append(car['Final Dest'])
+                for item in itemsList:
+                    itemWidth = reportWidth[item]
+                    switchListRow += formatText(car[item], itemWidth)
+                reportSwitchList += switchListRow + '\n'
+
+            if trackTotals:
+                totalLength = lengthOfLocos + lengthOfCars
+                reportSwitchList += 'Total Cars: ' + str(len(track['cars'])) + ' Track Length: ' + str(trackLength) + ' Eqpt. Length: ' + str(totalLength) + ' Available: ' + str(trackLength - totalLength) + '\n\n'
+                reportSwitchList += u'Track Totals:\n'
+                for track, count in sorted(occuranceTally(trackTally).items()):
+                    reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
+            reportSwitchList += '\n'
+
+        if trackTotals:
+            reportSwitchList += u'\nReport Totals:\n'
+            for track, count in sorted(occuranceTally(reportTally).items()):
+                reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
 
     return reportSwitchList
 
