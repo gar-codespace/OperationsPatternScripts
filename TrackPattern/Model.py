@@ -11,7 +11,6 @@ import psEntities.MainScriptEntities
 import TrackPattern.ModelEntities
 import TrackPattern.ControllerSetCarsForm
 
-
 '''Data munipulation for the track pattern subroutine'''
 
 scriptName = 'OperationsPatternScripts.TrackPattern.Model'
@@ -189,14 +188,19 @@ def resetTrainPlayerSwitchlist():
 
     psLog.debug('resetTrainPlayerSwitchlist')
 
-    reportTitle = psEntities.MainScriptEntities.readConfigFile('TP')['RT']['TP']
-    tpPatternHeader = TrackPattern.Model.makeSwitchListHeader()
-    tpPatternHeader['description'] = reportTitle
+    genericHeader = TrackPattern.ModelEntities.makeGenericHeader()
+    genericHeader['trainDescription'] = psEntities.MainScriptEntities.readConfigFile('TP')['RT']['TP']
+    genericHeader['locations'] = [{'locationName':'Location Name', 'tracks':[{'trackName':'Track Name', 'length': 1, 'locos':[], 'cars':[]}]}]
+    writeWorkEventListAsJson(genericHeader)
 
-    jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
-    jsonObject = jsonDumps(tpPatternHeader, indent=2, sort_keys=True) #trackPatternDict
-    with codecsOpen(jsonCopyTo, 'wb', encoding=psEntities.MainScriptEntities.setEncoding()) as jsonWorkFile:
-        jsonWorkFile.write(jsonObject)
+
+    # tpPatternHeader = TrackPattern.Model.makeSwitchListHeader()
+    # tpPatternHeader['description'] = reportTitle
+    #
+    # jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
+    # jsonObject = jsonDumps(tpPatternHeader, indent=2, sort_keys=True) #trackPatternDict
+    # with codecsOpen(jsonCopyTo, 'wb', encoding=psEntities.MainScriptEntities.setEncoding()) as jsonWorkFile:
+    #     jsonWorkFile.write(jsonObject)
 
     return
 
@@ -383,16 +387,16 @@ def makeTrackList(location, type):
 
     return TrackPattern.ModelEntities.getTracksByLocation(location, type)
 
-def writePatternJson(location, trackPatternDict):
-    '''Write the track pattern dictionary as a JSON file'''
-
-    psLog.debug('writePatternJson')
-    jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\Track Pattern (' + location + ').json'
-    jsonObject = jsonDumps(trackPatternDict, indent=2, sort_keys=True) #trackPatternDict
-    with codecsOpen(jsonCopyTo, 'wb', encoding=psEntities.MainScriptEntities.setEncoding()) as jsonWorkFile:
-        jsonWorkFile.write(jsonObject)
-
-    return
+# def writePatternJson(location, trackPatternDict):
+#     '''Write the track pattern dictionary as a JSON file'''
+#
+#     psLog.debug('writePatternJson')
+#     jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\Track Pattern (' + location + ').json'
+#     jsonObject = jsonDumps(trackPatternDict, indent=2, sort_keys=True) #trackPatternDict
+#     with codecsOpen(jsonCopyTo, 'wb', encoding=psEntities.MainScriptEntities.setEncoding()) as jsonWorkFile:
+#         jsonWorkFile.write(jsonObject)
+#
+#     return
 
 def writeCsvSwitchList(location, trackPatternDict):
     '''Rewrite this to write from the JSON file'''

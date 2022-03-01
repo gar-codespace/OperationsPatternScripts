@@ -17,7 +17,9 @@ scriptName = 'OperationsPatternScripts.TrackPattern.ModelSetCarsForm'
 scriptRev = 20220101
 psLog = logging.getLogger('PS.TP.ModelSetCarsForm')
 
-def testFormValidity(setCarsForm, textBoxEntry):
+def testValidityOfForm(setCarsForm, textBoxEntry):
+
+    psLog.debug('testValidityOfForm')
 
     locoCount = len(setCarsForm['locations'][0]['tracks'][0]['locos'])
     carCount = len(setCarsForm['locations'][0]['tracks'][0]['cars'])
@@ -28,24 +30,29 @@ def testFormValidity(setCarsForm, textBoxEntry):
         psLog.critical('mismatched input list and car roster lengths')
         return False
 
-def exportToTrainPlayer(body):
+def exportToTrainPlayer(setCarsForm, textBoxEntry):
 
-    tpBody = TrackPattern.ExportToTrainPlayer.TrackPatternTranslationToTp(body).modifySwitchList()
-    appendedTpSwitchList = TrackPattern.ExportToTrainPlayer.TrackPatternTranslationToTp(tpBody).appendSwitchList()
-    switchListName = TrackPattern.ExportToTrainPlayer.ProcessWorkEventList(appendedTpSwitchList).writeWorkEventListAsJson()
-    jsonSwitchList = TrackPattern.ExportToTrainPlayer.ProcessWorkEventList(switchListName).readFromFile()
-    tpSwitchList = TrackPattern.ExportToTrainPlayer.ProcessWorkEventList(jsonSwitchList)
-    tpSwitchListHeader = tpSwitchList.makeHeader()
-    tpSwitchListBody = tpSwitchList.makeBody()
+    psLog.debug('exportToTrainPlayer')
+
     TrackPattern.ExportToTrainPlayer.CheckTpDestination().directoryExists()
-    TrackPattern.ExportToTrainPlayer.WriteWorkEventListToTp(tpSwitchListHeader + tpSwitchListBody).asCsv()
     TrackPattern.ExportToTrainPlayer.ExportJmriLocations().toTrainPlayer()
+
+    tpSwitchList = TrackPattern.ExportToTrainPlayer.TrackPatternTranslationToTp()
+    modifiedSwitchList = tpSwitchList.modifySwitchList(setCarsForm, textBoxEntry)
+    appendedTpSwitchList = tpSwitchList.appendSwitchList(modifiedSwitchList)
+    tpWorkEventProcessor = TrackPattern.ExportToTrainPlayer.ProcessWorkEventList()
+    tpWorkEventProcessor.writeWorkEventListAsJson(appendedTpSwitchList)
+    tpSwitchListHeader = tpWorkEventProcessor.makeTpHeader(appendedTpSwitchList)
+    tpSwitchListLocations = tpWorkEventProcessor.makeTpLocations(appendedTpSwitchList)
+    TrackPattern.ExportToTrainPlayer.WriteWorkEventListToTp(tpSwitchListHeader + tpSwitchListLocations).asCsv()
+
+    return
 
 def setCarsToTrack(setCarsForm, textBoxEntry):
 
     psLog.debug('setCarsToTrack')
-    trackData = []
 
+    trackData = []
     em = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.engines.EngineManager)
     cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
     lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
@@ -119,6 +126,8 @@ def setCarsToTrack(setCarsForm, textBoxEntry):
 
 def writeTpSwitchListFromJson(switchListName):
     '''Writes the switch list for TrainPlayer'''
+
+    psLog.debug('writeTpSwitchListFromJson')
 
     TrackPattern.ExportToTrainPlayer.CheckTpDestination().directoryExists()
     TrackPattern.ExportToTrainPlayer.JmriLocationsToTrainPlayer().exportLocations()

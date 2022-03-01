@@ -36,7 +36,6 @@
     "AL" : [
     ],
     "PL" : "",
-    "IT" : true,
     "PT" : {
     },
     "RT" : {
@@ -47,7 +46,7 @@
     "PA" : false,
     "PI" : false,
     "AS" : true,
-    "TI" : true,
+    "TI" : false,
     "PW" : 260,
     "PH" : 16,
     "DS" : "*No Waybill",

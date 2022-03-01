@@ -2,16 +2,14 @@
 # © 2021 Greg Ritacco
 
 import jmri
-import java.awt
-import javax.swing
+# import java.awt
+# import javax.swing
 import time
 from codecs import open as codecsOpen
 from json import loads as jsonLoads, dumps as jsonDumps
 from xml.etree import ElementTree as ET
 
 import psEntities.MainScriptEntities
-
-'''Data munipulation support methods for the track pattern subroutine'''
 
 scriptName = 'OperationsPatternScripts.TrackPattern.ModelEntities'
 scriptRev = 20220101

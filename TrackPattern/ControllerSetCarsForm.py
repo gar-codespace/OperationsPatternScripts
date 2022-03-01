@@ -50,7 +50,7 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
     def printButton(self, MOUSE_CLICKED):
         '''Print a switch list for each "Pattern Report for Track X" window'''
 
-        if not TrackPattern.ModelSetCarsForm.testFormValidity(self.setCarsForm, self.textBoxEntry):
+        if not TrackPattern.ModelSetCarsForm.testValidityOfForm(self.setCarsForm, self.textBoxEntry):
             self.psLog.critical('Could not create switch list')
             return
 
@@ -74,7 +74,7 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
     def setButton(self, MOUSE_CLICKED):
         '''Event that moves cars to the tracks entered in the text box of the "Pattern Report for Track X" form'''
 
-        if not TrackPattern.ModelSetCarsForm.testFormValidity(self.setCarsForm, self.textBoxEntry):
+        if not TrackPattern.ModelSetCarsForm.testValidityOfForm(self.setCarsForm, self.textBoxEntry):
             self.psLog.critical('Could not set cars to track')
             return
 
@@ -91,13 +91,8 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
         '''Accumulate switch lists into one TrainPlayer switch list'''
 
         MOUSE_CLICKED.getSource().setBackground(java.awt.Color.GREEN)
-        try:
-            body = TrackPattern.ModelSetCarsForm.makeSetCarsSwitchList(self.trackData, self.textBoxEntry)
-        except:
-            self.psLog.critical('Could not create switch list')
-            return
 
-        TrackPattern.ModelSetCarsForm.exportToTrainPlayer(body)
+        TrackPattern.ModelSetCarsForm.exportToTrainPlayer(self.setCarsForm, self.textBoxEntry)
 
         print(scriptName + ' ' + str(scriptRev))
 

@@ -56,6 +56,7 @@ def displayTextSwitchlist(location):
     '''Opens the text switchlist to Notepad or other'''
 
     psLog.debug('displayTextSwitchlist')
+
     textSwitchList = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\Track Pattern (' + location + ').txt'
     osSystem(psEntities.MainScriptEntities.openEditorByComputerType(textSwitchList))
 
@@ -72,6 +73,7 @@ def printPatternLog():
     '''Opens the pattern log in notepad or other'''
 
     psLog.debug('displayPatternLog')
+    
     tempPatternLog = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
     osSystem(psEntities.MainScriptEntities.openEditorByComputerType(tempPatternLog))
 
