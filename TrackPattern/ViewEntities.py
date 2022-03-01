@@ -55,7 +55,7 @@ class TrackPatternPanel:
         '''Any track type and ignore length flags'''
 
         flagInputBox = javax.swing.Box(javax.swing.BoxLayout.X_AXIS) # make a box for the label and input box
-        flagInputBox.setPreferredSize(java.awt.Dimension(self.configFile['PW'], self.configFile['PH']))
+        # flagInputBox.setPreferredSize(java.awt.Dimension(self.configFile['PW'], self.configFile['PH']))
         flagInputBox.add(self.useYardTracks)
         flagInputBox.add(self.ignoreTrackLength)
 

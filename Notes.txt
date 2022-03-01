@@ -33,10 +33,10 @@ Stuff that's OK:
 
 Todo:
   Catch up with the latest JMRI stuff like text color
-  add internal logging to ExportToTrainPlayer.py that works
-  update help screen
-  update pattern scripts with locations properly implemented
-  Clean up the way track totals are included or not in the print report
+  BUG After setting cars in one window, press print on the other window and crash, but set cars button works ok
+    set a car from a to b. Press print button on b, the car roster length and input text lengths mismatch, but doesn't trigger a critical log entry.
+  Have to freeze the car and text box rosters.
+  UGH!! Left justify set cars lists
 
 Wish List:
   for getDetailsForLocoAsDict(locoObject) add loco include elements to the json config file similar to: jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()

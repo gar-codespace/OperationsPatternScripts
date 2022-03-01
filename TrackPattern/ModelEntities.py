@@ -258,7 +258,7 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
 
     itemsList = jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
     reportWidth = psEntities.MainScriptEntities.readConfigFile('TP')['RW']
-    includeTotals = psEntities.MainScriptEntities.readConfigFile('TP')['IT']
+    # includeTotals = psEntities.MainScriptEntities.readConfigFile('TP')['IT']
 
     reportSwitchList = ''
     reportTally = [] # running total for all tracks

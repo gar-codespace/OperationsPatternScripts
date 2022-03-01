@@ -97,7 +97,6 @@ class TrackPatternTranslationToTp():
         self.psLog.debug('modifySwitchList')
         self.tpLog.debug('modifySwitchList')
 
-        # setCarsForm['trainDescription'] = psEntities.MainScriptEntities.readConfigFile('TP')['RT']['TP']
         location = setCarsForm['locations'][0]['locationName']
         trackName = setCarsForm['locations'][0]['tracks'][0]['trackName']
         lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)

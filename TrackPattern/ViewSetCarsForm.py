@@ -44,20 +44,18 @@ def patternReportForTrackForm(setCarsForm):
     patternReportFormBody = javax.swing.JPanel()
     patternReportFormBody.setLayout(javax.swing.BoxLayout(patternReportFormBody, javax.swing.BoxLayout.PAGE_AXIS))
 
-    listOfLocoRows, textBoxEntry = makeSetCarsLocoList(setCarsForm)
+    setCarsEqptRows = MakeSetCarsEqptRows(setCarsForm)
+    listOfLocoRows, textBoxEntry = setCarsEqptRows.makeSetCarsLocoRows()
     for loco in listOfLocoRows:
-        # loco.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
         patternReportFormBody.add(loco)
-
-    listOfCarRows, carBoxEntry = makeSetCarsCarList(setCarsForm)
+    listOfCarRows, carBoxEntry = setCarsEqptRows.makeSetCarsCarRows()
     for car in listOfCarRows:
-        # car.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
         patternReportFormBody.add(car)
-
     for item in carBoxEntry:
         textBoxEntry.append(item)
 
-    patternReportForm.add(patternReportFormBody)
+    patternReportFormPane = javax.swing.JScrollPane(patternReportFormBody)
+    patternReportForm.add(patternReportFormPane)
     patternReportForm.add(javax.swing.JSeparator())
 
     setCarsSchedule = makeSetCarsScheduleRow(setCarsForm)
@@ -133,82 +131,93 @@ def patternReportRowOfTracks(allTracksAtLoc):
 
     return buttonPanel
 
-def makeSetCarsLocoList(setCarsForm):
-    '''Creates the locomotive lines of the pattern report form'''
+class MakeSetCarsEqptRows():
 
-    configFile = psEntities.MainScriptEntities.readConfigFile('TP')
-    reportWidth = configFile['RW']
+    def __init__(self, setCarsForm):
 
-    listOfLocoRows = []
-    textBoxEntry = []
-    locos = setCarsForm['locations'][0]['tracks'][0]['locos']
-    for loco in locos:
-        combinedInputLine = javax.swing.JPanel()
-        combinedInputLine.setBackground(psEntities.FADED)
-        # combinedInputLine.setAlignmentX(java.awt.BorderLayout.WEST)
+        self.scriptName = 'OperationsPatternScripts.TrackPattern.MakeSetCarsEqptRows'
+        self.scriptRev = 20220101
 
-        inputText = javax.swing.JTextField(5)
-        inputText.addMouseListener(TrackPattern.ControllerSetCarsForm.TextBoxEntryListener())
-        textBoxEntry.append(inputText)
-        inputBox = TrackPattern.ViewSetCarsForm.makeSwingBox(reportWidth['Input'] * configFile['RM'], configFile['PH'])
-        inputBox.add(inputText)
-        combinedInputLine.add(inputBox)
+        self.reportWidth = psEntities.MainScriptEntities.readConfigFile('TP')['RW']
+        pm = jmri.InstanceManager.getDefault(jmri.util.gui.GuiLafPreferencesManager)
+        fontSize = pm.getFontSize()
+        self.panelHeight = fontSize + 4
+        self.panelWidth = fontSize - 2
 
-        label = javax.swing.JLabel(loco['Road'])
-        box = TrackPattern.ViewSetCarsForm.makeSwingBox(reportWidth['Road'] * configFile['RM'], configFile['PH'])
-        box.add(label)
-        combinedInputLine.add(box)
+        self.setCarsForm = setCarsForm
 
-        label = javax.swing.JLabel(loco['Number'])
-        box = TrackPattern.ViewSetCarsForm.makeSwingBox(reportWidth['Number'] * configFile['RM'], configFile['PH'])
-        box.add(label)
-        combinedInputLine.add(box)
+        return
 
-        label = javax.swing.JLabel(loco['Model'])
-        box = TrackPattern.ViewSetCarsForm.makeSwingBox(reportWidth['Model'] * configFile['RM'], configFile['PH'])
-        box.add(label)
-        combinedInputLine.add(box)
+    def makeSetCarsLocoRows(self):
+        '''Creates the locomotive lines of the pattern report form'''
 
-        label = javax.swing.JLabel(loco['Type'])
-        box = TrackPattern.ViewSetCarsForm.makeSwingBox(reportWidth['Loco Type'] * configFile['RM'], configFile['PH'])
-        box.add(label)
-        combinedInputLine.add(box)
-        combinedInputLine.add(javax.swing.Box.createHorizontalGlue())
+        listOfLocoRows = []
+        textBoxEntry = []
+        locos = self.setCarsForm['locations'][0]['tracks'][0]['locos']
+        for loco in locos:
+            combinedInputLine = javax.swing.JPanel()
+            combinedInputLine.setBackground(psEntities.FADED)
+            # combinedInputLine.setAlignmentX(java.awt.BorderLayout.WEST)
 
-        listOfLocoRows.append(combinedInputLine)
+            inputText = javax.swing.JTextField(44)
+            inputText.addMouseListener(TrackPattern.ControllerSetCarsForm.TextBoxEntryListener())
+            textBoxEntry.append(inputText)
+            inputBox = TrackPattern.ViewSetCarsForm.makeSwingBox(self.panelWidth * 6, self.panelHeight)
+            inputBox.add(inputText)
+            combinedInputLine.add(inputBox)
 
-    return listOfLocoRows, textBoxEntry
-
-def makeSetCarsCarList(setCarsForm):
-    '''Creates the car lines of the pattern report form'''
-
-    configFile = psEntities.MainScriptEntities.readConfigFile('TP')
-    reportWidth = configFile['RW']
-
-    listOfCarRows = []
-    textBoxEntry = []
-    cars = setCarsForm['locations'][0]['tracks'][0]['cars']
-
-    for car in cars:
-        combinedInputLine = javax.swing.JPanel()
-        combinedInputLine.setBackground(psEntities.DUST)
-        # combinedInputLine.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
-        inputText = javax.swing.JTextField(5)
-        inputText.addMouseListener(TrackPattern.ControllerSetCarsForm.TextBoxEntryListener())
-        textBoxEntry.append(inputText)
-        inputBox = TrackPattern.ViewSetCarsForm.makeSwingBox(reportWidth['Input'] * configFile['RM'], configFile['PH'])
-        inputBox.add(inputText)
-        combinedInputLine.add(inputBox)
-
-        for item in jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
-            label = javax.swing.JLabel(car[item])
-            box = TrackPattern.ViewSetCarsForm.makeSwingBox(reportWidth[item] * configFile['RM'], configFile['PH'])
+            label = javax.swing.JLabel(loco['Road'])
+            box = TrackPattern.ViewSetCarsForm.makeSwingBox(self.reportWidth['Road'] * self.panelWidth, self.panelHeight)
             box.add(label)
             combinedInputLine.add(box)
-        combinedInputLine.add(javax.swing.Box.createHorizontalGlue())
-        listOfCarRows.append(combinedInputLine)
 
-    return listOfCarRows, textBoxEntry
+            label = javax.swing.JLabel(loco['Number'])
+            box = TrackPattern.ViewSetCarsForm.makeSwingBox(self.reportWidth['Number'] * self.panelWidth, self.panelHeight)
+            box.add(label)
+            combinedInputLine.add(box)
+
+            label = javax.swing.JLabel(loco['Model'])
+            box = TrackPattern.ViewSetCarsForm.makeSwingBox(self.reportWidth['Model'] * self.panelWidth, self.panelHeight)
+            box.add(label)
+            combinedInputLine.add(box)
+
+            label = javax.swing.JLabel(loco['Type'])
+            box = TrackPattern.ViewSetCarsForm.makeSwingBox(self.reportWidth['Loco Type'] * self.panelWidth, self.panelHeight)
+            box.add(label)
+            combinedInputLine.add(box)
+            combinedInputLine.add(javax.swing.Box.createHorizontalGlue())
+
+            listOfLocoRows.append(combinedInputLine)
+
+        return listOfLocoRows, textBoxEntry
+
+    def makeSetCarsCarRows(self):
+        '''Creates the car lines of the pattern report form'''
+
+        listOfCarRows = []
+        textBoxEntry = []
+        cars = self.setCarsForm['locations'][0]['tracks'][0]['cars']
+
+        for car in cars:
+            combinedInputLine = javax.swing.JPanel()
+            combinedInputLine.setBackground(psEntities.DUST)
+            # combinedInputLine.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
+            inputText = javax.swing.JTextField(5)
+            inputText.addMouseListener(TrackPattern.ControllerSetCarsForm.TextBoxEntryListener())
+            textBoxEntry.append(inputText)
+            inputBox = TrackPattern.ViewSetCarsForm.makeSwingBox(self.panelWidth * 6, self.panelHeight)
+            inputBox.add(inputText)
+            combinedInputLine.add(inputBox)
+
+            for item in jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
+                label = javax.swing.JLabel(car[item])
+                box = TrackPattern.ViewSetCarsForm.makeSwingBox(self.reportWidth[item] * self.panelWidth, self.panelHeight)
+                box.add(label)
+                combinedInputLine.add(box)
+            combinedInputLine.add(javax.swing.Box.createHorizontalGlue())
+            listOfCarRows.append(combinedInputLine)
+
+        return listOfCarRows, textBoxEntry
 
 def makeSetCarsScheduleRow(setCarsForm):
 
