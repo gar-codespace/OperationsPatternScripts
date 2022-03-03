@@ -49,7 +49,7 @@
       "TP" : "Local Switch Job"
     },
     "TC" : {
-      "PR" : "Switch List for Selected Tracks",
+      "PR" : "Track Pattern for Selected Tracks",
       "SC" : "Switch List for One Track",
       "TP" : "Switch List for Selected Tracks"
     },

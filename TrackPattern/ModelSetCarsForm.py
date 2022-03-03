@@ -11,8 +11,6 @@ import psEntities.MainScriptEntities
 import TrackPattern.ModelEntities
 import TrackPattern.ExportToTrainPlayer
 
-'''Data crunching for the Pattern Reprot for Track X Form'''
-
 scriptName = 'OperationsPatternScripts.TrackPattern.ModelSetCarsForm'
 scriptRev = 20220101
 psLog = logging.getLogger('PS.TP.ModelSetCarsForm')
@@ -35,14 +33,14 @@ def printSwitchList(setCarsForm, textBoxEntry):
     psLog.debug('printSwitchList')
 
     modifiedsetCarsForm = modifySetCarsList(setCarsForm, textBoxEntry)
-    patternListForJson = TrackPattern.Model.makePatternHeader()
 
     headerNames = psEntities.MainScriptEntities.readConfigFile('TP')
+    patternListForJson = TrackPattern.Model.makePatternHeader()
     patternListForJson['trainDescription'] = headerNames['TD']['SC']
     patternListForJson['trainName'] = headerNames['TN']['SC']
     patternListForJson['trainComment'] = headerNames['TC']['SC']
-
     patternListForJson['locations'] = modifiedsetCarsForm['locations']
+
     workEventName = TrackPattern.Model.writeWorkEventListAsJson(patternListForJson)
     textWorkEventList = TrackPattern.Model.readJsonWorkEventList(workEventName)
     textListForPrint = TrackPattern.Model.makeTextListForPrint(textWorkEventList)

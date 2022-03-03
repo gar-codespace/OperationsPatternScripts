@@ -65,26 +65,14 @@ class StartUp():
     def patternButton(self, event):
         '''Makes a track pattern report based on the config file'''
 
-        self.psLog.info('Configuration file updated with new settings for controls')
         TrackPattern.Model.updateConfigFile(self.controls)
+        self.psLog.info('Configuration file updated with new settings for controls')
 
-        listLocations = TrackPattern.Model.makePatternLocations()
-        if not listLocations:
+        if not TrackPattern.ModelEntities.getSelectedTracks():
             self.psLog.info('No tracks were selected')
             return
 
-        patternListForJson = TrackPattern.Model.makePatternHeader()
-        headerNames = psEntities.MainScriptEntities.readConfigFile('TP')
-        patternListForJson['trainDescription'] = headerNames['TD']['PR']
-        patternListForJson['trainName'] = headerNames['TN']['PR']
-        patternListForJson['trainComment'] = headerNames['TC']['PR']
-        # patternListForJson['trainDescription'] = psEntities.MainScriptEntities.readConfigFile('TP')['RT']['PR'] 
-        patternListForJson['locations'] = listLocations
-        workEventName = TrackPattern.Model.writeWorkEventListAsJson(patternListForJson)
-        textWorkEventList = TrackPattern.Model.readJsonWorkEventList(workEventName)
-        textListForPrint = TrackPattern.Model.makeTextListForPrint(textWorkEventList, trackTotals=True)
-        TrackPattern.Model.writeTextSwitchList(workEventName, textListForPrint)
-        TrackPattern.View.displayTextSwitchList(workEventName)
+        TrackPattern.Model.onPatternButtonPress()
 
         print(scriptName + ' ' + str(scriptRev))
 
@@ -93,11 +81,12 @@ class StartUp():
     def setCarsButton(self, event):
         '''Opens a "Pattern Report for Track X" window for each checked track'''
 
-        self.controls = TrackPattern.Model.updateConfigFile(self.controls)
+        TrackPattern.Model.updateConfigFile(self.controls)
         self.psLog.info('Configuration file updated with new settings for controls')
 
         TrackPattern.Model.makeLoadEmptyDesignationsDicts()
         TrackPattern.Model.onScButtonPress()
+
         if psEntities.MainScriptEntities.readConfigFile('TP')['TI']: # TrainPlayer Include
             TrackPattern.Model.resetTrainPlayerSwitchlist()
         print(scriptName + ' ' + str(scriptRev))
