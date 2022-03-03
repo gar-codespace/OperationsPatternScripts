@@ -74,7 +74,11 @@ class StartUp():
             return
 
         patternListForJson = TrackPattern.Model.makePatternHeader()
-        patternListForJson['trainDescription'] = psEntities.MainScriptEntities.readConfigFile('TP')['RT']['PR']
+        headerNames = psEntities.MainScriptEntities.readConfigFile('TP')
+        patternListForJson['trainDescription'] = headerNames['TD']['PR']
+        patternListForJson['trainName'] = headerNames['TN']['PR']
+        patternListForJson['trainComment'] = headerNames['TC']['PR']
+        # patternListForJson['trainDescription'] = psEntities.MainScriptEntities.readConfigFile('TP')['RT']['PR'] 
         patternListForJson['locations'] = listLocations
         workEventName = TrackPattern.Model.writeWorkEventListAsJson(patternListForJson)
         textWorkEventList = TrackPattern.Model.readJsonWorkEventList(workEventName)

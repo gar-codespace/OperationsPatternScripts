@@ -189,18 +189,15 @@ def resetTrainPlayerSwitchlist():
     psLog.debug('resetTrainPlayerSwitchlist')
 
     genericHeader = TrackPattern.ModelEntities.makeGenericHeader()
-    genericHeader['trainDescription'] = psEntities.MainScriptEntities.readConfigFile('TP')['RT']['TP']
+
+    headerNames = psEntities.MainScriptEntities.readConfigFile('TP')
+    genericHeader['trainDescription'] = headerNames['TD']['TP']
+    genericHeader['trainName'] = headerNames['TN']['TP']
+    genericHeader['trainComment'] = headerNames['TC']['TP']
+
     genericHeader['locations'] = [{'locationName':'Location Name', 'tracks':[{'trackName':'Track Name', 'length': 1, 'locos':[], 'cars':[]}]}]
+
     writeWorkEventListAsJson(genericHeader)
-
-
-    # tpPatternHeader = TrackPattern.Model.makeSwitchListHeader()
-    # tpPatternHeader['description'] = reportTitle
-    #
-    # jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
-    # jsonObject = jsonDumps(tpPatternHeader, indent=2, sort_keys=True) #trackPatternDict
-    # with codecsOpen(jsonCopyTo, 'wb', encoding=psEntities.MainScriptEntities.setEncoding()) as jsonWorkFile:
-    #     jsonWorkFile.write(jsonObject)
 
     return
 

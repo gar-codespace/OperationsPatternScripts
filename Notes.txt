@@ -30,13 +30,13 @@ Stuff that's OK:
   catches invalid track typed into set cars box OK
   ExportToTrainPlayer.py works as module OK
   ExportToTrainPlayer.py works as script OK
+  Train name, train comments matrix added to config file
 
 Todo:
   Catch up with the latest JMRI stuff like text color
-  BUG After setting cars in one window, press print on the other window and crash, but set cars button works ok
-    set a car from a to b. Press print button on b, the car roster length and input text lengths mismatch, but doesn't trigger a critical log entry.
-  Have to freeze the car and text box rosters.
   UGH!! Left justify set cars lists
+  The print switch list is created in one method and modified in two others, can this be combined?
+  ControllerSetCarsForm printButton, setButton, and trainPlayerButton share a lot of the same setup, can this be combined?
 
 Wish List:
   for getDetailsForLocoAsDict(locoObject) add loco include elements to the json config file similar to: jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()

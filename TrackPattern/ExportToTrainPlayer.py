@@ -135,12 +135,12 @@ class TrackPatternTranslationToTp():
         self.psLog.debug('appendSwitchList')
         self.tpLog.debug('appendSwitchList')
 
-        reportTitle = psEntities.MainScriptEntities.readConfigFile('TP')['RT']['TP']
+        headerNames = psEntities.MainScriptEntities.readConfigFile('TP')
+        reportTitle = headerNames['TD']['TP']
         jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
         with codecsOpen(jsonFile, 'r', encoding=psEntities.MainScriptEntities.setEncoding()) as jsonWorkFile:
             jsonSwitchList = jsonWorkFile.read()
         tpSwitchList = jsonLoads(jsonSwitchList)
-        tpSwitchList['trainComment'] = 'TrainPlayer Switch List'
 
         for loco in modifiedForm['locations'][0]['tracks'][0]['locos']:
             tpSwitchList['locations'][0]['tracks'][0]['locos'].append(loco)

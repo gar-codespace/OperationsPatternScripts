@@ -54,18 +54,7 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
             self.psLog.critical('Could not create switch list')
             return
 
-        trackName = self.setCarsForm['locations'][0]['tracks'][0]['trackName']
-        listLocations = TrackPattern.Model.makePatternLocations([trackName])
-        modifiedListLocations = TrackPattern.ModelSetCarsForm.modifySetCarsList(listLocations, self.textBoxEntry)
-
-        patternListForJson = TrackPattern.Model.makePatternHeader()
-        patternListForJson['trainDescription'] = psEntities.MainScriptEntities.readConfigFile('TP')['RT']['SC']
-        patternListForJson['locations'] = modifiedListLocations
-        workEventName = TrackPattern.Model.writeWorkEventListAsJson(patternListForJson)
-        textWorkEventList = TrackPattern.Model.readJsonWorkEventList(workEventName)
-        textListForPrint = TrackPattern.Model.makeTextListForPrint(textWorkEventList)
-        TrackPattern.Model.writeTextSwitchList(workEventName, textListForPrint)
-        TrackPattern.View.displayTextSwitchList(workEventName)
+        TrackPattern.ModelSetCarsForm.printSwitchList(self.setCarsForm, self.textBoxEntry)
 
         print(scriptName + ' ' + str(scriptRev))
 
@@ -83,6 +72,7 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
         setCarsWindow = MOUSE_CLICKED.getSource().getTopLevelAncestor()
         setCarsWindow.setVisible(False)
         setCarsWindow.dispose()
+
         print(scriptName + ' ' + str(scriptRev))
 
         return
@@ -90,6 +80,10 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
     def trainPlayerButton(self, MOUSE_CLICKED):
         '''Accumulate switch lists into one TrainPlayer switch list'''
 
+        if not TrackPattern.ModelSetCarsForm.testValidityOfForm(self.setCarsForm, self.textBoxEntry):
+            self.psLog.critical('Could not set cars to track')
+            return
+            
         MOUSE_CLICKED.getSource().setBackground(java.awt.Color.GREEN)
 
         TrackPattern.ModelSetCarsForm.exportToTrainPlayer(self.setCarsForm, self.textBoxEntry)

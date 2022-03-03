@@ -38,10 +38,20 @@
     "PL" : "",
     "PT" : {
     },
-    "RT" : {
-      "PR" : "Track Pattern Report",
-      "SC" : "Switch List for track",
-      "TP" : "TrainPlayer Work Events"
+    "TD" : {
+      "PR" : "Track Pattern",
+      "SC" : "Switch List",
+      "TP" : "TrainPlayer"
+    },
+    "TN" : {
+      "PR" : "Local Switch Job",
+      "SC" : "Local Switch Job",
+      "TP" : "Local Switch Job"
+    },
+    "TC" : {
+      "PR" : "Switch List for Selected Tracks",
+      "SC" : "Switch List for One Track",
+      "TP" : "Switch List for Selected Tracks"
     },
     "PA" : false,
     "PI" : false,

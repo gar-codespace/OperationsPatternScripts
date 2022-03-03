@@ -30,21 +30,24 @@ def testValidityOfForm(setCarsForm, textBoxEntry):
         psLog.critical('mismatched input list and car roster lengths')
         return False
 
-def exportToTrainPlayer(setCarsForm, textBoxEntry):
+def printSwitchList(setCarsForm, textBoxEntry):
 
-    psLog.debug('exportToTrainPlayer')
+    psLog.debug('printSwitchList')
 
-    TrackPattern.ExportToTrainPlayer.CheckTpDestination().directoryExists()
-    TrackPattern.ExportToTrainPlayer.ExportJmriLocations().toTrainPlayer()
+    modifiedsetCarsForm = modifySetCarsList(setCarsForm, textBoxEntry)
+    patternListForJson = TrackPattern.Model.makePatternHeader()
 
-    tpSwitchList = TrackPattern.ExportToTrainPlayer.TrackPatternTranslationToTp()
-    modifiedSwitchList = tpSwitchList.modifySwitchList(setCarsForm, textBoxEntry)
-    appendedTpSwitchList = tpSwitchList.appendSwitchList(modifiedSwitchList)
-    tpWorkEventProcessor = TrackPattern.ExportToTrainPlayer.ProcessWorkEventList()
-    tpWorkEventProcessor.writeWorkEventListAsJson(appendedTpSwitchList)
-    tpSwitchListHeader = tpWorkEventProcessor.makeTpHeader(appendedTpSwitchList)
-    tpSwitchListLocations = tpWorkEventProcessor.makeTpLocations(appendedTpSwitchList)
-    TrackPattern.ExportToTrainPlayer.WriteWorkEventListToTp(tpSwitchListHeader + tpSwitchListLocations).asCsv()
+    headerNames = psEntities.MainScriptEntities.readConfigFile('TP')
+    patternListForJson['trainDescription'] = headerNames['TD']['SC']
+    patternListForJson['trainName'] = headerNames['TN']['SC']
+    patternListForJson['trainComment'] = headerNames['TC']['SC']
+
+    patternListForJson['locations'] = modifiedsetCarsForm['locations']
+    workEventName = TrackPattern.Model.writeWorkEventListAsJson(patternListForJson)
+    textWorkEventList = TrackPattern.Model.readJsonWorkEventList(workEventName)
+    textListForPrint = TrackPattern.Model.makeTextListForPrint(textWorkEventList)
+    TrackPattern.Model.writeTextSwitchList(workEventName, textListForPrint)
+    TrackPattern.View.displayTextSwitchList(workEventName)
 
     return
 
@@ -124,6 +127,24 @@ def setCarsToTrack(setCarsForm, textBoxEntry):
 
     return
 
+def exportToTrainPlayer(setCarsForm, textBoxEntry):
+
+    psLog.debug('exportToTrainPlayer')
+
+    TrackPattern.ExportToTrainPlayer.CheckTpDestination().directoryExists()
+    TrackPattern.ExportToTrainPlayer.ExportJmriLocations().toTrainPlayer()
+
+    tpSwitchList = TrackPattern.ExportToTrainPlayer.TrackPatternTranslationToTp()
+    modifiedSwitchList = tpSwitchList.modifySwitchList(setCarsForm, textBoxEntry)
+    appendedTpSwitchList = tpSwitchList.appendSwitchList(modifiedSwitchList)
+    tpWorkEventProcessor = TrackPattern.ExportToTrainPlayer.ProcessWorkEventList()
+    tpWorkEventProcessor.writeWorkEventListAsJson(appendedTpSwitchList)
+    tpSwitchListHeader = tpWorkEventProcessor.makeTpHeader(appendedTpSwitchList)
+    tpSwitchListLocations = tpWorkEventProcessor.makeTpLocations(appendedTpSwitchList)
+    TrackPattern.ExportToTrainPlayer.WriteWorkEventListToTp(tpSwitchListHeader + tpSwitchListLocations).asCsv()
+
+    return
+
 def writeTpSwitchListFromJson(switchListName):
     '''Writes the switch list for TrainPlayer'''
 
@@ -140,31 +161,26 @@ def writeTpSwitchListFromJson(switchListName):
 
     return
 
-def modifySetCarsList(listLocations, textBoxEntry):
+def modifySetCarsList(setCarsForm, textBoxEntry):
     '''Replaces car['Set to'] = [ ] with either [Hold] or ["some other valid track"]'''
 
     psLog.debug('modifySetCarsList')
 
-    longestTrackString = 1
-    for track in psEntities.MainScriptEntities.readConfigFile('TP')['PT']: # Pattern Tracks
-        if len(track) > longestTrackString:
-            longestTrackString = len(track)
-
-    if longestTrackString < 6:
-        longestTrackString = 6
+    trackName = setCarsForm['locations'][0]['tracks'][0]['trackName']
+    location = setCarsForm['locations'][0]['locationName']
+    allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(location, None)
 
     userInputList = []
     for userInput in textBoxEntry:
         userInputList.append(unicode(userInput.getText(), psEntities.MainScriptEntities.setEncoding()))
 
-    location = psEntities.MainScriptEntities.readConfigFile('TP')['PL']
-    allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(location, None)
-
-    trackName = listLocations[0]['tracks'][0]['trackName']
-    trackName = unicode(listLocations[0]['tracks'][0]['trackName'], psEntities.MainScriptEntities.setEncoding())
+    longestTrackString = 6 # 6 is the length of [Hold]
+    for track in psEntities.MainScriptEntities.readConfigFile('TP')['PT']: # Pattern Tracks
+        if len(track) > longestTrackString:
+            longestTrackString = len(track)
 
     i = 0
-    locoList = listLocations[0]['tracks'][0]['locos']
+    locoList = setCarsForm['locations'][0]['tracks'][0]['locos']
     for loco in locoList:
         setTrack = u'Hold'
         userInput = unicode(userInputList[i], psEntities.MainScriptEntities.setEncoding())
@@ -172,9 +188,9 @@ def modifySetCarsList(listLocations, textBoxEntry):
             setTrack = userInput
         loco['Set to'] = TrackPattern.ModelEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
         i += 1
-    listLocations[0]['tracks'][0]['locos'] = locoList
+    setCarsForm['locations'][0]['tracks'][0]['locos'] = locoList
 
-    carList = listLocations[0]['tracks'][0]['cars']
+    carList = setCarsForm['locations'][0]['tracks'][0]['cars']
     for car in carList:
         setTrack = u'Hold'
         userInput = unicode(userInputList[i], psEntities.MainScriptEntities.setEncoding())
@@ -182,9 +198,9 @@ def modifySetCarsList(listLocations, textBoxEntry):
             setTrack = userInput
         car['Set to'] = TrackPattern.ModelEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
         i += 1
-    listLocations[0]['tracks'][0]['cars'] = carList
+    setCarsForm['locations'][0]['tracks'][0]['cars'] = carList
 
-    return listLocations
+    return setCarsForm
 
 def getSchedule(locationString, trackString):
     '''Returns a schedule if there is one'''
