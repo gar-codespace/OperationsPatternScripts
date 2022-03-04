@@ -7,13 +7,9 @@ from os import path as osPath
 from json import loads as jsonLoads, dumps as jsonDumps
 from codecs import open as codecsOpen
 
-# import MainScriptEntities
-import TrackPattern.ModelEntities
-import TrackPattern.ControllerSetCarsForm
-
 from psEntities import MainScriptEntities
-# from TrackPattern import ModelEntities
-# from TrackPattern import ControllerSetCarsForm
+from TrackPattern import ModelEntities
+from TrackPattern import ControllerSetCarsForm
 
 '''Data munipulation for the track pattern subroutine'''
 
@@ -28,9 +24,9 @@ def onPatternButtonPress():
 
     detailsForTrack = []
     patternLocation = MainScriptEntities.readConfigFile('TP')['PL']
-    trackList = TrackPattern.ModelEntities.getSelectedTracks()
+    trackList = getSelectedTracks()
     for trackName in trackList:
-        detailsForTrack.append(TrackPattern.ModelEntities.getGenericTrackDetails(patternLocation, trackName))
+        detailsForTrack.append(ModelEntities.getGenericTrackDetails(patternLocation, trackName))
 
     locationDict = {}
     locationDict['locationName'] = patternLocation
@@ -47,9 +43,18 @@ def onPatternButtonPress():
     textWorkEventList = readJsonWorkEventList(workEventName)
     textListForPrint = makeTextListForPrint(textWorkEventList, trackTotals=True)
     writeTextSwitchList(workEventName, textListForPrint)
-    TrackPattern.View.displayTextSwitchList(workEventName)
 
-    return
+    return workEventName
+
+def getSelectedTracks():
+
+    trackList = []
+    patternTracks = MainScriptEntities.readConfigFile('TP')['PT']
+    for track, include in sorted(patternTracks.items()):
+        if (include):
+            trackList.append(track)
+
+    return trackList
 
 # def makePatternLocations():
 #     '''Simplified since there is only one location for the pattern buton'''
@@ -58,9 +63,9 @@ def onPatternButtonPress():
 #
 #     tracks = []
 #     locationName = MainScriptEntities.readConfigFile('TP')['PL']
-#     trackList = TrackPattern.ModelEntities.getSelectedTracks()
+#     trackList = ModelEntities.getSelectedTracks()
 #     for trackName in trackList:
-#         tracks.append(TrackPattern.ModelEntities.getGenericTrackDetails(locationName, trackName))
+#         tracks.append(ModelEntities.getGenericTrackDetails(locationName, trackName))
 #
 #     locationDict = {}
 #     locationDict['locationName'] = locationName
@@ -76,18 +81,18 @@ def onScButtonPress():
     psLog.debug('onScButtonPress')
 
     locationName = MainScriptEntities.readConfigFile('TP')['PL']
-    selectedTracks = TrackPattern.ModelEntities.getSelectedTracks()
+    selectedTracks = getSelectedTracks()
     windowOffset = 200
     if selectedTracks:
         i = 0
         for trackName in selectedTracks:
-            setCarsForm = TrackPattern.ModelEntities.makeGenericHeader()
+            setCarsForm = ModelEntities.makeGenericHeader()
             locationDict = {}
             locationDict['locationName'] = locationName
-            locationDict['tracks'] = [TrackPattern.ModelEntities.getGenericTrackDetails(locationName, trackName)]
+            locationDict['tracks'] = [ModelEntities.getGenericTrackDetails(locationName, trackName)]
             setCarsForm['locations'] = [locationDict]
             # The above two lines are sent in as lists to maintain consistancy with the generic JSON file format
-            newFrame = TrackPattern.ControllerSetCarsForm.CreatePatternReportGui(setCarsForm)
+            newFrame = ControllerSetCarsForm.CreatePatternReportGui(setCarsForm)
             newWindow = newFrame.makeFrame()
             newWindow.setTitle(u'Pattern Report for track ' + trackName)
             newWindow.setLocation(windowOffset, 180)
@@ -107,7 +112,7 @@ def makePatternHeader():
 
     psLog.debug('makePatternHeader')
 
-    return TrackPattern.ModelEntities.makeGenericHeader()
+    return ModelEntities.makeGenericHeader()
 
 def makeSwitchList(fileName=u'test'): ##
 
@@ -115,7 +120,7 @@ def makeSwitchList(fileName=u'test'): ##
     switchList = TrackPattern.Model.makeSwitchListHeader()
     switchList['description'] = fileName
 
-    trackList = TrackPattern.ModelEntities.getSelectedTracks()
+    trackList = getSelectedTracks()
     if not trackList:
         return
 
@@ -123,13 +128,13 @@ def makeSwitchList(fileName=u'test'): ##
     locoRoster = []
     carRoster = []
     for track in trackList:
-        trackDetails = TrackPattern.ModelEntities.getTrackDetails(track)
+        trackDetails = ModelEntities.getTrackDetails(track)
 
-        locoList = TrackPattern.ModelEntities.getLocoListForTrack(track)
-        trackDetails['Locos'] = TrackPattern.ModelEntities.sortLocoList(locoList)
+        locoList = ModelEntities.getLocoListForTrack(track)
+        trackDetails['Locos'] = ModelEntities.sortLocoList(locoList)
 
-        carList = TrackPattern.ModelEntities.getCarListForTrack(track)
-        trackDetails['Cars'] = TrackPattern.ModelEntities.sortCarList(carList)
+        carList = ModelEntities.getCarListForTrack(track)
+        trackDetails['Cars'] = ModelEntities.sortCarList(carList)
         tracks.append(trackDetails)
 
     switchList['locations'] = tracks
@@ -164,8 +169,8 @@ def makeTextListForPrint(textWorkEventList, trackTotals=False):
 
     psLog.debug('makeTextListForPrint')
 
-    reportHeader = TrackPattern.ModelEntities.makeTextReportHeader(textWorkEventList)
-    reportLocations = TrackPattern.ModelEntities.makeTextReportLocations(textWorkEventList, trackTotals)
+    reportHeader = ModelEntities.makeTextReportHeader(textWorkEventList)
+    reportLocations = ModelEntities.makeTextReportLocations(textWorkEventList, trackTotals)
 
     return reportHeader + reportLocations
 
@@ -190,7 +195,7 @@ def makeTextSwitchListHeader(switchListName):
         jsonSwitchList = jsonWorkFile.read()
     switchList = jsonLoads(jsonSwitchList)
 
-    reportHeader = TrackPattern.ModelEntities.makeReportHeader(switchList)
+    reportHeader = ModelEntities.makeReportHeader(switchList)
 
     return reportHeader
 
@@ -202,7 +207,7 @@ def makeTextSwitchListBody(switchListName, includeTotals=False):
         jsonSwitchList = jsonWorkFile.read()
     switchList = jsonLoads(jsonSwitchList)
 
-    reportSwitchList = TrackPattern.ModelEntities.makeReportSwitchList(switchList, includeTotals)
+    reportSwitchList = ModelEntities.makeReportSwitchList(switchList, includeTotals)
 
     return reportSwitchList
 
@@ -221,7 +226,7 @@ def resetTrainPlayerSwitchlist():
 
     psLog.debug('resetTrainPlayerSwitchlist')
 
-    genericHeader = TrackPattern.ModelEntities.makeGenericHeader()
+    genericHeader = ModelEntities.makeGenericHeader()
 
     headerNames = MainScriptEntities.readConfigFile('TP')
     genericHeader['trainDescription'] = headerNames['TD']['TP']
@@ -240,10 +245,10 @@ def updateLocations():
     psLog.debug('updateLocations')
     newConfigFile = MainScriptEntities.readConfigFile()
     subConfigfile = newConfigFile['TP']
-    allLocations  = TrackPattern.ModelEntities.getAllLocations()
+    allLocations  = ModelEntities.getAllLocations()
     if not (subConfigfile['AL']): # when this sub is used for the first tims
         subConfigfile.update({'PL': allLocations[0]})
-        subConfigfile.update({'PT': TrackPattern.ModelEntities.makeInitialTrackList(allLocations[0])})
+        subConfigfile.update({'PT': ModelEntities.makeInitialTrackList(allLocations[0])})
     subConfigfile.update({'AL': allLocations})
     newConfigFile.update({'TP': subConfigfile})
     MainScriptEntities.writeConfigFile(newConfigFile)
@@ -256,10 +261,10 @@ def initializeConfigFile():
     psLog.debug('initializeConfigFile')
     newConfigFile = MainScriptEntities.readConfigFile()
     subConfigfile = newConfigFile['TP']
-    allLocations  = TrackPattern.ModelEntities.getAllLocations()
+    allLocations  = ModelEntities.getAllLocations()
     subConfigfile.update({'AL': allLocations})
     subConfigfile.update({'PL': allLocations[0]})
-    subConfigfile.update({'PT': TrackPattern.ModelEntities.makeInitialTrackList(allLocations[0])})
+    subConfigfile.update({'PT': ModelEntities.makeInitialTrackList(allLocations[0])})
     newConfigFile.update({'TP': subConfigfile})
 
     return newConfigFile
@@ -271,7 +276,7 @@ def updatePatternLocation(selectedItem):
 
     newConfigFile = MainScriptEntities.readConfigFile()
 
-    allLocations = TrackPattern.ModelEntities.getAllLocations()
+    allLocations = ModelEntities.getAllLocations()
     if not (selectedItem in allLocations):
         newConfigFile = initializeConfigFile()
         psLog.warning('Location list changed, config file updated')
@@ -346,7 +351,7 @@ def makeNewPatternTracks(location):
     '''Makes a new list of all tracks for a location'''
 
     psLog.debug('makeNewPatternTracks')
-    allTracks = TrackPattern.ModelEntities.getTracksByLocation(location, None)
+    allTracks = ModelEntities.getTracksByLocation(location, None)
     trackDict = {}
     for track in allTracks:
         trackDict[track] = False
@@ -388,26 +393,26 @@ def makeLoadEmptyDesignationsDicts():
     '''Stores the custom car load for Load and Empty by type designations and the default load and empty designation as global variables'''
 
     psLog.debug('makeLoadEmptyDesignationsDicts')
-    defaultLoadEmpty, customEmptyForCarTypes = TrackPattern.ModelEntities.getCustomEmptyForCarType()
-    defaultLoadLoad, customLoadForCarTypes = TrackPattern.ModelEntities.getCustomLoadForCarType()
+    defaultLoadEmpty, customEmptyForCarTypes = ModelEntities.getCustomEmptyForCarType()
+    defaultLoadLoad, customLoadForCarTypes = ModelEntities.getCustomLoadForCarType()
     # Set the default L/E
     try:
-        TrackPattern._defaultLoadEmpty = defaultLoadEmpty
-        TrackPattern._defaultLoadLoad = defaultLoadLoad
+        _defaultLoadEmpty = defaultLoadEmpty
+        _defaultLoadLoad = defaultLoadLoad
         psLog.info('Default load and empty designations saved')
     except:
         psLog.critical('Default empty designation not saved')
-        TrackPattern._defaultLoadEmpty = 'E'
-        TrackPattern._defaultLoadLoad = 'L'
+        _defaultLoadEmpty = 'E'
+        _defaultLoadLoad = 'L'
     # Set custom L/E
     try:
-        TrackPattern._carTypeByEmptyDict = customEmptyForCarTypes
-        TrackPattern._carTypeByLoadDict = customLoadForCarTypes
+        _carTypeByEmptyDict = customEmptyForCarTypes
+        _carTypeByLoadDict = customLoadForCarTypes
         psLog.info('Default custon loads for (empty) and (load) by car type designations saved')
     except:
         psLog.critical('Custom car empty designations not saved')
-        TrackPattern._carTypeByEmptyDict = {}
-        TrackPattern._carTypeByLoadDict = {}
+        _carTypeByEmptyDict = {}
+        _carTypeByLoadDict = {}
 
     return
 
@@ -415,7 +420,7 @@ def makeTrackList(location, type):
     '''Returns a list of tracks by type for a location'''
     psLog.debug('makeTrackList')
 
-    return TrackPattern.ModelEntities.getTracksByLocation(location, type)
+    return ModelEntities.getTracksByLocation(location, type)
 
 # def writePatternJson(location, trackPatternDict):
 #     '''Write the track pattern dictionary as a JSON file'''
@@ -436,7 +441,7 @@ def writeCsvSwitchList(location, trackPatternDict):
     if not (osPath.isdir(csvSwitchlistPath)):
         mkdir(csvSwitchlistPath)
     csvCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\csvSwitchLists\\Track Pattern (' + location + ').csv'
-    csvObject = TrackPattern.ModelEntities.makeCsvSwitchlist(trackPatternDict)
+    csvObject = ModelEntities.makeCsvSwitchlist(trackPatternDict)
     with codecsOpen(csvCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
         csvWorkFile.write(csvObject)
 

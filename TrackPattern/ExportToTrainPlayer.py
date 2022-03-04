@@ -7,8 +7,8 @@ from codecs import open as codecsOpen
 from os import mkdir as osMakeDir
 
 try:
-    import psEntities.MainScriptEntities
-    setEncoding = psEntities.MainScriptEntities.setEncoding()
+    from psEntities import MainScriptEntities
+    setEncoding = MainScriptEntities.setEncoding()
 except ImportError:
     setEncoding = 'utf-8'
 
@@ -107,7 +107,7 @@ class TrackPatternTranslationToTp():
 
         userInputList = []
         for userInput in textBoxEntry:
-            inputText = unicode(userInput.getText(), psEntities.MainScriptEntities.setEncoding())
+            inputText = unicode(userInput.getText(), MainScriptEntities.setEncoding())
             if inputText in trackList:
                 userInputList.append(inputText)
             else:
@@ -135,10 +135,10 @@ class TrackPatternTranslationToTp():
         self.psLog.debug('appendSwitchList')
         self.tpLog.debug('appendSwitchList')
 
-        headerNames = psEntities.MainScriptEntities.readConfigFile('TP')
+        headerNames = MainScriptEntities.readConfigFile('TP')
         reportTitle = headerNames['TD']['TP']
         jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
-        with codecsOpen(jsonFile, 'r', encoding=psEntities.MainScriptEntities.setEncoding()) as jsonWorkFile:
+        with codecsOpen(jsonFile, 'r', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
             jsonSwitchList = jsonWorkFile.read()
         tpSwitchList = jsonLoads(jsonSwitchList)
 
@@ -175,7 +175,7 @@ class JmriTranslationToTp():
             for train in trainListByStatus:
                 if train.isBuilt():
                     workEventFile =  jmri.util.FileUtil.getProfilePath() + 'operations\jsonManifests\\train-' + train.getName() + ".json"
-                    with codecsOpen(workEventFile, 'r', encoding=psEntities.MainScriptEntities.setEncoding()) as workEventObject:
+                    with codecsOpen(workEventFile, 'r', encoding=MainScriptEntities.setEncoding()) as workEventObject:
                         switchList = workEventObject.read()
                         workEventList = jsonLoads(switchList)
                     if workEventList[u'date'] > newestBuildTime:
@@ -362,7 +362,7 @@ class ProcessWorkEventList():
         reportTitle = appendedTpSwitchList['trainDescription']
         jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
         jsonObject = jsonDumps(appendedTpSwitchList, indent=2, sort_keys=True)
-        with codecsOpen(jsonFile, 'wb', encoding=psEntities.MainScriptEntities.setEncoding()) as jsonWorkFile:
+        with codecsOpen(jsonFile, 'wb', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
             jsonWorkFile.write(jsonObject)
 
         return

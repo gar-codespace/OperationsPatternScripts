@@ -234,15 +234,15 @@ def getTracksByLocation(location, trackType):
 
     return allTracksList
 
-def getSelectedTracks():
-
-    trackList = []
-    patternTracks = psEntities.MainScriptEntities.readConfigFile('TP')['PT']
-    for track, include in sorted(patternTracks.items()):
-        if (include):
-            trackList.append(track)
-
-    return trackList
+# def getSelectedTracks():
+#
+#     trackList = []
+#     patternTracks = psEntities.MainScriptEntities.readConfigFile('TP')['PT']
+#     for track, include in sorted(patternTracks.items()):
+#         if (include):
+#             trackList.append(track)
+#
+#     return trackList
 
 def makeTextReportHeader(textWorkEventList):
 

@@ -7,9 +7,11 @@ import logging
 from codecs import open as codecsOpen
 from json import loads as jsonLoads, dumps as jsonDumps
 
-import psEntities.MainScriptEntities
-import TrackPattern.ModelEntities
-import TrackPattern.ExportToTrainPlayer
+from psEntities import MainScriptEntities
+from TrackPattern import Model
+from TrackPattern import ModelEntities
+from TrackPattern import View
+from TrackPattern import ExportToTrainPlayer
 
 scriptName = 'OperationsPatternScripts.TrackPattern.ModelSetCarsForm'
 scriptRev = 20220101
@@ -34,18 +36,18 @@ def printSwitchList(setCarsForm, textBoxEntry):
 
     modifiedsetCarsForm = modifySetCarsList(setCarsForm, textBoxEntry)
 
-    headerNames = psEntities.MainScriptEntities.readConfigFile('TP')
-    patternListForJson = TrackPattern.Model.makePatternHeader()
+    headerNames = MainScriptEntities.readConfigFile('TP')
+    patternListForJson = Model.makePatternHeader()
     patternListForJson['trainDescription'] = headerNames['TD']['SC']
     patternListForJson['trainName'] = headerNames['TN']['SC']
     patternListForJson['trainComment'] = headerNames['TC']['SC']
     patternListForJson['locations'] = modifiedsetCarsForm['locations']
 
-    workEventName = TrackPattern.Model.writeWorkEventListAsJson(patternListForJson)
-    textWorkEventList = TrackPattern.Model.readJsonWorkEventList(workEventName)
-    textListForPrint = TrackPattern.Model.makeTextListForPrint(textWorkEventList)
-    TrackPattern.Model.writeTextSwitchList(workEventName, textListForPrint)
-    TrackPattern.View.displayTextSwitchList(workEventName)
+    workEventName = Model.writeWorkEventListAsJson(patternListForJson)
+    textWorkEventList = Model.readJsonWorkEventList(workEventName)
+    textListForPrint = Model.makeTextListForPrint(textWorkEventList)
+    Model.writeTextSwitchList(workEventName, textListForPrint)
+    View.displayTextSwitchList(workEventName)
 
     return
 
@@ -57,16 +59,16 @@ def setCarsToTrack(setCarsForm, textBoxEntry):
     em = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.engines.EngineManager)
     cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
     lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
-    ignoreTrackLength = psEntities.MainScriptEntities.readConfigFile('TP')['PI']
+    ignoreTrackLength = MainScriptEntities.readConfigFile('TP')['PI']
 
     location = setCarsForm['locations'][0]['locationName']
-    locationObject = lm.getLocationByName(unicode(location, psEntities.MainScriptEntities.setEncoding()))
-    allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(location, None)
-    fromTrack = unicode(setCarsForm['locations'][0]['tracks'][0]['trackName'], psEntities.MainScriptEntities.setEncoding())
+    locationObject = lm.getLocationByName(unicode(location, MainScriptEntities.setEncoding()))
+    allTracksAtLoc = ModelEntities.getTracksByLocation(location, None)
+    fromTrack = unicode(setCarsForm['locations'][0]['tracks'][0]['trackName'], MainScriptEntities.setEncoding())
 
     userInputList = []
     for userInput in textBoxEntry:
-        userInputList.append(unicode(userInput.getText(), psEntities.MainScriptEntities.setEncoding()))
+        userInputList.append(unicode(userInput.getText(), MainScriptEntities.setEncoding()))
 
     i = 0
     setCount = 0
@@ -78,9 +80,9 @@ def setCarsToTrack(setCarsForm, textBoxEntry):
             toTrack = userInputList[i]
 
         locoObject = em.newRS(loco['Road'], loco['Number'])
-        toTrackObject = locationObject.getTrackByName(unicode(toTrack, psEntities.MainScriptEntities.setEncoding()), None)
+        toTrackObject = locationObject.getTrackByName(unicode(toTrack, MainScriptEntities.setEncoding()), None)
 
-        if unicode(toTrack, psEntities.MainScriptEntities.setEncoding()) in allTracksAtLoc: # Catches invalid track typed into box
+        if unicode(toTrack, MainScriptEntities.setEncoding()) in allTracksAtLoc: # Catches invalid track typed into box
             if ignoreTrackLength:
                 trackLength = toTrackObject.getLength()
                 toTrackObject.setLength(9999)
@@ -102,9 +104,9 @@ def setCarsToTrack(setCarsForm, textBoxEntry):
             toTrack = userInputList[i]
 
         carObject = cm.newRS(car['Road'], car['Number'])
-        toTrackObject = locationObject.getTrackByName(unicode(toTrack, psEntities.MainScriptEntities.setEncoding()), None)
+        toTrackObject = locationObject.getTrackByName(unicode(toTrack, MainScriptEntities.setEncoding()), None)
 
-        if unicode(toTrack, psEntities.MainScriptEntities.setEncoding()) in allTracksAtLoc: # Catches invalid track typed into box
+        if unicode(toTrack, MainScriptEntities.setEncoding()) in allTracksAtLoc: # Catches invalid track typed into box
             if ignoreTrackLength:
                 trackLength = toTrackObject.getLength()
                 toTrackObject.setLength(9999)
@@ -129,17 +131,17 @@ def exportToTrainPlayer(setCarsForm, textBoxEntry):
 
     psLog.debug('exportToTrainPlayer')
 
-    TrackPattern.ExportToTrainPlayer.CheckTpDestination().directoryExists()
-    TrackPattern.ExportToTrainPlayer.ExportJmriLocations().toTrainPlayer()
+    ExportToTrainPlayer.CheckTpDestination().directoryExists()
+    ExportToTrainPlayer.ExportJmriLocations().toTrainPlayer()
 
-    tpSwitchList = TrackPattern.ExportToTrainPlayer.TrackPatternTranslationToTp()
+    tpSwitchList = ExportToTrainPlayer.TrackPatternTranslationToTp()
     modifiedSwitchList = tpSwitchList.modifySwitchList(setCarsForm, textBoxEntry)
     appendedTpSwitchList = tpSwitchList.appendSwitchList(modifiedSwitchList)
-    tpWorkEventProcessor = TrackPattern.ExportToTrainPlayer.ProcessWorkEventList()
+    tpWorkEventProcessor = ExportToTrainPlayer.ProcessWorkEventList()
     tpWorkEventProcessor.writeWorkEventListAsJson(appendedTpSwitchList)
     tpSwitchListHeader = tpWorkEventProcessor.makeTpHeader(appendedTpSwitchList)
     tpSwitchListLocations = tpWorkEventProcessor.makeTpLocations(appendedTpSwitchList)
-    TrackPattern.ExportToTrainPlayer.WriteWorkEventListToTp(tpSwitchListHeader + tpSwitchListLocations).asCsv()
+    ExportToTrainPlayer.WriteWorkEventListToTp(tpSwitchListHeader + tpSwitchListLocations).asCsv()
 
     return
 
@@ -148,14 +150,14 @@ def writeTpSwitchListFromJson(switchListName):
 
     psLog.debug('writeTpSwitchListFromJson')
 
-    TrackPattern.ExportToTrainPlayer.CheckTpDestination().directoryExists()
-    TrackPattern.ExportToTrainPlayer.JmriLocationsToTrainPlayer().exportLocations()
-    tpWorkEventList = TrackPattern.ExportToTrainPlayer.WorkEventListForTrainPlayer(switchListName).readFromFile()
+    ExportToTrainPlayer.CheckTpDestination().directoryExists()
+    ExportToTrainPlayer.JmriLocationsToTrainPlayer().exportLocations()
+    tpWorkEventList = ExportToTrainPlayer.WorkEventListForTrainPlayer(switchListName).readFromFile()
     if not tpWorkEventList:
         psLog.critical('No work event list read in')
         return
-    tpCsvWorkEventList = TrackPattern.ExportToTrainPlayer.CsvListFromFile(tpWorkEventList).makeList()
-    TrackPattern.ExportToTrainPlayer.writeWorkEventListToTp(tpCsvWorkEventList).writeAsCsv()
+    tpCsvWorkEventList = ExportToTrainPlayer.CsvListFromFile(tpWorkEventList).makeList()
+    ExportToTrainPlayer.writeWorkEventListToTp(tpCsvWorkEventList).writeAsCsv()
 
     return
 
@@ -166,14 +168,14 @@ def modifySetCarsList(setCarsForm, textBoxEntry):
 
     trackName = setCarsForm['locations'][0]['tracks'][0]['trackName']
     location = setCarsForm['locations'][0]['locationName']
-    allTracksAtLoc = TrackPattern.ModelEntities.getTracksByLocation(location, None)
+    allTracksAtLoc = ModelEntities.getTracksByLocation(location, None)
 
     userInputList = []
     for userInput in textBoxEntry:
-        userInputList.append(unicode(userInput.getText(), psEntities.MainScriptEntities.setEncoding()))
+        userInputList.append(unicode(userInput.getText(), MainScriptEntities.setEncoding()))
 
     longestTrackString = 6 # 6 is the length of [Hold]
-    for track in psEntities.MainScriptEntities.readConfigFile('TP')['PT']: # Pattern Tracks
+    for track in MainScriptEntities.readConfigFile('TP')['PT']: # Pattern Tracks
         if len(track) > longestTrackString:
             longestTrackString = len(track)
 
@@ -181,20 +183,20 @@ def modifySetCarsList(setCarsForm, textBoxEntry):
     locoList = setCarsForm['locations'][0]['tracks'][0]['locos']
     for loco in locoList:
         setTrack = u'Hold'
-        userInput = unicode(userInputList[i], psEntities.MainScriptEntities.setEncoding())
+        userInput = unicode(userInputList[i], MainScriptEntities.setEncoding())
         if userInput in allTracksAtLoc and userInput != trackName:
             setTrack = userInput
-        loco['Set to'] = TrackPattern.ModelEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
+        loco['Set to'] = ModelEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
         i += 1
     setCarsForm['locations'][0]['tracks'][0]['locos'] = locoList
 
     carList = setCarsForm['locations'][0]['tracks'][0]['cars']
     for car in carList:
         setTrack = u'Hold'
-        userInput = unicode(userInputList[i], psEntities.MainScriptEntities.setEncoding())
+        userInput = unicode(userInputList[i], MainScriptEntities.setEncoding())
         if userInput in allTracksAtLoc and userInput != trackName:
             setTrack = userInput
-        car['Set to'] = TrackPattern.ModelEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
+        car['Set to'] = ModelEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
         i += 1
     setCarsForm['locations'][0]['tracks'][0]['cars'] = carList
 
@@ -222,7 +224,7 @@ def applySchedule(carObject, scheduleObject=None):
 
         return
 
-    if (psEntities.MainScriptEntities.readConfigFile('TP')['AS']): # apply schedule flag
+    if (MainScriptEntities.readConfigFile('TP')['AS']): # apply schedule flag
         applyLoadRubric(carObject, scheduleObject)
         applyFdRubric(carObject, scheduleObject)
         carObject.setMoves(carObject.getMoves() + 1)
@@ -243,10 +245,10 @@ def applyLoadRubric(carObject, scheduleObject=None):
 
     carType = carObject.getTypeName()
 # Toggle the default loads if used
-    if (carObject.getLoadName() == TrackPattern._defaultLoadLoad):
-        carObject.setLoadName(TrackPattern._defaultLoadEmpty)
-    elif (carObject.getLoadName() == TrackPattern._defaultLoadEmpty):
-        carObject.setLoadName(TrackPattern._defaultLoadLoad)
+    if (carObject.getLoadName() == _defaultLoadLoad):
+        carObject.setLoadName(MainScriptEntities._defaultLoadEmpty)
+    elif (carObject.getLoadName() == MainScriptEntities._defaultLoadEmpty):
+        carObject.setLoadName(MainScriptEntities._defaultLoadLoad)
 # Toggle the custom loads
     try: # first try to apply the schedule
         carObject.setLoadName(scheduleObject.getItemByType(carType).getShipLoadName())
@@ -260,21 +262,21 @@ def applyLoadRubric(carObject, scheduleObject=None):
         except:
             try: # apply values from custom empty
                 if (carObject.getLoadType() == 'Empty'): # toggle the load
-                    carObject.setLoadName(TrackPattern._carTypeByLoadDict.get(carType))
+                    carObject.setLoadName(MainScriptEntities._carTypeByLoadDict.get(carType))
                 else:
-                    carObject.setLoadName(TrackPattern._carTypeByEmptyDict.get(carType))
+                    carObject.setLoadName(MainScriptEntities._carTypeByEmptyDict.get(carType))
             except: # when all else fails, apply the default loads
                 if (carObject.getLoadType() == 'Empty'): # toggle the load
-                    carObject.setLoadName(TrackPattern._defaultLoadLoad)
+                    carObject.setLoadName(MainScriptEntities._defaultLoadLoad)
                 else:
-                    carObject.setLoadName(TrackPattern._defaultLoadEmpty)
+                    carObject.setLoadName(MainScriptEntities._defaultLoadEmpty)
 
     return
 
 def applyFdRubric(carObject, scheduleObject=None):
     '''For spurs only, sets the values for the cars destination and track from the schedule or RWE/RWL'''
 
-    patternIgnore = psEntities.MainScriptEntities.readConfigFile('TP')['PI']
+    patternIgnore = MainScriptEntities.readConfigFile('TP')['PI']
     carType = carObject.getTypeName()
     carObject.setFinalDestination(None)
     carObject.setFinalDestinationTrack(None)

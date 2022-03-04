@@ -5,7 +5,7 @@ import jmri
 import java.awt
 import javax.swing
 
-import psEntities.MainScriptEntities
+from psEntities import MainScriptEntities
 
 '''Creates the track pattern and its panel'''
 
@@ -17,7 +17,7 @@ class TrackPatternPanel:
 
     def __init__(self):
 
-        self.configFile = psEntities.MainScriptEntities.readConfigFile('TP')
+        self.configFile = MainScriptEntities.readConfigFile('TP')
         self.useYardTracks = javax.swing.JCheckBox(u'Yard tracks only ', self.configFile['PA'])
         self.ignoreTrackLength = javax.swing.JCheckBox(u'Ignore track length ', self.configFile['PI'])
         self.ypButton = javax.swing.JButton()

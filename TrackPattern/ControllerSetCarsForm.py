@@ -6,15 +6,21 @@ import java.awt
 import logging
 from os import system as osSystem
 
-import psEntities.MainScriptEntities
-import TrackPattern.Model
-import TrackPattern.View
-import TrackPattern.ModelSetCarsForm
-import TrackPattern.ViewSetCarsForm
+from psEntities import MainScriptEntities
+from TrackPattern import Model
+from TrackPattern import View
+from TrackPattern import ModelSetCarsForm
+from TrackPattern import ViewSetCarsForm
+
+# import MainScriptEntities
+# import Model
+# import View
+# import ModelSetCarsForm
+# import ViewSetCarsForm
 
 '''Makes a "Pattern Report for Track X" form for each selected track'''
 
-scriptName = 'OperationsPatternScripts.TrackPattern.ControllerSetCarsForm'
+scriptName = 'OperationsPatternScripts.ControllerSetCarsForm'
 scriptRev = 20220101
 
 class AnyButtonPressedListener(java.awt.event.ActionListener):
@@ -34,7 +40,7 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
     def trackRowButton(self, MOUSE_CLICKED):
         '''Any of the "Pattern Report for Track X" - row of track buttons'''
 
-        TrackPattern._trackNameClickedOn = unicode(MOUSE_CLICKED.getSource().getText(), psEntities.MainScriptEntities.setEncoding())
+        MainScriptEntities._trackNameClickedOn = unicode(MOUSE_CLICKED.getSource().getText(), MainScriptEntities.setEncoding())
 
         return
 
@@ -50,11 +56,11 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
     def printButton(self, MOUSE_CLICKED):
         '''Print a switch list for each "Pattern Report for Track X" window'''
 
-        if not TrackPattern.ModelSetCarsForm.testValidityOfForm(self.setCarsForm, self.textBoxEntry):
+        if not ModelSetCarsForm.testValidityOfForm(self.setCarsForm, self.textBoxEntry):
             self.psLog.critical('Could not create switch list')
             return
 
-        TrackPattern.ModelSetCarsForm.printSwitchList(self.setCarsForm, self.textBoxEntry)
+        ModelSetCarsForm.printSwitchList(self.setCarsForm, self.textBoxEntry)
 
         print(scriptName + ' ' + str(scriptRev))
 
@@ -63,11 +69,11 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
     def setButton(self, MOUSE_CLICKED):
         '''Event that moves cars to the tracks entered in the text box of the "Pattern Report for Track X" form'''
 
-        if not TrackPattern.ModelSetCarsForm.testValidityOfForm(self.setCarsForm, self.textBoxEntry):
+        if not ModelSetCarsForm.testValidityOfForm(self.setCarsForm, self.textBoxEntry):
             self.psLog.critical('Could not set cars to track')
             return
 
-        TrackPattern.ModelSetCarsForm.setCarsToTrack(self.setCarsForm, self.textBoxEntry)
+        ModelSetCarsForm.setCarsToTrack(self.setCarsForm, self.textBoxEntry)
 
         setCarsWindow = MOUSE_CLICKED.getSource().getTopLevelAncestor()
         setCarsWindow.setVisible(False)
@@ -80,13 +86,13 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
     def trainPlayerButton(self, MOUSE_CLICKED):
         '''Accumulate switch lists into one TrainPlayer switch list'''
 
-        if not TrackPattern.ModelSetCarsForm.testValidityOfForm(self.setCarsForm, self.textBoxEntry):
+        if not ModelSetCarsForm.testValidityOfForm(self.setCarsForm, self.textBoxEntry):
             self.psLog.critical('Could not set cars to track')
             return
-            
+
         MOUSE_CLICKED.getSource().setBackground(java.awt.Color.GREEN)
 
-        TrackPattern.ModelSetCarsForm.exportToTrainPlayer(self.setCarsForm, self.textBoxEntry)
+        ModelSetCarsForm.exportToTrainPlayer(self.setCarsForm, self.textBoxEntry)
 
         print(scriptName + ' ' + str(scriptRev))
 
@@ -100,8 +106,8 @@ class TextBoxEntryListener(java.awt.event.MouseAdapter):
 
     def mouseClicked(self, MOUSE_CLICKED):
 
-        if (TrackPattern._trackNameClickedOn):
-            MOUSE_CLICKED.getSource().setText(TrackPattern._trackNameClickedOn)
+        if (MainScriptEntities._trackNameClickedOn):
+            MOUSE_CLICKED.getSource().setText(MainScriptEntities._trackNameClickedOn)
         else:
             self.psLog.warning('No track was selected')
 
@@ -119,7 +125,7 @@ class CreatePatternReportGui():
     def makeFrame(self):
         '''Create a JMRI jFrame window'''
 
-        patternReportForTrackForm = TrackPattern.ViewSetCarsForm.patternReportForTrackForm(self.setCarsForm)
-        patternReportForTrackWindow = TrackPattern.ViewSetCarsForm.patternReportForTrackWindow(patternReportForTrackForm)
+        patternReportForTrackForm = ViewSetCarsForm.patternReportForTrackForm(self.setCarsForm)
+        patternReportForTrackWindow = ViewSetCarsForm.patternReportForTrackWindow(patternReportForTrackForm)
 
         return patternReportForTrackWindow

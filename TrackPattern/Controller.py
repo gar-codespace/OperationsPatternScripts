@@ -5,9 +5,9 @@ import jmri
 import java.awt.event
 import logging
 
-import psEntities.MainScriptEntities
-import TrackPattern.Model
-import TrackPattern.View
+from psEntities import MainScriptEntities
+from TrackPattern import Model
+from TrackPattern import View
 
 '''Controller script for the track pattern subroutine'''
 
@@ -33,13 +33,13 @@ class StartUp():
 
         def actionPerformed(self, event):
 
-            newConfigFile = TrackPattern.Model.updatePatternLocation(event.getSource().getSelectedItem())
-            psEntities.MainScriptEntities.writeConfigFile(newConfigFile)
-            newConfigFile = psEntities.MainScriptEntities.readConfigFile('TP')
-            newConfigFile = TrackPattern.Model.makeNewPatternTracks(newConfigFile['PL'])
-            psEntities.MainScriptEntities.writeConfigFile(newConfigFile)
+            newConfigFile = Model.updatePatternLocation(event.getSource().getSelectedItem())
+            MainScriptEntities.writeConfigFile(newConfigFile)
+            newConfigFile = MainScriptEntities.readConfigFile('TP')
+            newConfigFile = Model.makeNewPatternTracks(newConfigFile['PL'])
+            MainScriptEntities.writeConfigFile(newConfigFile)
             self.psLog.info('The track list for location ' + newConfigFile['TP']['PL'] + ' has been created')
-            self.controls = TrackPattern.View.ManageGui().updatePanel(self.panel)
+            self.controls = View.ManageGui().updatePanel(self.panel)
             StartUp().activateButtons(self.panel, self.controls)
 
             print(scriptName + ' ' + str(scriptRev))
@@ -49,15 +49,15 @@ class StartUp():
     def yardTrackOnlyCheckBox(self, event):
 
         if (self.controls[1].selected):
-            trackList = TrackPattern.Model.makeTrackList(self.controls[0].getSelectedItem(), 'Yard')
+            trackList = Model.makeTrackList(self.controls[0].getSelectedItem(), 'Yard')
         else:
-            trackList = TrackPattern.Model.makeTrackList(self.controls[0].getSelectedItem(), None)
+            trackList = Model.makeTrackList(self.controls[0].getSelectedItem(), None)
 
-        newConfigFile = TrackPattern.Model.updatePatternTracks(trackList)
-        psEntities.MainScriptEntities.writeConfigFile(newConfigFile)
-        newConfigFile = TrackPattern.Model.updateCheckBoxStatus(self.controls[1].selected, self.controls[2].selected)
-        psEntities.MainScriptEntities.writeConfigFile(newConfigFile)
-        self.controls = TrackPattern.View.ManageGui().updatePanel(self.panel)
+        newConfigFile = Model.updatePatternTracks(trackList)
+        MainScriptEntities.writeConfigFile(newConfigFile)
+        newConfigFile = Model.updateCheckBoxStatus(self.controls[1].selected, self.controls[2].selected)
+        MainScriptEntities.writeConfigFile(newConfigFile)
+        self.controls = View.ManageGui().updatePanel(self.panel)
         StartUp().activateButtons(self.panel, self.controls)
 
         return
@@ -65,14 +65,15 @@ class StartUp():
     def patternButton(self, event):
         '''Makes a track pattern report based on the config file'''
 
-        TrackPattern.Model.updateConfigFile(self.controls)
+        Model.updateConfigFile(self.controls)
         self.psLog.info('Configuration file updated with new settings for controls')
 
-        if not TrackPattern.ModelEntities.getSelectedTracks():
+        if not Model.getSelectedTracks():
             self.psLog.info('No tracks were selected')
             return
 
-        TrackPattern.Model.onPatternButtonPress()
+        workEventName = Model.onPatternButtonPress()
+        View.displayTextSwitchList(workEventName)
 
         print(scriptName + ' ' + str(scriptRev))
 
@@ -81,14 +82,14 @@ class StartUp():
     def setCarsButton(self, event):
         '''Opens a "Pattern Report for Track X" window for each checked track'''
 
-        TrackPattern.Model.updateConfigFile(self.controls)
+        Model.updateConfigFile(self.controls)
         self.psLog.info('Configuration file updated with new settings for controls')
 
-        TrackPattern.Model.makeLoadEmptyDesignationsDicts()
-        TrackPattern.Model.onScButtonPress()
+        Model.makeLoadEmptyDesignationsDicts()
+        Model.onScButtonPress()
 
-        if psEntities.MainScriptEntities.readConfigFile('TP')['TI']: # TrainPlayer Include
-            TrackPattern.Model.resetTrainPlayerSwitchlist()
+        if MainScriptEntities.readConfigFile('TP')['TI']: # TrainPlayer Include
+            Model.resetTrainPlayerSwitchlist()
         print(scriptName + ' ' + str(scriptRev))
 
         return
@@ -96,8 +97,8 @@ class StartUp():
     def viewLogButton(self, event):
         '''Displays the pattern report log file in a notepad window'''
 
-        TrackPattern.Model.makePatternLog()
-        TrackPattern.View.printPatternLog()
+        Model.makePatternLog()
+        View.printPatternLog()
         print(scriptName + ' ' + str(scriptRev))
 
         return
@@ -118,7 +119,7 @@ class StartUp():
     def makeSubroutineFrame(self):
         '''Makes the title border frame'''
 
-        patternFrame = TrackPattern.View.ManageGui().makeFrame()
+        patternFrame = View.ManageGui().makeFrame()
         self.psLog.info('track pattern makeFrame completed')
 
         return patternFrame
@@ -126,8 +127,8 @@ class StartUp():
     def makeSubroutinePanel(self):
         '''Make and activate the Track Pattern objects'''
 
-        psEntities.MainScriptEntities.writeConfigFile(TrackPattern.Model.updateLocations())
-        panel, controls = TrackPattern.View.ManageGui().makePanel()
+        MainScriptEntities.writeConfigFile(Model.updateLocations())
+        panel, controls = View.ManageGui().makePanel()
         self.activateButtons(panel, controls)
         self.psLog.info('track pattern makeSubroutinePanel completed')
 

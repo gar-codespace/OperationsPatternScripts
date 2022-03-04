@@ -15,6 +15,16 @@ from shutil import copy as shutilCopy
 '''Support methods for any Pattern Script'''
 
 _currentPath = ''
+_trackNameClickedOn = None
+_carTypeByEmptyDict = {}
+_carTypeByLoadDict = {}
+_defaultLoadEmpty = u''
+_defaultLoadLoad = u''
+
+DUST = java.awt.Color(245,242,233) # Light tan
+PALE = java.awt.Color(237,243,250) # Light blue
+LICHEN = java.awt.Color(244,255,236) # Light green
+FADED = java.awt.Color(240,235,245) # Light purple
 
 scriptName = 'OperationsPatternScripts.psEntities.MainScriptEntities'
 scriptRev = 20220101

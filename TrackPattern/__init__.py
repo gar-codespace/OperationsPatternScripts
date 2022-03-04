@@ -15,8 +15,8 @@ import TrackPattern.ExportToTrainPlayer as ExportToTrainPlayer
 
 __all__ = ['Model', 'View', 'Controller', 'ModelEntities', 'ViewEntities', 'ModelSetCarsForm', 'ViewSetCarsForm', 'ControllerSetCarsForm', 'ExportToTrainPlayer']
 
-_trackNameClickedOn = None
-_carTypeByEmptyDict = {}
-_carTypeByLoadDict = {}
-_defaultLoadEmpty = u''
-_defaultLoadLoad = u''
+# _trackNameClickedOn = None
+# _carTypeByEmptyDict = {}
+# _carTypeByLoadDict = {}
+# _defaultLoadEmpty = u''
+# _defaultLoadLoad = u''

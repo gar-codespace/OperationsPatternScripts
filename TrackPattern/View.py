@@ -5,8 +5,8 @@ import jmri
 import logging
 from os import system as osSystem
 
-import psEntities.MainScriptEntities
-import TrackPattern.ViewEntities
+from psEntities import MainScriptEntities
+from TrackPattern import ViewEntities
 
 '''View script for the track pattern subroutine'''
 
@@ -21,7 +21,7 @@ class ManageGui:
         '''Track Pattern panel'''
 
         self.psLog = logging.getLogger('PS.TP.View')
-        self.configFile = psEntities.MainScriptEntities.readConfigFile('TP')
+        self.configFile = MainScriptEntities.readConfigFile('TP')
         self.panel = panel
         self.controls = controls
 
@@ -31,7 +31,7 @@ class ManageGui:
         ''' Replaces the current panel with a new updated panel'''
 
         self.psLog.debug('updatePanel')
-        newView, newControls = TrackPattern.ViewEntities.TrackPatternPanel().makePatternControls()
+        newView, newControls = ViewEntities.TrackPatternPanel().makePatternControls()
         panel.removeAll()
         panel.add(newView)
         panel.revalidate()
@@ -42,13 +42,13 @@ class ManageGui:
         '''Makes the title frame that all the track pattern controls go into'''
 
         self.psLog.debug('makeFrame')
-        return TrackPattern.ViewEntities.TrackPatternPanel().makePatternFrame()
+        return ViewEntities.TrackPatternPanel().makePatternFrame()
 
     def makePanel(self):
         '''Make the track pattern controls'''
 
         self.psLog.debug('makePanel')
-        return TrackPattern.ViewEntities.TrackPatternPanel().makePatternControls()
+        return ViewEntities.TrackPatternPanel().makePatternControls()
 
     print(scriptName + ' ' + str(scriptRev))
 
@@ -58,7 +58,7 @@ def displayTextSwitchlist(location):
     psLog.debug('displayTextSwitchlist')
 
     textSwitchList = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\Track Pattern (' + location + ').txt'
-    osSystem(psEntities.MainScriptEntities.openEditorByComputerType(textSwitchList))
+    osSystem(MainScriptEntities.openEditorByComputerType(textSwitchList))
 
     return
 
@@ -67,14 +67,14 @@ def displayTextSwitchList(textSwitchList):
 
     fileToDisplay = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + textSwitchList.splitlines()[0] + '.txt'
 
-    return osSystem(psEntities.MainScriptEntities.openEditorByComputerType(fileToDisplay))
+    return osSystem(MainScriptEntities.openEditorByComputerType(fileToDisplay))
 
 def printPatternLog():
     '''Opens the pattern log in notepad or other'''
 
     psLog.debug('displayPatternLog')
-    
+
     tempPatternLog = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
-    osSystem(psEntities.MainScriptEntities.openEditorByComputerType(tempPatternLog))
+    osSystem(MainScriptEntities.openEditorByComputerType(tempPatternLog))
 
     return

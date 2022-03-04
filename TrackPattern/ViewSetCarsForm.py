@@ -6,18 +6,19 @@ import java.awt
 import javax.swing
 import javax.swing.GroupLayout
 
-import psEntities.MainScriptEntities
-import TrackPattern.ViewEntities
-import TrackPattern.ControllerSetCarsForm
+from psEntities import MainScriptEntities
+from TrackPattern import ViewEntities
+from TrackPattern import ControllerSetCarsForm
+from TrackPattern import ModelSetCarsForm
 
 '''Display methods for the Pattern Report for Track X form'''
 
-scriptName = 'OperationsPatternScripts.TrackPattern.ViewSetCarsForm'
+scriptName = 'OperationsPatternScripts.ViewSetCarsForm'
 scriptRev = 20220101
 
 def patternReportForTrackWindow(patternReportForTrackForm):
 
-    setCarsWindow = TrackPattern.ViewSetCarsForm.makeWindow()
+    setCarsWindow = makeWindow()
     setCarsWindow.add(patternReportForTrackForm)
 
     return setCarsWindow
@@ -25,7 +26,7 @@ def patternReportForTrackWindow(patternReportForTrackForm):
 def patternReportForTrackForm(setCarsForm):
     '''Creates and populates the "Pattern Report for Track X" form'''
 
-    configFile = psEntities.MainScriptEntities.readConfigFile('TP')
+    configFile = MainScriptEntities.readConfigFile('TP')
 
     patternReportForm = javax.swing.JPanel()
     patternReportForm.setLayout(javax.swing.BoxLayout(patternReportForm, javax.swing.BoxLayout.PAGE_AXIS))
@@ -35,9 +36,9 @@ def patternReportForTrackForm(setCarsForm):
     patternReportForm.add(javax.swing.JSeparator())
 
     lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
-    trackLocation = unicode(setCarsForm['locations'][0]['locationName'], psEntities.MainScriptEntities.setEncoding())
+    trackLocation = unicode(setCarsForm['locations'][0]['locationName'], MainScriptEntities.setEncoding())
     allTracksAtLoc = lm.getLocationByName(trackLocation).getTracksByNameList(None)
-    patternReportRowOfTracks = TrackPattern.ViewSetCarsForm.patternReportRowOfTracks(allTracksAtLoc)
+    patternReportRowOfTracks = makePatternReportRowOfTracks(allTracksAtLoc)
     patternReportForm.add(patternReportRowOfTracks)
     patternReportForm.add(javax.swing.JSeparator())
 
@@ -65,10 +66,10 @@ def patternReportForTrackForm(setCarsForm):
 
     setCarsFooter = MakeSetCarsFooter()
     buttonList = setCarsFooter.getComponents()
-    buttonList[0].actionPerformed = TrackPattern.ControllerSetCarsForm.AnyButtonPressedListener(setCarsForm, textBoxEntry).printButton
-    buttonList[1].actionPerformed = TrackPattern.ControllerSetCarsForm.AnyButtonPressedListener(setCarsForm, textBoxEntry).setButton
+    buttonList[0].actionPerformed = ControllerSetCarsForm.AnyButtonPressedListener(setCarsForm, textBoxEntry).printButton
+    buttonList[1].actionPerformed = ControllerSetCarsForm.AnyButtonPressedListener(setCarsForm, textBoxEntry).setButton
     try:
-        buttonList[2].actionPerformed = TrackPattern.ControllerSetCarsForm.AnyButtonPressedListener(setCarsForm, textBoxEntry).trainPlayerButton
+        buttonList[2].actionPerformed = ControllerSetCarsForm.AnyButtonPressedListener(setCarsForm, textBoxEntry).trainPlayerButton
     except IndexError:
         pass
     patternReportForm.add(setCarsFooter)
@@ -94,7 +95,7 @@ def makeWindow():
 def makePatternReportFormHeader(setCarsForm):
     '''Creates the "Pattern Report for Track X" forms header'''
 
-    configFile = psEntities.MainScriptEntities.readConfigFile('TP')
+    configFile = MainScriptEntities.readConfigFile('TP')
 
     combinedHeader = javax.swing.JPanel()
     combinedHeader.setLayout(javax.swing.BoxLayout(combinedHeader, javax.swing.BoxLayout.PAGE_AXIS))
@@ -121,12 +122,12 @@ def makePatternReportFormHeader(setCarsForm):
 
     return combinedHeader
 
-def patternReportRowOfTracks(allTracksAtLoc):
+def makePatternReportRowOfTracks(allTracksAtLoc):
 
     buttonPanel = javax.swing.JPanel()
     for track in allTracksAtLoc:
         selectTrackButton = javax.swing.JButton(track.getName())
-        selectTrackButton.actionPerformed = TrackPattern.ControllerSetCarsForm.AnyButtonPressedListener().trackRowButton
+        selectTrackButton.actionPerformed = ControllerSetCarsForm.AnyButtonPressedListener().trackRowButton
         buttonPanel.add(selectTrackButton)
 
     return buttonPanel
@@ -135,10 +136,10 @@ class MakeSetCarsEqptRows():
 
     def __init__(self, setCarsForm):
 
-        self.scriptName = 'OperationsPatternScripts.TrackPattern.MakeSetCarsEqptRows'
+        self.scriptName = 'OperationsPatternScripts.MakeSetCarsEqptRows'
         self.scriptRev = 20220101
 
-        self.reportWidth = psEntities.MainScriptEntities.readConfigFile('TP')['RW']
+        self.reportWidth = MainScriptEntities.readConfigFile('TP')['RW']
         pm = jmri.InstanceManager.getDefault(jmri.util.gui.GuiLafPreferencesManager)
         fontSize = pm.getFontSize()
         self.panelHeight = fontSize + 4
@@ -156,33 +157,33 @@ class MakeSetCarsEqptRows():
         locos = self.setCarsForm['locations'][0]['tracks'][0]['locos']
         for loco in locos:
             combinedInputLine = javax.swing.JPanel()
-            combinedInputLine.setBackground(psEntities.FADED)
+            combinedInputLine.setBackground(MainScriptEntities.FADED)
             # combinedInputLine.setAlignmentX(java.awt.BorderLayout.WEST)
 
             inputText = javax.swing.JTextField(44)
-            inputText.addMouseListener(TrackPattern.ControllerSetCarsForm.TextBoxEntryListener())
+            inputText.addMouseListener(ControllerSetCarsForm.TextBoxEntryListener())
             textBoxEntry.append(inputText)
-            inputBox = TrackPattern.ViewSetCarsForm.makeSwingBox(self.panelWidth * 6, self.panelHeight)
+            inputBox = makeSwingBox(self.panelWidth * 6, self.panelHeight)
             inputBox.add(inputText)
             combinedInputLine.add(inputBox)
 
             label = javax.swing.JLabel(loco['Road'])
-            box = TrackPattern.ViewSetCarsForm.makeSwingBox(self.reportWidth['Road'] * self.panelWidth, self.panelHeight)
+            box = makeSwingBox(self.reportWidth['Road'] * self.panelWidth, self.panelHeight)
             box.add(label)
             combinedInputLine.add(box)
 
             label = javax.swing.JLabel(loco['Number'])
-            box = TrackPattern.ViewSetCarsForm.makeSwingBox(self.reportWidth['Number'] * self.panelWidth, self.panelHeight)
+            box = makeSwingBox(self.reportWidth['Number'] * self.panelWidth, self.panelHeight)
             box.add(label)
             combinedInputLine.add(box)
 
             label = javax.swing.JLabel(loco['Model'])
-            box = TrackPattern.ViewSetCarsForm.makeSwingBox(self.reportWidth['Model'] * self.panelWidth, self.panelHeight)
+            box = makeSwingBox(self.reportWidth['Model'] * self.panelWidth, self.panelHeight)
             box.add(label)
             combinedInputLine.add(box)
 
             label = javax.swing.JLabel(loco['Type'])
-            box = TrackPattern.ViewSetCarsForm.makeSwingBox(self.reportWidth['Loco Type'] * self.panelWidth, self.panelHeight)
+            box = makeSwingBox(self.reportWidth['Loco Type'] * self.panelWidth, self.panelHeight)
             box.add(label)
             combinedInputLine.add(box)
             combinedInputLine.add(javax.swing.Box.createHorizontalGlue())
@@ -200,18 +201,18 @@ class MakeSetCarsEqptRows():
 
         for car in cars:
             combinedInputLine = javax.swing.JPanel()
-            combinedInputLine.setBackground(psEntities.DUST)
+            combinedInputLine.setBackground(MainScriptEntities.DUST)
             # combinedInputLine.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
             inputText = javax.swing.JTextField(5)
-            inputText.addMouseListener(TrackPattern.ControllerSetCarsForm.TextBoxEntryListener())
+            inputText.addMouseListener(ControllerSetCarsForm.TextBoxEntryListener())
             textBoxEntry.append(inputText)
-            inputBox = TrackPattern.ViewSetCarsForm.makeSwingBox(self.panelWidth * 6, self.panelHeight)
+            inputBox = makeSwingBox(self.panelWidth * 6, self.panelHeight)
             inputBox.add(inputText)
             combinedInputLine.add(inputBox)
 
             for item in jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
                 label = javax.swing.JLabel(car[item])
-                box = TrackPattern.ViewSetCarsForm.makeSwingBox(self.reportWidth[item] * self.panelWidth, self.panelHeight)
+                box = makeSwingBox(self.reportWidth[item] * self.panelWidth, self.panelHeight)
                 box.add(label)
                 combinedInputLine.add(box)
             combinedInputLine.add(javax.swing.Box.createHorizontalGlue())
@@ -223,13 +224,13 @@ def makeSetCarsScheduleRow(setCarsForm):
 
     trackLocation = setCarsForm['locations'][0]['locationName']
     trackName = setCarsForm['locations'][0]['tracks'][0]['trackName']
-    trackObject = TrackPattern.ModelSetCarsForm.getTrackObject(trackLocation, trackName)
+    trackObject = ModelSetCarsForm.getTrackObject(trackLocation, trackName)
     scheduleObject = trackObject.getSchedule()
     schedulePanel = None
     if (scheduleObject):
         schedulePanel = javax.swing.JPanel()
         scheduleButton = javax.swing.JButton(scheduleObject.getName())
-        scheduleButton.actionPerformed = TrackPattern.ControllerSetCarsForm.AnyButtonPressedListener(trackObject).scheduleButton
+        scheduleButton.actionPerformed = ControllerSetCarsForm.AnyButtonPressedListener(trackObject).scheduleButton
         schedulePanel.add(javax.swing.JLabel(u'Schedule: '))
         schedulePanel.add(scheduleButton)
 
@@ -239,14 +240,14 @@ def MakeSetCarsFooter():
 
     combinedFooter = javax.swing.JPanel()
 
-    printButton = javax.swing.JButton(unicode(u'Print', psEntities.MainScriptEntities.setEncoding()))
+    printButton = javax.swing.JButton(unicode(u'Print', MainScriptEntities.setEncoding()))
     combinedFooter.add(printButton)
 
-    setButton = javax.swing.JButton(unicode(u'Set', psEntities.MainScriptEntities.setEncoding()))
+    setButton = javax.swing.JButton(unicode(u'Set', MainScriptEntities.setEncoding()))
     combinedFooter.add(setButton)
 
-    if psEntities.MainScriptEntities.readConfigFile('TP')['TI']:
-        trainPlayerButton = javax.swing.JButton(unicode(u'TrainPlayer', psEntities.MainScriptEntities.setEncoding()))
+    if MainScriptEntities.readConfigFile('TP')['TI']:
+        trainPlayerButton = javax.swing.JButton(unicode(u'TrainPlayer', MainScriptEntities.setEncoding()))
         combinedFooter.add(trainPlayerButton)
 
     return combinedFooter
