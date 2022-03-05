@@ -14,6 +14,14 @@ from shutil import copy as shutilCopy
 
 '''Support methods for any Pattern Script'''
 
+_lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
+_tm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.trains.TrainManager)
+_em = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.engines.EngineManager)
+_cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
+_cmx = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManagerXml)
+_sm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.schedules.ScheduleManager)
+_pm = jmri.InstanceManager.getDefault(jmri.util.gui.GuiLafPreferencesManager)
+
 _currentPath = ''
 _trackNameClickedOn = None
 _carTypeByEmptyDict = {}
@@ -65,8 +73,7 @@ def validateStubFile():
     '''Copy of the JMRI Java version of createStubFile'''
 
     locale = u'en'
-    gm = jmri.InstanceManager.getDefault(jmri.util.gui.GuiLafPreferencesManager)
-    locale = unicode(gm.getLocale(), setEncoding())
+    locale = unicode(_pm.getLocale(), setEncoding())
     stubLocation = jmri.util.FileUtil.getPreferencesPath() + '\\jmrihelp\\'
     try:
         osMakeDir(stubLocation)

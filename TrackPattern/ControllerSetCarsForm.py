@@ -7,16 +7,9 @@ import logging
 from os import system as osSystem
 
 from psEntities import MainScriptEntities
-from TrackPattern import Model
-from TrackPattern import View
 from TrackPattern import ModelSetCarsForm
 from TrackPattern import ViewSetCarsForm
-
-# import MainScriptEntities
-# import Model
-# import View
-# import ModelSetCarsForm
-# import ViewSetCarsForm
+from TrackPattern import View
 
 '''Makes a "Pattern Report for Track X" form for each selected track'''
 
@@ -28,7 +21,6 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
     def __init__(self, object1=None, object2=None):
 
         self.psLog = logging.getLogger('PS.TP.AnyButtonPressedListener')
-        self.sm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.schedules.ScheduleManager)
     # scheduleButton
         self.trackObject = object1
     # printButton, setButton, TrainPlayerButton
@@ -48,7 +40,7 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
         '''The named schedule button if displayed on any "Pattern Report for Track X" window'''
 
         scheduleName = MOUSE_CLICKED.getSource().getText()
-        scheduleObject = self.sm.getScheduleByName(scheduleName)
+        scheduleObject = MainScriptEntities._sm.getScheduleByName(scheduleName)
         jmri.jmrit.operations.locations.schedules.ScheduleEditFrame(scheduleObject, self.trackObject)
 
         return
@@ -60,7 +52,8 @@ class AnyButtonPressedListener(java.awt.event.ActionListener):
             self.psLog.critical('Could not create switch list')
             return
 
-        ModelSetCarsForm.printSwitchList(self.setCarsForm, self.textBoxEntry)
+        workEventName = ModelSetCarsForm.printSwitchList(self.setCarsForm, self.textBoxEntry)
+        View.displayTextSwitchList(workEventName)
 
         print(scriptName + ' ' + str(scriptRev))
 

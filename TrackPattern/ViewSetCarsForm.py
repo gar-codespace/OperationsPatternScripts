@@ -9,7 +9,7 @@ import javax.swing.GroupLayout
 from psEntities import MainScriptEntities
 from TrackPattern import ViewEntities
 from TrackPattern import ControllerSetCarsForm
-from TrackPattern import ModelSetCarsForm
+# from TrackPattern import ModelSetCarsForm
 
 '''Display methods for the Pattern Report for Track X form'''
 
@@ -34,10 +34,9 @@ def patternReportForTrackForm(setCarsForm):
     patternReportFormHeader = makePatternReportFormHeader(setCarsForm)
     patternReportForm.add(patternReportFormHeader)
     patternReportForm.add(javax.swing.JSeparator())
-
-    lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
+    
     trackLocation = unicode(setCarsForm['locations'][0]['locationName'], MainScriptEntities.setEncoding())
-    allTracksAtLoc = lm.getLocationByName(trackLocation).getTracksByNameList(None)
+    allTracksAtLoc =  MainScriptEntities._lm.getLocationByName(trackLocation).getTracksByNameList(None)
     patternReportRowOfTracks = makePatternReportRowOfTracks(allTracksAtLoc)
     patternReportForm.add(patternReportRowOfTracks)
     patternReportForm.add(javax.swing.JSeparator())
@@ -140,8 +139,7 @@ class MakeSetCarsEqptRows():
         self.scriptRev = 20220101
 
         self.reportWidth = MainScriptEntities.readConfigFile('TP')['RW']
-        pm = jmri.InstanceManager.getDefault(jmri.util.gui.GuiLafPreferencesManager)
-        fontSize = pm.getFontSize()
+        fontSize = MainScriptEntities._pm.getFontSize()
         self.panelHeight = fontSize + 4
         self.panelWidth = fontSize - 2
 
@@ -224,7 +222,7 @@ def makeSetCarsScheduleRow(setCarsForm):
 
     trackLocation = setCarsForm['locations'][0]['locationName']
     trackName = setCarsForm['locations'][0]['tracks'][0]['trackName']
-    trackObject = ModelSetCarsForm.getTrackObject(trackLocation, trackName)
+    trackObject = MainScriptEntities._lm.getLocationByName(trackLocation).getTrackByName(trackName, None)
     scheduleObject = trackObject.getSchedule()
     schedulePanel = None
     if (scheduleObject):
@@ -235,6 +233,7 @@ def makeSetCarsScheduleRow(setCarsForm):
         schedulePanel.add(scheduleButton)
 
     return schedulePanel
+    # trackObject = ModelSetCarsForm.getTrackObject(trackLocation, trackName)
 
 def MakeSetCarsFooter():
 

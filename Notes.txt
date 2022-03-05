@@ -37,6 +37,7 @@ Todo:
   UGH!! Left justify set cars lists
   The print switch list is created in one method and modified in two others, can this be combined?
   ControllerSetCarsForm printButton, setButton, and trainPlayerButton share a lot of the same setup, can this be combined?
+  Put write switch list as csv back in  makeCsvSwitchlist(trackPattern)
 
 Wish List:
   for getDetailsForLocoAsDict(locoObject) add loco include elements to the json config file similar to: jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()

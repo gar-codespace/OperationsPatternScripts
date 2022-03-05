@@ -8,8 +8,12 @@ from os import mkdir as osMakeDir
 
 try:
     from psEntities import MainScriptEntities
+    _lm = MainScriptEntities._lm
+    _tm = MainScriptEntities._tm
     setEncoding = MainScriptEntities.setEncoding()
 except ImportError:
+    _lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
+    _tm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.trains.TrainManager)
     setEncoding = 'utf-8'
 
 scriptName ='OperationsPatternScripts.TrackPattern.ExportToTrainPlayer'
@@ -51,7 +55,6 @@ class ExportJmriLocations():
         self.scriptRev = 20220101
         self.psLog = logging.getLogger('PS.EX.ExportJmriLocations')
         self.tpLog = logging.getLogger('TP.ExportJmriLocations')
-        self.jLM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
 
         return
 
@@ -59,7 +62,7 @@ class ExportJmriLocations():
         '''Exports JMRI location name/location comment pairs for TP Advanced Ops'''
 
         eMessage = 'No missing entries for location export for TrainPlayer'
-        locationList = self.jLM.getLocationsByIdList()
+        locationList = _lm.getLocationsByIdList()
         with codecsOpen(jmriLocationsPath, 'wb', encoding=setEncoding) as csvWorkFile:
             csvLocations = u'Locale,Industry\n'
             for location in locationList:
@@ -99,8 +102,7 @@ class TrackPatternTranslationToTp():
 
         location = setCarsForm['locations'][0]['locationName']
         trackName = setCarsForm['locations'][0]['tracks'][0]['trackName']
-        lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
-        locationTracks = lm.getLocationByName(location).getTracksList()
+        locationTracks = _lm.getLocationByName(location).getTracksList()
         trackList = []
         for track in locationTracks:
             trackList.append(track.getName())
@@ -160,8 +162,6 @@ class JmriTranslationToTp():
         self.psLog = logging.getLogger('PS.EX.JmriTranslationToTp')
         self.tpLog = logging.getLogger('TP.JmriTranslationToTp')
 
-        self.jTM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.trains.TrainManager)
-
         return
 
     def findNewestManifest(self):
@@ -169,8 +169,8 @@ class JmriTranslationToTp():
 
         newestTrain = ''
         trainComment = ''
-        if self.jTM.isAnyTrainBuilt():
-            trainListByStatus = self.jTM.getTrainsByStatusList()
+        if _tm.isAnyTrainBuilt():
+            trainListByStatus = _tm.getTrainsByStatusList()
             newestBuildTime = ''
             for train in trainListByStatus:
                 if train.isBuilt():
@@ -309,8 +309,6 @@ class ProcessWorkEventList():
         self.psLog = logging.getLogger('PS.EX.ProcessWorkEventList')
         self.tpLog = logging.getLogger('TP.ProcessWorkEventList')
 
-        self.jTM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.trains.TrainManager)
-
         return
 
     def makeTpHeader(self, appendedTpSwitchList):
@@ -411,7 +409,6 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
         self.tpLog.error('Log File for Pattern Scripts Plugin - error level initialized')
         self.tpLog.critical('Log File for Pattern Scripts Plugin - critical level initialized')
 
-        self.jTM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.trains.TrainManager)
         self.jProfilePath = jmri.util.FileUtil.getProfilePath()
 
         return

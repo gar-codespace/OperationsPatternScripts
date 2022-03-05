@@ -10,7 +10,7 @@ from json import loads as jsonLoads, dumps as jsonDumps
 from psEntities import MainScriptEntities
 from TrackPattern import Model
 from TrackPattern import ModelEntities
-from TrackPattern import View
+# from TrackPattern import View
 from TrackPattern import ExportToTrainPlayer
 
 scriptName = 'OperationsPatternScripts.TrackPattern.ModelSetCarsForm'
@@ -47,22 +47,18 @@ def printSwitchList(setCarsForm, textBoxEntry):
     textWorkEventList = Model.readJsonWorkEventList(workEventName)
     textListForPrint = Model.makeTextListForPrint(textWorkEventList)
     Model.writeTextSwitchList(workEventName, textListForPrint)
-    View.displayTextSwitchList(workEventName)
 
-    return
+    return workEventName
 
 def setCarsToTrack(setCarsForm, textBoxEntry):
 
     psLog.debug('setCarsToTrack')
 
     trackData = []
-    em = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.engines.EngineManager)
-    cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
-    lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
     ignoreTrackLength = MainScriptEntities.readConfigFile('TP')['PI']
 
     location = setCarsForm['locations'][0]['locationName']
-    locationObject = lm.getLocationByName(unicode(location, MainScriptEntities.setEncoding()))
+    locationObject = MainScriptEntities._lm.getLocationByName(unicode(location, MainScriptEntities.setEncoding()))
     allTracksAtLoc = ModelEntities.getTracksByLocation(location, None)
     fromTrack = unicode(setCarsForm['locations'][0]['tracks'][0]['trackName'], MainScriptEntities.setEncoding())
 
@@ -79,7 +75,7 @@ def setCarsToTrack(setCarsForm, textBoxEntry):
         if userInputList[i]:
             toTrack = userInputList[i]
 
-        locoObject = em.newRS(loco['Road'], loco['Number'])
+        locoObject = MainScriptEntities._em.newRS(loco['Road'], loco['Number'])
         toTrackObject = locationObject.getTrackByName(unicode(toTrack, MainScriptEntities.setEncoding()), None)
 
         if unicode(toTrack, MainScriptEntities.setEncoding()) in allTracksAtLoc: # Catches invalid track typed into box
@@ -103,7 +99,7 @@ def setCarsToTrack(setCarsForm, textBoxEntry):
         if userInputList[i]:
             toTrack = userInputList[i]
 
-        carObject = cm.newRS(car['Road'], car['Number'])
+        carObject = MainScriptEntities._cm.newRS(car['Road'], car['Number'])
         toTrackObject = locationObject.getTrackByName(unicode(toTrack, MainScriptEntities.setEncoding()), None)
 
         if unicode(toTrack, MainScriptEntities.setEncoding()) in allTracksAtLoc: # Catches invalid track typed into box
@@ -205,12 +201,10 @@ def modifySetCarsList(setCarsForm, textBoxEntry):
 def getSchedule(locationString, trackString):
     '''Returns a schedule if there is one'''
 
-    lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
-    sm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.schedules.ScheduleManager)
-    track = lm.getLocationByName(locationString).getTrackByName(trackString, 'Spur')
+    track = MainScriptEntities._lm.getLocationByName(locationString).getTrackByName(trackString, 'Spur')
 
     if (track):
-        schedule = sm.getScheduleByName(track.getScheduleName())
+        schedule = MainScriptEntities._sm.getScheduleByName(track.getScheduleName())
         return schedule
 
     return
@@ -230,15 +224,6 @@ def applySchedule(carObject, scheduleObject=None):
         carObject.setMoves(carObject.getMoves() + 1)
 
     return
-
-def getTrackObject(locationString, trackString):
-
-    psLog.debug('getTrackObject')
-
-    lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
-    trackObject = lm.getLocationByName(locationString).getTrackByName(trackString, None)
-
-    return trackObject
 
 def applyLoadRubric(carObject, scheduleObject=None):
     '''Apply loads by schedule, RWE/RWL, custom L/E, then default'''
