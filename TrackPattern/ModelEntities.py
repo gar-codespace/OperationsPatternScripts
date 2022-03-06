@@ -283,13 +283,13 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
             if trackTotals:
                 totalLength = lengthOfLocos + lengthOfCars
                 reportSwitchList += 'Total Cars: ' + str(len(track['cars'])) + ' Track Length: ' + str(trackLength) + ' Eqpt. Length: ' + str(totalLength) + ' Available: ' + str(trackLength - totalLength) + '\n\n'
-                reportSwitchList += u'Track Totals:\n'
+                reportSwitchList += u'Track Totals for Cars:\n'
                 for track, count in sorted(occuranceTally(trackTally).items()):
                     reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
             reportSwitchList += '\n'
 
         if trackTotals:
-            reportSwitchList += u'\nReport Totals:\n'
+            reportSwitchList += u'\nReport Totals for Cars:\n'
             for track, count in sorted(occuranceTally(reportTally).items()):
                 reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
 

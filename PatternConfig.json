@@ -39,9 +39,9 @@
     "PT" : {
     },
     "TD" : {
-      "PR" : "Track Pattern",
-      "SC" : "Switch List",
-      "TP" : "TrainPlayer"
+      "PR" : "Pattern Report - Track Pattern",
+      "SC" : "Pattern Report - Switch List",
+      "TP" : "Pattern Report - TrainPlayer Work Events"
     },
     "TN" : {
       "PR" : "Local Switch Job",

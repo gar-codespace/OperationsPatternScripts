@@ -4,7 +4,7 @@
 import jmri
 import java.awt
 import javax.swing
-import javax.swing.GroupLayout
+# import javax.swing.GroupLayout
 
 from psEntities import MainScriptEntities
 from TrackPattern import ViewEntities
@@ -23,10 +23,12 @@ def patternReportForTrackWindow(patternReportForTrackForm):
 
     return setCarsWindow
 
-def patternReportForTrackForm(setCarsForm):
+def makePatternReportForTrackForm(setCarsForm):
     '''Creates and populates the "Pattern Report for Track X" form'''
 
     configFile = MainScriptEntities.readConfigFile('TP')
+
+    buttonDict = {}
 
     patternReportForm = javax.swing.JPanel()
     patternReportForm.setLayout(javax.swing.BoxLayout(patternReportForm, javax.swing.BoxLayout.PAGE_AXIS))
@@ -34,10 +36,11 @@ def patternReportForTrackForm(setCarsForm):
     patternReportFormHeader = makePatternReportFormHeader(setCarsForm)
     patternReportForm.add(patternReportFormHeader)
     patternReportForm.add(javax.swing.JSeparator())
-    
+
     trackLocation = unicode(setCarsForm['locations'][0]['locationName'], MainScriptEntities.setEncoding())
     allTracksAtLoc =  MainScriptEntities._lm.getLocationByName(trackLocation).getTracksByNameList(None)
-    patternReportRowOfTracks = makePatternReportRowOfTracks(allTracksAtLoc)
+    patternReportRowOfTracks, buttonList = makePatternReportRowOfTracks(allTracksAtLoc)
+    buttonDict['trackButtons'] = buttonList
     patternReportForm.add(patternReportRowOfTracks)
     patternReportForm.add(javax.swing.JSeparator())
 
@@ -53,14 +56,18 @@ def patternReportForTrackForm(setCarsForm):
         patternReportFormBody.add(car)
     for item in carBoxEntry:
         textBoxEntry.append(item)
+    buttonDict['textBoxEntry'] = textBoxEntry
+
 
     patternReportFormPane = javax.swing.JScrollPane(patternReportFormBody)
     patternReportForm.add(patternReportFormPane)
     patternReportForm.add(javax.swing.JSeparator())
 
-    setCarsSchedule = makeSetCarsScheduleRow(setCarsForm)
+    setCarsSchedule, scheduleButton = makeSetCarsScheduleRow(setCarsForm)
+    buttonDict['scheduleButton'] = []
     if (setCarsSchedule):
         patternReportForm.add(setCarsSchedule)
+        buttonDict['scheduleButton'] = scheduleButton
         patternReportForm.add(javax.swing.JSeparator())
 
     setCarsFooter = MakeSetCarsFooter()
@@ -71,9 +78,10 @@ def patternReportForTrackForm(setCarsForm):
         buttonList[2].actionPerformed = ControllerSetCarsForm.AnyButtonPressedListener(setCarsForm, textBoxEntry).trainPlayerButton
     except IndexError:
         pass
+    buttonDict['footerButtons'] = buttonList
     patternReportForm.add(setCarsFooter)
 
-    return patternReportForm
+    return patternReportForm, buttonDict
 
 def makeSwingBox(xWidth, yHeight):
     '''Makes a swing box to the desired size'''
@@ -124,12 +132,14 @@ def makePatternReportFormHeader(setCarsForm):
 def makePatternReportRowOfTracks(allTracksAtLoc):
 
     buttonPanel = javax.swing.JPanel()
+    buttonList = []
     for track in allTracksAtLoc:
         selectTrackButton = javax.swing.JButton(track.getName())
-        selectTrackButton.actionPerformed = ControllerSetCarsForm.AnyButtonPressedListener().trackRowButton
+        buttonList.append(selectTrackButton)
+        # selectTrackButton.actionPerformed = ControllerSetCarsForm.AnyButtonPressedListener().trackRowButton
         buttonPanel.add(selectTrackButton)
 
-    return buttonPanel
+    return buttonPanel, buttonList
 
 class MakeSetCarsEqptRows():
 
@@ -159,7 +169,7 @@ class MakeSetCarsEqptRows():
             # combinedInputLine.setAlignmentX(java.awt.BorderLayout.WEST)
 
             inputText = javax.swing.JTextField(44)
-            inputText.addMouseListener(ControllerSetCarsForm.TextBoxEntryListener())
+            # inputText.addMouseListener(ControllerSetCarsForm.TextBoxEntryListener())
             textBoxEntry.append(inputText)
             inputBox = makeSwingBox(self.panelWidth * 6, self.panelHeight)
             inputBox.add(inputText)
@@ -202,7 +212,7 @@ class MakeSetCarsEqptRows():
             combinedInputLine.setBackground(MainScriptEntities.DUST)
             # combinedInputLine.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT)
             inputText = javax.swing.JTextField(5)
-            inputText.addMouseListener(ControllerSetCarsForm.TextBoxEntryListener())
+            # inputText.addMouseListener(ControllerSetCarsForm.TextBoxEntryListener())
             textBoxEntry.append(inputText)
             inputBox = makeSwingBox(self.panelWidth * 6, self.panelHeight)
             inputBox.add(inputText)
@@ -225,14 +235,16 @@ def makeSetCarsScheduleRow(setCarsForm):
     trackObject = MainScriptEntities._lm.getLocationByName(trackLocation).getTrackByName(trackName, None)
     scheduleObject = trackObject.getSchedule()
     schedulePanel = None
+    scheduleList = []
     if (scheduleObject):
         schedulePanel = javax.swing.JPanel()
         scheduleButton = javax.swing.JButton(scheduleObject.getName())
-        scheduleButton.actionPerformed = ControllerSetCarsForm.AnyButtonPressedListener(trackObject).scheduleButton
+        scheduleList.append(scheduleButton)
+        # scheduleButton.actionPerformed = ControllerSetCarsForm.AnyButtonPressedListener(trackObject).scheduleButton
         schedulePanel.add(javax.swing.JLabel(u'Schedule: '))
         schedulePanel.add(scheduleButton)
 
-    return schedulePanel
+    return schedulePanel, scheduleList
     # trackObject = ModelSetCarsForm.getTrackObject(trackLocation, trackName)
 
 def MakeSetCarsFooter():

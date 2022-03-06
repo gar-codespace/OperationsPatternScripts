@@ -4,6 +4,7 @@
 import jmri
 import java.awt.event
 import logging
+from os import system as osSystem
 
 from psEntities import MainScriptEntities
 from TrackPattern import Model
@@ -63,7 +64,7 @@ class StartUp():
         return
 
     def patternButton(self, event):
-        '''Makes a track pattern report based on the config file'''
+        '''Makes a track pattern report (PR) based on the config file'''
 
         Model.updateConfigFile(self.controls)
         self.psLog.info('Configuration file updated with new settings for controls')
@@ -72,8 +73,9 @@ class StartUp():
             self.psLog.info('No tracks were selected')
             return
 
-        workEventName = Model.onPatternButtonPress()
-        View.displayTextSwitchList(workEventName)
+        locationDict = Model.makeLocationDict()
+        modifiedReport = Model.modifyReport(locationDict, 'PR')
+        Model.printWorkEventList(modifiedReport, trackTotals=True)
 
         print(scriptName + ' ' + str(scriptRev))
 

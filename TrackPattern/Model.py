@@ -4,6 +4,7 @@
 import jmri
 import logging
 from os import path as osPath
+from os import system as osSystem
 from json import loads as jsonLoads, dumps as jsonDumps
 from codecs import open as codecsOpen
 
@@ -17,10 +18,10 @@ scriptName = 'OperationsPatternScripts.TrackPattern.Model'
 scriptRev = 20220101
 psLog = logging.getLogger('PS.TP.Model')
 
-def onPatternButtonPress():
-    '''Creates the Pattern report for selected tracks, ready to print'''
+def makeLocationDict():
+    ''' '''
 
-    psLog.debug('onPatternButtonPress')
+    psLog.debug('makeLocationDict')
 
     detailsForTrack = []
     patternLocation = MainScriptEntities.readConfigFile('TP')['PL']
@@ -32,19 +33,37 @@ def onPatternButtonPress():
     locationDict['locationName'] = patternLocation
     locationDict['tracks'] = detailsForTrack
 
+    return locationDict
+
+
+
+
+def modifyReport(locationDict, reportType):
+
+    psLog.debug('modifyReport')
+
     headerNames = MainScriptEntities.readConfigFile('TP')
-    patternListForJson = makePatternHeader()
-    patternListForJson['trainDescription'] = headerNames['TD']['PR']
-    patternListForJson['trainName'] = headerNames['TN']['PR']
-    patternListForJson['trainComment'] = headerNames['TC']['PR']
-    patternListForJson['locations'] = [locationDict] # put in as a dictionary to maintain compatability with JSON File Format. See help page
+    modifiedReport = makePatternHeader()
+    modifiedReport['trainDescription'] = headerNames['TD'][reportType]
+    modifiedReport['trainName'] = headerNames['TN'][reportType]
+    modifiedReport['trainComment'] = headerNames['TC'][reportType]
+    modifiedReport['locations'] = [locationDict] # put in as a dictionary to maintain compatability with JSON File Format/JMRI manifest export. See help web page
+
+    return modifiedReport
+
+def printWorkEventList(patternListForJson, trackTotals):
+
+    psLog.debug('printWorkEventList')
 
     workEventName = writeWorkEventListAsJson(patternListForJson)
     textWorkEventList = readJsonWorkEventList(workEventName)
-    textListForPrint = makeTextListForPrint(textWorkEventList, trackTotals=True)
+    textListForPrint = makeTextListForPrint(textWorkEventList, trackTotals)
     writeTextSwitchList(workEventName, textListForPrint)
 
-    return workEventName
+    switchListFile = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + workEventName + '.txt'
+    osSystem(MainScriptEntities.openEditorByComputerType(switchListFile))
+
+    return
 
 def getSelectedTracks():
 

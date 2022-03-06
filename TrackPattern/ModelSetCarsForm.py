@@ -8,10 +8,10 @@ from codecs import open as codecsOpen
 from json import loads as jsonLoads, dumps as jsonDumps
 
 from psEntities import MainScriptEntities
-from TrackPattern import Model
 from TrackPattern import ModelEntities
-# from TrackPattern import View
 from TrackPattern import ExportToTrainPlayer
+# from TrackPattern import Model
+# from TrackPattern import View
 
 scriptName = 'OperationsPatternScripts.TrackPattern.ModelSetCarsForm'
 scriptRev = 20220101
@@ -30,25 +30,16 @@ def testValidityOfForm(setCarsForm, textBoxEntry):
         psLog.critical('mismatched input list and car roster lengths')
         return False
 
-def printSwitchList(setCarsForm, textBoxEntry):
-
-    psLog.debug('printSwitchList')
-
-    modifiedsetCarsForm = modifySetCarsList(setCarsForm, textBoxEntry)
-
-    headerNames = MainScriptEntities.readConfigFile('TP')
-    patternListForJson = Model.makePatternHeader()
-    patternListForJson['trainDescription'] = headerNames['TD']['SC']
-    patternListForJson['trainName'] = headerNames['TN']['SC']
-    patternListForJson['trainComment'] = headerNames['TC']['SC']
-    patternListForJson['locations'] = modifiedsetCarsForm['locations']
-
-    workEventName = Model.writeWorkEventListAsJson(patternListForJson)
-    textWorkEventList = Model.readJsonWorkEventList(workEventName)
-    textListForPrint = Model.makeTextListForPrint(textWorkEventList)
-    Model.writeTextSwitchList(workEventName, textListForPrint)
-
-    return workEventName
+# def writeSwitchList(setCarsForm, textBoxEntry):
+#
+#     psLog.debug('writeSwitchList')
+#
+#     modifiedsetCarsForm = modifySetCarsList(setCarsForm, textBoxEntry)
+#
+#
+#
+#
+#     return modifiedsetCarsForm
 
 def setCarsToTrack(setCarsForm, textBoxEntry):
 
@@ -157,7 +148,7 @@ def writeTpSwitchListFromJson(switchListName):
 
     return
 
-def modifySetCarsList(setCarsForm, textBoxEntry):
+def makeLocationDict(setCarsForm, textBoxEntry):
     '''Replaces car['Set to'] = [ ] with either [Hold] or ["some other valid track"]'''
 
     psLog.debug('modifySetCarsList')
@@ -176,27 +167,40 @@ def modifySetCarsList(setCarsForm, textBoxEntry):
             longestTrackString = len(track)
 
     i = 0
-    locoList = setCarsForm['locations'][0]['tracks'][0]['locos']
-    for loco in locoList:
+    locoList = []
+    for loco in setCarsForm['locations'][0]['tracks'][0]['locos']:
         setTrack = u'Hold'
         userInput = unicode(userInputList[i], MainScriptEntities.setEncoding())
         if userInput in allTracksAtLoc and userInput != trackName:
             setTrack = userInput
         loco['Set to'] = ModelEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
+        locoList.append(loco)
         i += 1
-    setCarsForm['locations'][0]['tracks'][0]['locos'] = locoList
+    # setCarsForm['locations'][0]['tracks'][0]['locos'] = locoList
 
-    carList = setCarsForm['locations'][0]['tracks'][0]['cars']
-    for car in carList:
+    carList = []
+    for car in setCarsForm['locations'][0]['tracks'][0]['cars']:
         setTrack = u'Hold'
         userInput = unicode(userInputList[i], MainScriptEntities.setEncoding())
         if userInput in allTracksAtLoc and userInput != trackName:
             setTrack = userInput
         car['Set to'] = ModelEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
+        carList.append(car)
         i += 1
-    setCarsForm['locations'][0]['tracks'][0]['cars'] = carList
+    # setCarsForm['locations'][0]['tracks'][0]['cars'] = carList
 
-    return setCarsForm
+    trackDetails = {}
+    trackDetails['trackName'] = trackName
+    trackDetails['length'] = 1
+    trackDetails['locos'] = locoList
+    trackDetails['cars'] = carList
+
+    locationDict = {}
+    locationDict['locationName'] = location
+    locationDict['tracks'] = [trackDetails]
+
+
+    return locationDict
 
 def getSchedule(locationString, trackString):
     '''Returns a schedule if there is one'''
