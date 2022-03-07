@@ -441,26 +441,13 @@ def makeTrackList(location, type):
 
     return ModelEntities.getTracksByLocation(location, type)
 
-# def writePatternJson(location, trackPatternDict):
-#     '''Write the track pattern dictionary as a JSON file'''
-#
-#     psLog.debug('writePatternJson')
-#     jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\Track Pattern (' + location + ').json'
-#     jsonObject = jsonDumps(trackPatternDict, indent=2, sort_keys=True) #trackPatternDict
-#     with codecsOpen(jsonCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
-#         jsonWorkFile.write(jsonObject)
-#
-#     return
-
-def writeCsvSwitchList(location, trackPatternDict):
+def writeCsvSwitchList(trackPattern, type):
     '''Rewrite this to write from the JSON file'''
 
     psLog.debug('writeCsvSwitchList')
-    csvSwitchlistPath = jmri.util.FileUtil.getProfilePath() + 'operations\\csvSwitchLists'
-    if not (osPath.isdir(csvSwitchlistPath)):
-        mkdir(csvSwitchlistPath)
-    csvCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\csvSwitchLists\\Track Pattern (' + location + ').csv'
-    csvObject = ModelEntities.makeCsvSwitchlist(trackPatternDict)
+    trainDescription = MainScriptEntities.readConfigFile('TP')['TD']
+    csvCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\csvSwitchLists\\' + trainDescription[type]  + '.csv'
+    csvObject = ModelEntities.makeCsvSwitchlist(trackPattern)
     with codecsOpen(csvCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
         csvWorkFile.write(csvObject)
 

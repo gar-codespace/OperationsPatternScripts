@@ -114,7 +114,7 @@ def setCarsToTrack(setCarsForm, textBoxEntry):
 
     return
 
-def exportToTrainPlayer(setCarsForm, textBoxEntry):
+def exportSetCarsFormToTp(setCarsForm, textBoxEntry):
 
     psLog.debug('exportToTrainPlayer')
 

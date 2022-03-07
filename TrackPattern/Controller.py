@@ -77,6 +77,9 @@ class StartUp():
         modifiedReport = Model.modifyReport(locationDict, 'PR')
         Model.printWorkEventList(modifiedReport, trackTotals=True)
 
+        if jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
+            Model.writeCsvSwitchList(modifiedReport, 'PR')
+
         print(scriptName + ' ' + str(scriptRev))
 
         return

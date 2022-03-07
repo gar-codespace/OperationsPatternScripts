@@ -109,9 +109,12 @@ class CreatePatternReportGui():
         if not self.quickCheck():
             return
 
-        locationDict = ModelSetCarsForm.makeLocationDict(self.setCarsForm, self.buttonDict['textBoxEntry'])
-        modifiedReport = Model.modifyReport(locationDict, 'SC')
+        locationDict = ModelSetCarsForm.makeLocationDict(self.setCarsForm, self.buttonDict['textBoxEntry']) # Replaces [Hold] with a track name
+        modifiedReport = Model.modifyReport(locationDict, 'SC') # Tweaks the header for the report
         Model.printWorkEventList(modifiedReport, trackTotals=False)
+
+        if jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
+            Model.writeCsvSwitchList(modifiedReport, 'SC')
 
         print(scriptName + ' ' + str(scriptRev))
 
@@ -141,7 +144,7 @@ class CreatePatternReportGui():
 
         MOUSE_CLICKED.getSource().setBackground(java.awt.Color.GREEN)
 
-        ModelSetCarsForm.exportToTrainPlayer(self.setCarsForm, self.buttonDict['textBoxEntry'])
+        ModelSetCarsForm.exportSetCarsFormToTp(self.setCarsForm, self.buttonDict['textBoxEntry'])
 
         print(scriptName + ' ' + str(scriptRev))
 

@@ -82,6 +82,8 @@
       "Load" : 6,
       "Load Type" : 10,
       "Loco Type" : 18,
+      "Owner" : 20,
+      "Consist" : 8,
       "Hazardous" : 10,
       "Color" : 6,
       "Kernel" : 7,

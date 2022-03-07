@@ -97,20 +97,31 @@ def getLocoObjects(location, track):
     return locoList
 
 def getDetailsForLocoAsDict(locoObject):
-    '''A dictionary of locomotive attributes, hard coded selection'''
-    # @Todo move this to the json config file
+    '''Mimics jmri.jmrit.operations.setup.Setup.getEngineAttributes()
+    [u'Road', u'Number', u'Type', u'Model', u'Length', u'Weight', u'Consist', u'Owner', u'Track', u'Location', u'Destination', u'Comment']'''
+
     locoDetailDict = {}
     locoDetailDict[u'Set to'] = '[  ] '
+    locoDetailDict[u'PUSO'] = u'SL'
     locoDetailDict[u'Road'] = locoObject.getRoadName()
     locoDetailDict[u'Number'] = locoObject.getNumber()
     locoDetailDict[u'Type'] = locoObject.getTypeName()
+    locoDetailDict[u'Model'] = locoObject.getModel()
     locoDetailDict[u'Length'] = locoObject.getLength()
     locoDetailDict[u'Weight'] = locoObject.getWeightTons()
-    locoDetailDict[u'Model'] = locoObject.getModel()
-    locoDetailDict[u'PUSO'] = u'SL'
+    try:
+        locoDetailDict[u'Consist'] = locoObject.getConsist().getName()
+    except:
+        locoDetailDict[u'Consist'] = 'Single'
+    locoDetailDict[u'Owner'] = str(locoObject.getOwner())
+    locoDetailDict[u'Track'] = locoObject.getTrackName()
+    locoDetailDict[u'Location'] = locoObject.getLocation().getName()
+    locoDetailDict[u'Destination'] = locoObject.getDestinationName()
+    locoDetailDict[u'Comment'] = locoObject.getComment()
+# Not part of engine attributes
     locoDetailDict[u'Load'] = u'O'
     locoDetailDict[u'FD&Track'] = MainScriptEntities.readConfigFile('TP')['DS']
-    locoDetailDict[u'Track'] = locoObject.getTrackName()
+    locoDetailDict[u' '] = u' ' # Catches KeyError - empty box added to getDropEngineMessageFormat
 
     return locoDetailDict
 
@@ -136,8 +147,8 @@ def getCarObjects(location, track):
     return carList
 
 def getDetailsForCarAsDict(carObject):
-    '''makes a dictionary of attributes for one car that includes all the fields possible from:
-    jmri.jmrit.operations.setup.Setup.getCarAttributes()'''
+    '''Mimics jmri.jmrit.operations.setup.Setup.getCarAttributes()
+    [u'Road', u'Number', u'Type', u'Length', u'Weight', u'Load', u'Load Type', u'Hazardous', u'Color', u'Kernel', u'Kernel Size', u'Owner', u'Track', u'Location', u'Destination', u'Dest&Track', u'Final Dest', u'FD&Track', u'Comment', u'SetOut Msg', u'PickUp Msg', u'RWE']'''
 
     fdStandIn = MainScriptEntities.readConfigFile('TP')
 
@@ -180,7 +191,7 @@ def getDetailsForCarAsDict(carObject):
     carDetailDict[u'PickUp Msg'] = trackId.getCommentPickup()
     carDetailDict[u'RWE'] = carObject.getReturnWhenEmptyDestinationName()
     carDetailDict[u'PUSO'] = u'SC'
-    carDetailDict[u' '] = u' ' # Catches empty box added to getLocalSwitchListMessageFormat KeyError
+    carDetailDict[u' '] = u' ' # Catches KeyError - empty box added to getLocalSwitchListMessageFormat
 
     return carDetailDict
 
@@ -223,20 +234,10 @@ def makeInitialTrackList(location):
 def getTracksByLocation(location, trackType):
 
     allTracksList = []
-    for x in MainScriptEntities._lm.getLocationByName(location).getTracksByNameList(trackType): # returns object
+    for x in MainScriptEntities._lm.getLocationByName(location).getTracksByNameList(trackType):
         allTracksList.append(unicode(x.getName(), MainScriptEntities.setEncoding())) # list of all yard tracks for the validated location
 
     return allTracksList
-
-# def getSelectedTracks():
-#
-#     trackList = []
-#     patternTracks = MainScriptEntities.readConfigFile('TP')['PT']
-#     for track, include in sorted(patternTracks.items()):
-#         if (include):
-#             trackList.append(track)
-#
-#     return trackList
 
 def makeTextReportHeader(textWorkEventList):
 
@@ -250,9 +251,9 @@ def makeTextReportHeader(textWorkEventList):
 
 def makeTextReportLocations(textWorkEventList, trackTotals):
 
-    itemsList = jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
     reportWidth = MainScriptEntities.readConfigFile('TP')['RW']
-    # includeTotals = MainScriptEntities.readConfigFile('TP')['IT']
+    locoItems = jmri.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
+    carItems = jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
 
     reportSwitchList = ''
     reportTally = [] # running total for all tracks
@@ -268,17 +269,21 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
 
             for loco in track['locos']:
                 lengthOfLocos += int(loco['Length']) + 4
-                reportSwitchList += loco['Set to'] + formatText(loco['Road'], reportWidth['Road']) + formatText(loco['Number'],  reportWidth['Number']) + formatText(loco['Model'], reportWidth['Model']) + formatText(loco['Type'], reportWidth['Loco Type']) + '\n'
+                switchListRow = loco['Set to']
+                for item in locoItems:
+                    itemWidth = reportWidth[item]
+                    switchListRow += formatText(loco[item], itemWidth)
+                reportSwitchList += switchListRow + '\n'
 
             for car in track['cars']:
                 lengthOfCars += int(car['Length']) + 4
                 switchListRow = car['Set to']
-                trackTally.append(car['Final Dest'])
-                reportTally.append(car['Final Dest'])
-                for item in itemsList:
+                for item in carItems:
                     itemWidth = reportWidth[item]
                     switchListRow += formatText(car[item], itemWidth)
                 reportSwitchList += switchListRow + '\n'
+                trackTally.append(car['Final Dest'])
+                reportTally.append(car['Final Dest'])
 
             if trackTotals:
                 totalLength = lengthOfLocos + lengthOfCars
@@ -295,52 +300,52 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
 
     return reportSwitchList
 
-def makeReportSwitchList(switchList, includeTotals=False):
-
-    itemsList = jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
-    reportWidth = MainScriptEntities.readConfigFile('TP')['RW']
-
-    reportSwitchList = ''
-    reportTally = [] # running total for all tracks
-    for track in switchList['locations']:
-        lengthOfLocos = 0
-        lengthOfCars = 0
-        trackTally = []
-        trackName = track['Name']
-        trackLength = track['Length']
-        reportSwitchList += 'Track: ' + trackName + '\n'
-
-        sortedListOfLocos = sortLocoList(track['Locos'])
-        for loco in sortedListOfLocos:
-            lengthOfLocos += int(loco['Length']) + 4
-            reportSwitchList += loco['Set to'] + formatText(loco['Road'], reportWidth['Road']) + formatText(loco['Number'],  reportWidth['Number']) + formatText(loco['Model'], reportWidth['Model']) + formatText(loco['Type'], reportWidth['Loco Type']) + '\n'
-            # Loco Type is not as JMRI type, it is added by me
-
-        sortedListOfCars = sortCarList(track['Cars'])
-        for car in sortedListOfCars:
-            lengthOfCars += int(car['Length']) + 4
-            switchListRow = car['Set to']
-            trackTally.append(car['Final Dest'])
-            reportTally.append(car['Final Dest'])
-            for item in itemsList:
-                itemWidth = reportWidth[item]
-                switchListRow += formatText(car[item], itemWidth)
-            reportSwitchList += switchListRow + '\n'
-
-        if (includeTotals):
-            totalLength = lengthOfLocos + lengthOfCars
-            reportSwitchList += 'Total Cars: ' + str(len(track['Cars'])) + ' Track Length: ' + str(trackLength) + ' Eqpt. Length: ' + str(totalLength) + ' Available: ' + str(trackLength - totalLength) + '\n\n'
-            reportSwitchList += u'Track Totals:\n'
-            for track, count in sorted(occuranceTally(trackTally).items()):
-                reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
-        reportSwitchList += '\n'
-
-    if (includeTotals):
-        reportSwitchList += u'\nReport Totals:\n'
-        for track, count in sorted(occuranceTally(reportTally).items()):
-            reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
-
-    return reportSwitchList
+# def makeReportSwitchList(switchList, includeTotals=False):
+#
+#     itemsList = jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
+#     reportWidth = MainScriptEntities.readConfigFile('TP')['RW']
+#
+#     reportSwitchList = ''
+#     reportTally = [] # running total for all tracks
+#     for track in switchList['locations']:
+#         lengthOfLocos = 0
+#         lengthOfCars = 0
+#         trackTally = []
+#         trackName = track['Name']
+#         trackLength = track['Length']
+#         reportSwitchList += 'Track: ' + trackName + '\n'
+#
+#         sortedListOfLocos = sortLocoList(track['Locos'])
+#         for loco in sortedListOfLocos:
+#             lengthOfLocos += int(loco['Length']) + 4
+#             reportSwitchList += loco['Set to'] + formatText(loco['Road'], reportWidth['Road']) + formatText(loco['Number'],  reportWidth['Number']) + formatText(loco['Model'], reportWidth['Model']) + formatText(loco['Type'], reportWidth['Loco Type']) + '\n'
+#             # Loco Type is not as JMRI type, it is added by me
+#
+#         sortedListOfCars = sortCarList(track['Cars'])
+#         for car in sortedListOfCars:
+#             lengthOfCars += int(car['Length']) + 4
+#             switchListRow = car['Set to']
+#             trackTally.append(car['Final Dest'])
+#             reportTally.append(car['Final Dest'])
+#             for item in itemsList:
+#                 itemWidth = reportWidth[item]
+#                 switchListRow += formatText(car[item], itemWidth)
+#             reportSwitchList += switchListRow + '\n'
+#
+#         if (includeTotals):
+#             totalLength = lengthOfLocos + lengthOfCars
+#             reportSwitchList += 'Total Cars: ' + str(len(track['Cars'])) + ' Track Length: ' + str(trackLength) + ' Eqpt. Length: ' + str(totalLength) + ' Available: ' + str(trackLength - totalLength) + '\n\n'
+#             reportSwitchList += u'Track Totals:\n'
+#             for track, count in sorted(occuranceTally(trackTally).items()):
+#                 reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
+#         reportSwitchList += '\n'
+#
+#     if (includeTotals):
+#         reportSwitchList += u'\nReport Totals:\n'
+#         for track, count in sorted(occuranceTally(reportTally).items()):
+#             reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
+#
+#     return reportSwitchList
 
 def sortLocoList(locoList):
 
@@ -359,42 +364,61 @@ def sortCarList(carList):
     return carList
 
 def makeCsvSwitchlist(trackPattern):
-    '''Makes a CSV switchlist using an input pattern, conforming to config values.
-    Generate CSV Switch list is selected from the Trains window, Tools/Options pull down'''
+    '''Makes a CSV switchlist using an input pattern, conforming to config values.'''
 
     csvSwitchList = u'Operator,Description,Parameters\n' \
-                    u'RT,Report Type,' + trackPattern['RT'] + '\n' \
-                    u'RN,Railroad Name,' + trackPattern['RN'] + '\n' \
-                    u'LN,Location Name,' + trackPattern['YL'] + '\n' \
+                    u'RT,Report Type,' + trackPattern['trainDescription'] + '\n' \
+                    u'RN,Railroad Name,' + trackPattern['railroad'] + '\n' \
+                    u'LN,Location Name,' + trackPattern['locations'][0]['locationName'] + '\n' \
                     u'PRNTR,Printer Name,\n' \
-                    u'YPC,Yard Pattern Comment,Yard inventory by Track and Destination\n' \
-                    u'VT,Valid,' + trackPattern['VT'] + '\n'
-    for j in trackPattern['ZZ']:
-        csvSwitchList = csvSwitchList + u'TN,Track name,' + unicode(j['TN'], MainScriptEntities.setEncoding()) + '\n'
-        for car in j['TR']:
-            csvSwitchList   = csvSwitchList + car['Set to'] + ',' \
-                                            + car['Road'] + ',' \
-                                            + car['Number'] + ',' \
-                                            + car['Type'] + ',' \
-                                            + car['Length'] + ',' \
-                                            + car['Weight'] + ',' \
-                                            + car['Load'] + ',' \
-                                            + car['Load Type'] + ',' \
-                                            + str(car['Hazardous']) + ',' \
-                                            + car['Color'] + ',' \
-                                            + car['Kernel'] + ',' \
-                                            + car['Kernel Size'] + ',' \
-                                            + car['Owner'] + ',' \
-                                            + car['Track'] + ',' \
-                                            + car['Location'] + ',' \
-                                            + car['Destination'] + ',' \
-                                            + car['Dest&Track'] + ',' \
-                                            + car['Final Dest'] + ',' \
-                                            + car['FD&Track'] + ',' \
-                                            + car['Comment'] + ',' \
-                                            + car['SetOut Msg'] + ',' \
-                                            + car['PickUp Msg'] + ',' \
-                                            + car['RWE'] + '\n'
+                    u'YPC,Yard Pattern Comment,' + trackPattern['trainComment'] + '\n' \
+                    u'VT,Valid,' + trackPattern['date'] + '\n'
+    for track in trackPattern['locations'][0]['tracks']: # There is only one location
+        csvSwitchList += u'TN,Track name,' + unicode(track['trackName'], MainScriptEntities.setEncoding()) + '\n'
+        for loco in track['locos']:
+            csvSwitchList +=  loco['Set to'] + ',' \
+                            + loco['PUSO'] + ',' \
+                            + loco['Road'] + ',' \
+                            + loco['Number'] + ',' \
+                            + loco['Type'] + ',' \
+                            + loco['Model'] + ',' \
+                            + loco['Length'] + ',' \
+                            + loco['Weight'] + ',' \
+                            + loco['Consist'] + ',' \
+                            + loco['Owner'] + ',' \
+                            + loco['Track'] + ',' \
+                            + loco['Location'] + ',' \
+                            + loco['Destination'] + ',' \
+                            + loco['Comment'] + ',' \
+                            + loco['Load'] + ',' \
+                            + loco['FD&Track'] + ',' \
+                            + '\n'
+        for car in track['cars']:
+            csvSwitchList +=  car['Set to'] + ',' \
+                            + car['PUSO'] + ',' \
+                            + car['Road'] + ',' \
+                            + car['Number'] + ',' \
+                            + car['Type'] + ',' \
+                            + car['Length'] + ',' \
+                            + car['Weight'] + ',' \
+                            + car['Load'] + ',' \
+                            + car['Track'] + ',' \
+                            + car['FD&Track'] + ',' \
+                            + car['Load Type'] + ',' \
+                            + str(car['Hazardous']) + ',' \
+                            + car['Color'] + ',' \
+                            + car['Kernel'] + ',' \
+                            + car['Kernel Size'] + ',' \
+                            + car['Owner'] + ',' \
+                            + car['Location'] + ',' \
+                            + car['Destination'] + ',' \
+                            + car['Dest&Track'] + ',' \
+                            + car['Final Dest'] + ',' \
+                            + car['Comment'] + ',' \
+                            + car['SetOut Msg'] + ',' \
+                            + car['PickUp Msg'] + ',' \
+                            + car['RWE'] \
+                            + '\n'
 
     return csvSwitchList
 
