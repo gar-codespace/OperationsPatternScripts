@@ -18,7 +18,7 @@ scriptRev = 20220101
 
 def patternReportForTrackWindow(patternReportForTrackForm):
 
-    setCarsWindow = makeWindow()
+    setCarsWindow = jmri.util.JmriJFrame()
     setCarsWindow.add(patternReportForTrackForm)
 
     return setCarsWindow
@@ -91,13 +91,13 @@ def makeSwingBox(xWidth, yHeight):
 
     return xName
 
-def makeWindow():
-    '''Makes a JMRI style swing frame'''
-
-    jFrame = jmri.util.JmriJFrame()
-    # jFrame.contentPane.setLayout(javax.swing.BoxLayout(jFrame.contentPane, javax.swing.BoxLayout.PAGE_AXIS))
-
-    return jFrame
+# def makeWindow():
+#     '''Makes a JMRI style swing frame'''
+#
+#     jFrame = jmri.util.JmriJFrame()
+#     # jFrame.contentPane.setLayout(javax.swing.BoxLayout(jFrame.contentPane, javax.swing.BoxLayout.PAGE_AXIS))
+#
+#     return jFrame
 
 def makePatternReportFormHeader(setCarsForm):
     '''Creates the "Pattern Report for Track X" forms header'''
@@ -132,6 +132,8 @@ def makePatternReportFormHeader(setCarsForm):
 def makePatternReportRowOfTracks(allTracksAtLoc):
 
     buttonPanel = javax.swing.JPanel()
+    # buttonPanel.setName('RowOfTracks')
+    print(buttonPanel.getName())
     buttonList = []
     for track in allTracksAtLoc:
         selectTrackButton = javax.swing.JButton(track.getName())

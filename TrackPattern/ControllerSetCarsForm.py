@@ -127,11 +127,12 @@ class CreatePatternReportGui():
 
         patternReportForTrackForm, self.buttonDict = ViewSetCarsForm.makePatternReportForTrackForm(self.setCarsForm)
         patternReportForTrackWindow = ViewSetCarsForm.patternReportForTrackWindow(patternReportForTrackForm)
-        self.parseButtons()
+        self.activateButtons()
 
+        print(patternReportForTrackForm.getComponents())
         return patternReportForTrackWindow
 
-    def parseButtons(self):
+    def activateButtons(self):
 
         for track in self.buttonDict['trackButtons']:
             track.actionPerformed = AnyButtonPressedListener().trackRowButton
@@ -144,7 +145,7 @@ class CreatePatternReportGui():
                 schedule.actionPerformed = AnyButtonPressedListener(self.locationName, self.trackName).scheduleButton
 
         for button in self.buttonDict['footerButtons']:
-            print(setCarsForm)
+            pass
 
         # buttonDict['footerButtons'][0].actionPerformed = AnyButtonPressedListener(self.setCarsForm, textBoxEntry).printButton
 
