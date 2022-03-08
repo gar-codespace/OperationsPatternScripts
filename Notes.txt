@@ -40,6 +40,8 @@ Todo:
   UGH!! Left justify set cars lists
   The print switch list is created in one method and modified in two others, can this be combined?
   Sort out naming convention Set Cars vs Pattern Report for Track
+  For print reports, show caboose and passenger loads as occupied
+  The Controller should open the ControllerSetCarsForm as opposed to Model
 
 Wish List:
   for getDetailsForLocoAsDict(locoObject) add loco include elements to the json config file similar to: jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()

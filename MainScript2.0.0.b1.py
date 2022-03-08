@@ -18,8 +18,9 @@ def useThisVersion():
 
 _currentDir = useThisVersion()
 sysPath.append(_currentDir)
-import psEntities
-psEntities.MainScriptEntities._currentPath = _currentDir
+from psEntities import MainScriptEntities
+from psEntities import PluginLocations
+MainScriptEntities._currentPath = _currentDir
 
 '''Pattern Scripts Version 2.0.0 Pre Release b1'''
 
@@ -45,8 +46,8 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         self.psLog.error('Log File for Pattern Scripts Plugin - error level initialized')
         self.psLog.critical('Log File for Pattern Scripts Plugin - critical level initialized')
     # fire up the config file
-        if not (psEntities.MainScriptEntities.validateConfigFile()):
-            psEntities.MainScriptEntities.writeNewConfigFile() # No love, just start over
+        if not (MainScriptEntities.validateConfigFile()):
+            MainScriptEntities.writeNewConfigFile() # No love, just start over
             self.psLog.warning('New PatternConfig.json file created')
 
         return
@@ -55,10 +56,10 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         '''Make and populate the Pattern Scripts control panel'''
 
         yTimeNow = time.time()
-        psEntities.MainScriptEntities.validateFileDestinationDirestories()
+        MainScriptEntities.validateFileDestinationDirestories()
     # make a list of subroutines for the control panel
         subroutineList = []
-        controlPanelConfig = psEntities.MainScriptEntities.readConfigFile('CP')
+        controlPanelConfig = MainScriptEntities.readConfigFile('CP')
         for subroutineIncludes, isIncluded in controlPanelConfig['SI'].items():
             if (isIncluded):
             # import selected subroutines and add them to a list
@@ -69,17 +70,17 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
                 subroutineList.append(subroutineFrame)
                 self.psLog.info(subroutineIncludes + ' subroutine added to control panel')
     # plug in the subroutine list into the control panel
-        controlPanel, scrollPanel = psEntities.MainScriptEntities.makeControlPanel()
+        controlPanel, scrollPanel = MainScriptEntities.makeControlPanel()
         for subroutine in subroutineList:
             controlPanel.add(subroutine)
     # plug in the control panel to a location
-        locationMatrix = psEntities.MainScriptEntities.readConfigFile('LM')
+        locationMatrix = MainScriptEntities.readConfigFile('LM')
         panelLocation = locationMatrix['PL']
         locationOptions = locationMatrix['LO']
         if (locationOptions[panelLocation][1]):
-            getattr(psEntities.PluginLocations, locationOptions[panelLocation][1])(scrollPanel)
+            getattr(PluginLocations, locationOptions[panelLocation][1])(scrollPanel)
     # fire up the help File
-        psEntities.MainScriptEntities.validateStubFile()
+        MainScriptEntities.validateStubFile()
         self.psLog.info(locationOptions[panelLocation][0])
         self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
 
