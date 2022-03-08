@@ -18,14 +18,16 @@ scriptName = 'OperationsPatternScripts.TrackPattern.Model'
 scriptRev = 20220101
 psLog = logging.getLogger('PS.TP.Model')
 
-def makeLocationDict():
-    ''' '''
+def makeLocationDict(trackList=None):
+    '''Returns the details for the tracks sent in formatted for the JSON file '''
 
     psLog.debug('makeLocationDict')
 
+    if not trackList:
+        trackList = getSelectedTracks()
+
     detailsForTrack = []
     patternLocation = MainScriptEntities.readConfigFile('TP')['PL']
-    trackList = getSelectedTracks()
     for trackName in trackList:
         detailsForTrack.append(ModelEntities.getGenericTrackDetails(patternLocation, trackName))
 
@@ -34,22 +36,6 @@ def makeLocationDict():
     locationDict['tracks'] = detailsForTrack
 
     return locationDict
-
-
-
-
-def modifyReport(locationDict, reportType):
-
-    psLog.debug('modifyReport')
-
-    headerNames = MainScriptEntities.readConfigFile('TP')
-    modifiedReport = makePatternHeader()
-    modifiedReport['trainDescription'] = headerNames['TD'][reportType]
-    modifiedReport['trainName'] = headerNames['TN'][reportType]
-    modifiedReport['trainComment'] = headerNames['TC'][reportType]
-    modifiedReport['locations'] = [locationDict] # put in as a dictionary to maintain compatability with JSON File Format/JMRI manifest export. See help web page
-
-    return modifiedReport
 
 def printWorkEventList(patternListForJson, trackTotals):
 
@@ -67,13 +53,15 @@ def printWorkEventList(patternListForJson, trackTotals):
 
 def getSelectedTracks():
 
-    trackList = []
     patternTracks = MainScriptEntities.readConfigFile('TP')['PT']
-    for track, include in sorted(patternTracks.items()):
-        if (include):
-            trackList.append(track)
 
-    return trackList
+    # trackList = []
+    # for track, include in sorted(patternTracks.items()):
+    #     if (include):
+    #         trackList.append(track)
+
+
+    return [track for track, include in sorted(patternTracks.items()) if include]
 
 # def makePatternLocations():
 #     '''Simplified since there is only one location for the pattern buton'''
@@ -94,6 +82,20 @@ def getSelectedTracks():
 #
 #     return locations # locations is a list of dictionaries
 
+def makeReport(locationDict, reportType):
+
+    psLog.debug('makeReport')
+
+    headerNames = MainScriptEntities.readConfigFile('TP')
+    # modifiedReport = makePatternHeader()
+    modifiedReport = ModelEntities.makeGenericHeader()
+    modifiedReport['trainDescription'] = headerNames['TD'][reportType]
+    modifiedReport['trainName'] = headerNames['TN'][reportType]
+    modifiedReport['trainComment'] = headerNames['TC'][reportType]
+    modifiedReport['locations'] = [locationDict] # put in as a dictionary to maintain compatability with JSON File Format/JMRI manifest export. See help web page
+
+    return modifiedReport
+
 def onScButtonPress():
     '''"Set Cars" button opens a window for each selected track'''
 
@@ -105,18 +107,21 @@ def onScButtonPress():
     if selectedTracks:
         i = 0
         for trackName in selectedTracks:
-            setCarsForm = ModelEntities.makeGenericHeader()
-            locationDict = {}
-            locationDict['locationName'] = locationName
-            locationDict['tracks'] = [ModelEntities.getGenericTrackDetails(locationName, trackName)]
-            setCarsForm['locations'] = [locationDict]
-            # The above two lines are sent in as lists to maintain consistancy with the generic JSON file format
+            locationDict = makeLocationDict([trackName]) # makeLocationDict takes a track list
+            setCarsForm = makeReport(locationDict, 'SC')
             newFrame = ControllerSetCarsForm.CreatePatternReportGui(setCarsForm)
             newWindow = newFrame.makeFrame()
             newWindow.setTitle(u'Pattern Report for track ' + trackName)
             newWindow.setLocation(windowOffset, 180)
             newWindow.pack()
             newWindow.setVisible(True)
+
+            # setCarsForm = ModelEntities.makeGenericHeader()
+            # locationDict = {}
+            # locationDict['locationName'] = locationName
+            # locationDict['tracks'] = [ModelEntities.getGenericTrackDetails(locationName, trackName)]
+            # setCarsForm['locations'] = [locationDict]
+            # The above two lines are sent in as lists to maintain consistancy with the generic JSON file format
 
             psLog.info(u'Set Cars Window created for track ' + trackName)
             windowOffset += 50
@@ -127,11 +132,11 @@ def onScButtonPress():
 
     return
 
-def makePatternHeader():
-
-    psLog.debug('makePatternHeader')
-
-    return ModelEntities.makeGenericHeader()
+# def makePatternHeader():
+#
+#     psLog.debug('makePatternHeader')
+#
+#     return ModelEntities.makeGenericHeader()
 
 def makeSwitchList(fileName=u'test'): ##
 
@@ -245,16 +250,9 @@ def resetTrainPlayerSwitchlist():
 
     psLog.debug('resetTrainPlayerSwitchlist')
 
-    genericHeader = ModelEntities.makeGenericHeader()
-
-    headerNames = MainScriptEntities.readConfigFile('TP')
-    genericHeader['trainDescription'] = headerNames['TD']['TP']
-    genericHeader['trainName'] = headerNames['TN']['TP']
-    genericHeader['trainComment'] = headerNames['TC']['TP']
-
-    genericHeader['locations'] = [{'locationName':'Location Name', 'tracks':[{'trackName':'Track Name', 'length': 1, 'locos':[], 'cars':[]}]}]
-
-    writeWorkEventListAsJson(genericHeader)
+    locationDict = {'locationName':'Location Name', 'tracks':[{'trackName':'Track Name', 'length': 1, 'locos':[], 'cars':[]}]}
+    setCarsForm = makeReport(locationDict, 'TP')
+    writeWorkEventListAsJson(setCarsForm)
 
     return
 
@@ -397,6 +395,7 @@ def updateConfigFile(controls):
     '''Updates the track pattern part of the config file'''
 
     psLog.debug('updateConfigFile')
+
     focusOn = MainScriptEntities.readConfigFile('TP')
     focusOn.update({"PL": controls[0].getSelectedItem()})
     focusOn.update({"PA": controls[1].selected})
@@ -405,6 +404,7 @@ def updateConfigFile(controls):
     newConfigFile = MainScriptEntities.readConfigFile('all')
     newConfigFile.update({"TP": focusOn})
     MainScriptEntities.writeConfigFile(newConfigFile)
+    psLog.info('Controls settings for configuration file updated')
 
     return controls
 

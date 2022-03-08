@@ -30,17 +30,6 @@ def testValidityOfForm(setCarsForm, textBoxEntry):
         psLog.critical('mismatched input list and car roster lengths')
         return False
 
-# def writeSwitchList(setCarsForm, textBoxEntry):
-#
-#     psLog.debug('writeSwitchList')
-#
-#     modifiedsetCarsForm = modifySetCarsList(setCarsForm, textBoxEntry)
-#
-#
-#
-#
-#     return modifiedsetCarsForm
-
 def setCarsToTrack(setCarsForm, textBoxEntry):
 
     psLog.debug('setCarsToTrack')
@@ -151,7 +140,7 @@ def writeTpSwitchListFromJson(switchListName):
 def makeLocationDict(setCarsForm, textBoxEntry):
     '''Replaces car['Set to'] = [ ] with either [Hold] or ["some other valid track"]'''
 
-    psLog.debug('modifySetCarsList')
+    psLog.debug('makeLocationDict')
 
     trackName = setCarsForm['locations'][0]['tracks'][0]['trackName']
     location = setCarsForm['locations'][0]['locationName']

@@ -159,7 +159,10 @@ def getDetailsForCarAsDict(carObject):
     carDetailDict[u'Type'] = carObject.getTypeName()
     carDetailDict[u'Length'] = carObject.getLength()
     carDetailDict[u'Weight'] = carObject.getWeightTons()
-    carDetailDict[u'Load'] = carObject.getLoadName()
+    if carObject.isCaboose() or carObject.isPassenger():
+        carDetailDict[u'Load'] = u'O'
+    else:
+        carDetailDict[u'Load'] = carObject.getLoadName()
     carDetailDict[u'Load Type'] = carObject.getLoadType()
     carDetailDict[u'Hazardous'] = carObject.isHazardous()
     carDetailDict[u'Color'] = carObject.getColor()

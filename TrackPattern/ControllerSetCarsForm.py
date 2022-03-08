@@ -48,7 +48,7 @@ class CreatePatternReportGui():
     def makeFrame(self):
         '''Create a JMRI jFrame window'''
 
-        self.patternReportForTrackForm, self.buttonDict = ViewSetCarsForm.makePatternReportForTrackForm(self.setCarsForm)
+        self.patternReportForTrackForm, self.buttonDict = ViewSetCarsForm.makePatternReportForTrackForm(self.setCarsForm) 
         patternReportForTrackWindow = ViewSetCarsForm.patternReportForTrackWindow(self.patternReportForTrackForm)
         self.activateButtons()
 
@@ -110,7 +110,7 @@ class CreatePatternReportGui():
             return
 
         locationDict = ModelSetCarsForm.makeLocationDict(self.setCarsForm, self.buttonDict['textBoxEntry']) # Replaces [Hold] with a track name
-        modifiedReport = Model.modifyReport(locationDict, 'SC') # Tweaks the header for the report
+        modifiedReport = Model.makeReport(locationDict, 'SC') # Tweaks the header for the report
         Model.printWorkEventList(modifiedReport, trackTotals=False)
 
         if jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():

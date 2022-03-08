@@ -34,16 +34,15 @@ Stuff that's OK:
   CSV pattern and list written OK
   locos in report follow jmri.jmrit.operations.setup.Setup.getDropEngineMessageFormat OK
   cars in report follow jmri.jmrit.operations.setup.Setup.getLocalCarMessageFormat OK
+  Caboose and Passenger car types are loaded as O for Occupied OK
 
 Todo:
   Catch up with the latest JMRI stuff like text color
   UGH!! Left justify set cars lists
-  The print switch list is created in one method and modified in two others, can this be combined?
-  Sort out naming convention Set Cars vs Pattern Report for Track
-  For print reports, show caboose and passenger loads as occupied
-  The Controller should open the ControllerSetCarsForm as opposed to Model
+  Learn List Comprehension
 
 Wish List:
+  Sort out naming convention Set Cars vs Pattern Report for Track
   for getDetailsForLocoAsDict(locoObject) add loco include elements to the json config file similar to: jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
   add Pattern Scripts to Operations Pro combo box
   plugin added to button in trains window (AWT.getComponents())

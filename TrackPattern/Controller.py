@@ -66,15 +66,17 @@ class StartUp():
     def patternButton(self, event):
         '''Makes a track pattern report (PR) based on the config file'''
 
+        self.psLog.debug('patternButton')
+
         Model.updateConfigFile(self.controls)
-        self.psLog.info('Configuration file updated with new settings for controls')
 
         if not Model.getSelectedTracks():
             self.psLog.info('No tracks were selected')
             return
 
         locationDict = Model.makeLocationDict()
-        modifiedReport = Model.modifyReport(locationDict, 'PR')
+        modifiedReport = Model.makeReport(locationDict, 'PR')
+
         Model.printWorkEventList(modifiedReport, trackTotals=True)
 
         if jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
@@ -87,14 +89,16 @@ class StartUp():
     def setCarsButton(self, event):
         '''Opens a "Pattern Report for Track X" window for each checked track'''
 
+        self.psLog.debug('setCarsButton')
+        
         Model.updateConfigFile(self.controls)
-        self.psLog.info('Configuration file updated with new settings for controls')
 
         Model.makeLoadEmptyDesignationsDicts()
         Model.onScButtonPress()
 
         if MainScriptEntities.readConfigFile('TP')['TI']: # TrainPlayer Include
             Model.resetTrainPlayerSwitchlist()
+
         print(scriptName + ' ' + str(scriptRev))
 
         return
