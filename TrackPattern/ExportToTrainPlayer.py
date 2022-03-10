@@ -78,12 +78,13 @@ class ExportJmriLocations():
             csvWorkFile.write(csvLocations)
         self.psLog.info(eMessage)
         self.tpLog.info(eMessage)
+
         print(self.scriptName + ' ' + str(scriptRev))
 
         return
 
 class TrackPatternTranslationToTp():
-    '''Translate Track Patterns from OperationsPatternScripts to TrainPlayer format'''
+    '''Translate Track Patterns from OperationsPatternScripts for TrainPlayer O2O script compatability'''
 
     def __init__(self):
 
@@ -153,7 +154,7 @@ class TrackPatternTranslationToTp():
         return tpSwitchList
 
 class JmriTranslationToTp():
-    '''Translate manifests from JMRI to TrainPlayer format'''
+    '''Translate manifests from JMRI for TrainPlayer O2O script compatability'''
 
     def __init__(self):
 

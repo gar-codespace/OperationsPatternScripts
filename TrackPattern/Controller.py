@@ -10,8 +10,6 @@ from psEntities import MainScriptEntities
 from TrackPattern import Model
 from TrackPattern import View
 
-'''Controller script for the track pattern subroutine'''
-
 scriptName = 'OperationsPatternScripts.TrackPattern.Controller'
 scriptRev = 20220101
 
@@ -90,7 +88,7 @@ class StartUp():
         '''Opens a "Pattern Report for Track X" window for each checked track'''
 
         self.psLog.debug('setCarsButton')
-        
+
         Model.updateConfigFile(self.controls)
 
         Model.makeLoadEmptyDesignationsDicts()
@@ -108,6 +106,7 @@ class StartUp():
 
         Model.makePatternLog()
         View.printPatternLog()
+        
         print(scriptName + ' ' + str(scriptRev))
 
         return

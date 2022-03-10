@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021 Greg Ritacco
 
-import java.awt
+# import java.awt
 
 import MainScriptEntities
 import PluginLocations

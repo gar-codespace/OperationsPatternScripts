@@ -19,7 +19,6 @@ class PatternScriptsWindowListener(java.awt.event.WindowListener):
 
         self.homePanelButton = button
         return
-
     def windowOpened(self, WINDOW_OPENED):
         for xFrame in jmri.util.JmriJFrame.getFrameList(): # tonsil
             pass
@@ -42,6 +41,7 @@ class MakePatternScriptsWindow():
         self.controlPanel = scrollPanel
         self.button = button
         self.uniqueWindow = jmri.util.JmriJFrame(u'Pattern Scripts')
+
         return
 
     def helpItemSelected(self, ACTION_PERFORMED):
@@ -85,6 +85,7 @@ NOTE: This location does not support DecoderPro'''
 
     Apps.buttonSpace().add(scrollPanel)
     Apps.buttonSpace().revalidate()
+
     print(scriptName + ' ' + str(scriptRev))
 
     return
@@ -97,6 +98,7 @@ def panelProButton(scrollPanel):
         homePanelButton.setEnabled(False)
         psWindow = MakePatternScriptsWindow(scrollPanel, homePanelButton)
         psWindow.makeWindow()
+
         return
 
     homePanelButton = javax.swing.JButton(text = u'Pattern Scripts')

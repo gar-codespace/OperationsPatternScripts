@@ -17,7 +17,7 @@ scriptName = 'OperationsPatternScripts.ControllerSetCarsForm'
 scriptRev = 20220101
 
 class TextBoxEntryListener(java.awt.event.MouseAdapter):
-    '''When any of the "Pattern Report for Track X" text boxes is clicked on'''
+    '''When any of the "Pattern Report for Track X" text inpou boxes is clicked on'''
 
     def __init__(self):
         self.psLog = logging.getLogger('PS.TP.TextBoxEntryListener')
@@ -32,7 +32,8 @@ class TextBoxEntryListener(java.awt.event.MouseAdapter):
         return
 
 class CreatePatternReportGui():
-    '''Creates an instance of each "Pattern Report for Track X" window'''
+    '''Creates an instance of each "Pattern Report for Track X" window
+    [0] is used to avoid for loops since there is only 1 location and track'''
 
     def __init__(self, setCarsForm):
 
@@ -48,7 +49,7 @@ class CreatePatternReportGui():
     def makeFrame(self):
         '''Create a JMRI jFrame window'''
 
-        self.patternReportForTrackForm, self.buttonDict = ViewSetCarsForm.makePatternReportForTrackForm(self.setCarsForm) 
+        self.patternReportForTrackForm, self.buttonDict = ViewSetCarsForm.makePatternReportForTrackForm(self.setCarsForm)
         patternReportForTrackWindow = ViewSetCarsForm.patternReportForTrackWindow(self.patternReportForTrackForm)
         self.activateButtons()
 
@@ -62,9 +63,10 @@ class CreatePatternReportGui():
         for inputText in self.buttonDict['textBoxEntry']:
             inputText.addMouseListener(TextBoxEntryListener())
 
-        for schedule in self.buttonDict['scheduleButton']:
-            if schedule:
-                schedule.actionPerformed = self.scheduleButton
+        try:
+            self.buttonDict['scheduleButton'][0].actionPerformed = self.scheduleButton
+        except IndexError:
+            pass
 
         self.buttonDict['footerButtons'][0].actionPerformed = self.printButton
         self.buttonDict['footerButtons'][1].actionPerformed = self.setButton
@@ -85,7 +87,7 @@ class CreatePatternReportGui():
             return True
 
     def trackRowButton(self, MOUSE_CLICKED):
-        '''Any of the "Pattern Report for Track X" - row of track buttons'''
+        '''Any button of the "Pattern Report for Track X" - row of track buttons'''
 
         MainScriptEntities._trackNameClickedOn = unicode(MOUSE_CLICKED.getSource().getText(), MainScriptEntities.setEncoding())
 

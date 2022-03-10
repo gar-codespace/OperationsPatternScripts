@@ -1,8 +1,6 @@
 # coding=utf-8
 # © 2021 Greg Ritacco
 
-'''Track Pattern imports and global variables'''
-
 import TrackPattern.Model as Model
 import TrackPattern.View as View
 import TrackPattern.Controller as Controller

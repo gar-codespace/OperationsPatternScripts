@@ -2,7 +2,8 @@
 # © 2021 Greg Ritacco
 
 import jmri
-import java
+# import java
+from java import io as javaIo
 import java.awt
 import javax.swing
 import logging
@@ -81,7 +82,7 @@ def validateStubFile():
     except OSError:
         psLog.info('stub location already exists')
     stubFileName = stubLocation + 'psStub.html'
-    helpFilePath = java.io.File(_currentPath + '/Support/psHelp.html').toURI()
+    helpFilePath = javaIo.File(_currentPath + '/Support/psHelp.html').toURI()
     helpFilePath = unicode(helpFilePath, setEncoding())
     stubTemplateLocation = jmri.util.FileUtil.getProgramPath() + 'help\\' + locale[:2] + '\\local\\stub_template.html'
     with codecsOpen(stubTemplateLocation, 'r', encoding=setEncoding()) as template:
@@ -140,8 +141,8 @@ def validateConfigFile():
             return True
         else:
             psLog.warning('PatternConfig.json version mismatch')
-            copyTo = java.io.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json.bak')
-            copyFrom = java.io.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json')
+            copyTo = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json.bak')
+            copyFrom = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json')
             jmri.util.FileUtil.copy(copyFrom, copyTo)
             psLog.warning('PatternConfig.json.bak file written')
             return False
@@ -153,7 +154,7 @@ def readConfigFile(subConfig='all'):
     '''Read in the PatternConfig.json for a profile and return it as a dictionary'''
 
     configFileLoc = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json'
-    if not (java.io.File(configFileLoc).isFile()):
+    if not (javaIo.File(configFileLoc).isFile()):
         writeNewConfigFile()
     with codecsOpen(configFileLoc, 'r', encoding=setEncoding()) as configWorkFile:
         configFile = jsonLoads(configWorkFile.read())
@@ -175,8 +176,8 @@ def writeConfigFile(configFile):
 def writeNewConfigFile():
     '''Copies the default config file to the profile location'''
 
-    copyTo = java.io.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json')
-    copyFrom = java.io.File(_currentPath + '\\PatternConfig.json')
+    copyTo = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json')
+    copyFrom = javaIo.File(_currentPath + '\\PatternConfig.json')
     jmri.util.FileUtil.copy(copyFrom, copyTo)
 
     return 'New PatternConfig.json file for this profile created'
