@@ -41,7 +41,7 @@ Todo:
   UGH!! Left justify set cars lists
   Revisit why class LocationComboBox(java.awt.event.ActionListener) is nested in startup
   breakout ExportToTrainPlayer?
-  rework ExportJmriLocations().toTrainPlayer(self)
+  set cars window doesn't follow print options for locos
 
 Wish List:
   Sort out naming convention Set Cars vs Pattern Report for Track

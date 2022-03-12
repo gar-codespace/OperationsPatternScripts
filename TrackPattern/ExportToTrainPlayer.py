@@ -10,17 +10,17 @@ try:
     from psEntities import MainScriptEntities
     _lm = MainScriptEntities._lm
     _tm = MainScriptEntities._tm
-    setEncoding = MainScriptEntities.setEncoding()
+    _setEncoding = MainScriptEntities.setEncoding()
 except ImportError:
     _lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
     _tm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.trains.TrainManager)
-    setEncoding = 'utf-8'
+    _setEncoding = 'utf-8'
 
 scriptName ='OperationsPatternScripts.TrackPattern.ExportToTrainPlayer'
 scriptRev = 20220101
 
-jmriLocationsPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Locations.csv"
-jmriManifestPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Work Events.csv"
+_jmriLocationsPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Locations.csv"
+_jmriManifestPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Work Events.csv"
 
 class CheckTpDestination():
     '''Verify or create a TrainPlayer destination directory'''
@@ -58,26 +58,32 @@ class ExportJmriLocations():
 
         return
 
-    def toTrainPlayer(self):
-        '''Exports JMRI location name/location comment pairs for TP Advanced Ops'''
+    def makeLocationList(self):
+        '''Creates the TrainPlayer Advanced Ops compatable JMRI location list'''
 
-        eMessage = 'No missing entries for location export for TrainPlayer'
-        locationList = _lm.getLocationsByIdList()
-        with codecsOpen(jmriLocationsPath, 'wb', encoding=setEncoding) as csvWorkFile:
-            csvLocations = u'Locale,Industry\n'
-            for location in locationList:
-                jLocTrackList = location.getTrackIdsByIdList()
-                for track in jLocTrackList:
-                    jTrackId = location.getTrackById(track)
-                    jLocale = unicode(location.getName(), setEncoding) + u';' + unicode(jTrackId.getName(), setEncoding)
-                    jTrackComment = unicode(jTrackId.getComment(), setEncoding)
-                    if not (jTrackComment):
-                        jTrackComment = 'Null'
-                        eMessage = 'Missing location comment entries for JMRI locations export to TrainPlayer'
-                    csvLocations = csvLocations + jLocale + ',' + jTrackComment + '\n'
-            csvWorkFile.write(csvLocations)
-        self.psLog.info(eMessage)
-        self.tpLog.info(eMessage)
+        i = 0
+        csvLocations = ''
+        for locationId in _lm.getLocationsByIdList():
+            for trackId in locationId.getTrackIdsByIdList():
+                track = locationId.getTrackById(trackId)
+                aoLocale = unicode(locationId.getName(), _setEncoding) + u';' + unicode(track.getName(), _setEncoding)
+                trackComment = unicode(track.getComment(), _setEncoding)
+                if not (trackComment):
+                    i += 1
+                csvLocations += aoLocale + ',' + trackComment + '\n'
+
+        self.psLog.info(str(i) + ' missing track comments for locations export to TrainPlayer')
+        self.tpLog.info(str(i) + ' missing track comments for locations export to TrainPlayer')
+        print(self.scriptName + ' ' + str(scriptRev))
+
+        return csvLocations
+
+    def toTrainPlayer(self, csvLocations):
+        '''Exports JMRI location;track pairs and track comments for TP Advanced Ops'''
+
+        with codecsOpen(_jmriLocationsPath, 'wb', encoding=_setEncoding) as csvWorkFile:
+            csvHeader = u'Locale,Industry\n'
+            csvWorkFile.write(csvHeader + csvLocations)
 
         print(self.scriptName + ' ' + str(scriptRev))
 
@@ -110,7 +116,7 @@ class TrackPatternTranslationToTp():
 
         userInputList = []
         for userInput in textBoxEntry:
-            inputText = unicode(userInput.getText(), MainScriptEntities.setEncoding())
+            inputText = unicode(userInput.getText(), MainScriptEntities._setEncoding())
             if inputText in trackList:
                 userInputList.append(inputText)
             else:
@@ -141,7 +147,7 @@ class TrackPatternTranslationToTp():
         headerNames = MainScriptEntities.readConfigFile('TP')
         reportTitle = headerNames['TD']['TP']
         jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
-        with codecsOpen(jsonFile, 'r', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
+        with codecsOpen(jsonFile, 'r', encoding=MainScriptEntities._setEncoding()) as jsonWorkFile:
             jsonSwitchList = jsonWorkFile.read()
         tpSwitchList = jsonLoads(jsonSwitchList)
 
@@ -168,28 +174,40 @@ class JmriTranslationToTp():
     def findNewestManifest(self):
         '''If more than 1 train is built, pick the newest one'''
 
-        newestTrain = ''
-        trainComment = ''
-        if _tm.isAnyTrainBuilt():
-            trainListByStatus = _tm.getTrainsByStatusList()
-            newestBuildTime = ''
-            for train in trainListByStatus:
-                if train.isBuilt():
-                    workEventFile =  jmri.util.FileUtil.getProfilePath() + 'operations\jsonManifests\\train-' + train.getName() + ".json"
-                    with codecsOpen(workEventFile, 'r', encoding=MainScriptEntities.setEncoding()) as workEventObject:
-                        switchList = workEventObject.read()
-                        workEventList = jsonLoads(switchList)
-                    if workEventList[u'date'] > newestBuildTime:
-                        newestBuildTime = workEventList[u'date']
-                        newestTrain = workEventList
-                        newestTrain['comment'] = train.getComment()
-            self.psLog.info('Train ' + newestTrain[u'userName'] + ' is newest')
-            self.tpLog.info('Train ' + newestTrain[u'userName'] + ' is newest')
-        else:
+        if not _tm.isAnyTrainBuilt():
             self.psLog.info('No trains are built')
             self.tpLog.info('No trains are built')
 
+            return
+
+        newestBuildTime = ''
+        for train in self.getBuiltTrains():
+            trainAsDict = self.getTrainAsDict(train)
+            if trainAsDict['date'] > newestBuildTime:
+                newestBuildTime = trainAsDict['date']
+                newestTrain = trainAsDict
+
+        self.psLog.info('Train ' + newestTrain[u'userName'] + ' is newest')
+        self.tpLog.info('Train ' + newestTrain[u'userName'] + ' is newest')
+
         return newestTrain
+
+    def getBuiltTrains(self):
+
+        builtTrainList = []
+        for train in _tm.getTrainsByStatusList():
+            if train.isBuilt():
+                builtTrainList.append(train)
+
+        return builtTrainList
+
+    def getTrainAsDict(self, train):
+
+        manifest = jmri.util.FileUtil.readFile(jmri.jmrit.operations.trains.JsonManifest(train).getFile())
+        trainAsDict = jsonLoads(manifest)
+        trainAsDict['comment'] = train.getComment()
+
+        return trainAsDict
 
     def translateManifestHeader(self, completeJmriManifest):
 
@@ -301,7 +319,7 @@ class JmriTranslationToTp():
         return time.strftime('%a %b %d %Y %I:%M %p %Z', time.gmtime(jmriTime + timeOffset))
 
 class ProcessWorkEventList():
-    '''Process the translated work event lists as a CSV list formatted for the TrainPlayer side scripts'''
+    '''Process the translated work event lists to a CSV list formatted for the TrainPlayer side scripts'''
 
     def __init__(self):
 
@@ -361,7 +379,7 @@ class ProcessWorkEventList():
         reportTitle = appendedTpSwitchList['trainDescription']
         jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
         jsonObject = jsonDumps(appendedTpSwitchList, indent=2, sort_keys=True)
-        with codecsOpen(jsonFile, 'wb', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
+        with codecsOpen(jsonFile, 'wb', encoding=_setEncoding) as jsonWorkFile:
             jsonWorkFile.write(jsonObject)
 
         return
@@ -384,13 +402,13 @@ class WriteWorkEventListToTp():
         self.psLog.debug('asCsv')
         self.tpLog.debug('asCsv')
 
-        with codecsOpen(jmriManifestPath, 'wb', encoding=setEncoding) as csvWorkFile:
+        with codecsOpen(_jmriManifestPath, 'wb', encoding=_setEncoding) as csvWorkFile:
             csvWorkFile.write(self.workEventList)
 
         return
 
 class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
-    '''Processes a JMRI created manifest'''
+    '''Runs on JMRI train manifest builds'''
 
     def init(self):
         self.scriptName = 'ExportToTrainPlayer.ManifestForTrainPlayer'
@@ -401,7 +419,7 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
         self.tpLog = logging.getLogger('TP')
         self.tpLog.setLevel(10)
         logFileFormat = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        self.tpFileHandler = logging.FileHandler(logPath, mode='w', encoding=setEncoding)
+        self.tpFileHandler = logging.FileHandler(logPath, mode='w', encoding=_setEncoding)
         self.tpFileHandler.setFormatter(logFileFormat)
         self.tpLog.addHandler(self.tpFileHandler)
         self.tpLog.debug('Log File for Pattern Scripts Plugin - debug level initialized')
@@ -419,19 +437,23 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
         timeNow = time.time()
 
         CheckTpDestination().directoryExists()
-        ExportJmriLocations().toTrainPlayer()
+
+        jmriExport = ExportJmriLocations()
+        locationList = jmriExport.makeLocationList()
+        jmriExport.toTrainPlayer(locationList)
 
         jmriManifestTranslator = JmriTranslationToTp()
         newestTrain = jmriManifestTranslator.findNewestManifest()
-        translatedManifest = jmriManifestTranslator.translateManifestHeader(newestTrain)
-        translatedManifest['locations'] = jmriManifestTranslator.translateManifestBody(newestTrain)
+        if newestTrain:
+            translatedManifest = jmriManifestTranslator.translateManifestHeader(newestTrain)
+            translatedManifest['locations'] = jmriManifestTranslator.translateManifestBody(newestTrain)
 
-        processedManifest = ProcessWorkEventList()
-        processedManifest.writeWorkEventListAsJson(translatedManifest)
-        tpManifestHeader = processedManifest.makeTpHeader(translatedManifest)
-        tpManifestLocations = processedManifest.makeTpLocations(translatedManifest)
+            processedManifest = ProcessWorkEventList()
+            processedManifest.writeWorkEventListAsJson(translatedManifest)
+            tpManifestHeader = processedManifest.makeTpHeader(translatedManifest)
+            tpManifestLocations = processedManifest.makeTpLocations(translatedManifest)
 
-        WriteWorkEventListToTp(tpManifestHeader + tpManifestLocations).asCsv()
+            WriteWorkEventListToTp(tpManifestHeader + tpManifestLocations).asCsv()
 
         self.psLog.info('Manifest export (sec): ' + ('%s' % (time.time() - timeNow))[:6])
         self.tpLog.info('Manifest export (sec): ' + ('%s' % (time.time() - timeNow))[:6])
