@@ -39,10 +39,7 @@ Stuff that's OK:
 Todo:
   Catch up with the latest JMRI stuff like text color
   UGH!! Left justify set cars lists
-  Revisit why class LocationComboBox(java.awt.event.ActionListener) is nested in startup
-  breakout ExportToTrainPlayer?
-  set cars window doesn't follow print options for locos
-
+  
 Wish List:
   Sort out naming convention Set Cars vs Pattern Report for Track
   for getDetailsForLocoAsDict(locoObject) add loco include elements to the json config file similar to: jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
