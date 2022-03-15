@@ -12,8 +12,6 @@ from psEntities import MainScriptEntities
 from TrackPattern import ModelEntities
 from TrackPattern import ControllerSetCarsForm
 
-'''Data munipulation for the track pattern subroutine'''
-
 scriptName = 'OperationsPatternScripts.TrackPattern.Model'
 scriptRev = 20220101
 psLog = logging.getLogger('PS.TP.Model')
@@ -55,32 +53,7 @@ def getSelectedTracks():
 
     patternTracks = MainScriptEntities.readConfigFile('TP')['PT']
 
-    # trackList = []
-    # for track, include in sorted(patternTracks.items()):
-    #     if (include):
-    #         trackList.append(track)
-
-
     return [track for track, include in sorted(patternTracks.items()) if include]
-
-# def makePatternLocations():
-#     '''Simplified since there is only one location for the pattern buton'''
-#
-#     psLog.debug('makePatternLocations')
-#
-#     tracks = []
-#     locationName = MainScriptEntities.readConfigFile('TP')['PL']
-#     trackList = ModelEntities.getSelectedTracks()
-#     for trackName in trackList:
-#         tracks.append(ModelEntities.getGenericTrackDetails(locationName, trackName))
-#
-#     locationDict = {}
-#     locationDict['locationName'] = locationName
-#     locationDict['tracks'] = tracks
-#
-#     locations = [locationDict]
-#
-#     return locations # locations is a list of dictionaries
 
 def makeReport(locationDict, reportType):
 
@@ -92,7 +65,7 @@ def makeReport(locationDict, reportType):
     modifiedReport['trainDescription'] = headerNames['TD'][reportType]
     modifiedReport['trainName'] = headerNames['TN'][reportType]
     modifiedReport['trainComment'] = headerNames['TC'][reportType]
-    modifiedReport['locations'] = [locationDict] # put in as a dictionary to maintain compatability with JSON File Format/JMRI manifest export. See help web page
+    modifiedReport['locations'] = [locationDict] # put in as a list to maintain compatability with JSON File Format/JMRI manifest export. See help web page
 
     return modifiedReport
 
@@ -101,44 +74,34 @@ def onScButtonPress():
 
     psLog.debug('onScButtonPress')
 
-    locationName = MainScriptEntities.readConfigFile('TP')['PL']
     selectedTracks = getSelectedTracks()
-    windowOffset = 200
-    if selectedTracks:
-        i = 0
-        for trackName in selectedTracks:
-            locationDict = makeLocationDict([trackName]) # makeLocationDict takes a track list
-            setCarsForm = makeReport(locationDict, 'SC')
-            newFrame = ControllerSetCarsForm.CreatePatternReportGui(setCarsForm)
-            newWindow = newFrame.makeFrame()
-            newWindow.setTitle(u'Set Cars Form for track ' + trackName)
-            newWindow.setLocation(windowOffset, 180)
-            newWindow.pack()
-            newWindow.setVisible(True)
-
-            # setCarsForm = ModelEntities.makeGenericHeader()
-            # locationDict = {}
-            # locationDict['locationName'] = locationName
-            # locationDict['tracks'] = [ModelEntities.getGenericTrackDetails(locationName, trackName)]
-            # setCarsForm['locations'] = [locationDict]
-            # The above two lines are sent in as lists to maintain consistancy with the generic JSON file format
-
-            psLog.info(u'Set Cars Window created for track ' + trackName)
-            windowOffset += 50
-            i += 1
-        psLog.info(str(i) + ' Set Cars windows for ' + locationName + ' created')
-    else:
+    if not selectedTracks:
         psLog.warning('No tracks were selected for the Set Cars button')
+
+        return
+
+    locationName = MainScriptEntities.readConfigFile('TP')['PL']
+    windowOffset = 200
+    i = 0
+    for trackName in selectedTracks:
+        locationDict = makeLocationDict([trackName]) # makeLocationDict takes a track list
+        setCarsForm = makeReport(locationDict, 'SC')
+        newFrame = ControllerSetCarsForm.CreatePatternReportGui(setCarsForm)
+        newWindow = newFrame.makeFrame()
+        newWindow.setTitle(u'Set Cars Form for track ' + trackName)
+        newWindow.setLocation(windowOffset, 180)
+        newWindow.pack()
+        newWindow.setVisible(True)
+
+        psLog.info(u'Set Cars Window created for track ' + trackName)
+        windowOffset += 50
+        i += 1
+    psLog.info(str(i) + ' Set Cars windows for ' + locationName + ' created')
 
     return
 
-# def makePatternHeader():
-#
-#     psLog.debug('makePatternHeader')
-#
-#     return ModelEntities.makeGenericHeader()
-
-def makeSwitchList(fileName=u'test'): ##
+def makeSwitchList(fileName=u'test'):
+    '''The loco and car rosters are sorted at this level'''
 
     psLog.debug('makeSwitchList')
     switchList = TrackPattern.Model.makeSwitchListHeader()
@@ -164,6 +127,19 @@ def makeSwitchList(fileName=u'test'): ##
     switchList['locations'] = tracks
 
     return switchList
+
+def makeSwitchListHeader():
+    '''The header info for any switch list, used to make the JSON file'''
+
+    switchListHeader = {}
+    switchListHeader['railroad'] = unicode(jmri.jmrit.operations.setup.Setup.getRailroadName(), MainScriptEntities.setEncoding())
+    switchListHeader['userName'] = u'Report Type Placeholder'
+    switchListHeader['description'] = u'Report Description'
+    switchListHeader['location'] = MainScriptEntities.readConfigFile('TP')['PL']
+    switchListHeader['date'] = unicode(MainScriptEntities.timeStamp(), MainScriptEntities.setEncoding())
+    # switchListHeader['tracks'] = []
+
+    return switchListHeader
 
 def writeWorkEventListAsJson(switchList):
     '''The generic switch list is written as a JSON'''
@@ -197,19 +173,6 @@ def makeTextListForPrint(textWorkEventList, trackTotals=False):
     reportLocations = ModelEntities.makeTextReportLocations(textWorkEventList, trackTotals)
 
     return reportHeader + reportLocations
-
-def makeSwitchListHeader():
-    '''The header info for any switch list, used to make the JSON file'''
-
-    switchListHeader = {}
-    switchListHeader['railroad'] = unicode(jmri.jmrit.operations.setup.Setup.getRailroadName(), MainScriptEntities.setEncoding())
-    switchListHeader['userName'] = u'Report Type Placeholder'
-    switchListHeader['description'] = u'Report Description'
-    switchListHeader['location'] = MainScriptEntities.readConfigFile('TP')['PL']
-    switchListHeader['date'] = unicode(MainScriptEntities.timeStamp(), MainScriptEntities.setEncoding())
-    # switchListHeader['tracks'] = []
-
-    return switchListHeader
 
 def makeTextSwitchListHeader(switchListName):
     '''The JSON switch list is read in and processed'''
@@ -349,19 +312,20 @@ def makePatternLog():
             if not (thisLine):
                 break
             if (configLoggingIndex['9'] in thisLine and buildReportLevel > 0): # critical
-                outputPatternLog = outputPatternLog + thisLine
+                outputPatternLog += thisLine
             if (configLoggingIndex['7'] in thisLine and buildReportLevel > 0): # error
-                outputPatternLog = outputPatternLog + thisLine
+                outputPatternLog += thisLine
             if (configLoggingIndex['5'] in thisLine and buildReportLevel > 0): # warning
-                outputPatternLog = outputPatternLog + thisLine
+                outputPatternLog += thisLine
             if (configLoggingIndex['3'] in thisLine and buildReportLevel > 2): # info
-                outputPatternLog = outputPatternLog + thisLine
+                outputPatternLog += thisLine
             if (configLoggingIndex['1'] in thisLine and buildReportLevel > 4): # debug
-                outputPatternLog = outputPatternLog + thisLine
+                outputPatternLog += thisLine
 
     tempLogFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
     with codecsOpen(tempLogFileLocation, 'w', encoding=MainScriptEntities.setEncoding()) as tempPatternLogFile:
         tempPatternLogFile.write(outputPatternLog)
+
     return
 
 def makeNewPatternTracks(location):

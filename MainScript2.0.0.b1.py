@@ -40,11 +40,11 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         psFileHandler = logging.FileHandler(logPath, mode='w', encoding='utf-8')
         psFileHandler.setFormatter(logFileFormat)
         self.psLog.addHandler(psFileHandler)
-        self.psLog.debug('Log File for Pattern Scripts Plugin - debug level initialized')
-        self.psLog.info('Log File for Pattern Scripts Plugin - info level initialized')
-        self.psLog.warning('Log File for Pattern Scripts Plugin - warning level initialized')
-        self.psLog.error('Log File for Pattern Scripts Plugin - error level initialized')
-        self.psLog.critical('Log File for Pattern Scripts Plugin - critical level initialized')
+        self.psLog.debug('Log File for Pattern Scripts Plugin - debug level test message')
+        self.psLog.info('Log File for Pattern Scripts Plugin - info level test message')
+        self.psLog.warning('Log File for Pattern Scripts Plugin - warning level test message')
+        self.psLog.error('Log File for Pattern Scripts Plugin - error level test message')
+        self.psLog.critical('Log File for Pattern Scripts Plugin - critical level test message')
     # fire up the config file
         if not (MainScriptEntities.validateConfigFile()):
             MainScriptEntities.writeNewConfigFile() # No love, just start over

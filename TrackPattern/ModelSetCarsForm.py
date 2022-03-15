@@ -10,8 +10,6 @@ from json import loads as jsonLoads, dumps as jsonDumps
 from psEntities import MainScriptEntities
 from TrackPattern import ModelEntities
 from TrackPattern import ExportToTrainPlayer
-# from TrackPattern import Model
-# from TrackPattern import View
 
 scriptName = 'OperationsPatternScripts.TrackPattern.ModelSetCarsForm'
 scriptRev = 20220101
@@ -108,7 +106,10 @@ def exportSetCarsFormToTp(setCarsForm, textBoxEntry):
     psLog.debug('exportToTrainPlayer')
 
     ExportToTrainPlayer.CheckTpDestination().directoryExists()
-    ExportToTrainPlayer.ExportJmriLocations().toTrainPlayer()
+
+    jmriExport = ExportToTrainPlayer.ExportJmriLocations()
+    locationList = jmriExport.makeLocationList()
+    jmriExport.toTrainPlayer(locationList)
 
     tpSwitchList = ExportToTrainPlayer.TrackPatternTranslationToTp()
     modifiedSwitchList = tpSwitchList.modifySwitchList(setCarsForm, textBoxEntry)

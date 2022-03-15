@@ -57,8 +57,8 @@ def makeSetCarsForTrackForm(setCarsFormData):
         for loco in setCarsLocoRows:
             locoFormBody.add(loco)
         setCarsFormBody.add(locoFormBody)
-        for locoBox in locoBoxEntry:
-            textBoxEntry.append(locoBox)
+        # for locoBox in locoBoxEntry:
+        #     textBoxEntry.append(locoBox)
 
     carBoxEntry = []
     if setCarsFormData['locations'][0]['tracks'][0]['cars']:
@@ -70,8 +70,8 @@ def makeSetCarsForTrackForm(setCarsFormData):
         for car in setCarscarRows:
             carFormBody.add(car)
         setCarsFormBody.add(carFormBody)
-        for carBox in carBoxEntry:
-            textBoxEntry.append(carBox)
+        # for carBox in carBoxEntry:
+        #     textBoxEntry.append(carBox)
 
     buttonDict['textBoxEntry'] = locoBoxEntry + carBoxEntry
 
@@ -108,7 +108,6 @@ def makeSetCarsFormHeader(setCarsFormData):
     combinedHeader = javax.swing.JPanel()
     combinedHeader.setLayout(javax.swing.BoxLayout(combinedHeader, javax.swing.BoxLayout.PAGE_AXIS))
     combinedHeader.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT)
-    # combinedHeader.border = javax.swing.BorderFactory.createTitledBorder('Action')
     combinedHeader.border = javax.swing.BorderFactory.createEmptyBorder(10,0,10,0)
 
     headerRRLabel = javax.swing.JLabel(setCarsFormData['railroad'])
@@ -128,9 +127,6 @@ def makeSetCarsFormHeader(setCarsFormData):
     headerValidLabel.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT)
     headerValidBox = makeSwingBox(100, configFile['PH'])
     headerValidBox.add(headerValidLabel)
-    # combinedHeader.add(headerRRBox)
-    # combinedHeader.add(headerYTBox)
-    # combinedHeader.add(headerValidBox)
 
     combinedHeader.add(headerRRLabel)
     combinedHeader.add(headerYTLabel)

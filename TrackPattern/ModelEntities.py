@@ -85,9 +85,6 @@ def getLocoObjects(location, track):
 
     locoList = []
     allLocos = MainScriptEntities._em.getByModelList()
-    # for loco in allLocos:
-    #     if (loco.getLocationName() == location and loco.getTrackName() == track):
-    #         locoList.append(loco)
 
     return [loco for loco in allLocos if loco.getLocationName() == location and loco.getTrackName() == track]
 
@@ -133,24 +130,15 @@ def sortCarList(carList):
 def getCarListForTrack(track):
     '''A list of car attributes as a dictionary'''
 
-    # trackCarList = []
     location = MainScriptEntities.readConfigFile('TP')['PL']
     carList = getCarObjects(location, track)
-    # for car in carList:
-    #     trackCarList.append(getDetailsForCarAsDict(car))
-    #
-    # return trackCarList
+
     return [getDetailsForCarAsDict(car) for car in carList]
 
 def getCarObjects(location, track):
 
-    # carList = []
     allCars = MainScriptEntities._cm.getByIdList()
-    # for car in allCars:
-    #     if (car.getLocationName() == location and car.getTrackName() == track):
-    #         carList.append(car)
-    #
-    # return carList
+
     return [car for car in allCars if car.getLocationName() == location and car.getTrackName() == track]
 
 def getDetailsForCarAsDict(carObject):
@@ -312,7 +300,7 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
     return reportSwitchList
 
 def makeCsvSwitchlist(trackPattern):
-    '''Makes a CSV switchlist using an input pattern, conforming to config values.'''
+    # CSV writer does not support utf-8
 
     csvSwitchList = u'Operator,Description,Parameters\n' \
                     u'RT,Report Type,' + trackPattern['trainDescription'] + '\n' \
@@ -383,6 +371,7 @@ def getCustomLoadForCarType():
             for loadDetail in loadElement:
                 if (loadDetail.attrib['loadType'] == 'Load'):
                     customLoadForCarTypes[carType['type']] = loadDetail.attrib['name']
+
     return defaultLoadLoad, customLoadForCarTypes
 
 def getCustomEmptyForCarType():
@@ -398,60 +387,5 @@ def getCustomEmptyForCarType():
             for loadDetail in loadElement:
                 if (loadDetail.attrib['loadType'] == 'Empty'):
                     customEmptyForCarTypes[carType['type']] = loadDetail.attrib['name']
+
     return defaultLoadEmpty, customEmptyForCarTypes
-
-# def getTrackDetails(track):
-#
-#     location = MainScriptEntities.readConfigFile('TP')['PL']
-#     trackDetails = {}
-#     trackDetails['Name'] = track
-#     trackDetails['Length'] =  MainScriptEntities._lm.getLocationByName(location).getTrackByName(track, None).getLength()
-#
-#     return trackDetails
-
-# def makeReportSwitchList(switchList, includeTotals=False):
-#
-#     itemsList = jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
-#     reportWidth = MainScriptEntities.readConfigFile('TP')['RW']
-#
-#     reportSwitchList = ''
-#     reportTally = [] # running total for all tracks
-#     for track in switchList['locations']:
-#         lengthOfLocos = 0
-#         lengthOfCars = 0
-#         trackTally = []
-#         trackName = track['Name']
-#         trackLength = track['Length']
-#         reportSwitchList += 'Track: ' + trackName + '\n'
-#
-#         sortedListOfLocos = sortLocoList(track['Locos'])
-#         for loco in sortedListOfLocos:
-#             lengthOfLocos += int(loco['Length']) + 4
-#             reportSwitchList += loco['Set to'] + formatText(loco['Road'], reportWidth['Road']) + formatText(loco['Number'],  reportWidth['Number']) + formatText(loco['Model'], reportWidth['Model']) + formatText(loco['Type'], reportWidth['Loco Type']) + '\n'
-#             # Loco Type is not as JMRI type, it is added by me
-#
-#         sortedListOfCars = sortCarList(track['Cars'])
-#         for car in sortedListOfCars:
-#             lengthOfCars += int(car['Length']) + 4
-#             switchListRow = car['Set to']
-#             trackTally.append(car['Final Dest'])
-#             reportTally.append(car['Final Dest'])
-#             for item in itemsList:
-#                 itemWidth = reportWidth[item]
-#                 switchListRow += formatText(car[item], itemWidth)
-#             reportSwitchList += switchListRow + '\n'
-#
-#         if (includeTotals):
-#             totalLength = lengthOfLocos + lengthOfCars
-#             reportSwitchList += 'Total Cars: ' + str(len(track['Cars'])) + ' Track Length: ' + str(trackLength) + ' Eqpt. Length: ' + str(totalLength) + ' Available: ' + str(trackLength - totalLength) + '\n\n'
-#             reportSwitchList += u'Track Totals:\n'
-#             for track, count in sorted(occuranceTally(trackTally).items()):
-#                 reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
-#         reportSwitchList += '\n'
-#
-#     if (includeTotals):
-#         reportSwitchList += u'\nReport Totals:\n'
-#         for track, count in sorted(occuranceTally(reportTally).items()):
-#             reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
-#
-#     return reportSwitchList

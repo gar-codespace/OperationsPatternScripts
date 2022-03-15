@@ -116,7 +116,7 @@ class TrackPatternTranslationToTp():
 
         userInputList = []
         for userInput in textBoxEntry:
-            inputText = unicode(userInput.getText(), MainScriptEntities._setEncoding())
+            inputText = unicode(userInput.getText(), MainScriptEntities.setEncoding())
             if inputText in trackList:
                 userInputList.append(inputText)
             else:
@@ -147,7 +147,7 @@ class TrackPatternTranslationToTp():
         headerNames = MainScriptEntities.readConfigFile('TP')
         reportTitle = headerNames['TD']['TP']
         jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
-        with codecsOpen(jsonFile, 'r', encoding=MainScriptEntities._setEncoding()) as jsonWorkFile:
+        with codecsOpen(jsonFile, 'r', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
             jsonSwitchList = jsonWorkFile.read()
         tpSwitchList = jsonLoads(jsonSwitchList)
 
@@ -422,11 +422,11 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
         self.tpFileHandler = logging.FileHandler(logPath, mode='w', encoding=_setEncoding)
         self.tpFileHandler.setFormatter(logFileFormat)
         self.tpLog.addHandler(self.tpFileHandler)
-        self.tpLog.debug('Log File for Pattern Scripts Plugin - debug level initialized')
-        self.tpLog.info('Log File for Pattern Scripts Plugin - info level initialized')
-        self.tpLog.warning('Log File for Pattern Scripts Plugin - warning level initialized')
-        self.tpLog.error('Log File for Pattern Scripts Plugin - error level initialized')
-        self.tpLog.critical('Log File for Pattern Scripts Plugin - critical level initialized')
+        self.tpLog.debug('Log File for Pattern Scripts Plugin - debug level test message')
+        self.tpLog.info('Log File for Pattern Scripts Plugin - info level test message')
+        self.tpLog.warning('Log File for Pattern Scripts Plugin - warning level test message')
+        self.tpLog.error('Log File for Pattern Scripts Plugin - error level test message')
+        self.tpLog.critical('Log File for Pattern Scripts Plugin - critical level test message')
 
         self.jProfilePath = jmri.util.FileUtil.getProfilePath()
 

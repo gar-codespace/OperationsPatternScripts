@@ -32,7 +32,7 @@ class TextBoxEntryListener(java.awt.event.MouseAdapter):
         return
 
 class CreatePatternReportGui():
-    '''Creates an instance of each "Set Cars Form for Track X" window
+    '''Creates an instance of each "Set Cars Form for Track X" window,
     [0] is used to avoid for loops since there is only 1 location and track'''
 
     def __init__(self, setCarsForm):
