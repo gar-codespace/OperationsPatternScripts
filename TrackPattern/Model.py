@@ -111,7 +111,7 @@ def onScButtonPress():
             setCarsForm = makeReport(locationDict, 'SC')
             newFrame = ControllerSetCarsForm.CreatePatternReportGui(setCarsForm)
             newWindow = newFrame.makeFrame()
-            newWindow.setTitle(u'Pattern Report for track ' + trackName)
+            newWindow.setTitle(u'Set Cars Form for track ' + trackName)
             newWindow.setLocation(windowOffset, 180)
             newWindow.pack()
             newWindow.setVisible(True)

@@ -11,13 +11,13 @@ from TrackPattern import Model
 from TrackPattern import ModelSetCarsForm
 from TrackPattern import ViewSetCarsForm
 
-'''Makes a "Pattern Report for Track X" form for each selected track'''
+'''Makes a "Set Cars Form for Track X" form for each selected track'''
 
 scriptName = 'OperationsPatternScripts.ControllerSetCarsForm'
 scriptRev = 20220101
 
 class TextBoxEntryListener(java.awt.event.MouseAdapter):
-    '''When any of the "Pattern Report for Track X" text inpou boxes is clicked on'''
+    '''When any of the "Set Cars Form for Track X" text inpou boxes is clicked on'''
 
     def __init__(self):
         self.psLog = logging.getLogger('PS.TP.TextBoxEntryListener')
@@ -32,7 +32,7 @@ class TextBoxEntryListener(java.awt.event.MouseAdapter):
         return
 
 class CreatePatternReportGui():
-    '''Creates an instance of each "Pattern Report for Track X" window
+    '''Creates an instance of each "Set Cars Form for Track X" window
     [0] is used to avoid for loops since there is only 1 location and track'''
 
     def __init__(self, setCarsForm):
@@ -49,11 +49,11 @@ class CreatePatternReportGui():
     def makeFrame(self):
         '''Create a JMRI jFrame window'''
 
-        self.patternReportForTrackForm, self.buttonDict = ViewSetCarsForm.makePatternReportForTrackForm(self.setCarsForm)
-        patternReportForTrackWindow = ViewSetCarsForm.patternReportForTrackWindow(self.patternReportForTrackForm)
+        setCarsForTrackForm, self.buttonDict = ViewSetCarsForm.makeSetCarsForTrackForm(self.setCarsForm)
+        setCarsForTrackWindow = ViewSetCarsForm.setCarsForTrackWindow(setCarsForTrackForm)
         self.activateButtons()
 
-        return patternReportForTrackWindow
+        return setCarsForTrackWindow
 
     def activateButtons(self):
 
@@ -87,14 +87,14 @@ class CreatePatternReportGui():
             return True
 
     def trackRowButton(self, MOUSE_CLICKED):
-        '''Any button of the "Pattern Report for Track X" - row of track buttons'''
+        '''Any button of the "Set Cars Form for Track X" - row of track buttons'''
 
         MainScriptEntities._trackNameClickedOn = unicode(MOUSE_CLICKED.getSource().getText(), MainScriptEntities.setEncoding())
 
         return
 
     def scheduleButton(self, MOUSE_CLICKED):
-        '''The named schedule button if displayed on any "Pattern Report for Track X" window'''
+        '''The named schedule button if displayed on any "Set Cars Form for Track X" window'''
 
         scheduleName = MOUSE_CLICKED.getSource().getText()
         schedule = MainScriptEntities._sm.getScheduleByName(scheduleName)
@@ -106,7 +106,7 @@ class CreatePatternReportGui():
         return
 
     def printButton(self, MOUSE_CLICKED):
-        '''Makes a Set Cars (SC) switch list for the active "Pattern Report for Track X" window'''
+        '''Makes a Set Cars (SC) switch list for the active "Set Cars Form for Track X" window'''
 
         if not self.quickCheck():
             return
@@ -123,7 +123,7 @@ class CreatePatternReportGui():
         return
 
     def setButton(self, MOUSE_CLICKED):
-        '''Event that moves cars to the tracks entered in the text box of the "Pattern Report for Track X" form'''
+        '''Event that moves cars to the tracks entered in the text box of the "Set Cars Form for Track X" form'''
 
         if not self.quickCheck():
             return
@@ -167,14 +167,14 @@ class CreatePatternReportGui():
 #         return
 #
 #     def trackRowButton(self, MOUSE_CLICKED):
-#         '''Any of the "Pattern Report for Track X" - row of track buttons'''
+#         '''Any of the "Set Cars Form for Track X" - row of track buttons'''
 #
 #         MainScriptEntities._trackNameClickedOn = unicode(MOUSE_CLICKED.getSource().getText(), MainScriptEntities.setEncoding())
 #
 #         return
 
     # def scheduleButton(self, MOUSE_CLICKED):
-    #     '''The named schedule button if displayed on any "Pattern Report for Track X" window'''
+    #     '''The named schedule button if displayed on any "Set Cars Form for Track X" window'''
     #
     #     scheduleName = MOUSE_CLICKED.getSource().getText()
     #     schedule = MainScriptEntities._sm.getScheduleByName(scheduleName)
@@ -184,7 +184,7 @@ class CreatePatternReportGui():
     #     return
 
     # def printButton(self, MOUSE_CLICKED):
-    #     '''Makes a Set Cars (SC) switch list for the active "Pattern Report for Track X" window'''
+    #     '''Makes a Set Cars (SC) switch list for the active "Set Cars Form for Track X" window'''
     #
     #     if not ModelSetCarsForm.testValidityOfForm(self.setCarsForm, self.textBoxEntry):
     #         self.psLog.critical('Could not create switch list')
@@ -199,7 +199,7 @@ class CreatePatternReportGui():
     #     return
     #
     # def setButton(self, MOUSE_CLICKED):
-    #     '''Event that moves cars to the tracks entered in the text box of the "Pattern Report for Track X" form'''
+    #     '''Event that moves cars to the tracks entered in the text box of the "Set Cars Form for Track X" form'''
     #
     #     if not ModelSetCarsForm.testValidityOfForm(self.setCarsForm, self.textBoxEntry):
     #         self.psLog.critical('Could not set cars to track')

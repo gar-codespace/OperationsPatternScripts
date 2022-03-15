@@ -68,3 +68,43 @@ def makeSetCarsRsRows(self):
         listOfEqptRows.append(combinedInputLine)
 
     return listOfEqptRows, textBoxEntry
+
+    def findLongestRow(self):
+        '''The length of the locos row is compared to the length of the cars row, the longer is used for all items in the set cars form'''
+
+        locoRowLength = 0
+        for item in jmri.jmrit.operations.setup.Setup.getDropEngineMessageFormat():
+            locoRowLength += self.reportWidth[item]
+
+        carRowLength = 0
+        for item in jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
+            carRowLength += self.reportWidth[item]
+
+        if locoRowLength >= carRowLength:
+            return locoRowLength
+        else:
+            return carRowLength
+
+    def makeRsRowAdjustment(self):
+        '''I can't figure out how to left justify JAVAX so I'm doing this BS work around'''
+
+        for item in jmri.jmrit.operations.setup.Setup.getDropEngineMessageFormat():
+            self.locoRowLength += self.reportWidth[item]
+
+        for item in jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
+            self.carRowLength += self.reportWidth[item]
+
+        locoAdjustment = 0
+        if self.locoRowLength < self.carRowLength:
+            locoAdjustment = ((self.carRowLength - self.locoRowLength) * self.panelWidth) + 4
+            rowAdjustment = (self.carRowLength - self.locoRowLength) * self.panelWidth
+            shorterRow = 'loco'
+
+        carAdjustment = 0
+        if self.locoRowLength >= self.carRowLength:
+            carAdjustment = (self.locoRowLength - self.carRowLength) * self.panelWidth
+            rowAdjustment = (self.locoRowLength - self.carRowLength) * self.panelWidth
+            shorterRow = 'car'
+
+        # return rowAdjustment, shorterRow
+        return locoAdjustment, carAdjustment

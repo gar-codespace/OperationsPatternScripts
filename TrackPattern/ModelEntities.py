@@ -201,7 +201,7 @@ def getDetailsForCarAsDict(carObject):
     carDetailDict[u'PickUp Msg'] = trackId.getCommentPickup()
     carDetailDict[u'RWE'] = carObject.getReturnWhenEmptyDestinationName()
 # Not part of JMRI car attributes
-    carDetailDict[u'Set to'] = '[  ]'
+    carDetailDict[u'Set to'] = '[  ] '
     carDetailDict[u'PUSO'] = u'SC'
     carDetailDict[u' '] = u' ' # Catches KeyError - empty box added to getLocalSwitchListMessageFormat
 
