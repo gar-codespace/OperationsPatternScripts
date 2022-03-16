@@ -38,10 +38,8 @@ Stuff that's OK:
 
 Todo:
   Catch up with the latest JMRI stuff like text color
-  timestampis duplicated in tp export
 
 Wish List:
-  Sort out naming convention Set Cars vs Pattern Report for Track
   for getDetailsForLocoAsDict(locoObject) add loco include elements to the json config file similar to: jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
   add Pattern Scripts to Operations Pro combo box
   plugin added to button in trains window (AWT.getComponents())

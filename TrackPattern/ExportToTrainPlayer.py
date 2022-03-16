@@ -1,24 +1,34 @@
 import jmri
+import java
 import logging
 import time
 from json import loads as jsonLoads, dumps as jsonDumps
 from HTMLParser import HTMLParser
 from codecs import open as codecsOpen
 from os import mkdir as osMakeDir
+from sys import path as sysPath
+
+def useThisVersion():
+    '''Keep multiple versions of this plugin sorted out'''
+
+    fileRoot = jmri.util.FileUtil.getPreferencesPath()
+    currentFile = str(jmri.util.FileUtil.findFiles('MainScript2.0.0.b1.py', fileRoot).pop())
+    currentDir = java.io.File(currentFile).getParent()
+
+    return currentDir
 
 try:
-    from psEntities import MainScriptEntities
-    _lm = MainScriptEntities._lm
-    _tm = MainScriptEntities._tm
-    _setEncoding = MainScriptEntities.setEncoding()
-except ImportError:
-    _lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
-    _tm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.trains.TrainManager)
-    _setEncoding = 'utf-8'
+    _currentDir
+except NameError:
+    _currentDir = useThisVersion()
+    sysPath.append(_currentDir)
+from psEntities import MainScriptEntities
 
 scriptName ='OperationsPatternScripts.TrackPattern.ExportToTrainPlayer'
 scriptRev = 20220101
 
+_lm = MainScriptEntities._lm
+_tm = MainScriptEntities._tm
 _jmriLocationsPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Locations.csv"
 _jmriManifestPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Work Events.csv"
 
@@ -66,8 +76,8 @@ class ExportJmriLocations():
         for locationId in _lm.getLocationsByIdList():
             for trackId in locationId.getTrackIdsByIdList():
                 track = locationId.getTrackById(trackId)
-                aoLocale = unicode(locationId.getName(), _setEncoding) + u';' + unicode(track.getName(), _setEncoding)
-                trackComment = unicode(track.getComment(), _setEncoding)
+                aoLocale = unicode(locationId.getName(), MainScriptEntities.setEncoding()) + u';' + unicode(track.getName(), MainScriptEntities.setEncoding())
+                trackComment = unicode(track.getComment(), MainScriptEntities.setEncoding())
                 if not (trackComment):
                     i += 1
                 csvLocations += aoLocale + ',' + trackComment + '\n'
@@ -81,7 +91,7 @@ class ExportJmriLocations():
     def toTrainPlayer(self, csvLocations):
         '''Exports JMRI location;track pairs and track comments for TP Advanced Ops'''
 
-        with codecsOpen(_jmriLocationsPath, 'wb', encoding=_setEncoding) as csvWorkFile:
+        with codecsOpen(_jmriLocationsPath, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
             csvHeader = u'Locale,Industry\n'
             csvWorkFile.write(csvHeader + csvLocations)
 
@@ -215,7 +225,7 @@ class JmriTranslationToTp():
         self.tpLog.debug('translateManifestHeader')
 
         jmriDateAsEpoch = self.convertJmriDateToEpoch(completeJmriManifest[u'date'])
-        completeJmriManifest['date'] = self.jmriTimeStamp(jmriDateAsEpoch)
+        completeJmriManifest['date'] = MainScriptEntities.timeStamp(jmriDateAsEpoch)
         completeJmriManifest['trainDescription'] = 'TrainPlayer Work Events'
         completeJmriManifest['trainName'] = completeJmriManifest['userName']
         completeJmriManifest['trainComment'] = completeJmriManifest['comment']
@@ -306,17 +316,14 @@ class JmriTranslationToTp():
     def convertJmriDateToEpoch(self, jmriTime):
         '''2022-02-26T17:16:17.807+0000'''
 
-        return time.mktime(time.strptime(jmriTime, "%Y-%m-%dT%H:%M:%S.%f+0000"))
+        epochTime = time.mktime(time.strptime(jmriTime, "%Y-%m-%dT%H:%M:%S.%f+0000"))
 
-    def jmriTimeStamp(self, jmriTime):
-        '''Valid Time, get local time adjusted for time zone and dst'''
-
-        if time.localtime(jmriTime).tm_isdst and time.daylight: # If local dst and dst are both 1
-            timeOffset = time.altzone
+        if time.localtime(epochTime).tm_isdst and time.daylight: # If local dst and dst are both 1
+            epochTime -= time.altzone
         else:
-            timeOffset = time.timezone # in seconds
+            epochTime -= time.timezone # in seconds
 
-        return time.strftime('%a %b %d %Y %I:%M %p %Z', time.gmtime(jmriTime + timeOffset))
+        return epochTime
 
 class ProcessWorkEventList():
     '''Process the translated work event lists to a CSV list formatted for the TrainPlayer side scripts'''
@@ -379,7 +386,7 @@ class ProcessWorkEventList():
         reportTitle = appendedTpSwitchList['trainDescription']
         jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
         jsonObject = jsonDumps(appendedTpSwitchList, indent=2, sort_keys=True)
-        with codecsOpen(jsonFile, 'wb', encoding=_setEncoding) as jsonWorkFile:
+        with codecsOpen(jsonFile, 'wb', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
             jsonWorkFile.write(jsonObject)
 
         return
@@ -402,7 +409,7 @@ class WriteWorkEventListToTp():
         self.psLog.debug('asCsv')
         self.tpLog.debug('asCsv')
 
-        with codecsOpen(_jmriManifestPath, 'wb', encoding=_setEncoding) as csvWorkFile:
+        with codecsOpen(_jmriManifestPath, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
             csvWorkFile.write(self.workEventList)
 
         return
@@ -419,14 +426,14 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
         self.tpLog = logging.getLogger('TP')
         self.tpLog.setLevel(10)
         logFileFormat = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        self.tpFileHandler = logging.FileHandler(logPath, mode='w', encoding=_setEncoding)
+        self.tpFileHandler = logging.FileHandler(logPath, mode='w', encoding=MainScriptEntities.setEncoding())
         self.tpFileHandler.setFormatter(logFileFormat)
         self.tpLog.addHandler(self.tpFileHandler)
-        self.tpLog.debug('Log File for Pattern Scripts Plugin - debug level test message')
-        self.tpLog.info('Log File for Pattern Scripts Plugin - info level test message')
-        self.tpLog.warning('Log File for Pattern Scripts Plugin - warning level test message')
-        self.tpLog.error('Log File for Pattern Scripts Plugin - error level test message')
-        self.tpLog.critical('Log File for Pattern Scripts Plugin - critical level test message')
+        self.tpLog.debug('Log File for TrainPlayer script - debug level test message')
+        self.tpLog.info('Log File for TrainPlayer script - info level test message')
+        self.tpLog.warning('Log File for TrainPlayer script - warning level test message')
+        self.tpLog.error('Log File for TrainPlayer script - error level test message')
+        self.tpLog.critical('Log File for TrainPlayer script - critical level test message')
 
         self.jProfilePath = jmri.util.FileUtil.getProfilePath()
 

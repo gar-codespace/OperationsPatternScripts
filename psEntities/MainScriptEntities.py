@@ -2,7 +2,6 @@
 # © 2021 Greg Ritacco
 
 import jmri
-# import java
 from java import io as javaIo
 import java.awt
 import javax.swing
@@ -44,10 +43,10 @@ def setEncoding():
 
     return 'utf-8' #ascii, utf-16
 
-def timeStamp():
+def timeStamp(epochTime=time.time()):
     '''Valid Time, get local time adjusted for time zone and dst'''
 
-    epochTime = time.time()
+    # epochTime = time.time()
     if time.localtime(epochTime).tm_isdst and time.daylight: # If local dst and dst are both 1
         timeOffset = time.altzone
     else:
