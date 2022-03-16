@@ -35,7 +35,7 @@ The following are YouTube videos covering the use of this plugin:
 
 How to add this plugin to JMRI.  
 [How to use this plugin](https://youtu.be/GjPtXk3oKmc)  
-[Plugin demonstration at a yard](https://youtu.be/IdXvxyo-E3Y) 
+[Plugin demonstration at a yard](https://youtu.be/IdXvxyo-E3Y)  
 Plugin demonstration at industry  
 How to modify this plugin  
 
