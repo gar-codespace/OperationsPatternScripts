@@ -4,7 +4,7 @@
 import jmri
 # import java.awt
 # import javax.swing
-import time
+# import time
 from codecs import open as codecsOpen
 from json import loads as jsonLoads, dumps as jsonDumps
 from xml.etree import ElementTree as ET

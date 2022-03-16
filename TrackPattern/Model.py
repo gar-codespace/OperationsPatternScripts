@@ -3,6 +3,7 @@
 
 import jmri
 import logging
+# import time
 from os import path as osPath
 from os import system as osSystem
 from json import loads as jsonLoads, dumps as jsonDumps
@@ -16,58 +17,17 @@ scriptName = 'OperationsPatternScripts.TrackPattern.Model'
 scriptRev = 20220101
 psLog = logging.getLogger('PS.TP.Model')
 
-def makeLocationDict(trackList=None):
-    '''Returns the details for the tracks sent in formatted for the JSON file '''
+def makeTrackList(location, type):
+    '''Returns a list of tracks by type for a location'''
+    psLog.debug('makeTrackList')
 
-    psLog.debug('makeLocationDict')
-
-    if not trackList:
-        trackList = getSelectedTracks()
-
-    detailsForTrack = []
-    patternLocation = MainScriptEntities.readConfigFile('TP')['PL']
-    for trackName in trackList:
-        detailsForTrack.append(ModelEntities.getGenericTrackDetails(patternLocation, trackName))
-
-    locationDict = {}
-    locationDict['locationName'] = patternLocation
-    locationDict['tracks'] = detailsForTrack
-
-    return locationDict
-
-def printWorkEventList(patternListForJson, trackTotals):
-
-    psLog.debug('printWorkEventList')
-
-    workEventName = writeWorkEventListAsJson(patternListForJson)
-    textWorkEventList = readJsonWorkEventList(workEventName)
-    textListForPrint = makeTextListForPrint(textWorkEventList, trackTotals)
-    writeTextSwitchList(workEventName, textListForPrint)
-
-    switchListFile = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + workEventName + '.txt'
-    osSystem(MainScriptEntities.openEditorByComputerType(switchListFile))
-
-    return
+    return ModelEntities.getTracksByLocation(location, type)
 
 def getSelectedTracks():
 
     patternTracks = MainScriptEntities.readConfigFile('TP')['PT']
 
     return [track for track, include in sorted(patternTracks.items()) if include]
-
-def makeReport(locationDict, reportType):
-
-    psLog.debug('makeReport')
-
-    headerNames = MainScriptEntities.readConfigFile('TP')
-    # modifiedReport = makePatternHeader()
-    modifiedReport = ModelEntities.makeGenericHeader()
-    modifiedReport['trainDescription'] = headerNames['TD'][reportType]
-    modifiedReport['trainName'] = headerNames['TN'][reportType]
-    modifiedReport['trainComment'] = headerNames['TC'][reportType]
-    modifiedReport['locations'] = [locationDict] # put in as a list to maintain compatability with JSON File Format/JMRI manifest export. See help web page
-
-    return modifiedReport
 
 def onScButtonPress():
     '''"Set Cars" button opens a window for each selected track'''
@@ -100,46 +60,51 @@ def onScButtonPress():
 
     return
 
-def makeSwitchList(fileName=u'test'):
-    '''The loco and car rosters are sorted at this level'''
+def makeLocationDict(trackList=None):
+    '''Returns the details for the tracks sent in formatted for the JSON file '''
 
-    psLog.debug('makeSwitchList')
-    switchList = TrackPattern.Model.makeSwitchListHeader()
-    switchList['description'] = fileName
+    psLog.debug('makeLocationDict')
 
-    trackList = getSelectedTracks()
     if not trackList:
-        return
+        trackList = getSelectedTracks()
 
-    tracks = []
-    locoRoster = []
-    carRoster = []
-    for track in trackList:
-        trackDetails = ModelEntities.getTrackDetails(track)
+    detailsForTrack = []
+    patternLocation = MainScriptEntities.readConfigFile('TP')['PL']
+    for trackName in trackList:
+        detailsForTrack.append(ModelEntities.getGenericTrackDetails(patternLocation, trackName))
 
-        locoList = ModelEntities.getLocoListForTrack(track)
-        trackDetails['Locos'] = ModelEntities.sortLocoList(locoList)
+    locationDict = {}
+    locationDict['locationName'] = patternLocation
+    locationDict['tracks'] = detailsForTrack
 
-        carList = ModelEntities.getCarListForTrack(track)
-        trackDetails['Cars'] = ModelEntities.sortCarList(carList)
-        tracks.append(trackDetails)
+    return locationDict
 
-    switchList['locations'] = tracks
+def makeReport(locationDict, reportType):
 
-    return switchList
+    psLog.debug('makeReport')
 
-def makeSwitchListHeader():
-    '''The header info for any switch list, used to make the JSON file'''
+    headerNames = MainScriptEntities.readConfigFile('TP')
+    modifiedReport = ModelEntities.makeGenericHeader()
+    modifiedReport['trainDescription'] = headerNames['TD'][reportType]
+    modifiedReport['trainName'] = headerNames['TN'][reportType]
+    modifiedReport['trainComment'] = headerNames['TC'][reportType]
+    modifiedReport['locations'] = [locationDict] # put in as a list to maintain compatability with JSON File Format/JMRI manifest export. See help web page
 
-    switchListHeader = {}
-    switchListHeader['railroad'] = unicode(jmri.jmrit.operations.setup.Setup.getRailroadName(), MainScriptEntities.setEncoding())
-    switchListHeader['userName'] = u'Report Type Placeholder'
-    switchListHeader['description'] = u'Report Description'
-    switchListHeader['location'] = MainScriptEntities.readConfigFile('TP')['PL']
-    switchListHeader['date'] = unicode(MainScriptEntities.timeStamp(), MainScriptEntities.setEncoding())
-    # switchListHeader['tracks'] = []
+    return modifiedReport
 
-    return switchListHeader
+def printWorkEventList(patternListForJson, trackTotals):
+
+    psLog.debug('printWorkEventList')
+
+    workEventName = writeWorkEventListAsJson(patternListForJson)
+    textWorkEventList = readJsonWorkEventList(workEventName)
+    textListForPrint = makeTextListForPrint(textWorkEventList, trackTotals)
+    writeTextSwitchList(workEventName, textListForPrint)
+
+    switchListFile = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + workEventName + '.txt'
+    osSystem(MainScriptEntities.openEditorByComputerType(switchListFile))
+
+    return
 
 def writeWorkEventListAsJson(switchList):
     '''The generic switch list is written as a JSON'''
@@ -174,6 +139,16 @@ def makeTextListForPrint(textWorkEventList, trackTotals=False):
 
     return reportHeader + reportLocations
 
+def writeTextSwitchList(fileName, textSwitchList):
+
+    psLog.debug('writeTextSwitchList')
+
+    textCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + fileName + '.txt'
+    with codecsOpen(textCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as textWorkFile:
+        textWorkFile.write(textSwitchList)
+
+    return
+
 def makeTextSwitchListHeader(switchListName):
     '''The JSON switch list is read in and processed'''
 
@@ -197,16 +172,6 @@ def makeTextSwitchListBody(switchListName, includeTotals=False):
     reportSwitchList = ModelEntities.makeReportSwitchList(switchList, includeTotals)
 
     return reportSwitchList
-
-def writeTextSwitchList(fileName, textSwitchList):
-
-    psLog.debug('writeTextSwitchList')
-
-    textCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + fileName + '.txt'
-    with codecsOpen(textCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as textWorkFile:
-        textWorkFile.write(textSwitchList)
-
-    return
 
 def resetTrainPlayerSwitchlist():
     '''Overwrites the existing file with the header info for the next switch list'''
@@ -235,20 +200,6 @@ def updateLocations():
 
     return newConfigFile
 
-def initializeConfigFile():
-    '''initialize or reinitialize the track pattern part of the config file on first use, reset, or edit of a location name'''
-
-    psLog.debug('initializeConfigFile')
-    newConfigFile = MainScriptEntities.readConfigFile()
-    subConfigfile = newConfigFile['TP']
-    allLocations  = ModelEntities.getAllLocations()
-    subConfigfile.update({'AL': allLocations})
-    subConfigfile.update({'PL': allLocations[0]})
-    subConfigfile.update({'PT': ModelEntities.makeInitialTrackList(allLocations[0])})
-    newConfigFile.update({'TP': subConfigfile})
-
-    return newConfigFile
-
 def updatePatternLocation(selectedItem):
     '''Catches user edits of locations, sets yard track only to false'''
 
@@ -267,6 +218,20 @@ def updatePatternLocation(selectedItem):
     subConfigfile.update({'PL': selectedItem})
     newConfigFile.update({'TP': subConfigfile})
     psLog.debug('The current location for this profile has been set to ' + selectedItem)
+
+    return newConfigFile
+
+def initializeConfigFile():
+    '''initialize or reinitialize the track pattern part of the config file on first use, reset, or edit of a location name'''
+
+    psLog.debug('initializeConfigFile')
+    newConfigFile = MainScriptEntities.readConfigFile()
+    subConfigfile = newConfigFile['TP']
+    allLocations  = ModelEntities.getAllLocations()
+    subConfigfile.update({'AL': allLocations})
+    subConfigfile.update({'PL': allLocations[0]})
+    subConfigfile.update({'PT': ModelEntities.makeInitialTrackList(allLocations[0])})
+    newConfigFile.update({'TP': subConfigfile})
 
     return newConfigFile
 
@@ -297,36 +262,6 @@ def updatePatternTracks(trackList):
         psLog.warning('There are no yard tracks for this location')
 
     return newConfigFile
-
-def makePatternLog():
-    '''creates a pattern log for display based on the log level, as set by the getBuildReportLevel'''
-
-    outputPatternLog = ''
-    buildReportLevel = int(jmri.jmrit.operations.setup.Setup.getBuildReportLevel())
-    configLoggingIndex = MainScriptEntities.readConfigFile('LI')
-    logLevel = configLoggingIndex[jmri.jmrit.operations.setup.Setup.getBuildReportLevel()]
-    logFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog.txt'
-    with codecsOpen(logFileLocation, 'r', encoding=MainScriptEntities.setEncoding()) as patternLogFile:
-        while True:
-            thisLine = patternLogFile.readline()
-            if not (thisLine):
-                break
-            if (configLoggingIndex['9'] in thisLine and buildReportLevel > 0): # critical
-                outputPatternLog += thisLine
-            if (configLoggingIndex['7'] in thisLine and buildReportLevel > 0): # error
-                outputPatternLog += thisLine
-            if (configLoggingIndex['5'] in thisLine and buildReportLevel > 0): # warning
-                outputPatternLog += thisLine
-            if (configLoggingIndex['3'] in thisLine and buildReportLevel > 2): # info
-                outputPatternLog += thisLine
-            if (configLoggingIndex['1'] in thisLine and buildReportLevel > 4): # debug
-                outputPatternLog += thisLine
-
-    tempLogFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
-    with codecsOpen(tempLogFileLocation, 'w', encoding=MainScriptEntities.setEncoding()) as tempPatternLogFile:
-        tempPatternLogFile.write(outputPatternLog)
-
-    return
 
 def makeNewPatternTracks(location):
     '''Makes a new list of all tracks for a location'''
@@ -372,13 +307,43 @@ def updateConfigFile(controls):
 
     return controls
 
+def makePatternLog():
+    '''creates a pattern log for display based on the log level, as set by getBuildReportLevel'''
+
+    outputPatternLog = ''
+    buildReportLevel = int(jmri.jmrit.operations.setup.Setup.getBuildReportLevel())
+    configLoggingIndex = MainScriptEntities.readConfigFile('LI')
+    logLevel = configLoggingIndex[jmri.jmrit.operations.setup.Setup.getBuildReportLevel()]
+    logFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog.txt'
+    with codecsOpen(logFileLocation, 'r', encoding=MainScriptEntities.setEncoding()) as patternLogFile:
+        while True:
+            thisLine = patternLogFile.readline()
+            if not (thisLine):
+                break
+            if (configLoggingIndex['9'] in thisLine and buildReportLevel > 0): # critical
+                outputPatternLog += thisLine
+            if (configLoggingIndex['7'] in thisLine and buildReportLevel > 0): # error
+                outputPatternLog += thisLine
+            if (configLoggingIndex['5'] in thisLine and buildReportLevel > 0): # warning
+                outputPatternLog += thisLine
+            if (configLoggingIndex['3'] in thisLine and buildReportLevel > 2): # info
+                outputPatternLog += thisLine
+            if (configLoggingIndex['1'] in thisLine and buildReportLevel > 4): # debug
+                outputPatternLog += thisLine
+
+    tempLogFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
+    with codecsOpen(tempLogFileLocation, 'w', encoding=MainScriptEntities.setEncoding()) as tempPatternLogFile:
+        tempPatternLogFile.write(outputPatternLog)
+
+    return
+
 def makeLoadEmptyDesignationsDicts():
     '''Stores the custom car load for Load and Empty by type designations and the default load and empty designation as global variables'''
 
     psLog.debug('makeLoadEmptyDesignationsDicts')
     defaultLoadEmpty, customEmptyForCarTypes = ModelEntities.getCustomEmptyForCarType()
     defaultLoadLoad, customLoadForCarTypes = ModelEntities.getCustomLoadForCarType()
-    # Set the default L/E
+# Set the default L/E
     try:
         _defaultLoadEmpty = defaultLoadEmpty
         _defaultLoadLoad = defaultLoadLoad
@@ -387,7 +352,7 @@ def makeLoadEmptyDesignationsDicts():
         psLog.critical('Default empty designation not saved')
         _defaultLoadEmpty = 'E'
         _defaultLoadLoad = 'L'
-    # Set custom L/E
+# Set custom L/E
     try:
         _carTypeByEmptyDict = customEmptyForCarTypes
         _carTypeByLoadDict = customLoadForCarTypes
@@ -398,12 +363,6 @@ def makeLoadEmptyDesignationsDicts():
         _carTypeByLoadDict = {}
 
     return
-
-def makeTrackList(location, type):
-    '''Returns a list of tracks by type for a location'''
-    psLog.debug('makeTrackList')
-
-    return ModelEntities.getTracksByLocation(location, type)
 
 def writeCsvSwitchList(trackPattern, type):
     '''Rewrite this to write from the JSON file'''
@@ -416,3 +375,44 @@ def writeCsvSwitchList(trackPattern, type):
         csvWorkFile.write(csvObject)
 
     return
+
+# def makeSwitchList(fileName=u'test'):
+#     '''The loco and car rosters are sorted at this level'''
+#
+#     psLog.debug('makeSwitchList')
+#     switchList = TrackPattern.Model.makeSwitchListHeader()
+#     switchList['description'] = fileName
+#
+#     trackList = getSelectedTracks()
+#     if not trackList:
+#         return
+#
+#     tracks = []
+#     locoRoster = []
+#     carRoster = []
+#     for track in trackList:
+#         trackDetails = ModelEntities.getTrackDetails(track)
+#
+#         locoList = ModelEntities.getLocoListForTrack(track)
+#         trackDetails['Locos'] = ModelEntities.sortLocoList(locoList)
+#
+#         carList = ModelEntities.getCarListForTrack(track)
+#         trackDetails['Cars'] = ModelEntities.sortCarList(carList)
+#         tracks.append(trackDetails)
+#
+#     switchList['locations'] = tracks
+#
+#     return switchList
+
+# def makeSwitchListHeader():
+#     '''The header info for any switch list, used to make the JSON file'''
+#
+#     switchListHeader = {}
+#     switchListHeader['railroad'] = unicode(jmri.jmrit.operations.setup.Setup.getRailroadName(), MainScriptEntities.setEncoding())
+#     switchListHeader['userName'] = u'Report Type Placeholder'
+#     switchListHeader['description'] = u'Report Description'
+#     switchListHeader['location'] = MainScriptEntities.readConfigFile('TP')['PL']
+#     switchListHeader['date'] = unicode(MainScriptEntities.timeStamp(), MainScriptEntities.setEncoding())
+#     # switchListHeader['tracks'] = []
+#
+#     return switchListHeader

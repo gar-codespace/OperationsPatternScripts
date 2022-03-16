@@ -43,10 +43,11 @@ def setEncoding():
 
     return 'utf-8' #ascii, utf-16
 
-def timeStamp(epochTime=time.time()):
+def timeStamp(epochTime=0):
     '''Valid Time, get local time adjusted for time zone and dst'''
 
-    # epochTime = time.time()
+    if epochTime == 0:
+        epochTime = time.time()
     if time.localtime(epochTime).tm_isdst and time.daylight: # If local dst and dst are both 1
         timeOffset = time.altzone
     else:

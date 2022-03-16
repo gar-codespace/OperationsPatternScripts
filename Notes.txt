@@ -40,7 +40,6 @@ Todo:
   Catch up with the latest JMRI stuff like text color
 
 Wish List:
-  for getDetailsForLocoAsDict(locoObject) add loco include elements to the json config file similar to: jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
   add Pattern Scripts to Operations Pro combo box
   plugin added to button in trains window (AWT.getComponents())
   jmri.util.swing.JMenuUtil.replaceMenuItem() to replace the trains window with a new trains window that includes a ps button

@@ -22,6 +22,8 @@ try:
 except NameError:
     _currentDir = useThisVersion()
     sysPath.append(_currentDir)
+
+print('Export to TrainPlayer script location: ' + _currentDir)
 from psEntities import MainScriptEntities
 
 scriptName ='OperationsPatternScripts.TrackPattern.ExportToTrainPlayer'
@@ -109,6 +111,8 @@ class TrackPatternTranslationToTp():
         self.psLog = logging.getLogger('PS.EX.TrackPatternTranslationToTp')
         self.tpLog = logging.getLogger('TP.TrackPatternTranslationToTp')
 
+        print(self.scriptName + ' ' + str(self.scriptRev))
+
         return
 
     def modifySwitchList(self, setCarsForm, textBoxEntry):
@@ -179,6 +183,8 @@ class JmriTranslationToTp():
         self.psLog = logging.getLogger('PS.EX.JmriTranslationToTp')
         self.tpLog = logging.getLogger('TP.JmriTranslationToTp')
 
+        print(self.scriptName + ' ' + str(self.scriptRev))
+
         return
 
     def findNewestManifest(self):
@@ -234,6 +240,18 @@ class JmriTranslationToTp():
         completeJmriManifest.pop('comment', 'Comment')
 
         return completeJmriManifest
+
+    def convertJmriDateToEpoch(self, jmriTime):
+        '''2022-02-26T17:16:17.807+0000'''
+
+        epochTime = time.mktime(time.strptime(jmriTime, "%Y-%m-%dT%H:%M:%S.%f+0000"))
+
+        if time.localtime(epochTime).tm_isdst and time.daylight: # If local dst and dst are both 1
+            epochTime -= time.altzone
+        else:
+            epochTime -= time.timezone # in seconds
+
+        return epochTime
 
     def translateManifestBody(self, completeJmriManifest):
 
@@ -313,18 +331,6 @@ class JmriTranslationToTp():
 
         return rsDict
 
-    def convertJmriDateToEpoch(self, jmriTime):
-        '''2022-02-26T17:16:17.807+0000'''
-
-        epochTime = time.mktime(time.strptime(jmriTime, "%Y-%m-%dT%H:%M:%S.%f+0000"))
-
-        if time.localtime(epochTime).tm_isdst and time.daylight: # If local dst and dst are both 1
-            epochTime -= time.altzone
-        else:
-            epochTime -= time.timezone # in seconds
-
-        return epochTime
-
 class ProcessWorkEventList():
     '''Process the translated work event lists to a CSV list formatted for the TrainPlayer side scripts'''
 
@@ -378,16 +384,18 @@ class ProcessWorkEventList():
 
         return [rS[u'PUSO'], rS[u'Road'] + rS[u'Number'], rS[u'Road'], rS[u'Number'], rS[u'Load'], rS[u'Track'], rS[u'Set to'], rS['FD&Track']]
 
-    def writeWorkEventListAsJson(self, appendedTpSwitchList):
+    def writeTpWorkEventListAsJson(self, appendedTpSwitchList):
 
-        self.psLog.debug('writeWorkEventListAsJson')
-        self.tpLog.debug('writeWorkEventListAsJson')
+        self.psLog.debug('writeTpWorkEventListAsJson')
+        self.tpLog.debug('writeTpWorkEventListAsJson')
 
         reportTitle = appendedTpSwitchList['trainDescription']
         jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
         jsonObject = jsonDumps(appendedTpSwitchList, indent=2, sort_keys=True)
         with codecsOpen(jsonFile, 'wb', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
             jsonWorkFile.write(jsonObject)
+
+        print(self.scriptName + ' ' + str(self.scriptRev))
 
         return
 
@@ -411,6 +419,8 @@ class WriteWorkEventListToTp():
 
         with codecsOpen(_jmriManifestPath, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
             csvWorkFile.write(self.workEventList)
+
+        print(self.scriptName + ' ' + str(self.scriptRev))
 
         return
 
@@ -456,11 +466,14 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
             translatedManifest['locations'] = jmriManifestTranslator.translateManifestBody(newestTrain)
 
             processedManifest = ProcessWorkEventList()
-            processedManifest.writeWorkEventListAsJson(translatedManifest)
+            processedManifest.writeTpWorkEventListAsJson(translatedManifest)
             tpManifestHeader = processedManifest.makeTpHeader(translatedManifest)
             tpManifestLocations = processedManifest.makeTpLocations(translatedManifest)
 
             WriteWorkEventListToTp(tpManifestHeader + tpManifestLocations).asCsv()
+
+        self.psLog.info('Export to TrainPlayer script location: ' + _currentDir)
+        self.tpLog.info('Export to TrainPlayer script location: ' + _currentDir)
 
         self.psLog.info('Manifest export (sec): ' + ('%s' % (time.time() - timeNow))[:6])
         self.tpLog.info('Manifest export (sec): ' + ('%s' % (time.time() - timeNow))[:6])

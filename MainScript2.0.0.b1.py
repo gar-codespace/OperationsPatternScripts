@@ -18,9 +18,11 @@ def useThisVersion():
 
 _currentDir = useThisVersion()
 sysPath.append(_currentDir)
+
 from psEntities import MainScriptEntities
 from psEntities import PluginLocations
 MainScriptEntities._currentPath = _currentDir
+print('Current Pattern Scripts directory: ' + MainScriptEntities._currentPath)
 
 '''Pattern Scripts Version 2.0.0 Pre Release b1'''
 
@@ -82,6 +84,7 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
     # fire up the help File
         MainScriptEntities.validateStubFile()
         self.psLog.info(locationOptions[panelLocation][0])
+        self.psLog.info('Current Pattern Scripts directory: ' + MainScriptEntities._currentPath)
         self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
 
         return False

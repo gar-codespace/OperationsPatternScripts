@@ -115,7 +115,7 @@ def exportSetCarsFormToTp(setCarsForm, textBoxEntry):
     modifiedSwitchList = tpSwitchList.modifySwitchList(setCarsForm, textBoxEntry)
     appendedTpSwitchList = tpSwitchList.appendSwitchList(modifiedSwitchList)
     tpWorkEventProcessor = ExportToTrainPlayer.ProcessWorkEventList()
-    tpWorkEventProcessor.writeWorkEventListAsJson(appendedTpSwitchList)
+    tpWorkEventProcessor.writeTpWorkEventListAsJson(appendedTpSwitchList)
     tpSwitchListHeader = tpWorkEventProcessor.makeTpHeader(appendedTpSwitchList)
     tpSwitchListLocations = tpWorkEventProcessor.makeTpLocations(appendedTpSwitchList)
     ExportToTrainPlayer.WriteWorkEventListToTp(tpSwitchListHeader + tpSwitchListLocations).asCsv()
