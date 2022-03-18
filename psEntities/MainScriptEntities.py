@@ -24,10 +24,11 @@ _pm = jmri.InstanceManager.getDefault(jmri.util.gui.GuiLafPreferencesManager)
 
 _currentPath = ''
 _trackNameClickedOn = None
-_carTypeByEmptyDict = {}
-_carTypeByLoadDict = {}
-_defaultLoadEmpty = u''
-_defaultLoadLoad = u''
+# _carTypeByEmptyDict = {}
+# _carTypeByLoadDict = {}
+# _customLoadEmptyByCarType = {}
+# _defaultLoadEmpty = jmri.jmrit.operations.rollingstock.cars.CarLoads().getDefaultEmptyName()
+# _defaultLoadLoad = jmri.jmrit.operations.rollingstock.cars.CarLoads().getDefaultLoadName()
 
 DUST = java.awt.Color(245,242,233) # Light tan
 PALE = java.awt.Color(237,243,250) # Light blue

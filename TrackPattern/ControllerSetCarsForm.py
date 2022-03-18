@@ -127,7 +127,7 @@ class CreatePatternReportGui():
         if not self.quickCheck():
             return
 
-        ModelSetCarsForm.setCarsToTrack(self.setCarsForm, self.buttonDict['textBoxEntry'])
+        ModelSetCarsForm.setRsToTrack(self.setCarsForm, self.buttonDict['textBoxEntry'])
 
         setCarsWindow = MOUSE_CLICKED.getSource().getTopLevelAncestor()
         setCarsWindow.setVisible(False)
@@ -204,7 +204,7 @@ class CreatePatternReportGui():
     #         self.psLog.critical('Could not set cars to track')
     #         return
     #
-    #     ModelSetCarsForm.setCarsToTrack(self.setCarsForm, self.textBoxEntry)
+    #     ModelSetCarsForm.setRsToTrack(self.setCarsForm, self.textBoxEntry)
     #
     #     setCarsWindow = MOUSE_CLICKED.getSource().getTopLevelAncestor()
     #     setCarsWindow.setVisible(False)

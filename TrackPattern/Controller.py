@@ -92,6 +92,7 @@ class StartUp():
         Model.updateConfigFile(self.controls)
 
         Model.makeLoadEmptyDesignationsDicts()
+        Model.makeCustomLoadEmptyByCarType()
         Model.onScButtonPress()
 
         if MainScriptEntities.readConfigFile('TP')['TI']: # TrainPlayer Include
@@ -106,7 +107,7 @@ class StartUp():
 
         Model.makePatternLog()
         View.printPatternLog()
-        
+
         print(scriptName + ' ' + str(scriptRev))
 
         return

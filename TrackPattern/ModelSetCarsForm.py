@@ -28,9 +28,9 @@ def testValidityOfForm(setCarsForm, textBoxEntry):
         psLog.critical('mismatched input list and car roster lengths')
         return False
 
-def setCarsToTrack(setCarsForm, textBoxEntry):
+def setRsToTrack(setCarsForm, textBoxEntry):
 
-    psLog.debug('setCarsToTrack')
+    psLog.debug('setRsToTrack')
 
     trackData = []
     ignoreTrackLength = MainScriptEntities.readConfigFile('TP')['PI']
@@ -91,8 +91,12 @@ def setCarsToTrack(setCarsForm, textBoxEntry):
 
             if setResult == 'okay' and toTrack != fromTrack:
                 setCount += 1
-                schedule = getSchedule(location, toTrack)
-                applySchedule(carObject, schedule)
+                if toTrackObject.getTrackType() == 'Spur':
+                    carObject.setMoves(carObject.getMoves() + 1)
+                    applySchedule(toTrackObject, carObject)
+                    carObject.updateLoad()
+                    # applyReturnWhen(carObject)
+                jmri.jmrit.operations.rollingstock.cars.CarManagerXml.save()
 
         i += 1
     jmri.jmrit.operations.rollingstock.cars.CarManagerXml.save()
@@ -101,9 +105,34 @@ def setCarsToTrack(setCarsForm, textBoxEntry):
 
     return
 
+def applySchedule(toTrackObject, carObject):
+    '''If the to-track is a spur, try to set the load/empty requirement for the track'''
+
+    location = MainScriptEntities.readConfigFile('TP')['PL']
+    schedule = getSchedule(location, toTrackObject.getName())
+    if schedule:
+        carType = carObject.getTypeName()
+        carObject.setLoadName(schedule.getItemByType(carType).getShipLoadName())
+        carObject.setDestination(schedule.getItemByType(carType).getDestination(), schedule.getItemByType(carType).getDestinationTrack(), True) # force set dest
+        schedule.getItemByType(carType).setHits(schedule.getItemByType(carType).getHits() + 1)
+
+        return
+
+def getSchedule(locationString, trackString):
+    '''Returns a schedule if there is one'''
+
+    track = MainScriptEntities._lm.getLocationByName(locationString).getTrackByName(trackString, 'Spur')
+
+    if track:
+        schedule = MainScriptEntities._sm.getScheduleByName(track.getScheduleName())
+
+        return schedule
+
+    return
+
 def exportSetCarsFormToTp(setCarsForm, textBoxEntry):
 
-    psLog.debug('exportToTrainPlayer')
+    psLog.debug('exportSetCarsFormToTp')
 
     ExportToTrainPlayer.CheckTpDestination().directoryExists()
 
@@ -122,21 +151,21 @@ def exportSetCarsFormToTp(setCarsForm, textBoxEntry):
 
     return
 
-def writeTpSwitchListFromJson(switchListName):
-    '''Writes the switch list for TrainPlayer'''
-
-    psLog.debug('writeTpSwitchListFromJson')
-
-    ExportToTrainPlayer.CheckTpDestination().directoryExists()
-    ExportToTrainPlayer.JmriLocationsToTrainPlayer().exportLocations()
-    tpWorkEventList = ExportToTrainPlayer.WorkEventListForTrainPlayer(switchListName).readFromFile()
-    if not tpWorkEventList:
-        psLog.critical('No work event list read in')
-        return
-    tpCsvWorkEventList = ExportToTrainPlayer.CsvListFromFile(tpWorkEventList).makeList()
-    ExportToTrainPlayer.writeWorkEventListToTp(tpCsvWorkEventList).writeAsCsv()
-
-    return
+# def writeTpSwitchListFromJson(switchListName):
+#     '''Writes the switch list for TrainPlayer'''
+#
+#     psLog.debug('writeTpSwitchListFromJson')
+#
+#     ExportToTrainPlayer.CheckTpDestination().directoryExists()
+#     ExportToTrainPlayer.JmriLocationsToTrainPlayer().exportLocations()
+#     tpWorkEventList = ExportToTrainPlayer.WorkEventListForTrainPlayer(switchListName).readFromFile()
+#     if not tpWorkEventList:
+#         psLog.critical('No work event list read in')
+#         return
+#     tpCsvWorkEventList = ExportToTrainPlayer.CsvListFromFile(tpWorkEventList).makeList()
+#     ExportToTrainPlayer.writeWorkEventListToTp(tpCsvWorkEventList).writeAsCsv()
+#
+#     return
 
 def makeLocationDict(setCarsForm, textBoxEntry):
     '''Replaces car['Set to'] = [ ] with either [Hold] or ["some other valid track"]'''
@@ -192,90 +221,105 @@ def makeLocationDict(setCarsForm, textBoxEntry):
 
     return locationDict
 
-def getSchedule(locationString, trackString):
-    '''Returns a schedule if there is one'''
+# def applyReturnWhen(carObject):
+#
+#     carLoadType = carObject.getLoadType()
+#
+#     if carObject.getReturnWhenLoadedDestName() and carLoadType == 'Load':
+#         location, track = parseDestination(carObject.getReturnWhenLoadedDestName())
+#         carObject.setFinalDestination(location)
+#         carObject.setFinalDestinationTrack(track)
+#
+#     if carObject.getReturnWhenEmptyDestName() and carLoadType == 'Empty':
+#         location, track = parseDestination(carObject.getReturnWhenEmptyDestName())
+#         carObject.setFinalDestination(location)
+#         carObject.setFinalDestinationTrack(track)
+#
+#     return
 
-    track = MainScriptEntities._lm.getLocationByName(locationString).getTrackByName(trackString, 'Spur')
+# def parseDestination(destination):
+#     '''destination(track)'''
+#
+#     locationName, locationTrack = destination.split('(', 1)
+#
+#     location = MainScriptEntities._lm.getLocationByName(locationName)
+#     track = location.getTrackByName(locationTrack[:-1], None)
+#
+#     return location, track
 
-    if (track):
-        schedule = MainScriptEntities._sm.getScheduleByName(track.getScheduleName())
-        return schedule
+# def applySchedule(carObject, scheduleObject=None):
+#     '''Mini "controller" to plug in additional schedule methods.
+#     The schedule is applied when setting into a spur.
+#     Increment move count only when set to a spur.'''
+#
+#     if not scheduleObject:
+#
+#         return
+#
+#     if (MainScriptEntities.readConfigFile('TP')['AS']): # apply schedule flag
+#         applyLoadRubric(carObject, scheduleObject)
+#         applyFdRubric(carObject, scheduleObject)
+#         carObject.setMoves(carObject.getMoves() + 1)
+#
+#     return
 
-    return
-
-def applySchedule(carObject, scheduleObject=None):
-    '''Mini "controller" to plug in additional schedule methods.
-    The schedule is applied when setting into a spur.
-    Increment move count only when set to a spur.'''
-
-    if not scheduleObject:
-
-        return
-
-    if (MainScriptEntities.readConfigFile('TP')['AS']): # apply schedule flag
-        applyLoadRubric(carObject, scheduleObject)
-        applyFdRubric(carObject, scheduleObject)
-        carObject.setMoves(carObject.getMoves() + 1)
-
-    return
-
-def applyLoadRubric(carObject, scheduleObject=None):
-    '''Apply loads by schedule, RWE/RWL, custom L/E, then default'''
-
-    carType = carObject.getTypeName()
-# Toggle the default loads if used
-    if (carObject.getLoadName() == _defaultLoadLoad):
-        carObject.setLoadName(MainScriptEntities._defaultLoadEmpty)
-    elif (carObject.getLoadName() == MainScriptEntities._defaultLoadEmpty):
-        carObject.setLoadName(MainScriptEntities._defaultLoadLoad)
-# Toggle the custom loads
-    try: # first try to apply the schedule
-        carObject.setLoadName(scheduleObject.getItemByType(carType).getShipLoadName())
-        scheduleObject.getItemByType(carType).setHits(scheduleObject.getItemByType(carType).getHits() + 1)
-    except:
-        try: # apply values from RWE or RWL
-            if (carObject.getLoadType() == 'Empty'): # toggle the load
-                carObject.setLoadName(carObject.getReturnWhenLoadedLoadName())
-            else:
-                carObject.setLoadName(carObject.getReturnWhenEmptyLoadName())
-        except:
-            try: # apply values from custom empty
-                if (carObject.getLoadType() == 'Empty'): # toggle the load
-                    carObject.setLoadName(MainScriptEntities._carTypeByLoadDict.get(carType))
-                else:
-                    carObject.setLoadName(MainScriptEntities._carTypeByEmptyDict.get(carType))
-            except: # when all else fails, apply the default loads
-                if (carObject.getLoadType() == 'Empty'): # toggle the load
-                    carObject.setLoadName(MainScriptEntities._defaultLoadLoad)
-                else:
-                    carObject.setLoadName(MainScriptEntities._defaultLoadEmpty)
-
-    return
-
-def applyFdRubric(carObject, scheduleObject=None):
-    '''For spurs only, sets the values for the cars destination and track from the schedule or RWE/RWL'''
-
-    patternIgnore = MainScriptEntities.readConfigFile('TP')['PI']
-    carType = carObject.getTypeName()
-    carObject.setFinalDestination(None)
-    carObject.setFinalDestinationTrack(None)
-
-    try: # first try to apply the schedule
-        trySchedule = carObject.setDestination(scheduleObject.getItemByType(carType).getDestination(), scheduleObject.getItemByType(carType).getDestinationTrack())
-        if (trySchedule.startswith('rolling')):
-            trySchedule = carObject.setDestination(scheduleObject.getItemByType(carType).getDestination(), scheduleObject.getItemByType(carType).getDestinationTrack(), patternIgnore)
-            if (trySchedule != 'okay'):
-                psLog.warning('Schedule destination not applied: ' + trySchedule)
-        elif (trySchedule != 'okay'):
-            psLog.warning('Schedule destination not applied: ' + trySchedule)
-    except:
-        if (carObject.getLoadType() == 'Load'): # load has already been toggled
-            applyRWL = carObject.setDestination(carObject.getReturnWhenLoadedDestination(), carObject.getReturnWhenLoadedDestTrack(), patternIgnore)
-            if (applyRWL != 'okay'):
-                psLog.info('RWL destination not applied: ' + applyRWL)
-        if (carObject.getLoadType() == 'Empty'): # load has already been toggled
-            applyRWE = carObject.setDestination(carObject.getReturnWhenEmptyDestination(), carObject.getReturnWhenEmptyDestTrack(), patternIgnore)
-            if (applyRWE != 'okay'):
-                psLog.info('RWE destination not applied: ' + applyRWE)
-
-    return
+# def applyLoadRubric(carObject, scheduleObject=None):
+#     '''Apply loads by schedule, RWE/RWL, custom L/E, then default'''
+#
+#     carType = carObject.getTypeName()
+# # Toggle the default loads if used
+#     if (carObject.getLoadName() == _defaultLoadLoad):
+#         carObject.setLoadName(MainScriptEntities._defaultLoadEmpty)
+#     elif (carObject.getLoadName() == MainScriptEntities._defaultLoadEmpty):
+#         carObject.setLoadName(MainScriptEntities._defaultLoadLoad)
+# # Toggle the custom loads
+#     try: # first try to apply the schedule
+#         carObject.setLoadName(scheduleObject.getItemByType(carType).getShipLoadName())
+#         scheduleObject.getItemByType(carType).setHits(scheduleObject.getItemByType(carType).getHits() + 1)
+#     except:
+#         try: # apply values from RWE or RWL
+#             if (carObject.getLoadType() == 'Empty'): # toggle the load
+#                 carObject.setLoadName(carObject.getReturnWhenLoadedLoadName())
+#             else:
+#                 carObject.setLoadName(carObject.getReturnWhenEmptyLoadName())
+#         except:
+#             try: # apply values from custom empty
+#                 if (carObject.getLoadType() == 'Empty'): # toggle the load
+#                     carObject.setLoadName(MainScriptEntities._carTypeByLoadDict.get(carType))
+#                 else:
+#                     carObject.setLoadName(MainScriptEntities._carTypeByEmptyDict.get(carType))
+#             except: # when all else fails, apply the default loads
+#                 if (carObject.getLoadType() == 'Empty'): # toggle the load
+#                     carObject.setLoadName(MainScriptEntities._defaultLoadLoad)
+#                 else:
+#                     carObject.setLoadName(MainScriptEntities._defaultLoadEmpty)
+#
+#     return
+#
+# def applyFdRubric(carObject, scheduleObject=None):
+#     '''For spurs only, sets the values for the cars destination and track from the schedule or RWE/RWL'''
+#
+#     patternIgnore = MainScriptEntities.readConfigFile('TP')['PI']
+#     carType = carObject.getTypeName()
+#     carObject.setFinalDestination(None)
+#     carObject.setFinalDestinationTrack(None)
+#
+#     try: # first try to apply the schedule
+#         trySchedule = carObject.setDestination(scheduleObject.getItemByType(carType).getDestination(), scheduleObject.getItemByType(carType).getDestinationTrack())
+#         if (trySchedule.startswith('rolling')):
+#             trySchedule = carObject.setDestination(scheduleObject.getItemByType(carType).getDestination(), scheduleObject.getItemByType(carType).getDestinationTrack(), patternIgnore)
+#             if (trySchedule != 'okay'):
+#                 psLog.warning('Schedule destination not applied: ' + trySchedule)
+#         elif (trySchedule != 'okay'):
+#             psLog.warning('Schedule destination not applied: ' + trySchedule)
+#     except:
+#         if (carObject.getLoadType() == 'Load'): # load has already been toggled
+#             applyRWL = carObject.setDestination(carObject.getReturnWhenLoadedDestination(), carObject.getReturnWhenLoadedDestTrack(), patternIgnore)
+#             if (applyRWL != 'okay'):
+#                 psLog.info('RWL destination not applied: ' + applyRWL)
+#         if (carObject.getLoadType() == 'Empty'): # load has already been toggled
+#             applyRWE = carObject.setDestination(carObject.getReturnWhenEmptyDestination(), carObject.getReturnWhenEmptyDestTrack(), patternIgnore)
+#             if (applyRWE != 'okay'):
+#                 psLog.info('RWE destination not applied: ' + applyRWE)
+#
+#     return

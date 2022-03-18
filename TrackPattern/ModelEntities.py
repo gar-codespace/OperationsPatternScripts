@@ -256,48 +256,56 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
 
     reportSwitchList = ''
     reportTally = [] # running total for all tracks
-    for location in textWorkEventList['locations']:
-        reportSwitchList += 'Location: ' + location['locationName'] + '\n'
-        for track in location['tracks']:
-            lengthOfLocos = 0
-            lengthOfCars = 0
-            trackTally = []
-            trackName = track['trackName']
-            trackLength = track['length']
-            reportSwitchList += 'Track: ' + trackName + '\n'
+    reportSwitchList += 'Location: ' + textWorkEventList['locations'][0]['locationName'] + '\n'
+    for track in textWorkEventList['locations'][0]['tracks']:
+        lengthOfLocos = 0
+        lengthOfCars = 0
+        trackTally = []
+        trackName = track['trackName']
+        trackLength = track['length']
+        reportSwitchList += 'Track: ' + trackName + '\n'
+        switchListRow = ''
 
-            for loco in track['locos']:
-                lengthOfLocos += int(loco['Length']) + 4
-                switchListRow = loco['Set to']
-                for item in locoItems:
-                    itemWidth = reportWidth[item]
-                    switchListRow += formatText(loco[item], itemWidth)
-                reportSwitchList += switchListRow + '\n'
+        for loco in track['locos']:
+            lengthOfLocos += int(loco['Length']) + 4
+            reportSwitchList += loco['Set to'] + loopThroughRs('loco', loco) + '\n'
 
-            for car in track['cars']:
-                lengthOfCars += int(car['Length']) + 4
-                switchListRow = car['Set to']
-                for item in carItems:
-                    itemWidth = reportWidth[item]
-                    switchListRow += formatText(car[item], itemWidth)
-                reportSwitchList += switchListRow + '\n'
-                trackTally.append(car['Final Dest'])
-                reportTally.append(car['Final Dest'])
-
-            if trackTotals:
-                totalLength = lengthOfLocos + lengthOfCars
-                reportSwitchList += 'Total Cars: ' + str(len(track['cars'])) + ' Track Length: ' + str(trackLength) + ' Eqpt. Length: ' + str(totalLength) + ' Available: ' + str(trackLength - totalLength) + '\n\n'
-                reportSwitchList += u'Track Totals for Cars:\n'
-                for track, count in sorted(occuranceTally(trackTally).items()):
-                    reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
-            reportSwitchList += '\n'
+        for car in track['cars']:
+            lengthOfCars += int(car['Length']) + 4
+            reportSwitchList += car['Set to'] + loopThroughRs('car', car) + '\n'
+            trackTally.append(car['Final Dest'])
+            reportTally.append(car['Final Dest'])
 
         if trackTotals:
-            reportSwitchList += u'\nReport Totals for Cars:\n'
-            for track, count in sorted(occuranceTally(reportTally).items()):
+            totalLength = lengthOfLocos + lengthOfCars
+            reportSwitchList += 'Total Cars: ' + str(len(track['cars'])) + ' Track Length: ' + str(trackLength) + ' Eqpt. Length: ' + str(totalLength) + ' Available: ' + str(trackLength - totalLength) + '\n\n'
+            reportSwitchList += u'Track Totals for Cars:\n'
+            for track, count in sorted(occuranceTally(trackTally).items()):
                 reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
+        reportSwitchList += '\n'
+
+    if trackTotals:
+        reportSwitchList += u'\nReport Totals for Cars:\n'
+        for track, count in sorted(occuranceTally(reportTally).items()):
+            reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
 
     return reportSwitchList
+
+def loopThroughRs(type, rsAttribs):
+
+    reportWidth = MainScriptEntities.readConfigFile('TP')['RW']
+    switchListRow = ''
+
+    if type == 'loco':
+        messageFormat = jmri.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
+    if type == 'car':
+        messageFormat = jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
+
+    for item in messageFormat:
+        itemWidth = reportWidth[item]
+        switchListRow += formatText(rsAttribs[item], itemWidth)
+
+    return switchListRow
 
 def makeCsvSwitchlist(trackPattern):
     # CSV writer does not support utf-8
@@ -358,6 +366,53 @@ def makeCsvSwitchlist(trackPattern):
 
     return csvSwitchList
 
+class makeLoadEmptyDesignations:
+
+    def __init__(self):
+
+        opsFileName = jmri.util.FileUtil.getProfilePath() + 'operations\\' + MainScriptEntities._cmx.getOperationsFileName()
+        with codecsOpen(opsFileName, 'r', encoding=MainScriptEntities.setEncoding()) as opsWorkFile:
+            self.carRoster = ET.parse(opsWorkFile)
+
+        self.carLoads = self.carRoster.getroot().findall('./loads/load')
+        return
+
+    def getCarTypes(self):
+
+        carTypes = []
+        for type in self.carLoads:
+            carTypes.append(type.attrib['type'])
+
+        return carTypes
+
+    def getCustomLoadEmptyByCarType(self):
+
+        for carType in self.carLoads:
+
+            loadList, emptyList = self.makeLoadEmptyLists(carType)
+
+            loadEmpty = {}
+            loadEmpty['load'] = loadList
+            loadEmpty['empty'] = emptyList
+
+            loadEmptyByCarType = {}
+            loadEmptyByCarType[carType.attrib['type']] = loadEmpty
+
+        return loadEmptyByCarType
+
+    def makeLoadEmptyLists(self, carType):
+
+        loadList = []
+        emptyList = []
+        for load in carType:
+            if load.attrib['loadType'] == 'Load':
+                loadList.append(load.attrib['name'])
+            if load.attrib['loadType'] == 'Empty':
+                emptyList.append(load.attrib['name'])
+
+        return loadList, emptyList
+
+
 def getCustomLoadForCarType():
     '''Returns the default load designation and a dictionary of custon loads by car type'''
 
@@ -373,6 +428,7 @@ def getCustomLoadForCarType():
                     customLoadForCarTypes[carType['type']] = loadDetail.attrib['name']
 
     return defaultLoadLoad, customLoadForCarTypes
+
 
 def getCustomEmptyForCarType():
     '''Returns the default empty designation and a dictionary of custon empties by car type'''

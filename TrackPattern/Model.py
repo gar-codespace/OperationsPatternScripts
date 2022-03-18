@@ -337,21 +337,22 @@ def makePatternLog():
 
     return
 
+def makeCustomLoadEmptyByCarType():
+    '''Parses the OperationsCarRoster.xml for custom load/empty names by car type'''
+
+    loadEmptyDesignations = ModelEntities.makeLoadEmptyDesignations()
+    _customLoadEmptyByCarType = loadEmptyDesignations.getCustomLoadEmptyByCarType()
+
+    return
+
 def makeLoadEmptyDesignationsDicts():
-    '''Stores the custom car load for Load and Empty by type designations and the default load and empty designation as global variables'''
+    '''Remove this method'''
 
     psLog.debug('makeLoadEmptyDesignationsDicts')
+
     defaultLoadEmpty, customEmptyForCarTypes = ModelEntities.getCustomEmptyForCarType()
     defaultLoadLoad, customLoadForCarTypes = ModelEntities.getCustomLoadForCarType()
-# Set the default L/E
-    try:
-        _defaultLoadEmpty = defaultLoadEmpty
-        _defaultLoadLoad = defaultLoadLoad
-        psLog.info('Default load and empty designations saved')
-    except:
-        psLog.critical('Default empty designation not saved')
-        _defaultLoadEmpty = 'E'
-        _defaultLoadLoad = 'L'
+
 # Set custom L/E
     try:
         _carTypeByEmptyDict = customEmptyForCarTypes
