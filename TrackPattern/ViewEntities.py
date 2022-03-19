@@ -38,7 +38,7 @@ class TrackPatternPanel:
         return tpFrame
 
     def makeLocationComboBox(self):
-        '''make the combo box of user selectable locations'''
+        '''Make the combo box of user selectable locations'''
 
         patternLabel = javax.swing.JLabel(u'Location:')
         locationList = self.configFile['AL']
@@ -84,7 +84,7 @@ class TrackPatternPanel:
         return tracksPanel
 
     def makeButtonPanel(self):
-        '''button panel added to makeTrackPatternPanel'''
+        '''Button panel added to makeTrackPatternPanel'''
 
         self.ypButton.text = u'Pattern'
         self.scButton.text = u'Set Cars'

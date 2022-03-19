@@ -34,9 +34,7 @@ def makeSetCarsForTrackForm(setCarsFormData):
     setCarsForm.add(setCarsFormHeader)
     setCarsForm.add(javax.swing.JSeparator())
 
-    trackLocation = unicode(setCarsFormData['locations'][0]['locationName'], MainScriptEntities.setEncoding())
-    allTracksAtLoc =  MainScriptEntities._lm.getLocationByName(trackLocation).getTracksByNameList(None)
-    setCarsRowOfTracks, buttonList = makeSetCarsTrackButtons(allTracksAtLoc)
+    setCarsRowOfTracks, buttonList = makeSetCarsTrackButtons()
     buttonDict['trackButtons'] = buttonList
     setCarsForm.add(setCarsRowOfTracks)
     setCarsForm.add(javax.swing.JSeparator())
@@ -57,8 +55,6 @@ def makeSetCarsForTrackForm(setCarsFormData):
         for loco in setCarsLocoRows:
             locoFormBody.add(loco)
         setCarsFormBody.add(locoFormBody)
-        # for locoBox in locoBoxEntry:
-        #     textBoxEntry.append(locoBox)
 
     carBoxEntry = []
     if setCarsFormData['locations'][0]['tracks'][0]['cars']:
@@ -70,8 +66,6 @@ def makeSetCarsForTrackForm(setCarsFormData):
         for car in setCarscarRows:
             carFormBody.add(car)
         setCarsFormBody.add(carFormBody)
-        # for carBox in carBoxEntry:
-        #     textBoxEntry.append(carBox)
 
     buttonDict['textBoxEntry'] = locoBoxEntry + carBoxEntry
 
@@ -91,6 +85,9 @@ def makeSetCarsForTrackForm(setCarsFormData):
     setCarsForm.add(setCarsFooter)
 
     return setCarsForm, buttonDict
+
+
+
 
 def makeSwingBox(xWidth, yHeight):
     '''Makes a swing box to the desired size'''
@@ -134,10 +131,13 @@ def makeSetCarsFormHeader(setCarsFormData):
 
     return combinedHeader
 
-def makeSetCarsTrackButtons(allTracksAtLoc):
+def makeSetCarsTrackButtons():
+
+    location =  MainScriptEntities.readConfigFile('TP')['PL']
+    allTracksAtLoc =  MainScriptEntities._lm.getLocationByName(location).getTracksByNameList(None)
 
     buttonPanel = javax.swing.JPanel()
-    buttonPanel.border = javax.swing.BorderFactory.createTitledBorder(u'Tracks at ' + MainScriptEntities.readConfigFile('TP')['PL'])
+    buttonPanel.border = javax.swing.BorderFactory.createTitledBorder(u'Tracks at ' + location)
     buttonList = []
     for track in allTracksAtLoc:
         selectTrackButton = javax.swing.JButton(track.getName())
@@ -200,7 +200,7 @@ class MakeSetCarsEqptRows():
 
         for car in cars:
             combinedInputLine = javax.swing.JPanel()
-            combinedInputLine.setBackground(MainScriptEntities.DUST)
+            combinedInputLine.setBackground(MainScriptEntities.BLANCH)
             inputText = javax.swing.JTextField(5)
             textBoxEntry.append(inputText)
             inputBox = makeSwingBox(self.panelWidth * 6, self.panelHeight)

@@ -2,9 +2,6 @@
 # © 2021 Greg Ritacco
 
 import jmri
-# import java.awt
-# import javax.swing
-# import time
 from codecs import open as codecsOpen
 from json import loads as jsonLoads, dumps as jsonDumps
 from xml.etree import ElementTree as ET
@@ -366,82 +363,82 @@ def makeCsvSwitchlist(trackPattern):
 
     return csvSwitchList
 
-class makeLoadEmptyDesignations:
+# class makeLoadEmptyDesignations:
+#
+#     def __init__(self):
+#
+#         opsFileName = jmri.util.FileUtil.getProfilePath() + 'operations\\' + MainScriptEntities._cmx.getOperationsFileName()
+#         with codecsOpen(opsFileName, 'r', encoding=MainScriptEntities.setEncoding()) as opsWorkFile:
+#             self.carRoster = ET.parse(opsWorkFile)
+#
+#         self.carLoads = self.carRoster.getroot().findall('./loads/load')
+#         return
+#
+#     def getCarTypes(self):
+#
+#         carTypes = []
+#         for type in self.carLoads:
+#             carTypes.append(type.attrib['type'])
+#
+#         return carTypes
+#
+#     def getCustomLoadEmptyByCarType(self):
+#
+#         for carType in self.carLoads:
+#
+#             loadList, emptyList = self.makeLoadEmptyLists(carType)
+#
+#             loadEmpty = {}
+#             loadEmpty['load'] = loadList
+#             loadEmpty['empty'] = emptyList
+#
+#             loadEmptyByCarType = {}
+#             loadEmptyByCarType[carType.attrib['type']] = loadEmpty
+#
+#         return loadEmptyByCarType
 
-    def __init__(self):
-
-        opsFileName = jmri.util.FileUtil.getProfilePath() + 'operations\\' + MainScriptEntities._cmx.getOperationsFileName()
-        with codecsOpen(opsFileName, 'r', encoding=MainScriptEntities.setEncoding()) as opsWorkFile:
-            self.carRoster = ET.parse(opsWorkFile)
-
-        self.carLoads = self.carRoster.getroot().findall('./loads/load')
-        return
-
-    def getCarTypes(self):
-
-        carTypes = []
-        for type in self.carLoads:
-            carTypes.append(type.attrib['type'])
-
-        return carTypes
-
-    def getCustomLoadEmptyByCarType(self):
-
-        for carType in self.carLoads:
-
-            loadList, emptyList = self.makeLoadEmptyLists(carType)
-
-            loadEmpty = {}
-            loadEmpty['load'] = loadList
-            loadEmpty['empty'] = emptyList
-
-            loadEmptyByCarType = {}
-            loadEmptyByCarType[carType.attrib['type']] = loadEmpty
-
-        return loadEmptyByCarType
-
-    def makeLoadEmptyLists(self, carType):
-
-        loadList = []
-        emptyList = []
-        for load in carType:
-            if load.attrib['loadType'] == 'Load':
-                loadList.append(load.attrib['name'])
-            if load.attrib['loadType'] == 'Empty':
-                emptyList.append(load.attrib['name'])
-
-        return loadList, emptyList
-
-
-def getCustomLoadForCarType():
-    '''Returns the default load designation and a dictionary of custon loads by car type'''
-
-    opsFileName = jmri.util.FileUtil.getProfilePath() + 'operations\\' + MainScriptEntities._cmx.getOperationsFileName()
-    with codecsOpen(opsFileName, 'r', encoding=MainScriptEntities.setEncoding()) as opsWorkFile:
-        carXml = ET.parse(opsWorkFile)
-        defaultLoadLoad = carXml.getroot()[5][0].attrib['load']
-        customLoadForCarTypes = {}
-        for loadElement in carXml.getroot()[5]:
-            carType = loadElement.attrib
-            for loadDetail in loadElement:
-                if (loadDetail.attrib['loadType'] == 'Load'):
-                    customLoadForCarTypes[carType['type']] = loadDetail.attrib['name']
-
-    return defaultLoadLoad, customLoadForCarTypes
+    # def makeLoadEmptyLists(self, carType):
+    #
+    #     loadList = []
+    #     emptyList = []
+    #     for load in carType:
+    #         if load.attrib['loadType'] == 'Load':
+    #             loadList.append(load.attrib['name'])
+    #         if load.attrib['loadType'] == 'Empty':
+    #             emptyList.append(load.attrib['name'])
+    #
+    #     return loadList, emptyList
 
 
-def getCustomEmptyForCarType():
-    '''Returns the default empty designation and a dictionary of custon empties by car type'''
+# def getCustomLoadForCarType():
+#     '''Returns the default load designation and a dictionary of custon loads by car type'''
+#
+#     opsFileName = jmri.util.FileUtil.getProfilePath() + 'operations\\' + MainScriptEntities._cmx.getOperationsFileName()
+#     with codecsOpen(opsFileName, 'r', encoding=MainScriptEntities.setEncoding()) as opsWorkFile:
+#         carXml = ET.parse(opsWorkFile)
+#         defaultLoadLoad = carXml.getroot()[5][0].attrib['load']
+#         customLoadForCarTypes = {}
+#         for loadElement in carXml.getroot()[5]:
+#             carType = loadElement.attrib
+#             for loadDetail in loadElement:
+#                 if (loadDetail.attrib['loadType'] == 'Load'):
+#                     customLoadForCarTypes[carType['type']] = loadDetail.attrib['name']
+#
+#     return defaultLoadLoad, customLoadForCarTypes
 
-    opsFileName = jmri.util.FileUtil.getProfilePath() + 'operations\\' + MainScriptEntities._cmx.getOperationsFileName()
-    with codecsOpen(opsFileName, 'r', encoding=MainScriptEntities.setEncoding()) as opsWorkFile:
-        carXml = ET.parse(opsWorkFile)
-        defaultLoadEmpty = carXml.getroot()[5][0].attrib['empty']
-        customEmptyForCarTypes = {}
-        for loadElement in carXml.getroot()[5]:
-            carType = loadElement.attrib
-            for loadDetail in loadElement:
-                if (loadDetail.attrib['loadType'] == 'Empty'):
-                    customEmptyForCarTypes[carType['type']] = loadDetail.attrib['name']
 
-    return defaultLoadEmpty, customEmptyForCarTypes
+# def getCustomEmptyForCarType():
+#     '''Returns the default empty designation and a dictionary of custon empties by car type'''
+#
+#     opsFileName = jmri.util.FileUtil.getProfilePath() + 'operations\\' + MainScriptEntities._cmx.getOperationsFileName()
+#     with codecsOpen(opsFileName, 'r', encoding=MainScriptEntities.setEncoding()) as opsWorkFile:
+#         carXml = ET.parse(opsWorkFile)
+#         defaultLoadEmpty = carXml.getroot()[5][0].attrib['empty']
+#         customEmptyForCarTypes = {}
+#         for loadElement in carXml.getroot()[5]:
+#             carType = loadElement.attrib
+#             for loadDetail in loadElement:
+#                 if (loadDetail.attrib['loadType'] == 'Empty'):
+#                     customEmptyForCarTypes[carType['type']] = loadDetail.attrib['name']
+#
+#     return defaultLoadEmpty, customEmptyForCarTypes

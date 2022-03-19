@@ -91,8 +91,8 @@ class StartUp():
 
         Model.updateConfigFile(self.controls)
 
-        Model.makeLoadEmptyDesignationsDicts()
-        Model.makeCustomLoadEmptyByCarType()
+        # Model.makeLoadEmptyDesignationsDicts()
+        # Model.makeCustomLoadEmptyByCarType()
         Model.onScButtonPress()
 
         if MainScriptEntities.readConfigFile('TP')['TI']: # TrainPlayer Include

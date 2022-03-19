@@ -27,17 +27,19 @@ Stuff that's OK:
   ExportToTrainPlayer.py works as script OK
   Train name, train comments matrix added to config file
   CSV pattern and list written OK
-  locos in report follow jmri.jmrit.operations.setup.Setup.getDropEngineMessageFormat OK
-  cars in report follow jmri.jmrit.operations.setup.Setup.getLocalCarMessageFormat OK
+  Locos in report follow jmri.jmrit.operations.setup.Setup.getDropEngineMessageFormat OK
+  Cars in report follow jmri.jmrit.operations.setup.Setup.getLocalCarMessageFormat OK
   Caboose and Passenger car types are loaded as O for Occupied OK
-  when setting to a spur the reserved column for the spur shows an entry, as it should when setting a destination
+  When setting to a spur the reserved column for the spur shows an entry, as it should when setting a destination
   RWE and RWL seems to work ok
+  Default load/empty toggling ok
+  Car move count advances when set into spur only OK
+  Schedule hit count advances OK
+  Set to spur ignores the cars load, but schedule sets it OK
+  Ignore Track Length works with schedules
 
 Todo:
   Catch up with the latest JMRI stuff like text color
-  Ignore Track Length works with schedules
-  no schedule, no RWE/RWL load toggles ok
-  default load/empty toggling ok
 
 Wish List:
   add Pattern Scripts to Operations Pro combo box

@@ -337,33 +337,33 @@ def makePatternLog():
 
     return
 
-def makeCustomLoadEmptyByCarType():
-    '''Parses the OperationsCarRoster.xml for custom load/empty names by car type'''
+# def makeCustomLoadEmptyByCarType():
+#     '''Parses the OperationsCarRoster.xml for custom load/empty names by car type'''
+#
+#     loadEmptyDesignations = ModelEntities.makeLoadEmptyDesignations()
+#     _customLoadEmptyByCarType = loadEmptyDesignations.getCustomLoadEmptyByCarType()
+#
+#     return
 
-    loadEmptyDesignations = ModelEntities.makeLoadEmptyDesignations()
-    _customLoadEmptyByCarType = loadEmptyDesignations.getCustomLoadEmptyByCarType()
-
-    return
-
-def makeLoadEmptyDesignationsDicts():
-    '''Remove this method'''
-
-    psLog.debug('makeLoadEmptyDesignationsDicts')
-
-    defaultLoadEmpty, customEmptyForCarTypes = ModelEntities.getCustomEmptyForCarType()
-    defaultLoadLoad, customLoadForCarTypes = ModelEntities.getCustomLoadForCarType()
-
-# Set custom L/E
-    try:
-        _carTypeByEmptyDict = customEmptyForCarTypes
-        _carTypeByLoadDict = customLoadForCarTypes
-        psLog.info('Default custon loads for (empty) and (load) by car type designations saved')
-    except:
-        psLog.critical('Custom car empty designations not saved')
-        _carTypeByEmptyDict = {}
-        _carTypeByLoadDict = {}
-
-    return
+# def makeLoadEmptyDesignationsDicts():
+#     '''Remove this method'''
+#
+#     psLog.debug('makeLoadEmptyDesignationsDicts')
+#
+#     defaultLoadEmpty, customEmptyForCarTypes = ModelEntities.getCustomEmptyForCarType()
+#     defaultLoadLoad, customLoadForCarTypes = ModelEntities.getCustomLoadForCarType()
+#
+# # Set custom L/E
+#     try:
+#         _carTypeByEmptyDict = customEmptyForCarTypes
+#         _carTypeByLoadDict = customLoadForCarTypes
+#         psLog.info('Default custon loads for (empty) and (load) by car type designations saved')
+#     except:
+#         psLog.critical('Custom car empty designations not saved')
+#         _carTypeByEmptyDict = {}
+#         _carTypeByLoadDict = {}
+#
+#     return
 
 def writeCsvSwitchList(trackPattern, type):
     '''Rewrite this to write from the JSON file'''

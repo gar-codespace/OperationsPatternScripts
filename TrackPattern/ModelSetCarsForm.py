@@ -56,17 +56,22 @@ def setRsToTrack(setCarsForm, textBoxEntry):
         locoObject = MainScriptEntities._em.newRS(loco['Road'], loco['Number'])
         toTrackObject = locationObject.getTrackByName(unicode(toTrack, MainScriptEntities.setEncoding()), None)
 
-        if unicode(toTrack, MainScriptEntities.setEncoding()) in allTracksAtLoc: # Catches invalid track typed into box
-            if ignoreTrackLength:
-                trackLength = toTrackObject.getLength()
-                toTrackObject.setLength(9999)
-                setResult = locoObject.setLocation(locationObject, toTrackObject)
-                toTrackObject.setLength(trackLength)
-            else:
-                setResult = locoObject.setLocation(locationObject, toTrackObject)
+        if not unicode(toTrack, MainScriptEntities.setEncoding()) in allTracksAtLoc: # Catches invalid track typed into box
+            return
 
-            if setResult == 'okay' and toTrack != fromTrack:
-                setCount += 1
+        if toTrack == fromTrack:
+            return
+
+        if ignoreTrackLength:
+            trackLength = toTrackObject.getLength()
+            toTrackObject.setLength(9999)
+            setResult = locoObject.setLocation(locationObject, toTrackObject)
+            toTrackObject.setLength(trackLength)
+        else:
+            setResult = locoObject.setLocation(locationObject, toTrackObject)
+
+        if setResult == 'okay':
+            setCount += 1
 
         i += 1
     jmri.jmrit.operations.rollingstock.engines.EngineManagerXml.save()
@@ -80,23 +85,27 @@ def setRsToTrack(setCarsForm, textBoxEntry):
         carObject = MainScriptEntities._cm.newRS(car['Road'], car['Number'])
         toTrackObject = locationObject.getTrackByName(unicode(toTrack, MainScriptEntities.setEncoding()), None)
 
-        if unicode(toTrack, MainScriptEntities.setEncoding()) in allTracksAtLoc: # Catches invalid track typed into box
-            if ignoreTrackLength:
-                trackLength = toTrackObject.getLength()
-                toTrackObject.setLength(9999)
-                setResult = carObject.setLocation(locationObject, toTrackObject)
-                toTrackObject.setLength(trackLength)
-            else:
-                setResult = carObject.setLocation(locationObject, toTrackObject)
+        if not unicode(toTrack, MainScriptEntities.setEncoding()) in allTracksAtLoc: # Catches invalid track typed into box
+            return
 
-            if setResult == 'okay' and toTrack != fromTrack:
-                setCount += 1
-                if toTrackObject.getTrackType() == 'Spur':
-                    carObject.setMoves(carObject.getMoves() + 1)
-                    applySchedule(toTrackObject, carObject)
-                    carObject.updateLoad()
-                    # applyReturnWhen(carObject)
-                jmri.jmrit.operations.rollingstock.cars.CarManagerXml.save()
+        if toTrack == fromTrack:
+            return
+
+        if ignoreTrackLength:
+            trackLength = toTrackObject.getLength()
+            toTrackObject.setLength(9999)
+            setResult = carObject.setLocation(locationObject, toTrackObject)
+            toTrackObject.setLength(trackLength)
+        else:
+            setResult = carObject.setLocation(locationObject, toTrackObject)
+
+        if setResult == 'okay':
+            setCount += 1
+            if toTrackObject.getTrackType() == 'Spur':
+                carObject.setMoves(carObject.getMoves() + 1)
+                carObject.updateLoad()
+                applySchedule(toTrackObject, carObject)
+                # applyReturnWhen(carObject)
 
         i += 1
     jmri.jmrit.operations.rollingstock.cars.CarManagerXml.save()
@@ -151,22 +160,6 @@ def exportSetCarsFormToTp(setCarsForm, textBoxEntry):
 
     return
 
-# def writeTpSwitchListFromJson(switchListName):
-#     '''Writes the switch list for TrainPlayer'''
-#
-#     psLog.debug('writeTpSwitchListFromJson')
-#
-#     ExportToTrainPlayer.CheckTpDestination().directoryExists()
-#     ExportToTrainPlayer.JmriLocationsToTrainPlayer().exportLocations()
-#     tpWorkEventList = ExportToTrainPlayer.WorkEventListForTrainPlayer(switchListName).readFromFile()
-#     if not tpWorkEventList:
-#         psLog.critical('No work event list read in')
-#         return
-#     tpCsvWorkEventList = ExportToTrainPlayer.CsvListFromFile(tpWorkEventList).makeList()
-#     ExportToTrainPlayer.writeWorkEventListToTp(tpCsvWorkEventList).writeAsCsv()
-#
-#     return
-
 def makeLocationDict(setCarsForm, textBoxEntry):
     '''Replaces car['Set to'] = [ ] with either [Hold] or ["some other valid track"]'''
 
@@ -195,7 +188,6 @@ def makeLocationDict(setCarsForm, textBoxEntry):
         loco['Set to'] = ModelEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
         locoList.append(loco)
         i += 1
-    # setCarsForm['locations'][0]['tracks'][0]['locos'] = locoList
 
     carList = []
     for car in setCarsForm['locations'][0]['tracks'][0]['cars']:
@@ -206,7 +198,6 @@ def makeLocationDict(setCarsForm, textBoxEntry):
         car['Set to'] = ModelEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
         carList.append(car)
         i += 1
-    # setCarsForm['locations'][0]['tracks'][0]['cars'] = carList
 
     trackDetails = {}
     trackDetails['trackName'] = trackName
@@ -218,8 +209,23 @@ def makeLocationDict(setCarsForm, textBoxEntry):
     locationDict['locationName'] = location
     locationDict['tracks'] = [trackDetails]
 
-
     return locationDict
+
+# def writeTpSwitchListFromJson(switchListName):
+#     '''Writes the switch list for TrainPlayer'''
+#
+#     psLog.debug('writeTpSwitchListFromJson')
+#
+#     ExportToTrainPlayer.CheckTpDestination().directoryExists()
+#     ExportToTrainPlayer.JmriLocationsToTrainPlayer().exportLocations()
+#     tpWorkEventList = ExportToTrainPlayer.WorkEventListForTrainPlayer(switchListName).readFromFile()
+#     if not tpWorkEventList:
+#         psLog.critical('No work event list read in')
+#         return
+#     tpCsvWorkEventList = ExportToTrainPlayer.CsvListFromFile(tpWorkEventList).makeList()
+#     ExportToTrainPlayer.writeWorkEventListToTp(tpCsvWorkEventList).writeAsCsv()
+#
+#     return
 
 # def applyReturnWhen(carObject):
 #
