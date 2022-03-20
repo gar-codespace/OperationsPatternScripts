@@ -86,10 +86,12 @@ def setRsToTrack(setCarsForm, textBoxEntry):
         toTrackObject = locationObject.getTrackByName(unicode(toTrack, MainScriptEntities.setEncoding()), None)
 
         if not unicode(toTrack, MainScriptEntities.setEncoding()) in allTracksAtLoc: # Catches invalid track typed into box
-            return
+            i += 1
+            continue
 
         if toTrack == fromTrack:
-            return
+            i += 1
+            continue
 
         if ignoreTrackLength:
             trackLength = toTrackObject.getLength()
@@ -103,9 +105,7 @@ def setRsToTrack(setCarsForm, textBoxEntry):
             setCount += 1
             if toTrackObject.getTrackType() == 'Spur':
                 carObject.setMoves(carObject.getMoves() + 1)
-                carObject.updateLoad()
                 applySchedule(toTrackObject, carObject)
-                # applyReturnWhen(carObject)
 
         i += 1
     jmri.jmrit.operations.rollingstock.cars.CarManagerXml.save()
@@ -124,6 +124,8 @@ def applySchedule(toTrackObject, carObject):
         carObject.setLoadName(schedule.getItemByType(carType).getShipLoadName())
         carObject.setDestination(schedule.getItemByType(carType).getDestination(), schedule.getItemByType(carType).getDestinationTrack(), True) # force set dest
         schedule.getItemByType(carType).setHits(schedule.getItemByType(carType).getHits() + 1)
+    else:
+        carObject.updateLoad()
 
         return
 

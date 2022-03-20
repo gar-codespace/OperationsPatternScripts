@@ -55,7 +55,7 @@ class CheckTpDestination():
             self.psLog.info('TrainPlayer destination directory OK')
             self.tpLog.info('TrainPlayer destination directory OK')
 
-        print(scriptName + ' ' + str(scriptRev))
+        print(self.scriptName + ' ' + str(scriptRev))
 
         return
 
@@ -86,7 +86,6 @@ class ExportJmriLocations():
 
         self.psLog.info(str(i) + ' missing track comments for locations export to TrainPlayer')
         self.tpLog.info(str(i) + ' missing track comments for locations export to TrainPlayer')
-        print(self.scriptName + ' ' + str(scriptRev))
 
         return csvLocations
 
