@@ -69,7 +69,7 @@ class StartUp():
         Model.updateConfigFile(self.controls)
 
         if not Model.getSelectedTracks():
-            self.psLog.info('No tracks were selected')
+            self.psLog.warning('No tracks were selected for the pattern button')
             return
 
         locationDict = Model.makeLocationDict()
@@ -90,9 +90,6 @@ class StartUp():
         self.psLog.debug('setCarsButton')
 
         Model.updateConfigFile(self.controls)
-
-        # Model.makeLoadEmptyDesignationsDicts()
-        # Model.makeCustomLoadEmptyByCarType()
         Model.onScButtonPress()
 
         if MainScriptEntities.readConfigFile('TP')['TI']: # TrainPlayer Include

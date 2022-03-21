@@ -86,9 +86,6 @@ def makeSetCarsForTrackForm(setCarsFormData):
 
     return setCarsForm, buttonDict
 
-
-
-
 def makeSwingBox(xWidth, yHeight):
     '''Makes a swing box to the desired size'''
 
@@ -158,6 +155,18 @@ class MakeSetCarsEqptRows():
         self.panelHeight = fontSize + 4
         self.panelWidth = fontSize - 2
 
+        colorDefinition = MainScriptEntities.readConfigFile('CD')
+
+        r = colorDefinition['CP'][colorDefinition['color1']]["R"]
+        g = colorDefinition['CP'][colorDefinition['color1']]["G"]
+        b = colorDefinition['CP'][colorDefinition['color1']]["B"]
+        self.color1 = java.awt.Color(r, g, b)
+
+        r = colorDefinition['CP'][colorDefinition['color2']]["R"]
+        g = colorDefinition['CP'][colorDefinition['color2']]["G"]
+        b = colorDefinition['CP'][colorDefinition['color2']]["B"]
+        self.color2 = java.awt.Color(r, g, b)
+
         self.setCarsFormData = setCarsFormData
 
         return
@@ -172,7 +181,7 @@ class MakeSetCarsEqptRows():
 
         for loco in locos:
             combinedInputLine = javax.swing.JPanel()
-            combinedInputLine.setBackground(MainScriptEntities.FADED)
+            combinedInputLine.setBackground(self.color1)
             inputText = javax.swing.JTextField(5)
             textBoxEntry.append(inputText)
             inputBox = makeSwingBox(self.panelWidth * 6, self.panelHeight)
@@ -200,7 +209,7 @@ class MakeSetCarsEqptRows():
 
         for car in cars:
             combinedInputLine = javax.swing.JPanel()
-            combinedInputLine.setBackground(MainScriptEntities.BLANCH)
+            combinedInputLine.setBackground(self.color2)
             inputText = javax.swing.JTextField(5)
             textBoxEntry.append(inputText)
             inputBox = makeSwingBox(self.panelWidth * 6, self.panelHeight)

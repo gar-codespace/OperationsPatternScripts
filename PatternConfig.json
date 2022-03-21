@@ -16,6 +16,42 @@
     },
     "PL": "2"
   },
+  "CD": {
+    "CP": {
+      "BLANCH": {
+        "B": 212,
+        "D": "Light orange",
+        "G": 225,
+        "R": 235
+      },
+      "DUST": {
+        "B": 243,
+        "D": "Light tan",
+        "G": 244,
+        "R": 245
+      },
+      "FADED": {
+        "B": 245,
+        "D": "Light purple",
+        "G": 225,
+        "R": 237
+      },
+      "LICHEN": {
+        "B": 244,
+        "D": "Light green",
+        "G": 255,
+        "R": 236
+      },
+      "PALE": {
+        "B": 250,
+        "D": "Light blue",
+        "G": 243,
+        "R": 237
+      }
+    },
+    "color1": "FADED",
+    "color2": "BLANCH"
+  },
   "CP" : {
     "SI" : {
       "TrackPattern" : true,

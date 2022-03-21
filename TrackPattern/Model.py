@@ -337,34 +337,6 @@ def makePatternLog():
 
     return
 
-# def makeCustomLoadEmptyByCarType():
-#     '''Parses the OperationsCarRoster.xml for custom load/empty names by car type'''
-#
-#     loadEmptyDesignations = ModelEntities.makeLoadEmptyDesignations()
-#     _customLoadEmptyByCarType = loadEmptyDesignations.getCustomLoadEmptyByCarType()
-#
-#     return
-
-# def makeLoadEmptyDesignationsDicts():
-#     '''Remove this method'''
-#
-#     psLog.debug('makeLoadEmptyDesignationsDicts')
-#
-#     defaultLoadEmpty, customEmptyForCarTypes = ModelEntities.getCustomEmptyForCarType()
-#     defaultLoadLoad, customLoadForCarTypes = ModelEntities.getCustomLoadForCarType()
-#
-# # Set custom L/E
-#     try:
-#         _carTypeByEmptyDict = customEmptyForCarTypes
-#         _carTypeByLoadDict = customLoadForCarTypes
-#         psLog.info('Default custon loads for (empty) and (load) by car type designations saved')
-#     except:
-#         psLog.critical('Custom car empty designations not saved')
-#         _carTypeByEmptyDict = {}
-#         _carTypeByLoadDict = {}
-#
-#     return
-
 def writeCsvSwitchList(trackPattern, type):
     '''Rewrite this to write from the JSON file'''
 
@@ -376,44 +348,3 @@ def writeCsvSwitchList(trackPattern, type):
         csvWorkFile.write(csvObject)
 
     return
-
-# def makeSwitchList(fileName=u'test'):
-#     '''The loco and car rosters are sorted at this level'''
-#
-#     psLog.debug('makeSwitchList')
-#     switchList = TrackPattern.Model.makeSwitchListHeader()
-#     switchList['description'] = fileName
-#
-#     trackList = getSelectedTracks()
-#     if not trackList:
-#         return
-#
-#     tracks = []
-#     locoRoster = []
-#     carRoster = []
-#     for track in trackList:
-#         trackDetails = ModelEntities.getTrackDetails(track)
-#
-#         locoList = ModelEntities.getLocoListForTrack(track)
-#         trackDetails['Locos'] = ModelEntities.sortLocoList(locoList)
-#
-#         carList = ModelEntities.getCarListForTrack(track)
-#         trackDetails['Cars'] = ModelEntities.sortCarList(carList)
-#         tracks.append(trackDetails)
-#
-#     switchList['locations'] = tracks
-#
-#     return switchList
-
-# def makeSwitchListHeader():
-#     '''The header info for any switch list, used to make the JSON file'''
-#
-#     switchListHeader = {}
-#     switchListHeader['railroad'] = unicode(jmri.jmrit.operations.setup.Setup.getRailroadName(), MainScriptEntities.setEncoding())
-#     switchListHeader['userName'] = u'Report Type Placeholder'
-#     switchListHeader['description'] = u'Report Description'
-#     switchListHeader['location'] = MainScriptEntities.readConfigFile('TP')['PL']
-#     switchListHeader['date'] = unicode(MainScriptEntities.timeStamp(), MainScriptEntities.setEncoding())
-#     # switchListHeader['tracks'] = []
-#
-#     return switchListHeader

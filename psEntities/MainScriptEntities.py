@@ -24,17 +24,6 @@ _pm = jmri.InstanceManager.getDefault(jmri.util.gui.GuiLafPreferencesManager)
 
 _currentPath = ''
 _trackNameClickedOn = None
-# _carTypeByEmptyDict = {}
-# _carTypeByLoadDict = {}
-# _customLoadEmptyByCarType = {}
-# _defaultLoadEmpty = jmri.jmrit.operations.rollingstock.cars.CarLoads().getDefaultEmptyName()
-# _defaultLoadLoad = jmri.jmrit.operations.rollingstock.cars.CarLoads().getDefaultLoadName()
-
-DUST = java.awt.Color(245,242,233) # Light tan
-PALE = java.awt.Color(237,243,250) # Light blue
-LICHEN = java.awt.Color(244,255,236) # Light green
-FADED = java.awt.Color(237,225,245) # Light purple
-BLANCH = java.awt.Color(235,225,212) # Light orange
 
 scriptName = 'OperationsPatternScripts.psEntities.MainScriptEntities'
 scriptRev = 20220101
@@ -132,32 +121,36 @@ def validateFileDestinationDirestories():
 def validateConfigFile():
     '''Checks for an up to date, missing or ureadable config file'''
 
+    try:
+        readConfigFile()
+    except ValueError:
+        psLog.warning('Defective PatternConfig.JSON found')
+        writeNewConfigFile()
+    except IOError:
+        psLog.warning('No PatternConfig.JSON found')
+        writeNewConfigFile()
+
     with codecsOpen(_currentPath + '\\PatternConfig.json', 'r', encoding=setEncoding()) as validConfigFileLoc:
         validConfigFile = jsonLoads(validConfigFileLoc.read())
-        upToDate = validConfigFile['CP']['RV']
 
-    try:
-        currentConfigFile = readConfigFile('CP')
-        if (currentConfigFile['RV'] == upToDate):
-            psLog.info('PatternConfig.json file is up to date')
-            return True
-        else:
-            psLog.warning('PatternConfig.json version mismatch')
-            copyTo = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json.bak')
-            copyFrom = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json')
-            jmri.util.FileUtil.copy(copyFrom, copyTo)
-            psLog.warning('PatternConfig.json.bak file written')
-            return False
-    except IOError:
-        psLog.warning('No PatternConfig.json found or is unreadable')
-        return False
+    if validConfigFile['CP']['RV'] == readConfigFile()['CP']['RV']:
+        psLog.info('PatternConfig.JSON file is up to date')
+
+    else:
+        psLog.warning('PatternConfig.JSON version mismatch')
+        copyTo = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json.bak')
+        copyFrom = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json')
+        jmri.util.FileUtil.copy(copyFrom, copyTo)
+        psLog.warning('PatternConfig.json.bak file written')
+        writeNewConfigFile()
+
+    return
 
 def readConfigFile(subConfig='all'):
     '''Read in the PatternConfig.json for a profile and return it as a dictionary'''
 
     configFileLoc = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json'
-    if not (javaIo.File(configFileLoc).isFile()):
-        writeNewConfigFile()
+
     with codecsOpen(configFileLoc, 'r', encoding=setEncoding()) as configWorkFile:
         configFile = jsonLoads(configWorkFile.read())
     if (subConfig == 'all'):
@@ -173,7 +166,7 @@ def writeConfigFile(configFile):
     with codecsOpen(jsonCopyTo, 'wb', encoding=setEncoding()) as jsonWorkFile:
         jsonWorkFile.write(jsonObject)
 
-    return 'Configuration file updated'
+    return
 
 def writeNewConfigFile():
     '''Copies the default config file to the profile location'''
@@ -181,8 +174,9 @@ def writeNewConfigFile():
     copyTo = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json')
     copyFrom = javaIo.File(_currentPath + '\\PatternConfig.json')
     jmri.util.FileUtil.copy(copyFrom, copyTo)
+    psLog.warning('New PatternConfig.JSON file created for this profile')
 
-    return 'New PatternConfig.json file for this profile created'
+    return
 
 def makeControlPanel():
     '''Create the control panel, with a scroll bar, that all subroutines go into

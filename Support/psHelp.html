@@ -7,7 +7,11 @@
 	<META NAME="AUTHOR" CONTENT="Greg Ritacco">
 	<META NAME="CREATED" CONTENT="20211230;15202509">
 	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGED" CONTENT="20220315;21441733">
+	<META NAME="CHANGED" CONTENT="20220320;17143060">
+	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
+	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
+	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
+	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
 	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
 	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
 	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
@@ -59,11 +63,33 @@ shows the code structure of this plugin.</FONT></FONT></P>
 <P ALIGN=LEFT STYLE="margin-left: 0.29in; margin-bottom: 0in; page-break-before: always">
 <BR>
 </P>
-<P ALIGN=LEFT STYLE="margin-left: 0.29in; margin-bottom: 0in"><FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=4><B>Key
-&ndash; PatternConfig.JSON:</B></FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.29in; margin-bottom: 0in"><BR>
+</P>
+<P ALIGN=LEFT STYLE="margin-bottom: 0in"><BR>
+</P>
+<P ALIGN=LEFT STYLE="margin-bottom: 0in; page-break-before: always"><BR>
+</P>
+<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in; page-break-before: auto; page-break-after: auto">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=4><B>Track Pattern
+and Switch List JSON format</B></FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in; font-weight: normal">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>The pattern reports
+and TrainPlayer exports all start with the creation of a JSON file.
+The file is created by this plugin and in the case of TrainPlayer
+manifest exports the JSON is created by modifying the JMRI generated
+manifest JSON. All the JSON files are written to the jsonManifests
+folder. They follow the illustrated format:</FONT></FONT></P>
+<P ALIGN=LEFT STYLE="margin-bottom: 0in"><IMG SRC="psHelp_html_m3dba2bfb.png" NAME="graphics1" ALIGN=LEFT WIDTH=661 HEIGHT=658 BORDER=0><BR CLEAR=LEFT><BR>
+</P>
+<P ALIGN=LEFT STYLE="margin-left: 0.29in; margin-bottom: 0in; page-break-before: always">
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=4><B>Key &ndash;
+PatternConfig.JSON:</B></FONT></FONT></P>
 <P ALIGN=LEFT STYLE="margin-left: 0.29in; margin-bottom: 0in; font-weight: normal">
 <FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=2>Each JMRI profile
-gets its own configuration file, found in the operations folder.</FONT></FONT></P>
+gets its own configuration file, which is also a JSON file. This file
+is in a different format than the pattern JSON files. It is found in
+the operations folder, and is used to provide custom settings for
+each profile and record user inputs.</FONT></FONT></P>
 <P ALIGN=LEFT STYLE="margin-left: 0.29in; margin-bottom: 0in; font-weight: normal">
 <FONT COLOR="#00cc00"><FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=2>The
 description of each element is in green.</FONT></FONT></FONT></P>
@@ -321,36 +347,22 @@ empty box added to Local Move Message Format</SPAN></FONT></FONT></FONT></P>
 <FONT SIZE=2>}</FONT></P>
 <P STYLE="text-indent: 0.5in; margin-bottom: 0in; page-break-before: auto; page-break-after: auto">
 <FONT SIZE=2>}</FONT></P>
-<P STYLE="text-indent: 0.3in; margin-bottom: 0in; page-break-before: auto; page-break-after: auto">
+<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in; page-break-after: auto">
 <FONT SIZE=2>}</FONT></P>
-<P ALIGN=LEFT STYLE="margin-bottom: 0in"><BR>
-</P>
-<P ALIGN=LEFT STYLE="margin-bottom: 0in; page-break-before: always"><BR>
-</P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in; page-break-before: auto; page-break-after: auto">
-<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=4><B>Track Pattern
-and Switch List JSON format</B></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in; font-weight: normal">
-<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>The pattern reports
-and TrainPlayer exports all start with the creation of a JSON file.
-The file is created by this plugin and in the case of TrainPlayer
-manifest exports the JSON is created by modifying the JMRI generated
-manifest JSON. All the JSON files are written to the jsonManifests
-folder. They follow the illustrated format:</FONT></FONT></P>
-<P ALIGN=LEFT STYLE="margin-bottom: 0in"><IMG SRC="psHelp_html_m3dba2bfb.png" NAME="graphics1" ALIGN=LEFT WIDTH=661 HEIGHT=658 BORDER=0><BR CLEAR=LEFT><BR>
-</P>
 <P ALIGN=LEFT STYLE="margin-bottom: 0in; page-break-before: always"><BR>
 </P>
 <P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in; page-break-before: auto; page-break-after: auto">
 <FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=4><B>Pattern Scripts
 window:</B></FONT></FONT></P>
 <P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in; font-weight: normal">
-<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>Layout of methods
-and variables for:</FONT></FONT></P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in; font-weight: normal">
-<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>TrackPattern.ViewEntities.TrackPatternPanel().makePatternControls()</FONT></FONT></P>
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>OperationsPatternScripts.TrackPattern.ViewEntities.TrackPatternPanel</FONT></FONT></P>
+<IMG SRC="psHelp_html_m1c0263c5.png" NAME="graphics3" ALIGN=LEFT WIDTH=654 HEIGHT=210 BORDER=0><BR CLEAR=LEFT>
+<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in"><BR>
+</P>
+<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in"><BR>
+</P>
 <P ALIGN=LEFT STYLE="margin-bottom: 0in; page-break-before: auto; page-break-after: auto">
-<IMG SRC="Pattern%20Script%20Panel.png" NAME="FlowChart" ALIGN=LEFT WIDTH=641 HEIGHT=441 BORDER=0><BR CLEAR=LEFT><BR>
+<BR>
 </P>
 <P ALIGN=LEFT STYLE="margin-bottom: 0in"><BR>
 </P>
@@ -358,13 +370,11 @@ and variables for:</FONT></FONT></P>
 <FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=4><B>Pattern Report
 for Track window:</B></FONT></FONT></P>
 <P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in; font-weight: normal">
-<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>Layout of methods
-and variables for:</FONT></FONT></P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in; font-weight: normal">
-<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>TrackPattern.ViewSetCarsForm.patternReportForTrackWindow(self.trackPattern,offSet)</FONT></FONT></P>
+<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>OperationsPatternScripts.ControllerSetCarsForm.CreatePatternReportGui.makeFrame</FONT></FONT></P>
 <P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in"><BR>
 </P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in"><IMG SRC="Set%20Cars%20Form.png" NAME="FlowChart" ALIGN=LEFT WIDTH=645 HEIGHT=426 BORDER=0><BR CLEAR=LEFT><BR>
+<IMG SRC="psHelp_html_69a28c2a.png" NAME="graphics2" ALIGN=LEFT WIDTH=641 HEIGHT=698 BORDER=0><BR CLEAR=LEFT>
+<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in"><BR>
 </P>
 <P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in"><BR>
 </P>

@@ -438,11 +438,11 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
         self.tpFileHandler = logging.FileHandler(logPath, mode='w', encoding=MainScriptEntities.setEncoding())
         self.tpFileHandler.setFormatter(logFileFormat)
         self.tpLog.addHandler(self.tpFileHandler)
-        self.tpLog.debug('Log File for TrainPlayer script - debug level test message')
-        self.tpLog.info('Log File for TrainPlayer script - info level test message')
-        self.tpLog.warning('Log File for TrainPlayer script - warning level test message')
-        self.tpLog.error('Log File for TrainPlayer script - error level test message')
-        self.tpLog.critical('Log File for TrainPlayer script - critical level test message')
+        self.tpLog.debug('Log File for TrainPlayer script - DEBUG level test message')
+        self.tpLog.info('Log File for TrainPlayer script - INFO level test message')
+        self.tpLog.warning('Log File for TrainPlayer script - WARNING level test message')
+        self.tpLog.error('Log File for TrainPlayer script - ERROR level test message')
+        self.tpLog.critical('Log File for TrainPlayer script - CRITICAL level test message')
 
         self.jProfilePath = jmri.util.FileUtil.getProfilePath()
 

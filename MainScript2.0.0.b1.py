@@ -42,15 +42,11 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         psFileHandler = logging.FileHandler(logPath, mode='w', encoding='utf-8')
         psFileHandler.setFormatter(logFileFormat)
         self.psLog.addHandler(psFileHandler)
-        self.psLog.debug('Log File for Pattern Scripts Plugin - debug level test message')
-        self.psLog.info('Log File for Pattern Scripts Plugin - info level test message')
-        self.psLog.warning('Log File for Pattern Scripts Plugin - warning level test message')
-        self.psLog.error('Log File for Pattern Scripts Plugin - error level test message')
-        self.psLog.critical('Log File for Pattern Scripts Plugin - critical level test message')
-    # fire up the config file
-        if not (MainScriptEntities.validateConfigFile()):
-            MainScriptEntities.writeNewConfigFile() # No love, just start over
-            self.psLog.warning('New PatternConfig.json file created')
+        self.psLog.debug('Log File for Pattern Scripts Plugin - DEBUG level test message')
+        self.psLog.info('Log File for Pattern Scripts Plugin - INFO level test message')
+        self.psLog.warning('Log File for Pattern Scripts Plugin - WARNING level test message')
+        self.psLog.error('Log File for Pattern Scripts Plugin - ERROR level test message')
+        self.psLog.critical('Log File for Pattern Scripts Plugin - CRITICAL level test message')
 
         return
 
@@ -58,7 +54,10 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         '''Make and populate the Pattern Scripts control panel'''
 
         yTimeNow = time.time()
+        MainScriptEntities.validateStubFile()
         MainScriptEntities.validateFileDestinationDirestories()
+        MainScriptEntities.validateConfigFile()
+
     # make a list of subroutines for the control panel
         subroutineList = []
         controlPanelConfig = MainScriptEntities.readConfigFile('CP')
@@ -82,7 +81,6 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         if (locationOptions[panelLocation][1]):
             getattr(PluginLocations, locationOptions[panelLocation][1])(scrollPanel)
     # fire up the help File
-        MainScriptEntities.validateStubFile()
         self.psLog.info(locationOptions[panelLocation][0])
         self.psLog.info('Current Pattern Scripts directory: ' + MainScriptEntities._currentPath)
         self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
