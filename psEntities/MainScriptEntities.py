@@ -34,6 +34,25 @@ def setEncoding():
 
     return 'utf-8' #ascii, utf-16
 
+def setColors():
+    '''Call this before using color'''
+
+    colorDefinition = readConfigFile('CD')
+
+    r = colorDefinition['CP'][colorDefinition['color1']]["R"]
+    g = colorDefinition['CP'][colorDefinition['color1']]["G"]
+    b = colorDefinition['CP'][colorDefinition['color1']]["B"]
+    global _COLOR1
+    _COLOR1 = java.awt.Color(r, g, b)
+
+    r = colorDefinition['CP'][colorDefinition['color2']]["R"]
+    g = colorDefinition['CP'][colorDefinition['color2']]["G"]
+    b = colorDefinition['CP'][colorDefinition['color2']]["B"]
+    global _COLOR2
+    _COLOR2 = java.awt.Color(r, g, b)
+
+    return
+
 def timeStamp(epochTime=0):
     '''Valid Time, get local time adjusted for time zone and dst'''
 

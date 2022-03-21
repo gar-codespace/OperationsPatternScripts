@@ -48,6 +48,8 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         self.psLog.error('Log File for Pattern Scripts Plugin - ERROR level test message')
         self.psLog.critical('Log File for Pattern Scripts Plugin - CRITICAL level test message')
 
+        # MainScriptEntities.setColors()
+
         return
 
     def handle(self):

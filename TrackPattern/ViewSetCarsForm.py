@@ -154,20 +154,9 @@ class MakeSetCarsEqptRows():
         fontSize = MainScriptEntities._pm.getFontSize()
         self.panelHeight = fontSize + 4
         self.panelWidth = fontSize - 2
-
-        colorDefinition = MainScriptEntities.readConfigFile('CD')
-
-        r = colorDefinition['CP'][colorDefinition['color1']]["R"]
-        g = colorDefinition['CP'][colorDefinition['color1']]["G"]
-        b = colorDefinition['CP'][colorDefinition['color1']]["B"]
-        self.color1 = java.awt.Color(r, g, b)
-
-        r = colorDefinition['CP'][colorDefinition['color2']]["R"]
-        g = colorDefinition['CP'][colorDefinition['color2']]["G"]
-        b = colorDefinition['CP'][colorDefinition['color2']]["B"]
-        self.color2 = java.awt.Color(r, g, b)
-
+        
         self.setCarsFormData = setCarsFormData
+        MainScriptEntities.setColors()
 
         return
 
@@ -181,7 +170,7 @@ class MakeSetCarsEqptRows():
 
         for loco in locos:
             combinedInputLine = javax.swing.JPanel()
-            combinedInputLine.setBackground(self.color1)
+            combinedInputLine.setBackground(MainScriptEntities._COLOR1)
             inputText = javax.swing.JTextField(5)
             textBoxEntry.append(inputText)
             inputBox = makeSwingBox(self.panelWidth * 6, self.panelHeight)
@@ -209,7 +198,7 @@ class MakeSetCarsEqptRows():
 
         for car in cars:
             combinedInputLine = javax.swing.JPanel()
-            combinedInputLine.setBackground(self.color2)
+            combinedInputLine.setBackground(MainScriptEntities._COLOR2)
             inputText = javax.swing.JTextField(5)
             textBoxEntry.append(inputText)
             inputBox = makeSwingBox(self.panelWidth * 6, self.panelHeight)
