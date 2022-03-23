@@ -261,26 +261,25 @@ class JmriTranslationToTp():
         for location in completeJmriManifest[u'locations']:
 
             tpLocation = {}
-            locationName = location['userName']
             tpLocation['locationName'] = location['userName']
             tpLocation['tracks'] = []
 
             locoList = []
             carList = []
             for loco in location[u'engines'][u'add']:
-                line = self.parseRollingStockAsDict(loco, locationName)
+                line = self.parseRollingStockAsDict(loco)
                 line['PUSO'] = 'PL'
                 locoList.append(line)
             for loco in location[u'engines'][u'remove']:
-                line = self.parseRollingStockAsDict(loco, locationName)
+                line = self.parseRollingStockAsDict(loco)
                 line['PUSO'] = 'SL'
                 locoList.append(line)
             for car in location['cars']['add']:
-                line = self.parseRollingStockAsDict(car, locationName)
+                line = self.parseRollingStockAsDict(car)
                 line['PUSO'] = 'PC'
                 carList.append(line)
             for car in location['cars']['remove']:
-                line = self.parseRollingStockAsDict(car, locationName)
+                line = self.parseRollingStockAsDict(car)
                 line['PUSO'] = 'SC'
                 carList.append(line)
 
@@ -296,10 +295,10 @@ class JmriTranslationToTp():
 
         return locationList
 
-    def parseRollingStockAsDict(self, rS, lN):
+    def parseRollingStockAsDict(self, rS):
 
         rsDict = {}
-        rsDict['Road'] = rS[u'road']
+        rsDict['Road'] = unicode(rS[u'road'], MainScriptEntities.setEncoding())
         rsDict['Number'] = rS[u'number']
 
         try:
@@ -316,17 +315,18 @@ class JmriTranslationToTp():
             rsDict[u'Load'] = 'O'
         rsDict[u'Length'] = rS[u'length']
         rsDict[u'Weight'] = rS[u'weightTons']
-        rsDict[u'Track'] = rS[u'location'][u'track'][u'userName']
-        rsDict[u'Set to'] = lN + ';' + rS[u'destination'][u'track'][u'userName']
+        rsDict[u'Track'] = unicode(rS[u'location'][u'track'][u'userName'], MainScriptEntities.setEncoding())
+        # rsDict[u'Set to'] = unicode(lN, MainScriptEntities.setEncoding()) + u';' + unicode(rS[u'destination'][u'track'][u'userName'], MainScriptEntities.setEncoding())
+        rsDict[u'Set to'] = unicode(rS[u'destination'][u'userName'], MainScriptEntities.setEncoding()) + u';' + unicode(rS[u'destination'][u'track'][u'userName'], MainScriptEntities.setEncoding())
         try:
-            jFinalDestination = rS[u'finalDestination'][u'userName']
+            jFinalDestination = unicode(rS[u'finalDestination'][u'userName'], MainScriptEntities.setEncoding())
             try:
-                jFinalTrack = rS[u'finalDestination'][u'track'][u'userName']
+                jFinalTrack = unicode(rS[u'finalDestination'][u'track'][u'userName'], MainScriptEntities.setEncoding())
             except KeyError:
-                jFinalTrack = 'Any'
+                jFinalTrack = u'Any'
             rsDict[u'FD&Track'] = jFinalDestination + ';' + jFinalTrack
         except:
-            rsDict[u'FD&Track'] = rS[u'destination'][u'userName'] + ';' + rS[u'destination'][u'track'][u'userName']
+            rsDict[u'FD&Track'] = unicode(rS[u'destination'][u'userName'], MainScriptEntities.setEncoding()) + u';' + unicode(rS[u'destination'][u'track'][u'userName'], MainScriptEntities.setEncoding())
 
         return rsDict
 

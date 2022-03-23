@@ -39,6 +39,8 @@ Stuff that's OK:
   Ignore Track Length works with schedules
   Colors moved to config file
   Config file validation corrected
+  TP Exports unicode OK
+  Set cars to spur removes FD OK
 
 Todo:
   Catch up with the latest JMRI stuff like text color

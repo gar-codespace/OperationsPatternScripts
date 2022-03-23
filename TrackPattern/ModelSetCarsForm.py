@@ -108,11 +108,19 @@ def setRsToTrack(setCarsForm, textBoxEntry):
             if toTrackObject.getTrackType() == 'Spur':
                 carObject.setMoves(carObject.getMoves() + 1)
                 applySchedule(toTrackObject, carObject)
+                deleteFd(carObject)
 
         i += 1
     jmri.jmrit.operations.rollingstock.cars.CarManagerXml.save()
 
     psLog.info('Rolling stock count: ' + str(setCount) + ', processed from track: ' + fromTrack)
+
+    return
+
+def deleteFd(carObject):
+
+    carObject.setFinalDestinationTrack(None)
+    carObject.setFinalDestination(None)
 
     return
 
