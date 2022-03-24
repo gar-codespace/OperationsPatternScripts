@@ -1,6 +1,4 @@
 Comments:
-  why isnt jmri.jmrit.operations.rollingstock.cars.Car.testDestination()being used?
-  schedule does not prevent setting a car to a track, should it?
 
 Stuff that's OK:
   Ignore Track Length works with yard tracks
@@ -41,6 +39,8 @@ Stuff that's OK:
   Config file validation corrected
   TP Exports unicode OK
   Set cars to spur removes FD OK
+  Schedule does not prevent setting a car to a track
+  Toggle AS Apply schedule in config file works OK
 
 Todo:
   Catch up with the latest JMRI stuff like text color

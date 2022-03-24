@@ -14,7 +14,6 @@ def useThisVersion():
     fileRoot = jmri.util.FileUtil.getPreferencesPath()
     currentFile = str(jmri.util.FileUtil.findFiles('MainScript2.0.0.b1.py', fileRoot).pop())
     currentDir = java.io.File(currentFile).getParent()
-
     return currentDir
 
 try:
@@ -159,7 +158,7 @@ class TrackPatternTranslationToTp():
 
         headerNames = MainScriptEntities.readConfigFile('TP')
         reportTitle = headerNames['TD']['TP']
-        jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
+        jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\TrainPlayer Work Events.json'
         with codecsOpen(jsonFile, 'r', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
             jsonSwitchList = jsonWorkFile.read()
         tpSwitchList = jsonLoads(jsonSwitchList)
@@ -231,7 +230,7 @@ class JmriTranslationToTp():
 
         jmriDateAsEpoch = self.convertJmriDateToEpoch(completeJmriManifest[u'date'])
         completeJmriManifest['date'] = MainScriptEntities.timeStamp(jmriDateAsEpoch)
-        completeJmriManifest['trainDescription'] = 'TrainPlayer Work Events'
+        completeJmriManifest['trainDescription'] = completeJmriManifest['description']
         completeJmriManifest['trainName'] = completeJmriManifest['userName']
         completeJmriManifest['trainComment'] = completeJmriManifest['comment']
         completeJmriManifest.pop('description', 'Description')
@@ -389,7 +388,7 @@ class ProcessWorkEventList():
         self.tpLog.debug('writeTpWorkEventListAsJson')
 
         reportTitle = appendedTpSwitchList['trainDescription']
-        jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
+        jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\TrainPlayer Work Events.json'
         jsonObject = jsonDumps(appendedTpSwitchList, indent=2, sort_keys=True)
         with codecsOpen(jsonFile, 'wb', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
             jsonWorkFile.write(jsonObject)

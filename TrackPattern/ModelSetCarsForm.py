@@ -105,9 +105,10 @@ def setRsToTrack(setCarsForm, textBoxEntry):
 
         if setResult == 'okay':
             setCount += 1
+            if MainScriptEntities.readConfigFile('TP')['AS']:
+                applySchedule(toTrackObject, carObject)
             if toTrackObject.getTrackType() == 'Spur':
                 carObject.setMoves(carObject.getMoves() + 1)
-                applySchedule(toTrackObject, carObject)
                 deleteFd(carObject)
 
         i += 1
