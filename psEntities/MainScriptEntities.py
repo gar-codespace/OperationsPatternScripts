@@ -24,6 +24,7 @@ _pm = jmri.InstanceManager.getDefault(jmri.util.gui.GuiLafPreferencesManager)
 
 _currentPath = ''
 _trackNameClickedOn = None
+_listOfAssignedRs = []
 
 scriptName = 'OperationsPatternScripts.psEntities.MainScriptEntities'
 scriptRev = 20220101
@@ -50,6 +51,12 @@ def setColors():
     b = colorDefinition['CP'][colorDefinition['color2']]["B"]
     global _COLOR2
     _COLOR2 = java.awt.Color(r, g, b)
+
+    r = colorDefinition['CP'][colorDefinition['color3']]["R"]
+    g = colorDefinition['CP'][colorDefinition['color3']]["G"]
+    b = colorDefinition['CP'][colorDefinition['color3']]["B"]
+    global _COLOR3
+    _COLOR3 = java.awt.Color(r, g, b)
 
     return
 

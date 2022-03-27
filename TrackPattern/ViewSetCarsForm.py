@@ -154,7 +154,7 @@ class MakeSetCarsEqptRows():
         fontSize = MainScriptEntities._pm.getFontSize()
         self.panelHeight = fontSize + 4
         self.panelWidth = fontSize - 2
-        
+
         self.setCarsFormData = setCarsFormData
         MainScriptEntities.setColors()
 
@@ -170,7 +170,9 @@ class MakeSetCarsEqptRows():
 
         for loco in locos:
             combinedInputLine = javax.swing.JPanel()
-            combinedInputLine.setBackground(MainScriptEntities._COLOR1)
+            # combinedInputLine.setBackground(MainScriptEntities._COLOR1)
+            if str(loco['Road'] + loco['Number']) in MainScriptEntities._listOfAssignedRs:
+                combinedInputLine.setBackground(MainScriptEntities._COLOR3)
             inputText = javax.swing.JTextField(5)
             textBoxEntry.append(inputText)
             inputBox = makeSwingBox(self.panelWidth * 6, self.panelHeight)
@@ -198,7 +200,9 @@ class MakeSetCarsEqptRows():
 
         for car in cars:
             combinedInputLine = javax.swing.JPanel()
-            combinedInputLine.setBackground(MainScriptEntities._COLOR2)
+            # combinedInputLine.setBackground(MainScriptEntities._COLOR1)
+            if str(car['Road'] + car['Number']) in MainScriptEntities._listOfAssignedRs:
+                combinedInputLine.setBackground(MainScriptEntities._COLOR3)
             inputText = javax.swing.JTextField(5)
             textBoxEntry.append(inputText)
             inputBox = makeSwingBox(self.panelWidth * 6, self.panelHeight)
@@ -229,7 +233,7 @@ def makeSetCarsScheduleRow(setCarsFormData):
         schedulePanel.border = javax.swing.BorderFactory.createTitledBorder('Schedule for ' + trackName)
         scheduleButton = javax.swing.JButton(scheduleObject.getName())
         scheduleList.append(scheduleButton)
-        # schedulePanel.add(javax.swing.JLabel(u'Schedule: '))
+        schedulePanel.add(javax.swing.JLabel(u'Schedule: '))
         schedulePanel.add(scheduleButton)
 
     return schedulePanel, scheduleList

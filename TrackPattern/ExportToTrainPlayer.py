@@ -158,7 +158,7 @@ class TrackPatternTranslationToTp():
 
         headerNames = MainScriptEntities.readConfigFile('TP')
         reportTitle = headerNames['TD']['TP']
-        jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\TrainPlayer Work Events.json'
+        jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\Pattern Report - TrainPlayer Work Events.json'
         with codecsOpen(jsonFile, 'r', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
             jsonSwitchList = jsonWorkFile.read()
         tpSwitchList = jsonLoads(jsonSwitchList)
@@ -388,7 +388,7 @@ class ProcessWorkEventList():
         self.tpLog.debug('writeTpWorkEventListAsJson')
 
         reportTitle = appendedTpSwitchList['trainDescription']
-        jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\TrainPlayer Work Events.json'
+        jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\Pattern Report - TrainPlayer Work Events.json'
         jsonObject = jsonDumps(appendedTpSwitchList, indent=2, sort_keys=True)
         with codecsOpen(jsonFile, 'wb', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
             jsonWorkFile.write(jsonObject)

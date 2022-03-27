@@ -19,10 +19,10 @@
   "CD": {
     "CP": {
       "BLANCH": {
-        "B": 212,
-        "D": "Light orange",
+        "B": 225,
+        "D": "Light grey",
         "G": 225,
-        "R": 235
+        "R": 225
       },
       "DUST": {
         "B": 243,
@@ -47,11 +47,18 @@
         "D": "Light blue",
         "G": 243,
         "R": 237
+      },
+      "PETAL": {
+        "B": 220,
+        "D": "Light red",
+        "G": 220,
+        "R": 235
       }
     },
     "color1": "FADED",
-    "color2": "BLANCH"
-  },
+    "color2": "BLANCH",
+    "color3": "PETAL"
+  }, 
   "CP" : {
     "SI" : {
       "TrackPattern" : true,

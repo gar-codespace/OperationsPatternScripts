@@ -90,6 +90,7 @@ class StartUp():
         self.psLog.debug('setCarsButton')
 
         Model.updateConfigFile(self.controls)
+        Model.getRsOnTrains()
         Model.onScButtonPress()
 
         if MainScriptEntities.readConfigFile('TP')['TI']: # TrainPlayer Include

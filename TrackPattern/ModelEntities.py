@@ -37,19 +37,45 @@ def occuranceTally(listOfOccurances):
 
     return dict
 
-def makeGenericHeader():
-    '''A generic header info for any switch list, used to make the JSON file'''
+def getAllLocations():
+    '''JMRI sorts the list'''
 
-    listHeader = {}
-    listHeader['railroad'] = unicode(jmri.jmrit.operations.setup.Setup.getRailroadName(), MainScriptEntities.setEncoding())
-    listHeader['trainName'] = u'Report Type Placeholder'
-    listHeader['trainDescription'] = u'Report Description'
-    listHeader['trainComment'] = u'Train Comment Placeholder'
-    listHeader['date'] = unicode(MainScriptEntities.timeStamp(), MainScriptEntities.setEncoding())
-    listHeader['locations'] = []
+    allLocations = MainScriptEntities._lm.getLocationsByNameList()
+    locationList = []
+    for item in allLocations:
+        locationList.append(unicode(item.getName(), MainScriptEntities.setEncoding()))
 
-    return listHeader
+    return locationList
 
+def initializeConfigFile():
+    '''initialize or reinitialize the track pattern part of the config file on first use, reset, or edit of a location name'''
+
+    newConfigFile = MainScriptEntities.readConfigFile()
+    subConfigfile = newConfigFile['TP']
+    allLocations  = ModelEntities.getAllLocations()
+    subConfigfile.update({'AL': allLocations})
+    subConfigfile.update({'PL': allLocations[0]})
+    subConfigfile.update({'PT': ModelEntities.makeInitialTrackList(allLocations[0])})
+    newConfigFile.update({'TP': subConfigfile})
+
+    return newConfigFile
+
+def getTracksByLocation(location, trackType):
+
+    allTracksList = []
+    for x in MainScriptEntities._lm.getLocationByName(location).getTracksByNameList(trackType):
+        allTracksList.append(unicode(x.getName(), MainScriptEntities.setEncoding())) # list of all yard tracks for the validated location
+
+    return allTracksList
+
+def updateTrackCheckBoxes(trackCheckBoxes):
+    '''Returns a dictionary of track names and their check box status'''
+
+    dict = {}
+    for item in trackCheckBoxes:
+        dict[unicode(item.text, MainScriptEntities.setEncoding())] = item.selected
+
+    return dict
 def getGenericTrackDetails(locationName, trackName):
     '''The loco and car lists are sorted at this level, used to make the JSON file'''
 
@@ -192,48 +218,45 @@ def getDetailsForCarAsDict(carObject):
 
     return carDetailDict
 
-def appendJsonBody(trainPlayerSwitchList):
+def makeGenericHeader():
+    '''A generic header info for any switch list, used to make the JSON file'''
 
-    jsonCopyFrom = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\TrainPlayerSwitchlist.json'
-    with codecsOpen(jsonCopyFrom, 'r', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
-        switchList = jsonWorkFile.read()
-    jsonSwitchList = jsonLoads(switchList)
-    jTemp = jsonSwitchList['locations']
-    jTemp.append(trainPlayerSwitchList)
-    jsonSwitchList['locations'] = jTemp
+    listHeader = {}
+    listHeader['railroad'] = unicode(jmri.jmrit.operations.setup.Setup.getRailroadName(), MainScriptEntities.setEncoding())
+    listHeader['trainName'] = u'Report Type Placeholder'
+    listHeader['trainDescription'] = u'Report Description'
+    listHeader['trainComment'] = u'Train Comment Placeholder'
+    listHeader['date'] = unicode(MainScriptEntities.timeStamp(), MainScriptEntities.setEncoding())
+    listHeader['locations'] = []
 
-    jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\TrainPlayerSwitchlist.json'
-    jsonObject = jsonDumps(jsonSwitchList, indent=2, sort_keys=True)
+    return listHeader
+
+def writeWorkEventListAsJson(switchList):
+    '''The generic switch list is written as a JSON'''
+
+    switchListName = switchList['trainDescription']
+    jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + switchListName + '.json'
+    jsonObject = jsonDumps(switchList, indent=2, sort_keys=True)
     with codecsOpen(jsonCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
         jsonWorkFile.write(jsonObject)
 
-    return
+    return switchListName
 
-def getAllLocations():
-    '''JMRI sorts the list'''
+def readJsonWorkEventList(workEventName):
 
-    allLocations = MainScriptEntities._lm.getLocationsByNameList()
-    locationList = []
-    for item in allLocations:
-        locationList.append(unicode(item.getName(), MainScriptEntities.setEncoding()))
+    jsonCopyFrom = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + workEventName + '.json'
+    with codecsOpen(jsonCopyFrom, 'r', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
+        jsonEventList = jsonWorkFile.read()
+    textWorkEventList = jsonLoads(jsonEventList)
 
-    return locationList
+    return textWorkEventList
 
-def makeInitialTrackList(location):
+def makeTextListForPrint(textWorkEventList, trackTotals=False):
 
-    trackDict = {}
-    for track in MainScriptEntities._lm.getLocationByName(location).getTracksByNameList(None):
-        trackDict[unicode(track, MainScriptEntities.setEncoding())] = False
+    reportHeader = makeTextReportHeader(textWorkEventList)
+    reportLocations = makeTextReportLocations(textWorkEventList, trackTotals)
 
-    return trackDict
-
-def getTracksByLocation(location, trackType):
-
-    allTracksList = []
-    for x in MainScriptEntities._lm.getLocationByName(location).getTracksByNameList(trackType):
-        allTracksList.append(unicode(x.getName(), MainScriptEntities.setEncoding())) # list of all yard tracks for the validated location
-
-    return allTracksList
+    return reportHeader + reportLocations
 
 def makeTextReportHeader(textWorkEventList):
 
@@ -304,6 +327,22 @@ def loopThroughRs(type, rsAttribs):
 
     return switchListRow
 
+def writeTextSwitchList(fileName, textSwitchList):
+
+    textCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + fileName + '.txt'
+    with codecsOpen(textCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as textWorkFile:
+        textWorkFile.write(textSwitchList)
+
+    return
+
+def makeInitialTrackList(location):
+
+    trackDict = {}
+    for track in MainScriptEntities._lm.getLocationByName(location).getTracksByNameList(None):
+        trackDict[unicode(track, MainScriptEntities.setEncoding())] = False
+
+    return trackDict
+
 def makeCsvSwitchlist(trackPattern):
     # CSV writer does not support utf-8
 
@@ -362,3 +401,106 @@ def makeCsvSwitchlist(trackPattern):
                             + '\n'
 
     return csvSwitchList
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def appendJsonBody(trainPlayerSwitchList):
+
+    jsonCopyFrom = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\TrainPlayerSwitchlist.json'
+    with codecsOpen(jsonCopyFrom, 'r', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
+        switchList = jsonWorkFile.read()
+    jsonSwitchList = jsonLoads(switchList)
+    jTemp = jsonSwitchList['locations']
+    jTemp.append(trainPlayerSwitchList)
+    jsonSwitchList['locations'] = jTemp
+
+    jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\TrainPlayerSwitchlist.json'
+    jsonObject = jsonDumps(jsonSwitchList, indent=2, sort_keys=True)
+    with codecsOpen(jsonCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
+        jsonWorkFile.write(jsonObject)
+
+    return
+
+
+
+
+
+# def makeTextReportHeader(textWorkEventList):
+#
+#     textReportHeader    = textWorkEventList['railroad'] + '\n' \
+#                         + textWorkEventList['trainName'] + '\n' \
+#                         + textWorkEventList['trainDescription'] + '\n' \
+#                         + u'Comment: ' + textWorkEventList['trainComment'] + '\n' \
+#                         + u'Valid time: ' + textWorkEventList['date'] + '\n\n'
+#
+#     return textReportHeader
+
+# def makeTextReportLocations(textWorkEventList, trackTotals):
+#
+#     reportWidth = MainScriptEntities.readConfigFile('TP')['RW']
+#     locoItems = jmri.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
+#     carItems = jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
+#
+#     reportSwitchList = ''
+#     reportTally = [] # running total for all tracks
+#     reportSwitchList += 'Location: ' + textWorkEventList['locations'][0]['locationName'] + '\n'
+#     for track in textWorkEventList['locations'][0]['tracks']:
+#         lengthOfLocos = 0
+#         lengthOfCars = 0
+#         trackTally = []
+#         trackName = track['trackName']
+#         trackLength = track['length']
+#         reportSwitchList += 'Track: ' + trackName + '\n'
+#         switchListRow = ''
+#
+#         for loco in track['locos']:
+#             lengthOfLocos += int(loco['Length']) + 4
+#             reportSwitchList += loco['Set to'] + loopThroughRs('loco', loco) + '\n'
+#
+#         for car in track['cars']:
+#             lengthOfCars += int(car['Length']) + 4
+#             reportSwitchList += car['Set to'] + loopThroughRs('car', car) + '\n'
+#             trackTally.append(car['Final Dest'])
+#             reportTally.append(car['Final Dest'])
+#
+#         if trackTotals:
+#             totalLength = lengthOfLocos + lengthOfCars
+#             reportSwitchList += 'Total Cars: ' + str(len(track['cars'])) + ' Track Length: ' + str(trackLength) + ' Eqpt. Length: ' + str(totalLength) + ' Available: ' + str(trackLength - totalLength) + '\n\n'
+#             reportSwitchList += u'Track Totals for Cars:\n'
+#             for track, count in sorted(occuranceTally(trackTally).items()):
+#                 reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
+#         reportSwitchList += '\n'
+#
+#     if trackTotals:
+#         reportSwitchList += u'\nReport Totals for Cars:\n'
+#         for track, count in sorted(occuranceTally(reportTally).items()):
+#             reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
+#
+#     return reportSwitchList
+
+# def loopThroughRs(type, rsAttribs):
+#
+#     reportWidth = MainScriptEntities.readConfigFile('TP')['RW']
+#     switchListRow = ''
+#
+#     if type == 'loco':
+#         messageFormat = jmri.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
+#     if type == 'car':
+#         messageFormat = jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
+#
+#     for item in messageFormat:
+#         itemWidth = reportWidth[item]
+#         switchListRow += formatText(rsAttribs[item], itemWidth)
+#
+#     return switchListRow
