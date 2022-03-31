@@ -32,14 +32,6 @@ def setRsToTrack(setCarsForm, textBoxEntry):
 
     psLog.debug('setRsToTrack')
 
-    trackData = []
-    ignoreTrackLength = MainScriptEntities.readConfigFile('TP')['PI']
-
-    location = setCarsForm['locations'][0]['locationName']
-    locationObject = MainScriptEntities._lm.getLocationByName(unicode(location, MainScriptEntities.setEncoding()))
-    allTracksAtLoc = ModelEntities.getTracksByLocation(location, None)
-    fromTrack = unicode(setCarsForm['locations'][0]['tracks'][0]['trackName'], MainScriptEntities.setEncoding())
-
     userInputList = []
     for userInput in textBoxEntry:
         userInputList.append(unicode(userInput.getText(), MainScriptEntities.setEncoding()))
@@ -47,77 +39,66 @@ def setRsToTrack(setCarsForm, textBoxEntry):
     i = 0
     setCount = 0
 
+    allTracksAtLoc = ModelEntities.getTracksByLocation(None)
+    fromTrack = unicode(setCarsForm['locations'][0]['tracks'][0]['trackName'], MainScriptEntities.setEncoding())
     for loco in setCarsForm['locations'][0]['tracks'][0]['locos']:
-
-        toTrack = fromTrack
-        if userInputList[i]:
-            toTrack = userInputList[i]
-
-        locoObject = MainScriptEntities._em.newRS(loco['Road'], loco['Number'])
-        toTrackObject = locationObject.getTrackByName(unicode(toTrack, MainScriptEntities.setEncoding()), None)
-
-        if not unicode(toTrack, MainScriptEntities.setEncoding()) in allTracksAtLoc: # Catches invalid track typed into box
+        if not unicode(userInputList[i], MainScriptEntities.setEncoding()) in allTracksAtLoc: # Catches invalid track typed into box, skips empty entries
             i += 1
             continue
-
-        if toTrack == fromTrack:
+        if userInputList[i] == fromTrack:
             i += 1
             continue
-
-        if ignoreTrackLength:
-            trackLength = toTrackObject.getLength()
-            toTrackObject.setLength(9999)
-            setResult = locoObject.setLocation(locationObject, toTrackObject)
-            toTrackObject.setLength(trackLength)
-        else:
-            setResult = locoObject.setLocation(locationObject, toTrackObject)
-
+        locoObject =  MainScriptEntities._em.newRS(loco['Road'], loco['Number'])
+        setResult = setRs(locoObject, userInputList[i])
         if setResult == 'okay':
             setCount += 1
-
         i += 1
+
     jmri.jmrit.operations.rollingstock.engines.EngineManagerXml.save()
 
     for car in setCarsForm['locations'][0]['tracks'][0]['cars']:
-
-        toTrack = fromTrack
-        if userInputList[i]:
-            toTrack = userInputList[i]
-
-        carObject = MainScriptEntities._cm.newRS(car['Road'], car['Number'])
-        toTrackObject = locationObject.getTrackByName(unicode(toTrack, MainScriptEntities.setEncoding()), None)
-
-        if not unicode(toTrack, MainScriptEntities.setEncoding()) in allTracksAtLoc: # Catches invalid track typed into box
+        if not unicode(userInputList[i], MainScriptEntities.setEncoding()) in allTracksAtLoc:
             i += 1
             continue
-
-        if toTrack == fromTrack:
+        if userInputList[i] == fromTrack:
             i += 1
             continue
-
-        if ignoreTrackLength:
-            trackLength = toTrackObject.getLength()
-            toTrackObject.setLength(9999)
-            setResult = carObject.setLocation(locationObject, toTrackObject)
-            toTrackObject.setLength(trackLength)
-        else:
-            setResult = carObject.setLocation(locationObject, toTrackObject)
-
+        carObject =  MainScriptEntities._cm.newRS(car['Road'], car['Number'])
+        setResult = setRs(carObject, userInputList[i])
         if setResult == 'okay':
             setCount += 1
-            if toTrackObject.getTrackType() == 'Spur':
-                carObject.updateLoad()
-                carObject.setMoves(carObject.getMoves() + 1)
-                deleteFd(carObject)
-            if MainScriptEntities.readConfigFile('TP')['AS']:
-                applySchedule(toTrackObject, carObject)
 
         i += 1
+
     jmri.jmrit.operations.rollingstock.cars.CarManagerXml.save()
 
     psLog.info('Rolling stock count: ' + str(setCount) + ', processed from track: ' + fromTrack)
 
     return
+
+def setRs(rollingStock, userInputListItem):
+
+    location = MainScriptEntities.readConfigFile('TP')['PL']
+    locationObject = MainScriptEntities._lm.getLocationByName(unicode(location, MainScriptEntities.setEncoding()))
+    toTrackObject = locationObject.getTrackByName(unicode(userInputListItem, MainScriptEntities.setEncoding()), None)
+
+    ignoreTrackLength = MainScriptEntities.readConfigFile('TP')['PI']
+    if ignoreTrackLength:
+        trackLength = toTrackObject.getLength()
+        toTrackObject.setLength(9999)
+        setResult = rollingStock.setLocation(locationObject, toTrackObject)
+        toTrackObject.setLength(trackLength)
+    else:
+        setResult = rollingStock.setLocation(locationObject, toTrackObject)
+
+    if toTrackObject.getTrackType() == 'Spur' and setResult == 'okay':
+        rollingStock.updateLoad()
+        rollingStock.setMoves(rollingStock.getMoves() + 1)
+        deleteFd(rollingStock)
+    if MainScriptEntities.readConfigFile('TP')['AS'] and setResult == 'okay':
+        applySchedule(toTrackObject, rollingStock)
+
+    return setResult
 
 def deleteFd(carObject):
 
@@ -179,7 +160,7 @@ def makeLocationDict(setCarsForm, textBoxEntry):
 
     trackName = setCarsForm['locations'][0]['tracks'][0]['trackName']
     location = setCarsForm['locations'][0]['locationName']
-    allTracksAtLoc = ModelEntities.getTracksByLocation(location, None)
+    allTracksAtLoc = ModelEntities.getTracksByLocation(None)
 
     userInputList = []
     for userInput in textBoxEntry:

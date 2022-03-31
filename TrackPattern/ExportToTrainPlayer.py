@@ -28,8 +28,8 @@ from psEntities import MainScriptEntities
 scriptName ='OperationsPatternScripts.TrackPattern.ExportToTrainPlayer'
 scriptRev = 20220101
 
-_lm = MainScriptEntities._lm
-_tm = MainScriptEntities._tm
+# _lm = MainScriptEntities._lm
+# _tm = MainScriptEntities._tm
 _jmriLocationsPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Locations.csv"
 _jmriManifestPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Work Events.csv"
 
@@ -74,7 +74,7 @@ class ExportJmriLocations():
 
         i = 0
         csvLocations = ''
-        for locationId in _lm.getLocationsByIdList():
+        for locationId in MainScriptEntities._lm.getLocationsByIdList():
             for trackId in locationId.getTrackIdsByIdList():
                 track = locationId.getTrackById(trackId)
                 aoLocale = unicode(locationId.getName(), MainScriptEntities.setEncoding()) + u';' + unicode(track.getName(), MainScriptEntities.setEncoding())
@@ -121,7 +121,7 @@ class TrackPatternTranslationToTp():
 
         location = setCarsForm['locations'][0]['locationName']
         trackName = setCarsForm['locations'][0]['tracks'][0]['trackName']
-        locationTracks = _lm.getLocationByName(location).getTracksList()
+        locationTracks = MainScriptEntities._lm.getLocationByName(location).getTracksList()
         trackList = []
         for track in locationTracks:
             trackList.append(track.getName())
@@ -188,7 +188,7 @@ class JmriTranslationToTp():
     def findNewestManifest(self):
         '''If more than 1 train is built, pick the newest one'''
 
-        if not _tm.isAnyTrainBuilt():
+        if not MainScriptEntities._tm.isAnyTrainBuilt():
             self.psLog.info('No trains are built')
             self.tpLog.info('No trains are built')
 
@@ -209,7 +209,7 @@ class JmriTranslationToTp():
     def getBuiltTrains(self):
 
         builtTrainList = []
-        for train in _tm.getTrainsByStatusList():
+        for train in MainScriptEntities._tm.getTrainsByStatusList():
             if train.isBuilt():
                 builtTrainList.append(train)
 

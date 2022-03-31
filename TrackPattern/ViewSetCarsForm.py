@@ -43,31 +43,28 @@ def makeSetCarsForTrackForm(setCarsFormData):
     setCarsFormBody.setLayout(javax.swing.BoxLayout(setCarsFormBody, javax.swing.BoxLayout.PAGE_AXIS))
 
     setCarsEqptRows = MakeSetCarsEqptRows(setCarsFormData)
-    textBoxEntry = []
 
-    locoBoxEntry = []
     if setCarsFormData['locations'][0]['tracks'][0]['locos']:
         locoFormBody = javax.swing.JPanel()
         locoFormBody.setLayout(javax.swing.BoxLayout(locoFormBody, javax.swing.BoxLayout.PAGE_AXIS))
         locoFormBody.border = javax.swing.BorderFactory.createTitledBorder(u'Locomotives at ' + setCarsFormData['locations'][0]['tracks'][0]['trackName'])
 
-        setCarsLocoRows, locoBoxEntry = setCarsEqptRows.makeSetCarsLocoRows()
+        setCarsLocoRows = setCarsEqptRows.makeSetCarsLocoRows()
         for loco in setCarsLocoRows:
             locoFormBody.add(loco)
         setCarsFormBody.add(locoFormBody)
 
-    carBoxEntry = []
     if setCarsFormData['locations'][0]['tracks'][0]['cars']:
         carFormBody = javax.swing.JPanel()
         carFormBody.setLayout(javax.swing.BoxLayout(carFormBody, javax.swing.BoxLayout.PAGE_AXIS))
         carFormBody.border = javax.swing.BorderFactory.createTitledBorder(u'Cars at ' + setCarsFormData['locations'][0]['tracks'][0]['trackName'])
 
-        setCarscarRows, carBoxEntry = setCarsEqptRows.makeSetCarsCarRows()
-        for car in setCarscarRows:
+        setCarsCarRows = setCarsEqptRows.makesetCarsCarRows()
+        for car in setCarsCarRows:
             carFormBody.add(car)
         setCarsFormBody.add(carFormBody)
 
-    buttonDict['textBoxEntry'] = locoBoxEntry + carBoxEntry
+    buttonDict['textBoxEntry'] = setCarsEqptRows.textBoxEntryList()
 
     setCarsFormPane = javax.swing.JScrollPane(setCarsFormBody)
     setCarsForm.add(setCarsFormPane)
@@ -75,7 +72,7 @@ def makeSetCarsForTrackForm(setCarsFormData):
 
     setCarsSchedule, scheduleButton = makeSetCarsScheduleRow(setCarsFormData)
     buttonDict['scheduleButton'] = []
-    if (setCarsSchedule):
+    if setCarsSchedule and MainScriptEntities.readConfigFile('TP')['AS']:
         setCarsForm.add(setCarsSchedule)
         buttonDict['scheduleButton'] = scheduleButton
         setCarsForm.add(javax.swing.JSeparator())
@@ -156,6 +153,7 @@ class MakeSetCarsEqptRows():
         self.panelWidth = fontSize - 2
 
         self.setCarsFormData = setCarsFormData
+        self.textBoxEntry = []
         MainScriptEntities.setColors()
 
         return
@@ -163,9 +161,7 @@ class MakeSetCarsEqptRows():
     def makeSetCarsLocoRows(self):
         '''Creates the locomotive lines of the pattern report form'''
 
-
         listOfLocoRows = []
-        textBoxEntry = []
         locos = self.setCarsFormData['locations'][0]['tracks'][0]['locos']
 
         for loco in locos:
@@ -174,7 +170,7 @@ class MakeSetCarsEqptRows():
             if str(loco['Road'] + loco['Number']) in MainScriptEntities._listOfAssignedRs:
                 combinedInputLine.setBackground(MainScriptEntities._COLOR3)
             inputText = javax.swing.JTextField(5)
-            textBoxEntry.append(inputText)
+            self.textBoxEntry.append(inputText)
             inputBox = makeSwingBox(self.panelWidth * 6, self.panelHeight)
             inputBox.add(inputText)
             combinedInputLine.add(inputBox)
@@ -189,13 +185,12 @@ class MakeSetCarsEqptRows():
 
             listOfLocoRows.append(combinedInputLine)
 
-        return listOfLocoRows, textBoxEntry
+        return listOfLocoRows
 
-    def makeSetCarsCarRows(self):
+    def makesetCarsCarRows(self):
         '''Creates the car lines of the pattern report form'''
 
         listOfCarRows = []
-        textBoxEntry = []
         cars = self.setCarsFormData['locations'][0]['tracks'][0]['cars']
 
         for car in cars:
@@ -204,7 +199,7 @@ class MakeSetCarsEqptRows():
             if str(car['Road'] + car['Number']) in MainScriptEntities._listOfAssignedRs:
                 combinedInputLine.setBackground(MainScriptEntities._COLOR3)
             inputText = javax.swing.JTextField(5)
-            textBoxEntry.append(inputText)
+            self.textBoxEntry.append(inputText)
             inputBox = makeSwingBox(self.panelWidth * 6, self.panelHeight)
             inputBox.add(inputText)
             combinedInputLine.add(inputBox)
@@ -217,7 +212,11 @@ class MakeSetCarsEqptRows():
             combinedInputLine.add(javax.swing.Box.createHorizontalGlue())
             listOfCarRows.append(combinedInputLine)
 
-        return listOfCarRows, textBoxEntry
+        return listOfCarRows
+
+    def textBoxEntryList(self):
+
+        return self.textBoxEntry
 
 def makeSetCarsScheduleRow(setCarsFormData):
     '''Using [0] to avoid for loop since there is only 1 location and track'''

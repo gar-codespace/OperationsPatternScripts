@@ -60,11 +60,12 @@ def initializeConfigFile():
 
     return newConfigFile
 
-def getTracksByLocation(location, trackType):
+def getTracksByLocation(trackType):
 
+    location = MainScriptEntities.readConfigFile('TP')['PL']
     allTracksList = []
     for x in MainScriptEntities._lm.getLocationByName(location).getTracksByNameList(trackType):
-        allTracksList.append(unicode(x.getName(), MainScriptEntities.setEncoding())) # list of all yard tracks for the validated location
+        allTracksList.append(unicode(x.getName(), MainScriptEntities.setEncoding()))
 
     return allTracksList
 

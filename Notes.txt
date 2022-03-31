@@ -44,6 +44,8 @@ Stuff that's OK:
 
 Todo:
   Catch up with the latest JMRI stuff like text color
+  Test apply schedule turned off
+  Test schedule if set to sequential
 
 Wish List:
   add Pattern Scripts to Operations Pro combo box

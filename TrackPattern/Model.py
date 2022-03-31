@@ -41,7 +41,7 @@ def makeNewPatternTracks(location):
     '''Makes a new list of all tracks for a location'''
 
     psLog.debug('makeNewPatternTracks')
-    allTracks = ModelEntities.getTracksByLocation(location, None)
+    allTracks = ModelEntities.getTracksByLocation(None)
     trackDict = {}
     for track in allTracks:
         trackDict[track] = False
@@ -56,7 +56,7 @@ def makeTrackList(location, type):
     '''Returns a list of tracks by type for a location'''
     psLog.debug('makeTrackList')
 
-    return ModelEntities.getTracksByLocation(location, type)
+    return ModelEntities.getTracksByLocation(type)
 
 def updatePatternTracks(trackList):
     '''Updates list of yard tracks as the yard track only flag is toggled'''
