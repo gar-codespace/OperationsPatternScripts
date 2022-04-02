@@ -67,7 +67,6 @@ def setRsToTrack(setCarsForm, textBoxEntry):
         setResult = setRs(carObject, userInputList[i])
         if setResult == 'okay':
             setCount += 1
-
         i += 1
 
     jmri.jmrit.operations.rollingstock.cars.CarManagerXml.save()

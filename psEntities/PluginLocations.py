@@ -41,20 +41,28 @@ class MakePatternScriptsWindow():
         self.controlPanel = scrollPanel
         self.button = button
         self.uniqueWindow = jmri.util.JmriJFrame(u'Pattern Scripts')
+        self.helpStubPath = 'file:///' + jmri.util.FileUtil.getPreferencesPath() + 'jmrihelp\\psStub.html'
+
+        return
+
+    def scrubPath(self):
+        '''Convert an OS path to a browser acceptable path'''
+
+        self.helpStubPath = self.helpStubPath.replace('\\', '/')
+        self.helpStubPath = self.helpStubPath.replace(' ', '%20')
+        self.helpStubPath = self.helpStubPath.replace('  ', '%20%20')
 
         return
 
     def helpItemSelected(self, ACTION_PERFORMED):
 
-        helpStubPath = 'file:///' + jmri.util.FileUtil.getPreferencesPath() + 'jmrihelp\\psStub.html'
-        fixPath1 = helpStubPath.replace('\\', '/')
-        fixPath2 = fixPath1.replace(' ', '%20')
-        jmri.util.HelpUtil.openWebPage(fixPath2)
+        jmri.util.HelpUtil.openWebPage(self.helpStubPath)
 
         return
 
     def makeWindow(self):
 
+        self.scrubPath()
         helpMenuItem = javax.swing.JMenuItem(u'Window Help...')
         helpMenuItem.addActionListener(self.helpItemSelected)
 

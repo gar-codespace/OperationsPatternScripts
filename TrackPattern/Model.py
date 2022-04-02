@@ -111,6 +111,18 @@ def getSelectedTracks():
 
     return [track for track, include in sorted(patternTracks.items()) if include]
 
+def verifySelectedTracks():
+    '''Catches on the fly user edit if track names'''
+
+    validStatus = True
+    allTracksList = ModelEntities.getTracksByLocation(None)
+    patternTracks = MainScriptEntities.readConfigFile('TP')['PT']
+    for track in patternTracks:
+        if not track in allTracksList:
+            validStatus = False
+
+    return validStatus
+
 def makeLocationDict(trackList=None):
     '''Returns the details for the tracks sent in formatted for the JSON file '''
 
@@ -275,123 +287,3 @@ def writeCsvSwitchList(trackPattern, type):
         csvWorkFile.write(csvObject)
 
     return
-
-
-
-
-# def writeWorkEventListAsJson(switchList):
-#     '''The generic switch list is written as a JSON'''
-#
-#     psLog.debug('writeWorkEventListAsJson')
-#
-#     switchListName = switchList['trainDescription']
-#     jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + switchListName + '.json'
-#     jsonObject = jsonDumps(switchList, indent=2, sort_keys=True)
-#     with codecsOpen(jsonCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
-#         jsonWorkFile.write(jsonObject)
-#
-#     return switchListName
-
-# def readJsonWorkEventList(workEventName):
-#
-#     psLog.debug('readJsonWorkEventList')
-#
-#     jsonCopyFrom = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + workEventName + '.json'
-#     with codecsOpen(jsonCopyFrom, 'r', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
-#         jsonEventList = jsonWorkFile.read()
-#     textWorkEventList = jsonLoads(jsonEventList)
-#
-#     return textWorkEventList
-
-# def makeTextListForPrint(textWorkEventList, trackTotals=False):
-#
-#     psLog.debug('makeTextListForPrint')
-#
-#     reportHeader = ModelEntities.makeTextReportHeader(textWorkEventList)
-#     reportLocations = ModelEntities.makeTextReportLocations(textWorkEventList, trackTotals)
-#
-#     return reportHeader + reportLocations
-
-# def writeTextSwitchList(fileName, textSwitchList):
-#
-#     psLog.debug('writeTextSwitchList')
-#
-#     textCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + fileName + '.txt'
-#     with codecsOpen(textCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as textWorkFile:
-#         textWorkFile.write(textSwitchList)
-#
-#     return
-
-
-
-
-
-
-# def makeTextSwitchListHeader(switchListName):
-#     '''The JSON switch list is read in and processed'''
-#
-#     jsonCopyFrom = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + switchListName + '.json'
-#     with codecsOpen(jsonCopyFrom, 'r', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
-#         jsonSwitchList = jsonWorkFile.read()
-#     switchList = jsonLoads(jsonSwitchList)
-#
-#     reportHeader = ModelEntities.makeReportHeader(switchList)
-#
-#     return reportHeader
-#
-# def makeTextSwitchListBody(switchListName, includeTotals=False):
-#     '''The JSON switch list is read in and processed'''
-#
-#     jsonCopyFrom = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + switchListName + '.json'
-#     with codecsOpen(jsonCopyFrom, 'r', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
-#         jsonSwitchList = jsonWorkFile.read()
-#     switchList = jsonLoads(jsonSwitchList)
-#
-#     reportSwitchList = ModelEntities.makeReportSwitchList(switchList, includeTotals)
-#
-#     return reportSwitchList
-
-
-
-
-
-
-# def updateLocations():
-#     '''Updates the config file with a list of all locations for this profile'''
-#
-#     psLog.debug('updateLocations')
-#     newConfigFile = MainScriptEntities.readConfigFile()
-#     subConfigfile = newConfigFile['TP']
-#     allLocations  = ModelEntities.getAllLocations()
-#     if not (subConfigfile['AL']): # when this sub is used for the first tims
-#         subConfigfile.update({'PL': allLocations[0]})
-#         subConfigfile.update({'PT': ModelEntities.makeInitialTrackList(allLocations[0])})
-#     subConfigfile.update({'AL': allLocations})
-#     newConfigFile.update({'TP': subConfigfile})
-#     MainScriptEntities.writeConfigFile(newConfigFile)
-#
-#     return newConfigFile
-
-# def initializeConfigFile():
-#     '''initialize or reinitialize the track pattern part of the config file on first use, reset, or edit of a location name'''
-#
-#     psLog.debug('initializeConfigFile')
-#     newConfigFile = MainScriptEntities.readConfigFile()
-#     subConfigfile = newConfigFile['TP']
-#     allLocations  = ModelEntities.getAllLocations()
-#     subConfigfile.update({'AL': allLocations})
-#     subConfigfile.update({'PL': allLocations[0]})
-#     subConfigfile.update({'PT': ModelEntities.makeInitialTrackList(allLocations[0])})
-#     newConfigFile.update({'TP': subConfigfile})
-#
-#     return newConfigFile
-
-# def updateTrackCheckBoxes(trackCheckBoxes):
-#     '''Returns a dictionary of track names and their check box status'''
-#
-#     psLog.debug('updateTrackCheckBoxes')
-#     dict = {}
-#     for item in trackCheckBoxes:
-#         dict[unicode(item.text, MainScriptEntities.setEncoding())] = item.selected
-#
-#     return dict

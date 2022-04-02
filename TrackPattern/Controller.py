@@ -13,6 +13,29 @@ from TrackPattern import View
 scriptName = 'OperationsPatternScripts.TrackPattern.Controller'
 scriptRev = 20220101
 
+class LocationComboBox(java.awt.event.ActionListener):
+    '''Event triggered from location combobox selection'''
+
+    def __init__(self, panel, controls):
+        self.panel = panel
+        self.controls = controls
+        self.psLog = logging.getLogger('PS.TP.ComboBox')
+
+    def actionPerformed(self, event):
+
+        newConfigFile = Model.updatePatternLocation(event.getSource().getSelectedItem())
+        MainScriptEntities.writeConfigFile(newConfigFile)
+        newConfigFile = MainScriptEntities.readConfigFile('TP')
+        newConfigFile = Model.makeNewPatternTracks(newConfigFile['PL'])
+        MainScriptEntities.writeConfigFile(newConfigFile)
+        self.psLog.info('The track list for location ' + newConfigFile['TP']['PL'] + ' has been created')
+        self.controls = View.ManageGui().updatePanel(self.panel)
+        StartUp().activateButtons(self.panel, self.controls)
+
+        print(scriptName + ' ' + str(scriptRev))
+
+        return
+
 class StartUp():
     '''Start the Track Pattern subroutine'''
 
@@ -21,29 +44,6 @@ class StartUp():
         self.psLog = logging.getLogger('PS.TP.Control')
 
         return
-
-    class LocationComboBox(java.awt.event.ActionListener):
-        '''Event triggered from location combobox selection'''
-
-        def __init__(self, panel, controls):
-            self.panel = panel
-            self.controls = controls
-            self.psLog = logging.getLogger('PS.TP.ComboBox')
-
-        def actionPerformed(self, event):
-
-            newConfigFile = Model.updatePatternLocation(event.getSource().getSelectedItem())
-            MainScriptEntities.writeConfigFile(newConfigFile)
-            newConfigFile = MainScriptEntities.readConfigFile('TP')
-            newConfigFile = Model.makeNewPatternTracks(newConfigFile['PL'])
-            MainScriptEntities.writeConfigFile(newConfigFile)
-            self.psLog.info('The track list for location ' + newConfigFile['TP']['PL'] + ' has been created')
-            self.controls = View.ManageGui().updatePanel(self.panel)
-            StartUp().activateButtons(self.panel, self.controls)
-
-            print(scriptName + ' ' + str(scriptRev))
-
-            return
 
     def yardTrackOnlyCheckBox(self, event):
 
@@ -68,6 +68,10 @@ class StartUp():
 
         Model.updateConfigFile(self.controls)
 
+        if not Model.verifySelectedTracks():
+            self.psLog.warning('Track not found, re-select the location')
+            return
+
         if not Model.getSelectedTracks():
             self.psLog.warning('No tracks were selected for the pattern button')
             return
@@ -90,6 +94,11 @@ class StartUp():
         self.psLog.debug('setCarsButton')
 
         Model.updateConfigFile(self.controls)
+
+        if not Model.verifySelectedTracks():
+            self.psLog.warning('Track not found, re-select the location')
+            return
+
         Model.getRsOnTrains()
         Model.onScButtonPress()
 
@@ -115,7 +124,7 @@ class StartUp():
 
         self.panel = panel
         self.controls = controls
-        self.controls[0].addActionListener(self.LocationComboBox(panel, controls))
+        self.controls[0].addActionListener(LocationComboBox(panel, controls))
         self.controls[1].actionPerformed = self.yardTrackOnlyCheckBox
         self.controls[4].actionPerformed = self.patternButton
         self.controls[5].actionPerformed = self.setCarsButton

@@ -75,17 +75,12 @@ def timeStamp(epochTime=0):
 def openEditorByComputerType(switchListLocation=None):
     '''Opens a text file in a text editor for each type of computer.'''
 
-    osName = jmri.util.SystemType.getType()
-    textEdit = {
-        1: 'Mac Classic ',
-        2: 'open -a TextEdit "' + switchListLocation + '"', # OSX
-        4: 'start notepad.exe "' + switchListLocation + '"', # put the switchListLocation in quotes to work around names with &
-        5: 'nano "' + switchListLocation + '"', # Linux
-        6: 'OS2 ',
-        7: 'kwrite ', # Unix
-        }
+    osType = jmri.util.SystemType.getType()
+    editorMatrix = readConfigFile('EM')
+    textEditor = editorMatrix[str(osType)]
+    openEditor = textEditor + '"' + switchListLocation + '"'
 
-    return textEdit[osName]
+    return openEditor
 
 def validateStubFile():
     '''Copy of the JMRI Java version of createStubFile'''
@@ -104,12 +99,12 @@ def validateStubFile():
     stubTemplateLocation = jmri.util.FileUtil.getProgramPath() + 'help\\' + locale[:2] + '\\local\\stub_template.html'
     with codecsOpen(stubTemplateLocation, 'r', encoding=setEncoding()) as template:
         contents = template.read()
-        replaceContents = contents.replace("../index.html#", "")
-        replaceContents = replaceContents.replace("<!--HELP_KEY-->", helpFilePath)
-        replaceContents = replaceContents.replace("<!--URL_HELP_KEY-->", "")
-        with codecsOpen(stubFileName, 'wb', encoding=setEncoding()) as stubWorkFile:
-            stubWorkFile.write(replaceContents)
-            psLog.debug('psStub writen from stub_template')
+        contents = contents.replace("../index.html#", "")
+        contents = contents.replace("<!--HELP_KEY-->", helpFilePath)
+        contents = contents.replace("<!--URL_HELP_KEY-->", "")
+    with codecsOpen(stubFileName, 'wb', encoding=setEncoding()) as stubWorkFile:
+        stubWorkFile.write(contents)
+        psLog.debug('psStub writen from stub_template')
 
     return
 

@@ -1,4 +1,12 @@
 {
+  "EM": {
+    "1": "Mac Classic ",
+    "2": "open -a TextEdit ",
+    "4": "start notepad.exe ",
+    "5": "nano ",
+    "6": "OS2 ",
+    "7": "kwrite "
+  },
   "LM": {
     "LO": {
       "0": [
@@ -58,7 +66,7 @@
     "color1": "FADED",
     "color2": "BLANCH",
     "color3": "PETAL"
-  }, 
+  },
   "CP" : {
     "SI" : {
       "TrackPattern" : true,

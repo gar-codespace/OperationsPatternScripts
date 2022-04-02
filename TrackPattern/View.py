@@ -42,12 +42,14 @@ class ManageGui:
         '''Makes the title frame that all the track pattern controls go into'''
 
         self.psLog.debug('makeFrame')
+
         return ViewEntities.TrackPatternPanel().makePatternFrame()
 
     def makePanel(self):
         '''Make the track pattern controls'''
 
         self.psLog.debug('makePanel')
+        
         return ViewEntities.TrackPatternPanel().makePatternControls()
 
     print(scriptName + ' ' + str(scriptRev))

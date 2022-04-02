@@ -52,10 +52,10 @@ def initializeConfigFile():
 
     newConfigFile = MainScriptEntities.readConfigFile()
     subConfigfile = newConfigFile['TP']
-    allLocations  = ModelEntities.getAllLocations()
+    allLocations  = getAllLocations()
     subConfigfile.update({'AL': allLocations})
     subConfigfile.update({'PL': allLocations[0]})
-    subConfigfile.update({'PT': ModelEntities.makeInitialTrackList(allLocations[0])})
+    subConfigfile.update({'PT': makeInitialTrackList(allLocations[0])})
     newConfigFile.update({'TP': subConfigfile})
 
     return newConfigFile
@@ -77,6 +77,7 @@ def updateTrackCheckBoxes(trackCheckBoxes):
         dict[unicode(item.text, MainScriptEntities.setEncoding())] = item.selected
 
     return dict
+
 def getGenericTrackDetails(locationName, trackName):
     '''The loco and car lists are sorted at this level, used to make the JSON file'''
 
@@ -403,19 +404,6 @@ def makeCsvSwitchlist(trackPattern):
 
     return csvSwitchList
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 def appendJsonBody(trainPlayerSwitchList):
 
     jsonCopyFrom = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\TrainPlayerSwitchlist.json'
@@ -432,76 +420,3 @@ def appendJsonBody(trainPlayerSwitchList):
         jsonWorkFile.write(jsonObject)
 
     return
-
-
-
-
-
-# def makeTextReportHeader(textWorkEventList):
-#
-#     textReportHeader    = textWorkEventList['railroad'] + '\n' \
-#                         + textWorkEventList['trainName'] + '\n' \
-#                         + textWorkEventList['trainDescription'] + '\n' \
-#                         + u'Comment: ' + textWorkEventList['trainComment'] + '\n' \
-#                         + u'Valid time: ' + textWorkEventList['date'] + '\n\n'
-#
-#     return textReportHeader
-
-# def makeTextReportLocations(textWorkEventList, trackTotals):
-#
-#     reportWidth = MainScriptEntities.readConfigFile('TP')['RW']
-#     locoItems = jmri.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
-#     carItems = jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
-#
-#     reportSwitchList = ''
-#     reportTally = [] # running total for all tracks
-#     reportSwitchList += 'Location: ' + textWorkEventList['locations'][0]['locationName'] + '\n'
-#     for track in textWorkEventList['locations'][0]['tracks']:
-#         lengthOfLocos = 0
-#         lengthOfCars = 0
-#         trackTally = []
-#         trackName = track['trackName']
-#         trackLength = track['length']
-#         reportSwitchList += 'Track: ' + trackName + '\n'
-#         switchListRow = ''
-#
-#         for loco in track['locos']:
-#             lengthOfLocos += int(loco['Length']) + 4
-#             reportSwitchList += loco['Set to'] + loopThroughRs('loco', loco) + '\n'
-#
-#         for car in track['cars']:
-#             lengthOfCars += int(car['Length']) + 4
-#             reportSwitchList += car['Set to'] + loopThroughRs('car', car) + '\n'
-#             trackTally.append(car['Final Dest'])
-#             reportTally.append(car['Final Dest'])
-#
-#         if trackTotals:
-#             totalLength = lengthOfLocos + lengthOfCars
-#             reportSwitchList += 'Total Cars: ' + str(len(track['cars'])) + ' Track Length: ' + str(trackLength) + ' Eqpt. Length: ' + str(totalLength) + ' Available: ' + str(trackLength - totalLength) + '\n\n'
-#             reportSwitchList += u'Track Totals for Cars:\n'
-#             for track, count in sorted(occuranceTally(trackTally).items()):
-#                 reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
-#         reportSwitchList += '\n'
-#
-#     if trackTotals:
-#         reportSwitchList += u'\nReport Totals for Cars:\n'
-#         for track, count in sorted(occuranceTally(reportTally).items()):
-#             reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
-#
-#     return reportSwitchList
-
-# def loopThroughRs(type, rsAttribs):
-#
-#     reportWidth = MainScriptEntities.readConfigFile('TP')['RW']
-#     switchListRow = ''
-#
-#     if type == 'loco':
-#         messageFormat = jmri.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
-#     if type == 'car':
-#         messageFormat = jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
-#
-#     for item in messageFormat:
-#         itemWidth = reportWidth[item]
-#         switchListRow += formatText(rsAttribs[item], itemWidth)
-#
-#     return switchListRow
