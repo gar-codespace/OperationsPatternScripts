@@ -31,7 +31,6 @@ If no RWE or RWL, the plugin will then try to load the car with the custom desig
 If none of the above, a car moved from a spur will toggle default load/empty designation.  
 
 ## How To Use This Plugin
-There are many people on YouTube who are good at making demo videos. I am not one of them.  
 The following are YouTube videos covering the use of this plugin:  
 
 How to add this plugin to JMRI  
@@ -40,6 +39,9 @@ How to add this plugin to JMRI
 [Plugin demonstration at industry](https://youtu.be/2Tv6sUMDD_Y)  
 How to modify this plugin  
 Using this plugin with TrainPlayer  
+  
+Disclaimer: 
+There are many people on YouTube who are good at making demo videos. I am not one of them.  
 
 ## Testing
 This plugin has been tested with:
