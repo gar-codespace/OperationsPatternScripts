@@ -6,7 +6,7 @@ Tested Items:
   formatText formats ascii OK
   handle multiple versions OK
   test for file write locations OK
-  config.json version check OK
+  PatternConfig.json version check OK
   create JSON header OK
   create JSON body OK
   append JSON switchlist OK
@@ -44,11 +44,9 @@ Catches Items:
   Catches on the fly user edit of track names for set cars OK
   Catches empty boxes added to jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat() OK
   Catches invalid track typed into set cars box OK
+  Catches on the fly edit of RS name or road
 
 Todo:
-  Catch up with the latest JMRI stuff like text color
-  Test apply schedule turned off
-  Test schedule if set to sequential
 
 Wish List:
   add Pattern Scripts to Operations Pro combo box

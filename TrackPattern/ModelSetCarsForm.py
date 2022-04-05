@@ -48,8 +48,12 @@ def setRsToTrack(setCarsForm, textBoxEntry):
         if userInputList[i] == fromTrack:
             i += 1
             continue
-        locoObject =  MainScriptEntities._em.newRS(loco['Road'], loco['Number'])
-        setResult = setRs(locoObject, userInputList[i])
+        locoObject =  MainScriptEntities._em.getByRoadAndNumber(loco['Road'], loco['Number'])
+        try: # Catches on the fly edit of name or road
+            setResult = setRs(locoObject, userInputList[i])
+        except AttributeError:
+            i += 1
+            continue
         if setResult == 'okay':
             setCount += 1
         i += 1
@@ -63,8 +67,12 @@ def setRsToTrack(setCarsForm, textBoxEntry):
         if userInputList[i] == fromTrack:
             i += 1
             continue
-        carObject =  MainScriptEntities._cm.newRS(car['Road'], car['Number'])
-        setResult = setRs(carObject, userInputList[i])
+        carObject =  MainScriptEntities._cm.getByRoadAndNumber(car['Road'], car['Number'])
+        try: # Catches on the fly edit of name or road
+            setResult = setRs(carObject, userInputList[i])
+        except AttributeError:
+            i += 1
+            continue
         if setResult == 'okay':
             setCount += 1
         i += 1

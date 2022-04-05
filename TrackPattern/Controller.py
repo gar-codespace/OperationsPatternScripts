@@ -136,7 +136,7 @@ class StartUp():
         '''Makes the title border frame'''
 
         patternFrame = View.ManageGui().makeFrame()
-        self.psLog.info('track pattern makeFrame completed')
+        self.psLog.info('Track pattern makeFrame completed')
 
         return patternFrame
 
@@ -146,6 +146,6 @@ class StartUp():
         MainScriptEntities.writeConfigFile(Model.updateLocations())
         panel, controls = View.ManageGui().makePanel()
         self.activateButtons(panel, controls)
-        self.psLog.info('track pattern makeSubroutinePanel completed')
+        self.psLog.info('Track pattern makeSubroutinePanel completed')
 
         return panel

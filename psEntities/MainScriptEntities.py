@@ -90,9 +90,9 @@ def validateStubFile():
     stubLocation = jmri.util.FileUtil.getPreferencesPath() + '\\jmrihelp\\'
     try:
         osMakeDir(stubLocation)
-        psLog.warning('stub location created at: ' + stubLocation)
+        psLog.warning('Stub location created at: ' + stubLocation)
     except OSError:
-        psLog.info('stub location already exists')
+        psLog.info('Stub location already exists')
     stubFileName = stubLocation + 'psStub.html'
     helpFilePath = javaIo.File(_currentPath + '/Support/psHelp.html').toURI()
     helpFilePath = unicode(helpFilePath, setEncoding())
@@ -145,18 +145,19 @@ def validateConfigFile():
     try:
         readConfigFile()
     except ValueError:
-        psLog.warning('Defective PatternConfig.JSON found')
+        psLog.warning('Defective PatternConfig.JSON found, new file written')
         writeNewConfigFile()
+        return
     except IOError:
-        psLog.warning('No PatternConfig.JSON found')
+        psLog.warning('No PatternConfig.JSON found, new file written')
         writeNewConfigFile()
+        return
 
     with codecsOpen(_currentPath + '\\PatternConfig.json', 'r', encoding=setEncoding()) as validConfigFileLoc:
         validConfigFile = jsonLoads(validConfigFileLoc.read())
 
     if validConfigFile['CP']['RV'] == readConfigFile()['CP']['RV']:
-        psLog.info('PatternConfig.JSON file is up to date')
-
+        psLog.info('The PatternConfig.JSON file is the correct version')
     else:
         psLog.warning('PatternConfig.JSON version mismatch')
         copyTo = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json.bak')
@@ -164,6 +165,7 @@ def validateConfigFile():
         jmri.util.FileUtil.copy(copyFrom, copyTo)
         psLog.warning('PatternConfig.json.bak file written')
         writeNewConfigFile()
+        psLog.warning('New PatternConfig.JSON file created for this profile')
 
     return
 
@@ -195,7 +197,6 @@ def writeNewConfigFile():
     copyTo = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json')
     copyFrom = javaIo.File(_currentPath + '\\PatternConfig.json')
     jmri.util.FileUtil.copy(copyFrom, copyTo)
-    psLog.warning('New PatternConfig.JSON file created for this profile')
 
     return
 
