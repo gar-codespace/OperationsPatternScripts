@@ -56,7 +56,12 @@ class StartUp(jmri.jmrit.automat.AbstractAutomaton):
         yTimeNow = time.time()
         MainScriptEntities.validateStubFile()
         MainScriptEntities.validateFileDestinationDirestories()
-        MainScriptEntities.validateConfigFile()
+        MainScriptEntities.readConfigFile()
+        if not MainScriptEntities.validateConfigFile():
+            MainScriptEntities.backupConfigFile()
+            self.psLog.warning('PatternConfig.json.bak file written')
+            MainScriptEntities.writeNewConfigFile()
+            self.psLog.warning('New PatternConfig.JSON file created for this profile')
 
     # make a list of subroutines for the control panel
         subroutineList = []

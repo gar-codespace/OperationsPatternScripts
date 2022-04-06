@@ -140,37 +140,44 @@ def validateFileDestinationDirestories():
     return
 
 def validateConfigFile():
-    '''Checks for an up to date, missing or ureadable config file'''
-
-    try:
-        readConfigFile()
-    except ValueError:
-        psLog.warning('Defective PatternConfig.JSON found, new file written')
-        writeNewConfigFile()
-        return
-    except IOError:
-        psLog.warning('No PatternConfig.JSON found, new file written')
-        writeNewConfigFile()
-        return
+    '''Checks that the config file is the current version'''
 
     with codecsOpen(_currentPath + '\\PatternConfig.json', 'r', encoding=setEncoding()) as validConfigFileLoc:
         validConfigFile = jsonLoads(validConfigFileLoc.read())
 
-    if validConfigFile['CP']['RV'] == readConfigFile()['CP']['RV']:
+    if validConfigFile['CP']['RV'] == getConfigFile()['CP']['RV']:
         psLog.info('The PatternConfig.JSON file is the correct version')
+        return True
     else:
         psLog.warning('PatternConfig.JSON version mismatch')
-        copyTo = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json.bak')
-        copyFrom = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json')
-        jmri.util.FileUtil.copy(copyFrom, copyTo)
-        psLog.warning('PatternConfig.json.bak file written')
+        return False
+
+def readConfigFile(subConfig='all'):
+
+    try:
+        configFile = getConfigFile(subConfig)
+        return configFile
+    except ValueError:
+        psLog.warning('Defective PatternConfig.JSON found, new file written')
         writeNewConfigFile()
-        psLog.warning('New PatternConfig.JSON file created for this profile')
+        configFile = getConfigFile(subConfig)
+        return configFile
+    except IOError:
+        psLog.warning('No PatternConfig.JSON found, new file written')
+        writeNewConfigFile()
+        configFile = getConfigFile(subConfig)
+        return configFile
+
+def backupConfigFile():
+
+    copyTo = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json.bak')
+    copyFrom = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json')
+    jmri.util.FileUtil.copy(copyFrom, copyTo)
 
     return
 
-def readConfigFile(subConfig='all'):
-    '''Read in the PatternConfig.json for a profile and return it as a dictionary'''
+def getConfigFile(subConfig='all'):
+    '''Returns the config file, wether its compromised or not'''
 
     configFileLoc = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json'
 

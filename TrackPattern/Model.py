@@ -112,10 +112,13 @@ def getSelectedTracks():
     return [track for track, include in sorted(patternTracks.items()) if include]
 
 def verifySelectedTracks():
-    '''Catches on the fly user edit if track names'''
+    '''Catches on the fly user edit of JMRI track names'''
 
     validStatus = True
     allTracksList = ModelEntities.getTracksByLocation(None)
+    if not allTracksList:
+        psLog.warning('PatternConfig.JSON corrupted, new file written.')
+        return False
     patternTracks = MainScriptEntities.readConfigFile('TP')['PT']
     for track in patternTracks:
         if not track in allTracksList:

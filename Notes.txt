@@ -45,10 +45,13 @@ Catches Items:
   Catches empty boxes added to jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat() OK
   Catches invalid track typed into set cars box OK
   Catches on the fly edit of RS name or road
+  Catches on the fly user corruption of config file. Soft landing.
 
 Todo:
 
 Wish List:
+  Next version, Set Cars windows add work to work list or docket, similar to TrainPlayer button, add Yardmaster button to Set Cars windows
+  jmri.jmrit.operations.locations.YardmasterFrame(location)
   add Pattern Scripts to Operations Pro combo box
   plugin added to button in trains window (AWT.getComponents())
   jmri.util.swing.JMenuUtil.replaceMenuItem() to replace the trains window with a new trains window that includes a ps button

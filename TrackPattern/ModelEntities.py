@@ -62,12 +62,14 @@ def initializeConfigFile():
 
 def getTracksByLocation(trackType):
 
-    location = MainScriptEntities.readConfigFile('TP')['PL']
+    patternLocation = MainScriptEntities.readConfigFile('TP')['PL']
     allTracksList = []
-    for x in MainScriptEntities._lm.getLocationByName(location).getTracksByNameList(trackType):
-        allTracksList.append(unicode(x.getName(), MainScriptEntities.setEncoding()))
-
-    return allTracksList
+    try: # Catch on the fly user edit of config file error
+        for track in MainScriptEntities._lm.getLocationByName(patternLocation).getTracksByNameList(trackType):
+            allTracksList.append(unicode(track.getName(), MainScriptEntities.setEncoding()))
+        return allTracksList
+    except AttributeError:
+        return allTracksList
 
 def updateTrackCheckBoxes(trackCheckBoxes):
     '''Returns a dictionary of track names and their check box status'''
