@@ -35,6 +35,16 @@ def setEncoding():
 
     return 'utf-8' #ascii, utf-16
 
+def scrubPath():
+    '''Convert an OS path to a browser acceptable path'''
+
+    helpStubPath = 'file:///' + jmri.util.FileUtil.getPreferencesPath() + 'jmrihelp\\psStub.html'
+    helpStubPath = helpStubPath.replace('\\', '/')
+    helpStubPath = helpStubPath.replace(' ', '%20')
+    helpStubPath = helpStubPath.replace('  ', '%20%20')
+
+    return helpStubPath
+
 def setColors():
     '''Call this before using color'''
 
