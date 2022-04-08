@@ -35,6 +35,9 @@ Tested Items:
   TP Exports unicode OK
   Set cars to spur removes FD OK
   Toggle AS Apply schedule in config file works OK
+  All Set Cars windows close when Pattern Scripts window is closed OK
+  Bad edits of config file protected as much as possible. CBB
+  Pattern Scripts plugin hardened against errors  more or less. CBB
 
 Catches Items:
   Catches pattern report button press no tracks selected OK
@@ -45,9 +48,12 @@ Catches Items:
   Catches empty boxes added to jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat() OK
   Catches invalid track typed into set cars box OK
   Catches on the fly edit of RS name or road
-  Catches on the fly user corruption of config file. Soft landing.
+  Catches on the fly user corruption of config file more or less. Soft landing. CBB
 
 Todo:
+  move _listOfAssignedRs out of globals
+  Maybe hide config file from users
+  turn MainScriptEntities.makeControlPanel() into a class
 
 Wish List:
   Next version, Set Cars windows add work to work list or docket, similar to TrainPlayer button, add Yardmaster button to Set Cars windows
@@ -62,3 +68,6 @@ Colors:
   # LICHEN = java.awt.Color(244,255,236) # Light green
   # FADED = java.awt.Color(237,225,245) # Light purple
   # BLANCH = java.awt.Color(235,225,212) # Light orange
+
+xFrame = jmri.jmrit.automat.monitor.AutomatTableFrame(jmri.jmrit.automat.monitor.AutomatTableDataModel())
+xFrame.setVisible(True)

@@ -29,6 +29,7 @@ class PatternScriptsWindowListener(java.awt.event.WindowListener):
         return
     def windowClosed(self, WINDOW_CLOSED):
         self.homePanelButton.setEnabled(True)
+        StartUp().stop()
         return
     def windowClosing(self, WINDOW_CLOSING):
         return
@@ -99,10 +100,12 @@ NOTE: This location does not support DecoderPro'''
     return
 
 def panelProButton(scrollPanel):
-    '''makes a button on the PanelPro frame'''
+    '''makes a button on the PanelPro frame '''
 
     def homeButtonClick(MOUSE_CLICKED):
 
+        from psEntities import MainScriptEntities
+        MainScriptEntities.validateConfigFile()
         homePanelButton.setEnabled(False)
         psWindow = MakePatternScriptsWindow(scrollPanel, homePanelButton)
         psWindow.makeWindow()
