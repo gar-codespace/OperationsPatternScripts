@@ -28,11 +28,6 @@ from psEntities import MainScriptEntities
 scriptName ='OperationsPatternScripts.TrackPattern.ExportToTrainPlayer'
 scriptRev = 20220101
 
-# _lm = MainScriptEntities._lm
-# _tm = MainScriptEntities._tm
-_jmriLocationsPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Locations.csv"
-_jmriManifestPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Work Events.csv"
-
 class CheckTpDestination():
     '''Verify or create a TrainPlayer destination directory'''
 
@@ -91,7 +86,8 @@ class ExportJmriLocations():
     def toTrainPlayer(self, csvLocations):
         '''Exports JMRI location;track pairs and track comments for TP Advanced Ops'''
 
-        with codecsOpen(_jmriLocationsPath, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
+        jmriLocationsPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Locations.csv"
+        with codecsOpen(jmriLocationsPath, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
             csvHeader = u'Locale,Industry\n'
             csvWorkFile.write(csvHeader + csvLocations)
 
@@ -406,6 +402,7 @@ class WriteWorkEventListToTp():
         self.psLog = logging.getLogger('PS.EX.WriteWorkEventListToTp')
         self.tpLog = logging.getLogger('TP.WriteWorkEventListToTp')
 
+        self.jmriManifestPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Work Events.csv"
         self.workEventList = workEventList
 
         return
@@ -415,7 +412,7 @@ class WriteWorkEventListToTp():
         self.psLog.debug('asCsv')
         self.tpLog.debug('asCsv')
 
-        with codecsOpen(_jmriManifestPath, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
+        with codecsOpen(self.jmriManifestPath, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
             csvWorkFile.write(self.workEventList)
 
         print(self.scriptName + ' ' + str(self.scriptRev))

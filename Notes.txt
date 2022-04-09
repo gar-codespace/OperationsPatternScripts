@@ -38,6 +38,7 @@ Tested Items:
   All Set Cars windows close when Pattern Scripts window is closed OK
   Bad edits of config file protected as much as possible. CBB
   Pattern Scripts plugin hardened against errors  more or less. CBB
+  Move config file into psEntities to shield it from accidental edit
 
 Catches Items:
   Catches pattern report button press no tracks selected OK
@@ -51,9 +52,6 @@ Catches Items:
   Catches on the fly user corruption of config file more or less. Soft landing. CBB
 
 Todo:
-  move _listOfAssignedRs out of globals
-  Maybe hide config file from users
-  turn MainScriptEntities.makeControlPanel() into a class
 
 Wish List:
   Next version, Set Cars windows add work to work list or docket, similar to TrainPlayer button, add Yardmaster button to Set Cars windows

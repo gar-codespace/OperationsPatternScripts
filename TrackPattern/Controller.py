@@ -99,7 +99,6 @@ class StartUp():
             self.psLog.warning('Track not found, re-select the location')
             return
 
-        Model.getRsOnTrains()
         Model.onScButtonPress()
 
         if MainScriptEntities.readConfigFile('TP')['TI']: # TrainPlayer Include

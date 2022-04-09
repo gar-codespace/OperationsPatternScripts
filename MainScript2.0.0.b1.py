@@ -146,7 +146,6 @@ class StartPsPlugin(jmri.jmrit.automat.AbstractAutomaton):
 
     def init(self):
 
-    # fire up logging
         self.psLog = logging.getLogger('PS')
         self.psLog.debug('Log File for Pattern Scripts Plugin - DEBUG level test message')
         self.psLog.info('Log File for Pattern Scripts Plugin - INFO level test message')
@@ -181,9 +180,11 @@ class StartPsPlugin(jmri.jmrit.automat.AbstractAutomaton):
                 subroutineList.append(subroutineFrame)
                 self.psLog.info(subroutineIncludes + ' subroutine added to control panel')
     # plug in the subroutine list into the control panel
-        controlPanel, scrollPanel = MainScriptEntities.makeControlPanel()
+        controlPanel = MainScriptEntities.makeControlPanel()
+        pluginPanel = controlPanel.makePluginPanel()
+        scrollPanel = controlPanel.makeScrollPanel()
         for subroutine in subroutineList:
-            controlPanel.add(subroutine)
+            pluginPanel.add(subroutine)
 
         psWindow = MakePatternScriptsWindow(scrollPanel)
         psWindow.makeWindow()

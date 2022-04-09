@@ -24,7 +24,6 @@ _pm = jmri.InstanceManager.getDefault(jmri.util.gui.GuiLafPreferencesManager)
 
 _currentPath = ''
 _trackNameClickedOn = None
-_listOfAssignedRs = []
 
 scriptName = 'OperationsPatternScripts.psEntities.MainScriptEntities'
 scriptRev = 20220101
@@ -121,13 +120,12 @@ def validateStubFile():
 def validateFileDestinationDirestories():
     '''Checks that the folders this plugin writes to exist'''
 # Can't use jmri.util.FileUtil.createDirectory().... does not return anything
-    x = 0
     destDirPath = jmri.util.FileUtil.getProfilePath() + 'operations\\'
     try:
         osMakeDir(destDirPath + 'buildstatus')
         psLog.warning('buildstatus folder created')
     except OSError:
-        x += 1
+        x = 1
     try:
         osMakeDir(destDirPath + 'csvSwitchLists')
         psLog.warning('csvSwitchLists folder created')
@@ -180,8 +178,8 @@ def readConfigFile(subConfig='all'):
 
 def backupConfigFile():
 
-    copyTo = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json.bak')
     copyFrom = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json')
+    copyTo = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json.bak')
     jmri.util.FileUtil.copy(copyFrom, copyTo)
 
     return
@@ -217,15 +215,21 @@ def writeNewConfigFile():
 
     return
 
-def makeControlPanel():
-    '''Create the control panel, with a scroll bar, that all subroutines go into
-    This holds trackPatternPanel and future panels'''
+class makeControlPanel:
+    '''This is the main panel for the plugin'''
 
-    configFile = readConfigFile('CP')
-    controlPanel = javax.swing.JPanel() # The whole panel that everything goes into
-    scrollPanel = javax.swing.JScrollPane(controlPanel) # and that goes into a scroll pane
-    scrollPanel.border = javax.swing.BorderFactory.createLineBorder(java.awt.Color.GRAY)
-    scrollPanel.setPreferredSize(java.awt.Dimension(configFile['PW'], configFile['PH']))
-    scrollPanel.setMaximumSize(scrollPanel.getPreferredSize())
+    def makePluginPanel(self):
 
-    return controlPanel, scrollPanel
+        self.pluginPanel = javax.swing.JPanel()
+
+        return self.pluginPanel
+
+    def makeScrollPanel(self):
+
+        configPanel = readConfigFile('CP')
+        scrollPanel = javax.swing.JScrollPane(self.pluginPanel)
+        scrollPanel.border = javax.swing.BorderFactory.createLineBorder(java.awt.Color.GRAY)
+        scrollPanel.setPreferredSize(java.awt.Dimension(configPanel['PW'], configPanel['PH']))
+        scrollPanel.setMaximumSize(scrollPanel.getPreferredSize())
+
+        return scrollPanel

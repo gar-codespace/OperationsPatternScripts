@@ -172,25 +172,6 @@ def printWorkEventList(patternListForJson, trackTotals):
 
     return
 
-def getRsOnTrains():
-    '''Make a list of all rolling stock that are on built trains'''
-
-    builtTrainList = []
-    for train in MainScriptEntities._tm.getTrainsByStatusList():
-        if train.isBuilt():
-            builtTrainList.append(train)
-
-    listOfAssignedRs = []
-    for train in builtTrainList:
-        listOfAssignedRs += MainScriptEntities._cm.getByTrainList(train)
-        listOfAssignedRs += MainScriptEntities._em.getByTrainList(train)
-
-    MainScriptEntities._listOfAssignedRs = []
-    for rs in listOfAssignedRs:
-        MainScriptEntities._listOfAssignedRs.append(str(rs.getRoadName() + rs.getNumber()))
-
-    return
-
 def onScButtonPress():
     '''"Set Cars" button opens a window for each selected track'''
 

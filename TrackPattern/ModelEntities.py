@@ -100,6 +100,21 @@ def sortLocoList(locoList):
 
     return locoList
 
+def getRsOnTrains():
+    '''Make a list of all rolling stock that are on built trains'''
+
+    builtTrainList = []
+    for train in MainScriptEntities._tm.getTrainsByStatusList():
+        if train.isBuilt():
+            builtTrainList.append(train)
+
+    listOfAssignedRs = []
+    for train in builtTrainList:
+        listOfAssignedRs += MainScriptEntities._cm.getByTrainList(train)
+        listOfAssignedRs += MainScriptEntities._em.getByTrainList(train)
+
+    return listOfAssignedRs
+
 def getLocoListForTrack(track):
     '''Creates a generic locomotive list for a track, used to make the JSON file'''
 
@@ -119,6 +134,7 @@ def getDetailsForLocoAsDict(locoObject):
     '''Mimics jmri.jmrit.operations.setup.Setup.getEngineAttributes()
     [u'Road', u'Number', u'Type', u'Model', u'Length', u'Weight', u'Consist', u'Owner', u'Track', u'Location', u'Destination', u'Comment']'''
 
+    listOfAssignedRs = getRsOnTrains()
     locoDetailDict = {}
 
     locoDetailDict[u'Road'] = locoObject.getRoadName()
@@ -137,6 +153,10 @@ def getDetailsForLocoAsDict(locoObject):
     locoDetailDict[u'Destination'] = locoObject.getDestinationName()
     locoDetailDict[u'Comment'] = locoObject.getComment()
 # Not part of JMRI engine attributes
+    if locoObject in listOfAssignedRs: # Flag to mark if RS is on a built train
+        locoDetailDict[u'On Train'] = True
+    else:
+        locoDetailDict[u'On Train'] = False
     locoDetailDict[u'Set to'] = '[  ] '
     locoDetailDict[u'PUSO'] = u'SL'
     locoDetailDict[u'Load'] = u'O'
@@ -174,6 +194,7 @@ def getDetailsForCarAsDict(carObject):
 
     fdStandIn = MainScriptEntities.readConfigFile('TP')
 
+    listOfAssignedRs = getRsOnTrains()
     carDetailDict = {}
 
     carDetailDict[u'Road'] = carObject.getRoadName()
@@ -216,6 +237,10 @@ def getDetailsForCarAsDict(carObject):
     carDetailDict[u'PickUp Msg'] = trackId.getCommentPickup()
     carDetailDict[u'RWE'] = carObject.getReturnWhenEmptyDestinationName()
 # Not part of JMRI car attributes
+    if carObject in listOfAssignedRs: # Flag to mark if RS is on a built train
+        carDetailDict[u'On Train'] = True
+    else:
+        carDetailDict[u'On Train'] = False
     carDetailDict[u'Set to'] = '[  ] '
     carDetailDict[u'PUSO'] = u'SC'
     carDetailDict[u' '] = u' ' # Catches KeyError - empty box added to getLocalSwitchListMessageFormat
