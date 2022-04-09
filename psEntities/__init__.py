@@ -4,6 +4,5 @@
 # import java.awt
 
 import MainScriptEntities
-import PluginLocations
 
-__all__ = [u'MainScriptEntities', u'PluginLocations']
+__all__ = [u'MainScriptEntities']

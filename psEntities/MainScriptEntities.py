@@ -152,7 +152,7 @@ def validateFileDestinationDirestories():
 def validateConfigFile():
     '''Checks that the config file is the current version'''
 
-    with codecsOpen(_currentPath + '\\PatternConfig.json', 'r', encoding=setEncoding()) as validConfigFileLoc:
+    with codecsOpen(_currentPath + '\\psEntities\\PatternConfig.json', 'r', encoding=setEncoding()) as validConfigFileLoc:
         validConfigFile = jsonLoads(validConfigFileLoc.read())
 
     if validConfigFile['CP']['RV'] == getConfigFile()['CP']['RV']:
@@ -212,7 +212,7 @@ def writeNewConfigFile():
     '''Copies the default config file to the profile location'''
 
     copyTo = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json')
-    copyFrom = javaIo.File(_currentPath + '\\PatternConfig.json')
+    copyFrom = javaIo.File(_currentPath + '\\psEntities\\PatternConfig.json')
     jmri.util.FileUtil.copy(copyFrom, copyTo)
 
     return

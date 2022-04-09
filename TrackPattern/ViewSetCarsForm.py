@@ -166,7 +166,7 @@ class MakeSetCarsEqptRows():
 
         for loco in locos:
             combinedInputLine = javax.swing.JPanel()
-            # combinedInputLine.setBackground(MainScriptEntities._COLOR1)
+            combinedInputLine.setBackground(MainScriptEntities._COLOR1)
             if str(loco['Road'] + loco['Number']) in MainScriptEntities._listOfAssignedRs:
                 combinedInputLine.setBackground(MainScriptEntities._COLOR3)
             inputText = javax.swing.JTextField(5)
@@ -195,7 +195,7 @@ class MakeSetCarsEqptRows():
 
         for car in cars:
             combinedInputLine = javax.swing.JPanel()
-            # combinedInputLine.setBackground(MainScriptEntities._COLOR1)
+            combinedInputLine.setBackground(MainScriptEntities._COLOR2)
             if str(car['Road'] + car['Number']) in MainScriptEntities._listOfAssignedRs:
                 combinedInputLine.setBackground(MainScriptEntities._COLOR3)
             inputText = javax.swing.JTextField(5)

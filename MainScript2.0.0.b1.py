@@ -63,7 +63,7 @@ class Logger():
 
 
 class MakePatternScriptsWindow():
-    '''Makes a JFrame that the control panel is set into'''
+    '''Makes a JMRI JFrame that the control panel is set into'''
 
     def __init__(self, scrollPanel):
 
