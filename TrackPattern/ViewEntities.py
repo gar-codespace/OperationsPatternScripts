@@ -9,8 +9,8 @@ from psEntities import MainScriptEntities
 
 '''Creates the track pattern and its panel'''
 
-scriptName = 'OperationsPatternScripts.TrackPattern.ViewEntities'
-scriptRev = 20220101
+SCRIPT_NAME = 'OperationsPatternScripts.TrackPattern.ViewEntities'
+SCRIPT_REV = 20220101
 
 class TrackPatternPanel:
     '''Makes the track pattern subroutine panel'''
@@ -126,6 +126,6 @@ class TrackPatternPanel:
         tpPanel.add(inputRow)
         tpPanel.add(trackCheckBoxes)
         tpPanel.add(buttonPanel)
-        print(scriptName + ' ' + str(scriptRev))
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return tpPanel, self.getPanelWidgets()

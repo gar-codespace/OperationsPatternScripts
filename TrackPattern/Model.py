@@ -12,8 +12,8 @@ from psEntities import MainScriptEntities
 from TrackPattern import ModelEntities
 from TrackPattern import ControllerSetCarsForm
 
-scriptName = 'OperationsPatternScripts.TrackPattern.Model'
-scriptRev = 20220101
+SCRIPT_NAME = 'OperationsPatternScripts.TrackPattern.Model'
+SCRIPT_REV = 20220101
 psLog = logging.getLogger('PS.TP.Model')
 
 def updatePatternLocation(selectedItem):

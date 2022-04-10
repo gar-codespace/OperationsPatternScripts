@@ -25,15 +25,15 @@ except NameError:
 print('Export to TrainPlayer script location: ' + _currentDir)
 from psEntities import MainScriptEntities
 
-scriptName ='OperationsPatternScripts.TrackPattern.ExportToTrainPlayer'
-scriptRev = 20220101
+SCRIPT_NAME ='OperationsPatternScripts.TrackPattern.ExportToTrainPlayer'
+SCRIPT_REV = 20220101
 
 class CheckTpDestination():
     '''Verify or create a TrainPlayer destination directory'''
 
     def __init__(self):
-        self.scriptName = 'OperationsPatternScripts.TrackPattern.ExportToTrainPlayer.CheckTpDestination'
-        self.scriptRev = 20220101
+        self.SCRIPT_NAME = 'OperationsPatternScripts.TrackPattern.ExportToTrainPlayer.CheckTpDestination'
+        self.SCRIPT_REV = 20220101
         self.psLog = logging.getLogger('PS.EX.CheckTpDestination')
         self.tpLog = logging.getLogger('TP.CheckTpDestination')
 
@@ -49,7 +49,7 @@ class CheckTpDestination():
             self.psLog.info('TrainPlayer destination directory OK')
             self.tpLog.info('TrainPlayer destination directory OK')
 
-        print(self.scriptName + ' ' + str(scriptRev))
+        print(self.SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 
@@ -57,8 +57,8 @@ class ExportJmriLocations():
     '''Writes a list of location names and comments for the whole profile'''
 
     def __init__(self):
-        self.scriptName = 'OperationsPatternScripts.TrackPattern.ExportToTrainPlayer.LocationsForTrainPlayer'
-        self.scriptRev = 20220101
+        self.SCRIPT_NAME = 'OperationsPatternScripts.TrackPattern.ExportToTrainPlayer.LocationsForTrainPlayer'
+        self.SCRIPT_REV = 20220101
         self.psLog = logging.getLogger('PS.EX.ExportJmriLocations')
         self.tpLog = logging.getLogger('TP.ExportJmriLocations')
 
@@ -91,7 +91,7 @@ class ExportJmriLocations():
             csvHeader = u'Locale,Industry\n'
             csvWorkFile.write(csvHeader + csvLocations)
 
-        print(self.scriptName + ' ' + str(scriptRev))
+        print(self.SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 
@@ -100,12 +100,12 @@ class TrackPatternTranslationToTp():
 
     def __init__(self):
 
-        self.scriptName ='OperationsPatternScripts.TrackPattern.ExportToTrainPlayer.TrackPatternTranslationToTp'
-        self.scriptRev = 20220101
+        self.SCRIPT_NAME ='OperationsPatternScripts.TrackPattern.ExportToTrainPlayer.TrackPatternTranslationToTp'
+        self.SCRIPT_REV = 20220101
         self.psLog = logging.getLogger('PS.EX.TrackPatternTranslationToTp')
         self.tpLog = logging.getLogger('TP.TrackPatternTranslationToTp')
 
-        print(self.scriptName + ' ' + str(self.scriptRev))
+        print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
 
         return
 
@@ -172,12 +172,12 @@ class JmriTranslationToTp():
 
     def __init__(self):
 
-        self.scriptName ='OperationsPatternScripts.TrackPattern.ExportToTrainPlayer.JmriTranslationToTp'
-        self.scriptRev = 20220101
+        self.SCRIPT_NAME ='OperationsPatternScripts.TrackPattern.ExportToTrainPlayer.JmriTranslationToTp'
+        self.SCRIPT_REV = 20220101
         self.psLog = logging.getLogger('PS.EX.JmriTranslationToTp')
         self.tpLog = logging.getLogger('TP.JmriTranslationToTp')
 
-        print(self.scriptName + ' ' + str(self.scriptRev))
+        print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
 
         return
 
@@ -330,8 +330,8 @@ class ProcessWorkEventList():
 
     def __init__(self):
 
-        self.scriptName ='OperationsPatternScripts.TrackPattern.ExportToTrainPlayer.ProcessWorkEventList'
-        self.scriptRev = 20220101
+        self.SCRIPT_NAME ='OperationsPatternScripts.TrackPattern.ExportToTrainPlayer.ProcessWorkEventList'
+        self.SCRIPT_REV = 20220101
         self.psLog = logging.getLogger('PS.EX.ProcessWorkEventList')
         self.tpLog = logging.getLogger('TP.ProcessWorkEventList')
 
@@ -389,7 +389,7 @@ class ProcessWorkEventList():
         with codecsOpen(jsonFile, 'wb', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
             jsonWorkFile.write(jsonObject)
 
-        print(self.scriptName + ' ' + str(self.scriptRev))
+        print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
 
         return
 
@@ -397,8 +397,8 @@ class WriteWorkEventListToTp():
 
     def __init__(self, workEventList):
 
-        self.scriptName ='OperationsPatternScripts.TrackPattern.ExportToTrainPlayer.writeWorkEventListToTp'
-        self.scriptRev = 20220101
+        self.SCRIPT_NAME ='OperationsPatternScripts.TrackPattern.ExportToTrainPlayer.writeWorkEventListToTp'
+        self.SCRIPT_REV = 20220101
         self.psLog = logging.getLogger('PS.EX.WriteWorkEventListToTp')
         self.tpLog = logging.getLogger('TP.WriteWorkEventListToTp')
 
@@ -415,7 +415,7 @@ class WriteWorkEventListToTp():
         with codecsOpen(self.jmriManifestPath, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
             csvWorkFile.write(self.workEventList)
 
-        print(self.scriptName + ' ' + str(self.scriptRev))
+        print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
 
         return
 
@@ -423,8 +423,8 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
     '''Runs on JMRI train manifest builds'''
 
     def init(self):
-        self.scriptName = 'ExportToTrainPlayer.ManifestForTrainPlayer'
-        self.scriptRev = 20220101
+        self.SCRIPT_NAME = 'ExportToTrainPlayer.ManifestForTrainPlayer'
+        self.SCRIPT_REV = 20220101
         self.psLog = logging.getLogger('PS.EX.ManifestForTrainPlayer')
 
         logPath = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\TrainPlayerScriptsLog.txt'
@@ -473,7 +473,7 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
         self.psLog.info('Manifest export (sec): ' + ('%s' % (time.time() - timeNow))[:6])
         self.tpLog.info('Manifest export (sec): ' + ('%s' % (time.time() - timeNow))[:6])
 
-        print(self.scriptName + ' ' + str(self.scriptRev))
+        print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
         print('Manifest export (sec): ' + ('%s' % (time.time() - timeNow))[:6])
 
         return False

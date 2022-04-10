@@ -11,8 +11,8 @@ from psEntities import MainScriptEntities
 from TrackPattern import ModelEntities
 from TrackPattern import ExportToTrainPlayer
 
-scriptName = 'OperationsPatternScripts.TrackPattern.ModelSetCarsForm'
-scriptRev = 20220101
+SCRIPT_NAME = 'OperationsPatternScripts.TrackPattern.ModelSetCarsForm'
+SCRIPT_REV = 20220101
 psLog = logging.getLogger('PS.TP.ModelSetCarsForm')
 
 def testValidityOfForm(setCarsForm, textBoxEntry):

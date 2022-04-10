@@ -11,29 +11,27 @@ import logging
 import time
 from sys import path as sysPath
 
+'''Pattern Scripts plugin for JMRI Operations Pro'''
+
+SCRIPT_VER = u'MainScript2.0.0.b1.py' # Increment this for each new package
 
 def useThisVersion():
     '''Keep multiple versions of this plugin sorted out'''
 
     fileRoot = jmri.util.FileUtil.getPreferencesPath()
-    currentFile = str(jmri.util.FileUtil.findFiles('MainScript2.0.0.b1.py', fileRoot).pop())
+    currentFile = str(jmri.util.FileUtil.findFiles(SCRIPT_VER, fileRoot).pop())
     currentDir = java.io.File(currentFile).getParent()
 
     return currentDir
 
-_currentDir = useThisVersion()
-sysPath.append(_currentDir)
+CURRENT_DIR = useThisVersion()
+sysPath.append(CURRENT_DIR)
 
 from psEntities import MainScriptEntities
+MainScriptEntities.CURRENT_PATH = CURRENT_DIR
 
-MainScriptEntities._currentPath = _currentDir
-print('Current Pattern Scripts directory: ' + MainScriptEntities._currentPath)
-
-
-'''Pattern Scripts Version 2.0.0 Pre Release b1'''
-
-scriptName = 'OperationsPatternScripts.MainScript'
-scriptRev = 20220101
+SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
+SCRIPT_REV = 20220101
 
 class Logger():
 
@@ -155,6 +153,15 @@ class StartPsPlugin(jmri.jmrit.automat.AbstractAutomaton):
 
         return
 
+    def useThisVersion(self):
+        '''Keep multiple versions of this plugin sorted out'''
+
+        fileRoot = jmri.util.FileUtil.getPreferencesPath()
+        currentFile = str(jmri.util.FileUtil.findFiles('MainScript2.0.0.b1.py', fileRoot).pop())
+        currentDir = java.io.File(currentFile).getParent()
+
+        return currentDir
+
     def handle(self):
         '''Make and populate the Pattern Scripts control panel'''
 
@@ -189,7 +196,8 @@ class StartPsPlugin(jmri.jmrit.automat.AbstractAutomaton):
         psWindow = MakePatternScriptsWindow(scrollPanel)
         psWindow.makeWindow()
 
-        self.psLog.info('Current Pattern Scripts directory: ' + MainScriptEntities._currentPath)
+        print('Current Pattern Scripts directory: ' + CURRENT_DIR)
+        self.psLog.info('Current Pattern Scripts directory: ' + MainScriptEntities.CURRENT_PATH)
         self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
 
         return False
@@ -199,9 +207,10 @@ class panelProFrame:
 
     def __init__(self):
 
-        self.patternScriptsButton = javax.swing.JButton(text = 'Pattern Scripts', name = 'psButton')
         self.logger = Logger()
         self.psPlugin = StartPsPlugin()
+
+        self.patternScriptsButton = javax.swing.JButton(text = 'Pattern Scripts', name = 'psButton')
 
         return
 
@@ -238,7 +247,7 @@ class panelProFrame:
         Apps.buttonSpace().add(self.patternScriptsButton)
         Apps.buttonSpace().revalidate()
 
-        print(scriptName + ' ' + str(scriptRev))
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 

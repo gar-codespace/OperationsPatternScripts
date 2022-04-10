@@ -8,8 +8,8 @@ from xml.etree import ElementTree as ET
 
 from psEntities import MainScriptEntities
 
-scriptName = 'OperationsPatternScripts.TrackPattern.ModelEntities'
-scriptRev = 20220101
+SCRIPT_NAME = 'OperationsPatternScripts.TrackPattern.ModelEntities'
+SCRIPT_REV = 20220101
 
 def formatText(item, length):
     '''Truncate each item to its defined length in PatternConfig.json and add a space at the end'''

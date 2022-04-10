@@ -10,8 +10,8 @@ from psEntities import MainScriptEntities
 from TrackPattern import Model
 from TrackPattern import View
 
-scriptName = 'OperationsPatternScripts.TrackPattern.Controller'
-scriptRev = 20220101
+SCRIPT_NAME = 'OperationsPatternScripts.TrackPattern.Controller'
+SCRIPT_REV = 20220101
 
 class LocationComboBox(java.awt.event.ActionListener):
     '''Event triggered from location combobox selection'''
@@ -32,7 +32,7 @@ class LocationComboBox(java.awt.event.ActionListener):
         self.controls = View.ManageGui().updatePanel(self.panel)
         StartUp().activateButtons(self.panel, self.controls)
 
-        print(scriptName + ' ' + str(scriptRev))
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 
@@ -84,7 +84,7 @@ class StartUp():
         if jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
             Model.writeCsvSwitchList(modifiedReport, 'PR')
 
-        print(scriptName + ' ' + str(scriptRev))
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 
@@ -104,7 +104,7 @@ class StartUp():
         if MainScriptEntities.readConfigFile('TP')['TI']: # TrainPlayer Include
             Model.resetTrainPlayerSwitchlist()
 
-        print(scriptName + ' ' + str(scriptRev))
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 
@@ -114,7 +114,7 @@ class StartUp():
         Model.makePatternLog()
         View.printPatternLog()
 
-        print(scriptName + ' ' + str(scriptRev))
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 

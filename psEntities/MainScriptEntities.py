@@ -12,7 +12,7 @@ from codecs import open as codecsOpen
 from os import mkdir as osMakeDir
 from shutil import copy as shutilCopy
 
-'''Support methods for any Pattern Script'''
+'''Support methods for all Patter Script modules'''
 
 _lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
 _tm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.trains.TrainManager)
@@ -22,11 +22,12 @@ _cmx = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.C
 _sm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.schedules.ScheduleManager)
 _pm = jmri.InstanceManager.getDefault(jmri.util.gui.GuiLafPreferencesManager)
 
-_currentPath = ''
+CURRENT_PATH = ''
 _trackNameClickedOn = None
 
-scriptName = 'OperationsPatternScripts.psEntities.MainScriptEntities'
-scriptRev = 20220101
+SCRIPT_NAME = 'OperationsPatternScripts.psEntities.MainScriptEntities'
+SCRIPT_REV = 20220101
+
 psLog = logging.getLogger('PS.TP.MainScriptEntities')
 
 def setEncoding():
@@ -103,7 +104,7 @@ def validateStubFile():
     except OSError:
         psLog.info('Stub location already exists')
     stubFileName = stubLocation + 'psStub.html'
-    helpFilePath = javaIo.File(_currentPath + '/Support/psHelp.html').toURI()
+    helpFilePath = javaIo.File(CURRENT_PATH + '/Support/psHelp.html').toURI()
     helpFilePath = unicode(helpFilePath, setEncoding())
     stubTemplateLocation = jmri.util.FileUtil.getProgramPath() + 'help\\' + locale[:2] + '\\local\\stub_template.html'
     with codecsOpen(stubTemplateLocation, 'r', encoding=setEncoding()) as template:
@@ -120,12 +121,13 @@ def validateStubFile():
 def validateFileDestinationDirestories():
     '''Checks that the folders this plugin writes to exist'''
 # Can't use jmri.util.FileUtil.createDirectory().... does not return anything
+    x = 0
     destDirPath = jmri.util.FileUtil.getProfilePath() + 'operations\\'
     try:
         osMakeDir(destDirPath + 'buildstatus')
         psLog.warning('buildstatus folder created')
     except OSError:
-        x = 1
+        x += 1
     try:
         osMakeDir(destDirPath + 'csvSwitchLists')
         psLog.warning('csvSwitchLists folder created')
@@ -150,7 +152,7 @@ def validateFileDestinationDirestories():
 def validateConfigFile():
     '''Checks that the config file is the current version'''
 
-    with codecsOpen(_currentPath + '\\psEntities\\PatternConfig.json', 'r', encoding=setEncoding()) as validConfigFileLoc:
+    with codecsOpen(CURRENT_PATH + '\\psEntities\\PatternConfig.json', 'r', encoding=setEncoding()) as validConfigFileLoc:
         validConfigFile = jsonLoads(validConfigFileLoc.read())
 
     if validConfigFile['CP']['RV'] == getConfigFile()['CP']['RV']:
@@ -210,7 +212,7 @@ def writeNewConfigFile():
     '''Copies the default config file to the profile location'''
 
     copyTo = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json')
-    copyFrom = javaIo.File(_currentPath + '\\psEntities\\PatternConfig.json')
+    copyFrom = javaIo.File(CURRENT_PATH + '\\psEntities\\PatternConfig.json')
     jmri.util.FileUtil.copy(copyFrom, copyTo)
 
     return

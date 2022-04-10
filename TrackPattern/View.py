@@ -10,8 +10,8 @@ from TrackPattern import ViewEntities
 
 '''View script for the track pattern subroutine'''
 
-scriptName = 'OperationsPatternScripts.TrackPattern.View'
-scriptRev = 20220101
+SCRIPT_NAME = 'OperationsPatternScripts.TrackPattern.View'
+SCRIPT_REV = 20220101
 psLog = logging.getLogger('PS.TP.View')
 
 class ManageGui:
@@ -49,10 +49,10 @@ class ManageGui:
         '''Make the track pattern controls'''
 
         self.psLog.debug('makePanel')
-        
+
         return ViewEntities.TrackPatternPanel().makePatternControls()
 
-    print(scriptName + ' ' + str(scriptRev))
+    print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
 def displayTextSwitchList(textSwitchList):
     '''Opens the text switchlist to Notepad or other'''

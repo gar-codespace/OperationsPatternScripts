@@ -10,8 +10,8 @@ from TrackPattern import ViewEntities
 
 '''Display methods for the Set Cars Form for Track X form'''
 
-scriptName = 'OperationsPatternScripts.ViewSetCarsForm'
-scriptRev = 20220101
+SCRIPT_NAME = 'OperationsPatternScripts.ViewSetCarsForm'
+SCRIPT_REV = 20220101
 
 def setCarsForTrackWindow(setCarsForTrackForm):
 
@@ -144,8 +144,8 @@ class MakeSetCarsEqptRows():
 
     def __init__(self, setCarsFormData):
 
-        self.scriptName = 'OperationsPatternScripts.MakeSetCarsEqptRows'
-        self.scriptRev = 20220101
+        self.SCRIPT_NAME = 'OperationsPatternScripts.MakeSetCarsEqptRows'
+        self.SCRIPT_REV = 20220101
 
         self.reportWidth = MainScriptEntities.readConfigFile('TP')['RW']
         fontSize = MainScriptEntities._pm.getFontSize()

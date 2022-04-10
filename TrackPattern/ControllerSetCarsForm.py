@@ -12,8 +12,8 @@ from TrackPattern import ViewSetCarsForm
 
 '''Makes a "Set Cars Form for Track X" form for each selected track'''
 
-scriptName = 'OperationsPatternScripts.ControllerSetCarsForm'
-scriptRev = 20220101
+SCRIPT_NAME = 'OperationsPatternScripts.ControllerSetCarsForm'
+SCRIPT_REV = 20220101
 
 class TextBoxEntryListener(java.awt.event.MouseAdapter):
     '''When any of the "Set Cars Form for Track X" text inpou boxes is clicked on'''
@@ -100,7 +100,7 @@ class CreatePatternReportGui():
         track = MainScriptEntities._lm.getLocationByName(self.locationName).getTrackByName(self.trackName, None)
         jmri.jmrit.operations.locations.schedules.ScheduleEditFrame(schedule, track)
 
-        print(scriptName + ' ' + str(scriptRev))
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 
@@ -117,7 +117,7 @@ class CreatePatternReportGui():
         if jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
             Model.writeCsvSwitchList(modifiedReport, 'SC')
 
-        print(scriptName + ' ' + str(scriptRev))
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 
@@ -133,7 +133,7 @@ class CreatePatternReportGui():
         setCarsWindow.setVisible(False)
         setCarsWindow.dispose()
 
-        print(scriptName + ' ' + str(scriptRev))
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 
@@ -147,6 +147,6 @@ class CreatePatternReportGui():
 
         ModelSetCarsForm.exportSetCarsFormToTp(self.setCarsForm, self.buttonDict['textBoxEntry'])
 
-        print(scriptName + ' ' + str(scriptRev))
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
