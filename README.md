@@ -17,7 +17,7 @@ A yardmaster would use a yard pattern to:
 Track patterns can also be used for intra-plant switching, which are switching movements confined to a single location, often done by a private railroad or plant equipment.  
 Examples of this would include:  
 * Moving cars to and from an Off Spot alternate track.  
-* A mill operator moving coal and coke to and from a furnace.  
+* A steel mill operator moving slag cars to and from a furnace.  
 * A mine operator loading hoppers from a pool of empties.  
 * An inter-modal operator selecting certain types of well cars to load.  
 * A grain exchange selling loaded hoppers to brokers.  
