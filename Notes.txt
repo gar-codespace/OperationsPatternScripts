@@ -54,6 +54,8 @@ Catches Items:
 Todo:
   plugin crashes when jmfihelp drectory is deleted
   Stabalize and harden configFilePath = __file__
+  Make none an option for color
+  Try to get SCRIPT_ROOT out of readConfigFile() (eliminate SCRIPT_ROOT as a global)
 
 Wish List:
   Next version, Set Cars windows add work to work list or docket, similar to TrainPlayer button, add Yardmaster button to Set Cars windows

@@ -16,17 +16,18 @@ from sys import path as sysPath
 SCRIPT_VER = u'MainScript2.0.0.b1.py' # Increment this for each new package
 
 def useThisVersion():
-    '''Keep multiple versions of this plugin sorted out'''
+    '''Keep multiple versions of this plugin sorted out. Returns the root dir of the working plugin'''
 
     fileRoot = jmri.util.FileUtil.getPreferencesPath()
     currentFile = str(jmri.util.FileUtil.findFiles(SCRIPT_VER, fileRoot).pop())
-    currentDir = java.io.File(currentFile).getParent()
+    currentRootDir = java.io.File(currentFile).getParent()
 
-    return currentDir
+    return currentRootDir
 
-_currentDir = useThisVersion()
-sysPath.append(_currentDir)
+_currentRootDir = useThisVersion()
+sysPath.append(_currentRootDir)
 from psEntities import MainScriptEntities
+MainScriptEntities.SCRIPT_ROOT = _currentRootDir
 
 SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
 SCRIPT_REV = 20220101
@@ -151,26 +152,17 @@ class StartPsPlugin(jmri.jmrit.automat.AbstractAutomaton):
 
         return
 
-    # def useThisVersion(self):
-    #     '''Keep multiple versions of this plugin sorted out'''
-    #
-    #     fileRoot = jmri.util.FileUtil.getPreferencesPath()
-    #     currentFile = str(jmri.util.FileUtil.findFiles('MainScript2.0.0.b1.py', fileRoot).pop())
-    #     currentDir = java.io.File(currentFile).getParent()
-    #
-    #     return currentDir
-
     def handle(self):
         '''Make and populate the Pattern Scripts control panel'''
 
         yTimeNow = time.time()
         MainScriptEntities.validateFileDestinationDirestories()
-        MainScriptEntities.validateStubFile()
+        MainScriptEntities.validateStubFile(_currentRootDir)
         MainScriptEntities.readConfigFile()
-        if not MainScriptEntities.validateConfigFile():
+        if not MainScriptEntities.validateConfigFile(_currentRootDir):
             MainScriptEntities.backupConfigFile()
             self.psLog.warning('PatternConfig.json.bak file written')
-            MainScriptEntities.writeNewConfigFile()
+            MainScriptEntities.writeNewConfigFile(_currentRootDir)
             self.psLog.warning('New PatternConfig.JSON file created for this profile')
     # make a list of subroutines for the control panel
         subroutineList = []
@@ -194,8 +186,8 @@ class StartPsPlugin(jmri.jmrit.automat.AbstractAutomaton):
         psWindow = MakePatternScriptsWindow(scrollPanel)
         psWindow.makeWindow()
 
-        print('Current Pattern Scripts directory: ' + _currentDir)
-        self.psLog.info('Current Pattern Scripts directory: ' + _currentDir)
+        print('Current Pattern Scripts directory: ' + _currentRootDir)
+        self.psLog.info('Current Pattern Scripts directory: ' + _currentRootDir)
         self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
 
         return False
