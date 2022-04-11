@@ -12,18 +12,15 @@ from codecs import open as codecsOpen
 from os import mkdir as osMakeDir
 from shutil import copy as shutilCopy
 
-'''Support methods for all Patter Script modules'''
+'''Support methods for all Pattern Script modules'''
 
 _lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
 _tm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.trains.TrainManager)
 _em = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.engines.EngineManager)
 _cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
-_cmx = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManagerXml)
 _sm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.schedules.ScheduleManager)
 _pm = jmri.InstanceManager.getDefault(jmri.util.gui.GuiLafPreferencesManager)
-
-CURRENT_PATH = ''
-_trackNameClickedOn = None
+# _cmx = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManagerXml)
 
 SCRIPT_NAME = 'OperationsPatternScripts.psEntities.MainScriptEntities'
 SCRIPT_REV = 20220101
@@ -45,30 +42,35 @@ def scrubPath():
 
     return helpStubPath
 
-def setColors():
-    '''Call this before using color'''
+def getCarColor():
 
     colorDefinition = readConfigFile('CD')
 
-    r = colorDefinition['CP'][colorDefinition['color1']]["R"]
-    g = colorDefinition['CP'][colorDefinition['color1']]["G"]
-    b = colorDefinition['CP'][colorDefinition['color1']]["B"]
-    global _COLOR1
-    _COLOR1 = java.awt.Color(r, g, b)
+    r = colorDefinition['CP'][colorDefinition['carColor']]["R"]
+    g = colorDefinition['CP'][colorDefinition['carColor']]["G"]
+    b = colorDefinition['CP'][colorDefinition['carColor']]["B"]
 
-    r = colorDefinition['CP'][colorDefinition['color2']]["R"]
-    g = colorDefinition['CP'][colorDefinition['color2']]["G"]
-    b = colorDefinition['CP'][colorDefinition['color2']]["B"]
-    global _COLOR2
-    _COLOR2 = java.awt.Color(r, g, b)
+    return java.awt.Color(r, g, b)
 
-    r = colorDefinition['CP'][colorDefinition['color3']]["R"]
-    g = colorDefinition['CP'][colorDefinition['color3']]["G"]
-    b = colorDefinition['CP'][colorDefinition['color3']]["B"]
-    global _COLOR3
-    _COLOR3 = java.awt.Color(r, g, b)
+def getLocoColor():
 
-    return
+    colorDefinition = readConfigFile('CD')
+
+    r = colorDefinition['CP'][colorDefinition['locoColor']]["R"]
+    g = colorDefinition['CP'][colorDefinition['locoColor']]["G"]
+    b = colorDefinition['CP'][colorDefinition['locoColor']]["B"]
+
+    return java.awt.Color(r, g, b)
+
+def getAlertColor():
+
+    colorDefinition = readConfigFile('CD')
+
+    r = colorDefinition['CP'][colorDefinition['alertColor']]["R"]
+    g = colorDefinition['CP'][colorDefinition['alertColor']]["G"]
+    b = colorDefinition['CP'][colorDefinition['alertColor']]["B"]
+
+    return java.awt.Color(r, g, b)
 
 def timeStamp(epochTime=0):
     '''Valid Time, get local time adjusted for time zone and dst'''
@@ -95,17 +97,22 @@ def openEditorByComputerType(switchListLocation=None):
 def validateStubFile():
     '''Copy of the JMRI Java version of createStubFile'''
 
-    locale = u'en'
-    locale = unicode(_pm.getLocale(), setEncoding())
+    helpFilePath = __file__.replace('\psEntities\MainScriptEntities.py', '\Support\psHelp.html')
+    helpFilePath = __file__.replace('\psEntities\MainScriptEntities$py.class', '\Support\psHelp.html')
+
     stubLocation = jmri.util.FileUtil.getPreferencesPath() + '\\jmrihelp\\'
     try:
         osMakeDir(stubLocation)
         psLog.warning('Stub location created at: ' + stubLocation)
     except OSError:
         psLog.info('Stub location already exists')
+
     stubFileName = stubLocation + 'psStub.html'
-    helpFilePath = javaIo.File(CURRENT_PATH + '/Support/psHelp.html').toURI()
+    # helpFilePath = javaIo.File(configFilePath + '/Support/psHelp.html').toURI()
+    helpFilePath = javaIo.File(helpFilePath).toURI()
     helpFilePath = unicode(helpFilePath, setEncoding())
+
+    locale = unicode(_pm.getLocale(), setEncoding())
     stubTemplateLocation = jmri.util.FileUtil.getProgramPath() + 'help\\' + locale[:2] + '\\local\\stub_template.html'
     with codecsOpen(stubTemplateLocation, 'r', encoding=setEncoding()) as template:
         contents = template.read()
@@ -152,31 +159,18 @@ def validateFileDestinationDirestories():
 def validateConfigFile():
     '''Checks that the config file is the current version'''
 
-    with codecsOpen(CURRENT_PATH + '\\psEntities\\PatternConfig.json', 'r', encoding=setEncoding()) as validConfigFileLoc:
+    configFilePath = __file__.replace('MainScriptEntities$py.class', 'PatternConfig.json')
+    configFilePath = __file__.replace('MainScriptEntities.py', 'PatternConfig.json')
+    with codecsOpen(configFilePath, 'r', encoding=setEncoding()) as validConfigFileLoc:
         validConfigFile = jsonLoads(validConfigFileLoc.read())
 
-    if validConfigFile['CP']['RV'] == getConfigFile()['CP']['RV']:
+    currentConfigFile = getConfigFile()
+    if validConfigFile['CP']['RV'] == currentConfigFile['CP']['RV']:
         psLog.info('The PatternConfig.JSON file is the correct version')
         return True
     else:
         psLog.warning('PatternConfig.JSON version mismatch')
         return False
-
-def readConfigFile(subConfig='all'):
-
-    try:
-        configFile = getConfigFile(subConfig)
-        return configFile
-    except ValueError:
-        psLog.warning('Defective PatternConfig.JSON found, new file written')
-        writeNewConfigFile()
-        configFile = getConfigFile(subConfig)
-        return configFile
-    except IOError:
-        psLog.warning('No PatternConfig.JSON found, new file written')
-        writeNewConfigFile()
-        configFile = getConfigFile(subConfig)
-        return configFile
 
 def backupConfigFile():
 
@@ -186,17 +180,35 @@ def backupConfigFile():
 
     return
 
-def getConfigFile(subConfig='all'):
+def readConfigFile(subConfig='all'):
+
+    configFilePath = __file__.replace('MainScriptEntities$py.class', 'PatternConfig.json')
+    configFilePath = __file__.replace('MainScriptEntities.py', 'PatternConfig.json')
+
+    try:
+        configFile = getConfigFile()
+    except ValueError:
+        psLog.warning('Defective PatternConfig.JSON found, new file written')
+        writeNewConfigFile(configFilePath)
+        configFile = getConfigFile()
+    except IOError:
+        psLog.warning('No PatternConfig.JSON found, new file written')
+        writeNewConfigFile(configFilePath)
+        configFile = getConfigFile()
+    if subConfig == 'all':
+        return configFile
+    else:
+        return configFile[subConfig]
+
+def getConfigFile():
     '''Returns the config file, wether its compromised or not'''
 
     configFileLoc = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json'
 
     with codecsOpen(configFileLoc, 'r', encoding=setEncoding()) as configWorkFile:
         configFile = jsonLoads(configWorkFile.read())
-    if (subConfig == 'all'):
-        return configFile
-    else:
-        return configFile[subConfig]
+
+    return configFile
 
 def writeConfigFile(configFile):
     '''Updates the PatternConfig.json file'''
@@ -208,11 +220,11 @@ def writeConfigFile(configFile):
 
     return
 
-def writeNewConfigFile():
+def writeNewConfigFile(configFilePath):
     '''Copies the default config file to the profile location'''
 
+    copyFrom = javaIo.File(configFilePath)
     copyTo = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json')
-    copyFrom = javaIo.File(CURRENT_PATH + '\\psEntities\\PatternConfig.json')
     jmri.util.FileUtil.copy(copyFrom, copyTo)
 
     return

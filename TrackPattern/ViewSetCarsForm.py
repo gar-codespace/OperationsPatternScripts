@@ -154,7 +154,7 @@ class MakeSetCarsEqptRows():
 
         self.setCarsFormData = setCarsFormData
         self.textBoxEntry = []
-        MainScriptEntities.setColors()
+        # MainScriptEntities.setColors()
 
         return
 
@@ -166,9 +166,9 @@ class MakeSetCarsEqptRows():
 
         for loco in locos:
             combinedInputLine = javax.swing.JPanel()
-            combinedInputLine.setBackground(MainScriptEntities._COLOR1)
+            combinedInputLine.setBackground(MainScriptEntities.getLocoColor())
             if loco['On Train']:
-                combinedInputLine.setBackground(MainScriptEntities._COLOR3)
+                combinedInputLine.setBackground(MainScriptEntities.getAlertColor())
             inputText = javax.swing.JTextField(5)
             self.textBoxEntry.append(inputText)
             inputBox = makeSwingBox(self.panelWidth * 6, self.panelHeight)
@@ -195,9 +195,9 @@ class MakeSetCarsEqptRows():
 
         for car in cars:
             combinedInputLine = javax.swing.JPanel()
-            combinedInputLine.setBackground(MainScriptEntities._COLOR2)
+            combinedInputLine.setBackground(MainScriptEntities.getCarColor())
             if car['On Train']:
-                combinedInputLine.setBackground(MainScriptEntities._COLOR3)
+                combinedInputLine.setBackground(MainScriptEntities.getAlertColor())
             inputText = javax.swing.JTextField(5)
             self.textBoxEntry.append(inputText)
             inputBox = makeSwingBox(self.panelWidth * 6, self.panelHeight)

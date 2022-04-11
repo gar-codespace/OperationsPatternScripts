@@ -52,6 +52,8 @@ Catches Items:
   Catches on the fly user corruption of config file more or less. Soft landing. CBB
 
 Todo:
+  plugin crashes when jmfihelp drectory is deleted
+  Stabalize and harden configFilePath = __file__
 
 Wish List:
   Next version, Set Cars windows add work to work list or docket, similar to TrainPlayer button, add Yardmaster button to Set Cars windows

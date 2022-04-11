@@ -15,6 +15,8 @@ from TrackPattern import ViewSetCarsForm
 SCRIPT_NAME = 'OperationsPatternScripts.ControllerSetCarsForm'
 SCRIPT_REV = 20220101
 
+_trackNameClickedOn = None
+
 class TextBoxEntryListener(java.awt.event.MouseAdapter):
     '''When any of the "Set Cars Form for Track X" text inpou boxes is clicked on'''
 
@@ -23,8 +25,8 @@ class TextBoxEntryListener(java.awt.event.MouseAdapter):
 
     def mouseClicked(self, MOUSE_CLICKED):
 
-        if (MainScriptEntities._trackNameClickedOn):
-            MOUSE_CLICKED.getSource().setText(MainScriptEntities._trackNameClickedOn)
+        if _trackNameClickedOn:
+            MOUSE_CLICKED.getSource().setText(_trackNameClickedOn)
         else:
             self.psLog.warning('No track was selected')
 
@@ -88,7 +90,8 @@ class CreatePatternReportGui():
     def trackRowButton(self, MOUSE_CLICKED):
         '''Any button of the "Set Cars Form for Track X" - row of track buttons'''
 
-        MainScriptEntities._trackNameClickedOn = unicode(MOUSE_CLICKED.getSource().getText(), MainScriptEntities.setEncoding())
+        _trackNameClickedOn = unicode(MOUSE_CLICKED.getSource().getText(), MainScriptEntities.setEncoding())
+        global _trackNameClickedOn
 
         return
 

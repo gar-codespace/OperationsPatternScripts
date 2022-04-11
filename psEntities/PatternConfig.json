@@ -46,9 +46,9 @@
         "R": 240
       }
     },
-    "color1": "FADED",
-    "color2": "DUST",
-    "color3": "PETAL"
+    "locoColor": "FADED",
+    "carColor": "DUST",
+    "alertColor": "PETAL"
   },
   "CP" : {
     "SI" : {
@@ -57,7 +57,7 @@
     },
     "PH" : 140,
     "PW" : 2000,
-    "RV" : 20220104
+    "RV" : 20220109
   },
   "LI": {
     "9": "- CRITICAL -",

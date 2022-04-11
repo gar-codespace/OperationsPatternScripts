@@ -24,11 +24,9 @@ def useThisVersion():
 
     return currentDir
 
-CURRENT_DIR = useThisVersion()
-sysPath.append(CURRENT_DIR)
-
+_currentDir = useThisVersion()
+sysPath.append(_currentDir)
 from psEntities import MainScriptEntities
-MainScriptEntities.CURRENT_PATH = CURRENT_DIR
 
 SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
 SCRIPT_REV = 20220101
@@ -153,21 +151,21 @@ class StartPsPlugin(jmri.jmrit.automat.AbstractAutomaton):
 
         return
 
-    def useThisVersion(self):
-        '''Keep multiple versions of this plugin sorted out'''
-
-        fileRoot = jmri.util.FileUtil.getPreferencesPath()
-        currentFile = str(jmri.util.FileUtil.findFiles('MainScript2.0.0.b1.py', fileRoot).pop())
-        currentDir = java.io.File(currentFile).getParent()
-
-        return currentDir
+    # def useThisVersion(self):
+    #     '''Keep multiple versions of this plugin sorted out'''
+    #
+    #     fileRoot = jmri.util.FileUtil.getPreferencesPath()
+    #     currentFile = str(jmri.util.FileUtil.findFiles('MainScript2.0.0.b1.py', fileRoot).pop())
+    #     currentDir = java.io.File(currentFile).getParent()
+    #
+    #     return currentDir
 
     def handle(self):
         '''Make and populate the Pattern Scripts control panel'''
 
         yTimeNow = time.time()
-        MainScriptEntities.validateStubFile()
         MainScriptEntities.validateFileDestinationDirestories()
+        MainScriptEntities.validateStubFile()
         MainScriptEntities.readConfigFile()
         if not MainScriptEntities.validateConfigFile():
             MainScriptEntities.backupConfigFile()
@@ -196,8 +194,8 @@ class StartPsPlugin(jmri.jmrit.automat.AbstractAutomaton):
         psWindow = MakePatternScriptsWindow(scrollPanel)
         psWindow.makeWindow()
 
-        print('Current Pattern Scripts directory: ' + CURRENT_DIR)
-        self.psLog.info('Current Pattern Scripts directory: ' + MainScriptEntities.CURRENT_PATH)
+        print('Current Pattern Scripts directory: ' + _currentDir)
+        self.psLog.info('Current Pattern Scripts directory: ' + _currentDir)
         self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
 
         return False
