@@ -162,7 +162,7 @@ class StartPsPlugin(jmri.jmrit.automat.AbstractAutomaton):
         if not MainScriptEntities.validateConfigFile(_currentRootDir):
             MainScriptEntities.backupConfigFile()
             self.psLog.warning('PatternConfig.json.bak file written')
-            MainScriptEntities.writeNewConfigFile(_currentRootDir)
+            MainScriptEntities.writeNewConfigFile()
             self.psLog.warning('New PatternConfig.JSON file created for this profile')
     # make a list of subroutines for the control panel
         subroutineList = []

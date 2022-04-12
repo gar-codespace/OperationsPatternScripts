@@ -138,17 +138,17 @@ def backupConfigFile():
 
 def readConfigFile(subConfig='all'):
 
-    configFilePath = SCRIPT_ROOT + '\psEntities\PatternConfig.json'
+    # configFilePath = SCRIPT_ROOT + '\psEntities\PatternConfig.json'
 
     try:
         patternConfig = getConfigFile()
     except ValueError:
         psLog.warning('Defective PatternConfig.JSON found, new file written')
-        writeNewConfigFile(configFilePath)
+        writeNewConfigFile()
         patternConfig = getConfigFile()
     except IOError:
         psLog.warning('No PatternConfig.JSON found, new file written')
-        writeNewConfigFile(configFilePath)
+        writeNewConfigFile()
         patternConfig = getConfigFile()
     if subConfig == 'all':
         return patternConfig
@@ -175,9 +175,10 @@ def writeConfigFile(configFile):
 
     return
 
-def writeNewConfigFile(defaultConfigFilePath):
+def writeNewConfigFile():
     '''Copies the default PatternConfig.JSON to the profile location'''
 
+    defaultConfigFilePath = SCRIPT_ROOT + '\psEntities\PatternConfig.json'
     copyFrom = javaIo.File(defaultConfigFilePath)
     copyTo = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json')
     jmri.util.FileUtil.copy(copyFrom, copyTo)
@@ -210,8 +211,9 @@ def getCarColor():
     r = colorDefinition['CP'][colorDefinition['carColor']]["R"]
     g = colorDefinition['CP'][colorDefinition['carColor']]["G"]
     b = colorDefinition['CP'][colorDefinition['carColor']]["B"]
+    a = colorDefinition['CP'][colorDefinition['carColor']]["A"]
 
-    return java.awt.Color(r, g, b)
+    return java.awt.Color(r, g, b, a)
 
 def getLocoColor():
 
@@ -220,8 +222,9 @@ def getLocoColor():
     r = colorDefinition['CP'][colorDefinition['locoColor']]["R"]
     g = colorDefinition['CP'][colorDefinition['locoColor']]["G"]
     b = colorDefinition['CP'][colorDefinition['locoColor']]["B"]
+    a = colorDefinition['CP'][colorDefinition['locoColor']]["A"]
 
-    return java.awt.Color(r, g, b)
+    return java.awt.Color(r, g, b, a)
 
 def getAlertColor():
 
@@ -230,5 +233,6 @@ def getAlertColor():
     r = colorDefinition['CP'][colorDefinition['alertColor']]["R"]
     g = colorDefinition['CP'][colorDefinition['alertColor']]["G"]
     b = colorDefinition['CP'][colorDefinition['alertColor']]["B"]
+    a = colorDefinition['CP'][colorDefinition['alertColor']]["A"]
 
-    return java.awt.Color(r, g, b)
+    return java.awt.Color(r, g, b, a)

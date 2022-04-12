@@ -10,36 +10,49 @@
   "CD": {
     "CP": {
       "BLANCH": {
+        "A": 255,
         "B": 225,
         "D": "Light grey",
         "G": 225,
         "R": 225
       },
       "DUST": {
+        "A": 255,
         "B": 218,
         "D": "Light tan",
         "G": 242,
         "R": 252
       },
       "FADED": {
+        "A": 255,
         "B": 245,
         "D": "Light purple",
         "G": 225,
         "R": 237
       },
       "LICHEN": {
+        "A": 255,
         "B": 244,
         "D": "Light green",
         "G": 255,
         "R": 236
       },
+      "NONE": {
+        "A": 0,
+        "B": 0,
+        "D": "Dont use color",
+        "G": 0,
+        "R": 0
+      },
       "PALE": {
+        "A": 255,
         "B": 250,
         "D": "Light blue",
         "G": 243,
         "R": 237
       },
       "PETAL": {
+        "A": 255,
         "B": 224,
         "D": "Light red",
         "G": 208,
@@ -57,7 +70,7 @@
     },
     "PH" : 140,
     "PW" : 2000,
-    "RV" : 20220102
+    "RV" : 20220101
   },
   "LI": {
     "9": "- CRITICAL -",
