@@ -52,7 +52,6 @@ Catches Items:
   Catches on the fly user corruption of config file more or less. Soft landing. CBB
 
 Todo:
-  Make none an option for color
   Try to get SCRIPT_ROOT out of readConfigFile() (eliminate SCRIPT_ROOT as a global)
 
 Wish List:

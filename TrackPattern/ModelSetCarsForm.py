@@ -9,7 +9,7 @@ from json import loads as jsonLoads, dumps as jsonDumps
 
 from psEntities import MainScriptEntities
 from TrackPattern import ModelEntities
-from TrackPattern import ExportToTrainPlayer
+from TrainPlayerSubroutine import ExportToTrainPlayer
 
 SCRIPT_NAME = 'OperationsPatternScripts.TrackPattern.ModelSetCarsForm'
 SCRIPT_REV = 20220101

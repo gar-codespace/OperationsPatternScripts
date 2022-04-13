@@ -8,31 +8,25 @@ from codecs import open as codecsOpen
 from os import mkdir as osMakeDir
 from sys import path as sysPath
 
-def useThisVersion():
-    '''Keep multiple versions of this plugin sorted out'''
-
-    fileRoot = jmri.util.FileUtil.getPreferencesPath()
-    currentFile = str(jmri.util.FileUtil.findFiles('MainScript2.0.0.b1.py', fileRoot).pop())
-    currentDir = java.io.File(currentFile).getParent()
-    return currentDir
-
 try:
-    _currentDir
+    SCRIPT_ROOT
 except NameError:
-    _currentDir = useThisVersion()
-    sysPath.append(_currentDir)
+    SCRIPT_DIR = 'OperationsPatternScripts'
+    # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b2'
+    SCRIPT_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
+    sysPath.append(SCRIPT_ROOT)
 
-print('Export to TrainPlayer script location: ' + _currentDir)
+print('Export to TrainPlayer script location: ' + SCRIPT_ROOT)
 from psEntities import MainScriptEntities
 
-SCRIPT_NAME ='OperationsPatternScripts.TrackPattern.ExportToTrainPlayer'
+SCRIPT_NAME ='OperationsPatternScripts.TrainPlayerSubroutine.ExportToTrainPlayer'
 SCRIPT_REV = 20220101
 
 class CheckTpDestination():
     '''Verify or create a TrainPlayer destination directory'''
 
     def __init__(self):
-        self.SCRIPT_NAME = 'OperationsPatternScripts.TrackPattern.ExportToTrainPlayer.CheckTpDestination'
+        self.SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayer.ExportToTrainPlayer.CheckTpDestination'
         self.SCRIPT_REV = 20220101
         self.psLog = logging.getLogger('PS.EX.CheckTpDestination')
         self.tpLog = logging.getLogger('TP.CheckTpDestination')
@@ -57,7 +51,7 @@ class ExportJmriLocations():
     '''Writes a list of location names and comments for the whole profile'''
 
     def __init__(self):
-        self.SCRIPT_NAME = 'OperationsPatternScripts.TrackPattern.ExportToTrainPlayer.LocationsForTrainPlayer'
+        self.SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayer.ExportToTrainPlayer.LocationsForTrainPlayer'
         self.SCRIPT_REV = 20220101
         self.psLog = logging.getLogger('PS.EX.ExportJmriLocations')
         self.tpLog = logging.getLogger('TP.ExportJmriLocations')
@@ -100,10 +94,10 @@ class TrackPatternTranslationToTp():
 
     def __init__(self):
 
-        self.SCRIPT_NAME ='OperationsPatternScripts.TrackPattern.ExportToTrainPlayer.TrackPatternTranslationToTp'
+        self.SCRIPT_NAME ='OperationsPatternScripts.TrainPlayer.ExportToTrainPlayer.TrainPlayerTranslationToTp'
         self.SCRIPT_REV = 20220101
-        self.psLog = logging.getLogger('PS.EX.TrackPatternTranslationToTp')
-        self.tpLog = logging.getLogger('TP.TrackPatternTranslationToTp')
+        self.psLog = logging.getLogger('PS.EX.TrainPlayerTranslationToTp')
+        self.tpLog = logging.getLogger('TP.TrainPlayerTranslationToTp')
 
         print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
 
@@ -172,7 +166,7 @@ class JmriTranslationToTp():
 
     def __init__(self):
 
-        self.SCRIPT_NAME ='OperationsPatternScripts.TrackPattern.ExportToTrainPlayer.JmriTranslationToTp'
+        self.SCRIPT_NAME ='OperationsPatternScripts.TrainPlayer.ExportToTrainPlayer.JmriTranslationToTp'
         self.SCRIPT_REV = 20220101
         self.psLog = logging.getLogger('PS.EX.JmriTranslationToTp')
         self.tpLog = logging.getLogger('TP.JmriTranslationToTp')
@@ -330,7 +324,7 @@ class ProcessWorkEventList():
 
     def __init__(self):
 
-        self.SCRIPT_NAME ='OperationsPatternScripts.TrackPattern.ExportToTrainPlayer.ProcessWorkEventList'
+        self.SCRIPT_NAME ='OperationsPatternScripts.TrainPlayer.ExportToTrainPlayer.ProcessWorkEventList'
         self.SCRIPT_REV = 20220101
         self.psLog = logging.getLogger('PS.EX.ProcessWorkEventList')
         self.tpLog = logging.getLogger('TP.ProcessWorkEventList')
@@ -397,7 +391,7 @@ class WriteWorkEventListToTp():
 
     def __init__(self, workEventList):
 
-        self.SCRIPT_NAME ='OperationsPatternScripts.TrackPattern.ExportToTrainPlayer.writeWorkEventListToTp'
+        self.SCRIPT_NAME ='OperationsPatternScripts.TrainPlayer.ExportToTrainPlayer.writeWorkEventListToTp'
         self.SCRIPT_REV = 20220101
         self.psLog = logging.getLogger('PS.EX.WriteWorkEventListToTp')
         self.tpLog = logging.getLogger('TP.WriteWorkEventListToTp')
@@ -467,8 +461,8 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
 
             WriteWorkEventListToTp(tpManifestHeader + tpManifestLocations).asCsv()
 
-        self.psLog.info('Export to TrainPlayer script location: ' + _currentDir)
-        self.tpLog.info('Export to TrainPlayer script location: ' + _currentDir)
+        self.psLog.info('Export to TrainPlayer script location: ' + SCRIPT_ROOT)
+        self.tpLog.info('Export to TrainPlayer script location: ' + SCRIPT_ROOT)
 
         self.psLog.info('Manifest export (sec): ' + ('%s' % (time.time() - timeNow))[:6])
         self.tpLog.info('Manifest export (sec): ' + ('%s' % (time.time() - timeNow))[:6])

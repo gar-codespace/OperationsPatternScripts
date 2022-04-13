@@ -20,8 +20,7 @@ _em = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.engines
 _cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
 _sm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.schedules.ScheduleManager)
 _pm = jmri.InstanceManager.getDefault(jmri.util.gui.GuiLafPreferencesManager)
-# _cmx = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManagerXml)
-SCRIPT_ROOT = ''
+from OperationsPatternScripts import PM
 
 SCRIPT_NAME = 'OperationsPatternScripts.psEntities.MainScriptEntities'
 SCRIPT_REV = 20220101
@@ -68,8 +67,6 @@ def openEditorByComputerType(switchListLocation=None):
 def validateStubFile(currentRootDir):
     '''Copy of the JMRI Java version of createStubFile'''
 
-    # helpFilePath = __file__.replace('\psEntities\MainScriptEntities.py', '\Support\psHelp.html')
-    # helpFilePath = __file__.replace('\psEntities\MainScriptEntities$py.class', '\Support\psHelp.html')
     stubLocation = jmri.util.FileUtil.getPreferencesPath() + '\\jmrihelp\\'
     try:
         osMakeDir(stubLocation)

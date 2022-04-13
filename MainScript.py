@@ -10,27 +10,21 @@ import javax.swing
 import logging
 import time
 from sys import path as sysPath
+# import os.path
 
 '''Pattern Scripts plugin for JMRI Operations Pro'''
 
-SCRIPT_VER = u'MainScript2.0.0.b1.py' # Increment this for each new package
-
-def useThisVersion():
-    '''Keep multiple versions of this plugin sorted out. Returns the root dir of the working plugin'''
-
-    fileRoot = jmri.util.FileUtil.getPreferencesPath()
-    currentFile = str(jmri.util.FileUtil.findFiles(SCRIPT_VER, fileRoot).pop())
-    currentRootDir = java.io.File(currentFile).getParent()
-
-    return currentRootDir
-
-_currentRootDir = useThisVersion()
-sysPath.append(_currentRootDir)
-from psEntities import MainScriptEntities
-MainScriptEntities.SCRIPT_ROOT = _currentRootDir
-
 SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
 SCRIPT_REV = 20220101
+
+SCRIPT_DIR = 'OperationsPatternScripts'
+# SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b2'
+
+SCRIPT_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
+
+sysPath.append(SCRIPT_ROOT)
+from psEntities import MainScriptEntities
+MainScriptEntities.SCRIPT_ROOT = SCRIPT_ROOT
 
 class Logger():
 
@@ -143,6 +137,8 @@ class StartPsPlugin(jmri.jmrit.automat.AbstractAutomaton):
 
     def init(self):
 
+        PM = jmri.InstanceManager.getDefault(jmri.util.gui.GuiLafPreferencesManager)
+
         self.psLog = logging.getLogger('PS')
         self.psLog.debug('Log File for Pattern Scripts Plugin - DEBUG level test message')
         self.psLog.info('Log File for Pattern Scripts Plugin - INFO level test message')
@@ -157,9 +153,9 @@ class StartPsPlugin(jmri.jmrit.automat.AbstractAutomaton):
 
         yTimeNow = time.time()
         MainScriptEntities.validateFileDestinationDirestories()
-        MainScriptEntities.validateStubFile(_currentRootDir)
+        MainScriptEntities.validateStubFile(SCRIPT_ROOT)
         MainScriptEntities.readConfigFile()
-        if not MainScriptEntities.validateConfigFile(_currentRootDir):
+        if not MainScriptEntities.validateConfigFile(SCRIPT_ROOT):
             MainScriptEntities.backupConfigFile()
             self.psLog.warning('PatternConfig.json.bak file written')
             MainScriptEntities.writeNewConfigFile()
@@ -186,8 +182,8 @@ class StartPsPlugin(jmri.jmrit.automat.AbstractAutomaton):
         psWindow = MakePatternScriptsWindow(scrollPanel)
         psWindow.makeWindow()
 
-        print('Current Pattern Scripts directory: ' + _currentRootDir)
-        self.psLog.info('Current Pattern Scripts directory: ' + _currentRootDir)
+        print('Current Pattern Scripts directory: ' + SCRIPT_ROOT)
+        self.psLog.info('Current Pattern Scripts directory: ' + SCRIPT_ROOT)
         self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
 
         return False

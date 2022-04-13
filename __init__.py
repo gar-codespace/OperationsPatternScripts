@@ -1,6 +1,7 @@
-# coding=utf-8
-# © 2021 Greg Ritacco
 
+
+import jmri
+#
 # import TrackPattern.Model as Model
 # import TrackPattern.View as View
 # import TrackPattern.Controller as Controller
@@ -11,4 +12,8 @@
 # import TrackPattern.ControllerSetCarsForm as ControllerSetCarsForm
 # import TrainPlayerSubroutine.ExportToTrainPlayer as ExportToTrainPlayer
 #
-# __all__ = ['Model', 'View', 'Controller', 'ModelEntities', 'ViewEntities', 'ModelSetCarsForm', 'ViewSetCarsForm', 'ControllerSetCarsForm', 'ExportToTrainPlayer']
+PM = 42
+#
+# __all__ = ['Model', 'View', 'Controller', 'ModelEntities', 'ViewEntities', 'ModelSetCarsForm', 'ViewSetCarsForm', 'ControllerSetCarsForm', 'ExportToTrainPlayer', 'PM']
+
+# SCRIPT_ROOT = ''

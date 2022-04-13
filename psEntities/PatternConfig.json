@@ -66,11 +66,11 @@
   "CP" : {
     "SI" : {
       "TrackPattern" : true,
-      "FutureSubroutines" : false
+      "TrainPlayerExport" : false
     },
     "PH" : 140,
     "PW" : 2000,
-    "RV" : 20220101
+    "RV" : 20220201
   },
   "LI": {
     "9": "- CRITICAL -",
