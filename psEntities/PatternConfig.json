@@ -70,7 +70,7 @@
     },
     "PH" : 140,
     "PW" : 2000,
-    "RV" : 20220202
+    "RV" : 20220203
   },
   "LI": {
     "9": "- CRITICAL -",
@@ -103,7 +103,7 @@
     "PA" : false,
     "PI" : false,
     "AS" : true,
-    "TI" : true,
+    "TI" : false,
     "PW" : 260,
     "PH" : 16,
     "DS" : "*No Waybill",

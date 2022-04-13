@@ -8,19 +8,16 @@ from codecs import open as codecsOpen
 from os import mkdir as osMakeDir
 from sys import path as sysPath
 
-try:
-    SCRIPT_ROOT
-except NameError:
-    SCRIPT_DIR = 'OperationsPatternScripts'
-    # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b2'
-    SCRIPT_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
-    sysPath.append(SCRIPT_ROOT)
-
-print('Export to TrainPlayer script location: ' + SCRIPT_ROOT)
-from psEntities import MainScriptEntities
-
 SCRIPT_NAME ='OperationsPatternScripts.TrainPlayerSubroutine.ExportToTrainPlayer'
 SCRIPT_REV = 20220101
+
+SCRIPT_DIR = 'OperationsPatternScripts'
+# SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b2'
+SCRIPT_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
+sysPath.append(SCRIPT_ROOT)
+
+from psEntities import MainScriptEntities
+
 
 class CheckTpDestination():
     '''Verify or create a TrainPlayer destination directory'''
@@ -178,7 +175,7 @@ class JmriTranslationToTp():
     def findNewestManifest(self):
         '''If more than 1 train is built, pick the newest one'''
 
-        if not MainScriptEntities._tm.isAnyTrainBuilt():
+        if not MainScriptEntities.TM.isAnyTrainBuilt():
             self.psLog.info('No trains are built')
             self.tpLog.info('No trains are built')
 
@@ -199,7 +196,7 @@ class JmriTranslationToTp():
     def getBuiltTrains(self):
 
         builtTrainList = []
-        for train in MainScriptEntities._tm.getTrainsByStatusList():
+        for train in MainScriptEntities.TM.getTrainsByStatusList():
             if train.isBuilt():
                 builtTrainList.append(train)
 

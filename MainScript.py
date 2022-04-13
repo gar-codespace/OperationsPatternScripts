@@ -65,29 +65,51 @@ class MakePatternScriptsWindow():
         return
 
     def helpItemSelected(self, ACTION_PERFORMED):
+        '''Displays the help pge in a browser'''
 
         jmri.util.HelpUtil.openWebPage(self.helpStubPath)
 
         return
 
+    def tpItemSelected(self, EVENT):
+        '''Enable or disable the TrainPlayer subroutine'''
+
+        patternConfig = MainScriptEntities.readConfigFile()
+
+        if EVENT.getSource().getText() == u'Enable Subroutine':
+            patternConfig['TP'].update({'TI': True})
+            EVENT.getSource().setText(u'Disable Subroutine')
+        else:
+            patternConfig['TP'].update({'TI': False})
+            EVENT.getSource().setText(u'Enable Subroutine')
+
+        MainScriptEntities.writeConfigFile(patternConfig)
+
+        return
+
     def makeWindow(self):
-
-        self.helpStubPath = MainScriptEntities.scrubPath()
-        helpMenuItem = javax.swing.JMenuItem(u'Window Help...')
-        helpMenuItem.addActionListener(self.helpItemSelected)
-
-        helpMenu = javax.swing.JMenu(u'Help')
-        helpMenu.add(helpMenuItem)
 
         toolsMenu = javax.swing.JMenu(u'Tools')
         toolsMenu.add(jmri.jmrit.operations.setup.OptionAction())
         toolsMenu.add(jmri.jmrit.operations.setup.PrintOptionAction())
         toolsMenu.add(jmri.jmrit.operations.setup.BuildReportOptionAction())
 
+        tpMenuItem = javax.swing.JMenuItem("Enable Subroutine")
+        tpMenuItem.addActionListener(self.tpItemSelected)
+        tpMenu = javax.swing.JMenu(u'TrainPlayer')
+        tpMenu.add(tpMenuItem)
+
+        self.helpStubPath = MainScriptEntities.scrubPath()
+        helpMenuItem = javax.swing.JMenuItem(u'Window Help...')
+        helpMenuItem.addActionListener(self.helpItemSelected)
+        helpMenu = javax.swing.JMenu(u'Help')
+        helpMenu.add(helpMenuItem)
+
         psMenuBar = javax.swing.JMenuBar()
         psMenuBar.add(toolsMenu)
         psMenuBar.add(jmri.jmrit.operations.OperationsMenu())
         psMenuBar.add(jmri.util.WindowMenu(self.uniqueWindow))
+        psMenuBar.add(tpMenu)
         psMenuBar.add(helpMenu)
 
         self.uniqueWindow.addWindowListener(PatternScriptsWindowListener())
