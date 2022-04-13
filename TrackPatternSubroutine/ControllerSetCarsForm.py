@@ -6,9 +6,9 @@ import java.awt
 import logging
 
 from psEntities import MainScriptEntities
-from TrackPattern import Model
-from TrackPattern import ModelSetCarsForm
-from TrackPattern import ViewSetCarsForm
+from TrackPatternSubroutine import Model
+from TrackPatternSubroutine import ModelSetCarsForm
+from TrackPatternSubroutine import ViewSetCarsForm
 
 '''Makes a "Set Cars Form for Track X" form for each selected track'''
 
@@ -99,8 +99,8 @@ class CreatePatternReportGui():
         '''The named schedule button if displayed on any "Set Cars Form for Track X" window'''
 
         scheduleName = MOUSE_CLICKED.getSource().getText()
-        schedule = MainScriptEntities._sm.getScheduleByName(scheduleName)
-        track = MainScriptEntities._lm.getLocationByName(self.locationName).getTrackByName(self.trackName, None)
+        schedule = MainScriptEntities.SM.getScheduleByName(scheduleName)
+        track = MainScriptEntities.LM.getLocationByName(self.locationName).getTrackByName(self.trackName, None)
         jmri.jmrit.operations.locations.schedules.ScheduleEditFrame(schedule, track)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

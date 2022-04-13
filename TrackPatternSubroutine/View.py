@@ -6,11 +6,11 @@ import logging
 from os import system as osSystem
 
 from psEntities import MainScriptEntities
-from TrackPattern import ViewEntities
+from TrackPatternSubroutine import ViewEntities
 
 '''View script for the track pattern subroutine'''
 
-SCRIPT_NAME = 'OperationsPatternScripts.TrackPattern.View'
+SCRIPT_NAME = 'OperationsPatternScripts.TrackPatternSubroutine.View'
 SCRIPT_REV = 20220101
 psLog = logging.getLogger('PS.TP.View')
 

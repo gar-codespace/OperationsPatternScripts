@@ -7,10 +7,10 @@ import logging
 from os import system as osSystem
 
 from psEntities import MainScriptEntities
-from TrackPattern import Model
-from TrackPattern import View
+from TrackPatternSubroutine import Model
+from TrackPatternSubroutine import View
 
-SCRIPT_NAME = 'OperationsPatternScripts.TrackPattern.Controller'
+SCRIPT_NAME = 'OperationsPatternScripts.TrackPatternSubroutine.Controller'
 SCRIPT_REV = 20220101
 
 class LocationComboBox(java.awt.event.ActionListener):

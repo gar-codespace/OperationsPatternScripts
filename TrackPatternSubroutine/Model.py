@@ -9,10 +9,10 @@ from json import loads as jsonLoads, dumps as jsonDumps
 from codecs import open as codecsOpen
 
 from psEntities import MainScriptEntities
-from TrackPattern import ModelEntities
-from TrackPattern import ControllerSetCarsForm
+from TrackPatternSubroutine import ModelEntities
+from TrackPatternSubroutine import ControllerSetCarsForm
 
-SCRIPT_NAME = 'OperationsPatternScripts.TrackPattern.Model'
+SCRIPT_NAME = 'OperationsPatternScripts.TrackPatternSubroutine.Model'
 SCRIPT_REV = 20220101
 psLog = logging.getLogger('PS.TP.Model')
 
@@ -98,7 +98,7 @@ def updateConfigFile(controls):
     focusOn.update({"PA": controls[1].selected})
     focusOn.update({"PI": controls[2].selected})
     focusOn.update({"PT": ModelEntities.updateTrackCheckBoxes(controls[3])})
-    newConfigFile = MainScriptEntities.readConfigFile('all')
+    newConfigFile = MainScriptEntities.readConfigFile()
     newConfigFile.update({"TP": focusOn})
     MainScriptEntities.writeConfigFile(newConfigFile)
     psLog.info('Controls settings for configuration file updated')

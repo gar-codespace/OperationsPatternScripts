@@ -8,10 +8,10 @@ from codecs import open as codecsOpen
 from json import loads as jsonLoads, dumps as jsonDumps
 
 from psEntities import MainScriptEntities
-from TrackPattern import ModelEntities
+from TrackPatternSubroutine import ModelEntities
 from TrainPlayerSubroutine import ExportToTrainPlayer
 
-SCRIPT_NAME = 'OperationsPatternScripts.TrackPattern.ModelSetCarsForm'
+SCRIPT_NAME = 'OperationsPatternScripts.TrackPatternSubroutine.ModelSetCarsForm'
 SCRIPT_REV = 20220101
 psLog = logging.getLogger('PS.TP.ModelSetCarsForm')
 
@@ -48,7 +48,7 @@ def setRsToTrack(setCarsForm, textBoxEntry):
         if userInputList[i] == fromTrack:
             i += 1
             continue
-        locoObject =  MainScriptEntities._em.getByRoadAndNumber(loco['Road'], loco['Number'])
+        locoObject =  MainScriptEntities.EM.getByRoadAndNumber(loco['Road'], loco['Number'])
         try: # Catches on the fly edit of name or road
             setResult = setRs(locoObject, userInputList[i])
         except AttributeError:
@@ -67,7 +67,7 @@ def setRsToTrack(setCarsForm, textBoxEntry):
         if userInputList[i] == fromTrack:
             i += 1
             continue
-        carObject =  MainScriptEntities._cm.getByRoadAndNumber(car['Road'], car['Number'])
+        carObject =  MainScriptEntities.CM.getByRoadAndNumber(car['Road'], car['Number'])
         try: # Catches on the fly edit of name or road
             setResult = setRs(carObject, userInputList[i])
         except AttributeError:
@@ -86,7 +86,7 @@ def setRsToTrack(setCarsForm, textBoxEntry):
 def setRs(rollingStock, userInputListItem):
 
     location = MainScriptEntities.readConfigFile('TP')['PL']
-    locationObject = MainScriptEntities._lm.getLocationByName(unicode(location, MainScriptEntities.setEncoding()))
+    locationObject = MainScriptEntities.LM.getLocationByName(unicode(location, MainScriptEntities.setEncoding()))
     toTrackObject = locationObject.getTrackByName(unicode(userInputListItem, MainScriptEntities.setEncoding()), None)
 
     ignoreTrackLength = MainScriptEntities.readConfigFile('TP')['PI']
@@ -130,10 +130,10 @@ def applySchedule(toTrackObject, carObject):
 def getSchedule(locationString, trackString):
     '''Returns a schedule if there is one'''
 
-    track = MainScriptEntities._lm.getLocationByName(locationString).getTrackByName(trackString, 'Spur')
+    track = MainScriptEntities.LM.getLocationByName(locationString).getTrackByName(trackString, 'Spur')
 
     if track:
-        schedule = MainScriptEntities._sm.getScheduleByName(track.getScheduleName())
+        schedule = MainScriptEntities.SM.getScheduleByName(track.getScheduleName())
 
         return schedule
 

@@ -14,13 +14,12 @@ from shutil import copy as shutilCopy
 
 '''Support methods for all Pattern Script modules'''
 
-_lm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
-_tm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.trains.TrainManager)
-_em = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.engines.EngineManager)
-_cm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
-_sm = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.schedules.ScheduleManager)
-_pm = jmri.InstanceManager.getDefault(jmri.util.gui.GuiLafPreferencesManager)
-from OperationsPatternScripts import PM
+LM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
+TM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.trains.TrainManager)
+EM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.engines.EngineManager)
+CM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
+SM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.schedules.ScheduleManager)
+PM = jmri.InstanceManager.getDefault(jmri.util.gui.GuiLafPreferencesManager)
 
 SCRIPT_NAME = 'OperationsPatternScripts.psEntities.MainScriptEntities'
 SCRIPT_REV = 20220101
@@ -80,7 +79,7 @@ def validateStubFile(currentRootDir):
     helpFilePath = javaIo.File(helpFilePath).toURI()
     helpFilePath = unicode(helpFilePath, setEncoding())
 
-    locale = unicode(_pm.getLocale(), setEncoding())
+    locale = unicode(PM.getLocale(), setEncoding())
     stubTemplateLocation = jmri.util.FileUtil.getProgramPath() + 'help\\' + locale[:2] + '\\local\\stub_template.html'
     with codecsOpen(stubTemplateLocation, 'r', encoding=setEncoding()) as template:
         contents = template.read()
@@ -133,24 +132,21 @@ def backupConfigFile():
 
     return
 
-def readConfigFile(subConfig='all'):
-
-    # configFilePath = SCRIPT_ROOT + '\psEntities\PatternConfig.json'
+def readConfigFile(subConfig=None):
 
     try:
-        patternConfig = getConfigFile()
+        getConfigFile()
     except ValueError:
         psLog.warning('Defective PatternConfig.JSON found, new file written')
         writeNewConfigFile()
-        patternConfig = getConfigFile()
     except IOError:
         psLog.warning('No PatternConfig.JSON found, new file written')
         writeNewConfigFile()
-        patternConfig = getConfigFile()
-    if subConfig == 'all':
-        return patternConfig
+
+    if not subConfig:
+        return getConfigFile()
     else:
-        return patternConfig[subConfig]
+        return getConfigFile()[subConfig]
 
 def getConfigFile():
     '''Returns the users PatternConfig file from the active profile'''

@@ -6,7 +6,7 @@ import java.awt
 import javax.swing
 
 from psEntities import MainScriptEntities
-from TrackPattern import ViewEntities
+from TrackPatternSubroutine import ViewEntities
 
 '''Display methods for the Set Cars Form for Track X form'''
 
@@ -128,7 +128,7 @@ def makeSetCarsFormHeader(setCarsFormData):
 def makeSetCarsTrackButtons():
 
     location =  MainScriptEntities.readConfigFile('TP')['PL']
-    allTracksAtLoc =  MainScriptEntities._lm.getLocationByName(location).getTracksByNameList(None)
+    allTracksAtLoc =  MainScriptEntities.LM.getLocationByName(location).getTracksByNameList(None)
 
     buttonPanel = javax.swing.JPanel()
     buttonPanel.border = javax.swing.BorderFactory.createTitledBorder(u'Tracks at ' + location)
@@ -148,7 +148,7 @@ class MakeSetCarsEqptRows():
         self.SCRIPT_REV = 20220101
 
         self.reportWidth = MainScriptEntities.readConfigFile('TP')['RW']
-        fontSize = MainScriptEntities._pm.getFontSize()
+        fontSize = MainScriptEntities.PM.getFontSize()
         self.panelHeight = fontSize + 4
         self.panelWidth = fontSize - 2
 
@@ -223,7 +223,7 @@ def makeSetCarsScheduleRow(setCarsFormData):
 
     trackLocation = setCarsFormData['locations'][0]['locationName']
     trackName = setCarsFormData['locations'][0]['tracks'][0]['trackName']
-    trackObject = MainScriptEntities._lm.getLocationByName(trackLocation).getTrackByName(trackName, None)
+    trackObject = MainScriptEntities.LM.getLocationByName(trackLocation).getTrackByName(trackName, None)
     scheduleObject = trackObject.getSchedule()
     schedulePanel = None
     scheduleList = []

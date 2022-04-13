@@ -40,7 +40,7 @@ def occuranceTally(listOfOccurances):
 def getAllLocations():
     '''JMRI sorts the list'''
 
-    allLocations = MainScriptEntities._lm.getLocationsByNameList()
+    allLocations = MainScriptEntities.LM.getLocationsByNameList()
     locationList = []
     for item in allLocations:
         locationList.append(unicode(item.getName(), MainScriptEntities.setEncoding()))
@@ -65,7 +65,7 @@ def getTracksByLocation(trackType):
     patternLocation = MainScriptEntities.readConfigFile('TP')['PL']
     allTracksList = []
     try: # Catch on the fly user edit of config file error
-        for track in MainScriptEntities._lm.getLocationByName(patternLocation).getTracksByNameList(trackType):
+        for track in MainScriptEntities.LM.getLocationByName(patternLocation).getTracksByNameList(trackType):
             allTracksList.append(unicode(track.getName(), MainScriptEntities.setEncoding()))
         return allTracksList
     except AttributeError:
@@ -85,7 +85,7 @@ def getGenericTrackDetails(locationName, trackName):
 
     genericTrackDetails = {}
     genericTrackDetails['trackName'] = trackName
-    genericTrackDetails['length'] =  MainScriptEntities._lm.getLocationByName(locationName).getTrackByName(trackName, None).getLength()
+    genericTrackDetails['length'] =  MainScriptEntities.LM.getLocationByName(locationName).getTrackByName(trackName, None).getLength()
     genericTrackDetails['locos'] = sortLocoList(getLocoListForTrack(trackName))
     genericTrackDetails['cars'] = sortCarList(getCarListForTrack(trackName))
 
@@ -104,14 +104,14 @@ def getRsOnTrains():
     '''Make a list of all rolling stock that are on built trains'''
 
     builtTrainList = []
-    for train in MainScriptEntities._tm.getTrainsByStatusList():
+    for train in MainScriptEntities.TM.getTrainsByStatusList():
         if train.isBuilt():
             builtTrainList.append(train)
 
     listOfAssignedRs = []
     for train in builtTrainList:
-        listOfAssignedRs += MainScriptEntities._cm.getByTrainList(train)
-        listOfAssignedRs += MainScriptEntities._em.getByTrainList(train)
+        listOfAssignedRs += MainScriptEntities.CM.getByTrainList(train)
+        listOfAssignedRs += MainScriptEntities.EM.getByTrainList(train)
 
     return listOfAssignedRs
 
@@ -126,7 +126,7 @@ def getLocoListForTrack(track):
 def getLocoObjects(location, track):
 
     locoList = []
-    allLocos = MainScriptEntities._em.getByModelList()
+    allLocos = MainScriptEntities.EM.getByModelList()
 
     return [loco for loco in allLocos if loco.getLocationName() == location and loco.getTrackName() == track]
 
@@ -184,7 +184,7 @@ def getCarListForTrack(track):
 
 def getCarObjects(location, track):
 
-    allCars = MainScriptEntities._cm.getByIdList()
+    allCars = MainScriptEntities.CM.getByIdList()
 
     return [car for car in allCars if car.getLocationName() == location and car.getTrackName() == track]
 
@@ -210,7 +210,7 @@ def getDetailsForCarAsDict(carObject):
     carDetailDict[u'Hazardous'] = carObject.isHazardous()
     carDetailDict[u'Color'] = carObject.getColor()
     carDetailDict[u'Kernel'] = carObject.getKernelName()
-    allCarObjects =  MainScriptEntities._cm.getByIdList()
+    allCarObjects =  MainScriptEntities.CM.getByIdList()
     for car in allCarObjects:
         i = 0
         if (car.getKernelName() == carObject.getKernelName()):
@@ -232,7 +232,7 @@ def getDetailsForCarAsDict(carObject):
         carDetailDict[u'Final Dest'] = carObject.getFinalDestinationName()
         carDetailDict[u'FD&Track'] = carObject.getFinalDestinationName() + ', ' + carObject.getFinalDestinationTrackName()
     carDetailDict[u'Comment'] = carObject.getComment()
-    trackId =  MainScriptEntities._lm.getLocationByName(carObject.getLocationName()).getTrackById(carObject.getTrackId())
+    trackId =  MainScriptEntities.LM.getLocationByName(carObject.getLocationName()).getTrackById(carObject.getTrackId())
     carDetailDict[u'SetOut Msg'] = trackId.getCommentSetout()
     carDetailDict[u'PickUp Msg'] = trackId.getCommentPickup()
     carDetailDict[u'RWE'] = carObject.getReturnWhenEmptyDestinationName()
@@ -367,7 +367,7 @@ def writeTextSwitchList(fileName, textSwitchList):
 def makeInitialTrackList(location):
 
     trackDict = {}
-    for track in MainScriptEntities._lm.getLocationByName(location).getTracksByNameList(None):
+    for track in MainScriptEntities.LM.getLocationByName(location).getTracksByNameList(None):
         trackDict[unicode(track, MainScriptEntities.setEncoding())] = False
 
     return trackDict
