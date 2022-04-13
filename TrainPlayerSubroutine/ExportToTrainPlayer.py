@@ -78,9 +78,14 @@ class ExportJmriLocations():
         '''Exports JMRI location;track pairs and track comments for TP Advanced Ops'''
 
         jmriLocationsPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Locations.csv"
-        with codecsOpen(jmriLocationsPath, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
-            csvHeader = u'Locale,Industry\n'
-            csvWorkFile.write(csvHeader + csvLocations)
+        try:# Catch TrainPlayer not installed
+            with codecsOpen(jmriLocationsPath, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
+                csvHeader = u'Locale,Industry\n'
+                csvWorkFile.write(csvHeader + csvLocations)
+        except IOError:
+                self.psLog.warning('Directory not found, TP locations export did not complete')
+                self.tpLog.warning('Directory not found, TP locations export did not complete')
+
 
         print(self.SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -403,8 +408,12 @@ class WriteWorkEventListToTp():
         self.psLog.debug('asCsv')
         self.tpLog.debug('asCsv')
 
-        with codecsOpen(self.jmriManifestPath, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
-            csvWorkFile.write(self.workEventList)
+        try: # Catch TrainPlayer not installed
+            with codecsOpen(self.jmriManifestPath, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
+                csvWorkFile.write(self.workEventList)
+        except IOError:
+            self.psLog.warning('Directory not found, TP switch list export did not complete')
+            self.tpLog.warning('Directory not found, TP switch list export did not complete')
 
         print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
 
