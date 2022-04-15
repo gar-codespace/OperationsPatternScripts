@@ -199,11 +199,11 @@ class PatternScriptsWindowListener(java.awt.event.WindowListener):
     def windowDeactivated(self, WINDOW_DEACTIVATED):
         return
 
-class TrainBuiltListener(java.beans.jmri.beans.SwingPropertyChangeListener(java.beans.PropertyChangeListener listener(), True)):
+class TrainBuiltListener(java.beans.PropertyChangeListener):
 
-  def propertyChange(self, TRAINS_BUILT_CHANGED_PROPERTY):
-    print "change",TRAINS_BUILT_CHANGED_PROPERTY.propertyName
-    # print "from", event.oldValue, "to", event.newValue
+  def propertyChange(self, event):
+    print "change",event.propertyName
+    print "from", event.oldValue, "to", event.newValue
     # print "source systemName", event.source.systemName
     # print "source userName", event.source.userName
 #TRAINS_BUILT_CHANGED_PROPERTY
