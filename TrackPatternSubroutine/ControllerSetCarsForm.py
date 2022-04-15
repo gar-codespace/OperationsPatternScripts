@@ -23,6 +23,8 @@ class TextBoxEntryListener(java.awt.event.MouseAdapter):
     def __init__(self):
         self.psLog = logging.getLogger('PS.TP.TextBoxEntryListener')
 
+        return
+
     def mouseClicked(self, MOUSE_CLICKED):
 
         if _trackNameClickedOn:

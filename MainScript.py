@@ -4,6 +4,7 @@
 import jmri
 from apps import Apps
 import java
+import java.beans
 import java.awt
 import java.awt.event
 import javax.swing
@@ -24,6 +25,7 @@ SCRIPT_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
 
 sysPath.append(SCRIPT_ROOT)
 from psEntities import MainScriptEntities
+from TrainPlayerSubroutine import ExportToTrainPlayer
 MainScriptEntities.SCRIPT_ROOT = SCRIPT_ROOT
 
 class Logger():
@@ -95,9 +97,12 @@ class MakePatternScriptsWindow():
         if patternConfig['TP']['TI']:
             patternConfig['TP'].update({'TI': False})
             EVENT.getSource().setText(u'Enable TrainPlayer')
+            ExportToTrainPlayer.ManageScriptToTrains().deleteScriptToTrains()
         else:
             patternConfig['TP'].update({'TI': True})
             EVENT.getSource().setText(u'Disable TrainPlayer')
+            ExportToTrainPlayer.ManageScriptToTrains().deleteScriptToTrains() # Catches user edit or restore of config file
+            ExportToTrainPlayer.ManageScriptToTrains().addScriptToTrains()
 
         MainScriptEntities.writeConfigFile(patternConfig)
 
@@ -151,6 +156,8 @@ class MakePatternScriptsWindow():
         psMenuBar.add(helpMenu)
 
         self.uniqueWindow.addWindowListener(PatternScriptsWindowListener())
+        m = TrainBuiltListener()
+        self.uniqueWindow.addPropertyChangeListener(m)
         self.uniqueWindow.setJMenuBar(psMenuBar)
         self.uniqueWindow.add(self.controlPanel)
         self.uniqueWindow.pack()
@@ -191,6 +198,16 @@ class PatternScriptsWindowListener(java.awt.event.WindowListener):
         return
     def windowDeactivated(self, WINDOW_DEACTIVATED):
         return
+
+class TrainBuiltListener(java.beans.jmri.beans.SwingPropertyChangeListener(java.beans.PropertyChangeListener listener(), True)):
+
+  def propertyChange(self, TRAINS_BUILT_CHANGED_PROPERTY):
+    print "change",TRAINS_BUILT_CHANGED_PROPERTY.propertyName
+    # print "from", event.oldValue, "to", event.newValue
+    # print "source systemName", event.source.systemName
+    # print "source userName", event.source.userName
+#TRAINS_BUILT_CHANGED_PROPERTY
+    return
 
 class StartPsPlugin(jmri.jmrit.automat.AbstractAutomaton):
     '''Start the the Pattern Scripts plugin and add selected subroutines'''

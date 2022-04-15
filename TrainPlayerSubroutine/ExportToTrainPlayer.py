@@ -163,6 +163,31 @@ class TrackPatternTranslationToTp():
 
         return tpSwitchList
 
+class ManageScriptToTrains:
+
+    def __init__(self):
+
+        self.afterBuildScript = SCRIPT_ROOT + '\TrainPlayerSubroutine\ExportToTrainPlayer.py'
+        # self.afterBuildScript = 'C:\Users\Greg\JMRI\OperationsPatternScripts\TrainPlayerSubroutine\ExportToTrainPlayer.py'
+        self.trainList = MainScriptEntities.TM.getTrainsByIdList()
+        return
+
+    def addScriptToTrains(self):
+
+        for train in self.trainList:
+            train.addAfterBuildScript(self.afterBuildScript)
+        jmri.jmrit.operations.trains.TrainManagerXml.save()
+
+        return
+
+    def deleteScriptToTrains(self):
+
+        for train in self.trainList:
+            train.deleteAfterBuildScript(self.afterBuildScript)
+        jmri.jmrit.operations.trains.TrainManagerXml.save()
+
+        return
+
 class JmriTranslationToTp():
     '''Translate manifests from JMRI for TrainPlayer O2O script compatability'''
 
