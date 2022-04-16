@@ -54,15 +54,18 @@ class Logger():
 
         return
 
-
 class MakePatternScriptsWindow():
     '''Makes a JMRI JFrame that the control panel is set into'''
 
     def __init__(self, scrollPanel):
 
+        self.psLog = logging.getLogger('PS')
+
         self.controlPanel = scrollPanel
         self.uniqueWindow = jmri.util.JmriJFrame(u'Pattern Scripts')
         self.uniqueWindow.setName('patternScripts')
+
+        self.trainListener = BuiltTrainListener()
 
         return
 
@@ -97,19 +100,47 @@ class MakePatternScriptsWindow():
         if patternConfig['TP']['TI']:
             patternConfig['TP'].update({'TI': False})
             EVENT.getSource().setText(u'Enable TrainPlayer')
-            ExportToTrainPlayer.ManageScriptToTrains().deleteScriptToTrains()
+            self.stopBuiltTrainListener()
+            self.psLog.info('TrainPlayer support deactivated')
+            print('TrainPlayer support deactivated')
         else:
             patternConfig['TP'].update({'TI': True})
             EVENT.getSource().setText(u'Disable TrainPlayer')
-            ExportToTrainPlayer.ManageScriptToTrains().deleteScriptToTrains() # Catches user edit or restore of config file
-            ExportToTrainPlayer.ManageScriptToTrains().addScriptToTrains()
+            ExportToTrainPlayer.CheckTpDestination().directoryExists()
+            self.startBuiltTrainListener()
+            self.psLog.info('TrainPlayer support activated')
+            print('TrainPlayer support activated')
 
         MainScriptEntities.writeConfigFile(patternConfig)
 
         return
 
+    def startBuiltTrainListener(self):
+
+        trainList = MainScriptEntities.TM.getTrainsByIdList()
+
+        for train in trainList:
+            train.addPropertyChangeListener(self.trainListener)
+
+
+        self.psLog.info('trainListener added to trains')
+
+        return
+
+    def stopBuiltTrainListener(self):
+
+        trainList = MainScriptEntities.TM.getTrainsByIdList()
+
+
+        for train in trainList:
+            train.removePropertyChangeListener(self.trainListener)
+
+        self.psLog.info('trainListener removed from trains')
+
+        return
+
     def getAsFlag(self):
-        '''Set the drop down text per the Apply Schedule flay'''
+        '''Set the drop down text per the Apply Schedule flag'''
 
         asFlag = patternConfig = MainScriptEntities.readConfigFile('TP')['AS']
         if asFlag:
@@ -156,12 +187,22 @@ class MakePatternScriptsWindow():
         psMenuBar.add(helpMenu)
 
         self.uniqueWindow.addWindowListener(PatternScriptsWindowListener())
-        m = TrainBuiltListener()
-        self.uniqueWindow.addPropertyChangeListener(m)
         self.uniqueWindow.setJMenuBar(psMenuBar)
         self.uniqueWindow.add(self.controlPanel)
         self.uniqueWindow.pack()
         self.uniqueWindow.setVisible(True)
+
+        return
+
+class BuiltTrainListener(java.beans.PropertyChangeListener):
+
+    def propertyChange(self, TRAIN_BUILT):
+        '''Listens for a built train starts TrainPlayer manifest export'''
+
+        if TRAIN_BUILT.propertyName == 'TrainBuilt' and TRAIN_BUILT.newValue:
+            tpManifest = ExportToTrainPlayer.ManifestForTrainPlayer()
+            tpManifest.passInTrainName(TRAIN_BUILT.getSource().getName())
+            tpManifest.start()
 
         return
 
@@ -180,6 +221,7 @@ class PatternScriptsWindowListener(java.awt.event.WindowListener):
             if frame.getName() == 'setCarsWindow':
                 frame.dispose()
                 frame.setVisible(False)
+        # Also shut off train built listener here
 
         return
 
@@ -198,16 +240,6 @@ class PatternScriptsWindowListener(java.awt.event.WindowListener):
         return
     def windowDeactivated(self, WINDOW_DEACTIVATED):
         return
-
-class TrainBuiltListener(java.beans.PropertyChangeListener):
-
-  def propertyChange(self, event):
-    print "change",event.propertyName
-    print "from", event.oldValue, "to", event.newValue
-    # print "source systemName", event.source.systemName
-    # print "source userName", event.source.userName
-#TRAINS_BUILT_CHANGED_PROPERTY
-    return
 
 class StartPsPlugin(jmri.jmrit.automat.AbstractAutomaton):
     '''Start the the Pattern Scripts plugin and add selected subroutines'''
@@ -257,6 +289,9 @@ class StartPsPlugin(jmri.jmrit.automat.AbstractAutomaton):
             pluginPanel.add(subroutine)
 
         psWindow = MakePatternScriptsWindow(scrollPanel)
+        if MainScriptEntities.readConfigFile('TP')['TI']:
+            ExportToTrainPlayer.CheckTpDestination().directoryExists()
+            psWindow.startBuiltTrainListener()
         psWindow.makeWindow()
 
         print('Current Pattern Scripts directory: ' + SCRIPT_ROOT)
@@ -283,6 +318,7 @@ class panelProFrame:
         self.psPlugin.start()
         self.patternScriptsButton.setText('Restart Pattern Scripts')
         self.patternScriptsButton.actionPerformed = self.patternButtonRestart
+        # shut off train built listener
 
         return
 

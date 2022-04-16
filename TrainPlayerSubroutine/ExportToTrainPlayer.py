@@ -163,31 +163,6 @@ class TrackPatternTranslationToTp():
 
         return tpSwitchList
 
-class ManageScriptToTrains:
-
-    def __init__(self):
-
-        self.afterBuildScript = SCRIPT_ROOT + '\TrainPlayerSubroutine\ExportToTrainPlayer.py'
-        # self.afterBuildScript = 'C:\Users\Greg\JMRI\OperationsPatternScripts\TrainPlayerSubroutine\ExportToTrainPlayer.py'
-        self.trainList = MainScriptEntities.TM.getTrainsByIdList()
-        return
-
-    def addScriptToTrains(self):
-
-        for train in self.trainList:
-            train.addAfterBuildScript(self.afterBuildScript)
-        jmri.jmrit.operations.trains.TrainManagerXml.save()
-
-        return
-
-    def deleteScriptToTrains(self):
-
-        for train in self.trainList:
-            train.deleteAfterBuildScript(self.afterBuildScript)
-        jmri.jmrit.operations.trains.TrainManagerXml.save()
-
-        return
-
 class JmriTranslationToTp():
     '''Translate manifests from JMRI for TrainPlayer O2O script compatability'''
 
@@ -469,28 +444,32 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
 
         return
 
+    def passInTrainName(self, trainName):
+
+        self.trainName = trainName
+
+        return
+
     def handle(self):
 
         timeNow = time.time()
-
-        CheckTpDestination().directoryExists()
 
         jmriExport = ExportJmriLocations()
         locationList = jmriExport.makeLocationList()
         jmriExport.toTrainPlayer(locationList)
 
+        builtTrain = MainScriptEntities.TM.getTrainByName(self.trainName)
         jmriManifestTranslator = JmriTranslationToTp()
-        newestTrain = jmriManifestTranslator.findNewestManifest()
-        if newestTrain:
-            translatedManifest = jmriManifestTranslator.translateManifestHeader(newestTrain)
-            translatedManifest['locations'] = jmriManifestTranslator.translateManifestBody(newestTrain)
+        builtTrainAsDict = jmriManifestTranslator.getTrainAsDict(builtTrain)
+        translatedManifest = jmriManifestTranslator.translateManifestHeader(builtTrainAsDict)
+        translatedManifest['locations'] = jmriManifestTranslator.translateManifestBody(builtTrainAsDict)
 
-            processedManifest = ProcessWorkEventList()
-            processedManifest.writeTpWorkEventListAsJson(translatedManifest)
-            tpManifestHeader = processedManifest.makeTpHeader(translatedManifest)
-            tpManifestLocations = processedManifest.makeTpLocations(translatedManifest)
+        processedManifest = ProcessWorkEventList()
+        processedManifest.writeTpWorkEventListAsJson(translatedManifest)
+        tpManifestHeader = processedManifest.makeTpHeader(translatedManifest)
+        tpManifestLocations = processedManifest.makeTpLocations(translatedManifest)
 
-            WriteWorkEventListToTp(tpManifestHeader + tpManifestLocations).asCsv()
+        WriteWorkEventListToTp(tpManifestHeader + tpManifestLocations).asCsv()
 
         self.psLog.info('Export to TrainPlayer script location: ' + SCRIPT_ROOT)
         self.tpLog.info('Export to TrainPlayer script location: ' + SCRIPT_ROOT)

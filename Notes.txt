@@ -39,6 +39,7 @@ Tested Items:
   Bad edits of config file protected as much as possible. CBB
   Pattern Scripts plugin hardened against errors  more or less. CBB
   Move config file into psEntities to shield it from accidental edit
+  TrainPlayer integration harden with train listeners
 
 Catches Items:
   Catches pattern report button press no tracks selected OK
@@ -53,6 +54,7 @@ Catches Items:
 
 Todo:
   Try to get SCRIPT_ROOT out of readConfigFile() (eliminate SCRIPT_ROOT as a global)
+  Add a listener to monitor if a new train is created.
 
 Wish List:
   Next version, Set Cars windows add work to work list or docket, similar to TrainPlayer button, add Yardmaster button to Set Cars windows

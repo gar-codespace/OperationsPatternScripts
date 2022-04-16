@@ -143,7 +143,7 @@ def exportSetCarsFormToTp(setCarsForm, textBoxEntry):
 
     psLog.debug('exportSetCarsFormToTp')
 
-    ExportToTrainPlayer.CheckTpDestination().directoryExists()
+    # ExportToTrainPlayer.CheckTpDestination().directoryExists()
 
     jmriExport = ExportToTrainPlayer.ExportJmriLocations()
     locationList = jmriExport.makeLocationList()
