@@ -65,7 +65,8 @@ class MakePatternScriptsWindow():
         self.uniqueWindow = jmri.util.JmriJFrame(u'Pattern Scripts')
         self.uniqueWindow.setName('patternScripts')
 
-        self.trainListener = BuiltTrainListener()
+        self.trainsTableModel = jmri.jmrit.operations.trains.TrainsTableModel()
+        self.trainsTableListener = TrainsTableListener()
 
         return
 
@@ -101,6 +102,7 @@ class MakePatternScriptsWindow():
             patternConfig['TP'].update({'TI': False})
             EVENT.getSource().setText(u'Enable TrainPlayer')
             self.stopBuiltTrainListener()
+            self.stopTrainsTableListener()
             self.psLog.info('TrainPlayer support deactivated')
             print('TrainPlayer support deactivated')
         else:
@@ -108,10 +110,25 @@ class MakePatternScriptsWindow():
             EVENT.getSource().setText(u'Disable TrainPlayer')
             ExportToTrainPlayer.CheckTpDestination().directoryExists()
             self.startBuiltTrainListener()
+            self.startTrainsTableListener()
             self.psLog.info('TrainPlayer support activated')
             print('TrainPlayer support activated')
 
         MainScriptEntities.writeConfigFile(patternConfig)
+
+        return
+
+    def startTrainsTableListener(self):
+
+        self.trainsTableModel.addTableModelListener(self.trainsTableListener)
+        self.psLog.info('TrainsTableListener activated')
+
+        return
+
+    def stopTrainsTableListener(self):
+
+        self.trainsTableModel.removeTableModelListener(self.trainsTableListener)
+        self.psLog.info('TrainsTableListener deactivated')
 
         return
 
@@ -120,10 +137,10 @@ class MakePatternScriptsWindow():
         trainList = MainScriptEntities.TM.getTrainsByIdList()
 
         for train in trainList:
-            train.addPropertyChangeListener(self.trainListener)
+            train.addPropertyChangeListener(BuiltTrainListener())
 
 
-        self.psLog.info('trainListener added to trains')
+        self.psLog.info('BuiltTrainListener added to trains')
 
         return
 
@@ -133,9 +150,9 @@ class MakePatternScriptsWindow():
 
 
         for train in trainList:
-            train.removePropertyChangeListener(self.trainListener)
+            train.removePropertyChangeListener(BuiltTrainListener())
 
-        self.psLog.info('trainListener removed from trains')
+        self.psLog.info('BuiltTrainListener removed from trains')
 
         return
 
@@ -194,14 +211,27 @@ class MakePatternScriptsWindow():
 
         return
 
+class TrainsTableListener(javax.swing.event.TableModelListener):
+    '''Catches user add or remove train while TP support is active'''
+
+    def tableChanged(self, TABLE_CHANGE):
+
+        trainList = MainScriptEntities.TM.getTrainsByIdList()
+
+        for train in trainList:
+            train.removePropertyChangeListener(BuiltTrainListener()) # Does not throw error if there is no listener to remove
+            train.addPropertyChangeListener(BuiltTrainListener())
+
+        return
+
 class BuiltTrainListener(java.beans.PropertyChangeListener):
 
     def propertyChange(self, TRAIN_BUILT):
-        '''Listens for a built train starts TrainPlayer manifest export'''
+        '''Listens for a built train, starts TrainPlayer manifest export'''
 
         if TRAIN_BUILT.propertyName == 'TrainBuilt' and TRAIN_BUILT.newValue:
             tpManifest = ExportToTrainPlayer.ManifestForTrainPlayer()
-            tpManifest.passInTrainName(TRAIN_BUILT.getSource().getName())
+            tpManifest.passInTrain(TRAIN_BUILT.getSource())
             tpManifest.start()
 
         return
@@ -292,6 +322,7 @@ class StartPsPlugin(jmri.jmrit.automat.AbstractAutomaton):
         if MainScriptEntities.readConfigFile('TP')['TI']:
             ExportToTrainPlayer.CheckTpDestination().directoryExists()
             psWindow.startBuiltTrainListener()
+            psWindow.startTrainsTableListener()
         psWindow.makeWindow()
 
         print('Current Pattern Scripts directory: ' + SCRIPT_ROOT)

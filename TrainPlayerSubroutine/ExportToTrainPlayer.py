@@ -444,9 +444,9 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
 
         return
 
-    def passInTrainName(self, trainName):
+    def passInTrain(self, train):
 
-        self.trainName = trainName
+        self.train = train
 
         return
 
@@ -458,9 +458,8 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
         locationList = jmriExport.makeLocationList()
         jmriExport.toTrainPlayer(locationList)
 
-        builtTrain = MainScriptEntities.TM.getTrainByName(self.trainName)
         jmriManifestTranslator = JmriTranslationToTp()
-        builtTrainAsDict = jmriManifestTranslator.getTrainAsDict(builtTrain)
+        builtTrainAsDict = jmriManifestTranslator.getTrainAsDict(self.train)
         translatedManifest = jmriManifestTranslator.translateManifestHeader(builtTrainAsDict)
         translatedManifest['locations'] = jmriManifestTranslator.translateManifestBody(builtTrainAsDict)
 
