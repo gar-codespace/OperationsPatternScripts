@@ -54,163 +54,6 @@ class Logger():
 
         return
 
-class MakePatternScriptsWindow():
-    '''Makes a JMRI JFrame that the control panel is set into'''
-
-    def __init__(self, scrollPanel):
-
-        self.psLog = logging.getLogger('PS')
-
-        self.controlPanel = scrollPanel
-        self.uniqueWindow = jmri.util.JmriJFrame(u'Pattern Scripts')
-        self.uniqueWindow.setName('patternScripts')
-
-        self.trainsTableModel = jmri.jmrit.operations.trains.TrainsTableModel()
-        self.trainsTableListener = TrainsTableListener()
-
-        return
-
-    def helpItemSelected(self, ACTION_PERFORMED):
-        '''Displays the help pge in a browser'''
-
-        jmri.util.HelpUtil.openWebPage(self.helpStubPath)
-
-        return
-
-    def asItemSelected(self, EVENT):
-        '''Optionally apply a spurs schedule'''
-
-        patternConfig = MainScriptEntities.readConfigFile()
-
-        if patternConfig['TP']['AS']:
-            patternConfig['TP'].update({'AS': False})
-            EVENT.getSource().setText(u"Apply Schedules")
-        else:
-            patternConfig['TP'].update({'AS': True})
-            EVENT.getSource().setText(u"Don't Apply Schedules")
-
-        MainScriptEntities.writeConfigFile(patternConfig)
-
-        return
-
-    def tpItemSelected(self, EVENT):
-        '''Enable or disable the TrainPlayer subroutine'''
-
-        patternConfig = MainScriptEntities.readConfigFile()
-
-        if patternConfig['TP']['TI']:
-            patternConfig['TP'].update({'TI': False})
-            EVENT.getSource().setText(u'Enable TrainPlayer')
-            self.stopBuiltTrainListener()
-            self.stopTrainsTableListener()
-            self.psLog.info('TrainPlayer support deactivated')
-            print('TrainPlayer support deactivated')
-        else:
-            patternConfig['TP'].update({'TI': True})
-            EVENT.getSource().setText(u'Disable TrainPlayer')
-            ExportToTrainPlayer.CheckTpDestination().directoryExists()
-            self.startBuiltTrainListener()
-            self.startTrainsTableListener()
-            self.psLog.info('TrainPlayer support activated')
-            print('TrainPlayer support activated')
-
-        MainScriptEntities.writeConfigFile(patternConfig)
-
-        return
-
-    def startTrainsTableListener(self):
-
-        self.trainsTableModel.addTableModelListener(self.trainsTableListener)
-        self.psLog.info('TrainsTableListener activated')
-
-        return
-
-    def stopTrainsTableListener(self):
-
-        self.trainsTableModel.removeTableModelListener(self.trainsTableListener)
-        self.psLog.info('TrainsTableListener deactivated')
-
-        return
-
-    def startBuiltTrainListener(self):
-
-        trainList = MainScriptEntities.TM.getTrainsByIdList()
-
-        for train in trainList:
-            train.addPropertyChangeListener(BuiltTrainListener())
-
-
-        self.psLog.info('BuiltTrainListener added to trains')
-
-        return
-
-    def stopBuiltTrainListener(self):
-
-        trainList = MainScriptEntities.TM.getTrainsByIdList()
-
-
-        for train in trainList:
-            train.removePropertyChangeListener(BuiltTrainListener())
-
-        self.psLog.info('BuiltTrainListener removed from trains')
-
-        return
-
-    def getAsFlag(self):
-        '''Set the drop down text per the Apply Schedule flag'''
-
-        asFlag = patternConfig = MainScriptEntities.readConfigFile('TP')['AS']
-        if asFlag:
-            menuText = "Don't Apply Schedules"
-        else:
-            menuText = "Apply Schedules"
-
-        return menuText
-
-    def getTiFlag(self):
-        '''Set the drop down text per the TrainPlayer Include flag'''
-
-        tiFlag = patternConfig = MainScriptEntities.readConfigFile('TP')['TI']
-        if tiFlag:
-            menuText = "Disable TrainPlayer"
-        else:
-            menuText = "Enable TrainPlayer"
-
-        return menuText
-
-    def makeWindow(self):
-
-        asMenuItem = javax.swing.JMenuItem(self.getAsFlag())
-        asMenuItem.addActionListener(self.asItemSelected)
-        tpMenuItem = javax.swing.JMenuItem(self.getTiFlag())
-        tpMenuItem.addActionListener(self.tpItemSelected)
-        toolsMenu = javax.swing.JMenu(u'Tools')
-        toolsMenu.add(jmri.jmrit.operations.setup.OptionAction())
-        toolsMenu.add(jmri.jmrit.operations.setup.PrintOptionAction())
-        toolsMenu.add(jmri.jmrit.operations.setup.BuildReportOptionAction())
-        toolsMenu.add(asMenuItem)
-        toolsMenu.add(tpMenuItem)
-
-        self.helpStubPath = MainScriptEntities.scrubPath()
-        helpMenuItem = javax.swing.JMenuItem(u'Window Help...')
-        helpMenuItem.addActionListener(self.helpItemSelected)
-        helpMenu = javax.swing.JMenu(u'Help')
-        helpMenu.add(helpMenuItem)
-
-        psMenuBar = javax.swing.JMenuBar()
-        psMenuBar.add(toolsMenu)
-        psMenuBar.add(jmri.jmrit.operations.OperationsMenu())
-        psMenuBar.add(jmri.util.WindowMenu(self.uniqueWindow))
-        psMenuBar.add(helpMenu)
-
-        self.uniqueWindow.addWindowListener(PatternScriptsWindowListener())
-        self.uniqueWindow.setJMenuBar(psMenuBar)
-        self.uniqueWindow.add(self.controlPanel)
-        self.uniqueWindow.pack()
-        self.uniqueWindow.setVisible(True)
-
-        return
-
 class TrainsTableListener(javax.swing.event.TableModelListener):
     '''Catches user add or remove train while TP support is active'''
 
@@ -251,7 +94,6 @@ class PatternScriptsWindowListener(java.awt.event.WindowListener):
             if frame.getName() == 'setCarsWindow':
                 frame.dispose()
                 frame.setVisible(False)
-        # Also shut off train built listener here
 
         return
 
@@ -269,6 +111,280 @@ class PatternScriptsWindowListener(java.awt.event.WindowListener):
     def windowActivated(self, WINDOW_ACTIVATED):
         return
     def windowDeactivated(self, WINDOW_DEACTIVATED):
+        return
+
+class ControllerPsWindow():
+
+    def __init__(self):
+
+        self.psLog = logging.getLogger('PS')
+
+        self.helpStubPath = MainScriptEntities.scrubPath()
+        self.trainsTableModel = jmri.jmrit.operations.trains.TrainsTableModel()
+        self.trainsTableListener = TrainsTableListener()
+        self.trainList = MainScriptEntities.TM.getTrainsByIdList()
+
+        return
+
+    def helpItemSelected(self, ACTION_PERFORMED):
+        '''Displays the help pge in a browser'''
+
+        jmri.util.HelpUtil.openWebPage(self.helpStubPath)
+
+        return
+
+    def asItemSelected(self, EVENT):
+        '''Optionally apply a spurs schedule'''
+
+        patternConfig = MainScriptEntities.readConfigFile()
+
+        if patternConfig['TP']['AS']:
+            patternConfig['TP'].update({'AS': False})
+            EVENT.getSource().setText(u"Apply Schedules")
+        else:
+            patternConfig['TP'].update({'AS': True})
+            EVENT.getSource().setText(u"Don't Apply Schedules")
+
+        MainScriptEntities.writeConfigFile(patternConfig)
+
+        return
+
+    def getAsFlag(self):
+        '''Set the drop down text per the Apply Schedule flag'''
+
+        asFlag = patternConfig = MainScriptEntities.readConfigFile('TP')['AS']
+        if asFlag:
+            menuText = "Don't Apply Schedules"
+        else:
+            menuText = "Apply Schedules"
+
+        return menuText
+
+    def tpItemSelected(self, TP_ACTIVATE_EVENT):
+        '''Enable or disable the TrainPlayer subroutine'''
+
+        patternConfig = MainScriptEntities.readConfigFile()
+
+        if patternConfig['TP']['TI']:
+            patternConfig['TP'].update({'TI': False})
+            TP_ACTIVATE_EVENT.getSource().setText(u'Enable TrainPlayer')
+            self.stopBuiltTrainListener()
+            self.stopTrainsTableListener()
+            self.psLog.info('TrainPlayer support deactivated')
+            print('TrainPlayer support deactivated')
+        else:
+            patternConfig['TP'].update({'TI': True})
+            TP_ACTIVATE_EVENT.getSource().setText(u'Disable TrainPlayer')
+            ExportToTrainPlayer.CheckTpDestination().directoryExists()
+            self.startBuiltTrainListener()
+            self.startTrainsTableListener()
+            self.psLog.info('TrainPlayer support activated')
+            print('TrainPlayer support activated')
+
+        MainScriptEntities.writeConfigFile(patternConfig)
+
+        return
+
+    def getTiFlag(self):
+        '''Set the drop down text per the TrainPlayer Include flag'''
+
+        tiFlag = patternConfig = MainScriptEntities.readConfigFile('TP')['TI']
+        if tiFlag:
+            menuText = "Disable TrainPlayer"
+        else:
+            menuText = "Enable TrainPlayer"
+
+        return menuText
+
+    def startTrainsTableListener(self):
+
+        self.trainsTableModel.addTableModelListener(self.trainsTableListener)
+        self.psLog.info('TrainsTableListener activated')
+
+        return
+
+    def stopTrainsTableListener(self):
+
+        self.trainsTableModel.removeTableModelListener(self.trainsTableListener)
+        self.psLog.info('TrainsTableListener deactivated')
+
+        return
+
+    def startBuiltTrainListener(self):
+
+        for train in self.trainList:
+            train.addPropertyChangeListener(BuiltTrainListener())
+
+
+        self.psLog.info('BuiltTrainListener added to trains')
+
+        return
+
+    def stopBuiltTrainListener(self):
+
+        for train in self.trainList:
+            train.removePropertyChangeListener(BuiltTrainListener())
+
+        self.psLog.info('BuiltTrainListener removed from trains')
+
+        return
+
+class ViewPsWindow():
+    '''Makes a JMRI JFrame that the control panel is set into'''
+
+    def __init__(self, scrollPanel):
+
+        self.psLog = logging.getLogger('PS')
+
+        self.controlPanel = scrollPanel
+        self.uniqueWindow = jmri.util.JmriJFrame(u'Pattern Scripts')
+        self.uniqueWindow.setName('patternScripts')
+
+        # self.trainsTableModel = jmri.jmrit.operations.trains.TrainsTableModel()
+        # self.trainsTableListener = TrainsTableListener()
+
+        return
+
+    # def helpItemSelected(self, ACTION_PERFORMED):
+    #     '''Displays the help pge in a browser'''
+    #
+    #     jmri.util.HelpUtil.openWebPage(self.helpStubPath)
+    #
+    #     return
+
+    # def asItemSelected(self, EVENT):
+    #     '''Optionally apply a spurs schedule'''
+    #
+    #     patternConfig = MainScriptEntities.readConfigFile()
+    #
+    #     if patternConfig['TP']['AS']:
+    #         patternConfig['TP'].update({'AS': False})
+    #         EVENT.getSource().setText(u"Apply Schedules")
+    #     else:
+    #         patternConfig['TP'].update({'AS': True})
+    #         EVENT.getSource().setText(u"Don't Apply Schedules")
+    #
+    #     MainScriptEntities.writeConfigFile(patternConfig)
+    #
+    #     return
+
+    # def tpItemSelected(self, EVENT):
+    #     '''Enable or disable the TrainPlayer subroutine'''
+    #
+    #     patternConfig = MainScriptEntities.readConfigFile()
+    #
+    #     if patternConfig['TP']['TI']:
+    #         patternConfig['TP'].update({'TI': False})
+    #         EVENT.getSource().setText(u'Enable TrainPlayer')
+    #         self.stopBuiltTrainListener()
+    #         self.stopTrainsTableListener()
+    #         self.psLog.info('TrainPlayer support deactivated')
+    #         print('TrainPlayer support deactivated')
+    #     else:
+    #         patternConfig['TP'].update({'TI': True})
+    #         EVENT.getSource().setText(u'Disable TrainPlayer')
+    #         ExportToTrainPlayer.CheckTpDestination().directoryExists()
+    #         self.startBuiltTrainListener()
+    #         self.startTrainsTableListener()
+    #         self.psLog.info('TrainPlayer support activated')
+    #         print('TrainPlayer support activated')
+    #
+    #     MainScriptEntities.writeConfigFile(patternConfig)
+    #
+    #     return
+
+    # def startTrainsTableListener(self):
+    #
+    #     self.trainsTableModel.addTableModelListener(self.trainsTableListener)
+    #     self.psLog.info('TrainsTableListener activated')
+    #
+    #     return
+    #
+    # def stopTrainsTableListener(self):
+    #
+    #     self.trainsTableModel.removeTableModelListener(self.trainsTableListener)
+    #     self.psLog.info('TrainsTableListener deactivated')
+    #
+    #     return
+
+    # def startBuiltTrainListener(self):
+    #
+    #     trainList = MainScriptEntities.TM.getTrainsByIdList()
+    #
+    #     for train in trainList:
+    #         train.addPropertyChangeListener(BuiltTrainListener())
+    #
+    #
+    #     self.psLog.info('BuiltTrainListener added to trains')
+    #
+    #     return
+    #
+    # def stopBuiltTrainListener(self):
+    #
+    #     trainList = MainScriptEntities.TM.getTrainsByIdList()
+    #
+    #
+    #     for train in trainList:
+    #         train.removePropertyChangeListener(BuiltTrainListener())
+    #
+    #     self.psLog.info('BuiltTrainListener removed from trains')
+    #
+    #     return
+
+    # def getAsFlag(self):
+    #     '''Set the drop down text per the Apply Schedule flag'''
+    #
+    #     asFlag = patternConfig = MainScriptEntities.readConfigFile('TP')['AS']
+    #     if asFlag:
+    #         menuText = "Don't Apply Schedules"
+    #     else:
+    #         menuText = "Apply Schedules"
+    #
+    #     return menuText
+    #
+    # def getTiFlag(self):
+    #     '''Set the drop down text per the TrainPlayer Include flag'''
+    #
+    #     tiFlag = patternConfig = MainScriptEntities.readConfigFile('TP')['TI']
+    #     if tiFlag:
+    #         menuText = "Disable TrainPlayer"
+    #     else:
+    #         menuText = "Enable TrainPlayer"
+    #
+    #     return menuText
+
+    def makeWindow(self):
+
+        asMenuItem = javax.swing.JMenuItem(ControllerPsWindow().getAsFlag())
+        asMenuItem.addActionListener(ControllerPsWindow().asItemSelected)
+        tpMenuItem = javax.swing.JMenuItem(ControllerPsWindow().getTiFlag())
+        # tpMenuItem.addActionListener(self.tpItemSelected)
+        tpMenuItem.addActionListener(ControllerPsWindow().tpItemSelected)
+        toolsMenu = javax.swing.JMenu(u'Tools')
+        toolsMenu.add(jmri.jmrit.operations.setup.OptionAction())
+        toolsMenu.add(jmri.jmrit.operations.setup.PrintOptionAction())
+        toolsMenu.add(jmri.jmrit.operations.setup.BuildReportOptionAction())
+        toolsMenu.add(asMenuItem)
+        toolsMenu.add(tpMenuItem)
+
+        # self.helpStubPath = MainScriptEntities.scrubPath()
+        helpMenuItem = javax.swing.JMenuItem(u'Window Help...')
+        helpMenuItem.addActionListener(ControllerPsWindow().helpItemSelected)
+        helpMenu = javax.swing.JMenu(u'Help')
+        helpMenu.add(helpMenuItem)
+
+        psMenuBar = javax.swing.JMenuBar()
+        psMenuBar.add(toolsMenu)
+        psMenuBar.add(jmri.jmrit.operations.OperationsMenu())
+        psMenuBar.add(jmri.util.WindowMenu(self.uniqueWindow))
+        psMenuBar.add(helpMenu)
+
+        self.uniqueWindow.addWindowListener(PatternScriptsWindowListener())
+        self.uniqueWindow.setJMenuBar(psMenuBar)
+        self.uniqueWindow.add(self.controlPanel)
+        self.uniqueWindow.pack()
+        self.uniqueWindow.setVisible(True)
+
         return
 
 class StartPsPlugin(jmri.jmrit.automat.AbstractAutomaton):
@@ -318,11 +434,11 @@ class StartPsPlugin(jmri.jmrit.automat.AbstractAutomaton):
         for subroutine in subroutineList:
             pluginPanel.add(subroutine)
 
-        psWindow = MakePatternScriptsWindow(scrollPanel)
-        if MainScriptEntities.readConfigFile('TP')['TI']:
-            ExportToTrainPlayer.CheckTpDestination().directoryExists()
-            psWindow.startBuiltTrainListener()
-            psWindow.startTrainsTableListener()
+        psWindow = ViewPsWindow(scrollPanel)
+        # if MainScriptEntities.readConfigFile('TP')['TI']:
+        #     ExportToTrainPlayer.CheckTpDestination().directoryExists()
+        #     ControllerPsWindow().startBuiltTrainListener()
+        #     ControllerPsWindow().startTrainsTableListener()
         psWindow.makeWindow()
 
         print('Current Pattern Scripts directory: ' + SCRIPT_ROOT)
@@ -349,7 +465,6 @@ class panelProFrame:
         self.psPlugin.start()
         self.patternScriptsButton.setText('Restart Pattern Scripts')
         self.patternScriptsButton.actionPerformed = self.patternButtonRestart
-        # shut off train built listener
 
         return
 
