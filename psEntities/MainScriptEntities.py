@@ -178,24 +178,24 @@ def writeNewConfigFile():
 
     return
 
-class makeControlPanel:
-    '''This is the main panel for the plugin'''
-
-    def makePluginPanel(self):
-
-        self.pluginPanel = javax.swing.JPanel()
-
-        return self.pluginPanel
-
-    def makeScrollPanel(self):
-
-        configPanel = readConfigFile('CP')
-        scrollPanel = javax.swing.JScrollPane(self.pluginPanel)
-        scrollPanel.border = javax.swing.BorderFactory.createLineBorder(java.awt.Color.GRAY)
-        scrollPanel.setPreferredSize(java.awt.Dimension(configPanel['PW'], configPanel['PH']))
-        scrollPanel.setMaximumSize(scrollPanel.getPreferredSize())
-
-        return scrollPanel
+# class makeControlPanel:
+#     '''This is the main panel for the plugin'''
+#
+#     def makePluginPanel(self):
+#
+#         self.pluginPanel = javax.swing.JPanel()
+#
+#         return self.pluginPanel
+#
+#     def makeScrollPanel(self):
+#
+#         configPanel = readConfigFile('CP')
+#         scrollPanel = javax.swing.JScrollPane(self.pluginPanel)
+#         scrollPanel.border = javax.swing.BorderFactory.createLineBorder(java.awt.Color.GRAY)
+#         scrollPanel.setPreferredSize(java.awt.Dimension(configPanel['PW'], configPanel['PH']))
+#         scrollPanel.setMaximumSize(scrollPanel.getPreferredSize())
+#
+#         return scrollPanel
 
 def getCarColor():
 
