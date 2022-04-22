@@ -6,12 +6,11 @@ from apps import Apps
 import java
 import java.beans
 import java.awt
-import java.awt.event
+# import java.awt.event
 import javax.swing
 import logging
 import time
 from sys import path as sysPath
-# import os.path
 
 '''Pattern Scripts plugin for JMRI Operations Pro'''
 
@@ -57,12 +56,18 @@ class Logger():
 class TrainsTableListener(javax.swing.event.TableModelListener):
     '''Catches user add or remove train while TP support is active'''
 
+    def __init__(self, listener):
+
+        self.listener = listener
+
+        return
+
     def tableChanged(self, TABLE_CHANGE):
 
         trainList = MainScriptEntities.TM.getTrainsByIdList()
         for train in trainList:
-            train.removePropertyChangeListener(BuiltTrainListener()) # Does not throw error if there is no listener to remove
-            train.addPropertyChangeListener(BuiltTrainListener())
+            train.removePropertyChangeListener(self.listener) # Does not throw error if there is no listener to remove
+            train.addPropertyChangeListener(self.listener)
 
         return
 
@@ -79,14 +84,14 @@ class BuiltTrainListener(java.beans.PropertyChangeListener):
         return
 
 class PatternScriptsWindowListener(java.awt.event.WindowListener):
-    '''Listener to respond to the plugin window operations. More on this later.'''
+    '''Listener to respond to the plugin window operations.'''
 
     def __init__(self):
 
-        # self.psLog = logging.getLogger('PS')
         return
 
     def closeSetCarsWindows(self):
+        '''Close all the Set Cars windows when the Pattern Scripts window is closed'''
 
         for frameName in jmri.util.JmriJFrame.getFrameList():
             frame = jmri.util.JmriJFrame.getFrame(frameName)
@@ -216,7 +221,7 @@ class StartPsPlugin():
     def startPlugin(self):
         '''Make and populate the Pattern Scripts control panel'''
 
-
+    # Run validations
         MainScriptEntities.validateFileDestinationDirestories()
         MainScriptEntities.validateStubFile(SCRIPT_ROOT)
         MainScriptEntities.readConfigFile()
@@ -225,7 +230,9 @@ class StartPsPlugin():
             self.psLog.warning('PatternConfig.json.bak file written')
             MainScriptEntities.writeNewConfigFile()
             self.psLog.warning('New PatternConfig.JSON file created for this profile')
-    # make a list of subroutines for the control panel
+        if MainScriptEntities.readConfigFile('TP')['TI']: # TrainPlayer Include
+            ExportToTrainPlayer.CheckTpDestination().directoryExists()
+    # Make a list of subroutines for the control panel
         subroutineList = []
         controlPanelConfig = MainScriptEntities.readConfigFile('CP')
         for subroutineIncludes, isIncluded in controlPanelConfig['SI'].items():
@@ -237,7 +244,7 @@ class StartPsPlugin():
                 subroutineFrame.add(subroutinePanel)
                 subroutineList.append(subroutineFrame)
                 self.psLog.info(subroutineIncludes + ' subroutine added to control panel')
-    # plug in the subroutine list into the control panel
+    # plug the subroutine list into the control panel
         controlPanel = MakeControlPanel()
         pluginPanel = controlPanel.makePluginPanel()
         scrollPanel = controlPanel.makeScrollPanel()
@@ -261,55 +268,89 @@ class ControllerPsWindow(jmri.jmrit.automat.AbstractAutomaton):
 
         self.helpStubPath = MainScriptEntities.scrubPath()
 
-        self.trainList = MainScriptEntities.TM.getTrainsByIdList()
         self.trainsTableModel = jmri.jmrit.operations.trains.TrainsTableModel()
-        self.trainsTableListener = TrainsTableListener()
         self.builtTrainListener = BuiltTrainListener()
+        self.trainsTableListener = TrainsTableListener(self.builtTrainListener)
 
         self.patternScriptsButton = javax.swing.JButton(text = 'Pattern Scripts', name = 'psButton')
 
         return
 
-    def startTrainsTableListener(self):
+    def addTrainsTableListener(self):
 
         self.trainsTableModel.addTableModelListener(self.trainsTableListener)
 
         return
 
-    def startBuiltTrainListener(self):
+    def removeTrainsTableListener(self):
 
-        for train in self.trainList:
+        self.trainsTableModel.removeTableModelListener(self.trainsTableListener)
+
+        return
+
+    def addBuiltTrainListener(self):
+
+        trainList = MainScriptEntities.TM.getTrainsByIdList()
+        for train in trainList:
             train.addPropertyChangeListener(self.builtTrainListener)
 
         return
 
-    def stopBuiltTrainListener(self):
+    def removeBuiltTrainListener(self):
 
-        for train in self.trainList:
+        trainList = MainScriptEntities.TM.getTrainsByIdList()
+        for train in trainList:
             train.removePropertyChangeListener(self.builtTrainListener)
 
         return
 
-    def addPsButton(self):
+    def addPatternScriptsButton(self):
+        '''The Pattern Scripts button on the PanelPro frame'''
 
         self.patternScriptsButton = ViewPsWindow(None).makePsButton()
         self.patternScriptsButton.setText('Pattern Scripts')
-        self.patternScriptsButton.actionPerformed = self.patternButtonStart
+        self.patternScriptsButton.actionPerformed = self.patternScriptsButtonAction
         Apps.buttonSpace().add(self.patternScriptsButton)
         Apps.buttonSpace().revalidate()
 
         return
 
-    def patternButtonStart(self, MOUSE_CLICKED):
+    def patternScriptsButtonAction(self, MOUSE_CLICKED):
 
         self.patternScriptsButton.setText('Restart Pattern Scripts')
-        self.patternScriptsButton.actionPerformed = self.patternButtonRestart
+        self.patternScriptsButton.actionPerformed = self.patternScriptsButtonRestartAction
         self.startThePlugin()
+
+        return
+
+    def patternScriptsButtonRestartAction(self, MOUSE_CLICKED):
+
+        self.removeTrainsTableListener()
+        self.removeBuiltTrainListener()
+        self.closePsWindow()
+        self.logger.stopLogger()
+        self.logger.startLogger()
+        self.startThePlugin()
+        self.psLog.info('Pattern Scripts plugin restarted')
+
+        return
+
+    def closePsWindow(self):
+
+        for frameName in jmri.util.JmriJFrame.getFrameList():
+            frame = jmri.util.JmriJFrame.getFrame(frameName)
+            if frame.getName() == 'patternScripts':
+                frame.dispose()
+                frame.setVisible(False)
 
         return
 
     def startThePlugin(self):
         '''This method gets the whole thing rolling'''
+
+        if MainScriptEntities.readConfigFile('TP')['TI']: # TrainPlayer Include
+            self.addTrainsTableListener()
+            self.addBuiltTrainListener()
 
         psPlugin = StartPsPlugin()
         scrollPanel = psPlugin.startPlugin()
@@ -327,27 +368,8 @@ class ControllerPsWindow(jmri.jmrit.automat.AbstractAutomaton):
 
         return
 
-    def patternButtonRestart(self, MOUSE_CLICKED):
-
-        self.closePsWindow()
-        self.logger.stopLogger()
-        self.logger.startLogger()
-        self.startThePlugin()
-
-        return
-
-    def closePsWindow(self):
-
-        for frameName in jmri.util.JmriJFrame.getFrameList():
-            frame = jmri.util.JmriJFrame.getFrame(frameName)
-            if frame.getName() == 'patternScripts':
-                frame.dispose()
-                frame.setVisible(False)
-
-        return
-
     def asItemSelected(self, AS_ACTIVATE_EVENT):
-        '''Optionally apply a spurs schedule'''
+        '''menu item-Tools/Apply Schedule'''
 
         patternConfig = MainScriptEntities.readConfigFile()
 
@@ -367,7 +389,7 @@ class ControllerPsWindow(jmri.jmrit.automat.AbstractAutomaton):
         return
 
     def tpItemSelected(self, TP_ACTIVATE_EVENT):
-        '''Enable or disable the TrainPlayer subroutine'''
+        '''menu item-Tools/Enable Trainplayer'''
 
         patternConfig = MainScriptEntities.readConfigFile()
 
@@ -376,7 +398,7 @@ class ControllerPsWindow(jmri.jmrit.automat.AbstractAutomaton):
             TP_ACTIVATE_EVENT.getSource().setText(u'Enable TrainPlayer')
             trainList = MainScriptEntities.TM.getTrainsByIdList()
             self.trainsTableModel.removeTableModelListener(self.trainsTableListener)
-            self.stopBuiltTrainListener()
+            self.removeBuiltTrainListener()
             self.psLog.info('TrainPlayer support deactivated')
             print('TrainPlayer support deactivated')
         else:
@@ -385,7 +407,7 @@ class ControllerPsWindow(jmri.jmrit.automat.AbstractAutomaton):
             ExportToTrainPlayer.CheckTpDestination().directoryExists()
             trainList = MainScriptEntities.TM.getTrainsByIdList()
             self.trainsTableModel.addTableModelListener(self.trainsTableListener)
-            self.startBuiltTrainListener()
+            self.addBuiltTrainListener()
             self.psLog.info('TrainPlayer support activated')
             print('TrainPlayer support activated')
 
@@ -394,7 +416,7 @@ class ControllerPsWindow(jmri.jmrit.automat.AbstractAutomaton):
         return
 
     def helpItemSelected(self, OPEN_HELP_EVENT):
-        '''Displays the help page in a browser'''
+        '''menu item-Help/Window help...'''
 
         jmri.util.HelpUtil.openWebPage(self.helpStubPath)
 
@@ -403,14 +425,8 @@ class ControllerPsWindow(jmri.jmrit.automat.AbstractAutomaton):
     def handle(self):
 
         yTimeNow = time.time()
-        self.psLog = logging.getLogger('PS')
 
-        if MainScriptEntities.readConfigFile('TP')['TI']: # TrainPlayer Include
-            ExportToTrainPlayer.CheckTpDestination().directoryExists()
-            self.startTrainsTableListener()
-            self.startBuiltTrainListener()
-
-        self.addPsButton()
+        self.addPatternScriptsButton()
 
         self.psLog.info('Current Pattern Scripts directory: ' + SCRIPT_ROOT)
         self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])

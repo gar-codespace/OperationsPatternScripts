@@ -12,7 +12,7 @@ from codecs import open as codecsOpen
 from os import mkdir as osMakeDir
 from shutil import copy as shutilCopy
 
-'''Support methods for all Pattern Script modules'''
+'''Support methods for all Pattern Script subroutines'''
 
 LM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
 TM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.trains.TrainManager)
@@ -20,6 +20,8 @@ EM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.engines.
 CM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
 SM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.schedules.ScheduleManager)
 PM = jmri.InstanceManager.getDefault(jmri.util.gui.GuiLafPreferencesManager)
+
+SCRIPT_ROOT = ''
 
 SCRIPT_NAME = 'OperationsPatternScripts.psEntities.MainScriptEntities'
 SCRIPT_REV = 20220101
@@ -32,7 +34,7 @@ def setEncoding():
     return 'utf-8' #ascii, utf-16
 
 def scrubPath():
-    '''Convert an OS path to a browser acceptable path'''
+    '''Convert an OS path to a browser acceptable URI'''
 
     helpStubPath = 'file:///' + jmri.util.FileUtil.getPreferencesPath() + 'jmrihelp\\psStub.html'
     helpStubPath = helpStubPath.replace('\\', '/')
@@ -177,25 +179,6 @@ def writeNewConfigFile():
     jmri.util.FileUtil.copy(copyFrom, copyTo)
 
     return
-
-# class makeControlPanel:
-#     '''This is the main panel for the plugin'''
-#
-#     def makePluginPanel(self):
-#
-#         self.pluginPanel = javax.swing.JPanel()
-#
-#         return self.pluginPanel
-#
-#     def makeScrollPanel(self):
-#
-#         configPanel = readConfigFile('CP')
-#         scrollPanel = javax.swing.JScrollPane(self.pluginPanel)
-#         scrollPanel.border = javax.swing.BorderFactory.createLineBorder(java.awt.Color.GRAY)
-#         scrollPanel.setPreferredSize(java.awt.Dimension(configPanel['PW'], configPanel['PH']))
-#         scrollPanel.setMaximumSize(scrollPanel.getPreferredSize())
-#
-#         return scrollPanel
 
 def getCarColor():
 

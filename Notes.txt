@@ -39,7 +39,8 @@ Tested Items:
   Bad edits of config file protected as much as possible. CBB
   Pattern Scripts plugin hardened against errors  more or less. CBB
   Move config file into psEntities to shield it from accidental edit
-  TrainPlayer integration harden with train listeners
+  TrainPlayer integration harden with train built listeners
+  Adding scriptto train for TP support is not needed.
   Add a listener to monitor if a new train is created or deleted.
 
 Catches Items:
@@ -52,9 +53,10 @@ Catches Items:
   Catches invalid track typed into set cars box OK
   Catches on the fly edit of RS name or road
   Catches on the fly user corruption of config file more or less. Soft landing. CBB
+  Catches user add/remove train while TP export is enabled
 
 Todo:
-  Try to get SCRIPT_ROOT out of readConfigFile() (eliminate SCRIPT_ROOT as a global)
+  Try to get SCRIPT_ROOT out of writeNewConfigFile() (eliminate SCRIPT_ROOT as a global)
 
 Wish List:
   Next version, Set Cars windows add work to work list or docket, similar to TrainPlayer button, add Yardmaster button to Set Cars windows
