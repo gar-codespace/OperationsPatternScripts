@@ -17,9 +17,9 @@ from sys import path as sysPath
 SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
 SCRIPT_REV = 20220101
 
-# SCRIPT_DIR = 'OperationsPatternScripts'
+SCRIPT_DIR = 'OperationsPatternScripts'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b2'
-SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b3'
+# SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b3'
 
 SCRIPT_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
 

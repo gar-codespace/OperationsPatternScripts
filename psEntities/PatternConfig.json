@@ -66,7 +66,7 @@
   "CP" : {
     "SI" : {
       "TrackPatternSubroutine" : true,
-      "TrainPlayerSubroutine" : false
+      "FutureSubroutines" : false
     },
     "PH" : 140,
     "PW" : 2000,
