@@ -11,8 +11,10 @@ from sys import path as sysPath
 SCRIPT_NAME ='OperationsPatternScripts.TrainPlayerSubroutine.ExportToTrainPlayer'
 SCRIPT_REV = 20220101
 
-SCRIPT_DIR = 'OperationsPatternScripts'
+# SCRIPT_DIR = 'OperationsPatternScripts'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b2'
+SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b3'
+
 SCRIPT_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
 sysPath.append(SCRIPT_ROOT)
 
@@ -176,36 +178,6 @@ class JmriTranslationToTp():
         print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
 
         return
-
-    def findNewestManifest(self):
-        '''If more than 1 train is built, pick the newest one'''
-
-        if not MainScriptEntities.TM.isAnyTrainBuilt():
-            self.psLog.info('No trains are built')
-            self.tpLog.info('No trains are built')
-
-            return
-
-        newestBuildTime = ''
-        for train in self.getBuiltTrains():
-            trainAsDict = self.getTrainAsDict(train)
-            if trainAsDict['date'] > newestBuildTime:
-                newestBuildTime = trainAsDict['date']
-                newestTrain = trainAsDict
-
-        self.psLog.info('Train ' + newestTrain[u'userName'] + ' is newest')
-        self.tpLog.info('Train ' + newestTrain[u'userName'] + ' is newest')
-
-        return newestTrain
-
-    def getBuiltTrains(self):
-
-        builtTrainList = []
-        for train in MainScriptEntities.TM.getTrainsByStatusList():
-            if train.isBuilt():
-                builtTrainList.append(train)
-
-        return builtTrainList
 
     def getTrainAsDict(self, train):
 

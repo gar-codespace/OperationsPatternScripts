@@ -17,8 +17,9 @@ from sys import path as sysPath
 SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
 SCRIPT_REV = 20220101
 
-SCRIPT_DIR = 'OperationsPatternScripts'
+# SCRIPT_DIR = 'OperationsPatternScripts'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b2'
+SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b3'
 
 SCRIPT_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
 
@@ -348,9 +349,9 @@ class ControllerPsWindow(jmri.jmrit.automat.AbstractAutomaton):
     def startThePlugin(self):
         '''This method gets the whole thing rolling'''
 
-        if MainScriptEntities.readConfigFile('TP')['TI']: # TrainPlayer Include
-            self.addTrainsTableListener()
-            self.addBuiltTrainListener()
+        # if MainScriptEntities.readConfigFile('TP')['TI']: # TrainPlayer Include
+        #     self.addTrainsTableListener()
+        #     self.addBuiltTrainListener()
 
         psPlugin = StartPsPlugin()
         scrollPanel = psPlugin.startPlugin()
@@ -427,6 +428,10 @@ class ControllerPsWindow(jmri.jmrit.automat.AbstractAutomaton):
         yTimeNow = time.time()
 
         self.addPatternScriptsButton()
+
+        if MainScriptEntities.readConfigFile('TP')['TI']: # TrainPlayer Include
+            self.addTrainsTableListener()
+            self.addBuiltTrainListener()
 
         self.psLog.info('Current Pattern Scripts directory: ' + SCRIPT_ROOT)
         self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
