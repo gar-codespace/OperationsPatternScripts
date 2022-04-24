@@ -55,11 +55,11 @@ class Logger():
         return
 
 class TrainsTableListener(javax.swing.event.TableModelListener):
-    '''Catches user add or remove train while TP support is active'''
+    '''Catches user add or remove train while TP support is enabled'''
 
-    def __init__(self, listener):
+    def __init__(self, builtTrainListener):
 
-        self.listener = listener
+        self.builtTrainListener = builtTrainListener
 
         return
 
@@ -67,15 +67,15 @@ class TrainsTableListener(javax.swing.event.TableModelListener):
 
         trainList = MainScriptEntities.TM.getTrainsByIdList()
         for train in trainList:
-            train.removePropertyChangeListener(self.listener) # Does not throw error if there is no listener to remove
-            train.addPropertyChangeListener(self.listener)
+            train.removePropertyChangeListener(self.builtTrainListener) # Does not throw error if there is no listener to remove
+            train.addPropertyChangeListener(self.builtTrainListener)
 
         return
 
 class BuiltTrainListener(java.beans.PropertyChangeListener):
+    '''Listens for a built train, starts TrainPlayer manifest export'''
 
     def propertyChange(self, TRAIN_BUILT):
-        '''Listens for a built train, starts TrainPlayer manifest export'''
 
         if TRAIN_BUILT.propertyName == 'TrainBuilt' and TRAIN_BUILT.newValue:
             tpManifest = ExportToTrainPlayer.ManifestForTrainPlayer()
@@ -85,7 +85,7 @@ class BuiltTrainListener(java.beans.PropertyChangeListener):
         return
 
 class PatternScriptsWindowListener(java.awt.event.WindowListener):
-    '''Listener to respond to the plugin window operations.'''
+    '''Listener to respond to the plugin window operations'''
 
     def __init__(self):
 
@@ -131,7 +131,7 @@ class ViewPsWindow:
 
     def makePsButton(self):
 
-        psButton = javax.swing.JButton(name = 'psButton')
+        psButton = javax.swing.JButton(name='psButton')
 
         return psButton
 
@@ -210,7 +210,7 @@ class MakeControlPanel:
 
         return scrollPanel
 
-class StartPsPlugin():
+class StartPsPlugin:
     '''Start the the Pattern Scripts plugin and add selected subroutines'''
 
     def __init__(self):
@@ -349,10 +349,6 @@ class ControllerPsWindow(jmri.jmrit.automat.AbstractAutomaton):
     def startThePlugin(self):
         '''This method gets the whole thing rolling'''
 
-        # if MainScriptEntities.readConfigFile('TP')['TI']: # TrainPlayer Include
-        #     self.addTrainsTableListener()
-        #     self.addBuiltTrainListener()
-
         psPlugin = StartPsPlugin()
         scrollPanel = psPlugin.startPlugin()
         viewPsWindow = ViewPsWindow(scrollPanel)
@@ -437,6 +433,7 @@ class ControllerPsWindow(jmri.jmrit.automat.AbstractAutomaton):
         self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
         print('Current Pattern Scripts directory: ' + SCRIPT_ROOT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+        print('%s' % (SCRIPT_NAME))
 
         return False
 
