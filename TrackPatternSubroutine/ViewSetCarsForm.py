@@ -1,14 +1,14 @@
 # coding=utf-8
 # © 2021 Greg Ritacco
 
+'''Display methods for the Set Cars Form for Track X form'''
+
 import jmri
 import java.awt
 import javax.swing
 
 from psEntities import MainScriptEntities
 from TrackPatternSubroutine import ViewEntities
-
-'''Display methods for the Set Cars Form for Track X form'''
 
 SCRIPT_NAME = 'OperationsPatternScripts.ViewSetCarsForm'
 SCRIPT_REV = 20220101

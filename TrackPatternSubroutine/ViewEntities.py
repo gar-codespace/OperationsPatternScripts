@@ -1,13 +1,13 @@
 # coding=utf-8
 # © 2021 Greg Ritacco
 
+'''Creates the track pattern and its panel'''
+
 import jmri
 import java.awt
 import javax.swing
 
 from psEntities import MainScriptEntities
-
-'''Creates the track pattern and its panel'''
 
 SCRIPT_NAME = 'OperationsPatternScripts.TrackPatternSubroutine.ViewEntities'
 SCRIPT_REV = 20220101

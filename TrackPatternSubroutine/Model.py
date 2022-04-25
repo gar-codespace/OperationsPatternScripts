@@ -185,8 +185,7 @@ def onScButtonPress():
 
     locationName = MainScriptEntities.readConfigFile('TP')['PL']
     windowOffset = 200
-    i = 0
-    for trackName in selectedTracks:
+    for i, trackName in enumerate(selectedTracks, start=1):
         locationDict = makeLocationDict([trackName]) # makeLocationDict takes a track list
         setCarsForm = makeReport(locationDict, 'SC')
         newFrame = ControllerSetCarsForm.CreatePatternReportGui(setCarsForm)
@@ -199,7 +198,6 @@ def onScButtonPress():
 
         psLog.info(u'Set Cars Window created for track ' + trackName)
         windowOffset += 50
-        i += 1
     psLog.info(str(i) + ' Set Cars windows for ' + locationName + ' created')
 
     return

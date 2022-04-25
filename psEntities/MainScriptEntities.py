@@ -1,18 +1,20 @@
 # coding=utf-8
 # © 2021 Greg Ritacco
 
+'''Support methods for all Pattern Script subroutines'''
+
 import jmri
+
 from java import io as javaIo
 import java.awt
 import javax.swing
+
 import logging
 import time
 from json import loads as jsonLoads, dumps as jsonDumps
 from codecs import open as codecsOpen
 from os import mkdir as osMakeDir
 from shutil import copy as shutilCopy
-
-'''Support methods for all Pattern Script subroutines'''
 
 LM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
 TM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.trains.TrainManager)
@@ -33,15 +35,16 @@ def setEncoding():
 
     return 'utf-8' #ascii, utf-16
 
-def scrubPath():
-    '''Convert an OS path to a browser acceptable URI'''
+def getStubPath():
+    '''Convert an OS path to a browser acceptable URI, there is probably a method that does this'''
 
-    helpStubPath = 'file:///' + jmri.util.FileUtil.getPreferencesPath() + 'jmrihelp\\psStub.html'
-    helpStubPath = helpStubPath.replace('\\', '/')
-    helpStubPath = helpStubPath.replace(' ', '%20')
-    helpStubPath = helpStubPath.replace('  ', '%20%20')
+    stubPath = 'file:///' + jmri.util.FileUtil.getPreferencesPath() + 'jmrihelp/psStub.html'
 
-    return helpStubPath
+    stubPath = stubPath.replace('\\', '/')
+    stubPath = stubPath.replace(' ', '%20')
+    stubPath = stubPath.replace('  ', '%20%20')
+
+    return stubPath
 
 def timeStamp(epochTime=0):
     '''Valid Time, get local time adjusted for time zone and dst'''

@@ -1,14 +1,14 @@
 # coding=utf-8
 # © 2021 Greg Ritacco
 
+'''View script for the track pattern subroutine'''
+
 import jmri
 import logging
 from os import system as osSystem
 
 from psEntities import MainScriptEntities
 from TrackPatternSubroutine import ViewEntities
-
-'''View script for the track pattern subroutine'''
 
 SCRIPT_NAME = 'OperationsPatternScripts.TrackPatternSubroutine.View'
 SCRIPT_REV = 20220101

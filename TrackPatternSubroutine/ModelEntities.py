@@ -215,7 +215,7 @@ def getDetailsForCarAsDict(carObject):
         i = 0
         if (car.getKernelName() == carObject.getKernelName()):
             i += 1
-        carDetailDict[u'Kernel Size'] = str(i)
+    carDetailDict[u'Kernel Size'] = str(i)
     carDetailDict[u'Owner'] = carObject.getOwner()
     carDetailDict[u'Track'] = carObject.getTrackName()
     carDetailDict[u'Location'] = carObject.getLocationName()

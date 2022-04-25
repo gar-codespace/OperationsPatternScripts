@@ -36,7 +36,7 @@ class LocationComboBox(java.awt.event.ActionListener):
 
         return
 
-class StartUp():
+class StartUp:
     '''Start the Track Pattern subroutine'''
 
     def __init__(self):

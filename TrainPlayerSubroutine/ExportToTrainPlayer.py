@@ -21,7 +21,7 @@ sysPath.append(SCRIPT_ROOT)
 from psEntities import MainScriptEntities
 
 
-class CheckTpDestination():
+class CheckTpDestination:
     '''Verify or create a TrainPlayer destination directory'''
 
     def __init__(self):
@@ -46,7 +46,7 @@ class CheckTpDestination():
 
         return
 
-class ExportJmriLocations():
+class ExportJmriLocations:
     '''Writes a list of location names and comments for the whole profile'''
 
     def __init__(self):
@@ -93,7 +93,7 @@ class ExportJmriLocations():
 
         return
 
-class TrackPatternTranslationToTp():
+class TrackPatternTranslationToTp:
     '''Translate Track Patterns from OperationsPatternScripts for TrainPlayer O2O script compatability'''
 
     def __init__(self):
@@ -165,7 +165,7 @@ class TrackPatternTranslationToTp():
 
         return tpSwitchList
 
-class JmriTranslationToTp():
+class JmriTranslationToTp:
     '''Translate manifests from JMRI for TrainPlayer O2O script compatability'''
 
     def __init__(self):
@@ -293,7 +293,7 @@ class JmriTranslationToTp():
 
         return rsDict
 
-class ProcessWorkEventList():
+class ProcessWorkEventList:
     '''Process the translated work event lists to a CSV list formatted for the TrainPlayer side scripts'''
 
     def __init__(self):
@@ -361,7 +361,7 @@ class ProcessWorkEventList():
 
         return
 
-class WriteWorkEventListToTp():
+class WriteWorkEventListToTp:
 
     def __init__(self, workEventList):
 
