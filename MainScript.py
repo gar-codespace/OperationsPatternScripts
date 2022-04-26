@@ -29,7 +29,7 @@ from psEntities import MainScriptEntities
 from TrainPlayerSubroutine import ExportToTrainPlayer
 MainScriptEntities.SCRIPT_ROOT = SCRIPT_ROOT
 
-class Logger():
+class Logger:
 
     def __init__(self):
 
@@ -119,8 +119,7 @@ class PatternScriptsWindowListener(java.awt.event.WindowListener):
     def windowDeactivated(self, WINDOW_DEACTIVATED):
         return
 
-class View_PsWindow:
-    '''Makes a JMRI JFrame that the control panel is set into'''
+class View:
 
     def __init__(self, scrollPanel):
 
@@ -137,7 +136,23 @@ class View_PsWindow:
 
         return psButton
 
-    def makePatternScriptWindow(self):
+    def makePluginPanel(self):
+
+        pluginPanel = javax.swing.JPanel()
+
+        return pluginPanel
+
+    def makeScrollPanel(self, pluginPanel):
+
+        configPanel = MainScriptEntities.readConfigFile('CP')
+        scrollPanel = javax.swing.JScrollPane(pluginPanel)
+        scrollPanel.border = javax.swing.BorderFactory.createLineBorder(java.awt.Color.GRAY)
+        scrollPanel.setPreferredSize(java.awt.Dimension(configPanel['PW'], configPanel['PH']))
+        scrollPanel.setMaximumSize(scrollPanel.getPreferredSize())
+
+        return scrollPanel
+
+    def makePatternScriptsWindow(self):
 
         menuItemList = []
 
@@ -181,67 +196,40 @@ class View_PsWindow:
     def setAsDropDown(self):
         '''Set the drop down text per the Apply Schedule flag'''
 
-        asFlag = patternConfig = MainScriptEntities.readConfigFile('TP')['AS']
-        if asFlag:
-            menuText = "Don't Apply Schedules"
+        patternConfig = MainScriptEntities.readConfigFile('TP')
+        if patternConfig['SF']['AS']:
+            menuText = patternConfig['SF']['AT']
         else:
-            menuText = "Apply Schedules"
+            menuText = patternConfig['SF']['AF']
 
         return menuText
 
     def setTiDropDown(self):
         '''Set the drop down text per the TrainPlayer Include flag'''
 
-        tiFlag = patternConfig = MainScriptEntities.readConfigFile('TP')['TI']
-        if tiFlag:
-            menuText = "Disable TrainPlayer"
+        patternConfig = MainScriptEntities.readConfigFile('TP')
+        if patternConfig['TF']['TI']:
+            menuText = patternConfig['TF']['TT']
         else:
-            menuText = "Enable TrainPlayer"
+            menuText = patternConfig['TF']['TF']
 
         return menuText
 
-# class MakeControlPanel:
-#
-#     def makePluginPanel(self):
-#
-#         self.pluginPanel = javax.swing.JPanel()
-#
-#         return self.pluginPanel
-#
-#     def makeScrollPanel(self):
-#
-#         configPanel = MainScriptEntities.readConfigFile('CP')
-#         scrollPanel = javax.swing.JScrollPane(self.pluginPanel)
-#         scrollPanel.border = javax.swing.BorderFactory.createLineBorder(java.awt.Color.GRAY)
-#         scrollPanel.setPreferredSize(java.awt.Dimension(configPanel['PW'], configPanel['PH']))
-#         scrollPanel.setMaximumSize(scrollPanel.getPreferredSize())
-#
-#         return scrollPanel
-
-class PatternScriptsPlugin:
-    '''Make the the Pattern Scripts plugin from selected subroutines'''
+class Model:
 
     def __init__(self):
 
-        self.psLog = logging.getLogger('PS.Plugin')
+        self.psLog = logging.getLogger('PS.Model')
 
         return
 
-    def makePluginPanel(self):
+    def makePatternScriptsPanel(self, pluginPanel):
 
-        pluginPanel = javax.swing.JPanel()
+        subroutineList = self.makeSubroutineList()
+        for subroutine in subroutineList:
+            pluginPanel.add(subroutine)
 
         return pluginPanel
-
-    def makeScrollPanel(self, subroutinePanel):
-
-        configPanel = MainScriptEntities.readConfigFile('CP')
-        scrollPanel = javax.swing.JScrollPane(subroutinePanel)
-        scrollPanel.border = javax.swing.BorderFactory.createLineBorder(java.awt.Color.GRAY)
-        scrollPanel.setPreferredSize(java.awt.Dimension(configPanel['PW'], configPanel['PH']))
-        scrollPanel.setMaximumSize(scrollPanel.getPreferredSize())
-
-        return scrollPanel
 
     def makeSubroutineList(self):
 
@@ -258,23 +246,13 @@ class PatternScriptsPlugin:
 
         return subroutineList
 
-    def makeSubroutineScrollPanel(self):
-
-        subroutinePanel = self.makePluginPanel()
-        scrollPanel = self.makeScrollPanel(subroutinePanel)
-        subroutineList = self.makeSubroutineList()
-        for subroutine in subroutineList:
-            subroutinePanel.add(subroutine)
-
-        return scrollPanel
-
-class Controller_PsWindow(jmri.jmrit.automat.AbstractAutomaton):
+class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
     def init(self):
 
         self.logger = Logger()
         self.logger.startLogger()
-        self.psLog = logging.getLogger('PS')
+        self.psLog = logging.getLogger('PS.Controller')
         self.psLog.debug('Log File for Pattern Scripts Plugin - DEBUG level test message')
         self.psLog.info('Log File for Pattern Scripts Plugin - INFO level test message')
         self.psLog.warning('Log File for Pattern Scripts Plugin - WARNING level test message')
@@ -287,7 +265,23 @@ class Controller_PsWindow(jmri.jmrit.automat.AbstractAutomaton):
 
         self.patternScriptsButton = javax.swing.JButton(text = 'Pattern Scripts', name = 'psButton')
 
+        self.menuItemList = []
+
         return
+
+    def handle(self):
+
+        yTimeNow = time.time()
+
+        self.runValidations()
+        self.addPatternScriptsButton()
+
+        self.psLog.info('Current Pattern Scripts directory: ' + SCRIPT_ROOT)
+        self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
+        print('Current Pattern Scripts directory: ' + SCRIPT_ROOT)
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+        return False
 
     def runValidations(self):
 
@@ -299,8 +293,19 @@ class Controller_PsWindow(jmri.jmrit.automat.AbstractAutomaton):
             self.psLog.warning('PatternConfig.json.bak file written')
             MainScriptEntities.writeNewConfigFile()
             self.psLog.warning('New PatternConfig.JSON file created for this profile')
-        if MainScriptEntities.readConfigFile('TP')['TI']: # TrainPlayer Include
+        if MainScriptEntities.readConfigFile('TP')['TF']['TI']: # TrainPlayer Include
             ExportToTrainPlayer.CheckTpDestination().directoryExists()
+
+        return
+
+    def addPatternScriptsButton(self):
+        '''The Pattern Scripts button on the PanelPro frame'''
+
+        self.patternScriptsButton = View(None).makePsButton()
+        self.patternScriptsButton.setText('Pattern Scripts')
+        self.patternScriptsButton.actionPerformed = self.patternScriptsButtonAction
+        Apps.buttonSpace().add(self.patternScriptsButton)
+        Apps.buttonSpace().revalidate()
 
         return
 
@@ -329,17 +334,6 @@ class Controller_PsWindow(jmri.jmrit.automat.AbstractAutomaton):
         trainList = MainScriptEntities.TM.getTrainsByIdList()
         for train in trainList:
             train.removePropertyChangeListener(self.builtTrainListener)
-
-        return
-
-    def addPatternScriptsButton(self):
-        '''The Pattern Scripts button on the PanelPro frame'''
-
-        self.patternScriptsButton = View_PsWindow(None).makePsButton()
-        self.patternScriptsButton.setText('Pattern Scripts')
-        self.patternScriptsButton.actionPerformed = self.patternScriptsButtonAction
-        Apps.buttonSpace().add(self.patternScriptsButton)
-        Apps.buttonSpace().revalidate()
 
         return
 
@@ -375,19 +369,27 @@ class Controller_PsWindow(jmri.jmrit.automat.AbstractAutomaton):
 
     def buildThePlugin(self):
 
-        patternScriptsPlugin = PatternScriptsPlugin()
-        subroutinePanel = patternScriptsPlugin.makeSubroutineScrollPanel()
-        patternScriptsWindow = View_PsWindow(subroutinePanel)
-        patternScriptsWindow.makePatternScriptWindow()
-        menuItemList = patternScriptsWindow.getMenuItemList()
-        self.parseMenuItemList(menuItemList)
+        if MainScriptEntities.readConfigFile('TP')['TF']['TI']: # TrainPlayer Include
+            self.addTrainsTableListener()
+            self.addBuiltTrainListener()
+
+        emptyPluginPanel = View(None).makePluginPanel()
+
+        patternScriptsPlugin = Model()
+        populatedPluginPanel = patternScriptsPlugin.makePatternScriptsPanel(emptyPluginPanel)
+
+        scrollPanel = View(None).makeScrollPanel(populatedPluginPanel)
+        patternScriptsWindow = View(scrollPanel)
+        patternScriptsWindow.makePatternScriptsWindow()
+        self.menuItemList = patternScriptsWindow.getMenuItemList()
+        self.parseMenuItemList()
 
         return
 
-    def parseMenuItemList(self, menuItemList):
+    def parseMenuItemList(self):
         '''Use the pull down item names as the attribute to set the listener: asItemSelected, tpItemSelected, helpItemSelected'''
 
-        for menuItem in menuItemList:
+        for menuItem in self.menuItemList:
             menuItem.addActionListener(getattr(self, menuItem.getName()))
 
         return
@@ -397,14 +399,14 @@ class Controller_PsWindow(jmri.jmrit.automat.AbstractAutomaton):
 
         patternConfig = MainScriptEntities.readConfigFile()
 
-        if patternConfig['TP']['AS']:
-            patternConfig['TP'].update({'AS': False})
-            AS_ACTIVATE_EVENT.getSource().setText(u"Apply Schedules")
+        if patternConfig['TP']['SF']['AS']:
+            patternConfig['TP']['SF'].update({'AS': False})
+            AS_ACTIVATE_EVENT.getSource().setText(patternConfig['TP']['SF']['AF'])
             self.psLog.info('Apply Schedule turned off')
             print('Apply Schedule turned off')
         else:
-            patternConfig['TP'].update({'AS': True})
-            AS_ACTIVATE_EVENT.getSource().setText(u"Don't Apply Schedules")
+            patternConfig['TP']['SF'].update({'AS': True})
+            AS_ACTIVATE_EVENT.getSource().setText(patternConfig['TP']['SF']['AT'])
             self.psLog.info('Apply Schedule turned on')
             print('Apply Schedule turned on')
 
@@ -417,9 +419,9 @@ class Controller_PsWindow(jmri.jmrit.automat.AbstractAutomaton):
 
         patternConfig = MainScriptEntities.readConfigFile()
 
-        if patternConfig['TP']['TI']: # If enabled, turn it off
-            patternConfig['TP'].update({'TI': False})
-            TP_ACTIVATE_EVENT.getSource().setText(u'Enable TrainPlayer')
+        if patternConfig['TP']['TF']['TI']: # If enabled, turn it off
+            patternConfig['TP']['TF'].update({'TI': False})
+            TP_ACTIVATE_EVENT.getSource().setText(patternConfig['TP']['TF']['TF'])
 
             self.trainsTableModel.removeTableModelListener(self.trainsTableListener)
             self.removeBuiltTrainListener()
@@ -427,8 +429,8 @@ class Controller_PsWindow(jmri.jmrit.automat.AbstractAutomaton):
             self.psLog.info('TrainPlayer support deactivated')
             print('TrainPlayer support deactivated')
         else:
-            patternConfig['TP'].update({'TI': True})
-            TP_ACTIVATE_EVENT.getSource().setText(u'Disable TrainPlayer')
+            patternConfig['TP']['TF'].update({'TI': True})
+            TP_ACTIVATE_EVENT.getSource().setText(patternConfig['TP']['TF']['TT'])
 
             ExportToTrainPlayer.CheckTpDestination().directoryExists()
             self.trainsTableModel.addTableModelListener(self.trainsTableListener)
@@ -449,23 +451,4 @@ class Controller_PsWindow(jmri.jmrit.automat.AbstractAutomaton):
 
         return
 
-    def handle(self):
-
-        yTimeNow = time.time()
-
-        self.runValidations()
-        self.addPatternScriptsButton()
-
-        if MainScriptEntities.readConfigFile('TP')['TI']: # TrainPlayer Include
-            self.addTrainsTableListener()
-            self.addBuiltTrainListener()
-
-        self.psLog.info('Current Pattern Scripts directory: ' + SCRIPT_ROOT)
-        self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
-        print('Current Pattern Scripts directory: ' + SCRIPT_ROOT)
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-        print('%s' % (SCRIPT_NAME))
-
-        return False
-
-Controller_PsWindow().start()
+Controller().start()

@@ -21,9 +21,9 @@ class LocationComboBox(java.awt.event.ActionListener):
         self.controls = controls
         self.psLog = logging.getLogger('PS.TP.ComboBox')
 
-    def actionPerformed(self, event):
+    def actionPerformed(self, EVENT):
 
-        newConfigFile = Model.updatePatternLocation(event.getSource().getSelectedItem())
+        newConfigFile = Model.updatePatternLocation(EVENT.getSource().getSelectedItem())
         MainScriptEntities.writeConfigFile(newConfigFile)
         newConfigFile = MainScriptEntities.readConfigFile('TP')
         newConfigFile = Model.makeNewPatternTracks(newConfigFile['PL'])
@@ -45,7 +45,7 @@ class StartUp:
 
         return
 
-    def yardTrackOnlyCheckBox(self, event):
+    def yardTrackOnlyCheckBox(self, EVENT):
 
         if (self.controls[1].selected):
             trackList = Model.makeTrackList(self.controls[0].getSelectedItem(), 'Yard')
@@ -61,7 +61,7 @@ class StartUp:
 
         return
 
-    def patternButton(self, event):
+    def patternButton(self, EVENT):
         '''Makes a track pattern report (PR) based on the config file'''
 
         self.psLog.debug('patternButton')
@@ -88,7 +88,7 @@ class StartUp:
 
         return
 
-    def setCarsButton(self, event):
+    def setCarsButton(self, EVENT):
         '''Opens a "Pattern Report for Track X" window for each checked track'''
 
         self.psLog.debug('setCarsButton')
@@ -101,14 +101,14 @@ class StartUp:
 
         Model.onScButtonPress()
 
-        if MainScriptEntities.readConfigFile('TP')['TI']: # TrainPlayer Include
+        if MainScriptEntities.readConfigFile('TP')['TF']['TI']: # TrainPlayer Include
             Model.resetTrainPlayerSwitchlist()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 
-    def viewLogButton(self, event):
+    def viewLogButton(self, EVENT):
         '''Displays the pattern report log file in a notepad window'''
 
         Model.makePatternLog()
@@ -119,10 +119,10 @@ class StartUp:
         return
 
     def activateButtons(self, panel, controls):
-        '''Assigns actions to the subroutine widgets'''
 
         self.panel = panel
         self.controls = controls
+
         self.controls[0].addActionListener(LocationComboBox(panel, controls))
         self.controls[1].actionPerformed = self.yardTrackOnlyCheckBox
         self.controls[4].actionPerformed = self.patternButton

@@ -39,7 +39,6 @@ def getStubPath():
     '''Convert an OS path to a browser acceptable URI, there is probably a method that does this'''
 
     stubPath = 'file:///' + jmri.util.FileUtil.getPreferencesPath() + 'jmrihelp/psStub.html'
-
     stubPath = stubPath.replace('\\', '/')
     stubPath = stubPath.replace(' ', '%20')
     stubPath = stubPath.replace('  ', '%20%20')

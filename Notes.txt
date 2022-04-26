@@ -40,7 +40,7 @@ Tested Items:
   Pattern Scripts plugin hardened against errors  more or less. CBB
   Move config file into psEntities to shield it from accidental edit
   TrainPlayer integration harden with train built listeners
-  Adding scriptto train for TP support is not needed.
+  Adding script to train for TP support is not needed, but still can be done.
   Add a listener to monitor if a new train is created or deleted.
 
 Catches Items:
@@ -57,6 +57,7 @@ Catches Items:
 
 Todo:
   Try to get SCRIPT_ROOT out of writeNewConfigFile() (eliminate SCRIPT_ROOT as a global)
+  Not sure setAsDropDown and setTiDropDown should be in View()
 
 Wish List:
   Next version, Set Cars windows add work to work list or docket, similar to TrainPlayer button, add Yardmaster button to Set Cars windows

@@ -18,11 +18,24 @@ class TrackPatternPanel:
     def __init__(self):
 
         self.configFile = MainScriptEntities.readConfigFile('TP')
-        self.useYardTracks = javax.swing.JCheckBox(u'Yard tracks only ', self.configFile['PA'])
+        self.yardTracksOnly = javax.swing.JCheckBox(u'Yard tracks only ', self.configFile['PA'])
+        self.yardTracksOnly.setName('ytoCheckBox')
+
         self.ignoreTrackLength = javax.swing.JCheckBox(u'Ignore track length ', self.configFile['PI'])
+        self.ignoreTrackLength.setName('itlCheckBox')
+
         self.ypButton = javax.swing.JButton()
+        self.ypButton.setText(u'Pattern')
+        self.ypButton.setName('ypButton')
+
         self.scButton = javax.swing.JButton()
+        self.scButton.setText(u'Set Cars')
+        self.scButton.setName('scButton')
+
         self.vlButton = javax.swing.JButton()
+        self.vlButton.setText(u'View Log')
+        self.vlButton.setName('vlButton')
+
         self.trackCheckBoxes = []
         self.controlObjects = []
 
@@ -43,6 +56,7 @@ class TrackPatternPanel:
         patternLabel = javax.swing.JLabel(u'Location:')
         locationList = self.configFile['AL']
         self.locationComboBox = javax.swing.JComboBox(locationList)
+        self.locationComboBox.setName('locationComboBox')
         self.locationComboBox.setSelectedItem(self.configFile['PL'])
         patternComboBox = javax.swing.Box(javax.swing.BoxLayout.X_AXIS)
         patternComboBox.add(patternLabel)
@@ -56,7 +70,7 @@ class TrackPatternPanel:
 
         flagInputBox = javax.swing.Box(javax.swing.BoxLayout.X_AXIS) # make a box for the label and input box
         # flagInputBox.setPreferredSize(java.awt.Dimension(self.configFile['PW'], self.configFile['PH']))
-        flagInputBox.add(self.useYardTracks)
+        flagInputBox.add(self.yardTracksOnly)
         flagInputBox.add(self.ignoreTrackLength)
 
         return flagInputBox
@@ -86,9 +100,6 @@ class TrackPatternPanel:
     def makeButtonPanel(self):
         '''Button panel added to makeTrackPatternPanel'''
 
-        self.ypButton.text = u'Pattern'
-        self.scButton.text = u'Set Cars'
-        self.vlButton.text = u'View Log'
         buttonPanel = javax.swing.JPanel()
         buttonPanel.setAlignmentX(javax.swing.JPanel.CENTER_ALIGNMENT)
         buttonPanel.add(self.ypButton)
@@ -101,7 +112,7 @@ class TrackPatternPanel:
         '''A list of the widgets created by this class'''
 
         self.controlObjects.append(self.locationComboBox)
-        self.controlObjects.append(self.useYardTracks)
+        self.controlObjects.append(self.yardTracksOnly)
         self.controlObjects.append(self.ignoreTrackLength)
         self.controlObjects.append(self.trackCheckBoxes)
         self.controlObjects.append(self.ypButton)

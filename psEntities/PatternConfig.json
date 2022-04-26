@@ -70,9 +70,10 @@
     },
     "PH" : 140,
     "PW" : 2000,
-    "RV" : 20220203
+    "RV" : 20220201
   },
   "LI": {
+    "99" : "Editing these is not recommended",
     "9": "- CRITICAL -",
     "7": "- ERROR -",
     "5": "- WARNING -",
@@ -86,24 +87,37 @@
     "PT" : {
     },
     "TD" : {
+      "AA" : "Train Description, these are aditable",
       "PR" : "Pattern Report - Track Pattern",
       "SC" : "Pattern Report - Switch List",
       "TP" : "Pattern Report - TrainPlayer Work Events"
     },
     "TN" : {
+      "AA" : "Train Name, these are aditable",
       "PR" : "Local Switch Job",
       "SC" : "Local Switch Job",
       "TP" : "Local Switch Job"
     },
     "TC" : {
+      "AA" : "Train Comment, these are aditable",
       "PR" : "Track Pattern for Selected Tracks",
       "SC" : "Switch List for One Track",
       "TP" : "Switch List for Selected Tracks"
     },
     "PA" : false,
     "PI" : false,
-    "AS" : true,
-    "TI" : false,
+    "SF" : {
+      "AA" : "This is the schedule flag, AT and AF are editable",
+      "AS" : true,
+      "AT" : "Don't Apply Schedule",
+      "AF" : "Apply Schedule"
+    },
+    "TF" : {
+      "AA" : "This is the TrainPlayer Include flag, TT and TF are editable",
+      "TI" : true,
+      "TT" : "Disable TrainPlayer",
+      "TF" : "Enable TrainPlayer"
+    },
     "PW" : 260,
     "PH" : 16,
     "DS" : "*No Waybill",
@@ -119,6 +133,7 @@
     ],
     "RM": 8,
     "RW": {
+      "AAA" : "The integer sets the column width and is editable",
       "Input": 6,
       "Model": 5,
       "Road" : 5,
