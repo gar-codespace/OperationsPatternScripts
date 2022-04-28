@@ -1,5 +1,5 @@
 # coding=utf-8
-# © 2021 Greg Ritacco
+# © 2021, 2022 Greg Ritacco
 
 import jmri
 import java.awt.event
@@ -16,21 +16,16 @@ SCRIPT_REV = 20220101
 class LocationComboBox(java.awt.event.ActionListener):
     '''Event triggered from location combobox selection'''
 
-    def __init__(self, panel, controls):
+    def __init__(self, panel):
+
         self.panel = panel
-        self.controls = controls
         self.psLog = logging.getLogger('PS.TP.ComboBox')
 
     def actionPerformed(self, EVENT):
 
-        newConfigFile = Model.updatePatternLocation(EVENT.getSource().getSelectedItem())
-        MainScriptEntities.writeConfigFile(newConfigFile)
-        newConfigFile = MainScriptEntities.readConfigFile('TP')
-        newConfigFile = Model.makeNewPatternTracks(newConfigFile['PL'])
-        MainScriptEntities.writeConfigFile(newConfigFile)
-        self.psLog.info('The track list for location ' + newConfigFile['TP']['PL'] + ' has been created')
-        self.controls = View.ManageGui().updatePanel(self.panel)
-        StartUp().activateButtons(self.panel, self.controls)
+        Model.updatePatternLocation(EVENT.getSource().getSelectedItem())
+        widgets = View.updatePanel(self.panel)
+        StartUp().activateWidgets(self.panel, widgets)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -57,7 +52,7 @@ class StartUp:
         newConfigFile = Model.updateCheckBoxStatus(self.controls[1].selected, self.controls[2].selected)
         MainScriptEntities.writeConfigFile(newConfigFile)
         self.controls = View.ManageGui().updatePanel(self.panel)
-        StartUp().activateButtons(self.panel, self.controls)
+        StartUp().activateWidgets(self.panel, self.controls)
 
         return
 
@@ -118,12 +113,11 @@ class StartUp:
 
         return
 
-    def activateButtons(self, panel, controls):
+    def activateWidgets(self, panel, controls):
 
-        self.panel = panel
         self.controls = controls
 
-        self.controls[0].addActionListener(LocationComboBox(panel, controls))
+        self.controls[0].addActionListener(LocationComboBox(panel))
         self.controls[1].actionPerformed = self.yardTrackOnlyCheckBox
         self.controls[4].actionPerformed = self.patternButton
         self.controls[5].actionPerformed = self.setCarsButton
@@ -144,7 +138,7 @@ class StartUp:
 
         MainScriptEntities.writeConfigFile(Model.updateLocations())
         panel, controls = View.ManageGui().makePanel()
-        self.activateButtons(panel, controls)
+        self.activateWidgets(panel, controls)
         self.psLog.info('Track pattern makeSubroutinePanel completed')
 
         return panel

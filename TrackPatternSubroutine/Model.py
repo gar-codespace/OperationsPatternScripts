@@ -1,5 +1,5 @@
 # coding=utf-8
-# © 2021 Greg Ritacco
+# © 2021, 2022 Greg Ritacco
 
 import jmri
 import logging
@@ -17,25 +17,24 @@ SCRIPT_REV = 20220101
 psLog = logging.getLogger('PS.TP.Model')
 
 def updatePatternLocation(selectedItem):
-    '''Catches user edits of locations, sets yard track only to false'''
+    '''Catches user edits of locations'''
 
     psLog.debug('updatePatternLocation')
 
-    newConfigFile = MainScriptEntities.readConfigFile()
+    configFile = MainScriptEntities.readConfigFile()
+    newLocation = ModelEntities.testSelectedItem(selectedItem)
+    newLocationList = ModelEntities.getAllLocations()
+    newLocationTrackDict = ModelEntities.getAllTracksForLocation(newLocation)
+    configFile['TP'].update({'PA': False})
+    configFile['TP'].update({'PI': False})
+    configFile['TP'].update({'PL': newLocation})
+    configFile['TP'].update({'AL': newLocationList})
+    configFile['TP'].update({'PT': newLocationTrackDict})
+    MainScriptEntities.writeConfigFile(configFile)
 
-    allLocations = ModelEntities.getAllLocations()
-    if not (selectedItem in allLocations):
-        newConfigFile = ModelEntities.initializeConfigFile()
-        psLog.warning('Location list changed, config file updated')
-        return newConfigFile
+    psLog.info('The track list for location ' + newLocation + ' has been created')
 
-    subConfigfile = newConfigFile['TP']
-    subConfigfile.update({'PA': False})
-    subConfigfile.update({'PL': selectedItem})
-    newConfigFile.update({'TP': subConfigfile})
-    psLog.debug('The current location for this profile has been set to ' + selectedItem)
-
-    return newConfigFile
+    return newLocation
 
 def makeNewPatternTracks(location):
     '''Makes a new list of all tracks for a location'''

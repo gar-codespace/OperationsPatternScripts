@@ -1,5 +1,4 @@
-# No restrictions on use
-# © 2021 Greg Ritacco
+# © 2021, 2022 Greg Ritacco
 
 '''Pattern Scripts plugin for JMRI Operations Pro'''
 
@@ -124,8 +123,7 @@ class View:
     def __init__(self, scrollPanel):
 
         self.controlPanel = scrollPanel
-        self.uniqueWindow = jmri.util.JmriJFrame(u'Pattern Scripts')
-        self.uniqueWindow.setName('patternScripts')
+        self.uniqueWindow = jmri.util.JmriJFrame()
         self.menuItemList = []
 
         return
@@ -181,6 +179,8 @@ class View:
         psMenuBar.add(jmri.util.WindowMenu(self.uniqueWindow))
         psMenuBar.add(helpMenu)
 
+        self.uniqueWindow.setName('patternScripts')
+        self.uniqueWindow.setTitle('Pattern Scripts')
         self.uniqueWindow.addWindowListener(PatternScriptsWindowListener())
         self.uniqueWindow.setJMenuBar(psMenuBar)
         self.uniqueWindow.add(self.controlPanel)

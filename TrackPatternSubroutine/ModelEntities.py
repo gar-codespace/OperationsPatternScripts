@@ -1,5 +1,5 @@
 # coding=utf-8
-# © 2021 Greg Ritacco
+# © 2021, 2022 Greg Ritacco
 
 import jmri
 from codecs import open as codecsOpen
@@ -37,6 +37,15 @@ def occuranceTally(listOfOccurances):
 
     return dict
 
+def testSelectedItem(selectedItem):
+    '''Catches user edit of locations'''
+
+    allLocations = getAllLocations() #String list
+    if selectedItem in allLocations:
+        return selectedItem
+    else:
+        return allLocations[0]
+
 def getAllLocations():
     '''JMRI sorts the list'''
 
@@ -46,6 +55,20 @@ def getAllLocations():
         locationList.append(unicode(item.getName(), MainScriptEntities.setEncoding()))
 
     return locationList
+
+def getAllTracksForLocation(location):
+    '''Sets all tracks to false'''
+
+    jmriTrackList = MainScriptEntities.LM.getLocationByName(location).getTracksByNameList(None)
+    trackDict = {}
+    for track in jmriTrackList:
+        trackDict[unicode(track.getName(), MainScriptEntities.setEncoding())] = False
+
+    return trackDict
+
+
+
+
 
 def initializeConfigFile():
     '''initialize or reinitialize the track pattern part of the config file on first use, reset, or edit of a location name'''

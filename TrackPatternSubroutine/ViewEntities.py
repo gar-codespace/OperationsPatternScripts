@@ -1,5 +1,5 @@
 # coding=utf-8
-# © 2021 Greg Ritacco
+# © 2021, 2022 Greg Ritacco
 
 '''Creates the track pattern and its panel'''
 
@@ -121,7 +121,7 @@ class TrackPatternPanel:
 
         return self.controlObjects
 
-    def makePatternControls(self):
+    def makeTrackPatternPanel(self):
         '''Make the Track Pattern panel object'''
 
         tpPanel = javax.swing.JPanel() # the track pattern panel
@@ -139,4 +139,4 @@ class TrackPatternPanel:
         tpPanel.add(buttonPanel)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
-        return tpPanel, self.getPanelWidgets()
+        return tpPanel

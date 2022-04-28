@@ -1,3 +1,6 @@
+# coding=utf-8
+# © 2021, 2022 Greg Ritacco
+
 import jmri
 import java
 import logging

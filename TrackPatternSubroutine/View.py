@@ -1,5 +1,5 @@
 # coding=utf-8
-# © 2021 Greg Ritacco
+# © 2021, 2022 Greg Ritacco
 
 '''View script for the track pattern subroutine'''
 
@@ -15,28 +15,13 @@ SCRIPT_REV = 20220101
 psLog = logging.getLogger('PS.TP.View')
 
 class ManageGui:
-    '''Manages all the GUI elements for the Pattern Scripts subroutine'''
 
-    def __init__(self, panel=None, controls=None):
-        '''Track Pattern panel'''
+    def __init__(self):
 
         self.psLog = logging.getLogger('PS.TP.View')
         self.configFile = MainScriptEntities.readConfigFile('TP')
-        self.panel = panel
-        self.controls = controls
 
         return
-
-    def updatePanel(self, panel):
-        ''' Replaces the current panel with a new updated panel'''
-
-        self.psLog.debug('updatePanel')
-        newView, newControls = ViewEntities.TrackPatternPanel().makePatternControls()
-        panel.removeAll()
-        panel.add(newView)
-        panel.revalidate()
-
-        return newControls
 
     def makeFrame(self):
         '''Makes the title frame that all the track pattern controls go into'''
@@ -49,13 +34,32 @@ class ManageGui:
         '''Make the track pattern controls'''
 
         self.psLog.debug('makePanel')
+        trackPatternPanel = ViewEntities.TrackPatternPanel()
+        patternPanel = trackPatternPanel.makeTrackPatternPanel()
+        patternPanelWidgets = trackPatternPanel.getPanelWidgets()
 
-        return ViewEntities.TrackPatternPanel().makePatternControls()
+        return patternPanel, patternPanelWidgets
 
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
+def updatePanel(panel):
+    ''' Replaces the current panel with an updated panel'''
+
+    psLog.debug('updatePanel')
+
+    trackPatternPanel = ViewEntities.TrackPatternPanel()
+    patternPanel = trackPatternPanel.makeTrackPatternPanel()
+    patternPanelWidgets = trackPatternPanel.getPanelWidgets()
+    panel.removeAll()
+    panel.add(patternPanel)
+    panel.revalidate()
+
+    return patternPanelWidgets
+
 def displayTextSwitchList(textSwitchList):
     '''Opens the text switchlist to Notepad or other'''
+
+    psLog.debug('displayTextSwitchList')
 
     fileToDisplay = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + textSwitchList.splitlines()[0] + '.txt'
 
