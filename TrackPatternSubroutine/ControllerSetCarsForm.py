@@ -3,6 +3,7 @@
 
 import jmri
 import java.awt
+
 import logging
 
 from psEntities import MainScriptEntities

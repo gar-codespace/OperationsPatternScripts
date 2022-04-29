@@ -2,6 +2,7 @@
 # © 2021, 2022 Greg Ritacco
 
 import jmri
+
 import logging
 from os import path as osPath
 from os import system as osSystem
@@ -16,7 +17,7 @@ SCRIPT_NAME = 'OperationsPatternScripts.TrackPatternSubroutine.Model'
 SCRIPT_REV = 20220101
 psLog = logging.getLogger('PS.TP.Model')
 
-def updatePatternLocation(selectedItem):
+def updatePatternLocation(selectedItem=None):
     '''Catches user edits of locations'''
 
     psLog.debug('updatePatternLocation')
@@ -58,22 +59,19 @@ def makeTrackList(location, type):
     return ModelEntities.getTracksByLocation(type)
 
 def updatePatternTracks(trackList):
-    '''Updates list of yard tracks as the yard track only flag is toggled'''
+    '''Creates a new list of tracks and their default include flag'''
 
     psLog.debug('updatePatternTracks')
     trackDict = {}
     for track in trackList:
         trackDict[track] = False
-    newConfigFile = MainScriptEntities.readConfigFile()
-    subConfigfile = newConfigFile['TP']
-    subConfigfile.update({'PT': trackDict})
-    newConfigFile.update({'TP': subConfigfile})
+
     if (trackDict):
         psLog.warning('The track list for this location has changed')
     else:
         psLog.warning('There are no yard tracks for this location')
 
-    return newConfigFile
+    return trackDict
 
 def updateCheckBoxStatus(all, ignore):
     '''Updates the config file with the checked status of Yard Tracks Only and Ignore Track Length check boxes'''

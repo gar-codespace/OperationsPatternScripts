@@ -4,6 +4,8 @@
 '''View script for the track pattern subroutine'''
 
 import jmri
+import javax.swing
+
 import logging
 from os import system as osSystem
 
@@ -23,38 +25,47 @@ class ManageGui:
 
         return
 
-    def makeFrame(self):
-        '''Makes the title frame that all the track pattern controls go into'''
+    def makeSubroutineFrame(self):
+        '''Make the frame that all the track pattern controls are added to'''
 
-        self.psLog.debug('makeFrame')
+        subroutineFrame = javax.swing.JPanel() # the track pattern panel
+        subroutineFrame.setLayout(javax.swing.BoxLayout(subroutineFrame, javax.swing.BoxLayout.Y_AXIS))
+        subroutineFrame.border = javax.swing.BorderFactory.createTitledBorder(u'Track Pattern')
 
-        return ViewEntities.TrackPatternPanel().makePatternFrame()
+        return subroutineFrame
 
-    def makePanel(self):
+    # def makeFrame(self):
+    #     '''Makes the title frame that all the track pattern controls go into'''
+    #
+    #     self.psLog.debug('makeFrame')
+    #
+    #     return ViewEntities.TrackPatternPanel().makePatternFrame()
+
+    def makeSubroutinePanel(self):
         '''Make the track pattern controls'''
 
-        self.psLog.debug('makePanel')
+        self.psLog.debug('makeSubroutinePanel')
         trackPatternPanel = ViewEntities.TrackPatternPanel()
-        patternPanel = trackPatternPanel.makeTrackPatternPanel()
-        patternPanelWidgets = trackPatternPanel.getPanelWidgets()
+        subroutinesPanel = trackPatternPanel.makeTrackPatternPanel()
+        subroutinePanelWidgets = trackPatternPanel.getPanelWidgets()
 
-        return patternPanel, patternPanelWidgets
+        return subroutinesPanel, subroutinePanelWidgets
 
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
-def updatePanel(panel):
-    ''' Replaces the current panel with an updated panel'''
-
-    psLog.debug('updatePanel')
-
-    trackPatternPanel = ViewEntities.TrackPatternPanel()
-    patternPanel = trackPatternPanel.makeTrackPatternPanel()
-    patternPanelWidgets = trackPatternPanel.getPanelWidgets()
-    panel.removeAll()
-    panel.add(patternPanel)
-    panel.revalidate()
-
-    return patternPanelWidgets
+# def updatePanel(panel):
+#     ''' Replaces the current panel with an updated panel'''
+#
+#     psLog.debug('updatePanel')
+#
+#     trackPatternPanel = ViewEntities.TrackPatternPanel()
+#     patternPanel = trackPatternPanel.makeTrackPatternPanel()
+#     patternPanelWidgets = trackPatternPanel.getPanelWidgets()
+#     panel.removeAll()
+#     panel.add(patternPanel)
+#     panel.revalidate()
+#
+#     return patternPanelWidgets
 
 def displayTextSwitchList(textSwitchList):
     '''Opens the text switchlist to Notepad or other'''

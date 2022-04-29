@@ -3,6 +3,7 @@
 
 import jmri
 import java
+
 import logging
 import time
 from json import loads as jsonLoads, dumps as jsonDumps
@@ -400,20 +401,17 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
     def init(self):
         self.SCRIPT_NAME = 'ExportToTrainPlayer.ManifestForTrainPlayer'
         self.SCRIPT_REV = 20220101
-        self.psLog = logging.getLogger('PS.E2TP.ManifestForTrainPlayer')
 
         logPath = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\TrainPlayerScriptsLog.txt'
-        self.tpLog = logging.getLogger('TP')
-        self.tpLog.setLevel(10)
         logFileFormat = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         self.tpFileHandler = logging.FileHandler(logPath, mode='w', encoding=MainScriptEntities.setEncoding())
         self.tpFileHandler.setFormatter(logFileFormat)
+
+        self.tpLog = logging.getLogger('TP')
+        self.tpLog.setLevel(10)
         self.tpLog.addHandler(self.tpFileHandler)
-        self.tpLog.debug('Log File for TrainPlayer script - DEBUG level test message')
-        self.tpLog.info('Log File for TrainPlayer script - INFO level test message')
-        self.tpLog.warning('Log File for TrainPlayer script - WARNING level test message')
-        self.tpLog.error('Log File for TrainPlayer script - ERROR level test message')
-        self.tpLog.critical('Log File for TrainPlayer script - CRITICAL level test message')
+
+        self.psLog = logging.getLogger('PS.E2TP.ManifestForTrainPlayer')
 
         self.jProfilePath = jmri.util.FileUtil.getProfilePath()
 
@@ -428,6 +426,7 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
     def handle(self):
 
         timeNow = time.time()
+        MainScriptEntities.initialLogMessage()
 
         jmriExport = ExportJmriLocations()
         locationList = jmriExport.makeLocationList()

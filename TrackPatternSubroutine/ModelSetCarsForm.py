@@ -3,6 +3,7 @@
 
 import jmri
 import java.awt
+
 import logging
 from codecs import open as codecsOpen
 from json import loads as jsonLoads, dumps as jsonDumps
@@ -102,7 +103,7 @@ def setRs(rollingStock, userInputListItem):
         rollingStock.updateLoad()
         rollingStock.setMoves(rollingStock.getMoves() + 1)
         deleteFd(rollingStock)
-    if MainScriptEntities.readConfigFile('TP')['AS'] and setResult == 'okay':
+    if MainScriptEntities.readConfigFile('TP')['SF']['AS'] and setResult == 'okay':
         applySchedule(toTrackObject, rollingStock)
 
     return setResult

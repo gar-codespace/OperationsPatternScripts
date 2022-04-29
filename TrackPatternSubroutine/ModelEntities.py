@@ -2,6 +2,7 @@
 # © 2021, 2022 Greg Ritacco
 
 import jmri
+
 from codecs import open as codecsOpen
 from json import loads as jsonLoads, dumps as jsonDumps
 from xml.etree import ElementTree as ET
@@ -65,10 +66,6 @@ def getAllTracksForLocation(location):
         trackDict[unicode(track.getName(), MainScriptEntities.setEncoding())] = False
 
     return trackDict
-
-
-
-
 
 def initializeConfigFile():
     '''initialize or reinitialize the track pattern part of the config file on first use, reset, or edit of a location name'''

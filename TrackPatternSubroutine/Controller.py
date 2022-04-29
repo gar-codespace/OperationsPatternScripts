@@ -3,6 +3,7 @@
 
 import jmri
 import java.awt.event
+
 import logging
 from os import system as osSystem
 
@@ -16,16 +17,18 @@ SCRIPT_REV = 20220101
 class LocationComboBox(java.awt.event.ActionListener):
     '''Event triggered from location combobox selection'''
 
-    def __init__(self, panel):
+    def __init__(self, subroutineFrame):
 
-        self.panel = panel
+        self.subroutineFrame = subroutineFrame
         self.psLog = logging.getLogger('PS.TP.ComboBox')
 
     def actionPerformed(self, EVENT):
 
         Model.updatePatternLocation(EVENT.getSource().getSelectedItem())
-        widgets = View.updatePanel(self.panel)
-        StartUp().activateWidgets(self.panel, widgets)
+        subroutinePanel = StartUp(self.subroutineFrame).makeSubroutinePanel()
+        self.subroutineFrame.removeAll()
+        self.subroutineFrame.add(subroutinePanel)
+        self.subroutineFrame.revalidate()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -34,25 +37,31 @@ class LocationComboBox(java.awt.event.ActionListener):
 class StartUp:
     '''Start the Track Pattern subroutine'''
 
-    def __init__(self):
+    def __init__(self, subroutineFrame=None):
 
         self.psLog = logging.getLogger('PS.TP.Control')
+        self.subroutineFrame = subroutineFrame
 
         return
 
     def yardTrackOnlyCheckBox(self, EVENT):
 
-        if (self.controls[1].selected):
-            trackList = Model.makeTrackList(self.controls[0].getSelectedItem(), 'Yard')
+        if (self.widgets[1].selected):
+            trackList = Model.makeTrackList(self.widgets[0].getSelectedItem(), 'Yard')
         else:
-            trackList = Model.makeTrackList(self.controls[0].getSelectedItem(), None)
+            trackList = Model.makeTrackList(self.widgets[0].getSelectedItem(), None)
 
-        newConfigFile = Model.updatePatternTracks(trackList)
-        MainScriptEntities.writeConfigFile(newConfigFile)
-        newConfigFile = Model.updateCheckBoxStatus(self.controls[1].selected, self.controls[2].selected)
-        MainScriptEntities.writeConfigFile(newConfigFile)
-        self.controls = View.ManageGui().updatePanel(self.panel)
-        StartUp().activateWidgets(self.panel, self.controls)
+        configFile = MainScriptEntities.readConfigFile()
+        trackDict = Model.updatePatternTracks(trackList)
+        configFile['TP'].update({'PT': trackDict})
+        configFile['TP'].update({'PA': self.widgets[1].selected})
+        configFile['TP'].update({'PI': self.widgets[2].selected})
+        MainScriptEntities.writeConfigFile(configFile)
+
+        subroutinePanel = StartUp(self.subroutineFrame).makeSubroutinePanel()
+        self.subroutineFrame.removeAll()
+        self.subroutineFrame.add(subroutinePanel)
+        self.subroutineFrame.revalidate()
 
         return
 
@@ -61,7 +70,7 @@ class StartUp:
 
         self.psLog.debug('patternButton')
 
-        Model.updateConfigFile(self.controls)
+        Model.updateConfigFile(self.widgets)
 
         if not Model.verifySelectedTracks():
             self.psLog.warning('Track not found, re-select the location')
@@ -88,7 +97,7 @@ class StartUp:
 
         self.psLog.debug('setCarsButton')
 
-        Model.updateConfigFile(self.controls)
+        Model.updateConfigFile(self.widgets)
 
         if not Model.verifySelectedTracks():
             self.psLog.warning('Track not found, re-select the location')
@@ -113,32 +122,39 @@ class StartUp:
 
         return
 
-    def activateWidgets(self, panel, controls):
+    def activateWidgets(self):
 
-        self.controls = controls
+        self.widgets[0].addActionListener(LocationComboBox(self.subroutineFrame))
+        self.widgets[1].actionPerformed = self.yardTrackOnlyCheckBox
+        self.widgets[4].actionPerformed = self.patternButton
+        self.widgets[5].actionPerformed = self.setCarsButton
+        self.widgets[6].actionPerformed = self.viewLogButton
 
-        self.controls[0].addActionListener(LocationComboBox(panel))
-        self.controls[1].actionPerformed = self.yardTrackOnlyCheckBox
-        self.controls[4].actionPerformed = self.patternButton
-        self.controls[5].actionPerformed = self.setCarsButton
-        self.controls[6].actionPerformed = self.viewLogButton
+        return
+
+    def validateSubroutineConfig(self):
+
+        if not MainScriptEntities.readConfigFile('TP')['AL']:
+            MainScriptEntities.writeNewConfigFile()
+            Model.updatePatternLocation()
 
         return
 
     def makeSubroutineFrame(self):
         '''Makes the title border frame'''
 
-        patternFrame = View.ManageGui().makeFrame()
-        self.psLog.info('Track pattern makeFrame completed')
+        self.subroutineFrame = View.ManageGui().makeSubroutineFrame()
+        subroutinePanel = self.makeSubroutinePanel()
+        self.subroutineFrame.add(subroutinePanel)
 
-        return patternFrame
+        return self.subroutineFrame
 
     def makeSubroutinePanel(self):
-        '''Make and activate the Track Pattern objects'''
+        '''Makes the control panel that sits inside the frame'''
 
-        MainScriptEntities.writeConfigFile(Model.updateLocations())
-        panel, controls = View.ManageGui().makePanel()
-        self.activateWidgets(panel, controls)
-        self.psLog.info('Track pattern makeSubroutinePanel completed')
+        self.subroutinePanel, self.widgets = View.ManageGui().makeSubroutinePanel()
+        self.activateWidgets()
 
-        return panel
+        self.psLog.info('Track pattern makeFrame completed')
+
+        return self.subroutinePanel

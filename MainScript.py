@@ -4,7 +4,6 @@
 
 import jmri
 from apps import Apps
-
 import java
 import java.beans
 import java.awt
@@ -97,8 +96,8 @@ class PatternScriptsWindowListener(java.awt.event.WindowListener):
         for frameName in jmri.util.JmriJFrame.getFrameList():
             frame = jmri.util.JmriJFrame.getFrame(frameName)
             if frame.getName() == 'setCarsWindow':
-                frame.dispose()
                 frame.setVisible(False)
+                frame.dispose()
 
         return
 
@@ -109,14 +108,33 @@ class PatternScriptsWindowListener(java.awt.event.WindowListener):
 
         return
 
-    def windowOpened(self, WINDOW_OPENED):
-        return
     def windowClosing(self, WINDOW_CLOSING):
+
+        updateWindowParams(WINDOW_CLOSING.getSource())
+
+        return
+
+    def windowIconified(self, WINDOW_ICONIFIED):
+        return
+    def windowDeiconified(self, WINDOW_DEICONIFIED):
+        return
+    def windowOpened(self, WINDOW_OPENED):
         return
     def windowActivated(self, WINDOW_ACTIVATED):
         return
     def windowDeactivated(self, WINDOW_DEACTIVATED):
         return
+
+def updateWindowParams(window):
+
+    configPanel = MainScriptEntities.readConfigFile()
+    configPanel['CP'].update({'PH': window.getHeight()})
+    configPanel['CP'].update({'PW': window.getWidth()})
+    configPanel['CP'].update({'PX': window.getX()})
+    configPanel['CP'].update({'PY': window.getY()})
+    MainScriptEntities.writeConfigFile(configPanel)
+
+    return
 
 class View:
 
@@ -145,8 +163,9 @@ class View:
         configPanel = MainScriptEntities.readConfigFile('CP')
         scrollPanel = javax.swing.JScrollPane(pluginPanel)
         scrollPanel.border = javax.swing.BorderFactory.createLineBorder(java.awt.Color.GRAY)
-        scrollPanel.setPreferredSize(java.awt.Dimension(configPanel['PW'], configPanel['PH']))
-        scrollPanel.setMaximumSize(scrollPanel.getPreferredSize())
+
+        # scrollPanel.setPreferredSize(java.awt.Dimension(configPanel['PW'], configPanel['PH']))
+        # scrollPanel.setMaximumSize(scrollPanel.getPreferredSize())
 
         return scrollPanel
 
@@ -185,6 +204,9 @@ class View:
         self.uniqueWindow.setJMenuBar(psMenuBar)
         self.uniqueWindow.add(self.controlPanel)
         self.uniqueWindow.pack()
+        configPanel = MainScriptEntities.readConfigFile('CP')
+        self.uniqueWindow.setSize(configPanel['PW'], configPanel['PH'])
+        self.uniqueWindow.setLocation(configPanel['PX'], configPanel['PY'])
         self.uniqueWindow.setVisible(True)
 
         return
@@ -238,9 +260,9 @@ class Model:
         for subroutineIncludes, isIncluded in controlPanelConfig['SI'].items():
             if (isIncluded):
                 xModule = __import__(subroutineIncludes, fromlist=['Controller'])
-                subroutineFrame = xModule.Controller.StartUp().makeSubroutineFrame()
-                subroutinePanel = xModule.Controller.StartUp().makeSubroutinePanel()
-                subroutineFrame.add(subroutinePanel)
+                startUp = xModule.Controller.StartUp()
+                startUp.validateSubroutineConfig()
+                subroutineFrame = startUp.makeSubroutineFrame()
                 subroutineList.append(subroutineFrame)
                 self.psLog.info(subroutineIncludes + ' subroutine added to control panel')
 
@@ -252,18 +274,10 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
         self.logger = Logger()
         self.logger.startLogger()
-        self.psLog = logging.getLogger('PS.Controller')
-        self.psLog.debug('Log File for Pattern Scripts Plugin - DEBUG level test message')
-        self.psLog.info('Log File for Pattern Scripts Plugin - INFO level test message')
-        self.psLog.warning('Log File for Pattern Scripts Plugin - WARNING level test message')
-        self.psLog.error('Log File for Pattern Scripts Plugin - ERROR level test message')
-        self.psLog.critical('Log File for Pattern Scripts Plugin - CRITICAL level test message')
 
         self.trainsTableModel = jmri.jmrit.operations.trains.TrainsTableModel()
         self.builtTrainListener = BuiltTrainListener()
         self.trainsTableListener = TrainsTableListener(self.builtTrainListener)
-
-        self.patternScriptsButton = javax.swing.JButton(text = 'Pattern Scripts', name = 'psButton')
 
         self.menuItemList = []
 
@@ -272,7 +286,9 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
     def handle(self):
 
         yTimeNow = time.time()
+        self.psLog = logging.getLogger('PS.Controller')
 
+        MainScriptEntities.initialLogMessage()
         self.runValidations()
         self.addPatternScriptsButton()
 
@@ -303,6 +319,7 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
         self.patternScriptsButton = View(None).makePsButton()
         self.patternScriptsButton.setText('Pattern Scripts')
+        self.patternScriptsButton.setName('psButton')
         self.patternScriptsButton.actionPerformed = self.patternScriptsButtonAction
         Apps.buttonSpace().add(self.patternScriptsButton)
         Apps.buttonSpace().revalidate()
@@ -362,8 +379,9 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
         for frameName in jmri.util.JmriJFrame.getFrameList():
             frame = jmri.util.JmriJFrame.getFrame(frameName)
             if frame.getName() == 'patternScripts':
-                frame.dispose()
+                updateWindowParams(frame)
                 frame.setVisible(False)
+                frame.dispose()
 
         return
 

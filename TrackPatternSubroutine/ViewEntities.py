@@ -41,14 +41,14 @@ class TrackPatternPanel:
 
         return
 
-    def makePatternFrame(self):
-        '''Make the panel that all the track pattern controls are added to'''
-
-        tpFrame = javax.swing.JPanel() # the track pattern panel
-        tpFrame.setLayout(javax.swing.BoxLayout(tpFrame, javax.swing.BoxLayout.Y_AXIS))
-        tpFrame.border = javax.swing.BorderFactory.createTitledBorder(u'Track Pattern')
-
-        return tpFrame
+    # def makePatternFrame(self):
+    #     '''Make the panel that all the track pattern controls are added to'''
+    #
+    #     tpFrame = javax.swing.JPanel() # the track pattern panel
+    #     tpFrame.setLayout(javax.swing.BoxLayout(tpFrame, javax.swing.BoxLayout.Y_AXIS))
+    #     tpFrame.border = javax.swing.BorderFactory.createTitledBorder(u'Track Pattern')
+    #
+    #     return tpFrame
 
     def makeLocationComboBox(self):
         '''Make the combo box of user selectable locations'''

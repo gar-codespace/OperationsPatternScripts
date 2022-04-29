@@ -68,8 +68,10 @@
       "TrackPatternSubroutine" : true,
       "FutureSubroutines" : false
     },
-    "PH" : 140,
-    "PW" : 2000,
+    "PH" : 220,
+    "PW" : 1500,
+    "PX" : 0,
+    "PY" : 0,
     "RV" : 20220201
   },
   "LI": {
