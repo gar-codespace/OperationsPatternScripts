@@ -205,7 +205,7 @@ def resetTrainPlayerSwitchlist():
     psLog.debug('resetTrainPlayerSwitchlist')
 
     locationDict = {'locationName':'Location Name', 'tracks':[{'trackName':'Track Name', 'length': 1, 'locos':[], 'cars':[]}]}
-    setCarsForm = makeReport(locationDict, 'PT')
+    setCarsForm = makeReport(locationDict, 'TP')
     ModelEntities.writeWorkEventListAsJson(setCarsForm)
 
     return

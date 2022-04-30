@@ -31,7 +31,7 @@ class CheckTpDestination:
     def __init__(self):
         self.SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayer.ExportToTrainPlayer.CheckTpDestination'
         self.SCRIPT_REV = 20220101
-        self.psLog = logging.getLogger('PS.E2TP.CheckTpDestination')
+        self.psLog = logging.getLogger('PS.TP.CheckTpDestination')
         self.tpLog = logging.getLogger('PT.CheckTpDestination')
 
         return

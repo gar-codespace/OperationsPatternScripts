@@ -66,7 +66,7 @@ class StartUp:
         return
 
     def patternButton(self, EVENT):
-        '''Makes a pattern tracks report (PR) based on the config file'''
+        '''Makes a pattern tracks report based on the config file (PR)'''
 
         self.psLog.debug('patternButton')
 

@@ -28,20 +28,14 @@ SCRIPT_NAME = 'OperationsPatternScripts.psEntities.MainScriptEntities'
 SCRIPT_REV = 20220101
 
 psLog = logging.getLogger('PS.PT.MainScriptEntities')
-tpLog = logging.getLogger('PT.MainScriptEntities')
 
 def initialLogMessage():
 
     psLog.debug('Initialize PS log file - DEBUG level test message')
-    tpLog.debug('Initialize PT log file - DEBUG level test message')
     psLog.info('Initialize PS log file - INFO level test message')
-    tpLog.info('Initialize PT log file - INFO level test message')
     psLog.warning('Initialize PS log file - WARNING level test message')
-    tpLog.warning('Initialize PT log file - WARNING level test message')
     psLog.error('Initialize PS log file - ERROR level test message')
-    tpLog.error('Initialize PT log file - ERROR level test message')
     psLog.critical('Initialize PS log file - CRITICAL level test message')
-    tpLog.critical('Initialize PT log file - CRITICAL level test message')
 
     return
 
@@ -94,7 +88,7 @@ def validateStubFile(currentRootDir):
 
     stubFileName = stubLocation + 'psStub.html'
 
-    helpFilePath = currentRootDir + '\Support\psHelp.html'
+    helpFilePath = currentRootDir + '\psSupport\psHelp.html'
     helpFilePath = javaIo.File(helpFilePath).toURI()
     helpFilePath = unicode(helpFilePath, setEncoding())
 

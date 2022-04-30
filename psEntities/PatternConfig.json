@@ -72,7 +72,7 @@
     "PW" : 1500,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20220222
+    "RV" : 20220223
   },
   "LI": {
     "99" : "Editing these is not recommended",
@@ -89,19 +89,19 @@
     "PT" : {
     },
     "TD" : {
-      "AA" : "Train Description, these are aditable",
+      "AA" : "Train Description, these are editable",
       "PR" : "Pattern Report - Track Pattern",
       "SC" : "Pattern Report - Switch List",
       "TP" : "Pattern Report - TrainPlayer Work Events"
     },
     "TN" : {
-      "AA" : "Train Name, these are aditable",
+      "AA" : "Train Name, these are editable",
       "PR" : "Local Switch Job",
       "SC" : "Local Switch Job",
       "TP" : "Local Switch Job"
     },
     "TC" : {
-      "AA" : "Train Comment, these are aditable",
+      "AA" : "Train Comment, these are editable",
       "PR" : "Track Pattern for Selected Tracks",
       "SC" : "Switch List for One Track",
       "TP" : "Switch List for Selected Tracks"
