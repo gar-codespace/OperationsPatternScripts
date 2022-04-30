@@ -68,21 +68,21 @@ def getAllTracksForLocation(location):
     return trackDict
 
 def initializeConfigFile():
-    '''initialize or reinitialize the track pattern part of the config file on first use, reset, or edit of a location name'''
+    '''initialize or reinitialize the pattern tracks part of the config file on first use, reset, or edit of a location name'''
 
     newConfigFile = MainScriptEntities.readConfigFile()
-    subConfigfile = newConfigFile['TP']
+    subConfigfile = newConfigFile['PT']
     allLocations  = getAllLocations()
     subConfigfile.update({'AL': allLocations})
     subConfigfile.update({'PL': allLocations[0]})
     subConfigfile.update({'PT': makeInitialTrackList(allLocations[0])})
-    newConfigFile.update({'TP': subConfigfile})
+    newConfigFile.update({'PT': subConfigfile})
 
     return newConfigFile
 
 def getTracksByLocation(trackType):
 
-    patternLocation = MainScriptEntities.readConfigFile('TP')['PL']
+    patternLocation = MainScriptEntities.readConfigFile('PT')['PL']
     allTracksList = []
     try: # Catch on the fly user edit of config file error
         for track in MainScriptEntities.LM.getLocationByName(patternLocation).getTracksByNameList(trackType):
@@ -112,9 +112,9 @@ def getGenericTrackDetails(locationName, trackName):
     return genericTrackDetails
 
 def sortLocoList(locoList):
-    '''Sort order of MainScriptEntities.readConfigFile('TP')['SL'] is top down'''
+    '''Sort order of MainScriptEntities.readConfigFile('PT')['SL'] is top down'''
 
-    sortLocos = MainScriptEntities.readConfigFile('TP')['SL']
+    sortLocos = MainScriptEntities.readConfigFile('PT')['SL']
     for sortKey in sortLocos:
         locoList.sort(key=lambda row: row[sortKey])
 
@@ -138,7 +138,7 @@ def getRsOnTrains():
 def getLocoListForTrack(track):
     '''Creates a generic locomotive list for a track, used to make the JSON file'''
 
-    location = MainScriptEntities.readConfigFile('TP')['PL']
+    location = MainScriptEntities.readConfigFile('PT')['PL']
     locoList = getLocoObjects(location, track)
 
     return [getDetailsForLocoAsDict(loco) for loco in locoList]
@@ -180,15 +180,15 @@ def getDetailsForLocoAsDict(locoObject):
     locoDetailDict[u'Set to'] = '[  ] '
     locoDetailDict[u'PUSO'] = u'SL'
     locoDetailDict[u'Load'] = u'O'
-    locoDetailDict[u'FD&Track'] = MainScriptEntities.readConfigFile('TP')['DS']
+    locoDetailDict[u'FD&Track'] = MainScriptEntities.readConfigFile('PT')['DS']
     locoDetailDict[u' '] = u' ' # Catches KeyError - empty box added to getDropEngineMessageFormat
 
     return locoDetailDict
 
 def sortCarList(carList):
-    '''Sort order of MainScriptEntities.readConfigFile('TP')['SC'] is top down'''
+    '''Sort order of MainScriptEntities.readConfigFile('PT')['SC'] is top down'''
 
-    sortCars = MainScriptEntities.readConfigFile('TP')['SC']
+    sortCars = MainScriptEntities.readConfigFile('PT')['SC']
     for sortKey in sortCars:
         carList.sort(key=lambda row: row[sortKey])
 
@@ -197,7 +197,7 @@ def sortCarList(carList):
 def getCarListForTrack(track):
     '''A list of car attributes as a dictionary'''
 
-    location = MainScriptEntities.readConfigFile('TP')['PL']
+    location = MainScriptEntities.readConfigFile('PT')['PL']
     carList = getCarObjects(location, track)
 
     return [getDetailsForCarAsDict(car) for car in carList]
@@ -212,7 +212,7 @@ def getDetailsForCarAsDict(carObject):
     '''Mimics jmri.jmrit.operations.setup.Setup.getCarAttributes()
     [u'Road', u'Number', u'Type', u'Length', u'Weight', u'Load', u'Load Type', u'Hazardous', u'Color', u'Kernel', u'Kernel Size', u'Owner', u'Track', u'Location', u'Destination', u'Dest&Track', u'Final Dest', u'FD&Track', u'Comment', u'SetOut Msg', u'PickUp Msg', u'RWE']'''
 
-    fdStandIn = MainScriptEntities.readConfigFile('TP')
+    fdStandIn = MainScriptEntities.readConfigFile('PT')
 
     listOfAssignedRs = getRsOnTrains()
     carDetailDict = {}
@@ -319,7 +319,7 @@ def makeTextReportHeader(textWorkEventList):
 
 def makeTextReportLocations(textWorkEventList, trackTotals):
 
-    reportWidth = MainScriptEntities.readConfigFile('TP')['RW']
+    reportWidth = MainScriptEntities.readConfigFile('PT')['RW']
     locoItems = jmri.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
     carItems = jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
 
@@ -362,7 +362,7 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
 
 def loopThroughRs(type, rsAttribs):
 
-    reportWidth = MainScriptEntities.readConfigFile('TP')['RW']
+    reportWidth = MainScriptEntities.readConfigFile('PT')['RW']
     switchListRow = ''
 
     if type == 'loco':

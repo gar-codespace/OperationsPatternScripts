@@ -8,10 +8,10 @@ import logging
 from os import system as osSystem
 
 from psEntities import MainScriptEntities
-from TrackPatternSubroutine import Model
-from TrackPatternSubroutine import View
+from PatternTracksSubroutine import Model
+from PatternTracksSubroutine import View
 
-SCRIPT_NAME = 'OperationsPatternScripts.TrackPatternSubroutine.Controller'
+SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.Controller'
 SCRIPT_REV = 20220101
 
 class LocationComboBox(java.awt.event.ActionListener):
@@ -20,7 +20,7 @@ class LocationComboBox(java.awt.event.ActionListener):
     def __init__(self, subroutineFrame):
 
         self.subroutineFrame = subroutineFrame
-        self.psLog = logging.getLogger('PS.TP.ComboBox')
+        self.psLog = logging.getLogger('PS.PT.ComboBox')
 
     def actionPerformed(self, EVENT):
 
@@ -35,11 +35,11 @@ class LocationComboBox(java.awt.event.ActionListener):
         return
 
 class StartUp:
-    '''Start the Track Pattern subroutine'''
+    '''Start the pattern tracks subroutine'''
 
     def __init__(self, subroutineFrame=None):
 
-        self.psLog = logging.getLogger('PS.TP.Control')
+        self.psLog = logging.getLogger('PS.PT.Control')
         self.subroutineFrame = subroutineFrame
 
         return
@@ -53,9 +53,9 @@ class StartUp:
 
         configFile = MainScriptEntities.readConfigFile()
         trackDict = Model.updatePatternTracks(trackList)
-        configFile['TP'].update({'PT': trackDict})
-        configFile['TP'].update({'PA': self.widgets[1].selected})
-        configFile['TP'].update({'PI': self.widgets[2].selected})
+        configFile['PT'].update({'PT': trackDict})
+        configFile['PT'].update({'PA': self.widgets[1].selected})
+        configFile['PT'].update({'PI': self.widgets[2].selected})
         MainScriptEntities.writeConfigFile(configFile)
 
         subroutinePanel = StartUp(self.subroutineFrame).makeSubroutinePanel()
@@ -66,7 +66,7 @@ class StartUp:
         return
 
     def patternButton(self, EVENT):
-        '''Makes a track pattern report (PR) based on the config file'''
+        '''Makes a pattern tracks report (PR) based on the config file'''
 
         self.psLog.debug('patternButton')
 
@@ -105,7 +105,7 @@ class StartUp:
 
         Model.onScButtonPress()
 
-        if MainScriptEntities.readConfigFile('TP')['TF']['TI']: # TrainPlayer Include
+        if MainScriptEntities.readConfigFile('PT')['TF']['TI']: # TrainPlayer Include
             Model.resetTrainPlayerSwitchlist()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
@@ -134,7 +134,7 @@ class StartUp:
 
     def validateSubroutineConfig(self):
 
-        if not MainScriptEntities.readConfigFile('TP')['AL']:
+        if not MainScriptEntities.readConfigFile('PT')['AL']:
             MainScriptEntities.writeNewConfigFile()
             Model.updatePatternLocation()
 
@@ -155,6 +155,6 @@ class StartUp:
         self.subroutinePanel, self.widgets = View.ManageGui().makeSubroutinePanel()
         self.activateWidgets()
 
-        self.psLog.info('Track pattern makeFrame completed')
+        self.psLog.info('pattern tracks makeFrame completed')
 
         return self.subroutinePanel

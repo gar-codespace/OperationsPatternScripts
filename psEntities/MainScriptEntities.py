@@ -27,21 +27,21 @@ SCRIPT_ROOT = ''
 SCRIPT_NAME = 'OperationsPatternScripts.psEntities.MainScriptEntities'
 SCRIPT_REV = 20220101
 
-psLog = logging.getLogger('PS.TP.MainScriptEntities')
-tpLog = logging.getLogger('TP.MainScriptEntities')
+psLog = logging.getLogger('PS.PT.MainScriptEntities')
+tpLog = logging.getLogger('PT.MainScriptEntities')
 
 def initialLogMessage():
 
     psLog.debug('Initialize PS log file - DEBUG level test message')
-    tpLog.debug('Initialize TP log file - DEBUG level test message')
+    tpLog.debug('Initialize PT log file - DEBUG level test message')
     psLog.info('Initialize PS log file - INFO level test message')
-    tpLog.info('Initialize TP log file - INFO level test message')
+    tpLog.info('Initialize PT log file - INFO level test message')
     psLog.warning('Initialize PS log file - WARNING level test message')
-    tpLog.warning('Initialize TP log file - WARNING level test message')
+    tpLog.warning('Initialize PT log file - WARNING level test message')
     psLog.error('Initialize PS log file - ERROR level test message')
-    tpLog.error('Initialize TP log file - ERROR level test message')
+    tpLog.error('Initialize PT log file - ERROR level test message')
     psLog.critical('Initialize PS log file - CRITICAL level test message')
-    tpLog.critical('Initialize TP log file - CRITICAL level test message')
+    tpLog.critical('Initialize PT log file - CRITICAL level test message')
 
     return
 

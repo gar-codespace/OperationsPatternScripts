@@ -10,12 +10,12 @@ from json import loads as jsonLoads, dumps as jsonDumps
 from codecs import open as codecsOpen
 
 from psEntities import MainScriptEntities
-from TrackPatternSubroutine import ModelEntities
-from TrackPatternSubroutine import ControllerSetCarsForm
+from PatternTracksSubroutine import ModelEntities
+from PatternTracksSubroutine import ControllerSetCarsForm
 
-SCRIPT_NAME = 'OperationsPatternScripts.TrackPatternSubroutine.Model'
+SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.Model'
 SCRIPT_REV = 20220101
-psLog = logging.getLogger('PS.TP.Model')
+psLog = logging.getLogger('PS.PT.Model')
 
 def updatePatternLocation(selectedItem=None):
     '''Catches user edits of locations'''
@@ -26,11 +26,11 @@ def updatePatternLocation(selectedItem=None):
     newLocation = ModelEntities.testSelectedItem(selectedItem)
     newLocationList = ModelEntities.getAllLocations()
     newLocationTrackDict = ModelEntities.getAllTracksForLocation(newLocation)
-    configFile['TP'].update({'PA': False})
-    configFile['TP'].update({'PI': False})
-    configFile['TP'].update({'PL': newLocation})
-    configFile['TP'].update({'AL': newLocationList})
-    configFile['TP'].update({'PT': newLocationTrackDict})
+    configFile['PT'].update({'PA': False})
+    configFile['PT'].update({'PI': False})
+    configFile['PT'].update({'PL': newLocation})
+    configFile['PT'].update({'AL': newLocationList})
+    configFile['PT'].update({'PT': newLocationTrackDict})
     MainScriptEntities.writeConfigFile(configFile)
 
     psLog.info('The track list for location ' + newLocation + ' has been created')
@@ -46,9 +46,9 @@ def makeNewPatternTracks(location):
     for track in allTracks:
         trackDict[track] = False
     newConfigFile = MainScriptEntities.readConfigFile()
-    subConfigfile = newConfigFile['TP']
+    subConfigfile = newConfigFile['PT']
     subConfigfile.update({'PT': trackDict})
-    newConfigFile.update({'TP': subConfigfile})
+    newConfigFile.update({'PT': subConfigfile})
 
     return newConfigFile
 
@@ -78,25 +78,25 @@ def updateCheckBoxStatus(all, ignore):
 
     psLog.debug('updateCheckBoxStatus')
     newConfigFile = MainScriptEntities.readConfigFile()
-    subConfigfile = newConfigFile['TP']
+    subConfigfile = newConfigFile['PT']
     subConfigfile.update({'PA': all})
     subConfigfile.update({'PI': ignore})
-    newConfigFile.update({'TP': subConfigfile})
+    newConfigFile.update({'PT': subConfigfile})
 
     return newConfigFile
 
 def updateConfigFile(controls):
-    '''Updates the track pattern part of the config file'''
+    '''Updates the pattern tracks part of the config file'''
 
     psLog.debug('updateConfigFile')
 
-    focusOn = MainScriptEntities.readConfigFile('TP')
+    focusOn = MainScriptEntities.readConfigFile('PT')
     focusOn.update({"PL": controls[0].getSelectedItem()})
     focusOn.update({"PA": controls[1].selected})
     focusOn.update({"PI": controls[2].selected})
     focusOn.update({"PT": ModelEntities.updateTrackCheckBoxes(controls[3])})
     newConfigFile = MainScriptEntities.readConfigFile()
-    newConfigFile.update({"TP": focusOn})
+    newConfigFile.update({"PT": focusOn})
     MainScriptEntities.writeConfigFile(newConfigFile)
     psLog.info('Controls settings for configuration file updated')
 
@@ -104,7 +104,7 @@ def updateConfigFile(controls):
 
 def getSelectedTracks():
 
-    patternTracks = MainScriptEntities.readConfigFile('TP')['PT']
+    patternTracks = MainScriptEntities.readConfigFile('PT')['PT']
 
     return [track for track, include in sorted(patternTracks.items()) if include]
 
@@ -116,7 +116,7 @@ def verifySelectedTracks():
     if not allTracksList:
         psLog.warning('PatternConfig.JSON corrupted, new file written.')
         return False
-    patternTracks = MainScriptEntities.readConfigFile('TP')['PT']
+    patternTracks = MainScriptEntities.readConfigFile('PT')['PT']
     for track in patternTracks:
         if not track in allTracksList:
             validStatus = False
@@ -132,7 +132,7 @@ def makeLocationDict(trackList=None):
         trackList = getSelectedTracks()
 
     detailsForTrack = []
-    patternLocation = MainScriptEntities.readConfigFile('TP')['PL']
+    patternLocation = MainScriptEntities.readConfigFile('PT')['PL']
     for trackName in trackList:
         detailsForTrack.append(ModelEntities.getGenericTrackDetails(patternLocation, trackName))
 
@@ -146,7 +146,7 @@ def makeReport(locationDict, reportType):
 
     psLog.debug('makeReport')
 
-    headerNames = MainScriptEntities.readConfigFile('TP')
+    headerNames = MainScriptEntities.readConfigFile('PT')
     modifiedReport = ModelEntities.makeGenericHeader()
     modifiedReport['trainDescription'] = headerNames['TD'][reportType]
     modifiedReport['trainName'] = headerNames['TN'][reportType]
@@ -180,7 +180,7 @@ def onScButtonPress():
 
         return
 
-    locationName = MainScriptEntities.readConfigFile('TP')['PL']
+    locationName = MainScriptEntities.readConfigFile('PT')['PL']
     windowOffset = 200
     for i, trackName in enumerate(selectedTracks, start=1):
         locationDict = makeLocationDict([trackName]) # makeLocationDict takes a track list
@@ -205,7 +205,7 @@ def resetTrainPlayerSwitchlist():
     psLog.debug('resetTrainPlayerSwitchlist')
 
     locationDict = {'locationName':'Location Name', 'tracks':[{'trackName':'Track Name', 'length': 1, 'locos':[], 'cars':[]}]}
-    setCarsForm = makeReport(locationDict, 'TP')
+    setCarsForm = makeReport(locationDict, 'PT')
     ModelEntities.writeWorkEventListAsJson(setCarsForm)
 
     return
@@ -245,13 +245,13 @@ def updateLocations():
 
     psLog.debug('updateLocations')
     newConfigFile = MainScriptEntities.readConfigFile()
-    subConfigfile = newConfigFile['TP']
+    subConfigfile = newConfigFile['PT']
     allLocations  = ModelEntities.getAllLocations()
     if not (subConfigfile['AL']): # when this sub is used for the first tims
         subConfigfile.update({'PL': allLocations[0]})
         subConfigfile.update({'PT': ModelEntities.makeInitialTrackList(allLocations[0])})
     subConfigfile.update({'AL': allLocations})
-    newConfigFile.update({'TP': subConfigfile})
+    newConfigFile.update({'PT': subConfigfile})
     MainScriptEntities.writeConfigFile(newConfigFile)
 
     return newConfigFile
@@ -260,7 +260,7 @@ def writeCsvSwitchList(trackPattern, type):
     '''Rewrite this to write from the JSON file'''
 
     psLog.debug('writeCsvSwitchList')
-    trainDescription = MainScriptEntities.readConfigFile('TP')['TD']
+    trainDescription = MainScriptEntities.readConfigFile('PT')['TD']
     csvCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\csvSwitchLists\\' + trainDescription[type]  + '.csv'
     csvObject = ModelEntities.makeCsvSwitchlist(trackPattern)
     with codecsOpen(csvCopyTo, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:

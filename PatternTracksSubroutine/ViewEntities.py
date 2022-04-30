@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-'''Creates the track pattern and its panel'''
+'''Creates the pattern tracks and its panel'''
 
 import jmri
 import java.awt
@@ -9,15 +9,15 @@ import javax.swing
 
 from psEntities import MainScriptEntities
 
-SCRIPT_NAME = 'OperationsPatternScripts.TrackPatternSubroutine.ViewEntities'
+SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ViewEntities'
 SCRIPT_REV = 20220101
 
 class TrackPatternPanel:
-    '''Makes the track pattern subroutine panel'''
+    '''Makes the pattern tracks subroutine panel'''
 
     def __init__(self):
 
-        self.configFile = MainScriptEntities.readConfigFile('TP')
+        self.configFile = MainScriptEntities.readConfigFile('PT')
         self.yardTracksOnly = javax.swing.JCheckBox(u'Yard tracks only ', self.configFile['PA'])
         self.yardTracksOnly.setName('ytoCheckBox')
 
@@ -40,15 +40,6 @@ class TrackPatternPanel:
         self.controlObjects = []
 
         return
-
-    # def makePatternFrame(self):
-    #     '''Make the panel that all the track pattern controls are added to'''
-    #
-    #     tpFrame = javax.swing.JPanel() # the track pattern panel
-    #     tpFrame.setLayout(javax.swing.BoxLayout(tpFrame, javax.swing.BoxLayout.Y_AXIS))
-    #     tpFrame.border = javax.swing.BorderFactory.createTitledBorder(u'Track Pattern')
-    #
-    #     return tpFrame
 
     def makeLocationComboBox(self):
         '''Make the combo box of user selectable locations'''
@@ -122,9 +113,9 @@ class TrackPatternPanel:
         return self.controlObjects
 
     def makeTrackPatternPanel(self):
-        '''Make the Track Pattern panel object'''
+        '''Make the pattern tracks panel object'''
 
-        tpPanel = javax.swing.JPanel() # the track pattern panel
+        tpPanel = javax.swing.JPanel() # the pattern tracks panel
         tpPanel.setLayout(javax.swing.BoxLayout(tpPanel, javax.swing.BoxLayout.Y_AXIS))
         inputRow = javax.swing.JPanel()
         inputRow.setLayout(javax.swing.BoxLayout(inputRow, javax.swing.BoxLayout.X_AXIS))

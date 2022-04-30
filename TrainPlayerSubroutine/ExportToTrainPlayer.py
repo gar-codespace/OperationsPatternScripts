@@ -32,7 +32,7 @@ class CheckTpDestination:
         self.SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayer.ExportToTrainPlayer.CheckTpDestination'
         self.SCRIPT_REV = 20220101
         self.psLog = logging.getLogger('PS.E2TP.CheckTpDestination')
-        self.tpLog = logging.getLogger('TP.CheckTpDestination')
+        self.tpLog = logging.getLogger('PT.CheckTpDestination')
 
         return
 
@@ -57,7 +57,7 @@ class ExportJmriLocations:
         self.SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayer.ExportToTrainPlayer.LocationsForTrainPlayer'
         self.SCRIPT_REV = 20220101
         self.psLog = logging.getLogger('PS.E2TP.ExportJmriLocations')
-        self.tpLog = logging.getLogger('TP.ExportJmriLocations')
+        self.tpLog = logging.getLogger('PT.ExportJmriLocations')
 
         return
 
@@ -81,7 +81,7 @@ class ExportJmriLocations:
         return csvLocations
 
     def toTrainPlayer(self, csvLocations):
-        '''Exports JMRI location;track pairs and track comments for TP Advanced Ops'''
+        '''Exports JMRI location;track pairs and track comments for TrainPlayer Advanced Ops'''
 
         jmriLocationsPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Locations.csv"
         try:# Catch TrainPlayer not installed
@@ -89,8 +89,8 @@ class ExportJmriLocations:
                 csvHeader = u'Locale,Industry\n'
                 csvWorkFile.write(csvHeader + csvLocations)
         except IOError:
-                self.psLog.warning('Directory not found, TP locations export did not complete')
-                self.tpLog.warning('Directory not found, TP locations export did not complete')
+                self.psLog.warning('Directory not found, TrainPlayer locations export did not complete')
+                self.tpLog.warning('Directory not found, TrainPlayer locations export did not complete')
 
 
         print(self.SCRIPT_NAME + ' ' + str(SCRIPT_REV))
@@ -105,7 +105,7 @@ class TrackPatternTranslationToTp:
         self.SCRIPT_NAME ='OperationsPatternScripts.TrainPlayer.ExportToTrainPlayer.TrainPlayerTranslationToTp'
         self.SCRIPT_REV = 20220101
         self.psLog = logging.getLogger('PS.E2TP.TrainPlayerTranslationToTp')
-        self.tpLog = logging.getLogger('TP.TrainPlayerTranslationToTp')
+        self.tpLog = logging.getLogger('PT.TrainPlayerTranslationToTp')
 
         print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
 
@@ -154,8 +154,8 @@ class TrackPatternTranslationToTp:
         self.psLog.debug('appendSwitchList')
         self.tpLog.debug('appendSwitchList')
 
-        headerNames = MainScriptEntities.readConfigFile('TP')
-        reportTitle = headerNames['TD']['TP']
+        headerNames = MainScriptEntities.readConfigFile('PT')
+        reportTitle = headerNames['TD']['PT']
         jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\Pattern Report - TrainPlayer Work Events.json'
         with codecsOpen(jsonFile, 'r', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
             jsonSwitchList = jsonWorkFile.read()
@@ -177,7 +177,7 @@ class JmriTranslationToTp:
         self.SCRIPT_NAME ='OperationsPatternScripts.TrainPlayer.ExportToTrainPlayer.JmriTranslationToTp'
         self.SCRIPT_REV = 20220101
         self.psLog = logging.getLogger('PS.E2TP.JmriTranslationToTp')
-        self.tpLog = logging.getLogger('TP.JmriTranslationToTp')
+        self.tpLog = logging.getLogger('PT.JmriTranslationToTp')
 
         print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
 
@@ -305,7 +305,7 @@ class ProcessWorkEventList:
         self.SCRIPT_NAME ='OperationsPatternScripts.TrainPlayer.ExportToTrainPlayer.ProcessWorkEventList'
         self.SCRIPT_REV = 20220101
         self.psLog = logging.getLogger('PS.E2TP.ProcessWorkEventList')
-        self.tpLog = logging.getLogger('TP.ProcessWorkEventList')
+        self.tpLog = logging.getLogger('PT.ProcessWorkEventList')
 
         return
 
@@ -372,7 +372,7 @@ class WriteWorkEventListToTp:
         self.SCRIPT_NAME ='OperationsPatternScripts.TrainPlayer.ExportToTrainPlayer.writeWorkEventListToTp'
         self.SCRIPT_REV = 20220101
         self.psLog = logging.getLogger('PS.E2TP.WriteWorkEventListToTp')
-        self.tpLog = logging.getLogger('TP.WriteWorkEventListToTp')
+        self.tpLog = logging.getLogger('PT.WriteWorkEventListToTp')
 
         self.jmriManifestPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Work Events.csv"
         self.workEventList = workEventList
@@ -388,8 +388,8 @@ class WriteWorkEventListToTp:
             with codecsOpen(self.jmriManifestPath, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
                 csvWorkFile.write(self.workEventList)
         except IOError:
-            self.psLog.warning('Directory not found, TP switch list export did not complete')
-            self.tpLog.warning('Directory not found, TP switch list export did not complete')
+            self.psLog.warning('Directory not found, TrainPlayer switch list export did not complete')
+            self.tpLog.warning('Directory not found, TrainPlayer switch list export did not complete')
 
         print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
 
@@ -407,7 +407,7 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
         self.tpFileHandler = logging.FileHandler(logPath, mode='w', encoding=MainScriptEntities.setEncoding())
         self.tpFileHandler.setFormatter(logFileFormat)
 
-        self.tpLog = logging.getLogger('TP')
+        self.tpLog = logging.getLogger('PT')
         self.tpLog.setLevel(10)
         self.tpLog.addHandler(self.tpFileHandler)
 

@@ -54,7 +54,7 @@ class Logger:
         return
 
 class TrainsTableListener(javax.swing.event.TableModelListener):
-    '''Catches user add or remove train while TP support is enabled'''
+    '''Catches user add or remove train while TrainPlayer support is enabled'''
 
     def __init__(self, builtTrainListener):
 
@@ -141,7 +141,6 @@ class View:
     def __init__(self, scrollPanel):
 
         self.controlPanel = scrollPanel
-        self.uniqueWindow = jmri.util.JmriJFrame()
         self.menuItemList = []
 
         return
@@ -155,6 +154,7 @@ class View:
     def makePluginPanel(self):
 
         pluginPanel = javax.swing.JPanel()
+        # pluginPanel.setLayout(javax.swing.BoxLayout(pluginPanel, javax.swing.BoxLayout.PAGE_AXIS))
 
         return pluginPanel
 
@@ -171,6 +171,7 @@ class View:
 
     def makePatternScriptsWindow(self):
 
+        uniqueWindow = jmri.util.JmriJFrame()
         menuItemList = []
 
         asMenuItem = javax.swing.JMenuItem(self.setAsDropDown())
@@ -195,19 +196,19 @@ class View:
         psMenuBar = javax.swing.JMenuBar()
         psMenuBar.add(toolsMenu)
         psMenuBar.add(jmri.jmrit.operations.OperationsMenu())
-        psMenuBar.add(jmri.util.WindowMenu(self.uniqueWindow))
+        psMenuBar.add(jmri.util.WindowMenu(uniqueWindow))
         psMenuBar.add(helpMenu)
 
-        self.uniqueWindow.setName('patternScripts')
-        self.uniqueWindow.setTitle('Pattern Scripts')
-        self.uniqueWindow.addWindowListener(PatternScriptsWindowListener())
-        self.uniqueWindow.setJMenuBar(psMenuBar)
-        self.uniqueWindow.add(self.controlPanel)
-        self.uniqueWindow.pack()
+        uniqueWindow.setName('patternScripts')
+        uniqueWindow.setTitle('Pattern Scripts')
+        uniqueWindow.addWindowListener(PatternScriptsWindowListener())
+        uniqueWindow.setJMenuBar(psMenuBar)
+        uniqueWindow.add(self.controlPanel)
+        uniqueWindow.pack()
         configPanel = MainScriptEntities.readConfigFile('CP')
-        self.uniqueWindow.setSize(configPanel['PW'], configPanel['PH'])
-        self.uniqueWindow.setLocation(configPanel['PX'], configPanel['PY'])
-        self.uniqueWindow.setVisible(True)
+        uniqueWindow.setSize(configPanel['PW'], configPanel['PH'])
+        uniqueWindow.setLocation(configPanel['PX'], configPanel['PY'])
+        uniqueWindow.setVisible(True)
 
         return
 
@@ -218,7 +219,7 @@ class View:
     def setAsDropDown(self):
         '''Set the drop down text per the Apply Schedule flag'''
 
-        patternConfig = MainScriptEntities.readConfigFile('TP')
+        patternConfig = MainScriptEntities.readConfigFile('PT')
         if patternConfig['SF']['AS']:
             menuText = patternConfig['SF']['AT']
         else:
@@ -229,7 +230,7 @@ class View:
     def setTiDropDown(self):
         '''Set the drop down text per the TrainPlayer Include flag'''
 
-        patternConfig = MainScriptEntities.readConfigFile('TP')
+        patternConfig = MainScriptEntities.readConfigFile('PT')
         if patternConfig['TF']['TI']:
             menuText = patternConfig['TF']['TT']
         else:
@@ -309,7 +310,7 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
             self.psLog.warning('PatternConfig.json.bak file written')
             MainScriptEntities.writeNewConfigFile()
             self.psLog.warning('New PatternConfig.JSON file created for this profile')
-        if MainScriptEntities.readConfigFile('TP')['TF']['TI']: # TrainPlayer Include
+        if MainScriptEntities.readConfigFile('PT')['TF']['TI']: # TrainPlayer Include
             ExportToTrainPlayer.CheckTpDestination().directoryExists()
 
         return
@@ -387,14 +388,14 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
     def buildThePlugin(self):
 
-        if MainScriptEntities.readConfigFile('TP')['TF']['TI']: # TrainPlayer Include
+        if MainScriptEntities.readConfigFile('PT')['TF']['TI']: # TrainPlayer Include
             self.addTrainsTableListener()
             self.addBuiltTrainListener()
 
         emptyPluginPanel = View(None).makePluginPanel()
 
-        patternScriptsPlugin = Model()
-        populatedPluginPanel = patternScriptsPlugin.makePatternScriptsPanel(emptyPluginPanel)
+        # patternScriptsPlugin = Model()
+        populatedPluginPanel = Model().makePatternScriptsPanel(emptyPluginPanel)
 
         scrollPanel = View(None).makeScrollPanel(populatedPluginPanel)
         patternScriptsWindow = View(scrollPanel)
@@ -417,14 +418,14 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
         patternConfig = MainScriptEntities.readConfigFile()
 
-        if patternConfig['TP']['SF']['AS']:
-            patternConfig['TP']['SF'].update({'AS': False})
-            AS_ACTIVATE_EVENT.getSource().setText(patternConfig['TP']['SF']['AF'])
+        if patternConfig['PT']['SF']['AS']:
+            patternConfig['PT']['SF'].update({'AS': False})
+            AS_ACTIVATE_EVENT.getSource().setText(patternConfig['PT']['SF']['AF'])
             self.psLog.info('Apply Schedule turned off')
             print('Apply Schedule turned off')
         else:
-            patternConfig['TP']['SF'].update({'AS': True})
-            AS_ACTIVATE_EVENT.getSource().setText(patternConfig['TP']['SF']['AT'])
+            patternConfig['PT']['SF'].update({'AS': True})
+            AS_ACTIVATE_EVENT.getSource().setText(patternConfig['PT']['SF']['AT'])
             self.psLog.info('Apply Schedule turned on')
             print('Apply Schedule turned on')
 
@@ -437,9 +438,9 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
         patternConfig = MainScriptEntities.readConfigFile()
 
-        if patternConfig['TP']['TF']['TI']: # If enabled, turn it off
-            patternConfig['TP']['TF'].update({'TI': False})
-            TP_ACTIVATE_EVENT.getSource().setText(patternConfig['TP']['TF']['TF'])
+        if patternConfig['PT']['TF']['TI']: # If enabled, turn it off
+            patternConfig['PT']['TF'].update({'TI': False})
+            TP_ACTIVATE_EVENT.getSource().setText(patternConfig['PT']['TF']['TF'])
 
             self.trainsTableModel.removeTableModelListener(self.trainsTableListener)
             self.removeBuiltTrainListener()
@@ -447,8 +448,8 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
             self.psLog.info('TrainPlayer support deactivated')
             print('TrainPlayer support deactivated')
         else:
-            patternConfig['TP']['TF'].update({'TI': True})
-            TP_ACTIVATE_EVENT.getSource().setText(patternConfig['TP']['TF']['TT'])
+            patternConfig['PT']['TF'].update({'TI': True})
+            TP_ACTIVATE_EVENT.getSource().setText(patternConfig['PT']['TF']['TT'])
 
             ExportToTrainPlayer.CheckTpDestination().directoryExists()
             self.trainsTableModel.addTableModelListener(self.trainsTableListener)

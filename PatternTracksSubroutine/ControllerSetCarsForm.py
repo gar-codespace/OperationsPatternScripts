@@ -7,9 +7,9 @@ import java.awt
 import logging
 
 from psEntities import MainScriptEntities
-from TrackPatternSubroutine import Model
-from TrackPatternSubroutine import ModelSetCarsForm
-from TrackPatternSubroutine import ViewSetCarsForm
+from PatternTracksSubroutine import Model
+from PatternTracksSubroutine import ModelSetCarsForm
+from PatternTracksSubroutine import ViewSetCarsForm
 
 '''Makes a "Set Cars Form for Track X" form for each selected track'''
 
@@ -22,7 +22,7 @@ class TextBoxEntryListener(java.awt.event.MouseAdapter):
     '''When any of the "Set Cars Form for Track X" text inpou boxes is clicked on'''
 
     def __init__(self):
-        self.psLog = logging.getLogger('PS.TP.TextBoxEntryListener')
+        self.psLog = logging.getLogger('PS.PT.TextBoxEntryListener')
 
         return
 
@@ -41,7 +41,7 @@ class CreatePatternReportGui:
 
     def __init__(self, setCarsForm):
 
-        self.psLog = logging.getLogger('PS.TP.CreatePatternReportGui')
+        self.psLog = logging.getLogger('PS.PT.CreatePatternReportGui')
 
         self.setCarsForm = setCarsForm
         self.locationName = setCarsForm['locations'][0]['locationName']

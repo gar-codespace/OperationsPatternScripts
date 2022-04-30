@@ -8,7 +8,7 @@ import java.awt
 import javax.swing
 
 from psEntities import MainScriptEntities
-from TrackPatternSubroutine import ViewEntities
+from PatternTracksSubroutine import ViewEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.ViewSetCarsForm'
 SCRIPT_REV = 20220101
@@ -23,7 +23,7 @@ def setCarsForTrackWindow(setCarsForTrackForm):
 def makeSetCarsForTrackForm(setCarsFormData):
     '''Creates and populates the "Set Cars Form for Track X" form'''
 
-    configFile = MainScriptEntities.readConfigFile('TP')
+    configFile = MainScriptEntities.readConfigFile('PT')
 
     buttonDict = {}
 
@@ -72,7 +72,7 @@ def makeSetCarsForTrackForm(setCarsFormData):
 
     setCarsSchedule, scheduleButton = makeSetCarsScheduleRow(setCarsFormData)
     buttonDict['scheduleButton'] = []
-    if setCarsSchedule and MainScriptEntities.readConfigFile('TP')['SF']['AS']:
+    if setCarsSchedule and MainScriptEntities.readConfigFile('PT')['SF']['AS']:
         setCarsForm.add(setCarsSchedule)
         buttonDict['scheduleButton'] = scheduleButton
         setCarsForm.add(javax.swing.JSeparator())
@@ -94,7 +94,7 @@ def makeSwingBox(xWidth, yHeight):
 def makeSetCarsFormHeader(setCarsFormData):
     '''Creates the "Set Cars Form for Track X" forms header'''
 
-    configFile = MainScriptEntities.readConfigFile('TP')
+    configFile = MainScriptEntities.readConfigFile('PT')
 
     combinedHeader = javax.swing.JPanel()
     combinedHeader.setLayout(javax.swing.BoxLayout(combinedHeader, javax.swing.BoxLayout.PAGE_AXIS))
@@ -127,7 +127,7 @@ def makeSetCarsFormHeader(setCarsFormData):
 
 def makeSetCarsTrackButtons():
 
-    location =  MainScriptEntities.readConfigFile('TP')['PL']
+    location =  MainScriptEntities.readConfigFile('PT')['PL']
     allTracksAtLoc =  MainScriptEntities.LM.getLocationByName(location).getTracksByNameList(None)
 
     buttonPanel = javax.swing.JPanel()
@@ -147,7 +147,7 @@ class MakeSetCarsEqptRows():
         self.SCRIPT_NAME = 'OperationsPatternScripts.MakeSetCarsEqptRows'
         self.SCRIPT_REV = 20220101
 
-        self.reportWidth = MainScriptEntities.readConfigFile('TP')['RW']
+        self.reportWidth = MainScriptEntities.readConfigFile('PT')['RW']
         fontSize = MainScriptEntities.PM.getFontSize()
         self.panelHeight = fontSize + 4
         self.panelWidth = fontSize - 2
@@ -248,7 +248,7 @@ def MakeSetCarsFooter():
     setButton = javax.swing.JButton(unicode(u'Set', MainScriptEntities.setEncoding()))
     combinedFooter.add(setButton)
 
-    if MainScriptEntities.readConfigFile('TP')['TF']['TI']:
+    if MainScriptEntities.readConfigFile('PT')['TF']['TI']:
         trainPlayerButton = javax.swing.JButton(unicode(u'TrainPlayer', MainScriptEntities.setEncoding()))
         combinedFooter.add(trainPlayerButton)
 

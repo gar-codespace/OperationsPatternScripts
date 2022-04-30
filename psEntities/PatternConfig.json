@@ -65,14 +65,14 @@
   },
   "CP" : {
     "SI" : {
-      "TrackPatternSubroutine" : true,
-      "FutureSubroutines" : false
+      "PatternTracksSubroutine" : true,
+      "TrainPlayerSubroutine" : false
     },
     "PH" : 220,
     "PW" : 1500,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20220201
+    "RV" : 20220222
   },
   "LI": {
     "99" : "Editing these is not recommended",
@@ -82,7 +82,7 @@
     "3": "- INFO -",
     "1": "- DEBUG -"
   },
-  "TP" : {
+  "PT" : {
     "AL" : [
     ],
     "PL" : "",

@@ -9,12 +9,12 @@ from codecs import open as codecsOpen
 from json import loads as jsonLoads, dumps as jsonDumps
 
 from psEntities import MainScriptEntities
-from TrackPatternSubroutine import ModelEntities
+from PatternTracksSubroutine import ModelEntities
 from TrainPlayerSubroutine import ExportToTrainPlayer
 
-SCRIPT_NAME = 'OperationsPatternScripts.TrackPatternSubroutine.ModelSetCarsForm'
+SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ModelSetCarsForm'
 SCRIPT_REV = 20220101
-psLog = logging.getLogger('PS.TP.ModelSetCarsForm')
+psLog = logging.getLogger('PS.PT.ModelSetCarsForm')
 
 def testValidityOfForm(setCarsForm, textBoxEntry):
 
@@ -86,11 +86,11 @@ def setRsToTrack(setCarsForm, textBoxEntry):
 
 def setRs(rollingStock, userInputListItem):
 
-    location = MainScriptEntities.readConfigFile('TP')['PL']
+    location = MainScriptEntities.readConfigFile('PT')['PL']
     locationObject = MainScriptEntities.LM.getLocationByName(unicode(location, MainScriptEntities.setEncoding()))
     toTrackObject = locationObject.getTrackByName(unicode(userInputListItem, MainScriptEntities.setEncoding()), None)
 
-    ignoreTrackLength = MainScriptEntities.readConfigFile('TP')['PI']
+    ignoreTrackLength = MainScriptEntities.readConfigFile('PT')['PI']
     if ignoreTrackLength:
         trackLength = toTrackObject.getLength()
         toTrackObject.setLength(9999)
@@ -103,7 +103,7 @@ def setRs(rollingStock, userInputListItem):
         rollingStock.updateLoad()
         rollingStock.setMoves(rollingStock.getMoves() + 1)
         deleteFd(rollingStock)
-    if MainScriptEntities.readConfigFile('TP')['SF']['AS'] and setResult == 'okay':
+    if MainScriptEntities.readConfigFile('PT')['SF']['AS'] and setResult == 'okay':
         applySchedule(toTrackObject, rollingStock)
 
     return setResult
@@ -118,7 +118,7 @@ def deleteFd(carObject):
 def applySchedule(toTrackObject, carObject):
     '''If the to-track is a spur, try to set the load/empty requirement for the track'''
 
-    location = MainScriptEntities.readConfigFile('TP')['PL']
+    location = MainScriptEntities.readConfigFile('PT')['PL']
     schedule = getSchedule(location, toTrackObject.getName())
     if schedule:
         carType = carObject.getTypeName()
@@ -175,7 +175,7 @@ def makeLocationDict(setCarsForm, textBoxEntry):
         userInputList.append(unicode(userInput.getText(), MainScriptEntities.setEncoding()))
 
     longestTrackString = 6 # 6 is the length of [Hold]
-    for track in MainScriptEntities.readConfigFile('TP')['PT']: # Pattern Tracks
+    for track in MainScriptEntities.readConfigFile('PT')['PT']: # Pattern Tracks
         if len(track) > longestTrackString:
             longestTrackString = len(track)
 
