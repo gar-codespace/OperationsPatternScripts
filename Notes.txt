@@ -59,6 +59,7 @@ Todo:
   Try to get SCRIPT_ROOT out of writeNewConfigFile() (eliminate SCRIPT_ROOT as a global)
   Not sure setAsDropDown and setTiDropDown should be in View()
   KeyError when editing config file crashed plugin
+  Implement PatternConfig CP MI
 
 Wish List:
   Next version, Set Cars windows add work to work list or docket, similar to TrainPlayer button, add Yardmaster button to Set Cars windows

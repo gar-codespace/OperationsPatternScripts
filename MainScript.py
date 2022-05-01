@@ -140,6 +140,8 @@ class View:
 
     def __init__(self, scrollPanel):
 
+        self.psLog = logging.getLogger('PS.View')
+
         self.controlPanel = scrollPanel
         self.menuItemList = []
 
@@ -169,15 +171,24 @@ class View:
 
     def makePatternScriptsWindow(self):
 
+        # Implement this in version 3
+        tally = -1 # Don't count the description in the tally
+        menuIncludes = PatternScriptEntities.readConfigFile('CP')['MI']
+        for name, menuItem in menuIncludes.items():
+            tally += len(menuItem)
+        self.psLog.info(''.join(menuIncludes['Description']) + str(tally))
+
         uniqueWindow = jmri.util.JmriJFrame()
         menuItemList = []
 
         asMenuItem = javax.swing.JMenuItem(self.setAsDropDown())
         asMenuItem.setName('asItemSelected')
         self.menuItemList.append(asMenuItem)
+
         tpMenuItem = javax.swing.JMenuItem(self.setTiDropDown())
         tpMenuItem.setName('tpItemSelected')
         self.menuItemList.append(tpMenuItem)
+
         toolsMenu = javax.swing.JMenu(u'Tools')
         toolsMenu.add(jmri.jmrit.operations.setup.OptionAction())
         toolsMenu.add(jmri.jmrit.operations.setup.PrintOptionAction())
@@ -396,19 +407,18 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
         emptyPluginPanel = View(None).makePluginPanel()
 
-        # patternScriptsPlugin = Model()
         populatedPluginPanel = Model().makePatternScriptsPanel(emptyPluginPanel)
 
         scrollPanel = View(None).makeScrollPanel(populatedPluginPanel)
         patternScriptsWindow = View(scrollPanel)
         patternScriptsWindow.makePatternScriptsWindow()
         self.menuItemList = patternScriptsWindow.getMenuItemList()
-        self.parseMenuItemList()
+        self.addMenuItemListeners()
 
         return
 
-    def parseMenuItemList(self):
-        '''Use the pull down item names as the attribute to set the listener: asItemSelected, tpItemSelected, helpItemSelected'''
+    def addMenuItemListeners(self):
+        '''Use the pull down item names as the attribute to set the listener: asItemSelected, tpItemSelected, logItemSelected, helpItemSelected'''
 
         for menuItem in self.menuItemList:
             menuItem.addActionListener(getattr(self, menuItem.getName()))

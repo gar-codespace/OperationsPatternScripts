@@ -68,11 +68,18 @@
       "PatternTracksSubroutine" : true,
       "TrainPlayerSubroutine" : true
     },
+    "MI" : {
+      "Description" : ["Additional menu items included in the Pattern Scripts window: "],
+      "Tools" : ["asItemSelected", "tpItemSelected"],
+      "OperationsPro" : [],
+      "Window" : [],
+      "Help" : ["logItemSelected"]
+    },
     "PH" : 220,
     "PW" : 1500,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20220202
+    "RV" : 20220203
   },
   "LI": {
     "99" : "Editing these is not recommended",
@@ -111,7 +118,7 @@
     "SF" : {
       "AA" : "This is the schedule flag, AT and AF are editable",
       "AS" : true,
-      "AT" : "Don't Apply Schedule",
+      "AT" : "Do Not Apply Schedule",
       "AF" : "Apply Schedule"
     },
     "TF" : {
