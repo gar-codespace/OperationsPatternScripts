@@ -7,7 +7,7 @@ import java.awt.event
 import logging
 from os import system as osSystem
 
-from psEntities import MainScriptEntities
+from psEntities import PatternScriptEntities
 from PatternTracksSubroutine import Model
 from PatternTracksSubroutine import View
 
@@ -51,12 +51,12 @@ class StartUp:
         else:
             trackList = Model.makeTrackList(self.widgets[0].getSelectedItem(), None)
 
-        configFile = MainScriptEntities.readConfigFile()
+        configFile = PatternScriptEntities.readConfigFile()
         trackDict = Model.updatePatternTracks(trackList)
         configFile['PT'].update({'PT': trackDict})
         configFile['PT'].update({'PA': self.widgets[1].selected})
         configFile['PT'].update({'PI': self.widgets[2].selected})
-        MainScriptEntities.writeConfigFile(configFile)
+        PatternScriptEntities.writeConfigFile(configFile)
 
         subroutinePanel = StartUp(self.subroutineFrame).makeSubroutinePanel()
         self.subroutineFrame.removeAll()
@@ -105,7 +105,7 @@ class StartUp:
 
         Model.onScButtonPress()
 
-        if MainScriptEntities.readConfigFile('PT')['TF']['TI']: # TrainPlayer Include
+        if PatternScriptEntities.readConfigFile('PT')['TF']['TI']: # TrainPlayer Include
             Model.resetTrainPlayerSwitchlist()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
@@ -134,8 +134,8 @@ class StartUp:
 
     def validateSubroutineConfig(self):
 
-        if not MainScriptEntities.readConfigFile('PT')['AL']:
-            MainScriptEntities.writeNewConfigFile()
+        if not PatternScriptEntities.readConfigFile('PT')['AL']:
+            PatternScriptEntities.writeNewConfigFile()
             Model.updatePatternLocation()
 
         return

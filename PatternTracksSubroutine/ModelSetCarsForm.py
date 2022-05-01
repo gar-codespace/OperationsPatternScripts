@@ -8,7 +8,7 @@ import logging
 from codecs import open as codecsOpen
 from json import loads as jsonLoads, dumps as jsonDumps
 
-from psEntities import MainScriptEntities
+from psEntities import PatternScriptEntities
 from PatternTracksSubroutine import ModelEntities
 from TrainPlayerSubroutine import ExportToTrainPlayer
 
@@ -35,21 +35,21 @@ def setRsToTrack(setCarsForm, textBoxEntry):
 
     userInputList = []
     for userInput in textBoxEntry:
-        userInputList.append(unicode(userInput.getText(), MainScriptEntities.setEncoding()))
+        userInputList.append(unicode(userInput.getText(), PatternScriptEntities.setEncoding()))
 
     i = 0
     setCount = 0
 
     allTracksAtLoc = ModelEntities.getTracksByLocation(None)
-    fromTrack = unicode(setCarsForm['locations'][0]['tracks'][0]['trackName'], MainScriptEntities.setEncoding())
+    fromTrack = unicode(setCarsForm['locations'][0]['tracks'][0]['trackName'], PatternScriptEntities.setEncoding())
     for loco in setCarsForm['locations'][0]['tracks'][0]['locos']:
-        if not unicode(userInputList[i], MainScriptEntities.setEncoding()) in allTracksAtLoc: # Catches invalid track typed into box, skips empty entries
+        if not unicode(userInputList[i], PatternScriptEntities.setEncoding()) in allTracksAtLoc: # Catches invalid track typed into box, skips empty entries
             i += 1
             continue
         if userInputList[i] == fromTrack:
             i += 1
             continue
-        locoObject =  MainScriptEntities.EM.getByRoadAndNumber(loco['Road'], loco['Number'])
+        locoObject =  PatternScriptEntities.EM.getByRoadAndNumber(loco['Road'], loco['Number'])
         try: # Catches on the fly edit of name or road
             setResult = setRs(locoObject, userInputList[i])
         except AttributeError:
@@ -62,13 +62,13 @@ def setRsToTrack(setCarsForm, textBoxEntry):
     jmri.jmrit.operations.rollingstock.engines.EngineManagerXml.save()
 
     for car in setCarsForm['locations'][0]['tracks'][0]['cars']:
-        if not unicode(userInputList[i], MainScriptEntities.setEncoding()) in allTracksAtLoc:
+        if not unicode(userInputList[i], PatternScriptEntities.setEncoding()) in allTracksAtLoc:
             i += 1
             continue
         if userInputList[i] == fromTrack:
             i += 1
             continue
-        carObject =  MainScriptEntities.CM.getByRoadAndNumber(car['Road'], car['Number'])
+        carObject =  PatternScriptEntities.CM.getByRoadAndNumber(car['Road'], car['Number'])
         try: # Catches on the fly edit of name or road
             setResult = setRs(carObject, userInputList[i])
         except AttributeError:
@@ -86,11 +86,11 @@ def setRsToTrack(setCarsForm, textBoxEntry):
 
 def setRs(rollingStock, userInputListItem):
 
-    location = MainScriptEntities.readConfigFile('PT')['PL']
-    locationObject = MainScriptEntities.LM.getLocationByName(unicode(location, MainScriptEntities.setEncoding()))
-    toTrackObject = locationObject.getTrackByName(unicode(userInputListItem, MainScriptEntities.setEncoding()), None)
+    location = PatternScriptEntities.readConfigFile('PT')['PL']
+    locationObject = PatternScriptEntities.LM.getLocationByName(unicode(location, PatternScriptEntities.setEncoding()))
+    toTrackObject = locationObject.getTrackByName(unicode(userInputListItem, PatternScriptEntities.setEncoding()), None)
 
-    ignoreTrackLength = MainScriptEntities.readConfigFile('PT')['PI']
+    ignoreTrackLength = PatternScriptEntities.readConfigFile('PT')['PI']
     if ignoreTrackLength:
         trackLength = toTrackObject.getLength()
         toTrackObject.setLength(9999)
@@ -103,7 +103,7 @@ def setRs(rollingStock, userInputListItem):
         rollingStock.updateLoad()
         rollingStock.setMoves(rollingStock.getMoves() + 1)
         deleteFd(rollingStock)
-    if MainScriptEntities.readConfigFile('PT')['SF']['AS'] and setResult == 'okay':
+    if PatternScriptEntities.readConfigFile('PT')['SF']['AS'] and setResult == 'okay':
         applySchedule(toTrackObject, rollingStock)
 
     return setResult
@@ -118,7 +118,7 @@ def deleteFd(carObject):
 def applySchedule(toTrackObject, carObject):
     '''If the to-track is a spur, try to set the load/empty requirement for the track'''
 
-    location = MainScriptEntities.readConfigFile('PT')['PL']
+    location = PatternScriptEntities.readConfigFile('PT')['PL']
     schedule = getSchedule(location, toTrackObject.getName())
     if schedule:
         carType = carObject.getTypeName()
@@ -131,10 +131,10 @@ def applySchedule(toTrackObject, carObject):
 def getSchedule(locationString, trackString):
     '''Returns a schedule if there is one'''
 
-    track = MainScriptEntities.LM.getLocationByName(locationString).getTrackByName(trackString, 'Spur')
+    track = PatternScriptEntities.LM.getLocationByName(locationString).getTrackByName(trackString, 'Spur')
 
     if track:
-        schedule = MainScriptEntities.SM.getScheduleByName(track.getScheduleName())
+        schedule = PatternScriptEntities.SM.getScheduleByName(track.getScheduleName())
 
         return schedule
 
@@ -172,10 +172,10 @@ def makeLocationDict(setCarsForm, textBoxEntry):
 
     userInputList = []
     for userInput in textBoxEntry:
-        userInputList.append(unicode(userInput.getText(), MainScriptEntities.setEncoding()))
+        userInputList.append(unicode(userInput.getText(), PatternScriptEntities.setEncoding()))
 
     longestTrackString = 6 # 6 is the length of [Hold]
-    for track in MainScriptEntities.readConfigFile('PT')['PT']: # Pattern Tracks
+    for track in PatternScriptEntities.readConfigFile('PT')['PT']: # Pattern Tracks
         if len(track) > longestTrackString:
             longestTrackString = len(track)
 
@@ -183,7 +183,7 @@ def makeLocationDict(setCarsForm, textBoxEntry):
     locoList = []
     for loco in setCarsForm['locations'][0]['tracks'][0]['locos']:
         setTrack = u'Hold'
-        userInput = unicode(userInputList[i], MainScriptEntities.setEncoding())
+        userInput = unicode(userInputList[i], PatternScriptEntities.setEncoding())
         if userInput in allTracksAtLoc and userInput != trackName:
             setTrack = userInput
         loco['Set to'] = ModelEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
@@ -193,7 +193,7 @@ def makeLocationDict(setCarsForm, textBoxEntry):
     carList = []
     for car in setCarsForm['locations'][0]['tracks'][0]['cars']:
         setTrack = u'Hold'
-        userInput = unicode(userInputList[i], MainScriptEntities.setEncoding())
+        userInput = unicode(userInputList[i], PatternScriptEntities.setEncoding())
         if userInput in allTracksAtLoc and userInput != trackName:
             setTrack = userInput
         car['Set to'] = ModelEntities.formatText('[' + setTrack + ']', longestTrackString + 2)

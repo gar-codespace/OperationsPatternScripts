@@ -9,7 +9,7 @@ import javax.swing
 import logging
 from os import system as osSystem
 
-from psEntities import MainScriptEntities
+from psEntities import PatternScriptEntities
 from PatternTracksSubroutine import ViewEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.View'
@@ -21,7 +21,7 @@ class ManageGui:
     def __init__(self):
 
         self.psLog = logging.getLogger('PS.PT.View')
-        self.configFile = MainScriptEntities.readConfigFile('PT')
+        self.configFile = PatternScriptEntities.readConfigFile('PT')
 
         return
 
@@ -53,7 +53,7 @@ def displayTextSwitchList(textSwitchList):
 
     fileToDisplay = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + textSwitchList.splitlines()[0] + '.txt'
 
-    return osSystem(MainScriptEntities.openEditorByComputerType(fileToDisplay))
+    return osSystem(PatternScriptEntities.openEditorByComputerType(fileToDisplay))
 
 def printPatternLog():
     '''Opens the pattern log in notepad or other'''
@@ -61,6 +61,6 @@ def printPatternLog():
     psLog.debug('displayPatternLog')
 
     tempPatternLog = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
-    osSystem(MainScriptEntities.openEditorByComputerType(tempPatternLog))
+    osSystem(PatternScriptEntities.openEditorByComputerType(tempPatternLog))
 
     return

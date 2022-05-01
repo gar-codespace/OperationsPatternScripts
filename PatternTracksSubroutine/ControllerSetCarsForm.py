@@ -6,7 +6,7 @@ import java.awt
 
 import logging
 
-from psEntities import MainScriptEntities
+from psEntities import PatternScriptEntities
 from PatternTracksSubroutine import Model
 from PatternTracksSubroutine import ModelSetCarsForm
 from PatternTracksSubroutine import ViewSetCarsForm
@@ -93,7 +93,7 @@ class CreatePatternReportGui:
     def trackRowButton(self, MOUSE_CLICKED):
         '''Any button of the "Set Cars Form for Track X" - row of track buttons'''
 
-        _trackNameClickedOn = unicode(MOUSE_CLICKED.getSource().getText(), MainScriptEntities.setEncoding())
+        _trackNameClickedOn = unicode(MOUSE_CLICKED.getSource().getText(), PatternScriptEntities.setEncoding())
         global _trackNameClickedOn
 
         return
@@ -102,8 +102,8 @@ class CreatePatternReportGui:
         '''The named schedule button if displayed on any "Set Cars Form for Track X" window'''
 
         scheduleName = MOUSE_CLICKED.getSource().getText()
-        schedule = MainScriptEntities.SM.getScheduleByName(scheduleName)
-        track = MainScriptEntities.LM.getLocationByName(self.locationName).getTrackByName(self.trackName, None)
+        schedule = PatternScriptEntities.SM.getScheduleByName(scheduleName)
+        track = PatternScriptEntities.LM.getLocationByName(self.locationName).getTrackByName(self.trackName, None)
         jmri.jmrit.operations.locations.schedules.ScheduleEditFrame(schedule, track)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

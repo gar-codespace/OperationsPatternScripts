@@ -7,11 +7,11 @@ import java.awt.event
 import logging
 from os import system as osSystem
 
-from psEntities import MainScriptEntities
-from TrianPlayerSubroutine import Model
-from TrianPlayerSubroutine import View
+from psEntities import PatternScriptEntities
+# from TrainPlayerSubroutine import Model
+from TrainPlayerSubroutine import View
 
-SCRIPT_NAME = 'OperationsPatternScripts.TrianPlayerSubroutine.Controller'
+SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.Controller'
 SCRIPT_REV = 20220101
 
 class StartUp:
@@ -42,3 +42,12 @@ class StartUp:
         self.psLog.info('Track pattern makeFrame completed')
 
         return self.subroutinePanel
+
+    def validateSubroutineConfig(self):
+        '''Put a test here that validates config file ["T"]'''
+
+        if not PatternScriptEntities.readConfigFile('PT')['AL']:
+            PatternScriptEntities.writeNewConfigFile()
+            Model.updatePatternLocation()
+
+        return

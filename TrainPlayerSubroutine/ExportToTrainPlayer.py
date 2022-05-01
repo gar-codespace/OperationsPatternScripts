@@ -22,7 +22,7 @@ SCRIPT_DIR = 'OperationsPatternScripts'
 SCRIPT_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
 sysPath.append(SCRIPT_ROOT)
 
-from psEntities import MainScriptEntities
+from psEntities import PatternScriptEntities
 
 
 class CheckTpDestination:
@@ -66,11 +66,11 @@ class ExportJmriLocations:
 
         i = 0
         csvLocations = ''
-        for locationId in MainScriptEntities.LM.getLocationsByIdList():
+        for locationId in PatternScriptEntities.LM.getLocationsByIdList():
             for trackId in locationId.getTrackIdsByIdList():
                 track = locationId.getTrackById(trackId)
-                aoLocale = unicode(locationId.getName(), MainScriptEntities.setEncoding()) + u';' + unicode(track.getName(), MainScriptEntities.setEncoding())
-                trackComment = unicode(track.getComment(), MainScriptEntities.setEncoding())
+                aoLocale = unicode(locationId.getName(), PatternScriptEntities.setEncoding()) + u';' + unicode(track.getName(), PatternScriptEntities.setEncoding())
+                trackComment = unicode(track.getComment(), PatternScriptEntities.setEncoding())
                 if not (trackComment):
                     i += 1
                 csvLocations += aoLocale + ',' + trackComment + '\n'
@@ -85,7 +85,7 @@ class ExportJmriLocations:
 
         jmriLocationsPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Locations.csv"
         try:# Catch TrainPlayer not installed
-            with codecsOpen(jmriLocationsPath, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
+            with codecsOpen(jmriLocationsPath, 'wb', encoding=PatternScriptEntities.setEncoding()) as csvWorkFile:
                 csvHeader = u'Locale,Industry\n'
                 csvWorkFile.write(csvHeader + csvLocations)
         except IOError:
@@ -119,14 +119,14 @@ class TrackPatternTranslationToTp:
 
         location = setCarsForm['locations'][0]['locationName']
         trackName = setCarsForm['locations'][0]['tracks'][0]['trackName']
-        locationTracks = MainScriptEntities.LM.getLocationByName(location).getTracksList()
+        locationTracks = PatternScriptEntities.LM.getLocationByName(location).getTracksList()
         trackList = []
         for track in locationTracks:
             trackList.append(track.getName())
 
         userInputList = []
         for userInput in textBoxEntry:
-            inputText = unicode(userInput.getText(), MainScriptEntities.setEncoding())
+            inputText = unicode(userInput.getText(), PatternScriptEntities.setEncoding())
             if inputText in trackList:
                 userInputList.append(inputText)
             else:
@@ -154,10 +154,10 @@ class TrackPatternTranslationToTp:
         self.psLog.debug('appendSwitchList')
         self.tpLog.debug('appendSwitchList')
 
-        headerNames = MainScriptEntities.readConfigFile('PT')
+        headerNames = PatternScriptEntities.readConfigFile('PT')
         reportTitle = headerNames['TD']['PT']
         jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\Pattern Report - TrainPlayer Work Events.json'
-        with codecsOpen(jsonFile, 'r', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
+        with codecsOpen(jsonFile, 'r', encoding=PatternScriptEntities.setEncoding()) as jsonWorkFile:
             jsonSwitchList = jsonWorkFile.read()
         tpSwitchList = jsonLoads(jsonSwitchList)
 
@@ -197,7 +197,7 @@ class JmriTranslationToTp:
         self.tpLog.debug('translateManifestHeader')
 
         jmriDateAsEpoch = self.convertJmriDateToEpoch(completeJmriManifest[u'date'])
-        completeJmriManifest['date'] = MainScriptEntities.timeStamp(jmriDateAsEpoch)
+        completeJmriManifest['date'] = PatternScriptEntities.timeStamp(jmriDateAsEpoch)
         completeJmriManifest['trainDescription'] = completeJmriManifest['description']
         completeJmriManifest['trainName'] = completeJmriManifest['userName']
         completeJmriManifest['trainComment'] = completeJmriManifest['comment']
@@ -265,7 +265,7 @@ class JmriTranslationToTp:
     def parseRollingStockAsDict(self, rS):
 
         rsDict = {}
-        rsDict['Road'] = unicode(rS[u'road'], MainScriptEntities.setEncoding())
+        rsDict['Road'] = unicode(rS[u'road'], PatternScriptEntities.setEncoding())
         rsDict['Number'] = rS[u'number']
 
         try:
@@ -282,18 +282,18 @@ class JmriTranslationToTp:
             rsDict[u'Load'] = 'O'
         rsDict[u'Length'] = rS[u'length']
         rsDict[u'Weight'] = rS[u'weightTons']
-        rsDict[u'Track'] = unicode(rS[u'location'][u'track'][u'userName'], MainScriptEntities.setEncoding())
-        # rsDict[u'Set to'] = unicode(lN, MainScriptEntities.setEncoding()) + u';' + unicode(rS[u'destination'][u'track'][u'userName'], MainScriptEntities.setEncoding())
-        rsDict[u'Set to'] = unicode(rS[u'destination'][u'userName'], MainScriptEntities.setEncoding()) + u';' + unicode(rS[u'destination'][u'track'][u'userName'], MainScriptEntities.setEncoding())
+        rsDict[u'Track'] = unicode(rS[u'location'][u'track'][u'userName'], PatternScriptEntities.setEncoding())
+        # rsDict[u'Set to'] = unicode(lN, PatternScriptEntities.setEncoding()) + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.setEncoding())
+        rsDict[u'Set to'] = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.setEncoding()) + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.setEncoding())
         try:
-            jFinalDestination = unicode(rS[u'finalDestination'][u'userName'], MainScriptEntities.setEncoding())
+            jFinalDestination = unicode(rS[u'finalDestination'][u'userName'], PatternScriptEntities.setEncoding())
             try:
-                jFinalTrack = unicode(rS[u'finalDestination'][u'track'][u'userName'], MainScriptEntities.setEncoding())
+                jFinalTrack = unicode(rS[u'finalDestination'][u'track'][u'userName'], PatternScriptEntities.setEncoding())
             except KeyError:
                 jFinalTrack = u'Any'
             rsDict[u'FD&Track'] = jFinalDestination + ';' + jFinalTrack
         except:
-            rsDict[u'FD&Track'] = unicode(rS[u'destination'][u'userName'], MainScriptEntities.setEncoding()) + u';' + unicode(rS[u'destination'][u'track'][u'userName'], MainScriptEntities.setEncoding())
+            rsDict[u'FD&Track'] = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.setEncoding()) + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.setEncoding())
 
         return rsDict
 
@@ -358,7 +358,7 @@ class ProcessWorkEventList:
         reportTitle = appendedTpSwitchList['trainDescription']
         jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\Pattern Report - TrainPlayer Work Events.json'
         jsonObject = jsonDumps(appendedTpSwitchList, indent=2, sort_keys=True)
-        with codecsOpen(jsonFile, 'wb', encoding=MainScriptEntities.setEncoding()) as jsonWorkFile:
+        with codecsOpen(jsonFile, 'wb', encoding=PatternScriptEntities.setEncoding()) as jsonWorkFile:
             jsonWorkFile.write(jsonObject)
 
         print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
@@ -385,7 +385,7 @@ class WriteWorkEventListToTp:
         self.tpLog.debug('asCsv')
 
         try: # Catch TrainPlayer not installed
-            with codecsOpen(self.jmriManifestPath, 'wb', encoding=MainScriptEntities.setEncoding()) as csvWorkFile:
+            with codecsOpen(self.jmriManifestPath, 'wb', encoding=PatternScriptEntities.setEncoding()) as csvWorkFile:
                 csvWorkFile.write(self.workEventList)
         except IOError:
             self.psLog.warning('Directory not found, TrainPlayer switch list export did not complete')
@@ -404,7 +404,7 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
 
         logPath = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\TrainPlayerScriptsLog.txt'
         logFileFormat = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        self.tpFileHandler = logging.FileHandler(logPath, mode='w', encoding=MainScriptEntities.setEncoding())
+        self.tpFileHandler = logging.FileHandler(logPath, mode='w', encoding=PatternScriptEntities.setEncoding())
         self.tpFileHandler.setFormatter(logFileFormat)
 
         self.tpLog = logging.getLogger('PT')
@@ -426,7 +426,7 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
     def handle(self):
 
         timeNow = time.time()
-        MainScriptEntities.initialLogMessage()
+        PatternScriptEntities.initialLogMessage()
 
         jmriExport = ExportJmriLocations()
         locationList = jmriExport.makeLocationList()

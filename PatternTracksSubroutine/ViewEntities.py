@@ -7,7 +7,7 @@ import jmri
 import java.awt
 import javax.swing
 
-from psEntities import MainScriptEntities
+from psEntities import PatternScriptEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ViewEntities'
 SCRIPT_REV = 20220101
@@ -17,7 +17,7 @@ class TrackPatternPanel:
 
     def __init__(self):
 
-        self.configFile = MainScriptEntities.readConfigFile('PT')
+        self.configFile = PatternScriptEntities.readConfigFile('PT')
         self.yardTracksOnly = javax.swing.JCheckBox(u'Yard tracks only ', self.configFile['PA'])
         self.yardTracksOnly.setName('ytoCheckBox')
 

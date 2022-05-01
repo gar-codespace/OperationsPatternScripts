@@ -24,10 +24,10 @@ PM = jmri.InstanceManager.getDefault(jmri.util.gui.GuiLafPreferencesManager)
 
 SCRIPT_ROOT = ''
 
-SCRIPT_NAME = 'OperationsPatternScripts.psEntities.MainScriptEntities'
+SCRIPT_NAME = 'OperationsPatternScripts.psEntities.PatternScriptEntities'
 SCRIPT_REV = 20220101
 
-psLog = logging.getLogger('PS.PT.MainScriptEntities')
+psLog = logging.getLogger('PS.PT.PatternScriptEntities')
 
 def initialLogMessage():
 
