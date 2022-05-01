@@ -210,35 +210,35 @@ def resetTrainPlayerSwitchlist():
 
     return
 
-def makePatternLog():
-    '''creates a pattern log for display based on the log level, as set by getBuildReportLevel'''
-
-    outputPatternLog = ''
-    buildReportLevel = int(jmri.jmrit.operations.setup.Setup.getBuildReportLevel())
-    configLoggingIndex = PatternScriptEntities.readConfigFile('LI')
-    logLevel = configLoggingIndex[jmri.jmrit.operations.setup.Setup.getBuildReportLevel()]
-    logFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog.txt'
-    with codecsOpen(logFileLocation, 'r', encoding=PatternScriptEntities.setEncoding()) as patternLogFile:
-        while True:
-            thisLine = patternLogFile.readline()
-            if not (thisLine):
-                break
-            if (configLoggingIndex['9'] in thisLine and buildReportLevel > 0): # critical
-                outputPatternLog += thisLine
-            if (configLoggingIndex['7'] in thisLine and buildReportLevel > 0): # error
-                outputPatternLog += thisLine
-            if (configLoggingIndex['5'] in thisLine and buildReportLevel > 0): # warning
-                outputPatternLog += thisLine
-            if (configLoggingIndex['3'] in thisLine and buildReportLevel > 2): # info
-                outputPatternLog += thisLine
-            if (configLoggingIndex['1'] in thisLine and buildReportLevel > 4): # debug
-                outputPatternLog += thisLine
-
-    tempLogFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
-    with codecsOpen(tempLogFileLocation, 'w', encoding=PatternScriptEntities.setEncoding()) as tempPatternLogFile:
-        tempPatternLogFile.write(outputPatternLog)
-
-    return
+# def makePatternLog():
+#     '''creates a pattern log for display based on the log level, as set by getBuildReportLevel'''
+#
+#     outputPatternLog = ''
+#     buildReportLevel = int(jmri.jmrit.operations.setup.Setup.getBuildReportLevel())
+#     configLoggingIndex = PatternScriptEntities.readConfigFile('LI')
+#     logLevel = configLoggingIndex[jmri.jmrit.operations.setup.Setup.getBuildReportLevel()]
+#     logFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog.txt'
+#     with codecsOpen(logFileLocation, 'r', encoding=PatternScriptEntities.setEncoding()) as patternLogFile:
+#         while True:
+#             thisLine = patternLogFile.readline()
+#             if not (thisLine):
+#                 break
+#             if (configLoggingIndex['9'] in thisLine and buildReportLevel > 0): # critical
+#                 outputPatternLog += thisLine
+#             if (configLoggingIndex['7'] in thisLine and buildReportLevel > 0): # error
+#                 outputPatternLog += thisLine
+#             if (configLoggingIndex['5'] in thisLine and buildReportLevel > 0): # warning
+#                 outputPatternLog += thisLine
+#             if (configLoggingIndex['3'] in thisLine and buildReportLevel > 2): # info
+#                 outputPatternLog += thisLine
+#             if (configLoggingIndex['1'] in thisLine and buildReportLevel > 4): # debug
+#                 outputPatternLog += thisLine
+#
+#     tempLogFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
+#     with codecsOpen(tempLogFileLocation, 'w', encoding=PatternScriptEntities.setEncoding()) as tempPatternLogFile:
+#         tempPatternLogFile.write(outputPatternLog)
+#
+#     return
 
 def updateLocations():
     '''Updates the config file with a list of all locations for this profile'''

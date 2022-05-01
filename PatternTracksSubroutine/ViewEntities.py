@@ -32,9 +32,9 @@ class TrackPatternPanel:
         self.scButton.setText(u'Set Cars')
         self.scButton.setName('scButton')
 
-        self.vlButton = javax.swing.JButton()
-        self.vlButton.setText(u'View Log')
-        self.vlButton.setName('vlButton')
+        # self.vlButton = javax.swing.JButton()
+        # self.vlButton.setText(u'View Log')
+        # self.vlButton.setName('vlButton')
 
         self.trackCheckBoxes = []
         self.controlObjects = []
@@ -95,7 +95,7 @@ class TrackPatternPanel:
         buttonPanel.setAlignmentX(javax.swing.JPanel.CENTER_ALIGNMENT)
         buttonPanel.add(self.ypButton)
         buttonPanel.add(self.scButton)
-        buttonPanel.add(self.vlButton)
+        # buttonPanel.add(self.vlButton)
 
         return buttonPanel
 
@@ -108,7 +108,7 @@ class TrackPatternPanel:
         self.controlObjects.append(self.trackCheckBoxes)
         self.controlObjects.append(self.ypButton)
         self.controlObjects.append(self.scButton)
-        self.controlObjects.append(self.vlButton)
+        # self.controlObjects.append(self.vlButton)
 
         return self.controlObjects
 

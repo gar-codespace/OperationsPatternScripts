@@ -13,6 +13,7 @@ import time
 from json import loads as jsonLoads, dumps as jsonDumps
 from codecs import open as codecsOpen
 from os import mkdir as osMakeDir
+from os import system as osSystem
 from shutil import copy as shutilCopy
 
 LM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
@@ -188,6 +189,46 @@ def writeNewConfigFile():
     copyFrom = javaIo.File(defaultConfigFilePath)
     copyTo = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json')
     jmri.util.FileUtil.copy(copyFrom, copyTo)
+
+    return
+
+def makePatternLog():
+    '''creates a pattern log for display based on the log level, as set by getBuildReportLevel'''
+
+    outputPatternLog = ''
+    buildReportLevel = int(jmri.jmrit.operations.setup.Setup.getBuildReportLevel())
+    configLoggingIndex = readConfigFile('LI')
+    logLevel = configLoggingIndex[jmri.jmrit.operations.setup.Setup.getBuildReportLevel()]
+    logFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog.txt'
+    with codecsOpen(logFileLocation, 'r', encoding=setEncoding()) as patternLogFile:
+        while True:
+            thisLine = patternLogFile.readline()
+            if not (thisLine):
+                break
+            if (configLoggingIndex['9'] in thisLine and buildReportLevel > 0): # critical
+                outputPatternLog += thisLine
+            if (configLoggingIndex['7'] in thisLine and buildReportLevel > 0): # error
+                outputPatternLog += thisLine
+            if (configLoggingIndex['5'] in thisLine and buildReportLevel > 0): # warning
+                outputPatternLog += thisLine
+            if (configLoggingIndex['3'] in thisLine and buildReportLevel > 2): # info
+                outputPatternLog += thisLine
+            if (configLoggingIndex['1'] in thisLine and buildReportLevel > 4): # debug
+                outputPatternLog += thisLine
+
+    tempLogFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
+    with codecsOpen(tempLogFileLocation, 'w', encoding=setEncoding()) as tempPatternLogFile:
+        tempPatternLogFile.write(outputPatternLog)
+
+    return
+
+def printPatternLog():
+    '''Opens the pattern log in notepad or other'''
+
+    psLog.debug('displayPatternLog')
+
+    tempPatternLog = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
+    osSystem(openEditorByComputerType(tempPatternLog))
 
     return
 

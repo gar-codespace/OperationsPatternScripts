@@ -152,6 +152,7 @@ class View:
         return psButton
 
     def makePluginPanel(self):
+        '''Still not sure if it should be a panel or box'''
 
         # pluginPanel = javax.swing.JPanel()
         pluginPanel = javax.swing.Box(javax.swing.BoxLayout.PAGE_AXIS)
@@ -163,9 +164,6 @@ class View:
         configPanel = PatternScriptEntities.readConfigFile('CP')
         scrollPanel = javax.swing.JScrollPane(pluginPanel)
         scrollPanel.border = javax.swing.BorderFactory.createLineBorder(java.awt.Color.GRAY)
-
-        # scrollPanel.setPreferredSize(java.awt.Dimension(configPanel['PW'], configPanel['PH']))
-        # scrollPanel.setMaximumSize(scrollPanel.getPreferredSize())
 
         return scrollPanel
 
@@ -187,10 +185,14 @@ class View:
         toolsMenu.add(asMenuItem)
         toolsMenu.add(tpMenuItem)
 
+        logMenuItem = javax.swing.JMenuItem(u'View Log')
+        logMenuItem.setName('logItemSelected')
         helpMenuItem = javax.swing.JMenuItem(u'Window Help...')
         helpMenuItem.setName('helpItemSelected')
+        self.menuItemList.append(logMenuItem)
         self.menuItemList.append(helpMenuItem)
         helpMenu = javax.swing.JMenu(u'Help')
+        helpMenu.add(logMenuItem)
         helpMenu.add(helpMenuItem)
 
         psMenuBar = javax.swing.JMenuBar()
@@ -459,6 +461,17 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
             print('TrainPlayer support activated')
 
         PatternScriptEntities.writeConfigFile(patternConfig)
+
+        return
+
+    def logItemSelected(self, OPEN_LOG_EVENT):
+        '''menu item-Help/View Log'''
+
+        PatternScriptEntities.makePatternLog()
+        PatternScriptEntities.printPatternLog()
+
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+        print('View Log')
 
         return
 

@@ -38,7 +38,7 @@ class ManageGui:
         '''Make the pattern tracks controls'''
 
         self.psLog.debug('makeSubroutinePanel')
-        
+
         trackPatternPanel = ViewEntities.TrackPatternPanel()
         subroutinesPanel = trackPatternPanel.makeTrackPatternPanel()
         subroutinePanelWidgets = trackPatternPanel.getPanelWidgets()
@@ -56,12 +56,12 @@ def displayTextSwitchList(textSwitchList):
 
     return osSystem(PatternScriptEntities.openEditorByComputerType(fileToDisplay))
 
-def printPatternLog():
-    '''Opens the pattern log in notepad or other'''
-
-    psLog.debug('displayPatternLog')
-
-    tempPatternLog = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
-    osSystem(PatternScriptEntities.openEditorByComputerType(tempPatternLog))
-
-    return
+# def printPatternLog():
+#     '''Opens the pattern log in notepad or other'''
+#
+#     psLog.debug('displayPatternLog')
+#
+#     tempPatternLog = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
+#     osSystem(PatternScriptEntities.openEditorByComputerType(tempPatternLog))
+#
+#     return

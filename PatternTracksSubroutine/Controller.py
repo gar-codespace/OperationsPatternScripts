@@ -128,7 +128,7 @@ class StartUp:
         self.widgets[1].actionPerformed = self.yardTrackOnlyCheckBox
         self.widgets[4].actionPerformed = self.patternButton
         self.widgets[5].actionPerformed = self.setCarsButton
-        self.widgets[6].actionPerformed = self.viewLogButton
+        # self.widgets[6].actionPerformed = self.viewLogButton
 
         return
 
