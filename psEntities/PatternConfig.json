@@ -66,13 +66,13 @@
   "CP" : {
     "SI" : {
       "PatternTracksSubroutine" : true,
-      "TrainPlayerSubroutine" : false
+      "TrainPlayerSubroutine" : true
     },
     "PH" : 220,
     "PW" : 1500,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 2022222
+    "RV" : 2022
   },
   "LI": {
     "99" : "Editing these is not recommended",

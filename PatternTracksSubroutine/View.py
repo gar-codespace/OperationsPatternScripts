@@ -38,6 +38,7 @@ class ManageGui:
         '''Make the pattern tracks controls'''
 
         self.psLog.debug('makeSubroutinePanel')
+        
         trackPatternPanel = ViewEntities.TrackPatternPanel()
         subroutinesPanel = trackPatternPanel.makeTrackPatternPanel()
         subroutinePanelWidgets = trackPatternPanel.getPanelWidgets()

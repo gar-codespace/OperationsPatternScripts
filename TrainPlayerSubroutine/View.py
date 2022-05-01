@@ -5,12 +5,13 @@
 
 import jmri
 import javax.swing
+import java.awt
 
 import logging
 from os import system as osSystem
 
 from psEntities import PatternScriptEntities
-# from TrianPlayerSubroutine import ViewEntities
+from TrainPlayerSubroutine import ViewEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.TrianPlayerSubroutine.View'
 SCRIPT_REV = 20220101
@@ -20,34 +21,28 @@ class ManageGui:
 
     def __init__(self):
 
-        # self.psLog = logging.getLogger('PS.TrainPlayer.View')
+        self.psLog = logging.getLogger('PS.TP.View')
         self.configFile = PatternScriptEntities.readConfigFile('TP')
 
         return
 
     def makeSubroutineFrame(self):
-        '''Make the frame that all the track pattern controls are added to'''
+        '''Make the frame that all the TrainPlayer controls are added to'''
 
         subroutineFrame = javax.swing.JPanel() # the track pattern panel
-        subroutineFrame.setLayout(javax.swing.BoxLayout(subroutineFrame, javax.swing.BoxLayout.Y_AXIS))
-        subroutineFrame.border = javax.swing.BorderFactory.createTitledBorder(u'TrainPlayer Support')
+        subroutineFrame.border = javax.swing.BorderFactory.createTitledBorder(u'TrainPlayer Support Subroutine')
 
         return subroutineFrame
 
     def makeSubroutinePanel(self):
-        '''Make the pattern tracks controls'''
+        '''Make the TrainPlayer controls'''
 
-        tpPanel = javax.swing.JPanel() # the pattern tracks panel
-        tpPanel.setLayout(javax.swing.BoxLayout(tpPanel, javax.swing.BoxLayout.Y_AXIS))
+        self.psLog.debug('makeSubroutinePanel')
 
-        ypButton = javax.swing.JButton()
-        ypButton.setText(u'Test Button')
-        ypButton.setName('testButton')
+        trainPlayerPanel = ViewEntities.TrainPlayerPanel()
+        subroutinesPanel = trainPlayerPanel.makeTrainPlayerPanel()
+        subroutinePanelWidgets = trainPlayerPanel.getPanelWidgets()
 
-        tpPanel.add(ypButton)
-
-
-
-        return tpPanel, ypButton
+        return subroutinesPanel, subroutinePanelWidgets
 
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

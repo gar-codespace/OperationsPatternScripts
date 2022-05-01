@@ -153,8 +153,8 @@ class View:
 
     def makePluginPanel(self):
 
-        pluginPanel = javax.swing.JPanel()
-        # pluginPanel.setLayout(javax.swing.BoxLayout(pluginPanel, javax.swing.BoxLayout.PAGE_AXIS))
+        # pluginPanel = javax.swing.JPanel()
+        pluginPanel = javax.swing.Box(javax.swing.BoxLayout.PAGE_AXIS)
 
         return pluginPanel
 
@@ -249,8 +249,9 @@ class Model:
     def makePatternScriptsPanel(self, pluginPanel):
 
         for subroutine in self.makeSubroutineList():
+            pluginPanel.add(javax.swing.Box.createRigidArea(java.awt.Dimension(0,10)))
             pluginPanel.add(subroutine)
-
+        # pluginPanel.add(javax.swing.Box.createHorizontalGlue())
         return pluginPanel
 
     def makeSubroutineList(self):

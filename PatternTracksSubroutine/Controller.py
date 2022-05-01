@@ -39,7 +39,7 @@ class StartUp:
 
     def __init__(self, subroutineFrame=None):
 
-        self.psLog = logging.getLogger('PS.PT.Control')
+        self.psLog = logging.getLogger('PS.PT.Controller')
         self.subroutineFrame = subroutineFrame
 
         return
@@ -147,6 +147,8 @@ class StartUp:
         subroutinePanel = self.makeSubroutinePanel()
         self.subroutineFrame.add(subroutinePanel)
 
+        self.psLog.info('pattern tracks makeFrame completed')
+
         return self.subroutineFrame
 
     def makeSubroutinePanel(self):
@@ -154,7 +156,5 @@ class StartUp:
 
         self.subroutinePanel, self.widgets = View.ManageGui().makeSubroutinePanel()
         self.activateWidgets()
-
-        self.psLog.info('pattern tracks makeFrame completed')
 
         return self.subroutinePanel

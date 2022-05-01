@@ -27,7 +27,7 @@ SCRIPT_ROOT = ''
 SCRIPT_NAME = 'OperationsPatternScripts.psEntities.PatternScriptEntities'
 SCRIPT_REV = 20220101
 
-psLog = logging.getLogger('PS.PT.PatternScriptEntities')
+psLog = logging.getLogger('PS.PE.PatternScriptEntities')
 
 def initialLogMessage():
 
