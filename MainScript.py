@@ -471,7 +471,6 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
         PatternScriptEntities.printPatternLog()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-        print('View Log')
 
         return
 

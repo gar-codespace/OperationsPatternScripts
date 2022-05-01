@@ -40,8 +40,8 @@ Tested Items:
   Pattern Scripts plugin hardened against errors  more or less. CBB
   Move config file into psEntities to shield it from accidental edit
   TrainPlayer integration harden with train built listeners
-  Adding script to train for TP support is not needed, but still can be done.
-  Add a listener to monitor if a new train is created or deleted.
+  Adding script to run on train built for TP export is not needed, but still can be done.
+  Add a listener to monitor if a new train is created or deleted, builtTrain listeners updated accordingly
 
 Catches Items:
   Catches pattern report button press no tracks selected OK

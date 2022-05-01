@@ -72,7 +72,7 @@
     "PW" : 1500,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 2022
+    "RV" : 20220202
   },
   "LI": {
     "99" : "Editing these is not recommended",
@@ -90,9 +90,9 @@
     },
     "TD" : {
       "AA" : "Train Description, these are editable",
-      "PR" : "Track Pattern for location",
-      "SC" : "Switch List for track",
-      "TP" : "TrainPlayer Work Events"
+      "PR" : "Track Pattern - Location Report",
+      "SC" : "Switch List - Track Report",
+      "TP" : "Work Event List for TrainPlayer"
     },
     "TN" : {
       "AA" : "Train Name, these are editable",

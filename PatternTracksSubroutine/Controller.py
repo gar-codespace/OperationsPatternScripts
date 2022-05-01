@@ -44,6 +44,43 @@ class StartUp:
 
         return
 
+    def makeSubroutineFrame(self):
+        '''Makes the title border frame'''
+
+        self.subroutineFrame = View.ManageGui().makeSubroutineFrame()
+        subroutinePanel = self.makeSubroutinePanel()
+        self.subroutineFrame.add(subroutinePanel)
+
+        self.psLog.info('pattern tracks makeFrame completed')
+
+        return self.subroutineFrame
+
+    def makeSubroutinePanel(self):
+        '''Makes the control panel that sits inside the frame'''
+
+        self.subroutinePanel, self.widgets = View.ManageGui().makeSubroutinePanel()
+        self.activateWidgets()
+
+        return self.subroutinePanel
+
+    def validateSubroutineConfig(self):
+
+        if not PatternScriptEntities.readConfigFile('PT')['AL']:
+            PatternScriptEntities.writeNewConfigFile()
+            Model.updatePatternLocation()
+
+        return
+
+    def activateWidgets(self):
+
+        self.widgets[0].addActionListener(LocationComboBox(self.subroutineFrame))
+        self.widgets[1].actionPerformed = self.yardTrackOnlyCheckBox
+        self.widgets[4].actionPerformed = self.patternButton
+        self.widgets[5].actionPerformed = self.setCarsButton
+        # self.widgets[6].actionPerformed = self.viewLogButton
+
+        return
+
     def yardTrackOnlyCheckBox(self, EVENT):
 
         if (self.widgets[1].selected):
@@ -112,49 +149,12 @@ class StartUp:
 
         return
 
-    def viewLogButton(self, EVENT):
-        '''Displays the pattern report log file in a notepad window'''
-
-        Model.makePatternLog()
-        View.printPatternLog()
-
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-
-        return
-
-    def activateWidgets(self):
-
-        self.widgets[0].addActionListener(LocationComboBox(self.subroutineFrame))
-        self.widgets[1].actionPerformed = self.yardTrackOnlyCheckBox
-        self.widgets[4].actionPerformed = self.patternButton
-        self.widgets[5].actionPerformed = self.setCarsButton
-        # self.widgets[6].actionPerformed = self.viewLogButton
-
-        return
-
-    def validateSubroutineConfig(self):
-
-        if not PatternScriptEntities.readConfigFile('PT')['AL']:
-            PatternScriptEntities.writeNewConfigFile()
-            Model.updatePatternLocation()
-
-        return
-
-    def makeSubroutineFrame(self):
-        '''Makes the title border frame'''
-
-        self.subroutineFrame = View.ManageGui().makeSubroutineFrame()
-        subroutinePanel = self.makeSubroutinePanel()
-        self.subroutineFrame.add(subroutinePanel)
-
-        self.psLog.info('pattern tracks makeFrame completed')
-
-        return self.subroutineFrame
-
-    def makeSubroutinePanel(self):
-        '''Makes the control panel that sits inside the frame'''
-
-        self.subroutinePanel, self.widgets = View.ManageGui().makeSubroutinePanel()
-        self.activateWidgets()
-
-        return self.subroutinePanel
+    # def viewLogButton(self, EVENT):
+    #     '''Displays the pattern report log file in a notepad window'''
+    #
+    #     Model.makePatternLog()
+    #     View.printPatternLog()
+    #
+    #     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+    #
+    #     return
