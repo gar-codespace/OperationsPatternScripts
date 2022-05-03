@@ -12,47 +12,36 @@ from codecs import open as codecsOpen
 from os import mkdir as osMakeDir
 from sys import path as sysPath
 
-SCRIPT_NAME ='OperationsPatternScripts.TrainPlayerSubroutine.ExportToTrainPlayer'
+SCRIPT_NAME ='OperationsPatternScripts.TrainPlayerSubroutine.PatternTracksExport'
 SCRIPT_REV = 20220101
-
-SCRIPT_DIR = 'OperationsPatternScripts'
-# SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b2'
-# SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b3'
-
-SCRIPT_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
-sysPath.append(SCRIPT_ROOT)
 
 from psEntities import PatternScriptEntities
 
 
-class CheckTpDestination:
-    '''Verify or create a TrainPlayer destination directory'''
-
-    def __init__(self):
-        self.SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayer.ExportToTrainPlayer.CheckTpDestination'
-        self.SCRIPT_REV = 20220101
-        self.psLog = logging.getLogger('PS.TP.CheckTpDestination')
-
-        return
-
-    def directoryExists(self):
-
-        try:
-            osMakeDir(jmri.util.FileUtil.getHomePath() + 'AppData\\Roaming\\TrainPlayer\\Reports')
-            self.psLog.warning('TrainPlayer destination directory created')
-        except OSError:
-            self.psLog.info('TrainPlayer destination directory OK')
-
-        print(self.SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-
-        return
+# class CheckTpDestination:
+#     '''Verify or create a TrainPlayer destination directory'''
+#
+#     def __init__(self):
+#
+#         self.psLog = logging.getLogger('PS.TP.CheckTpDestination')
+#
+#         return
+#
+#     def directoryExists(self):
+#
+#         try:
+#             osMakeDir(jmri.util.FileUtil.getHomePath() + 'AppData\\Roaming\\TrainPlayer\\Reports')
+#             self.psLog.warning('TrainPlayer destination directory created')
+#         except OSError:
+#             self.psLog.info('TrainPlayer destination directory OK')
+#
+#         return
 
 class ExportJmriLocations:
     '''Writes a list of location names and comments for the whole profile'''
 
     def __init__(self):
-        self.SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayer.ExportToTrainPlayer.LocationsForTrainPlayer'
-        self.SCRIPT_REV = 20220101
+
         self.psLog = logging.getLogger('PS.TP.ExportJmriLocations')
 
         return
@@ -60,14 +49,14 @@ class ExportJmriLocations:
     def makeLocationList(self):
         '''Creates the TrainPlayer Advanced Ops compatable JMRI location list'''
 
-        i = 0
         csvLocations = ''
-        for locationId in PatternScriptEntities.LM.getLocationsByIdList():
-            for trackId in locationId.getTrackIdsByIdList():
-                track = locationId.getTrackById(trackId)
-                aoLocale = unicode(locationId.getName(), PatternScriptEntities.setEncoding()) + u';' + unicode(track.getName(), PatternScriptEntities.setEncoding())
+        i = 0
+        for location in PatternScriptEntities.LM.getLocationsByIdList():
+            tracks = location.getTracksList()
+            for track in tracks:
+                aoLocale = unicode(location.getName(), PatternScriptEntities.setEncoding()) + u';' + unicode(track.getName(), PatternScriptEntities.setEncoding())
                 trackComment = unicode(track.getComment(), PatternScriptEntities.setEncoding())
-                if not (trackComment):
+                if not trackComment:
                     i += 1
                 csvLocations += aoLocale + ',' + trackComment + '\n'
 
@@ -86,7 +75,7 @@ class ExportJmriLocations:
         except IOError:
                 self.psLog.warning('Directory not found, TrainPlayer locations export did not complete')
 
-        print(self.SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+        print(SCRIPT_NAME + '.ExportJmriLocations ' + str(SCRIPT_REV))
 
         return
 
@@ -95,11 +84,7 @@ class TrackPatternTranslationToTp:
 
     def __init__(self):
 
-        self.SCRIPT_NAME ='OperationsPatternScripts.TrainPlayer.ExportToTrainPlayer.TrainPlayerTranslationToTp'
-        self.SCRIPT_REV = 20220101
         self.psLog = logging.getLogger('PS.TP.TrainPlayerTranslationToTp')
-
-        print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
 
         return
 
@@ -146,7 +131,6 @@ class TrackPatternTranslationToTp:
 
         headerNames = PatternScriptEntities.readConfigFile('PT')
         reportTitle = headerNames['TD']['TP']
-        # jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\Pattern Report - TrainPlayer Work Events.json'
         jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
         with codecsOpen(jsonFile, 'r', encoding=PatternScriptEntities.setEncoding()) as jsonWorkFile:
             jsonSwitchList = jsonWorkFile.read()
@@ -165,11 +149,9 @@ class JmriTranslationToTp:
 
     def __init__(self):
 
-        self.SCRIPT_NAME ='OperationsPatternScripts.TrainPlayer.ExportToTrainPlayer.JmriTranslationToTp'
-        self.SCRIPT_REV = 20220101
         self.psLog = logging.getLogger('PS.TP.JmriTranslationToTp')
 
-        print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
+        print(SCRIPT_NAME + '.JmriTranslationToTp ' + str(SCRIPT_REV))
 
         return
 
@@ -290,8 +272,6 @@ class ProcessWorkEventList:
 
     def __init__(self):
 
-        self.SCRIPT_NAME ='OperationsPatternScripts.TrainPlayer.ExportToTrainPlayer.ProcessWorkEventList'
-        self.SCRIPT_REV = 20220101
         self.psLog = logging.getLogger('PS.TP.ProcessWorkEventList')
 
         return
@@ -340,13 +320,12 @@ class ProcessWorkEventList:
         self.psLog.debug('writeTpWorkEventListAsJson')
 
         reportTitle = appendedTpSwitchList['trainDescription']
-        # jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\Pattern Report - TrainPlayer Work Events.json'
         jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
         jsonObject = jsonDumps(appendedTpSwitchList, indent=2, sort_keys=True)
         with codecsOpen(jsonFile, 'wb', encoding=PatternScriptEntities.setEncoding()) as jsonWorkFile:
             jsonWorkFile.write(jsonObject)
 
-        print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
+        print(SCRIPT_NAME + '.ProcessWorkEventList ' + str(SCRIPT_REV))
 
         return
 
@@ -354,8 +333,6 @@ class WriteWorkEventListToTp:
 
     def __init__(self, workEventList):
 
-        self.SCRIPT_NAME ='OperationsPatternScripts.TrainPlayer.ExportToTrainPlayer.writeWorkEventListToTp'
-        self.SCRIPT_REV = 20220101
         self.psLog = logging.getLogger('PS.TP.WriteWorkEventListToTp')
 
         self.jmriManifestPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Work Events.csv"
@@ -373,67 +350,6 @@ class WriteWorkEventListToTp:
         except IOError:
             self.psLog.warning('Directory not found, TrainPlayer switch list export did not complete')
 
-        print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
+        print(SCRIPT_NAME + '.WriteWorkEventListToTp ' + str(SCRIPT_REV))
 
         return
-
-class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
-    '''Runs on JMRI train manifest builds'''
-
-    def init(self):
-        self.SCRIPT_NAME = 'ExportToTrainPlayer.ManifestForTrainPlayer'
-        self.SCRIPT_REV = 20220101
-
-        logPath = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\TrainPlayerScriptsLog.txt'
-        logFileFormat = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        self.tpFileHandler = logging.FileHandler(logPath, mode='w', encoding=PatternScriptEntities.setEncoding())
-        self.tpFileHandler.setFormatter(logFileFormat)
-
-        # self.tpLog = logging.getLogger('PT')
-        # self.tpLog.setLevel(10)
-        # self.tpLog.addHandler(self.tpFileHandler)
-
-        self.psLog = logging.getLogger('PS.TP.ManifestForTrainPlayer')
-
-        self.jProfilePath = jmri.util.FileUtil.getProfilePath()
-
-        return
-
-    def passInTrain(self, train):
-
-        self.train = train
-
-        return
-
-    def handle(self):
-
-        timeNow = time.time()
-        PatternScriptEntities.initialLogMessage()
-
-        jmriExport = ExportJmriLocations()
-        locationList = jmriExport.makeLocationList()
-        jmriExport.toTrainPlayer(locationList)
-
-        jmriManifestTranslator = JmriTranslationToTp()
-        builtTrainAsDict = jmriManifestTranslator.getTrainAsDict(self.train)
-        translatedManifest = jmriManifestTranslator.translateManifestHeader(builtTrainAsDict)
-        translatedManifest['locations'] = jmriManifestTranslator.translateManifestBody(builtTrainAsDict)
-
-        processedManifest = ProcessWorkEventList()
-        processedManifest.writeTpWorkEventListAsJson(translatedManifest)
-        tpManifestHeader = processedManifest.makeTpHeader(translatedManifest)
-        tpManifestLocations = processedManifest.makeTpLocations(translatedManifest)
-
-        WriteWorkEventListToTp(tpManifestHeader + tpManifestLocations).asCsv()
-
-        self.psLog.info('Export to TrainPlayer script location: ' + SCRIPT_ROOT)
-
-        self.psLog.info('Manifest export (sec): ' + ('%s' % (time.time() - timeNow))[:6])
-
-        print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
-        print('Manifest export (sec): ' + ('%s' % (time.time() - timeNow))[:6])
-
-        return False
-
-if __name__ == "__builtin__":
-    ManifestForTrainPlayer().start()

@@ -50,7 +50,7 @@ class StartUp:
 
         if not PatternScriptEntities.readConfigFile('PT')['AL']:
             PatternScriptEntities.writeNewConfigFile()
-            Model.updatePatternLocation()
+            # Model.updatePatternLocation()
 
         return
 

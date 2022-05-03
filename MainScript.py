@@ -24,34 +24,8 @@ SCRIPT_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
 
 sysPath.append(SCRIPT_ROOT)
 from psEntities import PatternScriptEntities
-from TrainPlayerSubroutine import ExportToTrainPlayer
+from TrainPlayerSubroutine import BuiltTrainExport
 PatternScriptEntities.SCRIPT_ROOT = SCRIPT_ROOT
-
-class Logger:
-
-    def __init__(self):
-
-        logPath = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog.txt'
-        logFileFormat = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        self.psFileHandler = logging.FileHandler(logPath, mode='w', encoding='utf-8')
-        self.psFileHandler.setFormatter(logFileFormat)
-
-        return
-
-    def startLogger(self):
-
-        psLog = logging.getLogger('PS')
-        psLog.setLevel(10)
-        psLog.addHandler(self.psFileHandler)
-
-        return
-
-    def stopLogger(self):
-
-        psLog = logging.getLogger('PS')
-        psLog.removeHandler(self.psFileHandler)
-
-        return
 
 class TrainsTableListener(javax.swing.event.TableModelListener):
     '''Catches user add or remove train while TrainPlayer support is enabled'''
@@ -77,7 +51,7 @@ class BuiltTrainListener(java.beans.PropertyChangeListener):
     def propertyChange(self, TRAIN_BUILT):
 
         if TRAIN_BUILT.propertyName == 'TrainBuilt' and TRAIN_BUILT.newValue:
-            tpManifest = ExportToTrainPlayer.ManifestForTrainPlayer()
+            tpManifest = BuiltTrainExport.ManifestForTrainPlayer()
             tpManifest.passInTrain(TRAIN_BUILT.getSource())
             tpManifest.start()
 
@@ -135,6 +109,37 @@ def updateWindowParams(window):
     PatternScriptEntities.writeConfigFile(configPanel)
 
     return
+
+class Model:
+
+    def __init__(self):
+
+        self.psLog = logging.getLogger('PS.Model')
+
+        return
+
+    def makePatternScriptsPanel(self, pluginPanel):
+
+        for subroutine in self.makeSubroutineList():
+            pluginPanel.add(javax.swing.Box.createRigidArea(java.awt.Dimension(0,10)))
+            pluginPanel.add(subroutine)
+        # pluginPanel.add(javax.swing.Box.createHorizontalGlue())
+        return pluginPanel
+
+    def makeSubroutineList(self):
+
+        subroutineList = []
+        controlPanelConfig = PatternScriptEntities.readConfigFile('CP')
+        for subroutineIncludes, isIncluded in controlPanelConfig['SI'].items():
+            if (isIncluded):
+                xModule = __import__(subroutineIncludes, fromlist=['Controller'])
+                startUp = xModule.Controller.StartUp()
+                startUp.validateSubroutineConfig()
+                subroutineFrame = startUp.makeSubroutineFrame()
+                subroutineList.append(subroutineFrame)
+                self.psLog.info(subroutineIncludes + ' subroutine added to control panel')
+
+        return subroutineList
 
 class View:
 
@@ -251,43 +256,13 @@ class View:
 
         return menuText
 
-class Model:
-
-    def __init__(self):
-
-        self.psLog = logging.getLogger('PS.Model')
-
-        return
-
-    def makePatternScriptsPanel(self, pluginPanel):
-
-        for subroutine in self.makeSubroutineList():
-            pluginPanel.add(javax.swing.Box.createRigidArea(java.awt.Dimension(0,10)))
-            pluginPanel.add(subroutine)
-        # pluginPanel.add(javax.swing.Box.createHorizontalGlue())
-        return pluginPanel
-
-    def makeSubroutineList(self):
-
-        subroutineList = []
-        controlPanelConfig = PatternScriptEntities.readConfigFile('CP')
-        for subroutineIncludes, isIncluded in controlPanelConfig['SI'].items():
-            if (isIncluded):
-                xModule = __import__(subroutineIncludes, fromlist=['Controller'])
-                startUp = xModule.Controller.StartUp()
-                startUp.validateSubroutineConfig()
-                subroutineFrame = startUp.makeSubroutineFrame()
-                subroutineList.append(subroutineFrame)
-                self.psLog.info(subroutineIncludes + ' subroutine added to control panel')
-
-        return subroutineList
-
 class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
     def init(self):
 
-        self.logger = Logger()
-        self.logger.startLogger()
+        logPath = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog.txt'
+        self.logger = PatternScriptEntities.Logger(logPath)
+        self.logger.startLogger('PS')
 
         self.trainsTableModel = jmri.jmrit.operations.trains.TrainsTableModel()
         self.builtTrainListener = BuiltTrainListener()
@@ -301,10 +276,12 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
         yTimeNow = time.time()
         self.psLog = logging.getLogger('PS.Controller')
+        self.logger.initialLogMessage(self.psLog)
 
-        PatternScriptEntities.initialLogMessage()
         self.runValidations()
-        self.addPatternScriptsButton()
+        self.addTrainPlayerListeners()
+        if PatternScriptEntities.readConfigFile()['CP']['AP']:
+            self.addPatternScriptsButton()
 
         self.psLog.info('Current Pattern Scripts directory: ' + SCRIPT_ROOT)
         self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
@@ -324,7 +301,8 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
             PatternScriptEntities.writeNewConfigFile()
             self.psLog.warning('New PatternConfig.JSON file created for this profile')
         if PatternScriptEntities.readConfigFile('PT')['TF']['TI']: # TrainPlayer Include
-            ExportToTrainPlayer.CheckTpDestination().directoryExists()
+            # ExportToTrainPlayer.BuiltTrainExport().directoryExists()
+            pass
 
         return
 
@@ -381,8 +359,8 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
         self.removeTrainsTableListener()
         self.removeBuiltTrainListener()
         self.closePsWindow()
-        self.logger.stopLogger()
-        self.logger.startLogger()
+        self.logger.stopLogger('PS')
+        self.logger.startLogger('PS')
         self.buildThePlugin()
         self.psLog.info('Pattern Scripts plugin restarted')
 
@@ -401,10 +379,10 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
     def buildThePlugin(self):
 
-        if PatternScriptEntities.readConfigFile('PT')['TF']['TI']: # TrainPlayer Include
-            self.addTrainsTableListener()
-            self.addBuiltTrainListener()
-
+        # if PatternScriptEntities.readConfigFile('PT')['TF']['TI']: # TrainPlayer Include
+        #     self.addTrainsTableListener()
+        #     self.addBuiltTrainListener()
+        # self.addTrainPlayerListeners()
         emptyPluginPanel = View(None).makePluginPanel()
 
         populatedPluginPanel = Model().makePatternScriptsPanel(emptyPluginPanel)
@@ -414,6 +392,14 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
         patternScriptsWindow.makePatternScriptsWindow()
         self.menuItemList = patternScriptsWindow.getMenuItemList()
         self.addMenuItemListeners()
+
+        return
+
+    def addTrainPlayerListeners(self):
+
+        if PatternScriptEntities.readConfigFile('PT')['TF']['TI']: # TrainPlayer Include
+            self.addTrainsTableListener()
+            self.addBuiltTrainListener()
 
         return
 
@@ -463,7 +449,7 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
             patternConfig['PT']['TF'].update({'TI': True})
             TP_ACTIVATE_EVENT.getSource().setText(patternConfig['PT']['TF']['TT'])
 
-            ExportToTrainPlayer.CheckTpDestination().directoryExists()
+            PatternScriptEntities.CheckTpDestination().directoryExists()
             self.trainsTableModel.addTableModelListener(self.trainsTableListener)
             self.addBuiltTrainListener()
 

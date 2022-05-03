@@ -64,6 +64,7 @@
     "alertColor": "PETAL"
   },
   "CP" : {
+    "AP" : true,
     "SI" : {
       "PatternTracksSubroutine" : true,
       "TrainPlayerSubroutine" : true
@@ -79,7 +80,7 @@
     "PW" : 1500,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20220203
+    "RV" : 20220204
   },
   "LI": {
     "99" : "Editing these is not recommended",

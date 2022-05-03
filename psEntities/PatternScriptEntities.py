@@ -30,16 +30,60 @@ SCRIPT_REV = 20220101
 
 psLog = logging.getLogger('PS.PE.PatternScriptEntities')
 
-def initialLogMessage():
+class Logger:
 
-    psLog.debug('Initialize PS log file - DEBUG level test message')
-    psLog.info('Initialize PS log file - INFO level test message')
-    psLog.warning('Initialize PS log file - WARNING level test message')
-    psLog.error('Initialize PS log file - ERROR level test message')
-    psLog.critical('Initialize PS log file - CRITICAL level test message')
+    def __init__(self, logPath):
 
-    return
+        logFileFormat = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        self.psFileHandler = logging.FileHandler(logPath, mode='w', encoding='utf-8')
+        self.psFileHandler.setFormatter(logFileFormat)
 
+        return
+
+    def startLogger(self, log):
+
+        psLog = logging.getLogger(log)
+        psLog.setLevel(10)
+        psLog.addHandler(self.psFileHandler)
+
+        return
+
+    def stopLogger(self, log):
+
+        psLog = logging.getLogger(log)
+        psLog.removeHandler(self.psFileHandler)
+
+        return
+
+    def initialLogMessage(self, log):
+
+        log.debug('Initialize log file - DEBUG level test message')
+        log.info('Initialize log file - INFO level test message')
+        log.warning('Initialize log file - WARNING level test message')
+        log.error('Initialize log file - ERROR level test message')
+        log.critical('Initialize log file - CRITICAL level test message')
+
+        return
+
+class CheckTpDestination:
+    '''Verify or create a TrainPlayer destination directory'''
+
+    def __init__(self):
+
+        self.psLog = logging.getLogger('PS.TP.CheckTpDestination')
+
+        return
+
+    def directoryExists(self):
+
+        try:
+            osMakeDir(jmri.util.FileUtil.getHomePath() + 'AppData\\Roaming\\TrainPlayer\\Reports')
+            self.psLog.warning('TrainPlayer destination directory created')
+        except OSError:
+            self.psLog.info('TrainPlayer destination directory OK')
+
+        return
+            
 def setEncoding():
     '''Expand on this later'''
 
