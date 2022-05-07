@@ -1,5 +1,4 @@
-# coding=utf-8
-# © 2021, 2022 Greg Ritacco
+'''Exports a TrainPlayer manifest into a csv for import into the TrainPlayer o2o script suite'''
 
 import jmri
 import java
@@ -19,11 +18,46 @@ SCRIPT_DIR = 'OperationsPatternScripts'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b2'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b3'
 
-SCRIPT_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
-sysPath.append(SCRIPT_ROOT)
 
-from psEntities import PatternScriptEntities
-from TrainPlayerSubroutine import Model
+
+class StandAlone():
+    '''Called when this script is used by itself'''
+
+    def __init__(self):
+
+        return
+
+    def findNewestTrain(self):
+        '''If more than 1 train is built, pick the newest one'''
+
+        if not PatternScriptEntities.TM.isAnyTrainBuilt():
+
+            return
+
+        newestBuildTime = ''
+        for train in self.getBuiltTrains():
+            testDate = self.getTrainBuiltDate(train)
+            if testDate > newestBuildTime:
+                newestBuildTime = testDate
+                newestTrain = train
+
+        return newestTrain
+
+    def getBuiltTrains(self):
+
+        builtTrainList = []
+        for train in PatternScriptEntities.TM.getTrainsByStatusList():
+            if train.isBuilt():
+                builtTrainList.append(train)
+
+        return builtTrainList
+
+    def getTrainBuiltDate(self, train):
+
+        manifest = jmri.util.FileUtil.readFile(jmri.jmrit.operations.trains.JsonManifest(train).getFile())
+
+        return jsonLoads(manifest)['date']
+
 
 class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
     '''Runs on JMRI train manifest builds'''
@@ -72,7 +106,7 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
         Model.WriteWorkEventListToTp(tpManifestHeader + tpManifestLocations).asCsv()
 
         self.tpLog.info('Export JMRI manifest to TrainPlyer: ' + self.train.getName())
-        self.tpLog.info('Export to TrainPlayer script location: ' + SCRIPT_ROOT)
+        # self.tpLog.info('Export to TrainPlayer script location: ' + SCRIPT_ROOT)
         self.tpLog.info('Manifest export (sec): ' + ('%s' % (time.time() - timeNow))[:6])
 
         print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
@@ -83,4 +117,20 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
         return False
 
 if __name__ == "__builtin__":
-    ManifestForTrainPlayer().start()
+
+    SCRIPT_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
+    sysPath.append(SCRIPT_ROOT)
+    from psEntities import PatternScriptEntities
+    from TrainPlayerSubroutine import Model
+
+    standAlone = StandAlone()
+    train = standAlone.findNewestTrain()
+
+    tpManifest = ManifestForTrainPlayer()
+    tpManifest.passInTrain(train)
+    tpManifest.start()
+
+else:
+
+    from psEntities import PatternScriptEntities
+    from TrainPlayerSubroutine import Model
