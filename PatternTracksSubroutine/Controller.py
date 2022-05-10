@@ -63,14 +63,6 @@ class StartUp:
 
         return self.subroutinePanel
 
-    def validateSubroutineConfig(self):
-
-        if not PatternScriptEntities.readConfigFile('PT')['AL']:
-            PatternScriptEntities.writeNewConfigFile()
-            Model.updatePatternLocation()
-
-        return
-
     def activateWidgets(self):
 
         self.widgets[0].addActionListener(LocationComboBox(self.subroutineFrame))

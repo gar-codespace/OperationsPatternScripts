@@ -42,6 +42,8 @@ Tested Items:
   TrainPlayer integration harden with train built listeners
   Adding script to run on train built for TP export is not needed, but still can be done.
   Add a listener to monitor if a new train is created or deleted, builtTrain listeners updated accordingly
+  TrainPlayer subroutine sketched in, to be expanded
+  Language bundle sketched in, to be expanded
 
 Catches Items:
   Catches pattern report button press no tracks selected OK
@@ -58,8 +60,7 @@ Catches Items:
 Todo:
   Try to get SCRIPT_ROOT out of writeNewConfigFile() (eliminate SCRIPT_ROOT as a global)
   Not sure setAsDropDown and setTiDropDown should be in View()
-  KeyError when editing config file crashed plugin
-  validateSubroutineConfig needs to be implemented better
+  KeyError when editing config file crashed plugin, bummer
 
 Wish List:
   Next version, Set Cars windows add work to work list or docket, similar to TrainPlayer button, add Yardmaster button to Set Cars windows

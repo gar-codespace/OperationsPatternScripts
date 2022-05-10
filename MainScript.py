@@ -24,6 +24,7 @@ SCRIPT_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
 
 sysPath.append(SCRIPT_ROOT)
 from psEntities import PatternScriptEntities
+from psBundle import Bundle
 from TrainPlayerSubroutine import BuiltTrainExport
 PatternScriptEntities.SCRIPT_ROOT = SCRIPT_ROOT
 
@@ -123,7 +124,6 @@ class Model:
         for subroutine in self.makeSubroutineList():
             pluginPanel.add(javax.swing.Box.createRigidArea(java.awt.Dimension(0,10)))
             pluginPanel.add(subroutine)
-        # pluginPanel.add(javax.swing.Box.createHorizontalGlue())
         return pluginPanel
 
     def makeSubroutineList(self):
@@ -134,7 +134,6 @@ class Model:
             if (isIncluded):
                 xModule = __import__(subroutineIncludes, fromlist=['Controller'])
                 startUp = xModule.Controller.StartUp()
-                startUp.validateSubroutineConfig()
                 subroutineFrame = startUp.makeSubroutineFrame()
                 subroutineList.append(subroutineFrame)
                 self.psLog.info(subroutineIncludes + ' subroutine added to control panel')
@@ -146,6 +145,7 @@ class View:
     def __init__(self, scrollPanel):
 
         self.psLog = logging.getLogger('PS.View')
+        self.bundle = Bundle.getBundleForLocale(SCRIPT_ROOT)
 
         self.controlPanel = scrollPanel
         self.menuItemList = []
@@ -176,7 +176,6 @@ class View:
 
     def makePatternScriptsWindow(self):
 
-        # Implement this in version 3
         tally = -1 # Don't count the description in the tally
         menuIncludes = PatternScriptEntities.readConfigFile('CP')['MI']
         for name, menuItem in menuIncludes.items():
@@ -201,13 +200,13 @@ class View:
         toolsMenu.add(asMenuItem)
         toolsMenu.add(tpMenuItem)
 
-        logMenuItem = javax.swing.JMenuItem(u'View Log')
+        logMenuItem = javax.swing.JMenuItem(self.bundle['View Log'])
         logMenuItem.setName('logItemSelected')
-        helpMenuItem = javax.swing.JMenuItem(u'Window Help...')
+        helpMenuItem = javax.swing.JMenuItem(self.bundle['Window Help...'])
         helpMenuItem.setName('helpItemSelected')
         self.menuItemList.append(logMenuItem)
         self.menuItemList.append(helpMenuItem)
-        helpMenu = javax.swing.JMenu(u'Help')
+        helpMenu = javax.swing.JMenu(self.bundle['Help'])
         helpMenu.add(logMenuItem)
         helpMenu.add(helpMenuItem)
 
@@ -218,7 +217,7 @@ class View:
         psMenuBar.add(helpMenu)
 
         uniqueWindow.setName('patternScripts')
-        uniqueWindow.setTitle('Pattern Scripts')
+        uniqueWindow.setTitle(self.bundle['Pattern Scripts'])
         uniqueWindow.addWindowListener(PatternScriptsWindowListener())
         uniqueWindow.setJMenuBar(psMenuBar)
         uniqueWindow.add(self.controlPanel)
@@ -239,9 +238,9 @@ class View:
 
         patternConfig = PatternScriptEntities.readConfigFile('PT')
         if patternConfig['SF']['AS']:
-            menuText = patternConfig['SF']['AT']
+            menuText = self.bundle['Do Not Apply Schedule']
         else:
-            menuText = patternConfig['SF']['AF']
+            menuText = self.bundle['Apply Schedule']
 
         return menuText
 
@@ -250,9 +249,9 @@ class View:
 
         patternConfig = PatternScriptEntities.readConfigFile('PT')
         if patternConfig['TF']['TI']:
-            menuText = patternConfig['TF']['TT']
+            menuText = self.bundle['Disable TrainPlayer']
         else:
-            menuText = patternConfig['TF']['TF']
+            menuText = self.bundle['Enable TrainPlayer']
 
         return menuText
 
@@ -263,6 +262,8 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
         logPath = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog.txt'
         self.logger = PatternScriptEntities.Logger(logPath)
         self.logger.startLogger('PS')
+
+        self.bundle = Bundle.getBundleForLocale(SCRIPT_ROOT)
 
         self.trainsTableModel = jmri.jmrit.operations.trains.TrainsTableModel()
         self.builtTrainListener = BuiltTrainListener()
@@ -300,9 +301,6 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
             self.psLog.warning('PatternConfig.json.bak file written')
             PatternScriptEntities.writeNewConfigFile()
             self.psLog.warning('New PatternConfig.JSON file created for this profile')
-        if PatternScriptEntities.readConfigFile('PT')['TF']['TI']: # TrainPlayer Include
-            # ExportToTrainPlayer.BuiltTrainExport().directoryExists()
-            pass
 
         return
 
@@ -310,7 +308,7 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
         '''The Pattern Scripts button on the PanelPro frame'''
 
         self.patternScriptsButton = View(None).makePsButton()
-        self.patternScriptsButton.setText('Pattern Scripts')
+        self.patternScriptsButton.setText(self.bundle['Pattern Scripts'])
         self.patternScriptsButton.setName('psButton')
         self.patternScriptsButton.actionPerformed = self.patternScriptsButtonAction
         Apps.buttonSpace().add(self.patternScriptsButton)
@@ -348,7 +346,7 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
     def patternScriptsButtonAction(self, MOUSE_CLICKED):
 
-        self.patternScriptsButton.setText('Restart Pattern Scripts')
+        self.patternScriptsButton.setText(self.bundle['Restart Pattern Scripts'])
         self.patternScriptsButton.actionPerformed = self.patternScriptsButtonRestartAction
         self.buildThePlugin()
 
@@ -379,10 +377,6 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
     def buildThePlugin(self):
 
-        # if PatternScriptEntities.readConfigFile('PT')['TF']['TI']: # TrainPlayer Include
-        #     self.addTrainsTableListener()
-        #     self.addBuiltTrainListener()
-        # self.addTrainPlayerListeners()
         emptyPluginPanel = View(None).makePluginPanel()
 
         populatedPluginPanel = Model().makePatternScriptsPanel(emptyPluginPanel)

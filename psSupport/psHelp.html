@@ -1,465 +1,267 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML>
-<HEAD>
-	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
-	<TITLE></TITLE>
-	<META NAME="GENERATOR" CONTENT="OpenOffice 4.1.7  (Win32)">
-	<META NAME="AUTHOR" CONTENT="Greg Ritacco">
-	<META NAME="CREATED" CONTENT="20211230;15202509">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGED" CONTENT="20220423;11425226">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<META NAME="CHANGEDBY" CONTENT="Greg Ritacco">
-	<STYLE TYPE="text/css">
-	<!--
-		@page { margin-left: 0.83in; margin-right: 0.79in; margin-top: 0.79in; margin-bottom: 0.79in }
-		P { margin-bottom: 0.08in }
-		A:link { so-language: zxx }
-	-->
-	</STYLE>
-</HEAD>
-<BODY LANG="en-US" DIR="LTR">
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in"><FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=4 STYLE="font-size: 16pt"><B>Help
-File - Pattern Scripts plugin for JMRI</B></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in"><FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=4><B>Introduction:</B></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in; font-weight: normal">
-<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>This program is a
-plugin for JMRI Operations Pro. With it, the user can generate
-pattern reports for tracks at a single location. Additionally, cars
-can be moved from track to track within a location, and optionally,
-if a car is moved onto a spur, the schedule for that spur can be
-applied. Support for my TrainPlayer suite of scripts is also
-included. The use of this plugin is documented in the following list
-of videos.</FONT></FONT></P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in; font-weight: normal">
-<BR>
-</P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in"><FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=4><B>Videos:</B></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in">How to
-add this plugin to JMRI</P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in"><A HREF="https://youtu.be/GjPtXk3oKmc">How
-to set up this plugin</A></P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in"><A HREF="https://youtu.be/IdXvxyo-E3Y">Demonstration
-at a yard</A></P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in"><A HREF="https://youtu.be/2Tv6sUMDD_Y">Demonstration
-at industry</A></P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in">How to
-modify this plugin</P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in">Use this
-plugin with TrainPlayer</P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in; font-weight: normal">
-<BR>
-</P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in"><FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=4><B>Organization:</B></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in; font-weight: normal">
-<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>The following chart
-shows the code structure of this plugin.</FONT></FONT></P>
-<P ALIGN=LEFT STYLE="margin-bottom: 0in"><IMG SRC="psHelp_html_28f76eb9.png" NAME="graphics4" ALIGN=LEFT WIDTH=641 HEIGHT=282 BORDER=0><BR CLEAR=LEFT><BR>
-</P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in; page-break-before: auto; page-break-after: auto">
-<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=4><B>Track Pattern
-and Switch List JSON format</B></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in; font-weight: normal">
-<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>The pattern reports
-and TrainPlayer exports all start with the creation of a JSON file.
-The file is created by this plugin and in the case of TrainPlayer
-manifest exports the JSON is created by modifying the JMRI generated
-manifest JSON. All the JSON files are written to the jsonManifests
-folder. They follow the illustrated format:</FONT></FONT></P>
-<IMG SRC="psHelp_html_m54590ba0.png" NAME="graphics5" ALIGN=LEFT WIDTH=549 HEIGHT=562 BORDER=0><BR CLEAR=LEFT>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in"><BR>
-</P>
-<P ALIGN=LEFT STYLE="margin-left: 0.29in; margin-bottom: 0in"><BR>
-</P>
-<P ALIGN=LEFT STYLE="margin-left: 0.29in; margin-bottom: 0in"><FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=4><B>Key
-&ndash; PatternConfig.JSON:</B></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="margin-left: 0.29in; margin-bottom: 0in; font-weight: normal">
-<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=2>Each JMRI profile
-gets its own configuration file, which is a JSON file. It is found in
-the operations folder, and is used to provide custom settings for
-each profile and record user inputs.</FONT></FONT></P>
-<P ALIGN=LEFT STYLE="margin-left: 0.29in; margin-bottom: 0in; font-weight: normal">
-<FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=2>The
-description of each element is in blue.</FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="margin-left: 0.29in; margin-bottom: 0in; font-weight: normal">
-<FONT COLOR="#006600"><FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=2>User
-editable keys are described in green</FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="margin-left: 0.29in; margin-bottom: 0in; font-weight: normal">
-<FONT COLOR="#000000"><FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=2>If
-a mistake is made editing the PatternConfig.json file, the plugin
-will replace it with the default file, and the user will have to
-start over.</FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="margin-left: 0.29in; margin-bottom: 0in"><BR>
-</P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in; page-break-before: auto; page-break-after: auto">
-<FONT SIZE=2>{</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;EM&quot;:
-{ <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Editor</SPAN></FONT></FONT><FONT COLOR="#3333ff">
-</FONT><FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Matrix,
-default text editor for each computer type</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;1&quot;:
-&quot;<FONT COLOR="#006600">Mac Classic </FONT>&quot;,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;2&quot;:
-&quot;<FONT COLOR="#006600">open -a TextEdit </FONT>&quot;, <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">OSX</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;4&quot;:
-&quot;<FONT COLOR="#006600">start notepad.exe </FONT>&quot;, <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Windows</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;5&quot;:
-&quot;<FONT COLOR="#006600">nano </FONT>&quot;, <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Linux</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;6&quot;:
-&quot;<FONT COLOR="#006600">OS2 </FONT>&quot;,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;7&quot;:
-&quot;<FONT COLOR="#006600">kwrite </FONT>&quot; <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Unix</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>},</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;CD&quot;:
-{ <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Color
-Definitions</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;CP&quot;:
-{ <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Color
-Palette</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT COLOR="#006600"><FONT SIZE=2>&quot;BLANCH&quot;:
-{ Colors may be changed or new ones added</FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT COLOR="#006600"><FONT SIZE=2>&quot;A&quot;:
-255, <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Alpha</SPAN></FONT></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT COLOR="#006600"><FONT SIZE=2>&quot;B&quot;:
-225, <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Blue</SPAN></FONT></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT COLOR="#006600"><FONT SIZE=2>&quot;D&quot;:
-&quot;Light grey&quot;, <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Description</SPAN></FONT></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT COLOR="#006600"><FONT SIZE=2>&quot;G&quot;:
-225, <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Green</SPAN></FONT></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT COLOR="#006600"><FONT SIZE=2>&quot;R&quot;:
-225 <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Red</SPAN></FONT></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT COLOR="#006600"><FONT SIZE=2>},</FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;DUST&quot;:
-{ <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Name
-of the color</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;A&quot;:
-255,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;B&quot;:
-218,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;D&quot;:
-&quot;Light tan&quot;,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;G&quot;:
-242,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;R&quot;:
-252</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>},</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;FADED&quot;:
-{</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;A&quot;:
-255,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;B&quot;:
-245,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;D&quot;:
-&quot;Light purple&quot;,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;G&quot;:
-225,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;R&quot;:
-237</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>},</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;LICHEN&quot;:
-{</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;A&quot;:
-255,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;B&quot;:
-244,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;D&quot;:
-&quot;Light green&quot;,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;G&quot;:
-255,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;R&quot;:
-236</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>},</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;NONE&quot;:
-{</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;A&quot;:
-0,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;B&quot;:
-0,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;D&quot;:
-&quot;Dont use color&quot;,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;G&quot;:
-0,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;R&quot;:
-0</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>},</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;PALE&quot;:
-{</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;A&quot;:
-255,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;B&quot;:
-250,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;D&quot;:
-&quot;Light blue&quot;,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;G&quot;:
-243,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;R&quot;:
-237</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>},</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;PETAL&quot;:
-{</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;A&quot;:
-255,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;B&quot;:
-224,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;D&quot;:
-&quot;Light red&quot;,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;G&quot;:
-208,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;R&quot;:
-240</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>}</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>},</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;locoColor&quot;:
-&quot;<FONT COLOR="#006600">FADED</FONT>&quot;, <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Hi-lite
-color for engines in a Set Cars window</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;carColor&quot;:
-&quot;<FONT COLOR="#006600">DUST</FONT>&quot;, <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Hi-lite
-color for cars in a Set Cars window</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;alertColor&quot;:
-&quot;<FONT COLOR="#006600">PETAL</FONT>&quot; <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Hi-lite
-color for rolling stock already assigned to a train</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>},</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;CP&quot;
-: {<FONT COLOR="#3333ff"> </FONT><FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Control
-Panel</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;SI&quot;
-: { <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Script
-Includes</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;TrackPatternSubroutine&quot;
-: <FONT COLOR="#006600">true</FONT>, <FONT COLOR="#006600">Choose
-which subroutines to include or not, but for now there is only one</FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;FutureSubroutines&quot;
-: <FONT COLOR="#006600">false</FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>},</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;PH&quot;
-: 140, <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Panel
-Height</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;PW&quot;
-: 2000, <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Panel
-Width</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;RV&quot;
-: 20220203 <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Version
-number of this file</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>},</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;LI&quot;:
-{ <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Logging
-Index</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;9&quot;:
-&quot;- CRITICAL -&quot;,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;7&quot;:
-&quot;- ERROR -&quot;,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;5&quot;:
-&quot;- WARNING -&quot;,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;3&quot;:
-&quot;- INFO -&quot;,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;1&quot;:
-&quot;- DEBUG -&quot;</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>},</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;TP&quot;
-: { <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Track
-Pattern</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;AL&quot;
-: [ <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">List
-of All Locations</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>],</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;PL&quot;
-: &quot;&quot;, <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Pattern
-Location</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;PT&quot;
-: { <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Pattern
-Tracks</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>},</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;TD&quot;
-: { <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Train
-Description for reports</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;PR&quot;
-: &quot;<FONT COLOR="#006600">Pattern Report - Track Pattern</FONT>&quot;,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;SC&quot;
-: &quot;<FONT COLOR="#006600">Pattern Report - Switch List</FONT>&quot;,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;TP&quot;
-: &quot;<FONT COLOR="#006600">Pattern Report - TrainPlayer Work
-Events</FONT>&quot;</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>},</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;TN&quot;
-: { <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Train
-Name for reports</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;PR&quot;
-: &quot;<FONT COLOR="#006600">Local Switch Job</FONT>&quot;,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;SC&quot;
-: &quot;<FONT COLOR="#006600">Local Switch Job</FONT>&quot;,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;TP&quot;
-: &quot;<FONT COLOR="#006600">Local Switch Job</FONT>&quot;</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>},</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;TC&quot;
-: { <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Train
-Comment for reports</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;PR&quot;
-: &quot;<FONT COLOR="#006600">Track Pattern for Selected Tracks</FONT>&quot;,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;SC&quot;
-: &quot;<FONT COLOR="#006600">Switch List for One Track</FONT>&quot;,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;TP&quot;
-: &quot;<FONT COLOR="#006600">Switch List for Selected Tracks</FONT>&quot;</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>},</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;PA&quot;
-: false, <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Yard
-tracks only flag</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;PI&quot;
-: false, <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Ignore
-track length flag</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;AS&quot;
-: true, <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Apply
-schedules flag</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;TI&quot;
-: false, <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Include
-TrainPlayer reports flag</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;PW&quot;
-: 260, <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Pattern
-Width</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;PH&quot;
-: 16, <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Pattern
-heigth</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;DS&quot;
-: &quot;<FONT COLOR="#006600">*No Waybill</FONT>&quot;, <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Destination</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;DT&quot;
-: &quot;<FONT COLOR="#006600">*No Waybill</FONT>&quot;, <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Destination
-Track</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;FD&quot;
-: &quot;<FONT COLOR="#006600">*Via Staging</FONT>&quot;, <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Final
-Destination</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;FT&quot;
-: &quot;<FONT COLOR="#006600">*Via Staging</FONT>&quot;, <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">FD
-Track</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;SL&quot;:
-[ <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Sort
-Engines list</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;<FONT COLOR="#006600">Model</FONT>&quot;</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>],</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;SC&quot;:
-[ <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Sort
-Cars list</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;<FONT COLOR="#006600">Load
-Type</FONT>&quot;,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;<FONT COLOR="#006600">FD&amp;Track</FONT>&quot;</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>],</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;RM&quot;:
-8, <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Row
-Multiplier</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;RW&quot;:
-{ <FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Row
-Width (Number of characters)</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;Input&quot;:
-<FONT COLOR="#006600">6</FONT>,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;Model&quot;:
-<FONT COLOR="#006600">5</FONT>,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;Road&quot;
-: <FONT COLOR="#006600">5,</FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;Number&quot;
-: <FONT COLOR="#006600">7</FONT>,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;Type&quot;
-: <FONT COLOR="#006600">6</FONT>,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;Length&quot;
-: <FONT COLOR="#006600">7,</FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;Weight&quot;
-<FONT COLOR="#006600">:</FONT> <FONT COLOR="#006600">7</FONT>,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;Load&quot;
-: <FONT COLOR="#006600">6</FONT>,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;Load
-Type&quot; : <FONT COLOR="#006600">5</FONT>,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;Loco
-Type&quot; : <FONT COLOR="#006600">18</FONT>,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;Owner&quot;
-: <FONT COLOR="#006600">20</FONT>,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;Consist&quot;
-: <FONT COLOR="#006600">8</FONT>,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;Hazardous&quot;
-: <FONT COLOR="#006600">10</FONT>,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;Color&quot;
-: <FONT COLOR="#006600">6,</FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;Kernel&quot;
-: <FONT COLOR="#006600">7,</FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;Kernel
-Size&quot; : <FONT COLOR="#006600">12</FONT>,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;Owner&quot;
-: <FONT COLOR="#006600">6</FONT>,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;Track&quot;
-: <FONT COLOR="#006600">6</FONT>,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;Location&quot;
-: <FONT COLOR="#006600">9</FONT>,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;Destination&quot;
-: <FONT COLOR="#006600">15</FONT>,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;Dest&amp;Track&quot;
-: <FONT COLOR="#006600">30</FONT>,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;Final
-Dest&quot; : <FONT COLOR="#006600">11</FONT>,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;FD&amp;Track&quot;
-: <FONT COLOR="#006600">21</FONT>,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;Comment&quot;
-: <FONT COLOR="#006600">15</FONT>,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;SetOut
-Msg&quot; : <FONT COLOR="#006600">12</FONT>,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;PickUp
-Msg&quot; : <FONT COLOR="#006600">12</FONT>,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;RWE&quot;
-: <FONT COLOR="#006600">10</FONT>,</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>&quot;
-&quot; : <FONT COLOR="#006600">0 </FONT><FONT COLOR="#3333ff"><FONT FACE="Adobe Caslon Pro, serif"><SPAN STYLE="font-weight: normal">Width
-of empty box added to move message format</SPAN></FONT></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>}</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><FONT SIZE=2>}</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in; page-break-before: auto; page-break-after: auto">
-<FONT SIZE=2>}</FONT></P>
-<P ALIGN=LEFT STYLE="text-indent: 0.3in; margin-bottom: 0in"><BR>
-</P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in; page-break-before: auto; page-break-after: auto">
-<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=4><B>Pattern Scripts
-window:</B></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in; font-weight: normal">
-<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>OperationsPatternScripts.MainScript.ViewPsWindow.makeWindow()</FONT></FONT></P>
-<IMG SRC="psHelp_html_m1c0263c5.png" NAME="graphics3" ALIGN=LEFT WIDTH=654 HEIGHT=210 BORDER=0><BR CLEAR=LEFT>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in"><BR>
-</P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in"><BR>
-</P>
-<P ALIGN=LEFT STYLE="margin-bottom: 0in; page-break-before: auto; page-break-after: auto">
-<BR>
-</P>
-<P ALIGN=LEFT STYLE="text-indent: 0.19in; margin-bottom: 0in"><FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=4><B>Pattern
-Report for Track window:</B></FONT></FONT></P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in; font-weight: normal">
-<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=3>OperationsPatternScripts.ControllerSetCarsForm.CreatePatternReportGui.makeFrame()</FONT></FONT></P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in"><BR>
-</P>
-<IMG SRC="psHelp_html_69a28c2a.png" NAME="graphics2" ALIGN=LEFT WIDTH=641 HEIGHT=698 BORDER=0><BR CLEAR=LEFT>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in"><BR>
-</P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in"><BR>
-</P>
-<P ALIGN=LEFT STYLE="margin-left: 0.2in; margin-bottom: 0in; font-weight: normal">
-<FONT FACE="Adobe Caslon Pro, serif"><FONT SIZE=2>This document &copy;
-2021 Greg Ritacco, all rights reserved.</FONT></FONT></P>
-</BODY>
-</HTML>
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<title>Pattern Scripts Help</title>
+<meta name="AUTHOR" content="Greg Ritacco">
+<meta name="PROJECT" content="Pattern scripts for JMRI">
+<meta name="VERSION" content="2.0.0">
+<style>
+  html * {
+    font-family: verdana;
+  }
+  h1 {
+    margin-left: 10px;
+  }
+  h2 {
+    margin-left: 20px;
+  }
+  h3 {
+    margin-left: 30px;
+  }
+  p {
+    margin-left: 30px;
+  }
+  img {
+    margin-left: 30px;
+  }
+  pre {
+    margin-left: 30px;
+  }
+</style>
+</head>
+
+<body>
+
+<h1>Help Page - Pattern Scripts plugin for JMRI</h1>
+<h2>Introduction</h2>
+<p>This program is a plugin for JMRI Operations Pro. With it, the user can generate pattern reports for tracks at a single location.
+  Additionally, cars can be moved from track to track within a location, and optionally, if a car is moved onto a spur, the schedule for that spur can be applied.
+  Support for my TrainPlayer suite of scripts is also included. The use of this plugin is documented in the following list of videos.</p>
+
+
+<h2>Video Documentation</h2>
+<p>How to add this plugin to JMRI</p>
+<p><A HREF="https://youtu.be/GjPtXk3oKmc">How to set up this plugin</A></p>
+<p><A HREF="https://youtu.be/IdXvxyo-E3Y">Demonstration at a yard</A></p>
+<p><A HREF="https://youtu.be/2Tv6sUMDD_Y">Demonstration at industry</A></p>
+<p>How to modify this plugin</p>
+<p>Use this plugin with TrainPlayer</p>
+
+
+<h2>Organization</h2>
+<p>The following chart shows the code structure of this plugin.</P>
+<img src="FlowChart1.png" alt="<Flow Chart Image>">
+
+<h2>Pattern Scripts Window</h2>
+<p>OperationsPatternScripts.MainScript.ViewPsWindow.makeWindow()</p>
+<img src="PatternScriptsWindow1.png" alt="<Pattern Scripts Window Image>">
+
+<h2>Pattern Report for Track Window</h2>
+<p>OperationsPatternScripts.ControllerSetCarsForm.CreatePatternReportGui.makeFrame()</p>
+<img src="PatternReportForTrackWindow1.png" alt="<Pattern Report for Track Window Image>">
+
+
+<h2>Track Pattern and Switch List JSON format</h2>
+<p>The pattern reports and TrainPlayer exports all start with the creation of a JSON file.
+  The file is created by this plugin and in the case of TrainPlayer manifest exports the JSON is created by modifying the JMRI generated manifest JSON.
+  All the JSON files are written to the jsonManifests folder. They follow the illustrated format:</p>
+  <img src="ReportFileFormat1.png" alt="<JSON format for reports>">
+
+<h2>Key – PatternConfig.json</h2>
+<p>Each JMRI profile gets its own configuration file, which is a JSON file. It is found in the operations folder, and is used to provide custom settings for each profile and record user inputs.
+<br><font color="blue">The description of each element is in blue</font>
+<br><font color="green">User editable keys are described in green</font>
+<br>This plugin is not able to catch every type of mistakes made when editing the PatternConfig.json file, and in some cases the plugin will crash.
+ If that happens, delete the file and the plugin will create a new one to start over with.
+ In other cases, if a mistake is made editing the PatternConfig.json file, the plugin will replace it with the default file, and the user will have to start over.</p>
+<h3>Editor Matrix</h3>
+<pre>
+  "EM": {
+    "1": "<font color="green">Mac Classic</font> ",
+    "2": "<font color="green">open -a TextEdit</font> ", <font color="blue">OSX</font>
+    "4": "<font color="green">start notepad.exe</font> ", <font color="blue">Windows</font>
+    "5": "<font color="green">nano</font> ", <font color="blue">Linux</font>
+    "6": "<font color="green">OS2</font> ",
+    "7": "<font color="green">kwrite</font> " <font color="blue">Unix</font>
+  },
+</pre>
+<h3>Color Definations</h3>
+<pre>
+  "CD": {
+    "CP": { <font color="blue">Color Pallett</font>
+      "<font color="green">BLANCH</font>": { <font color="blue">Any of these colors can be changed</font>
+        "A": <font color="green">255</font>, <font color="blue">Alpha value</font>
+        "B": <font color="green">225</font>, <font color="blue">Blue value</font>
+        "D": <font color="green">Light grey</font>, <font color="blue">Vague Description</font>
+        "G": <font color="green">225</font>, <font color="blue">Green value</font>
+        "R": <font color="green">225</font> <font color="blue">Blue value</font>
+      },
+      "DUST": {
+        "A": 255,
+        "B": 218,
+        "D": "Light tan",
+        "G": 242,
+        "R": 252
+      },
+      "FADED": {
+        "A": 255,
+        "B": 245,
+        "D": "Light purple",
+        "G": 225,
+        "R": 237
+      },
+      "LICHEN": {
+        "A": 255,
+        "B": 244,
+        "D": "Light green",
+        "G": 255,
+        "R": 236
+      },
+      "NONE": {
+        "A": 0,
+        "B": 0,
+        "D": "Dont use color",
+        "G": 0,
+        "R": 0
+      },
+      "PALE": {
+        "A": 255,
+        "B": 250,
+        "D": "Light blue",
+        "G": 243,
+        "R": 237
+      },
+      "PETAL": {
+        "A": 255,
+        "B": 224,
+        "D": "Light red",
+        "G": 208,
+        "R": 240
+      }
+    },
+    "locoColor": <font color="green">"FADED"</font>, <font color="blue">NONE can be specified if no color is desired</font>
+    "carColor": <font color="green">"DUST"</font>,
+    "alertColor": <font color="green">"PETAL"</font>
+  },
+</pre>
+<h3>Control Panel</h3>
+<pre>
+  "CP" : {
+    "AP" : true, <font color="blue">Add button to Panel Pro frame, plugin is not displayed but still enabled</font>
+    "SE" : "utf-8", <font color="blue">Implemented in Version 3</font>
+    "SI" : { <font color="blue">Script Includes</font>
+      "PatternTracksSubroutine" : true, <font color="blue">Include this subroutine in the Control Panel</font>
+      "TrainPlayerSubroutine" : false <font color="blue">Available in Version 3</font>
+    },
+    "MI" : {  <font color="blue">Menu Includes</font>
+      "Description" : ["Additional menu items included in the Pattern Scripts window: "],
+      "Tools" : ["asItemSelected", "tpItemSelected"],
+      "OperationsPro" : [],
+      "Window" : [],
+      "Help" : ["logItemSelected"]
+    },
+    "PH" : <font color="green">220</font>, <font color="blue">Default panel height</font>
+    "PW" : <font color="green">1500</font>, <font color="blue">Default panel width</font>
+    "PX" : 0, <font color="blue">Not Implemented</font>
+    "PY" : 0, <font color="blue">Not Implemented</font>
+    "RV" : 20220205 <font color="blue">Version control</font>
+  },
+</pre>
+<h3>Logging Index</h3>
+<pre>
+  "LI": {
+    "0" : "Editing these is not recommended",
+    "9": "- CRITICAL -",
+    "7": "- ERROR -",
+    "5": "- WARNING -",
+    "3": "- INFO -",
+    "1": "- DEBUG -"
+  },
+</pre>
+<h3>Pattern Tracks</h3>
+<pre>
+  "PT" : {
+    "AL" : [ <font color="blue">All Locations (written by this plugin)</font>
+    ],
+    "PL" : "", <font color="blue">Pattern Location (written by this plugin)</font>
+    "PT" : { <font color="blue">Pattern Tracks (written by this plugin)</font>
+    },
+    "TD" : { <font color="blue">Train Description</font>
+      "PR" : "<font color="green">Track Pattern - Location Report</font>",
+      "SC" : "<font color="green">Switch List - Track Report</font>",
+      "TP" : "<font color="green">Work Event List for TrainPlayer</font>"
+    },
+    "TN" : { <font color="blue">Train Name</font>
+      "PR" : "<font color="green">Local Switch Job</font>",
+      "SC" : "<font color="green">Local Switch Job</font>",
+      "TP" : "<font color="green">Local Switch Job</font>"
+    },
+    "TC" : { <font color="blue">Train Comment</font>
+      "PR" : "<font color="green">Track Pattern for Selected Tracks</font>",
+      "SC" : "<font color="green">Switch List for One Track</font>",
+      "TP" : "<font color="green">Switch List for Selected Tracks</font>"
+    },
+    "PA" : false, <font color="blue">Yard Tracks Only flag</font>
+    "PI" : false, <font color="blue">Ignore Track Length flag</font>
+    "SF" : { <font color="blue">Schedule Flag</font>
+      "AS" : true, <font color="blue">Apply Schedule flag</font>
+      "AT" : "Do Not Apply Schedule", <font color="blue">Menu Text</font>
+      "AF" : "Apply Schedule" <font color="blue">Menu Text</font>
+    },
+    "TF" : { <font color="blue">TrainPlayer Flag</font>
+      "TI" : true, <font color="blue">TrainPlayer Include flag</font>
+      "TT" : "Disable TrainPlayer", <font color="blue">Menu Text</font>
+      "TF" : "Enable TrainPlayer" <font color="blue">Menu Text</font>
+    },
+    "PW" : 260, <font color="blue">Pattern Width</font>
+    "PH" : 16, <font color="blue">Pattern Height</font>
+    "DS" : "<font color="green">*No Waybill</font>", <font color="blue">Destination standin</font>
+    "DT" : "<font color="green">*No Waybill</font>", <font color="blue">Destination Track standin</font>
+    "FD" : "<font color="green">*Via Staging</font>", <font color="blue">Final Destination standin</font>
+    "FT" : "<font color="green">*Via Staging</font>", <font color="blue">Final Destination track standin</font>
+    "SL": [ <font color="blue">Sort Locomotives</font>
+      "<font color="green">Model</font>"
+    ],
+    "SC": [ <font color="blue">Sort Cars</font>
+      "<font color="green">Load Type</font>",
+      "<font color="green">FD&Track</font>"
+    ],
+    "RM": 8, <font color="blue">Row Multiplier</font>
+    "RW": { <font color="blue">Row Width</font>
+      "AAA" : "The integer sets the column width and is editable",
+      "Input": <font color="green">6</font>,
+      "Model": <font color="green">5</font>,
+      "Road" : <font color="green">5</font>,
+      "Number" : <font color="green">7</font>,
+      "Type" : <font color="green">6</font>,
+      "Length" : <font color="green">7</font>,
+      "Weight" : <font color="green">7</font>,
+      "Load" : <font color="green">6</font>,
+      "Load Type" : <font color="green">5</font>,
+      "Loco Type" : <font color="green">18</font>,
+      "Owner" : <font color="green">20</font>,
+      "Consist" : <font color="green">8</font>,
+      "Hazardous" : <font color="green">10</font>,
+      "Color" : <font color="green">6</font>,
+      "Kernel" : <font color="green">7</font>,
+      "Kernel Size" : <font color="green">12</font>,
+      "Owner" : <font color="green">6</font>,
+      "Track" : <font color="green">6</font>,
+      "Location" : <font color="green">9</font>,
+      "Destination" : <font color="green">15</font>,
+      "Dest&Track" : <font color="green">30</font>,
+      "Final Dest" : <font color="green">11</font>,
+      "FD&Track" : <font color="green">21</font>,
+      "Comment" : <font color="green">15</font>,
+      "SetOut Msg" : <font color="green">12</font>,
+      "PickUp Msg" : <font color="green">12</font>,
+      "RWE" : <font color="green">10</font>,
+      " " : 0
+    }
+  },
+</pre>
+<h3>TrainPlayer (Implemented in version 3)</h3>
+
+</body>
+
+</html>

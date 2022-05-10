@@ -10,11 +10,18 @@
   "CD": {
     "CP": {
       "BLANCH": {
-        "A": 255,
-        "B": 225,
-        "D": "Light grey",
-        "G": 225,
-        "R": 225
+        "A": 210,
+        "B": 255,
+        "D": "Lighten a bit",
+        "G": 255,
+        "R": 255
+      },
+      "GLOOM": {
+        "A": 10,
+        "B": 0,
+        "D": "Darken a bit",
+        "G": 0,
+        "R": 0
       },
       "DUST": {
         "A": 255,
@@ -51,7 +58,7 @@
         "G": 243,
         "R": 237
       },
-      "PETAL": {
+      "RASH": {
         "A": 255,
         "B": 224,
         "D": "Light red",
@@ -61,10 +68,11 @@
     },
     "locoColor": "FADED",
     "carColor": "DUST",
-    "alertColor": "PETAL"
+    "alertColor": "RASH"
   },
   "CP" : {
     "AP" : true,
+    "SE" : "utf-8",
     "SI" : {
       "PatternTracksSubroutine" : true,
       "TrainPlayerSubroutine" : true
@@ -83,7 +91,7 @@
     "RV" : 20220204
   },
   "LI": {
-    "99" : "Editing these is not recommended",
+    "0" : "Editing these is not recommended",
     "9": "- CRITICAL -",
     "7": "- ERROR -",
     "5": "- WARNING -",
@@ -97,19 +105,16 @@
     "PT" : {
     },
     "TD" : {
-      "AA" : "Train Description, these are editable",
       "PR" : "Track Pattern - Location Report",
       "SC" : "Switch List - Track Report",
       "TP" : "Work Event List for TrainPlayer"
     },
     "TN" : {
-      "AA" : "Train Name, these are editable",
       "PR" : "Local Switch Job",
       "SC" : "Local Switch Job",
       "TP" : "Local Switch Job"
     },
     "TC" : {
-      "AA" : "Train Comment, these are editable",
       "PR" : "Track Pattern for Selected Tracks",
       "SC" : "Switch List for One Track",
       "TP" : "Switch List for Selected Tracks"
@@ -117,13 +122,11 @@
     "PA" : false,
     "PI" : false,
     "SF" : {
-      "AA" : "This is the schedule flag, AT and AF are editable",
       "AS" : true,
       "AT" : "Do Not Apply Schedule",
       "AF" : "Apply Schedule"
     },
     "TF" : {
-      "AA" : "This is the TrainPlayer Include flag, TT and TF are editable",
       "TI" : true,
       "TT" : "Disable TrainPlayer",
       "TF" : "Enable TrainPlayer"

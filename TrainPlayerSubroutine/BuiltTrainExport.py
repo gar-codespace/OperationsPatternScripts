@@ -18,8 +18,6 @@ SCRIPT_DIR = 'OperationsPatternScripts'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b2'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b3'
 
-
-
 class StandAlone():
     '''Called when this script is used by itself'''
 
@@ -106,7 +104,7 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
         Model.WriteWorkEventListToTp(tpManifestHeader + tpManifestLocations).asCsv()
 
         self.tpLog.info('Export JMRI manifest to TrainPlyer: ' + self.train.getName())
-        # self.tpLog.info('Export to TrainPlayer script location: ' + SCRIPT_ROOT)
+        self.tpLog.info('Export to TrainPlayer script location: ' + SCRIPT_ROOT)
         self.tpLog.info('Manifest export (sec): ' + ('%s' % (time.time() - timeNow))[:6])
 
         print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
@@ -123,14 +121,15 @@ if __name__ == "__builtin__":
     from psEntities import PatternScriptEntities
     from TrainPlayerSubroutine import Model
 
-    standAlone = StandAlone()
-    train = standAlone.findNewestTrain()
+    train = StandAlone().findNewestTrain()
 
-    tpManifest = ManifestForTrainPlayer()
-    tpManifest.passInTrain(train)
-    tpManifest.start()
+    if train:
+        tpManifest = ManifestForTrainPlayer()
+        tpManifest.passInTrain(train)
+        tpManifest.start()
 
 else:
 
+    SCRIPT_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
     from psEntities import PatternScriptEntities
     from TrainPlayerSubroutine import Model

@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-'''Creates the pattern tracks and its panel'''
+'''Creates the TrainPlayer panel'''
 
 import jmri
 import java.awt
@@ -23,10 +23,10 @@ class TrainPlayerPanel:
         self.aButton.setName('aButton')
 
         self.bButton = javax.swing.JButton()
-        self.bButton.setText(u'Not Implemented')
+        self.bButton.setText(u'Post No Bills')
         self.bButton.setName('bButton')
 
-        self.controlObjects = []
+        self.controlWidgets = []
 
         return
 
@@ -41,9 +41,8 @@ class TrainPlayerPanel:
         return tpPanel
 
     def getPanelWidgets(self):
-        '''A list of the widgets created by this class'''
 
-        self.controlObjects.append(self.aButton)
-        self.controlObjects.append(self.bButton)
+        self.controlWidgets.append(self.aButton)
+        self.controlWidgets.append(self.bButton)
 
-        return self.controlObjects
+        return self.controlWidgets

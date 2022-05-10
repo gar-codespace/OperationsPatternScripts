@@ -276,6 +276,20 @@ class ProcessWorkEventList:
 
         return
 
+    def writeTpWorkEventListAsJson(self, appendedTpSwitchList):
+
+        self.psLog.debug('writeTpWorkEventListAsJson')
+
+        reportTitle = appendedTpSwitchList['trainDescription']
+        jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
+        jsonObject = jsonDumps(appendedTpSwitchList, indent=2, sort_keys=True)
+        with codecsOpen(jsonFile, 'wb', encoding=PatternScriptEntities.setEncoding()) as jsonWorkFile:
+            jsonWorkFile.write(jsonObject)
+
+        print(SCRIPT_NAME + '.ProcessWorkEventList ' + str(SCRIPT_REV))
+
+        return
+
     def makeTpHeader(self, appendedTpSwitchList):
         '''The jason manifest is encoded in HTML Entity'''
         # csv writer does not encode utf-8
@@ -314,20 +328,6 @@ class ProcessWorkEventList:
     def makeLine(self, rS):
 
         return [rS[u'PUSO'], rS[u'Road'] + rS[u'Number'], rS[u'Road'], rS[u'Number'], rS[u'Load'], rS[u'Track'], rS[u'Set to'], rS['FD&Track']]
-
-    def writeTpWorkEventListAsJson(self, appendedTpSwitchList):
-
-        self.psLog.debug('writeTpWorkEventListAsJson')
-
-        reportTitle = appendedTpSwitchList['trainDescription']
-        jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
-        jsonObject = jsonDumps(appendedTpSwitchList, indent=2, sort_keys=True)
-        with codecsOpen(jsonFile, 'wb', encoding=PatternScriptEntities.setEncoding()) as jsonWorkFile:
-            jsonWorkFile.write(jsonObject)
-
-        print(SCRIPT_NAME + '.ProcessWorkEventList ' + str(SCRIPT_REV))
-
-        return
 
 class WriteWorkEventListToTp:
 

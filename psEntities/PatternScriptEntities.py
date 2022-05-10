@@ -83,9 +83,15 @@ class CheckTpDestination:
             self.psLog.info('TrainPlayer destination directory OK')
 
         return
-            
+
+def psLocale():
+
+    return unicode(PM.getLocale(), setEncoding())
+
 def setEncoding():
-    '''Expand on this later'''
+    '''Move this to the confif file'''
+
+    # psEncoding = readConfigFile('CP')['SE']
 
     return 'utf-8' #ascii, utf-16
 
@@ -137,8 +143,7 @@ def validateStubFile(currentRootDir):
     helpFilePath = javaIo.File(helpFilePath).toURI()
     helpFilePath = unicode(helpFilePath, setEncoding())
 
-    locale = unicode(PM.getLocale(), setEncoding())
-    stubTemplateLocation = jmri.util.FileUtil.getProgramPath() + 'help\\' + locale[:2] + '\\local\\stub_template.html'
+    stubTemplateLocation = jmri.util.FileUtil.getProgramPath() + 'help\\' + psLocale() + '\\local\\stub_template.html'
     with codecsOpen(stubTemplateLocation, 'r', encoding=setEncoding()) as template:
         contents = template.read()
         contents = contents.replace("../index.html#", "")

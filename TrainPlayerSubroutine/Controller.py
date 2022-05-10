@@ -45,15 +45,6 @@ class StartUp:
 
         return self.subroutinePanel
 
-    def validateSubroutineConfig(self):
-        '''Put a test here that validates config file ["T"]'''
-
-        if not PatternScriptEntities.readConfigFile('PT')['AL']:
-            PatternScriptEntities.writeNewConfigFile()
-            # Model.updatePatternLocation()
-
-        return
-
     def activateWidgets(self):
         '''Maybe get them by name?'''
 
