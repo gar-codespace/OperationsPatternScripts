@@ -10,6 +10,8 @@ import logging
 from os import system as osSystem
 
 from psEntities import PatternScriptEntities
+from psBundle import Bundle
+
 from PatternTracksSubroutine import ViewEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.View'
@@ -22,6 +24,7 @@ class ManageGui:
 
         self.psLog = logging.getLogger('PS.PT.View')
         self.configFile = PatternScriptEntities.readConfigFile('PT')
+        self.bundle = Bundle.getBundleForLocale(PatternScriptEntities.SCRIPT_ROOT)
 
         return
 
@@ -30,7 +33,7 @@ class ManageGui:
 
         subroutineFrame = javax.swing.JPanel() # the pattern tracks panel
         subroutineFrame.setLayout(javax.swing.BoxLayout(subroutineFrame, javax.swing.BoxLayout.Y_AXIS))
-        subroutineFrame.border = javax.swing.BorderFactory.createTitledBorder(u'Pattern Tracks Subroutine')
+        subroutineFrame.border = javax.swing.BorderFactory.createTitledBorder(self.bundle['Pattern Tracks Subroutine'])
 
         return subroutineFrame
 

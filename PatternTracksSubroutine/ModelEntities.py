@@ -335,7 +335,7 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
         trackTally = []
         trackName = track['trackName']
         trackLength = track['length']
-        reportSwitchList += 'Track: ' + trackName + '\n'
+        reportSwitchList += bundle['Track: '] + trackName + '\n'
         switchListRow = ''
 
         for loco in track['locos']:
