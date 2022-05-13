@@ -88,7 +88,7 @@
     "PW" : 1500,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20220255
+    "RV" : 20220301
   },
   "LI": {
     "0" : "Editing these is not recommended",
@@ -121,7 +121,7 @@
     },
     "PA" : false,
     "PI" : false,
-    "TI" : true,
+    "TI" : false,
     "AS" : true,
     "PW" : 260,
     "PH" : 16,

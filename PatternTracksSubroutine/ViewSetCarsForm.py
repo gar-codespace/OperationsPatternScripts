@@ -59,7 +59,7 @@ def makeSetCarsForTrackForm(setCarsFormData):
         carFormBody.setLayout(javax.swing.BoxLayout(carFormBody, javax.swing.BoxLayout.PAGE_AXIS))
         carFormBody.border = javax.swing.BorderFactory.createTitledBorder(u'Cars at ' + setCarsFormData['locations'][0]['tracks'][0]['trackName'])
 
-        setCarsCarRows = setCarsEqptRows.makesetCarsCarRows()
+        setCarsCarRows = setCarsEqptRows.makeSetCarsCarRows()
         for car in setCarsCarRows:
             carFormBody.add(car)
         setCarsFormBody.add(carFormBody)
@@ -187,7 +187,7 @@ class MakeSetCarsEqptRows():
 
         return listOfLocoRows
 
-    def makesetCarsCarRows(self):
+    def makeSetCarsCarRows(self):
         '''Creates the car lines of the pattern report form'''
 
         listOfCarRows = []

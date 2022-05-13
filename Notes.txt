@@ -58,6 +58,7 @@ Catches Items:
   Catches user add/remove train while TP export is enabled
 
 Todo:
+  Fix Yard Tracks Only Check Box
   Try to get SCRIPT_ROOT out of writeNewConfigFile() (eliminate SCRIPT_ROOT as a global)
   Not sure setAsDropDown and setTiDropDown should be in View()
   KeyError when editing config file crashed plugin, bummer

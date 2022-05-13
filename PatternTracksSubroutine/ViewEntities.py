@@ -8,6 +8,7 @@ import java.awt
 import javax.swing
 
 from psEntities import PatternScriptEntities
+from psBundle import Bundle
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ViewEntities'
 SCRIPT_REV = 20220101
@@ -17,24 +18,26 @@ class TrackPatternPanel:
 
     def __init__(self):
 
+        self.bundle = Bundle.getBundleForLocale(PatternScriptEntities.SCRIPT_ROOT)
+
         self.configFile = PatternScriptEntities.readConfigFile('PT')
-        self.yardTracksOnly = javax.swing.JCheckBox(u'Yard tracks only ', self.configFile['PA'])
+        self.yardTracksOnly = javax.swing.JCheckBox() #self.configFile['PA']
+        self.yardTracksOnly.setText(self.bundle['Yard tracks only '])
+        self.yardTracksOnly.setSelected(self.configFile['PA'])
         self.yardTracksOnly.setName('ytoCheckBox')
 
-        self.ignoreTrackLength = javax.swing.JCheckBox(u'Ignore track length ', self.configFile['PI'])
+        self.ignoreTrackLength = javax.swing.JCheckBox() # u'Ignore track length ', self.configFile['PI']
+        self.ignoreTrackLength.setText(self.bundle['Ignore track length '])
+        self.yardTracksOnly.setSelected(self.configFile['PI'])
         self.ignoreTrackLength.setName('itlCheckBox')
 
         self.ypButton = javax.swing.JButton()
-        self.ypButton.setText(u'Pattern')
+        self.ypButton.setText(self.bundle['Pattern'])
         self.ypButton.setName('ypButton')
 
         self.scButton = javax.swing.JButton()
-        self.scButton.setText(u'Set Cars')
+        self.scButton.setText(self.bundle['Set Cars'])
         self.scButton.setName('scButton')
-
-        # self.vlButton = javax.swing.JButton()
-        # self.vlButton.setText(u'View Log')
-        # self.vlButton.setName('vlButton')
 
         self.trackCheckBoxes = []
         self.controlObjects = []
@@ -44,7 +47,7 @@ class TrackPatternPanel:
     def makeLocationComboBox(self):
         '''Make the combo box of user selectable locations'''
 
-        patternLabel = javax.swing.JLabel(u'Location:')
+        patternLabel = javax.swing.JLabel(self.bundle['Location:'])
         locationList = self.configFile['AL']
         self.locationComboBox = javax.swing.JComboBox(locationList)
         self.locationComboBox.setName('locationComboBox')
@@ -75,7 +78,7 @@ class TrackPatternPanel:
         tracksPanel.add(rowLabel)
         trackDict = self.configFile['PT'] # pattern tracks
         if (trackDict):
-            rowLabel.text = u'Track List: '
+            rowLabel.text = self.bundle['Track List: ']
             for track, flag in sorted(trackDict.items()):
                 trackCheckBox = tracksPanel.add(javax.swing.JCheckBox(track, flag))
                 self.trackCheckBoxes.append(trackCheckBox)
@@ -84,7 +87,7 @@ class TrackPatternPanel:
         else:
             self.ypButton.setEnabled(False)
             self.scButton.setEnabled(False)
-            rowLabel.text = u'There are no yard tracks for this location'
+            rowLabel.text = self.bundle['There are no yard tracks for this location']
 
         return tracksPanel
 

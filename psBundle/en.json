@@ -7,5 +7,12 @@
   "Do Not Apply Schedule" : "Do Not Apply Schedule",
   "Apply Schedule" : "Apply Schedule",
   "Disable TrainPlayer" : "Disable TrainPlayer",
-  "Enable TrainPlayer" : "Enable TrainPlayer"
+  "Enable TrainPlayer" : "Enable TrainPlayer",
+  "Yard tracks only " : "Yard tracks only ",
+  "Ignore track length " : "Ignore track length ",
+  "Pattern" : "Pattern",
+  "Set Cars" : "Set Cars",
+  "Location:" : "Location",
+  "Track List: " : "Track List: ",
+  "There are no yard tracks for this location" : "There are no yard tracks for this location"
 }

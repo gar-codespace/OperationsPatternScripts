@@ -55,13 +55,3 @@ def displayTextSwitchList(textSwitchList):
     fileToDisplay = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + textSwitchList.splitlines()[0] + '.txt'
 
     return osSystem(PatternScriptEntities.openEditorByComputerType(fileToDisplay))
-
-# def printPatternLog():
-#     '''Opens the pattern log in notepad or other'''
-#
-#     psLog.debug('displayPatternLog')
-#
-#     tempPatternLog = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
-#     osSystem(PatternScriptEntities.openEditorByComputerType(tempPatternLog))
-#
-#     return
