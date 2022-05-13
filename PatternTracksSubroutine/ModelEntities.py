@@ -8,9 +8,12 @@ from json import loads as jsonLoads, dumps as jsonDumps
 from xml.etree import ElementTree as ET
 
 from psEntities import PatternScriptEntities
+from psBundle import Bundle
 
 SCRIPT_NAME = 'OperationsPatternScripts.TrackPattern.ModelEntities'
 SCRIPT_REV = 20220101
+
+bundle = Bundle.getBundleForLocale(PatternScriptEntities.SCRIPT_ROOT)
 
 def formatText(item, length):
     '''Truncate each item to its defined length in PatternConfig.json and add a space at the end'''
@@ -312,8 +315,8 @@ def makeTextReportHeader(textWorkEventList):
     textReportHeader    = textWorkEventList['railroad'] + '\n' \
                         + textWorkEventList['trainName'] + '\n' \
                         + textWorkEventList['trainDescription'] + '\n' \
-                        + u'Comment: ' + textWorkEventList['trainComment'] + '\n' \
-                        + u'Valid time: ' + textWorkEventList['date'] + '\n\n'
+                        + bundle['Comment: '] + textWorkEventList['trainComment'] + '\n' \
+                        + bundle['Valid time: '] + textWorkEventList['date'] + '\n\n'
 
     return textReportHeader
 
@@ -325,7 +328,7 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
 
     reportSwitchList = ''
     reportTally = [] # running total for all tracks
-    reportSwitchList += 'Location: ' + textWorkEventList['locations'][0]['locationName'] + '\n'
+    reportSwitchList += bundle['Location: '] + textWorkEventList['locations'][0]['locationName'] + '\n'
     for track in textWorkEventList['locations'][0]['tracks']:
         lengthOfLocos = 0
         lengthOfCars = 0
@@ -347,14 +350,14 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
 
         if trackTotals:
             totalLength = lengthOfLocos + lengthOfCars
-            reportSwitchList += 'Total Cars: ' + str(len(track['cars'])) + ' Track Length: ' + str(trackLength) + ' Eqpt. Length: ' + str(totalLength) + ' Available: ' + str(trackLength - totalLength) + '\n\n'
-            reportSwitchList += u'Track Totals for Cars:\n'
+            reportSwitchList += bundle['Total Cars: '] + str(len(track['cars'])) + bundle[' Track Length: '] + str(trackLength) + bundle[' Eqpt. Length: '] + str(totalLength) + bundle[' Available: '] + str(trackLength - totalLength) + '\n\n'
+            reportSwitchList += bundle['Track Totals for Cars:'] + '\n'
             for track, count in sorted(occuranceTally(trackTally).items()):
                 reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
         reportSwitchList += '\n'
 
     if trackTotals:
-        reportSwitchList += u'\nReport Totals for Cars:\n'
+        reportSwitchList += '\n' + bundle['Report Totals for Cars:'] + '\n'
         for track, count in sorted(occuranceTally(reportTally).items()):
             reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
 
