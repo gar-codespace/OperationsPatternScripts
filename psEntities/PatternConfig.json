@@ -88,7 +88,7 @@
     "PW" : 1500,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20220204
+    "RV" : 20220255
   },
   "LI": {
     "0" : "Editing these is not recommended",
@@ -121,16 +121,8 @@
     },
     "PA" : false,
     "PI" : false,
-    "SF" : {
-      "AS" : true,
-      "AT" : "Do Not Apply Schedule",
-      "AF" : "Apply Schedule"
-    },
-    "TF" : {
-      "TI" : true,
-      "TT" : "Disable TrainPlayer",
-      "TF" : "Enable TrainPlayer"
-    },
+    "TI" : true,
+    "AS" : true,
     "PW" : 260,
     "PH" : 16,
     "DS" : "*No Waybill",

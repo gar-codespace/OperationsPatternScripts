@@ -58,6 +58,9 @@ class StartUp:
     def makeSubroutinePanel(self):
         '''Makes the control panel that sits inside the frame'''
 
+        if not PatternScriptEntities.readConfigFile('PT')['AL']:
+            Model.updateLocations()
+
         self.subroutinePanel, self.widgets = View.ManageGui().makeSubroutinePanel()
         self.activateWidgets()
 
@@ -134,19 +137,9 @@ class StartUp:
 
         Model.onScButtonPress()
 
-        if PatternScriptEntities.readConfigFile('PT')['TF']['TI']: # TrainPlayer Include
+        if PatternScriptEntities.readConfigFile('PT')['TI']: # TrainPlayer Include
             Model.resetTrainPlayerSwitchlist()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
-
-    # def viewLogButton(self, EVENT):
-    #     '''Displays the pattern report log file in a notepad window'''
-    #
-    #     Model.makePatternLog()
-    #     View.printPatternLog()
-    #
-    #     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-    #
-    #     return

@@ -72,7 +72,7 @@ def makeSetCarsForTrackForm(setCarsFormData):
 
     setCarsSchedule, scheduleButton = makeSetCarsScheduleRow(setCarsFormData)
     buttonDict['scheduleButton'] = []
-    if setCarsSchedule and PatternScriptEntities.readConfigFile('PT')['SF']['AS']:
+    if setCarsSchedule and PatternScriptEntities.readConfigFile('PT')['AS']:
         setCarsForm.add(setCarsSchedule)
         buttonDict['scheduleButton'] = scheduleButton
         setCarsForm.add(javax.swing.JSeparator())
@@ -248,7 +248,7 @@ def MakeSetCarsFooter():
     setButton = javax.swing.JButton(unicode(u'Set', PatternScriptEntities.setEncoding()))
     combinedFooter.add(setButton)
 
-    if PatternScriptEntities.readConfigFile('PT')['TF']['TI']:
+    if PatternScriptEntities.readConfigFile('PT')['TI']:
         trainPlayerButton = javax.swing.JButton(unicode(u'TrainPlayer', PatternScriptEntities.setEncoding()))
         combinedFooter.add(trainPlayerButton)
 

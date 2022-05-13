@@ -19,6 +19,7 @@ SCRIPT_REV = 20220101
 SCRIPT_DIR = 'OperationsPatternScripts'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b2'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b3'
+# SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b4'
 
 SCRIPT_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
 
@@ -237,7 +238,7 @@ class View:
         '''Set the drop down text per the Apply Schedule flag'''
 
         patternConfig = PatternScriptEntities.readConfigFile('PT')
-        if patternConfig['SF']['AS']:
+        if patternConfig['AS']:
             menuText = self.bundle['Do Not Apply Schedule']
         else:
             menuText = self.bundle['Apply Schedule']
@@ -248,7 +249,7 @@ class View:
         '''Set the drop down text per the TrainPlayer Include flag'''
 
         patternConfig = PatternScriptEntities.readConfigFile('PT')
-        if patternConfig['TF']['TI']:
+        if patternConfig['TI']:
             menuText = self.bundle['Disable TrainPlayer']
         else:
             menuText = self.bundle['Enable TrainPlayer']
@@ -391,7 +392,7 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
     def addTrainPlayerListeners(self):
 
-        if PatternScriptEntities.readConfigFile('PT')['TF']['TI']: # TrainPlayer Include
+        if PatternScriptEntities.readConfigFile('PT')['TI']: # TrainPlayer Include
             self.addTrainsTableListener()
             self.addBuiltTrainListener()
 
@@ -410,14 +411,14 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
         patternConfig = PatternScriptEntities.readConfigFile()
 
-        if patternConfig['PT']['SF']['AS']:
-            patternConfig['PT']['SF'].update({'AS': False})
-            AS_ACTIVATE_EVENT.getSource().setText(patternConfig['PT']['SF']['AF'])
+        if patternConfig['PT']['AS']:
+            patternConfig['PT'].update({'AS': False})
+            AS_ACTIVATE_EVENT.getSource().setText(self.bundle["Apply Schedule"])
             self.psLog.info('Apply Schedule turned off')
             print('Apply Schedule turned off')
         else:
-            patternConfig['PT']['SF'].update({'AS': True})
-            AS_ACTIVATE_EVENT.getSource().setText(patternConfig['PT']['SF']['AT'])
+            patternConfig['PT'].update({'AS': True})
+            AS_ACTIVATE_EVENT.getSource().setText(self.bundle["Do Not Apply Schedule"])
             self.psLog.info('Apply Schedule turned on')
             print('Apply Schedule turned on')
 
@@ -430,9 +431,9 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
         patternConfig = PatternScriptEntities.readConfigFile()
 
-        if patternConfig['PT']['TF']['TI']: # If enabled, turn it off
-            patternConfig['PT']['TF'].update({'TI': False})
-            TP_ACTIVATE_EVENT.getSource().setText(patternConfig['PT']['TF']['TF'])
+        if patternConfig['PT']['TI']: # If enabled, turn it off
+            patternConfig['PT'].update({'TI': False})
+            TP_ACTIVATE_EVENT.getSource().setText(self.bundle["Enable TrainPlayer"])
 
             self.trainsTableModel.removeTableModelListener(self.trainsTableListener)
             self.removeBuiltTrainListener()
@@ -440,8 +441,8 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
             self.psLog.info('TrainPlayer support deactivated')
             print('TrainPlayer support deactivated')
         else:
-            patternConfig['PT']['TF'].update({'TI': True})
-            TP_ACTIVATE_EVENT.getSource().setText(patternConfig['PT']['TF']['TT'])
+            patternConfig['PT'].update({'TI': True})
+            TP_ACTIVATE_EVENT.getSource().setText(self.bundle["Disable TrainPlayer"])
 
             PatternScriptEntities.CheckTpDestination().directoryExists()
             self.trainsTableModel.addTableModelListener(self.trainsTableListener)
