@@ -28,7 +28,7 @@ class TrackPatternPanel:
 
         self.ignoreTrackLength = javax.swing.JCheckBox() # u'Ignore track length ', self.configFile['PI']
         self.ignoreTrackLength.setText(self.bundle['Ignore track length '])
-        self.yardTracksOnly.setSelected(self.configFile['PI'])
+        self.ignoreTrackLength.setSelected(self.configFile['PI'])
         self.ignoreTrackLength.setName('itlCheckBox')
 
         self.ypButton = javax.swing.JButton()

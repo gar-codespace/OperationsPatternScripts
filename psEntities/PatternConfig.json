@@ -119,8 +119,8 @@
       "SC" : "Switch List for One Track",
       "TP" : "Switch List for Selected Tracks"
     },
-    "PA" : false,
-    "PI" : false,
+    "PA" : true,
+    "PI" : true,
     "TI" : false,
     "AS" : true,
     "PW" : 260,
