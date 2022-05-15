@@ -86,10 +86,11 @@ class CheckTpDestination:
 
 def psLocale():
 
-    return unicode(PM.getLocale(), setEncoding())
+    return PM.getLocale().toString()
+    # return unicode(PM.getLocale(), setEncoding())
 
 def setEncoding():
-    '''Move this to the confif file'''
+    '''Move this to the confif file?'''
 
     # psEncoding = readConfigFile('CP')['SE']
 

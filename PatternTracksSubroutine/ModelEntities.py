@@ -374,8 +374,8 @@ def loopThroughRs(type, rsAttribs):
         messageFormat = jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
 
     for item in messageFormat:
-        itemWidth = reportWidth[item]
-        switchListRow += formatText(rsAttribs[item], itemWidth)
+        itemWidth = reportWidth[bundle[item]]
+        switchListRow += formatText(rsAttribs[bundle[item]], itemWidth)
 
     return switchListRow
 

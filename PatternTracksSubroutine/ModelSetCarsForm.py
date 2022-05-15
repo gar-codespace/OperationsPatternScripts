@@ -103,7 +103,7 @@ def setRs(rollingStock, userInputListItem):
         rollingStock.updateLoad()
         rollingStock.setMoves(rollingStock.getMoves() + 1)
         deleteFd(rollingStock)
-    if PatternScriptEntities.readConfigFile('PT')['SF']['AS'] and setResult == 'okay':
+    if PatternScriptEntities.readConfigFile('PT')['AS'] and setResult == 'okay':
         applySchedule(toTrackObject, rollingStock)
 
     return setResult

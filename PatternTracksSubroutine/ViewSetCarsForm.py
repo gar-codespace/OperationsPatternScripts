@@ -14,6 +14,8 @@ from psBundle import Bundle
 SCRIPT_NAME = 'OperationsPatternScripts.ViewSetCarsForm'
 SCRIPT_REV = 20220101
 
+bundle = Bundle.getBundleForLocale(PatternScriptEntities.SCRIPT_ROOT)
+
 def setCarsForTrackWindow(setCarsForTrackForm):
 
     setCarsWindow = jmri.util.JmriJFrame()
@@ -25,7 +27,6 @@ def makeSetCarsForTrackForm(setCarsFormData):
     '''Creates and populates the "Set Cars Form for Track X" form'''
 
     configFile = PatternScriptEntities.readConfigFile('PT')
-    bundle = Bundle.getBundleForLocale(PatternScriptEntities.SCRIPT_ROOT)
 
     buttonDict = {}
 
@@ -97,7 +98,6 @@ def makeSetCarsFormHeader(setCarsFormData):
     '''Creates the "Set Cars Form for Track X" forms header'''
 
     configFile = PatternScriptEntities.readConfigFile('PT')
-    bundle = Bundle.getBundleForLocale(PatternScriptEntities.SCRIPT_ROOT)
 
     combinedHeader = javax.swing.JPanel()
     combinedHeader.setLayout(javax.swing.BoxLayout(combinedHeader, javax.swing.BoxLayout.PAGE_AXIS))
@@ -129,8 +129,6 @@ def makeSetCarsFormHeader(setCarsFormData):
     return combinedHeader
 
 def makeSetCarsTrackButtons():
-
-    bundle = Bundle.getBundleForLocale(PatternScriptEntities.SCRIPT_ROOT)
 
     location =  PatternScriptEntities.readConfigFile('PT')['PL']
     allTracksAtLoc =  PatternScriptEntities.LM.getLocationByName(location).getTracksByNameList(None)
@@ -226,8 +224,6 @@ class MakeSetCarsEqptRows():
 def makeSetCarsScheduleRow(setCarsFormData):
     '''Using [0] to avoid for loop since there is only 1 location and track'''
 
-    bundle = Bundle.getBundleForLocale(PatternScriptEntities.SCRIPT_ROOT)
-
     trackLocation = setCarsFormData['locations'][0]['locationName']
     trackName = setCarsFormData['locations'][0]['tracks'][0]['trackName']
     trackObject = PatternScriptEntities.LM.getLocationByName(trackLocation).getTrackByName(trackName, None)
@@ -245,8 +241,6 @@ def makeSetCarsScheduleRow(setCarsFormData):
     return schedulePanel, scheduleList
 
 def MakeSetCarsFooter():
-
-    bundle = Bundle.getBundleForLocale(PatternScriptEntities.SCRIPT_ROOT)
 
     combinedFooter = javax.swing.JPanel()
     combinedFooter.border = javax.swing.BorderFactory.createTitledBorder(bundle['Action'])

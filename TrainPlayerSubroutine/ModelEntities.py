@@ -5,10 +5,6 @@ import jmri
 
 import logging
 import time
-# from json import loads as jsonLoads, dumps as jsonDumps
-# from os import mkdir as osMakeDir
-# from codecs import open as codecsOpen
-# from HTMLParser import HTMLParser
 
 from psEntities import PatternScriptEntities
 

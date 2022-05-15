@@ -17,6 +17,7 @@ SCRIPT_REV = 20220101
 SCRIPT_DIR = 'OperationsPatternScripts'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b2'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b3'
+# SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b4'
 
 class StandAlone():
     '''Called when this script is used by itself'''
