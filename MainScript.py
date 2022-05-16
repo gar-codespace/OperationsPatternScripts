@@ -30,6 +30,8 @@ from TrainPlayerSubroutine import BuiltTrainExport
 
 '''Global variables for now, this may change'''
 PatternScriptEntities.SCRIPT_ROOT = SCRIPT_ROOT
+# PatternScriptEntities.ENCODING = PatternScriptEntities.readConfigFile()['CP']['SE']
+PatternScriptEntities.ENCODING = 'utf-8'
 PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale(SCRIPT_ROOT)
 
 class TrainsTableListener(javax.swing.event.TableModelListener):
@@ -123,10 +125,8 @@ class Model:
 
         return
 
-    def runValidations(self):
+    def validatePatternConfig(self):
 
-        PatternScriptEntities.validateFileDestinationDirestories()
-        PatternScriptEntities.validateStubFile(SCRIPT_ROOT)
         PatternScriptEntities.readConfigFile()
         if not PatternScriptEntities.validateConfigFile(SCRIPT_ROOT):
             PatternScriptEntities.backupConfigFile()
@@ -135,7 +135,14 @@ class Model:
             self.psLog.warning('New PatternConfig.JSON file created for this profile')
 
         return
-        
+
+    def runValidations(self):
+
+        PatternScriptEntities.validateFileDestinationDirestories()
+        PatternScriptEntities.validateStubFile(SCRIPT_ROOT)
+
+        return
+
     def makePatternScriptsPanel(self, pluginPanel):
 
         for subroutine in self.makeSubroutineList():
@@ -280,6 +287,8 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
         self.logger = PatternScriptEntities.Logger(logPath)
         self.logger.startLogger('PS')
 
+        self.model = Model()
+
         self.trainsTableModel = jmri.jmrit.operations.trains.TrainsTableModel()
         self.builtTrainListener = BuiltTrainListener()
         self.trainsTableListener = TrainsTableListener(self.builtTrainListener)
@@ -294,7 +303,10 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
         self.psLog = logging.getLogger('PS.Controller')
         self.logger.initialLogMessage(self.psLog)
 
-        Model().runValidations()
+        self.model.validatePatternConfig()
+        # PatternScriptEntities.ENCODING = PatternScriptEntities.readConfigFile()['CP']['SE']
+        self.model.runValidations()
+        PatternScriptEntities.validateStubFile(SCRIPT_ROOT)
         self.addTrainPlayerListeners()
         if PatternScriptEntities.readConfigFile()['CP']['AP']:
             self.addPatternScriptsButton()
@@ -305,19 +317,6 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return False
-
-    # def runValidations(self):
-    #
-    #     PatternScriptEntities.validateFileDestinationDirestories()
-    #     PatternScriptEntities.validateStubFile(SCRIPT_ROOT)
-    #     PatternScriptEntities.readConfigFile()
-    #     if not PatternScriptEntities.validateConfigFile(SCRIPT_ROOT):
-    #         PatternScriptEntities.backupConfigFile()
-    #         self.psLog.warning('PatternConfig.json.bak file written')
-    #         PatternScriptEntities.writeNewConfigFile()
-    #         self.psLog.warning('New PatternConfig.JSON file created for this profile')
-    #
-    #     return
 
     def addPatternScriptsButton(self):
         '''The Pattern Scripts button on the PanelPro frame'''
@@ -390,11 +389,12 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
     def buildThePlugin(self):
 
-        emptyPluginPanel = View(None).makePluginPanel()
+        view = View(None)
+        emptyPluginPanel = view.makePluginPanel()
 
-        populatedPluginPanel = Model().makePatternScriptsPanel(emptyPluginPanel)
+        populatedPluginPanel = self.model.makePatternScriptsPanel(emptyPluginPanel)
 
-        scrollPanel = View(None).makeScrollPanel(populatedPluginPanel)
+        scrollPanel = view.makeScrollPanel(populatedPluginPanel)
         patternScriptsWindow = View(scrollPanel)
         patternScriptsWindow.makePatternScriptsWindow()
         self.menuItemList = patternScriptsWindow.getMenuItemList()

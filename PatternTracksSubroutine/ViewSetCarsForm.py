@@ -242,14 +242,14 @@ def MakeSetCarsFooter():
     combinedFooter = javax.swing.JPanel()
     combinedFooter.border = javax.swing.BorderFactory.createTitledBorder(PatternScriptEntities.BUNDLE['Action'])
 
-    printButton = javax.swing.JButton(unicode(PatternScriptEntities.BUNDLE['Print'], PatternScriptEntities.setEncoding()))
+    printButton = javax.swing.JButton(unicode(PatternScriptEntities.BUNDLE['Print'], PatternScriptEntities.ENCODING))
     combinedFooter.add(printButton)
 
-    setButton = javax.swing.JButton(unicode(PatternScriptEntities.BUNDLE['Set'], PatternScriptEntities.setEncoding()))
+    setButton = javax.swing.JButton(unicode(PatternScriptEntities.BUNDLE['Set'], PatternScriptEntities.ENCODING))
     combinedFooter.add(setButton)
 
     if PatternScriptEntities.readConfigFile('PT')['TI']:
-        trainPlayerButton = javax.swing.JButton(unicode(u'TrainPlayer', PatternScriptEntities.setEncoding()))
+        trainPlayerButton = javax.swing.JButton(unicode(u'TrainPlayer', PatternScriptEntities.ENCODING))
         combinedFooter.add(trainPlayerButton)
 
     return combinedFooter

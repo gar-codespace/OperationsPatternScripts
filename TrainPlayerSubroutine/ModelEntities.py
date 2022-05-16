@@ -61,7 +61,7 @@ def parseJmriLocations(location):
 def parseRollingStockAsDict(rS):
 
     rsDict = {}
-    rsDict['Road'] = unicode(rS[u'road'], PatternScriptEntities.setEncoding())
+    rsDict['Road'] = unicode(rS[u'road'], PatternScriptEntities.ENCODING)
     rsDict['Number'] = rS[u'number']
 
     try:
@@ -78,16 +78,16 @@ def parseRollingStockAsDict(rS):
         rsDict[u'Load'] = 'O'
     rsDict[u'Length'] = rS[u'length']
     rsDict[u'Weight'] = rS[u'weightTons']
-    rsDict[u'Track'] = unicode(rS[u'location'][u'track'][u'userName'], PatternScriptEntities.setEncoding())
-    rsDict[u'Set to'] = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.setEncoding()) + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.setEncoding())
+    rsDict[u'Track'] = unicode(rS[u'location'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
+    rsDict[u'Set to'] = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.ENCODING) + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
     try:
-        jFinalDestination = unicode(rS[u'finalDestination'][u'userName'], PatternScriptEntities.setEncoding())
+        jFinalDestination = unicode(rS[u'finalDestination'][u'userName'], PatternScriptEntities.ENCODING)
         try:
-            jFinalTrack = unicode(rS[u'finalDestination'][u'track'][u'userName'], PatternScriptEntities.setEncoding())
+            jFinalTrack = unicode(rS[u'finalDestination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
         except KeyError:
             jFinalTrack = u'Any'
         rsDict[u'FD&Track'] = jFinalDestination + ';' + jFinalTrack
     except:
-        rsDict[u'FD&Track'] = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.setEncoding()) + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.setEncoding())
+        rsDict[u'FD&Track'] = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.ENCODING) + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
 
     return rsDict

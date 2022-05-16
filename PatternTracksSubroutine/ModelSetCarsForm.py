@@ -35,15 +35,15 @@ def setRsToTrack(setCarsForm, textBoxEntry):
 
     userInputList = []
     for userInput in textBoxEntry:
-        userInputList.append(unicode(userInput.getText(), PatternScriptEntities.setEncoding()))
+        userInputList.append(unicode(userInput.getText(), PatternScriptEntities.ENCODING))
 
     i = 0
     setCount = 0
 
     allTracksAtLoc = ModelEntities.getTracksByLocation(None)
-    fromTrack = unicode(setCarsForm['locations'][0]['tracks'][0]['trackName'], PatternScriptEntities.setEncoding())
+    fromTrack = unicode(setCarsForm['locations'][0]['tracks'][0]['trackName'], PatternScriptEntities.ENCODING)
     for loco in setCarsForm['locations'][0]['tracks'][0]['locos']:
-        if not unicode(userInputList[i], PatternScriptEntities.setEncoding()) in allTracksAtLoc: # Catches invalid track typed into box, skips empty entries
+        if not unicode(userInputList[i], PatternScriptEntities.ENCODING) in allTracksAtLoc: # Catches invalid track typed into box, skips empty entries
             i += 1
             continue
         if userInputList[i] == fromTrack:
@@ -62,7 +62,7 @@ def setRsToTrack(setCarsForm, textBoxEntry):
     jmri.jmrit.operations.rollingstock.engines.EngineManagerXml.save()
 
     for car in setCarsForm['locations'][0]['tracks'][0]['cars']:
-        if not unicode(userInputList[i], PatternScriptEntities.setEncoding()) in allTracksAtLoc:
+        if not unicode(userInputList[i], PatternScriptEntities.ENCODING) in allTracksAtLoc:
             i += 1
             continue
         if userInputList[i] == fromTrack:
@@ -87,8 +87,8 @@ def setRsToTrack(setCarsForm, textBoxEntry):
 def setRs(rollingStock, userInputListItem):
 
     location = PatternScriptEntities.readConfigFile('PT')['PL']
-    locationObject = PatternScriptEntities.LM.getLocationByName(unicode(location, PatternScriptEntities.setEncoding()))
-    toTrackObject = locationObject.getTrackByName(unicode(userInputListItem, PatternScriptEntities.setEncoding()), None)
+    locationObject = PatternScriptEntities.LM.getLocationByName(unicode(location, PatternScriptEntities.ENCODING))
+    toTrackObject = locationObject.getTrackByName(unicode(userInputListItem, PatternScriptEntities.ENCODING), None)
 
     ignoreTrackLength = PatternScriptEntities.readConfigFile('PT')['PI']
     if ignoreTrackLength:
@@ -174,7 +174,7 @@ def makeLocationDict(setCarsForm, textBoxEntry):
 
     userInputList = []
     for userInput in textBoxEntry:
-        userInputList.append(unicode(userInput.getText(), PatternScriptEntities.setEncoding()))
+        userInputList.append(unicode(userInput.getText(), PatternScriptEntities.ENCODING))
 
     longestTrackString = 6 # 6 is the length of [Hold]
     for track in PatternScriptEntities.readConfigFile('PT')['PT']: # Pattern Tracks
@@ -185,7 +185,7 @@ def makeLocationDict(setCarsForm, textBoxEntry):
     locoList = []
     for loco in setCarsForm['locations'][0]['tracks'][0]['locos']:
         setTrack = u'Hold'
-        userInput = unicode(userInputList[i], PatternScriptEntities.setEncoding())
+        userInput = unicode(userInputList[i], PatternScriptEntities.ENCODING)
         if userInput in allTracksAtLoc and userInput != trackName:
             setTrack = userInput
         loco['Set to'] = PatternScriptEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
@@ -195,7 +195,7 @@ def makeLocationDict(setCarsForm, textBoxEntry):
     carList = []
     for car in setCarsForm['locations'][0]['tracks'][0]['cars']:
         setTrack = u'Hold'
-        userInput = unicode(userInputList[i], PatternScriptEntities.setEncoding())
+        userInput = unicode(userInputList[i], PatternScriptEntities.ENCODING)
         if userInput in allTracksAtLoc and userInput != trackName:
             setTrack = userInput
         car['Set to'] = PatternScriptEntities.formatText('[' + setTrack + ']', longestTrackString + 2)

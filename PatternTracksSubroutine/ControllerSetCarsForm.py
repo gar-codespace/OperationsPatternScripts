@@ -93,7 +93,7 @@ class CreatePatternReportGui:
     def trackRowButton(self, MOUSE_CLICKED):
         '''Any button of the "Set Cars Form for Track X" - row of track buttons'''
 
-        _trackNameClickedOn = unicode(MOUSE_CLICKED.getSource().getText(), PatternScriptEntities.setEncoding())
+        _trackNameClickedOn = unicode(MOUSE_CLICKED.getSource().getText(), PatternScriptEntities.ENCODING)
         global _trackNameClickedOn
 
         return

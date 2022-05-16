@@ -61,8 +61,7 @@ Catches Items:
 
 Todo:
   BUNDLE calls seem to be scattered around MainScript
-  eliminate SCRIPT_ROOT as a global?
-  Is global BUNDLE a good idea?
+  Are SCRIPT_ROOT, ENCODING and BUNDLE as global constants a good idea?
   Maybe move encoding into config file?
 
 Wish List:

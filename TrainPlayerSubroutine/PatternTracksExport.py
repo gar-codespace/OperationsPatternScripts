@@ -34,8 +34,8 @@ class ExportJmriLocations:
         for location in PatternScriptEntities.LM.getLocationsByIdList():
             tracks = location.getTracksList()
             for track in tracks:
-                aoLocale = unicode(location.getName(), PatternScriptEntities.setEncoding()) + u';' + unicode(track.getName(), PatternScriptEntities.setEncoding())
-                trackComment = unicode(track.getComment(), PatternScriptEntities.setEncoding())
+                aoLocale = unicode(location.getName(), PatternScriptEntities.ENCODING) + u';' + unicode(track.getName(), PatternScriptEntities.ENCODING)
+                trackComment = unicode(track.getComment(), PatternScriptEntities.ENCODING)
                 if not trackComment:
                     i += 1
                 csvLocations += aoLocale + ',' + trackComment + '\n'
@@ -49,7 +49,7 @@ class ExportJmriLocations:
 
         jmriLocationsPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Locations.csv"
         try: # Catch TrainPlayer not installed
-            with codecsOpen(jmriLocationsPath, 'wb', encoding=PatternScriptEntities.setEncoding()) as csvWorkFile:
+            with codecsOpen(jmriLocationsPath, 'wb', encoding=PatternScriptEntities.ENCODING) as csvWorkFile:
                 csvHeader = u'Locale,Industry\n'
                 csvWorkFile.write(csvHeader + csvLocations)
         except IOError:
@@ -82,7 +82,7 @@ class TrackPatternTranslationToTp:
 
         userInputList = []
         for userInput in textBoxEntry:
-            inputText = unicode(userInput.getText(), PatternScriptEntities.setEncoding())
+            inputText = unicode(userInput.getText(), PatternScriptEntities.ENCODING)
             if inputText in trackList:
                 userInputList.append(inputText)
             else:
@@ -112,7 +112,7 @@ class TrackPatternTranslationToTp:
         headerNames = PatternScriptEntities.readConfigFile('PT')
         reportTitle = headerNames['TD']['TP']
         jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
-        with codecsOpen(jsonFile, 'r', encoding=PatternScriptEntities.setEncoding()) as jsonWorkFile:
+        with codecsOpen(jsonFile, 'r', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
             jsonSwitchList = jsonWorkFile.read()
         tpSwitchList = jsonLoads(jsonSwitchList)
 
@@ -215,7 +215,7 @@ class JmriTranslationToTp:
     def parseRollingStockAsDict(self, rS):
 
         rsDict = {}
-        rsDict['Road'] = unicode(rS[u'road'], PatternScriptEntities.setEncoding())
+        rsDict['Road'] = unicode(rS[u'road'], PatternScriptEntities.ENCODING)
         rsDict['Number'] = rS[u'number']
 
         try:
@@ -232,18 +232,18 @@ class JmriTranslationToTp:
             rsDict[u'Load'] = 'O'
         rsDict[u'Length'] = rS[u'length']
         rsDict[u'Weight'] = rS[u'weightTons']
-        rsDict[u'Track'] = unicode(rS[u'location'][u'track'][u'userName'], PatternScriptEntities.setEncoding())
-        # rsDict[u'Set to'] = unicode(lN, PatternScriptEntities.setEncoding()) + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.setEncoding())
-        rsDict[u'Set to'] = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.setEncoding()) + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.setEncoding())
+        rsDict[u'Track'] = unicode(rS[u'location'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
+        # rsDict[u'Set to'] = unicode(lN, PatternScriptEntities.ENCODING) + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
+        rsDict[u'Set to'] = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.ENCODING) + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
         try:
-            jFinalDestination = unicode(rS[u'finalDestination'][u'userName'], PatternScriptEntities.setEncoding())
+            jFinalDestination = unicode(rS[u'finalDestination'][u'userName'], PatternScriptEntities.ENCODING)
             try:
-                jFinalTrack = unicode(rS[u'finalDestination'][u'track'][u'userName'], PatternScriptEntities.setEncoding())
+                jFinalTrack = unicode(rS[u'finalDestination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
             except KeyError:
                 jFinalTrack = u'Any'
             rsDict[u'FD&Track'] = jFinalDestination + ';' + jFinalTrack
         except:
-            rsDict[u'FD&Track'] = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.setEncoding()) + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.setEncoding())
+            rsDict[u'FD&Track'] = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.ENCODING) + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
 
         return rsDict
 
@@ -263,7 +263,7 @@ class ProcessWorkEventList:
         reportTitle = appendedTpSwitchList['trainDescription']
         jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
         jsonObject = jsonDumps(appendedTpSwitchList, indent=2, sort_keys=True)
-        with codecsOpen(jsonFile, 'wb', encoding=PatternScriptEntities.setEncoding()) as jsonWorkFile:
+        with codecsOpen(jsonFile, 'wb', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
             jsonWorkFile.write(jsonObject)
 
         print(SCRIPT_NAME + '.ProcessWorkEventList ' + str(SCRIPT_REV))
@@ -325,7 +325,7 @@ class WriteWorkEventListToTp:
         self.psLog.debug('asCsv')
 
         try: # Catch TrainPlayer not installed
-            with codecsOpen(self.jmriManifestPath, 'wb', encoding=PatternScriptEntities.setEncoding()) as csvWorkFile:
+            with codecsOpen(self.jmriManifestPath, 'wb', encoding=PatternScriptEntities.ENCODING) as csvWorkFile:
                 csvWorkFile.write(self.workEventList)
         except IOError:
             self.psLog.warning('Directory not found, TrainPlayer switch list export did not complete')

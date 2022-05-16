@@ -27,7 +27,7 @@ def getAllLocations():
     allLocations = PatternScriptEntities.LM.getLocationsByNameList()
     locationList = []
     for item in allLocations:
-        locationList.append(unicode(item.getName(), PatternScriptEntities.setEncoding()))
+        locationList.append(unicode(item.getName(), PatternScriptEntities.ENCODING))
 
     return locationList
 
@@ -37,7 +37,7 @@ def getAllTracksForLocation(location):
     jmriTrackList = PatternScriptEntities.LM.getLocationByName(location).getTracksByNameList(None)
     trackDict = {}
     for track in jmriTrackList:
-        trackDict[unicode(track.getName(), PatternScriptEntities.setEncoding())] = False
+        trackDict[unicode(track.getName(), PatternScriptEntities.ENCODING)] = False
 
     return trackDict
 
@@ -60,7 +60,7 @@ def getTracksByLocation(trackType):
     allTracksList = []
     try: # Catch on the fly user edit of config file error
         for track in PatternScriptEntities.LM.getLocationByName(patternLocation).getTracksByNameList(trackType):
-            allTracksList.append(unicode(track.getName(), PatternScriptEntities.setEncoding()))
+            allTracksList.append(unicode(track.getName(), PatternScriptEntities.ENCODING))
         return allTracksList
     except AttributeError:
         return allTracksList
@@ -70,7 +70,7 @@ def updateTrackCheckBoxes(trackCheckBoxes):
 
     dict = {}
     for item in trackCheckBoxes:
-        dict[unicode(item.text, PatternScriptEntities.setEncoding())] = item.selected
+        dict[unicode(item.text, PatternScriptEntities.ENCODING)] = item.selected
 
     return dict
 
@@ -245,11 +245,11 @@ def makeGenericHeader():
     '''A generic header info for any switch list, used to make the JSON file'''
 
     listHeader = {}
-    listHeader['railroad'] = unicode(jmri.jmrit.operations.setup.Setup.getRailroadName(), PatternScriptEntities.setEncoding())
+    listHeader['railroad'] = unicode(jmri.jmrit.operations.setup.Setup.getRailroadName(), PatternScriptEntities.ENCODING)
     listHeader['trainName'] = u'Report Type Placeholder'
     listHeader['trainDescription'] = u'Report Description'
     listHeader['trainComment'] = u'Train Comment Placeholder'
-    listHeader['date'] = unicode(PatternScriptEntities.timeStamp(), PatternScriptEntities.setEncoding())
+    listHeader['date'] = unicode(PatternScriptEntities.timeStamp(), PatternScriptEntities.ENCODING)
     listHeader['locations'] = []
 
     return listHeader
@@ -260,7 +260,7 @@ def writeWorkEventListAsJson(switchList):
     switchListName = switchList['trainDescription']
     jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + switchListName + '.json'
     jsonObject = jsonDumps(switchList, indent=2, sort_keys=True)
-    with codecsOpen(jsonCopyTo, 'wb', encoding=PatternScriptEntities.setEncoding()) as jsonWorkFile:
+    with codecsOpen(jsonCopyTo, 'wb', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
         jsonWorkFile.write(jsonObject)
 
     return switchListName
@@ -268,7 +268,7 @@ def writeWorkEventListAsJson(switchList):
 def readJsonWorkEventList(workEventName):
 
     jsonCopyFrom = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + workEventName + '.json'
-    with codecsOpen(jsonCopyFrom, 'r', encoding=PatternScriptEntities.setEncoding()) as jsonWorkFile:
+    with codecsOpen(jsonCopyFrom, 'r', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
         jsonEventList = jsonWorkFile.read()
     textWorkEventList = jsonLoads(jsonEventList)
 
@@ -277,7 +277,7 @@ def readJsonWorkEventList(workEventName):
 def writeTextSwitchList(fileName, textSwitchList):
 
     textCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + fileName + '.txt'
-    with codecsOpen(textCopyTo, 'wb', encoding=PatternScriptEntities.setEncoding()) as textWorkFile:
+    with codecsOpen(textCopyTo, 'wb', encoding=PatternScriptEntities.ENCODING) as textWorkFile:
         textWorkFile.write(textSwitchList)
 
     return
@@ -286,7 +286,7 @@ def makeInitialTrackList(location):
 
     trackDict = {}
     for track in PatternScriptEntities.LM.getLocationByName(location).getTracksByNameList(None):
-        trackDict[unicode(track, PatternScriptEntities.setEncoding())] = False
+        trackDict[unicode(track, PatternScriptEntities.ENCODING)] = False
 
     return trackDict
 
@@ -301,7 +301,7 @@ def makeCsvSwitchlist(trackPattern):
                     u'YPC,Yard Pattern Comment,' + trackPattern['trainComment'] + '\n' \
                     u'VT,Valid,' + trackPattern['date'] + '\n'
     for track in trackPattern['locations'][0]['tracks']: # There is only one location
-        csvSwitchList += u'TN,Track name,' + unicode(track['trackName'], PatternScriptEntities.setEncoding()) + '\n'
+        csvSwitchList += u'TN,Track name,' + unicode(track['trackName'], PatternScriptEntities.ENCODING) + '\n'
         for loco in track['locos']:
             csvSwitchList +=  loco['Set to'] + ',' \
                             + loco['PUSO'] + ',' \
@@ -352,7 +352,7 @@ def makeCsvSwitchlist(trackPattern):
 def appendJsonBody(trainPlayerSwitchList):
 
     jsonCopyFrom = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\TrainPlayerSwitchlist.json'
-    with codecsOpen(jsonCopyFrom, 'r', encoding=PatternScriptEntities.setEncoding()) as jsonWorkFile:
+    with codecsOpen(jsonCopyFrom, 'r', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
         switchList = jsonWorkFile.read()
     jsonSwitchList = jsonLoads(switchList)
     jTemp = jsonSwitchList['locations']
@@ -361,7 +361,7 @@ def appendJsonBody(trainPlayerSwitchList):
 
     jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\TrainPlayerSwitchlist.json'
     jsonObject = jsonDumps(jsonSwitchList, indent=2, sort_keys=True)
-    with codecsOpen(jsonCopyTo, 'wb', encoding=PatternScriptEntities.setEncoding()) as jsonWorkFile:
+    with codecsOpen(jsonCopyTo, 'wb', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
         jsonWorkFile.write(jsonObject)
 
     return

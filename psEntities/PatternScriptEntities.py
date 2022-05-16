@@ -30,6 +30,7 @@ psLog = logging.getLogger('PS.PE.PatternScriptEntities')
 
 '''Global variables for now, this may change'''
 SCRIPT_ROOT = ''
+ENCODING = ''
 BUNDLE = {}
 
 class Logger:
@@ -89,7 +90,7 @@ class CheckTpDestination:
 def psLocale():
 
     return PM.getLocale().toString()
-    # return unicode(PM.getLocale(), setEncoding())
+    # return unicode(PM.getLocale(), ENCODING)
 
 def setEncoding():
     '''Move this to the confif file?'''
@@ -171,15 +172,15 @@ def validateStubFile(currentRootDir):
 
     helpFilePath = currentRootDir + '\psSupport\psHelp.html'
     helpFilePath = javaIo.File(helpFilePath).toURI()
-    helpFilePath = unicode(helpFilePath, setEncoding())
+    helpFilePath = unicode(helpFilePath, ENCODING)
 
     stubTemplateLocation = jmri.util.FileUtil.getProgramPath() + 'help\\' + psLocale() + '\\local\\stub_template.html'
-    with codecsOpen(stubTemplateLocation, 'r', encoding=setEncoding()) as template:
+    with codecsOpen(stubTemplateLocation, 'r', encoding=ENCODING) as template:
         contents = template.read()
         contents = contents.replace("../index.html#", "")
         contents = contents.replace("<!--HELP_KEY-->", helpFilePath)
         contents = contents.replace("<!--URL_HELP_KEY-->", "")
-    with codecsOpen(stubFileName, 'wb', encoding=setEncoding()) as stubWorkFile:
+    with codecsOpen(stubFileName, 'wb', encoding=ENCODING) as stubWorkFile:
         stubWorkFile.write(contents)
         psLog.debug('psStub writen from stub_template')
 
@@ -207,7 +208,7 @@ def validateConfigFile(currentRootDir):
     '''Checks that the config file is the current version'''
 
     configFilePath = currentRootDir + '\psEntities\PatternConfig.json'
-    with codecsOpen(configFilePath, 'r', encoding=setEncoding()) as validConfigFileLoc:
+    with codecsOpen(configFilePath, 'r', encoding=ENCODING) as validConfigFileLoc:
         validPatternConfig = jsonLoads(validConfigFileLoc.read())
 
     userPatternConfig = getConfigFile()
@@ -247,7 +248,7 @@ def getConfigFile():
 
     configFileLoc = jmri.util.FileUtil.getProfilePath() + 'operations\PatternConfig.json'
 
-    with codecsOpen(configFileLoc, 'r', encoding=setEncoding()) as configWorkFile:
+    with codecsOpen(configFileLoc, 'r', encoding=ENCODING) as configWorkFile:
         patternConfig = jsonLoads(configWorkFile.read())
 
     return patternConfig
@@ -257,7 +258,7 @@ def writeConfigFile(configFile):
 
     jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json'
     jsonObject = jsonDumps(configFile, indent=2, sort_keys=True)
-    with codecsOpen(jsonCopyTo, 'wb', encoding=setEncoding()) as jsonWorkFile:
+    with codecsOpen(jsonCopyTo, 'wb', encoding=ENCODING) as jsonWorkFile:
         jsonWorkFile.write(jsonObject)
 
     return
@@ -280,7 +281,7 @@ def makePatternLog():
     configLoggingIndex = readConfigFile('LI')
     logLevel = configLoggingIndex[jmri.jmrit.operations.setup.Setup.getBuildReportLevel()]
     logFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog.txt'
-    with codecsOpen(logFileLocation, 'r', encoding=setEncoding()) as patternLogFile:
+    with codecsOpen(logFileLocation, 'r', encoding=ENCODING) as patternLogFile:
         while True:
             thisLine = patternLogFile.readline()
             if not (thisLine):
@@ -297,7 +298,7 @@ def makePatternLog():
                 outputPatternLog += thisLine
 
     tempLogFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
-    with codecsOpen(tempLogFileLocation, 'w', encoding=setEncoding()) as tempPatternLogFile:
+    with codecsOpen(tempLogFileLocation, 'w', encoding=ENCODING) as tempPatternLogFile:
         tempPatternLogFile.write(outputPatternLog)
 
     return
