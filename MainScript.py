@@ -123,6 +123,19 @@ class Model:
 
         return
 
+    def runValidations(self):
+
+        PatternScriptEntities.validateFileDestinationDirestories()
+        PatternScriptEntities.validateStubFile(SCRIPT_ROOT)
+        PatternScriptEntities.readConfigFile()
+        if not PatternScriptEntities.validateConfigFile(SCRIPT_ROOT):
+            PatternScriptEntities.backupConfigFile()
+            self.psLog.warning('PatternConfig.json.bak file written')
+            PatternScriptEntities.writeNewConfigFile()
+            self.psLog.warning('New PatternConfig.JSON file created for this profile')
+
+        return
+        
     def makePatternScriptsPanel(self, pluginPanel):
 
         for subroutine in self.makeSubroutineList():
@@ -281,7 +294,7 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
         self.psLog = logging.getLogger('PS.Controller')
         self.logger.initialLogMessage(self.psLog)
 
-        self.runValidations()
+        Model().runValidations()
         self.addTrainPlayerListeners()
         if PatternScriptEntities.readConfigFile()['CP']['AP']:
             self.addPatternScriptsButton()
@@ -293,18 +306,18 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
         return False
 
-    def runValidations(self):
-
-        PatternScriptEntities.validateFileDestinationDirestories()
-        PatternScriptEntities.validateStubFile(SCRIPT_ROOT)
-        PatternScriptEntities.readConfigFile()
-        if not PatternScriptEntities.validateConfigFile(SCRIPT_ROOT):
-            PatternScriptEntities.backupConfigFile()
-            self.psLog.warning('PatternConfig.json.bak file written')
-            PatternScriptEntities.writeNewConfigFile()
-            self.psLog.warning('New PatternConfig.JSON file created for this profile')
-
-        return
+    # def runValidations(self):
+    #
+    #     PatternScriptEntities.validateFileDestinationDirestories()
+    #     PatternScriptEntities.validateStubFile(SCRIPT_ROOT)
+    #     PatternScriptEntities.readConfigFile()
+    #     if not PatternScriptEntities.validateConfigFile(SCRIPT_ROOT):
+    #         PatternScriptEntities.backupConfigFile()
+    #         self.psLog.warning('PatternConfig.json.bak file written')
+    #         PatternScriptEntities.writeNewConfigFile()
+    #         self.psLog.warning('New PatternConfig.JSON file created for this profile')
+    #
+    #     return
 
     def addPatternScriptsButton(self):
         '''The Pattern Scripts button on the PanelPro frame'''

@@ -23,14 +23,14 @@ CM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.Car
 SM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.schedules.ScheduleManager)
 PM = jmri.InstanceManager.getDefault(jmri.util.gui.GuiLafPreferencesManager)
 
-'''Global variables for now, this may change'''
-SCRIPT_ROOT = ''
-BUNDLE = {}
-
 SCRIPT_NAME = 'OperationsPatternScripts.psEntities.PatternScriptEntities'
 SCRIPT_REV = 20220101
 
 psLog = logging.getLogger('PS.PE.PatternScriptEntities')
+
+'''Global variables for now, this may change'''
+SCRIPT_ROOT = ''
+BUNDLE = {}
 
 class Logger:
 
@@ -110,7 +110,8 @@ def formatText(item, length):
     return xItem + u' '
 
 def occuranceTally(listOfOccurances):
-    '''Tally the occurances of a word in a list and return a dictionary'''
+    '''Tally the occurances of a word in a list and return a dictionary
+    Home grown version of collections.Counter'''
 
     dict = {}
     while len(listOfOccurances):
@@ -125,7 +126,7 @@ def occuranceTally(listOfOccurances):
     return dict
 
 def getStubPath():
-    '''Convert an OS path to a browser acceptable URI, there is probably a method that does this'''
+    '''Convert an OS path to a browser acceptable URI, there is probably a method that already does this'''
 
     stubPath = 'file:///' + jmri.util.FileUtil.getPreferencesPath() + 'jmrihelp/psStub.html'
     stubPath = stubPath.replace('\\', '/')
@@ -186,6 +187,7 @@ def validateStubFile(currentRootDir):
 
 def validateFileDestinationDirestories():
     '''Checks that the folders this plugin writes to exist'''
+
 # Can't use jmri.util.FileUtil.createDirectory().... does not return anything
     destDirPath = jmri.util.FileUtil.getProfilePath() + 'operations\\'
     listOfDirectories = ['csvManifests', 'csvSwitchLists', 'jsonManifests', 'switchLists']
@@ -196,7 +198,7 @@ def validateFileDestinationDirestories():
             psLog.warning(directory + ' folder created')
         except OSError:
             x += 1
-    if (x == 4):
+    if (x == len(listOfDirectories)):
         psLog.info('Destination folders check OK')
 
     return

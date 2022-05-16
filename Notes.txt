@@ -44,6 +44,8 @@ Tested Items:
   Add a listener to monitor if a new train is created or deleted, builtTrain listeners updated accordingly
   TrainPlayer subroutine sketched in, to be expanded
   Language bundle sketched in, to be expanded
+  Bundle added with French test case
+  KeyError when editing config file crashed plugin, bummer. Restart button bale out.
 
 Catches Items:
   Catches pattern report button press no tracks selected OK
@@ -58,17 +60,17 @@ Catches Items:
   Catches user add/remove train while TP export is enabled
 
 Todo:
-  Get all BUNDLE calls into 'View' modules and classes only
-  Try to get SCRIPT_ROOT out of writeNewConfigFile() (eliminate SCRIPT_ROOT as a global)
-  Not sure setAsDropDown and setTiDropDown should be in View()
-  KeyError when editing config file crashed plugin, bummer
+  BUNDLE calls seem to be scattered around MainScript
+  eliminate SCRIPT_ROOT as a global?
+  Is global BUNDLE a good idea?
+  Maybe move encoding into config file?
 
 Wish List:
   Next version, Set Cars windows add work to work list or docket, similar to TrainPlayer button, add Yardmaster button to Set Cars windows
   jmri.jmrit.operations.locations.YardmasterFrame(location)
-  add Pattern Scripts to Operations Pro combo box
-  plugin added to button in trains window (AWT.getComponents())
-  jmri.util.swing.JMenuUtil.replaceMenuItem() to replace the trains window with a new trains window that includes a ps button
+  add Pattern Scripts to Operations Pro combo box?
+  plugin added to button in trains window (AWT.getComponents())?
+  jmri.util.swing.JMenuUtil.replaceMenuItem() to replace the trains window with a new trains window that includes a ps button?
 
 Colors:
   # DUST = java.awt.Color(245,242,233) # Light tan
