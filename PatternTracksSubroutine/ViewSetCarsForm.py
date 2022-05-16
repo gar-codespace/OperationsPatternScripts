@@ -14,7 +14,7 @@ from psBundle import Bundle
 SCRIPT_NAME = 'OperationsPatternScripts.ViewSetCarsForm'
 SCRIPT_REV = 20220101
 
-bundle = Bundle.getBundleForLocale(PatternScriptEntities.SCRIPT_ROOT)
+# bundle = Bundle.getBundleForLocale(PatternScriptEntities.SCRIPT_ROOT)
 
 def setCarsForTrackWindow(setCarsForTrackForm):
 
@@ -50,7 +50,7 @@ def makeSetCarsForTrackForm(setCarsFormData):
     if setCarsFormData['locations'][0]['tracks'][0]['locos']:
         locoFormBody = javax.swing.JPanel()
         locoFormBody.setLayout(javax.swing.BoxLayout(locoFormBody, javax.swing.BoxLayout.PAGE_AXIS))
-        locoFormBody.border = javax.swing.BorderFactory.createTitledBorder(bundle['Locomotives at '] + setCarsFormData['locations'][0]['tracks'][0]['trackName'])
+        locoFormBody.border = javax.swing.BorderFactory.createTitledBorder(PatternScriptEntities.BUNDLE['Locomotives at '] + setCarsFormData['locations'][0]['tracks'][0]['trackName'])
 
         setCarsLocoRows = setCarsEqptRows.makeSetCarsLocoRows()
         for loco in setCarsLocoRows:
@@ -60,7 +60,7 @@ def makeSetCarsForTrackForm(setCarsFormData):
     if setCarsFormData['locations'][0]['tracks'][0]['cars']:
         carFormBody = javax.swing.JPanel()
         carFormBody.setLayout(javax.swing.BoxLayout(carFormBody, javax.swing.BoxLayout.PAGE_AXIS))
-        carFormBody.border = javax.swing.BorderFactory.createTitledBorder(bundle['Cars at '] + setCarsFormData['locations'][0]['tracks'][0]['trackName'])
+        carFormBody.border = javax.swing.BorderFactory.createTitledBorder(PatternScriptEntities.BUNDLE['Cars at '] + setCarsFormData['locations'][0]['tracks'][0]['trackName'])
 
         setCarsCarRows = setCarsEqptRows.makeSetCarsCarRows()
         for car in setCarsCarRows:
@@ -113,7 +113,7 @@ def makeSetCarsFormHeader(setCarsFormData):
     headerYTLabel.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT)
     trackName = setCarsFormData['locations'][0]['tracks'][0]['trackName'] # There's only one track
     locationName = setCarsFormData['locations'][0]['locationName'] # There's only one location
-    headerYTLabel.setText(bundle['Set Cars Form for track: '] + trackName + bundle[' at '] + locationName)
+    headerYTLabel.setText(PatternScriptEntities.BUNDLE['Set Cars Form for track: '] + trackName + PatternScriptEntities.BUNDLE[' at '] + locationName)
     headerYTBox = makeSwingBox(100, configFile['PH'])
     headerYTBox.add(headerYTLabel)
 
@@ -134,7 +134,7 @@ def makeSetCarsTrackButtons():
     allTracksAtLoc =  PatternScriptEntities.LM.getLocationByName(location).getTracksByNameList(None)
 
     buttonPanel = javax.swing.JPanel()
-    buttonPanel.border = javax.swing.BorderFactory.createTitledBorder(bundle['Tracks at '] + location)
+    buttonPanel.border = javax.swing.BorderFactory.createTitledBorder(PatternScriptEntities.BUNDLE['Tracks at '] + location)
     buttonList = []
     for track in allTracksAtLoc:
         selectTrackButton = javax.swing.JButton(track.getName())
@@ -179,8 +179,8 @@ class MakeSetCarsEqptRows():
             combinedInputLine.add(inputBox)
 
             for item in jmri.jmrit.operations.setup.Setup.getDropEngineMessageFormat():
-                label = javax.swing.JLabel(loco[item])
-                box = makeSwingBox(self.reportWidth[item] * self.panelWidth, self.panelHeight)
+                label = javax.swing.JLabel(loco[PatternScriptEntities.BUNDLE[item]])
+                box = makeSwingBox(self.reportWidth[PatternScriptEntities.BUNDLE[item]] * self.panelWidth, self.panelHeight)
                 box.add(label)
                 combinedInputLine.add(box)
 
@@ -208,8 +208,8 @@ class MakeSetCarsEqptRows():
             combinedInputLine.add(inputBox)
 
             for item in jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
-                label = javax.swing.JLabel(car[item])
-                box = makeSwingBox(self.reportWidth[item] * self.panelWidth, self.panelHeight)
+                label = javax.swing.JLabel(car[PatternScriptEntities.BUNDLE[item]])
+                box = makeSwingBox(self.reportWidth[PatternScriptEntities.BUNDLE[item]] * self.panelWidth, self.panelHeight)
                 box.add(label)
                 combinedInputLine.add(box)
             combinedInputLine.add(javax.swing.Box.createHorizontalGlue())
@@ -232,10 +232,10 @@ def makeSetCarsScheduleRow(setCarsFormData):
     scheduleList = []
     if (scheduleObject):
         schedulePanel = javax.swing.JPanel()
-        schedulePanel.border = javax.swing.BorderFactory.createTitledBorder(bundle['Schedule for '] + trackName)
+        schedulePanel.border = javax.swing.BorderFactory.createTitledBorder(PatternScriptEntities.BUNDLE['Schedule for '] + trackName)
         scheduleButton = javax.swing.JButton(scheduleObject.getName())
         scheduleList.append(scheduleButton)
-        schedulePanel.add(javax.swing.JLabel(bundle['Schedule: ']))
+        schedulePanel.add(javax.swing.JLabel(PatternScriptEntities.BUNDLE['Schedule: ']))
         schedulePanel.add(scheduleButton)
 
     return schedulePanel, scheduleList
@@ -243,12 +243,12 @@ def makeSetCarsScheduleRow(setCarsFormData):
 def MakeSetCarsFooter():
 
     combinedFooter = javax.swing.JPanel()
-    combinedFooter.border = javax.swing.BorderFactory.createTitledBorder(bundle['Action'])
+    combinedFooter.border = javax.swing.BorderFactory.createTitledBorder(PatternScriptEntities.BUNDLE['Action'])
 
-    printButton = javax.swing.JButton(unicode(bundle['Print'], PatternScriptEntities.setEncoding()))
+    printButton = javax.swing.JButton(unicode(PatternScriptEntities.BUNDLE['Print'], PatternScriptEntities.setEncoding()))
     combinedFooter.add(printButton)
 
-    setButton = javax.swing.JButton(unicode(bundle['Set'], PatternScriptEntities.setEncoding()))
+    setButton = javax.swing.JButton(unicode(PatternScriptEntities.BUNDLE['Set'], PatternScriptEntities.setEncoding()))
     combinedFooter.add(setButton)
 
     if PatternScriptEntities.readConfigFile('PT')['TI']:

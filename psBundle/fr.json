@@ -1,7 +1,8 @@
 {
+  "Pattern Tracks Subroutine" : "Translation Items, do not edit this line",
+  "Pattern Tracks Subroutine" : "Sous-routine Pattern Tracks",
   "Pattern Scripts" : "Scripts de modèle",
   "Restart Pattern Scripts" : "Redémarrer les scripts de modèle",
-  "Pattern Tracks Subroutine" : "Sous-routine Pattern Tracks",
   "Help" : "Aider",
   "Window Help..." : "Aide de la fenêtre...",
   "View Log" : "Afficher le fichier journal",
@@ -12,7 +13,7 @@
   "Yard tracks only " : "Uniquement les voies ferrées du triage ",
   "Ignore track length " : "ignorer la longueur de la voie ferrée ",
   "Pattern" : "Rapport sur le modèle",
-  "Set Cars" : "Set Cars",
+  "Set Cars" : "Set Cars to Trackz",
   "Set Caaars" : "Régler les wagons",
   "Comment: " : "Commentz: ",
   "Valid time: " : "Valid timez: ",
@@ -37,6 +38,7 @@
   "Action" : "Actionz",
   "Print" : "Printz",
   "Set" : "Setz",
+  "Pattern Report for Track" : "Translation Items, do not edit this line",
   "Input": "Input",
   "Road" : "Road",
   "Number" : "Number",
@@ -60,7 +62,8 @@
   "Msg Collecte" : "Pickup Msg",
   "RWE" : "RWE",
   "Modèle" : "Model",
-  "Couplage" : "Loco Type",
+  "Couplage" : "Consist",
   " " : " ",
+  "TrainPlayer Support Subroutine" : "Translation Items, do not edit this line",
   "TrainPlayer Support Subroutine" : "Sous-routine de support TrainPlayer"
 }

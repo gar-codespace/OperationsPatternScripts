@@ -96,6 +96,32 @@ def setEncoding():
 
     return 'utf-8' #ascii, utf-16
 
+def formatText(item, length):
+    '''Truncate each item to its defined length in PatternConfig.json and add a space at the end'''
+    # This version works with utf-8
+
+    if len(item) < length:
+        xItem = item.ljust(length)
+    else:
+        xItem = item[:length]
+
+    return xItem + u' '
+
+def occuranceTally(listOfOccurances):
+    '''Tally the occurances of a word in a list and return a dictionary'''
+
+    dict = {}
+    while len(listOfOccurances):
+        occurance = listOfOccurances[-1]
+        tally = 0
+        for i in xrange(len(listOfOccurances) - 1, -1, -1): # run list from bottom up
+            if (listOfOccurances[i] == occurance):
+                tally += 1
+                listOfOccurances.pop(i)
+        dict[occurance] = tally
+
+    return dict
+    
 def getStubPath():
     '''Convert an OS path to a browser acceptable URI, there is probably a method that does this'''
 

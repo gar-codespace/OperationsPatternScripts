@@ -27,7 +27,10 @@ sysPath.append(SCRIPT_ROOT)
 from psEntities import PatternScriptEntities
 from psBundle import Bundle
 from TrainPlayerSubroutine import BuiltTrainExport
+
+'''Global variables for now, this may change'''
 PatternScriptEntities.SCRIPT_ROOT = SCRIPT_ROOT
+PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale(SCRIPT_ROOT)
 
 class TrainsTableListener(javax.swing.event.TableModelListener):
     '''Catches user add or remove train while TrainPlayer support is enabled'''
@@ -146,7 +149,6 @@ class View:
     def __init__(self, scrollPanel):
 
         self.psLog = logging.getLogger('PS.View')
-        self.bundle = Bundle.getBundleForLocale(SCRIPT_ROOT)
 
         self.controlPanel = scrollPanel
         self.menuItemList = []
@@ -201,13 +203,13 @@ class View:
         toolsMenu.add(asMenuItem)
         toolsMenu.add(tpMenuItem)
 
-        logMenuItem = javax.swing.JMenuItem(self.bundle['View Log'])
+        logMenuItem = javax.swing.JMenuItem(PatternScriptEntities.BUNDLE['View Log'])
         logMenuItem.setName('logItemSelected')
-        helpMenuItem = javax.swing.JMenuItem(self.bundle['Window Help...'])
+        helpMenuItem = javax.swing.JMenuItem(PatternScriptEntities.BUNDLE['Window Help...'])
         helpMenuItem.setName('helpItemSelected')
         self.menuItemList.append(logMenuItem)
         self.menuItemList.append(helpMenuItem)
-        helpMenu = javax.swing.JMenu(self.bundle['Help'])
+        helpMenu = javax.swing.JMenu(PatternScriptEntities.BUNDLE['Help'])
         helpMenu.add(logMenuItem)
         helpMenu.add(helpMenuItem)
 
@@ -218,7 +220,7 @@ class View:
         psMenuBar.add(helpMenu)
 
         uniqueWindow.setName('patternScripts')
-        uniqueWindow.setTitle(self.bundle['Pattern Scripts'])
+        uniqueWindow.setTitle(PatternScriptEntities.BUNDLE['Pattern Scripts'])
         uniqueWindow.addWindowListener(PatternScriptsWindowListener())
         uniqueWindow.setJMenuBar(psMenuBar)
         uniqueWindow.add(self.controlPanel)
@@ -239,9 +241,9 @@ class View:
 
         patternConfig = PatternScriptEntities.readConfigFile('PT')
         if patternConfig['AS']:
-            menuText = self.bundle['Do Not Apply Schedule']
+            menuText = PatternScriptEntities.BUNDLE['Do Not Apply Schedule']
         else:
-            menuText = self.bundle['Apply Schedule']
+            menuText = PatternScriptEntities.BUNDLE['Apply Schedule']
 
         return menuText
 
@@ -250,9 +252,9 @@ class View:
 
         patternConfig = PatternScriptEntities.readConfigFile('PT')
         if patternConfig['TI']:
-            menuText = self.bundle['Disable TrainPlayer']
+            menuText = PatternScriptEntities.BUNDLE['Disable TrainPlayer']
         else:
-            menuText = self.bundle['Enable TrainPlayer']
+            menuText = PatternScriptEntities.BUNDLE['Enable TrainPlayer']
 
         return menuText
 
@@ -264,7 +266,7 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
         self.logger = PatternScriptEntities.Logger(logPath)
         self.logger.startLogger('PS')
 
-        self.bundle = Bundle.getBundleForLocale(SCRIPT_ROOT)
+        PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale(SCRIPT_ROOT)
 
         self.trainsTableModel = jmri.jmrit.operations.trains.TrainsTableModel()
         self.builtTrainListener = BuiltTrainListener()
@@ -309,7 +311,7 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
         '''The Pattern Scripts button on the PanelPro frame'''
 
         self.patternScriptsButton = View(None).makePsButton()
-        self.patternScriptsButton.setText(self.bundle['Pattern Scripts'])
+        self.patternScriptsButton.setText(PatternScriptEntities.BUNDLE['Pattern Scripts'])
         self.patternScriptsButton.setName('psButton')
         self.patternScriptsButton.actionPerformed = self.patternScriptsButtonAction
         Apps.buttonSpace().add(self.patternScriptsButton)
@@ -347,7 +349,7 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
     def patternScriptsButtonAction(self, MOUSE_CLICKED):
 
-        self.patternScriptsButton.setText(self.bundle['Restart Pattern Scripts'])
+        self.patternScriptsButton.setText(PatternScriptEntities.BUNDLE['Restart Pattern Scripts'])
         self.patternScriptsButton.actionPerformed = self.patternScriptsButtonRestartAction
         self.buildThePlugin()
 
@@ -413,12 +415,12 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
         if patternConfig['PT']['AS']:
             patternConfig['PT'].update({'AS': False})
-            AS_ACTIVATE_EVENT.getSource().setText(self.bundle["Apply Schedule"])
+            AS_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE["Apply Schedule"])
             self.psLog.info('Apply Schedule turned off')
             print('Apply Schedule turned off')
         else:
             patternConfig['PT'].update({'AS': True})
-            AS_ACTIVATE_EVENT.getSource().setText(self.bundle["Do Not Apply Schedule"])
+            AS_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE["Do Not Apply Schedule"])
             self.psLog.info('Apply Schedule turned on')
             print('Apply Schedule turned on')
 
@@ -433,7 +435,7 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
         if patternConfig['PT']['TI']: # If enabled, turn it off
             patternConfig['PT'].update({'TI': False})
-            TP_ACTIVATE_EVENT.getSource().setText(self.bundle["Enable TrainPlayer"])
+            TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE["Enable TrainPlayer"])
 
             self.trainsTableModel.removeTableModelListener(self.trainsTableListener)
             self.removeBuiltTrainListener()
@@ -442,7 +444,7 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
             print('TrainPlayer support deactivated')
         else:
             patternConfig['PT'].update({'TI': True})
-            TP_ACTIVATE_EVENT.getSource().setText(self.bundle["Disable TrainPlayer"])
+            TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE["Disable TrainPlayer"])
 
             PatternScriptEntities.CheckTpDestination().directoryExists()
             self.trainsTableModel.addTableModelListener(self.trainsTableListener)

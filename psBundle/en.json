@@ -1,7 +1,8 @@
 {
+  "Pattern Tracks Subroutine" : "Translation Items",
+  "Pattern Tracks Subroutine" : "Pattern Tracks Subroutine",
   "Pattern Scripts" : "Pattern Scripts",
   "Restart Pattern Scripts" : "Restart Pattern Scripts",
-  "Pattern Tracks Subroutine" : "Pattern Tracks Subroutine",
   "Help" : "Help",
   "Window Help..." : "Window Help...",
   "View Log" : "View Log",
@@ -36,6 +37,7 @@
   "Action" : "Action",
   "Print" : "Print",
   "Set" : "Set",
+  "Pattern Report for Track" : "Translation Items",
   "Input": "Input",
   "Road" : "Road",
   "Number" : "Number",
@@ -60,6 +62,8 @@
   "RWE" : "RWE",
   "Model" : "Model",
   "Loco Type" : "Loco Type",
+  "Consist" : "Consist",
   " " : " ",
+  "TrainPlayer Support Subroutine" : "Translation Items",
   "TrainPlayer Support Subroutine" : "TrainPlayer Support Subroutine"
 }

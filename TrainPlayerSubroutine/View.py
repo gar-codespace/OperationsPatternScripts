@@ -25,7 +25,7 @@ class ManageGui:
         self.psLog = logging.getLogger('PS.TP.View')
         self.configFile = PatternScriptEntities.readConfigFile('TP')
 
-        self.bundle = Bundle.getBundleForLocale(PatternScriptEntities.SCRIPT_ROOT)
+        # self.bundle = Bundle.getBundleForLocale(PatternScriptEntities.SCRIPT_ROOT)
 
         return
 
@@ -33,7 +33,7 @@ class ManageGui:
         '''Make the frame that all the TrainPlayer controls are added to'''
 
         subroutineFrame = javax.swing.JPanel() # the track pattern panel
-        subroutineFrame.border = javax.swing.BorderFactory.createTitledBorder(self.bundle['TrainPlayer Support Subroutine'])
+        subroutineFrame.border = javax.swing.BorderFactory.createTitledBorder(PatternScriptEntities.BUNDLE['TrainPlayer Support Subroutine'])
 
         return subroutineFrame
 

@@ -11,6 +11,7 @@ from codecs import open as codecsOpen
 
 from psEntities import PatternScriptEntities
 from PatternTracksSubroutine import ModelEntities
+from PatternTracksSubroutine import ViewEntities
 from PatternTracksSubroutine import ControllerSetCarsForm
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.Model'
@@ -161,7 +162,8 @@ def printWorkEventList(patternListForJson, trackTotals):
 
     workEventName = ModelEntities.writeWorkEventListAsJson(patternListForJson)
     textWorkEventList = ModelEntities.readJsonWorkEventList(workEventName)
-    textListForPrint = ModelEntities.makeTextListForPrint(textWorkEventList, trackTotals)
+    # textListForPrint = ModelEntities.makeTextListForPrint(textWorkEventList, trackTotals)
+    textListForPrint = ViewEntities.makeTextListForPrint(textWorkEventList, trackTotals)
     ModelEntities.writeTextSwitchList(workEventName, textListForPrint)
 
     switchListFile = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + workEventName + '.txt'
