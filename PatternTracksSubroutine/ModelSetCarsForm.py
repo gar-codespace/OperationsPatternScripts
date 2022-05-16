@@ -188,7 +188,7 @@ def makeLocationDict(setCarsForm, textBoxEntry):
         userInput = unicode(userInputList[i], PatternScriptEntities.setEncoding())
         if userInput in allTracksAtLoc and userInput != trackName:
             setTrack = userInput
-        loco['Set to'] = ModelEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
+        loco['Set to'] = PatternScriptEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
         locoList.append(loco)
         i += 1
 
@@ -198,7 +198,7 @@ def makeLocationDict(setCarsForm, textBoxEntry):
         userInput = unicode(userInputList[i], PatternScriptEntities.setEncoding())
         if userInput in allTracksAtLoc and userInput != trackName:
             setTrack = userInput
-        car['Set to'] = ModelEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
+        car['Set to'] = PatternScriptEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
         carList.append(car)
         i += 1
 

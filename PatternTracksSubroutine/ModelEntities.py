@@ -8,38 +8,9 @@ from json import loads as jsonLoads, dumps as jsonDumps
 from xml.etree import ElementTree as ET
 
 from psEntities import PatternScriptEntities
-# from psBundle import Bundle
 
 SCRIPT_NAME = 'OperationsPatternScripts.TrackPattern.ModelEntities'
 SCRIPT_REV = 20220101
-
-# bundle = Bundle.getBundleForLocale(PatternScriptEntities.SCRIPT_ROOT)
-
-# def formatText(item, length):
-#     '''Truncate each item to its defined length in PatternConfig.json and add a space at the end'''
-#     # This version works with utf-8
-#
-#     if len(item) < length:
-#         xItem = item.ljust(length)
-#     else:
-#         xItem = item[:length]
-#
-#     return xItem + u' '
-
-# def occuranceTally(listOfOccurances):
-#     '''Tally the occurances of a word in a list and return a dictionary'''
-#
-#     dict = {}
-#     while len(listOfOccurances):
-#         occurance = listOfOccurances[-1]
-#         tally = 0
-#         for i in xrange(len(listOfOccurances) - 1, -1, -1): # run list from bottom up
-#             if (listOfOccurances[i] == occurance):
-#                 tally += 1
-#                 listOfOccurances.pop(i)
-#         dict[occurance] = tally
-#
-#     return dict
 
 def testSelectedItem(selectedItem):
     '''Catches user edit of locations'''
@@ -302,82 +273,6 @@ def readJsonWorkEventList(workEventName):
     textWorkEventList = jsonLoads(jsonEventList)
 
     return textWorkEventList
-
-# def makeTextListForPrint(textWorkEventList, trackTotals=False):
-#
-#     reportHeader = makeTextReportHeader(textWorkEventList)
-#     reportLocations = makeTextReportLocations(textWorkEventList, trackTotals)
-#
-#     return reportHeader + reportLocations
-#
-# def makeTextReportHeader(textWorkEventList):
-#
-#     textReportHeader    = textWorkEventList['railroad'] + '\n' \
-#                         + textWorkEventList['trainName'] + '\n' \
-#                         + textWorkEventList['trainDescription'] + '\n' \
-#                         + bundle['Comment: '] + textWorkEventList['trainComment'] + '\n' \
-#                         + bundle['Valid time: '] + textWorkEventList['date'] + '\n\n'
-#
-#     return textReportHeader
-#
-# def makeTextReportLocations(textWorkEventList, trackTotals):
-#
-#     reportWidth = PatternScriptEntities.readConfigFile('PT')['RW']
-#     locoItems = jmri.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
-#     carItems = jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
-#
-#     reportSwitchList = ''
-#     reportTally = [] # running total for all tracks
-#     reportSwitchList += bundle['Location: '] + textWorkEventList['locations'][0]['locationName'] + '\n'
-#     for track in textWorkEventList['locations'][0]['tracks']:
-#         lengthOfLocos = 0
-#         lengthOfCars = 0
-#         trackTally = []
-#         trackName = track['trackName']
-#         trackLength = track['length']
-#         reportSwitchList += bundle['Track: '] + trackName + '\n'
-#         switchListRow = ''
-#
-#         for loco in track['locos']:
-#             lengthOfLocos += int(loco['Length']) + 4
-#             reportSwitchList += loco['Set to'] + loopThroughRs('loco', loco) + '\n'
-#
-#         for car in track['cars']:
-#             lengthOfCars += int(car['Length']) + 4
-#             reportSwitchList += car['Set to'] + loopThroughRs('car', car) + '\n'
-#             trackTally.append(car['Final Dest'])
-#             reportTally.append(car['Final Dest'])
-#
-#         if trackTotals:
-#             totalLength = lengthOfLocos + lengthOfCars
-#             reportSwitchList += bundle['Total Cars: '] + str(len(track['cars'])) + bundle[' Track Length: '] + str(trackLength) + bundle[' Eqpt. Length: '] + str(totalLength) + bundle[' Available: '] + str(trackLength - totalLength) + '\n\n'
-#             reportSwitchList += bundle['Track Totals for Cars:'] + '\n'
-#             for track, count in sorted(occuranceTally(trackTally).items()):
-#                 reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
-#         reportSwitchList += '\n'
-#
-#     if trackTotals:
-#         reportSwitchList += '\n' + bundle['Report Totals for Cars:'] + '\n'
-#         for track, count in sorted(occuranceTally(reportTally).items()):
-#             reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
-#
-#     return reportSwitchList
-
-# def loopThroughRs(type, rsAttribs):
-#
-#     reportWidth = PatternScriptEntities.readConfigFile('PT')['RW']
-#     switchListRow = ''
-#
-#     if type == 'loco':
-#         messageFormat = jmri.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
-#     if type == 'car':
-#         messageFormat = jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
-#
-#     for item in messageFormat:
-#         itemWidth = reportWidth[bundle[item]]
-#         switchListRow += formatText(rsAttribs[bundle[item]], itemWidth)
-#
-#     return switchListRow
 
 def writeTextSwitchList(fileName, textSwitchList):
 

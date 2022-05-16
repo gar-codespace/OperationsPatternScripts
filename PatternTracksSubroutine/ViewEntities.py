@@ -13,8 +13,6 @@ from psBundle import Bundle
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ViewEntities'
 SCRIPT_REV = 20220101
 
-bundle = Bundle.getBundleForLocale(PatternScriptEntities.SCRIPT_ROOT)
-
 class TrackPatternPanel:
     '''Makes the pattern tracks subroutine panel'''
 
@@ -149,8 +147,8 @@ def makeTextReportHeader(textWorkEventList):
     textReportHeader    = textWorkEventList['railroad'] + '\n' \
                         + textWorkEventList['trainName'] + '\n' \
                         + textWorkEventList['trainDescription'] + '\n' \
-                        + bundle['Comment: '] + textWorkEventList['trainComment'] + '\n' \
-                        + bundle['Valid time: '] + textWorkEventList['date'] + '\n\n'
+                        + PatternScriptEntities.BUNDLE['Comment: '] + textWorkEventList['trainComment'] + '\n' \
+                        + PatternScriptEntities.BUNDLE['Valid time: '] + textWorkEventList['date'] + '\n\n'
 
     return textReportHeader
 
@@ -162,14 +160,14 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
 
     reportSwitchList = ''
     reportTally = [] # running total for all tracks
-    reportSwitchList += bundle['Location: '] + textWorkEventList['locations'][0]['locationName'] + '\n'
+    reportSwitchList += PatternScriptEntities.BUNDLE['Location: '] + textWorkEventList['locations'][0]['locationName'] + '\n'
     for track in textWorkEventList['locations'][0]['tracks']:
         lengthOfLocos = 0
         lengthOfCars = 0
         trackTally = []
         trackName = track['trackName']
         trackLength = track['length']
-        reportSwitchList += bundle['Track: '] + trackName + '\n'
+        reportSwitchList += PatternScriptEntities.BUNDLE['Track: '] + trackName + '\n'
         switchListRow = ''
 
         for loco in track['locos']:
@@ -184,14 +182,14 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
 
         if trackTotals:
             totalLength = lengthOfLocos + lengthOfCars
-            reportSwitchList += bundle['Total Cars: '] + str(len(track['cars'])) + bundle[' Track Length: '] + str(trackLength) + bundle[' Eqpt. Length: '] + str(totalLength) + bundle[' Available: '] + str(trackLength - totalLength) + '\n\n'
-            reportSwitchList += bundle['Track Totals for Cars:'] + '\n'
+            reportSwitchList += PatternScriptEntities.BUNDLE['Total Cars: '] + str(len(track['cars'])) + PatternScriptEntities.BUNDLE[' Track Length: '] + str(trackLength) + PatternScriptEntities.BUNDLE[' Eqpt. Length: '] + str(totalLength) + PatternScriptEntities.BUNDLE[' Available: '] + str(trackLength - totalLength) + '\n\n'
+            reportSwitchList += PatternScriptEntities.BUNDLE['Track Totals for Cars:'] + '\n'
             for track, count in sorted(PatternScriptEntities.occuranceTally(trackTally).items()):
                 reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
         reportSwitchList += '\n'
 
     if trackTotals:
-        reportSwitchList += '\n' + bundle['Report Totals for Cars:'] + '\n'
+        reportSwitchList += '\n' + PatternScriptEntities.BUNDLE['Report Totals for Cars:'] + '\n'
         for track, count in sorted(PatternScriptEntities.occuranceTally(reportTally).items()):
             reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
 
@@ -208,7 +206,7 @@ def loopThroughRs(type, rsAttribs):
         messageFormat = jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
 
     for item in messageFormat:
-        itemWidth = reportWidth[bundle[item]]
-        switchListRow += PatternScriptEntities.formatText(rsAttribs[bundle[item]], itemWidth)
+        itemWidth = reportWidth[PatternScriptEntities.BUNDLE[item]]
+        switchListRow += PatternScriptEntities.formatText(rsAttribs[PatternScriptEntities.BUNDLE[item]], itemWidth)
 
     return switchListRow

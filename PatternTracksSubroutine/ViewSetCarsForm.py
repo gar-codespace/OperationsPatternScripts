@@ -9,12 +9,9 @@ import javax.swing
 
 from psEntities import PatternScriptEntities
 from PatternTracksSubroutine import ViewEntities
-from psBundle import Bundle
 
 SCRIPT_NAME = 'OperationsPatternScripts.ViewSetCarsForm'
 SCRIPT_REV = 20220101
-
-# bundle = Bundle.getBundleForLocale(PatternScriptEntities.SCRIPT_ROOT)
 
 def setCarsForTrackWindow(setCarsForTrackForm):
 

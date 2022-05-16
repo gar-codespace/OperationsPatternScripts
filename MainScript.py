@@ -158,6 +158,7 @@ class View:
     def makePsButton(self):
 
         psButton = javax.swing.JButton(name='psButton')
+        psButton.setText(PatternScriptEntities.BUNDLE['Pattern Scripts'])
 
         return psButton
 
@@ -266,8 +267,6 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
         self.logger = PatternScriptEntities.Logger(logPath)
         self.logger.startLogger('PS')
 
-        PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale(SCRIPT_ROOT)
-
         self.trainsTableModel = jmri.jmrit.operations.trains.TrainsTableModel()
         self.builtTrainListener = BuiltTrainListener()
         self.trainsTableListener = TrainsTableListener(self.builtTrainListener)
@@ -311,8 +310,6 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
         '''The Pattern Scripts button on the PanelPro frame'''
 
         self.patternScriptsButton = View(None).makePsButton()
-        self.patternScriptsButton.setText(PatternScriptEntities.BUNDLE['Pattern Scripts'])
-        self.patternScriptsButton.setName('psButton')
         self.patternScriptsButton.actionPerformed = self.patternScriptsButtonAction
         Apps.buttonSpace().add(self.patternScriptsButton)
         Apps.buttonSpace().revalidate()

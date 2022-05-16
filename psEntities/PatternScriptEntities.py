@@ -23,7 +23,9 @@ CM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.Car
 SM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.schedules.ScheduleManager)
 PM = jmri.InstanceManager.getDefault(jmri.util.gui.GuiLafPreferencesManager)
 
+'''Global variables for now, this may change'''
 SCRIPT_ROOT = ''
+BUNDLE = {}
 
 SCRIPT_NAME = 'OperationsPatternScripts.psEntities.PatternScriptEntities'
 SCRIPT_REV = 20220101
@@ -121,7 +123,7 @@ def occuranceTally(listOfOccurances):
         dict[occurance] = tally
 
     return dict
-    
+
 def getStubPath():
     '''Convert an OS path to a browser acceptable URI, there is probably a method that does this'''
 
