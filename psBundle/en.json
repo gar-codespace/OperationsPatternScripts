@@ -1,5 +1,5 @@
 {
-  "Pattern Tracks Subroutine" : "Translation Items",
+  "Pattern Tracks Subroutine" : "Translation Items, do not edit this line",
   "Pattern Tracks Subroutine" : "Pattern Tracks Subroutine",
   "Pattern Scripts" : "Pattern Scripts",
   "Restart Pattern Scripts" : "Restart Pattern Scripts",
@@ -37,7 +37,7 @@
   "Action" : "Action",
   "Print" : "Print",
   "Set" : "Set",
-  "Pattern Report for Track" : "Translation Items",
+  "Pattern Report for Track" : "Translation Items, do not edit this line",
   "Input": "Input",
   "Road" : "Road",
   "Number" : "Number",
@@ -64,6 +64,6 @@
   "Loco Type" : "Loco Type",
   "Consist" : "Consist",
   " " : " ",
-  "TrainPlayer Support Subroutine" : "Translation Items",
+  "TrainPlayer Support Subroutine" : "Translation Items, do not edit this line",
   "TrainPlayer Support Subroutine" : "TrainPlayer Support Subroutine"
 }

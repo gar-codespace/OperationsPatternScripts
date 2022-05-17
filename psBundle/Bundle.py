@@ -20,7 +20,7 @@ def getBundleForLocale(SCRIPT_ROOT):
     else:
         bundleFileLocation = bundleDir + 'en.json'
 
-    with codecsOpen(bundleFileLocation, 'r', encoding=PatternScriptEntities.setEncoding()) as workingFile:
+    with codecsOpen(bundleFileLocation, 'r', encoding=PatternScriptEntities.ENCODING) as workingFile:
         bundleFile = jsonLoads(workingFile.read())
 
     return bundleFile

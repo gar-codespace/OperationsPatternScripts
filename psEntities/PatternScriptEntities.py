@@ -92,12 +92,12 @@ def psLocale():
     return PM.getLocale().toString()
     # return unicode(PM.getLocale(), ENCODING)
 
-def setEncoding():
-    '''Move this to the confif file?'''
-
-    # psEncoding = readConfigFile('CP')['SE']
-
-    return 'utf-8' #ascii, utf-16
+# def setEncoding():
+#     '''Move this to the confif file?'''
+#
+#     # psEncoding = readConfigFile('CP')['SE']
+#
+#     return 'utf-8' #ascii, utf-16
 
 def formatText(item, length):
     '''Truncate each item to its defined length in PatternConfig.json and add a space at the end'''
@@ -248,7 +248,7 @@ def getConfigFile():
 
     configFileLoc = jmri.util.FileUtil.getProfilePath() + 'operations\PatternConfig.json'
 
-    with codecsOpen(configFileLoc, 'r', encoding=ENCODING) as configWorkFile:
+    with codecsOpen(configFileLoc, 'r', encoding='utf-8') as configWorkFile:
         patternConfig = jsonLoads(configWorkFile.read())
 
     return patternConfig
@@ -258,7 +258,7 @@ def writeConfigFile(configFile):
 
     jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json'
     jsonObject = jsonDumps(configFile, indent=2, sort_keys=True)
-    with codecsOpen(jsonCopyTo, 'wb', encoding=ENCODING) as jsonWorkFile:
+    with codecsOpen(jsonCopyTo, 'wb', encoding='utf-8') as jsonWorkFile:
         jsonWorkFile.write(jsonObject)
 
     return

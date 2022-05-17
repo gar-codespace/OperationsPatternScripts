@@ -46,6 +46,8 @@ Tested Items:
   Language bundle sketched in, to be expanded
   Bundle added with French test case
   KeyError when editing config file crashed plugin, bummer. Restart button bale out.
+  Moved ENCODING value into the config file
+  BUNDLE calls moved to only 'View*' methods and classes
 
 Catches Items:
   Catches pattern report button press no tracks selected OK
@@ -62,11 +64,17 @@ Catches Items:
 Todo:
   BUNDLE calls seem to be scattered around MainScript
   Are SCRIPT_ROOT, ENCODING and BUNDLE as global constants a good idea?
-  Maybe move encoding into config file?
+
+Version 3 ideas:
+  Fill out TrainPlayer Support subroutine.
+  Enhance and harden BUNDLE
+  Start working on distributed JMRI
+    Set Cars windows add work to work list or docket, similar to TrainPlayer button, add Yardmaster button to Set Cars windows. Work can then be reported as it's done.
+    jmri.jmrit.operations.locations.YardmasterFrame(location)
+    Phone based switch list crew can report work when done. Crews use train symbol as ID
+    Maybe a custom Trains window with only the trains for each yard master location + pattern scripts
 
 Wish List:
-  Next version, Set Cars windows add work to work list or docket, similar to TrainPlayer button, add Yardmaster button to Set Cars windows
-  jmri.jmrit.operations.locations.YardmasterFrame(location)
   add Pattern Scripts to Operations Pro combo box?
   plugin added to button in trains window (AWT.getComponents())?
   jmri.util.swing.JMenuUtil.replaceMenuItem() to replace the trains window with a new trains window that includes a ps button?
@@ -77,6 +85,3 @@ Colors:
   # LICHEN = java.awt.Color(244,255,236) # Light green
   # FADED = java.awt.Color(237,225,245) # Light purple
   # BLANCH = java.awt.Color(235,225,212) # Light orange
-
-xFrame = jmri.jmrit.automat.monitor.AutomatTableFrame(jmri.jmrit.automat.monitor.AutomatTableDataModel())
-xFrame.setVisible(True)

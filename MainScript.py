@@ -30,8 +30,7 @@ from TrainPlayerSubroutine import BuiltTrainExport
 
 '''Global variables for now, this may change'''
 PatternScriptEntities.SCRIPT_ROOT = SCRIPT_ROOT
-# PatternScriptEntities.ENCODING = PatternScriptEntities.readConfigFile()['CP']['SE']
-PatternScriptEntities.ENCODING = 'utf-8'
+PatternScriptEntities.ENCODING = PatternScriptEntities.readConfigFile('CP')['SE']
 PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale(SCRIPT_ROOT)
 
 class TrainsTableListener(javax.swing.event.TableModelListener):
