@@ -52,9 +52,13 @@
 <p>The following chart shows the code structure of this plugin.</P>
 <img src="FlowChart1.png" alt="<Flow Chart Image>">
 
-<h2>Pattern Scripts Window</h2>
-<p>OperationsPatternScripts.MainScript.ViewPsWindow.makeWindow()</p>
-<img src="PatternScriptsWindow1.png" alt="<Pattern Scripts Window Image>">
+<h2>Plugin Layout</h2>
+<p>OperationsPatternScripts.MainScript.View.makePatternScriptsWindow()</p>
+<img src="PluginLayout1.png" alt="<Plugin Layout Image>">
+
+<h2>Pattern Scripts Subroutine</h2>
+<p>OperationsPatternScripts.PatternTracksSubroutine.Controller.makeSubroutinePanel()</p>
+<img src="PatternScriptsSubroutine1.png" alt="<Pattern Scripts Window Image>">
 
 <h2>Pattern Report for Track Window</h2>
 <p>OperationsPatternScripts.ControllerSetCarsForm.CreatePatternReportGui.makeFrame()</p>
@@ -71,8 +75,8 @@
 <p>Each JMRI profile gets its own configuration file, which is a JSON file. It is found in the operations folder, and is used to provide custom settings for each profile and record user inputs.
 <br><font color="blue">The description of each element is in blue</font>
 <br><font color="green">User editable keys are described in green</font>
-<br>This plugin is not able to catch every type of mistakes made when editing the PatternConfig.json file, and in some cases the plugin will crash.
- If that happens, delete the file and the plugin will create a new one to start over with.
+<br>This plugin is not able to catch every type of mistake that can be made when editing the PatternConfig.json file, and in some cases the plugin will crash.
+ If that happens, delete the PatternConfig.json file and the plugin will create a new one to start over with.
  In other cases, if a mistake is made editing the PatternConfig.json file, the plugin will replace it with the default file, and the user will have to start over.</p>
 <h3>Editor Matrix</h3>
 <pre>

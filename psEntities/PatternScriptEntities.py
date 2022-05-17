@@ -196,7 +196,7 @@ def validateFileDestinationDirestories():
 
     return
 
-def validateConfigFile(currentRootDir):
+def validateConfigFileVersion(currentRootDir):
     '''Checks that the config file is the current version'''
 
     configFilePath = currentRootDir + '\psEntities\PatternConfig.json'
@@ -204,11 +204,12 @@ def validateConfigFile(currentRootDir):
         validPatternConfig = jsonLoads(validConfigFileLoc.read())
 
     userPatternConfig = getConfigFile()
+
     if validPatternConfig['CP']['RV'] == userPatternConfig['CP']['RV']:
-        psLog.info('The PatternConfig.JSON file is the correct version')
+        psLog.info('The PatternConfig.json file is the correct version')
         return True
     else:
-        psLog.warning('PatternConfig.JSON version mismatch')
+        psLog.warning('PatternConfig.json version mismatch')
         return False
 
 def backupConfigFile():
@@ -219,16 +220,21 @@ def backupConfigFile():
 
     return
 
+def mergeConfigFiles():
+    '''Implemented in v3'''
+    return
+    
 def readConfigFile(subConfig=None):
 
     try:
         getConfigFile()
+        backupConfigFile()
     except ValueError:
         writeNewConfigFile()
-        psLog.warning('Defective PatternConfig.JSON found, new file written')
+        psLog.warning('Defective PatternConfig.json found, new file written')
     except IOError:
         writeNewConfigFile()
-        psLog.warning('No PatternConfig.JSON found, new file written')
+        psLog.warning('No PatternConfig.json found, new file written')
 
     if not subConfig:
         return getConfigFile()

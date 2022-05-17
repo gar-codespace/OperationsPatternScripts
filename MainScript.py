@@ -125,20 +125,14 @@ class Model:
         return
 
     def validatePatternConfig(self):
+        '''To be reworked in v3'''
 
         PatternScriptEntities.readConfigFile()
-        if not PatternScriptEntities.validateConfigFile(SCRIPT_ROOT):
-            PatternScriptEntities.backupConfigFile()
-            self.psLog.warning('PatternConfig.json.bak file written')
+        if not PatternScriptEntities.validateConfigFileVersion(SCRIPT_ROOT):
+            PatternScriptEntities.mergeConfigFiles()
+            self.psLog.info('Previous PatternConfig.json merged with new')
             PatternScriptEntities.writeNewConfigFile()
-            self.psLog.warning('New PatternConfig.JSON file created for this profile')
-
-        return
-
-    def runValidations(self):
-
-        PatternScriptEntities.validateFileDestinationDirestories()
-        PatternScriptEntities.validateStubFile(SCRIPT_ROOT)
+            self.psLog.warning('New PatternConfig.json file created for this profile')
 
         return
 
@@ -303,8 +297,7 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
         self.logger.initialLogMessage(self.psLog)
 
         self.model.validatePatternConfig()
-        # PatternScriptEntities.ENCODING = PatternScriptEntities.readConfigFile()['CP']['SE']
-        self.model.runValidations()
+        PatternScriptEntities.validateFileDestinationDirestories()
         PatternScriptEntities.validateStubFile(SCRIPT_ROOT)
         self.addTrainPlayerListeners()
         if PatternScriptEntities.readConfigFile()['CP']['AP']:

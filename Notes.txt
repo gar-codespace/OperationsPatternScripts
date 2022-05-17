@@ -58,6 +58,7 @@ Tested Items:
     TrainPlayer support implements OK
     ExportToTrainPlayer.py works as module OK
     ExportToTrainPlayer.py works as script OK
+    When run as a stand alone script, ManifestForTrainPlayer does not read config file, which is correct
 
 Catches Items:
   Catches pattern report button press no tracks selected OK
@@ -77,10 +78,11 @@ Catches Items:
 Todo:
   BUNDLE calls seem to be scattered around MainScript
   Are SCRIPT_ROOT, ENCODING and BUNDLE as global constants a good idea?
-  https://stackoverflow.com/questions/6234405/logging-uncaught-exceptions-in-python#16993115 to catch user edits of config file that crashes plugin
+  https://stackoverflow.com/questions/6234405/logging-uncaught-exceptions-in-python#16993115 to catch user edits of config file that crashes plugin?
 
 Version 3 ideas:
   Fill out TrainPlayer Support subroutine.
+  mergeConfigFiles()
   Enhance and harden BUNDLE
   Start working on distributed JMRI
     Set Cars windows add work to work list or docket, similar to TrainPlayer button, add Yardmaster button to Set Cars windows. Work can then be reported as it's done.

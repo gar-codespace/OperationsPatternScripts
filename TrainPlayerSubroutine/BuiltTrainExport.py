@@ -122,6 +122,8 @@ if __name__ == "__builtin__":
     from psEntities import PatternScriptEntities
     from TrainPlayerSubroutine import Model
 
+    PatternScriptEntities.ENCODING = 'utf-8'
+
     train = StandAlone().findNewestTrain()
 
     if train:
