@@ -37,7 +37,11 @@
   "Action" : "Action",
   "Print" : "Print",
   "Set" : "Set",
-  "Pattern Report for Track" : "Translation Items, do not edit this line",
+
+  "TrainPlayer Support Subroutine" : "Translation Items, do not edit this line",
+  "TrainPlayer Support Subroutine" : "TrainPlayer Support Subroutine",
+  
+  "Pattern Report for Track" : "Translation Items, do not edit these items",
   "Input": "Input",
   "Road" : "Road",
   "Number" : "Number",
@@ -63,7 +67,5 @@
   "Model" : "Model",
   "Loco Type" : "Loco Type",
   "Consist" : "Consist",
-  " " : " ",
-  "TrainPlayer Support Subroutine" : "Translation Items, do not edit this line",
-  "TrainPlayer Support Subroutine" : "TrainPlayer Support Subroutine"
+  " " : " "
 }

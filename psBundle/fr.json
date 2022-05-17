@@ -38,7 +38,11 @@
   "Action" : "Actionz",
   "Print" : "Printz",
   "Set" : "Setz",
-  "Pattern Report for Track" : "Translation Items, do not edit this line",
+
+  "TrainPlayer Support Subroutine" : "Translation Items, do not edit this line",
+  "TrainPlayer Support Subroutine" : "Sous-routine de support TrainPlayer",
+
+  "Pattern Report for Track" : "Éléments de traduction, ne modifiez pas ces éléments",
   "Input": "Input",
   "Road" : "Road",
   "Number" : "Number",
@@ -63,7 +67,5 @@
   "RWE" : "RWE",
   "Modèle" : "Model",
   "Couplage" : "Consist",
-  " " : " ",
-  "TrainPlayer Support Subroutine" : "Translation Items, do not edit this line",
-  "TrainPlayer Support Subroutine" : "Sous-routine de support TrainPlayer"
+  " " : " "
 }

@@ -2,68 +2,82 @@ Comments:
   Schedule does not prevent setting a car to a track
 
 Tested Items:
-  Ignore Track Length works with yard tracks
-  formatText formats ascii OK
-  handle multiple versions OK
-  test for file write locations OK
-  PatternConfig.json version check OK
-  create JSON header OK
-  create JSON body OK
-  append JSON switchlist OK
-  write JMRI location list to trainPlayer OK
-  write JMRI workEvent list to TrainPlayer OK
-  Report Title - Pattern Report edits OK
-  Report Title - Set Cars edits OK
-  Report Title - TrainPlayer edits OK
-  Caboose and passenger move OK
-  TrainPlayer support implements OK
-  formatText() works with utf-8 OK
-  set cars to 'Hold' works OK
-  ExportToTrainPlayer.py works as module OK
-  ExportToTrainPlayer.py works as script OK
-  CSV pattern and list written OK
-  Locos in report follow jmri.jmrit.operations.setup.Setup.getDropEngineMessageFormat OK
-  Cars in report follow jmri.jmrit.operations.setup.Setup.getLocalCarMessageFormat OK
-  Caboose and Passenger car types are loaded as O for Occupied OK
-  When setting to a spur the reserved column for the spur shows an entry, as it should when setting a destination
-  RWE and RWL seems to work ok
-  Default load/empty toggling ok
-  Car move count advances when set into spur only OK
-  Schedule hit count advances OK
-  Set to spur ignores the cars load, but schedule sets it OK
-  Ignore Track Length works with schedules
-  TP Exports unicode OK
-  Set cars to spur removes FD OK
-  Toggle AS Apply schedule in config file works OK
-  All Set Cars windows close when Pattern Scripts window is closed OK
-  Bad edits of config file protected as much as possible. CBB
-  Pattern Scripts plugin hardened against errors  more or less. CBB
-  Move config file into psEntities to shield it from accidental edit
-  TrainPlayer integration harden with train built listeners
-  Adding script to run on train built for TP export is not needed, but still can be done.
-  Add a listener to monitor if a new train is created or deleted, builtTrain listeners updated accordingly
-  TrainPlayer subroutine sketched in, to be expanded
-  Language bundle sketched in, to be expanded
-  Bundle added with French test case
-  KeyError when editing config file crashed plugin, bummer. Restart button bale out.
-  Moved ENCODING value into the config file
-  BUNDLE calls moved to only 'View*' methods and classes
+  Plugin
+    Handle multiple versions OK
+    Test for file write locations OK
+    All Set Cars windows close when Pattern Scripts window is closed OK
+    PatternConfig.json version check OK
+    Moved ENCODING value into the config file
+    Move config file into psEntities to shield it from accidental edit
+    Bad edits of config file protected as much as possible. CBB
+    Pattern Scripts plugin hardened against errors  more or less. CBB
+    Plugin restarts OK
+
+  Reports
+    Ignore Track Length works with yard tracks
+    formatText formats ascii OK
+    formatText() works with utf-8 OK
+    Create JSON header OK
+    Create JSON body OK
+    Append JSON switchlist OK
+    Write JMRI location list to trainPlayer OK
+    Write JMRI workEvent list to TrainPlayer OK
+    Report Title - Pattern Report edits OK
+    Report Title - Set Cars edits OK
+    Report Title - TrainPlayer edits OK
+    CSV pattern and list written OK
+    Locos in report follow jmri.jmrit.operations.setup.Setup.getDropEngineMessageFormat OK
+    Cars in report follow jmri.jmrit.operations.setup.Setup.getLocalCarMessageFormat OK
+
+  Actions
+    Set Cars to 'Hold' works OK
+    Caboose and passenger move OK
+    Caboose and Passenger car types are loaded as O for Occupied OK
+    When setting to a spur the reserved column for the spur shows an entry, as it should when setting a destination
+    RWE and RWL seems to work ok
+    Default load/empty toggling ok
+    Car move count advances when set into spur only OK
+    Schedule hit count advances OK
+    Set to spur ignores the cars load, but schedule sets it OK
+    Ignore Track Length works with schedules
+    Set cars to spur removes FD OK
+    Toggle AS Apply schedule in config file works OK
+
+  Language
+    Language changes OK
+    Language bundle sketched in, to be expanded
+    Bundle added with French test case
+    BUNDLE calls moved to only 'View*' methods and classes
+
+  TrainPlayer
+    Add a listener to monitor if a new train is created or deleted, builtTrain listeners updated accordingly
+    Adding script to run on train built for TP export is not needed, but still can be done.
+    TrainPlayer subroutine sketched in, to be expanded
+    TrainPlayer integration harden with train built listeners
+    TP Exports unicode OK
+    TrainPlayer support implements OK
+    ExportToTrainPlayer.py works as module OK
+    ExportToTrainPlayer.py works as script OK
 
 Catches Items:
   Catches pattern report button press no tracks selected OK
   Catches set cars button press no tracks selected OK
   Catches user edit of location at location combo box OK
+  Catches and ignores user edit of log display
   Catches on the fly user edit of track names for pattern report OK
   Catches on the fly user edit of track names for set cars OK
   Catches empty boxes added to jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat() OK
   Catches invalid track typed into set cars box OK
   Catches on the fly edit of RS name or road
   Catches on the fly user corruption of config file more or less. Soft landing. CBB
+  KeyError when editing config file crashed plugin, bummer. Restart button bale out.
   Catches user add/remove train while TP export is enabled
+  Catches user edit train while TP export is enabled
 
 Todo:
   BUNDLE calls seem to be scattered around MainScript
   Are SCRIPT_ROOT, ENCODING and BUNDLE as global constants a good idea?
+  https://stackoverflow.com/questions/6234405/logging-uncaught-exceptions-in-python#16993115 to catch user edits of config file that crashes plugin
 
 Version 3 ideas:
   Fill out TrainPlayer Support subroutine.

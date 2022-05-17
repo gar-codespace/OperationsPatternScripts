@@ -6,7 +6,7 @@
 import jmri
 from java import io as javaIo
 import java.awt
-import javax.swing
+# import javax.swing
 
 import logging
 import time
@@ -14,7 +14,7 @@ from json import loads as jsonLoads, dumps as jsonDumps
 from codecs import open as codecsOpen
 from os import mkdir as osMakeDir
 from os import system as osSystem
-from shutil import copy as shutilCopy
+# from shutil import copy as shutilCopy
 
 LM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
 TM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.trains.TrainManager)
@@ -28,7 +28,7 @@ SCRIPT_REV = 20220101
 
 psLog = logging.getLogger('PS.PE.PatternScriptEntities')
 
-'''Global variables for now, this may change'''
+'''Global variables passed between modules, for now, this may change'''
 SCRIPT_ROOT = ''
 ENCODING = ''
 BUNDLE = {}
@@ -92,16 +92,8 @@ def psLocale():
     return PM.getLocale().toString()
     # return unicode(PM.getLocale(), ENCODING)
 
-# def setEncoding():
-#     '''Move this to the confif file?'''
-#
-#     # psEncoding = readConfigFile('CP')['SE']
-#
-#     return 'utf-8' #ascii, utf-16
-
 def formatText(item, length):
     '''Truncate each item to its defined length in PatternConfig.json and add a space at the end'''
-    # This version works with utf-8
 
     if len(item) < length:
         xItem = item.ljust(length)
@@ -154,7 +146,7 @@ def openEditorByComputerType(switchListLocation=None):
     osType = jmri.util.SystemType.getType()
     editorMatrix = readConfigFile('EM')
     textEditor = editorMatrix[str(osType)]
-    openEditor = textEditor + '"' + switchListLocation + '"'
+    openEditor = textEditor + '"' + switchListLocation + '"' # Double quotes escapes the & symbol
 
     return openEditor
 
@@ -188,8 +180,8 @@ def validateStubFile(currentRootDir):
 
 def validateFileDestinationDirestories():
     '''Checks that the folders this plugin writes to exist'''
-
 # Can't use jmri.util.FileUtil.createDirectory().... does not return anything
+
     destDirPath = jmri.util.FileUtil.getProfilePath() + 'operations\\'
     listOfDirectories = ['csvManifests', 'csvSwitchLists', 'jsonManifests', 'switchLists']
     x = 0
@@ -244,7 +236,6 @@ def readConfigFile(subConfig=None):
         return getConfigFile()[subConfig]
 
 def getConfigFile():
-    '''Returns the users PatternConfig file from the active profile'''
 
     configFileLoc = jmri.util.FileUtil.getProfilePath() + 'operations\PatternConfig.json'
 
@@ -254,7 +245,6 @@ def getConfigFile():
     return patternConfig
 
 def writeConfigFile(configFile):
-    '''Updates the users PatternConfig.json file'''
 
     jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json'
     jsonObject = jsonDumps(configFile, indent=2, sort_keys=True)
@@ -264,7 +254,6 @@ def writeConfigFile(configFile):
     return
 
 def writeNewConfigFile():
-    '''Copies the default PatternConfig.JSON to the profile location'''
 
     defaultConfigFilePath = SCRIPT_ROOT + '\psEntities\PatternConfig.json'
     copyFrom = javaIo.File(defaultConfigFilePath)
@@ -304,7 +293,7 @@ def makePatternLog():
     return
 
 def printPatternLog():
-    '''Opens the pattern log in notepad or other'''
+    '''Opens the pattern log in a text editor'''
 
     psLog.debug('displayPatternLog')
 

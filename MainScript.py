@@ -390,20 +390,20 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
         view = View(None)
         emptyPluginPanel = view.makePluginPanel()
-
         populatedPluginPanel = self.model.makePatternScriptsPanel(emptyPluginPanel)
 
         scrollPanel = view.makeScrollPanel(populatedPluginPanel)
         patternScriptsWindow = View(scrollPanel)
         patternScriptsWindow.makePatternScriptsWindow()
         self.menuItemList = patternScriptsWindow.getMenuItemList()
+
         self.addMenuItemListeners()
 
         return
 
     def addTrainPlayerListeners(self):
 
-        if PatternScriptEntities.readConfigFile('PT')['TI']: # TrainPlayer Include
+        if PatternScriptEntities.readConfigFile('PT')['TI']:
             self.addTrainsTableListener()
             self.addBuiltTrainListener()
 
