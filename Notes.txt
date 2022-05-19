@@ -12,6 +12,7 @@ Tested Items:
     Bad edits of config file protected as much as possible. CBB
     Pattern Scripts plugin hardened against errors  more or less. CBB
     Plugin restarts OK
+    On defective config file, plugin first tries to restore from the bak file OK
 
   Reports
     Ignore Track Length works with yard tracks

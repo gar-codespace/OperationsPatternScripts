@@ -220,18 +220,27 @@ def backupConfigFile():
 
     return
 
+def restoreConfigFile():
+
+    copyFrom = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\PatternConfig.json.bak')
+    copyTo = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json')
+    jmri.util.FileUtil.copy(copyFrom, copyTo)
+
+    return
+
 def mergeConfigFiles():
     '''Implemented in v3'''
     return
-    
+
 def readConfigFile(subConfig=None):
 
     try:
         getConfigFile()
         backupConfigFile()
     except ValueError:
-        writeNewConfigFile()
-        psLog.warning('Defective PatternConfig.json found, new file written')
+        restoreConfigFile()
+        # writeNewConfigFile()
+        psLog.warning('Defective PatternConfig.json found, new file restored from backup')
     except IOError:
         writeNewConfigFile()
         psLog.warning('No PatternConfig.json found, new file written')
