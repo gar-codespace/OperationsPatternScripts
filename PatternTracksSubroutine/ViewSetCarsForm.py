@@ -23,7 +23,7 @@ def setCarsForTrackWindow(setCarsForTrackForm):
 def makeSetCarsForTrackForm(setCarsFormData):
     '''Creates and populates the "Set Cars Form for Track X" form'''
 
-    configFile = PatternScriptEntities.readConfigFile('PT')
+    # configFile = PatternScriptEntities.readConfigFile('PT')
 
     buttonDict = {}
 
@@ -185,6 +185,7 @@ class MakeSetCarsEqptRows():
 
             listOfLocoRows.append(combinedInputLine)
 
+        PatternScriptEntities.backupConfigFile()
         return listOfLocoRows
 
     def makeSetCarsCarRows(self):
@@ -212,6 +213,7 @@ class MakeSetCarsEqptRows():
             combinedInputLine.add(javax.swing.Box.createHorizontalGlue())
             listOfCarRows.append(combinedInputLine)
 
+        PatternScriptEntities.backupConfigFile()
         return listOfCarRows
 
     def textBoxEntryList(self):
@@ -252,4 +254,5 @@ def MakeSetCarsFooter():
         trainPlayerButton = javax.swing.JButton(unicode(u'TrainPlayer', PatternScriptEntities.ENCODING))
         combinedFooter.add(trainPlayerButton)
 
+    # PatternScriptEntities.backupConfigFile()
     return combinedFooter

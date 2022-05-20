@@ -32,8 +32,8 @@ def updatePatternLocation(selectedItem=None):
     configFile['PT'].update({'PL': newLocation})
     configFile['PT'].update({'AL': newLocationList})
     configFile['PT'].update({'PT': newLocationTrackDict})
-    PatternScriptEntities.writeConfigFile(configFile)
 
+    PatternScriptEntities.writeConfigFile(configFile)
     psLog.info('The track list for location ' + newLocation + ' has been created')
 
     return newLocation
@@ -125,7 +125,7 @@ def verifySelectedTracks():
     return validStatus
 
 def makeLocationDict(trackList=None):
-    '''Returns the details for the tracks sent in formatted for the JSON file '''
+    '''Returns the details for the tracks sent in formatted for the json file '''
 
     psLog.debug('makeLocationDict')
 
@@ -144,6 +144,7 @@ def makeLocationDict(trackList=None):
     return locationDict
 
 def makeReport(locationDict, reportType):
+    '''backupConfigFile() is a bit of user edit protection'''
 
     psLog.debug('makeReport')
 
@@ -154,6 +155,7 @@ def makeReport(locationDict, reportType):
     modifiedReport['trainComment'] = headerNames['TC'][reportType]
     modifiedReport['locations'] = [locationDict] # put in as a list to maintain compatability with JSON File Format/JMRI manifest export. See help web page
 
+    PatternScriptEntities.backupConfigFile()
     return modifiedReport
 
 def printWorkEventList(patternListForJson, trackTotals):
@@ -162,7 +164,7 @@ def printWorkEventList(patternListForJson, trackTotals):
 
     workEventName = ModelEntities.writeWorkEventListAsJson(patternListForJson)
     textWorkEventList = ModelEntities.readJsonWorkEventList(workEventName)
-    # textListForPrint = ModelEntities.makeTextListForPrint(textWorkEventList, trackTotals)
+
     textListForPrint = ViewEntities.makeTextListForPrint(textWorkEventList, trackTotals)
     ModelEntities.writeTextSwitchList(workEventName, textListForPrint)
 
@@ -229,7 +231,7 @@ def updateLocations():
     return newConfigFile
 
 def writeCsvSwitchList(trackPattern, type):
-    '''Rewrite this to write from the JSON file'''
+    '''Rewrite this to write from the json file'''
 
     psLog.debug('writeCsvSwitchList')
     trainDescription = PatternScriptEntities.readConfigFile('PT')['TD']
@@ -238,4 +240,5 @@ def writeCsvSwitchList(trackPattern, type):
     with codecsOpen(csvCopyTo, 'wb', encoding=PatternScriptEntities.ENCODING) as csvWorkFile:
         csvWorkFile.write(csvObject)
 
+    PatternScriptEntities.backupConfigFile()
     return

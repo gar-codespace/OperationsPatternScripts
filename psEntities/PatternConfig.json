@@ -88,7 +88,8 @@
     "PW" : 1500,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20220302
+    "RV" : 20220312,
+    "VM" : true
   },
   "LI": {
     "0" : "Editing these is not recommended",

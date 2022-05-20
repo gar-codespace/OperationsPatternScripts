@@ -106,6 +106,7 @@ class PatternScriptsWindowListener(java.awt.event.WindowListener):
         return
 
 def updateWindowParams(window):
+    '''backupConfigFile() is a bit of user edit protection'''
 
     configPanel = PatternScriptEntities.readConfigFile()
     configPanel['CP'].update({'PH': window.getHeight()})
@@ -114,6 +115,7 @@ def updateWindowParams(window):
     configPanel['CP'].update({'PY': window.getY()})
     PatternScriptEntities.writeConfigFile(configPanel)
 
+    PatternScriptEntities.backupConfigFile()
     return
 
 class Model:
@@ -127,7 +129,7 @@ class Model:
     def validatePatternConfig(self):
         '''To be reworked in v3'''
 
-        PatternScriptEntities.readConfigFile()
+        # PatternScriptEntities.readConfigFile()
         if not PatternScriptEntities.validateConfigFileVersion(SCRIPT_ROOT):
             PatternScriptEntities.mergeConfigFiles()
             self.psLog.info('Previous PatternConfig.json merged with new')
@@ -155,6 +157,7 @@ class Model:
                 subroutineList.append(subroutineFrame)
                 self.psLog.info(subroutineIncludes + ' subroutine added to control panel')
 
+        # PatternScriptEntities.backupConfigFile()
         return subroutineList
 
 class View:
@@ -185,13 +188,14 @@ class View:
 
     def makeScrollPanel(self, pluginPanel):
 
-        configPanel = PatternScriptEntities.readConfigFile('CP')
+        # configPanel = PatternScriptEntities.readConfigFile('CP')
         scrollPanel = javax.swing.JScrollPane(pluginPanel)
         scrollPanel.border = javax.swing.BorderFactory.createLineBorder(java.awt.Color.GRAY)
 
         return scrollPanel
 
     def makePatternScriptsWindow(self):
+        '''backupConfigFile() is a bit of user edit protection'''
 
         tally = -1 # Don't count the description in the tally
         menuIncludes = PatternScriptEntities.readConfigFile('CP')['MI']
@@ -244,6 +248,7 @@ class View:
         uniqueWindow.setLocation(configPanel['PX'], configPanel['PY'])
         uniqueWindow.setVisible(True)
 
+        PatternScriptEntities.backupConfigFile()
         return
 
     def getMenuItemList(self):
@@ -308,6 +313,7 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
         print('Current Pattern Scripts directory: ' + SCRIPT_ROOT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
+        # PatternScriptEntities.backupConfigFile()
         return False
 
     def addPatternScriptsButton(self):
@@ -365,6 +371,8 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
         self.logger.startLogger('PS')
         self.buildThePlugin()
         self.psLog.info('Pattern Scripts plugin restarted')
+
+        PatternScriptEntities.restoreConfigFile()
 
         return
 
@@ -427,6 +435,7 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
             print('Apply Schedule turned on')
 
         PatternScriptEntities.writeConfigFile(patternConfig)
+        # PatternScriptEntities.backupConfigFile()
 
         return
 
@@ -456,6 +465,7 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
             print('TrainPlayer support activated')
 
         PatternScriptEntities.writeConfigFile(patternConfig)
+        # PatternScriptEntities.backupConfigFile()
 
         return
 

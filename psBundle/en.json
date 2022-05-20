@@ -2,7 +2,7 @@
   "Pattern Tracks Subroutine" : "Translation Items, do not edit this line",
   "Pattern Tracks Subroutine" : "Pattern Tracks Subroutine",
   "Pattern Scripts" : "Pattern Scripts",
-  "Restart Pattern Scripts" : "Restart Pattern Scripts",
+  "Restart Pattern Scripts" : "Restart from PatternConfig Backup",
   "Help" : "Help",
   "Window Help..." : "Window Help...",
   "View Log" : "View Log",
@@ -40,7 +40,7 @@
 
   "TrainPlayer Support Subroutine" : "Translation Items, do not edit this line",
   "TrainPlayer Support Subroutine" : "TrainPlayer Support Subroutine",
-  
+
   "Pattern Report for Track" : "Translation Items, do not edit these items",
   "Input": "Input",
   "Road" : "Road",

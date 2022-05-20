@@ -88,12 +88,14 @@ class StartUp:
         configFile['PT'].update({'PT': trackDict})
         configFile['PT'].update({'PA': self.widgets[1].selected})
         configFile['PT'].update({'PI': self.widgets[2].selected})
-        PatternScriptEntities.writeConfigFile(configFile)
 
         subroutinePanel = StartUp(self.subroutineFrame).makeSubroutinePanel()
         self.subroutineFrame.removeAll()
         self.subroutineFrame.add(subroutinePanel)
         self.subroutineFrame.revalidate()
+
+        PatternScriptEntities.writeConfigFile(configFile)
+        # PatternScriptEntities.backupConfigFile()
 
         return
 

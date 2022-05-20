@@ -21,7 +21,7 @@ class ManageGui:
     def __init__(self):
 
         self.psLog = logging.getLogger('PS.PT.View')
-        self.configFile = PatternScriptEntities.readConfigFile('PT')
+        # self.configFile = PatternScriptEntities.readConfigFile('PT')
 
         return
 

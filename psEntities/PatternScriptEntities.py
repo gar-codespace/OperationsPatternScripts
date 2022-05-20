@@ -148,6 +148,7 @@ def openEditorByComputerType(switchListLocation=None):
     textEditor = editorMatrix[str(osType)]
     openEditor = textEditor + '"' + switchListLocation + '"' # Double quotes escapes the & symbol
 
+    PatternScriptEntities.backupConfigFile()
     return openEditor
 
 def validateStubFile(currentRootDir):
@@ -234,21 +235,47 @@ def mergeConfigFiles():
 
 def readConfigFile(subConfig=None):
 
+    configFile = tryConfigFile()
+
+    if not subConfig:
+        return configFile
+    else:
+        return configFile[subConfig]
+
+def tryConfigFile():
+    '''Catch some user edit mistakes'''
+
     try:
-        getConfigFile()
-        backupConfigFile()
+        configFile = getConfigFile()
     except ValueError:
         restoreConfigFile()
-        # writeNewConfigFile()
+        configFile = getConfigFile()
         psLog.warning('Defective PatternConfig.json found, new file restored from backup')
     except IOError:
         writeNewConfigFile()
+        configFile = getConfigFile()
         psLog.warning('No PatternConfig.json found, new file written')
 
-    if not subConfig:
-        return getConfigFile()
-    else:
-        return getConfigFile()[subConfig]
+    return configFile
+
+def setBeforeMarker():
+    '''Attempt to catch KeyError of bad user edit of configFile'''
+
+    beforeConfigFile = getConfigFile()
+    beforeConfigFile['CP'].update({'VM': False})
+    writeConfigFile(beforeConfigFile)
+
+    return
+
+def setAfterMarker():
+    '''Attempt to catch KeyError of bad user edit of configFile'''
+
+    beforeConfigFile = getConfigFile()
+    beforeConfigFile['CP'].update({'VM': True})
+    writeConfigFile(beforeConfigFile)
+    backupConfigFile()
+
+    return
 
 def getConfigFile():
 
@@ -318,6 +345,7 @@ def printPatternLog():
     return
 
 def getCarColor():
+    '''backupConfigFile() is a bit of user edit protection'''
 
     colorDefinition = readConfigFile('CD')
 
@@ -326,7 +354,10 @@ def getCarColor():
     b = colorDefinition['CP'][colorDefinition['carColor']]["B"]
     a = colorDefinition['CP'][colorDefinition['carColor']]["A"]
 
-    return java.awt.Color(r, g, b, a)
+    color = java.awt.Color(r, g, b, a)
+    backupConfigFile()
+    return color
+
 
 def getLocoColor():
 
@@ -337,7 +368,9 @@ def getLocoColor():
     b = colorDefinition['CP'][colorDefinition['locoColor']]["B"]
     a = colorDefinition['CP'][colorDefinition['locoColor']]["A"]
 
-    return java.awt.Color(r, g, b, a)
+    color = java.awt.Color(r, g, b, a)
+    backupConfigFile()
+    return color
 
 def getAlertColor():
 
@@ -348,4 +381,6 @@ def getAlertColor():
     b = colorDefinition['CP'][colorDefinition['alertColor']]["B"]
     a = colorDefinition['CP'][colorDefinition['alertColor']]["A"]
 
-    return java.awt.Color(r, g, b, a)
+    color = java.awt.Color(r, g, b, a)
+    backupConfigFile()
+    return color

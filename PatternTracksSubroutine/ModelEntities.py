@@ -86,12 +86,14 @@ def getGenericTrackDetails(locationName, trackName):
     return genericTrackDetails
 
 def sortLocoList(locoList):
-    '''Sort order of PatternScriptEntities.readConfigFile('PT')['SL'] is top down'''
+    '''backupConfigFile() is a bit of user edit protection
+    Sort order of PatternScriptEntities.readConfigFile('PT')['SL'] is top down'''
 
     sortLocos = PatternScriptEntities.readConfigFile('PT')['SL']
     for sortKey in sortLocos:
         locoList.sort(key=lambda row: row[sortKey])
 
+    PatternScriptEntities.backupConfigFile()
     return locoList
 
 def getRsOnTrains():
@@ -125,7 +127,8 @@ def getLocoObjects(location, track):
     return [loco for loco in allLocos if loco.getLocationName() == location and loco.getTrackName() == track]
 
 def getDetailsForLocoAsDict(locoObject):
-    '''Mimics jmri.jmrit.operations.setup.Setup.getEngineAttributes()
+    '''backupConfigFile() is a bit of user edit protection
+    Mimics jmri.jmrit.operations.setup.Setup.getEngineAttributes()
     [u'Road', u'Number', u'Type', u'Model', u'Length', u'Weight', u'Consist', u'Owner', u'Track', u'Location', u'Destination', u'Comment']'''
 
     listOfAssignedRs = getRsOnTrains()
@@ -157,15 +160,18 @@ def getDetailsForLocoAsDict(locoObject):
     locoDetailDict[u'FD&Track'] = PatternScriptEntities.readConfigFile('PT')['DS']
     locoDetailDict[u' '] = u' ' # Catches KeyError - empty box added to getDropEngineMessageFormat
 
+    PatternScriptEntities.backupConfigFile()
     return locoDetailDict
 
 def sortCarList(carList):
-    '''Sort order of PatternScriptEntities.readConfigFile('PT')['SC'] is top down'''
+    '''backupConfigFile() is a bit of user edit protection
+    Sort order of PatternScriptEntities.readConfigFile('PT')['SC'] is top down'''
 
     sortCars = PatternScriptEntities.readConfigFile('PT')['SC']
     for sortKey in sortCars:
         carList.sort(key=lambda row: row[sortKey])
 
+    PatternScriptEntities.backupConfigFile()
     return carList
 
 def getCarListForTrack(track):
@@ -183,7 +189,8 @@ def getCarObjects(location, track):
     return [car for car in allCars if car.getLocationName() == location and car.getTrackName() == track]
 
 def getDetailsForCarAsDict(carObject):
-    '''Mimics jmri.jmrit.operations.setup.Setup.getCarAttributes()
+    '''backupConfigFile() is a bit of user edit protection
+    Mimics jmri.jmrit.operations.setup.Setup.getCarAttributes()
     [u'Road', u'Number', u'Type', u'Length', u'Weight', u'Load', u'Load Type', u'Hazardous', u'Color', u'Kernel', u'Kernel Size', u'Owner', u'Track', u'Location', u'Destination', u'Dest&Track', u'Final Dest', u'FD&Track', u'Comment', u'SetOut Msg', u'PickUp Msg', u'RWE']'''
 
     fdStandIn = PatternScriptEntities.readConfigFile('PT')
@@ -239,6 +246,7 @@ def getDetailsForCarAsDict(carObject):
     carDetailDict[u'PUSO'] = u'SC'
     carDetailDict[u' '] = u' ' # Catches KeyError - empty box added to getLocalSwitchListMessageFormat
 
+    PatternScriptEntities.backupConfigFile()
     return carDetailDict
 
 def makeGenericHeader():
@@ -255,7 +263,7 @@ def makeGenericHeader():
     return listHeader
 
 def writeWorkEventListAsJson(switchList):
-    '''The generic switch list is written as a JSON'''
+    '''The generic switch list is written as a json'''
 
     switchListName = switchList['trainDescription']
     jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + switchListName + '.json'

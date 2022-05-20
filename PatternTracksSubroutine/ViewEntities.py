@@ -21,12 +21,12 @@ class TrackPatternPanel:
         # self.bundle = Bundle.getBundleForLocale(PatternScriptEntities.SCRIPT_ROOT)
 
         self.configFile = PatternScriptEntities.readConfigFile('PT')
-        self.yardTracksOnly = javax.swing.JCheckBox() #self.configFile['PA']
+        self.yardTracksOnly = javax.swing.JCheckBox()
         self.yardTracksOnly.setText(PatternScriptEntities.BUNDLE['Yard tracks only '])
         self.yardTracksOnly.setSelected(self.configFile['PA'])
         self.yardTracksOnly.setName('ytoCheckBox')
 
-        self.ignoreTrackLength = javax.swing.JCheckBox() # u'Ignore track length ', self.configFile['PI']
+        self.ignoreTrackLength = javax.swing.JCheckBox()
         self.ignoreTrackLength.setText(PatternScriptEntities.BUNDLE['Ignore track length '])
         self.ignoreTrackLength.setSelected(self.configFile['PI'])
         self.ignoreTrackLength.setName('itlCheckBox')
