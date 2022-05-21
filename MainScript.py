@@ -157,7 +157,6 @@ class Model:
                 subroutineList.append(subroutineFrame)
                 self.psLog.info(subroutineIncludes + ' subroutine added to control panel')
 
-        # PatternScriptEntities.backupConfigFile()
         return subroutineList
 
 class View:

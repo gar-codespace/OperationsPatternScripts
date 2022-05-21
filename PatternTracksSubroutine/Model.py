@@ -21,7 +21,7 @@ psLog = logging.getLogger('PS.PT.Model')
 def updatePatternLocation(selectedItem=None):
     '''Catches user edits of locations'''
 
-    psLog.debug('updatePatternLocation')
+    psLog.debug('Model.updatePatternLocation')
 
     configFile = PatternScriptEntities.readConfigFile()
     newLocation = ModelEntities.testSelectedItem(selectedItem)
@@ -41,7 +41,7 @@ def updatePatternLocation(selectedItem=None):
 def makeNewPatternTracks(location):
     '''Makes a new list of all tracks for a location'''
 
-    psLog.debug('makeNewPatternTracks')
+    psLog.debug('Model.makeNewPatternTracks')
     allTracks = ModelEntities.getTracksByLocation(None)
     trackDict = {}
     for track in allTracks:
@@ -55,14 +55,14 @@ def makeNewPatternTracks(location):
 
 def makeTrackList(location, type):
     '''Returns a list of tracks by type for a location'''
-    psLog.debug('makeTrackList')
+    psLog.debug('Model.makeTrackList')
 
     return ModelEntities.getTracksByLocation(type)
 
 def updatePatternTracks(trackList):
     '''Creates a new list of tracks and their default include flag'''
 
-    psLog.debug('updatePatternTracks')
+    psLog.debug('Model.updatePatternTracks')
     trackDict = {}
     for track in trackList:
         trackDict[track] = False
@@ -77,7 +77,7 @@ def updatePatternTracks(trackList):
 def updateCheckBoxStatus(all, ignore):
     '''Updates the config file with the checked status of Yard Tracks Only and Ignore Track Length check boxes'''
 
-    psLog.debug('updateCheckBoxStatus')
+    psLog.debug('Model.updateCheckBoxStatus')
     newConfigFile = PatternScriptEntities.readConfigFile()
     subConfigfile = newConfigFile['PT']
     subConfigfile.update({'PA': all})
@@ -89,7 +89,7 @@ def updateCheckBoxStatus(all, ignore):
 def updateConfigFile(controls):
     '''Updates the pattern tracks part of the config file'''
 
-    psLog.debug('updateConfigFile')
+    psLog.debug('Model.updateConfigFile')
 
     focusOn = PatternScriptEntities.readConfigFile('PT')
     focusOn.update({"PL": controls[0].getSelectedItem()})
@@ -127,7 +127,7 @@ def verifySelectedTracks():
 def makeLocationDict(trackList=None):
     '''Returns the details for the tracks sent in formatted for the json file '''
 
-    psLog.debug('makeLocationDict')
+    psLog.debug('Model.makeLocationDict')
 
     if not trackList:
         trackList = getSelectedTracks()
@@ -146,21 +146,21 @@ def makeLocationDict(trackList=None):
 def makeReport(locationDict, reportType):
     '''backupConfigFile() is a bit of user edit protection'''
 
-    psLog.debug('makeReport')
+    psLog.debug('Model.makeReport')
 
-    headerNames = PatternScriptEntities.readConfigFile('PT')
+
+    # headerNames = PatternScriptEntities.readConfigFile('PT')
     modifiedReport = ModelEntities.makeGenericHeader()
-    modifiedReport['trainDescription'] = headerNames['TD'][reportType]
-    modifiedReport['trainName'] = headerNames['TN'][reportType]
-    modifiedReport['trainComment'] = headerNames['TC'][reportType]
-    modifiedReport['locations'] = [locationDict] # put in as a list to maintain compatability with JSON File Format/JMRI manifest export. See help web page
+    # modifiedReport['trainDescription'] = headerNames['TD'][reportType]
+    # modifiedReport['trainName'] = PatternScriptEntities.BUNDLE['Location: '] + headerNames['PL']
+    # modifiedReport['trainComment'] = headerNames['TC'][reportType]
+    modifiedReport['locations'] = [locationDict] # put in as a list to maintain compatability with JSON File Format/JMRI manifest export.
 
-    PatternScriptEntities.backupConfigFile()
     return modifiedReport
 
 def printWorkEventList(patternListForJson, trackTotals):
 
-    psLog.debug('printWorkEventList')
+    psLog.debug('Model.printWorkEventList')
 
     workEventName = ModelEntities.writeWorkEventListAsJson(patternListForJson)
     textWorkEventList = ModelEntities.readJsonWorkEventList(workEventName)
@@ -176,7 +176,7 @@ def printWorkEventList(patternListForJson, trackTotals):
 def onScButtonPress():
     '''"Set Cars" button opens a window for each selected track'''
 
-    psLog.debug('onScButtonPress')
+    psLog.debug('Model.onScButtonPress')
 
     selectedTracks = getSelectedTracks()
     if not selectedTracks:
@@ -206,9 +206,10 @@ def onScButtonPress():
 def resetTrainPlayerSwitchlist():
     '''Overwrites the existing file with the header info for the next switch list'''
 
-    psLog.debug('resetTrainPlayerSwitchlist')
+    psLog.debug('Model.resetTrainPlayerSwitchlist')
 
-    locationDict = {'locationName':'Location Name', 'tracks':[{'trackName':'Track Name', 'length': 1, 'locos':[], 'cars':[]}]}
+    locationName = PatternScriptEntities.readConfigFile()['PT']['PL']
+    locationDict = {'locationName':locationName, 'tracks':[{'trackName':'Track Name', 'length': 1, 'locos':[], 'cars':[]}]}
     setCarsForm = makeReport(locationDict, 'TP')
     ModelEntities.writeWorkEventListAsJson(setCarsForm)
 
@@ -217,7 +218,7 @@ def resetTrainPlayerSwitchlist():
 def updateLocations():
     '''Updates the config file with a list of all locations for this profile'''
 
-    psLog.debug('updateLocations')
+    psLog.debug('Model.updateLocations')
     newConfigFile = PatternScriptEntities.readConfigFile()
     subConfigfile = newConfigFile['PT']
     allLocations  = ModelEntities.getAllLocations()
@@ -233,9 +234,9 @@ def updateLocations():
 def writeCsvSwitchList(trackPattern, type):
     '''Rewrite this to write from the json file'''
 
-    psLog.debug('writeCsvSwitchList')
-    trainDescription = PatternScriptEntities.readConfigFile('PT')['TD']
-    csvCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\csvSwitchLists\\' + trainDescription[type]  + '.csv'
+    psLog.debug('Model.writeCsvSwitchList')
+
+    csvCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\csvSwitchLists\\Track Pattern Report.csv'
     csvObject = ModelEntities.makeCsvSwitchlist(trackPattern)
     with codecsOpen(csvCopyTo, 'wb', encoding=PatternScriptEntities.ENCODING) as csvWorkFile:
         csvWorkFile.write(csvObject)

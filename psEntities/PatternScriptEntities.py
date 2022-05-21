@@ -148,7 +148,7 @@ def openEditorByComputerType(switchListLocation=None):
     textEditor = editorMatrix[str(osType)]
     openEditor = textEditor + '"' + switchListLocation + '"' # Double quotes escapes the & symbol
 
-    PatternScriptEntities.backupConfigFile()
+    backupConfigFile()
     return openEditor
 
 def validateStubFile(currentRootDir):

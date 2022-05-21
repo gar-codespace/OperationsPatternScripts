@@ -72,12 +72,14 @@
   <img src="ReportFileFormat1.png" alt="<JSON format for reports>">
 
 <h2>Key – PatternConfig.json</h2>
-<p>Each JMRI profile gets its own configuration file, which is a JSON file. It is found in the operations folder, and is used to provide custom settings for each profile and record user inputs.
+<p>Each JMRI profile gets its own configuration file, which is named PatternConfig.json. It is found in the operations folder, and is used to provide custom settings for each profile and record user inputs.
 <br><font color="blue">The description of each element is in blue</font>
 <br><font color="green">User editable keys are described in green</font>
-<br>This plugin is not able to catch every type of mistake that can be made when editing the PatternConfig.json file, and in some cases the plugin will crash.
- If that happens, delete the PatternConfig.json file and the plugin will create a new one to start over with.
- In other cases, if a mistake is made editing the PatternConfig.json file, the plugin will replace it with the default file, and the user will have to start over.</p>
+<br>Guard rails of sorts have been put up around the values marked in green, but even so this plugin is not able to catch every type of mistake that can be made when editing the PatternConfig.json file, and in some cases the plugin might crash.
+ If that happens, press the 'Restart from PatternConfig Backup" button and the plugin will use the last good PatternConfig.json file as a new starting off point.
+In other cases, if a mistake is made editing the PatternConfig.json file, the plugin will replace it with the default file, and the user will have to start over.
+<br>Worst case, simply delete the Pattern Config.json file and the plugin will create a new one.</p>
+
 <h3>Editor Matrix</h3>
 <pre>
   "EM": {
@@ -190,33 +192,10 @@
     "PL" : "", <font color="blue">Pattern Location (written by this plugin)</font>
     "PT" : { <font color="blue">Pattern Tracks (written by this plugin)</font>
     },
-    "TD" : { <font color="blue">Train Description</font>
-      "PR" : "<font color="green">Track Pattern - Location Report</font>",
-      "SC" : "<font color="green">Switch List - Track Report</font>",
-      "TP" : "<font color="green">Work Event List for TrainPlayer</font>"
-    },
-    "TN" : { <font color="blue">Train Name</font>
-      "PR" : "<font color="green">Local Switch Job</font>",
-      "SC" : "<font color="green">Local Switch Job</font>",
-      "TP" : "<font color="green">Local Switch Job</font>"
-    },
-    "TC" : { <font color="blue">Train Comment</font>
-      "PR" : "<font color="green">Track Pattern for Selected Tracks</font>",
-      "SC" : "<font color="green">Switch List for One Track</font>",
-      "TP" : "<font color="green">Switch List for Selected Tracks</font>"
-    },
     "PA" : false, <font color="blue">Yard Tracks Only flag</font>
     "PI" : false, <font color="blue">Ignore Track Length flag</font>
-    "SF" : { <font color="blue">Schedule Flag</font>
-      "AS" : true, <font color="blue">Apply Schedule flag</font>
-      "AT" : "Do Not Apply Schedule", <font color="blue">Menu Text</font>
-      "AF" : "Apply Schedule" <font color="blue">Menu Text</font>
-    },
-    "TF" : { <font color="blue">TrainPlayer Flag</font>
-      "TI" : true, <font color="blue">TrainPlayer Include flag</font>
-      "TT" : "Disable TrainPlayer", <font color="blue">Menu Text</font>
-      "TF" : "Enable TrainPlayer" <font color="blue">Menu Text</font>
-    },
+    "AS" : true, <font color="blue">Apply Schedule flag</font>
+    "TI" : false, <font color="blue">TrainPlayer Include flag</font>
     "PW" : 260, <font color="blue">Pattern Width</font>
     "PH" : 16, <font color="blue">Pattern Height</font>
     "DS" : "<font color="green">*No Waybill</font>", <font color="blue">Destination standin</font>
@@ -232,7 +211,6 @@
     ],
     "RM": 8, <font color="blue">Row Multiplier</font>
     "RW": { <font color="blue">Row Width</font>
-      "AAA" : "The integer sets the column width and is editable",
       "Input": <font color="green">6</font>,
       "Model": <font color="green">5</font>,
       "Road" : <font color="green">5</font>,

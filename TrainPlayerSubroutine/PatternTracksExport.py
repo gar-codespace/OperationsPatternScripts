@@ -16,6 +16,7 @@ SCRIPT_NAME ='OperationsPatternScripts.TrainPlayerSubroutine.PatternTracksExport
 SCRIPT_REV = 20220101
 
 from psEntities import PatternScriptEntities
+from psBundle import Bundle
 
 class ExportJmriLocations:
     '''Writes a list of location names and comments for the whole profile'''
@@ -110,7 +111,8 @@ class TrackPatternTranslationToTp:
         self.psLog.debug('appendSwitchList')
 
         headerNames = PatternScriptEntities.readConfigFile('PT')
-        reportTitle = headerNames['TD']['TP']
+        reportTitle = PatternScriptEntities.BUNDLE['Work Event List for TrainPlayer']
+        # reportTitle = headerNames['TD']['TP']
         jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
         with codecsOpen(jsonFile, 'r', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
             jsonSwitchList = jsonWorkFile.read()
@@ -279,7 +281,7 @@ class ProcessWorkEventList:
         header = 'HN,' + HTMLParser().unescape(appendedTpSwitchList['railroad']) + '\n'
         header += 'HT,' + HTMLParser().unescape(appendedTpSwitchList['trainName']) + '\n'
         header += 'HD,' + HTMLParser().unescape(appendedTpSwitchList['trainDescription']) + '\n'
-        header += 'HC,' + HTMLParser().unescape(appendedTpSwitchList['trainComment']) + '\n'
+        header += 'HC,' + PatternScriptEntities.BUNDLE['Switch List for Selected Tracks'] + '\n'
         header += 'HV,' + HTMLParser().unescape(appendedTpSwitchList['date']) + '\n'
         header += u'WT,' + str(len(appendedTpSwitchList['locations'])) + '\n'
 

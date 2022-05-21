@@ -88,7 +88,7 @@
     "PW" : 1500,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20220312,
+    "RV" : 20220313,
     "VM" : true
   },
   "LI": {
@@ -105,21 +105,7 @@
     "PL" : "",
     "PT" : {
     },
-    "TD" : {
-      "PR" : "Track Pattern - Location Report",
-      "SC" : "Switch List - Track Report",
-      "TP" : "Work Event List for TrainPlayer"
-    },
-    "TN" : {
-      "PR" : "Local Switch Job",
-      "SC" : "Local Switch Job",
-      "TP" : "Local Switch Job"
-    },
-    "TC" : {
-      "PR" : "Track Pattern for Selected Tracks",
-      "SC" : "Switch List for One Track",
-      "TP" : "Switch List for Selected Tracks"
-    },
+
     "PA" : true,
     "PI" : true,
     "TI" : false,
@@ -139,7 +125,6 @@
     ],
     "RM": 8,
     "RW": {
-      "AAA" : "The integer sets the column width and is editable",
       "Input": 6,
       "Model": 5,
       "Road" : 5,

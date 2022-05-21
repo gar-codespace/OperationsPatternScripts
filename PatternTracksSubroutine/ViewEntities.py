@@ -18,8 +18,6 @@ class TrackPatternPanel:
 
     def __init__(self):
 
-        # self.bundle = Bundle.getBundleForLocale(PatternScriptEntities.SCRIPT_ROOT)
-
         self.configFile = PatternScriptEntities.readConfigFile('PT')
         self.yardTracksOnly = javax.swing.JCheckBox()
         self.yardTracksOnly.setText(PatternScriptEntities.BUNDLE['Yard tracks only '])
@@ -98,7 +96,6 @@ class TrackPatternPanel:
         buttonPanel.setAlignmentX(javax.swing.JPanel.CENTER_ALIGNMENT)
         buttonPanel.add(self.ypButton)
         buttonPanel.add(self.scButton)
-        # buttonPanel.add(self.vlButton)
 
         return buttonPanel
 
@@ -111,7 +108,6 @@ class TrackPatternPanel:
         self.controlObjects.append(self.trackCheckBoxes)
         self.controlObjects.append(self.ypButton)
         self.controlObjects.append(self.scButton)
-        # self.controlObjects.append(self.vlButton)
 
         return self.controlObjects
 
@@ -144,11 +140,12 @@ def makeTextListForPrint(textWorkEventList, trackTotals=False):
 
 def makeTextReportHeader(textWorkEventList):
 
+    headerNames = PatternScriptEntities.readConfigFile('PT')
+
     textReportHeader    = textWorkEventList['railroad'] + '\n' \
-                        + textWorkEventList['trainName'] + '\n' \
-                        + textWorkEventList['trainDescription'] + '\n' \
-                        + PatternScriptEntities.BUNDLE['Comment: '] + textWorkEventList['trainComment'] + '\n' \
-                        + PatternScriptEntities.BUNDLE['Valid time: '] + textWorkEventList['date'] + '\n\n'
+                        + PatternScriptEntities.BUNDLE['Pattern Report'] + '\n' \
+                        + PatternScriptEntities.BUNDLE['Switching at: '] + headerNames['PL'] + '\n' \
+                        + textWorkEventList['date'] + '\n\n'
 
     return textReportHeader
 
@@ -160,7 +157,6 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
 
     reportSwitchList = ''
     reportTally = [] # running total for all tracks
-    reportSwitchList += PatternScriptEntities.BUNDLE['Location: '] + textWorkEventList['locations'][0]['locationName'] + '\n'
     for track in textWorkEventList['locations'][0]['tracks']:
         lengthOfLocos = 0
         lengthOfCars = 0

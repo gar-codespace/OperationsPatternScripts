@@ -78,10 +78,7 @@ Catches Items:
 
 Todo:
   BUNDLE calls seem to be scattered around MainScript
-  Move TC TD TN to BUNDLE?
-  Move DS DT FS FT to BUNDLE?
   Are SCRIPT_ROOT, ENCODING and BUNDLE as global constants a good idea?
-  https://stackoverflow.com/questions/6234405/logging-uncaught-exceptions-in-python#16993115 to catch user edits of config file that crashes plugin?
 
 Version 3 ideas:
   Fill out TrainPlayer Support subroutine.
