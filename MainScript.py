@@ -105,7 +105,6 @@ class PatternScriptsWindowListener(java.awt.event.WindowListener):
         return
 
 def updateWindowParams(window):
-    '''backupConfigFile() is a bit of user edit protection'''
 
     configPanel = PatternScriptEntities.readConfigFile()
     configPanel['CP'].update({'PH': window.getHeight()})
@@ -114,7 +113,6 @@ def updateWindowParams(window):
     configPanel['CP'].update({'PY': window.getY()})
     PatternScriptEntities.writeConfigFile(configPanel)
 
-    PatternScriptEntities.backupConfigFile()
     return
 
 class Model:
@@ -165,7 +163,7 @@ class View:
         self.psLog = logging.getLogger('PS.View')
 
         self.controlPanel = scrollPanel
-        self.menuItemList = []
+        self.psPluginMenuItems = []
 
         return
 
@@ -192,19 +190,20 @@ class View:
 
         return scrollPanel
 
+    def getPsPluginMenuItems(self):
+
+        return self.psPluginMenuItems
+
     def makePatternScriptsWindow(self):
         '''In v3, implement this with loops, using values from config file'''
 
         uniqueWindow = jmri.util.JmriJFrame()
-        menuItemList = []
 
-        asMenuItem = javax.swing.JMenuItem(self.setAsDropDown())
-        asMenuItem.setName('asItemSelected')
-        self.menuItemList.append(asMenuItem)
-
-        tpMenuItem = javax.swing.JMenuItem(self.setTiDropDown())
-        tpMenuItem.setName('tpItemSelected')
-        self.menuItemList.append(tpMenuItem)
+        # Loop over this in v3
+        asMenuItem = self.makeMenuItem(self.setAsDropDownText())
+        tpMenuItem = self.makeMenuItem(self.setTiDropDownText())
+        logMenuItem = self.makeMenuItem(self.setLmDropDownText())
+        helpMenuItem = self.makeMenuItem(self.setHmDropDownText())
 
         toolsMenu = javax.swing.JMenu(u'Tools')
         toolsMenu.add(jmri.jmrit.operations.setup.OptionAction())
@@ -213,12 +212,6 @@ class View:
         toolsMenu.add(asMenuItem)
         toolsMenu.add(tpMenuItem)
 
-        logMenuItem = javax.swing.JMenuItem(PatternScriptEntities.BUNDLE['View Log'])
-        logMenuItem.setName('logItemSelected')
-        helpMenuItem = javax.swing.JMenuItem(PatternScriptEntities.BUNDLE['Window Help...'])
-        helpMenuItem.setName('helpItemSelected')
-        self.menuItemList.append(logMenuItem)
-        self.menuItemList.append(helpMenuItem)
         helpMenu = javax.swing.JMenu(PatternScriptEntities.BUNDLE['Help'])
         helpMenu.add(logMenuItem)
         helpMenu.add(helpMenuItem)
@@ -229,7 +222,7 @@ class View:
         psMenuBar.add(jmri.util.WindowMenu(uniqueWindow))
         psMenuBar.add(helpMenu)
 
-        uniqueWindow.setName('patternScripts')
+        uniqueWindow.setName('patternScriptsWindow')
         uniqueWindow.setTitle(PatternScriptEntities.BUNDLE['Pattern Scripts'])
         uniqueWindow.addWindowListener(PatternScriptsWindowListener())
         uniqueWindow.setJMenuBar(psMenuBar)
@@ -242,12 +235,18 @@ class View:
 
         return
 
-    def getMenuItemList(self):
+    def makeMenuItem(self, itemMethod):
 
-        return self.menuItemList
+        itemText, itemName = itemMethod
 
-    def setAsDropDown(self):
-        '''Set the drop down text per the Apply Schedule flag'''
+        menuItem = javax.swing.JMenuItem(itemText)
+        menuItem.setName(itemName)
+        self.psPluginMenuItems.append(menuItem)
+
+        return menuItem
+
+    def setAsDropDownText(self):
+        '''itemMethod - Set the drop down text per the Apply Schedule flag'''
 
         patternConfig = PatternScriptEntities.readConfigFile('PT')
         if patternConfig['AS']:
@@ -255,10 +254,10 @@ class View:
         else:
             menuText = PatternScriptEntities.BUNDLE['Apply Schedule']
 
-        return menuText
+        return menuText, 'asItemSelected'
 
-    def setTiDropDown(self):
-        '''Set the drop down text per the TrainPlayer Include flag'''
+    def setTiDropDownText(self):
+        '''itemMethod - Set the drop down text per the TrainPlayer Include flag'''
 
         patternConfig = PatternScriptEntities.readConfigFile('PT')
         if patternConfig['TI']:
@@ -266,7 +265,21 @@ class View:
         else:
             menuText = PatternScriptEntities.BUNDLE['Enable TrainPlayer']
 
-        return menuText
+        return menuText, 'tpItemSelected'
+
+    def setLmDropDownText(self):
+        '''itemMethod - Set the drop down text for the Log menu item'''
+
+        logMenuText = PatternScriptEntities.BUNDLE['View Log']
+
+        return logMenuText, 'logItemSelected'
+
+    def setHmDropDownText(self):
+        '''itemMethod - Set the drop down text for the Log menu item'''
+
+        helpMenuText = PatternScriptEntities.BUNDLE['Window Help...']
+
+        return helpMenuText, 'helpItemSelected'
 
 class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
@@ -285,27 +298,6 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
         self.menuItemList = []
 
         return
-
-    def handle(self):
-
-        yTimeNow = time.time()
-        self.psLog = logging.getLogger('PS.Controller')
-        self.logger.initialLogMessage(self.psLog)
-
-        self.model.validatePatternConfig()
-        PatternScriptEntities.validateFileDestinationDirestories()
-        PatternScriptEntities.validateStubFile(SCRIPT_ROOT)
-        self.addTrainPlayerListeners()
-        if PatternScriptEntities.readConfigFile()['CP']['AP']:
-            self.addPatternScriptsButton()
-
-        self.psLog.info('Current Pattern Scripts directory: ' + SCRIPT_ROOT)
-        self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
-        print('Current Pattern Scripts directory: ' + SCRIPT_ROOT)
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-
-        # PatternScriptEntities.backupConfigFile()
-        return False
 
     def addPatternScriptsButton(self):
         '''The Pattern Scripts button on the PanelPro frame'''
@@ -371,7 +363,7 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
         for frameName in jmri.util.JmriJFrame.getFrameList():
             frame = jmri.util.JmriJFrame.getFrame(frameName)
-            if frame.getName() == 'patternScripts':
+            if frame.getName() == 'patternScriptsWindow':
                 updateWindowParams(frame)
                 frame.setVisible(False)
                 frame.dispose()
@@ -387,7 +379,7 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
         scrollPanel = view.makeScrollPanel(populatedPluginPanel)
         patternScriptsWindow = View(scrollPanel)
         patternScriptsWindow.makePatternScriptsWindow()
-        self.menuItemList = patternScriptsWindow.getMenuItemList()
+        self.menuItemList = patternScriptsWindow.getPsPluginMenuItems()
 
         self.addMenuItemListeners()
 
@@ -412,6 +404,7 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
     def asItemSelected(self, AS_ACTIVATE_EVENT):
         '''menu item-Tools/Apply Schedule'''
 
+        self.psLog.debug(AS_ACTIVATE_EVENT)
         patternConfig = PatternScriptEntities.readConfigFile()
 
         if patternConfig['PT']['AS']:
@@ -432,6 +425,7 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
     def tpItemSelected(self, TP_ACTIVATE_EVENT):
         '''menu item-Tools/Enable Trainplayer'''
 
+        self.psLog.debug(TP_ACTIVATE_EVENT)
         patternConfig = PatternScriptEntities.readConfigFile()
 
         if patternConfig['PT']['TI']: # If enabled, turn it off
@@ -461,6 +455,8 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
     def logItemSelected(self, OPEN_LOG_EVENT):
         '''menu item-Help/View Log'''
 
+        self.psLog.debug(OPEN_LOG_EVENT)
+
         PatternScriptEntities.makePatternLog()
         PatternScriptEntities.printPatternLog()
 
@@ -471,9 +467,31 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
     def helpItemSelected(self, OPEN_HELP_EVENT):
         '''menu item-Help/Window help...'''
 
+        self.psLog.debug(OPEN_HELP_EVENT)
+
         helpStubPath = PatternScriptEntities.getStubPath()
         jmri.util.HelpUtil.openWebPage(helpStubPath)
 
         return
+
+    def handle(self):
+
+        yTimeNow = time.time()
+        self.psLog = logging.getLogger('PS.Controller')
+        self.logger.initialLogMessage(self.psLog)
+
+        self.model.validatePatternConfig()
+        PatternScriptEntities.validateFileDestinationDirestories()
+        PatternScriptEntities.validateStubFile(SCRIPT_ROOT)
+        self.addTrainPlayerListeners()
+        if PatternScriptEntities.readConfigFile()['CP']['AP']:
+            self.addPatternScriptsButton()
+
+        self.psLog.info('Current Pattern Scripts directory: ' + SCRIPT_ROOT)
+        self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
+        print('Current Pattern Scripts directory: ' + SCRIPT_ROOT)
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+        return False
 
 Controller().start()
