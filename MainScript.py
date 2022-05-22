@@ -28,7 +28,6 @@ from psEntities import PatternScriptEntities
 from psBundle import Bundle
 from TrainPlayerSubroutine import BuiltTrainExport
 
-'''Global variables for now, this may change'''
 PatternScriptEntities.SCRIPT_ROOT = SCRIPT_ROOT
 PatternScriptEntities.ENCODING = PatternScriptEntities.readConfigFile('CP')['SE']
 PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale(SCRIPT_ROOT)
@@ -46,7 +45,7 @@ class TrainsTableListener(javax.swing.event.TableModelListener):
 
         trainList = PatternScriptEntities.TM.getTrainsByIdList()
         for train in trainList:
-            train.removePropertyChangeListener(self.builtTrainListener) # Does not throw error if there is no listener to remove
+            train.removePropertyChangeListener(self.builtTrainListener) # Does not throw error if there is no listener to remove :)
             train.addPropertyChangeListener(self.builtTrainListener)
 
         return
@@ -194,13 +193,7 @@ class View:
         return scrollPanel
 
     def makePatternScriptsWindow(self):
-        '''backupConfigFile() is a bit of user edit protection'''
-
-        tally = -1 # Don't count the description in the tally
-        menuIncludes = PatternScriptEntities.readConfigFile('CP')['MI']
-        for name, menuItem in menuIncludes.items():
-            tally += len(menuItem)
-        self.psLog.info(''.join(menuIncludes['Description']) + str(tally))
+        '''In v3, implement this with loops, using values from config file'''
 
         uniqueWindow = jmri.util.JmriJFrame()
         menuItemList = []
@@ -247,7 +240,6 @@ class View:
         uniqueWindow.setLocation(configPanel['PX'], configPanel['PY'])
         uniqueWindow.setVisible(True)
 
-        PatternScriptEntities.backupConfigFile()
         return
 
     def getMenuItemList(self):
@@ -434,7 +426,6 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
             print('Apply Schedule turned on')
 
         PatternScriptEntities.writeConfigFile(patternConfig)
-        # PatternScriptEntities.backupConfigFile()
 
         return
 
@@ -464,7 +455,6 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
             print('TrainPlayer support activated')
 
         PatternScriptEntities.writeConfigFile(patternConfig)
-        # PatternScriptEntities.backupConfigFile()
 
         return
 

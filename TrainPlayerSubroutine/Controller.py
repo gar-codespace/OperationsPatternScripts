@@ -17,7 +17,7 @@ SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.Controller'
 SCRIPT_REV = 20220101
 
 class StartUp:
-    '''Start the Track Pattern subroutine'''
+    '''Start the TrainPlayer subroutine'''
 
     def __init__(self, subroutineFrame=None):
 

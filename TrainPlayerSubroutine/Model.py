@@ -15,28 +15,10 @@ from TrainPlayerSubroutine import ModelEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.Model'
 SCRIPT_REV = 20220101
+
 psLog = logging.getLogger('PS.TP.Model')
 
 print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-
-class CheckTpDestination:
-    '''Verify or create a TrainPlayer destination directory'''
-
-    def __init__(self):
-
-        self.psLog = logging.getLogger('PS.TP.CheckTpDestination')
-
-        return
-
-    def directoryExists(self):
-
-        try:
-            osMakeDir(jmri.util.FileUtil.getHomePath() + 'AppData\\Roaming\\TrainPlayer\\Reports')
-            self.psLog.warning('TrainPlayer destination directory created')
-        except OSError:
-            self.psLog.info('TrainPlayer destination directory OK')
-
-        return
 
 class ExportJmriLocations:
     '''Writes a list of location names and comments for the whole profile'''

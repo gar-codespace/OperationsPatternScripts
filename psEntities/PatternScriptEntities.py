@@ -6,7 +6,6 @@
 import jmri
 from java import io as javaIo
 import java.awt
-# import javax.swing
 
 import logging
 import time
@@ -14,7 +13,9 @@ from json import loads as jsonLoads, dumps as jsonDumps
 from codecs import open as codecsOpen
 from os import mkdir as osMakeDir
 from os import system as osSystem
-# from shutil import copy as shutilCopy
+
+SCRIPT_NAME = 'OperationsPatternScripts.psEntities.PatternScriptEntities'
+SCRIPT_REV = 20220101
 
 LM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
 TM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.trains.TrainManager)
@@ -23,15 +24,11 @@ CM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.Car
 SM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.schedules.ScheduleManager)
 PM = jmri.InstanceManager.getDefault(jmri.util.gui.GuiLafPreferencesManager)
 
-SCRIPT_NAME = 'OperationsPatternScripts.psEntities.PatternScriptEntities'
-SCRIPT_REV = 20220101
-
-psLog = logging.getLogger('PS.PE.PatternScriptEntities')
-
-'''Global variables passed between modules, for now, this may change'''
 SCRIPT_ROOT = ''
 ENCODING = ''
 BUNDLE = {}
+
+psLog = logging.getLogger('PS.PE.PatternScriptEntities')
 
 class Logger:
 
@@ -258,25 +255,6 @@ def tryConfigFile():
 
     return configFile
 
-def setBeforeMarker():
-    '''Attempt to catch KeyError of bad user edit of configFile'''
-
-    beforeConfigFile = getConfigFile()
-    beforeConfigFile['CP'].update({'VM': False})
-    writeConfigFile(beforeConfigFile)
-
-    return
-
-def setAfterMarker():
-    '''Attempt to catch KeyError of bad user edit of configFile'''
-
-    beforeConfigFile = getConfigFile()
-    beforeConfigFile['CP'].update({'VM': True})
-    writeConfigFile(beforeConfigFile)
-    backupConfigFile()
-
-    return
-
 def getConfigFile():
 
     configFileLoc = jmri.util.FileUtil.getProfilePath() + 'operations\PatternConfig.json'
@@ -308,24 +286,24 @@ def makePatternLog():
     '''creates a pattern log for display based on the log level, as set by getBuildReportLevel'''
 
     outputPatternLog = ''
-    buildReportLevel = int(jmri.jmrit.operations.setup.Setup.getBuildReportLevel())
+    buildReportLevel = jmri.jmrit.operations.setup.Setup.getBuildReportLevel()
     configLoggingIndex = readConfigFile('LI')
-    logLevel = configLoggingIndex[jmri.jmrit.operations.setup.Setup.getBuildReportLevel()]
+    logLevel = configLoggingIndex[buildReportLevel]
     logFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog.txt'
     with codecsOpen(logFileLocation, 'r', encoding=ENCODING) as patternLogFile:
         while True:
             thisLine = patternLogFile.readline()
             if not (thisLine):
                 break
-            if (configLoggingIndex['9'] in thisLine and buildReportLevel > 0): # critical
+            if (configLoggingIndex['9'] in thisLine and int(buildReportLevel) > 0): # critical
                 outputPatternLog += thisLine
-            if (configLoggingIndex['7'] in thisLine and buildReportLevel > 0): # error
+            if (configLoggingIndex['7'] in thisLine and int(buildReportLevel) > 0): # error
                 outputPatternLog += thisLine
-            if (configLoggingIndex['5'] in thisLine and buildReportLevel > 0): # warning
+            if (configLoggingIndex['5'] in thisLine and int(buildReportLevel) > 0): # warning
                 outputPatternLog += thisLine
-            if (configLoggingIndex['3'] in thisLine and buildReportLevel > 2): # info
+            if (configLoggingIndex['3'] in thisLine and int(buildReportLevel) > 2): # info
                 outputPatternLog += thisLine
-            if (configLoggingIndex['1'] in thisLine and buildReportLevel > 4): # debug
+            if (configLoggingIndex['1'] in thisLine and int(buildReportLevel) > 4): # debug
                 outputPatternLog += thisLine
 
     tempLogFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
@@ -354,10 +332,8 @@ def getCarColor():
     b = colorDefinition['CP'][colorDefinition['carColor']]["B"]
     a = colorDefinition['CP'][colorDefinition['carColor']]["A"]
 
-    color = java.awt.Color(r, g, b, a)
     backupConfigFile()
-    return color
-
+    return java.awt.Color(r, g, b, a)
 
 def getLocoColor():
 
@@ -368,9 +344,8 @@ def getLocoColor():
     b = colorDefinition['CP'][colorDefinition['locoColor']]["B"]
     a = colorDefinition['CP'][colorDefinition['locoColor']]["A"]
 
-    color = java.awt.Color(r, g, b, a)
     backupConfigFile()
-    return color
+    return java.awt.Color(r, g, b, a)
 
 def getAlertColor():
 
@@ -381,6 +356,5 @@ def getAlertColor():
     b = colorDefinition['CP'][colorDefinition['alertColor']]["B"]
     a = colorDefinition['CP'][colorDefinition['alertColor']]["A"]
 
-    color = java.awt.Color(r, g, b, a)
     backupConfigFile()
-    return color
+    return java.awt.Color(r, g, b, a)

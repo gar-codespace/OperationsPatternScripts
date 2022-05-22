@@ -80,17 +80,6 @@
 In other cases, if a mistake is made editing the PatternConfig.json file, the plugin will replace it with the default file, and the user will have to start over.
 <br>Worst case, simply delete the Pattern Config.json file and the plugin will create a new one.</p>
 
-<h3>Editor Matrix</h3>
-<pre>
-  "EM": {
-    "1": "<font color="green">Mac Classic</font> ",
-    "2": "<font color="green">open -a TextEdit</font> ", <font color="blue">OSX</font>
-    "4": "<font color="green">start notepad.exe</font> ", <font color="blue">Windows</font>
-    "5": "<font color="green">nano</font> ", <font color="blue">Linux</font>
-    "6": "<font color="green">OS2</font> ",
-    "7": "<font color="green">kwrite</font> " <font color="blue">Unix</font>
-  },
-</pre>
 <h3>Color Definations</h3>
 <pre>
   "CD": {
@@ -173,6 +162,17 @@ In other cases, if a mistake is made editing the PatternConfig.json file, the pl
     "RV" : 20220205 <font color="blue">Version control</font>
   },
 </pre>
+<h3>Editor Matrix</h3>
+<pre>
+  "EM": {
+    "1": "<font color="green">Mac Classic</font> ",
+    "2": "<font color="green">open -a TextEdit</font> ", <font color="blue">OSX</font>
+    "4": "<font color="green">start notepad.exe</font> ", <font color="blue">Windows</font>
+    "5": "<font color="green">nano</font> ", <font color="blue">Linux</font>
+    "6": "<font color="green">OS2</font> ",
+    "7": "<font color="green">kwrite</font> " <font color="blue">Unix</font>
+  },
+</pre>
 <h3>Logging Index</h3>
 <pre>
   "LI": {
@@ -192,10 +192,10 @@ In other cases, if a mistake is made editing the PatternConfig.json file, the pl
     "PL" : "", <font color="blue">Pattern Location (written by this plugin)</font>
     "PT" : { <font color="blue">Pattern Tracks (written by this plugin)</font>
     },
-    "PA" : false, <font color="blue">Yard Tracks Only flag</font>
-    "PI" : false, <font color="blue">Ignore Track Length flag</font>
-    "AS" : true, <font color="blue">Apply Schedule flag</font>
-    "TI" : false, <font color="blue">TrainPlayer Include flag</font>
+    "PA" : false, <font color="blue">Yard Tracks Only flag (set by user)</font>
+    "PI" : false, <font color="blue">Ignore Track Length flag (set by user)</font>
+    "AS" : true, <font color="blue">Apply Schedule flag (set by user)</font>
+    "TI" : false, <font color="blue">TrainPlayer Include flag (set by user)</font>
     "PW" : 260, <font color="blue">Pattern Width</font>
     "PH" : 16, <font color="blue">Pattern Height</font>
     "DS" : "<font color="green">*No Waybill</font>", <font color="blue">Destination standin</font>

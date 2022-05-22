@@ -1,5 +1,6 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
+'''These are the classes used by the Pattern Tracks module'''
 
 import jmri
 import java

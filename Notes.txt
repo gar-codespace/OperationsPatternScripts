@@ -77,10 +77,12 @@ Catches Items:
   Catches user edit train while TP export is enabled
 
 Todo:
+  Test with two profiles running
   BUNDLE calls seem to be scattered around MainScript
-  Are SCRIPT_ROOT, ENCODING and BUNDLE as global constants a good idea?
+  CP MI doesn't work
 
 Version 3 ideas:
+  Implement makePatternScriptsWindow() from config file list
   Fill out TrainPlayer Support subroutine.
   mergeConfigFiles()
   Enhance and harden BUNDLE

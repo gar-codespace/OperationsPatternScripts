@@ -85,7 +85,8 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
         self.tpLog = logging.getLogger('TP.BuiltTrainExport')
         self.logger.initialLogMessage(self.tpLog)
 
-        Model.CheckTpDestination().directoryExists()
+        # Model.CheckTpDestination().directoryExists()
+        PatternScriptEntities.CheckTpDestination().directoryExists()
 
         jmriExport = Model.ExportJmriLocations()
         locationList = jmriExport.makeLocationList()

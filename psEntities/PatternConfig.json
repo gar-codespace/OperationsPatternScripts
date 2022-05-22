@@ -1,12 +1,4 @@
 {
-  "EM": {
-    "1": "Mac Classic ",
-    "2": "open -a TextEdit ",
-    "4": "start notepad.exe ",
-    "5": "nano ",
-    "6": "OS2 ",
-    "7": "kwrite "
-  },
   "CD": {
     "CP": {
       "BLANCH": {
@@ -78,7 +70,7 @@
       "TrainPlayerSubroutine" : true
     },
     "MI" : {
-      "Description" : ["Additional menu items included in the Pattern Scripts window: "],
+      "Description" : ["Implement in v3"],
       "Tools" : ["asItemSelected", "tpItemSelected"],
       "OperationsPro" : [],
       "Window" : [],
@@ -88,8 +80,15 @@
     "PW" : 1500,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20220313,
-    "VM" : true
+    "RV" : 2022
+  },
+  "EM": {
+    "1": "Mac Classic ",
+    "2": "open -a TextEdit ",
+    "4": "start notepad.exe ",
+    "5": "nano ",
+    "6": "OS2 ",
+    "7": "kwrite "
   },
   "LI": {
     "0" : "Editing these is not recommended",
@@ -105,7 +104,6 @@
     "PL" : "",
     "PT" : {
     },
-
     "PA" : true,
     "PI" : true,
     "TI" : false,

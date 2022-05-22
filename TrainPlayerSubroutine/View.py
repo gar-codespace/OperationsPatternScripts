@@ -16,6 +16,7 @@ from TrainPlayerSubroutine import ViewEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.TrianPlayerSubroutine.View'
 SCRIPT_REV = 20220101
+
 psLog = logging.getLogger('PS.TrainPlayer.View')
 
 class ManageGui:
@@ -24,8 +25,6 @@ class ManageGui:
 
         self.psLog = logging.getLogger('PS.TP.View')
         self.configFile = PatternScriptEntities.readConfigFile('TP')
-
-        # self.bundle = Bundle.getBundleForLocale(PatternScriptEntities.SCRIPT_ROOT)
 
         return
 
