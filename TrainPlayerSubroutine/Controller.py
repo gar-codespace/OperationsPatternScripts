@@ -48,16 +48,19 @@ class StartUp:
     def activateWidgets(self):
         '''Maybe get them by name?'''
 
-        self.widgets[0].actionPerformed = self.aButtonAction
+        self.widgets[0].actionPerformed = self.updateInventory
         self.widgets[1].actionPerformed = self.bButtonAction
 
         return
 
 
-    def aButtonAction(self, EVENT):
-        '''Whatever this button ends up doing'''
+    def updateInventory(self, EVENT):
+        '''Updates JMRI rolling stock locations based on TrainPlayer inventory export'''
 
-        print('This space for rent')
+        Model.updateInventory()
+
+        self.psLog.info('Updated Rolling stock locations')
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 

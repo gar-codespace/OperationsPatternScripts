@@ -193,3 +193,55 @@ class WriteWorkEventListToTp:
         print(SCRIPT_NAME + '.WriteWorkEventListToTp ' + str(SCRIPT_REV))
 
         return
+
+def updateInventory():
+
+    tpInventory = getTpInventory()
+    jmriLocationList = makeJmriLocationList()
+    print(jmriLocationList)
+
+    for item in tpInventory:
+        item = tuple(item.split(','))
+
+
+    return
+
+def getTpLocation(comment=None):
+
+    return
+
+def getTpInventory():
+
+    tpInventoryPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\TrainPlayer Export - Inventory.txt"
+    tpInventory = ''
+
+    try: # Catch TrainPlayer not installed
+        with codecsOpen(tpInventoryPath, 'r', encoding=PatternScriptEntities.ENCODING) as csvWorkFile:
+            tpInventory = [line.rstrip() for line in csvWorkFile]
+            # tpInventory = csvWorkFile.read()
+
+    except IOError:
+        psLog.warning('TrainPlayer directory or file not found')
+
+    return tpInventory
+
+def makeJmriLocationList():
+    '''Returns a tuple(comment, location, track)'''
+
+    allLocations = PatternScriptEntities.getAllLocations()
+
+    locationList = []
+    for location in allLocations:
+        locationObject = PatternScriptEntities.LM.getLocationByName(location)
+        allTracks = locationObject.getTracksList()
+        for track in allTracks:
+            locationList.append((track.getComment(),locationObject.getName(),track.getName()))
+
+    return locationList
+
+# def  getAllRS():
+#
+#     allCars = PatternScriptEntities.CM.getByLocationList()
+#     allLocos = PatternScriptEntities.EM.getByLocationList()
+#
+#     return allCars + allLocos

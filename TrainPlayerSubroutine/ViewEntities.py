@@ -8,6 +8,7 @@ import java.awt
 import javax.swing
 
 from psEntities import PatternScriptEntities
+from psBundle import Bundle
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ViewEntities'
 SCRIPT_REV = 20220101
@@ -18,13 +19,13 @@ class TrainPlayerPanel:
 
         self.configFile = PatternScriptEntities.readConfigFile('TP')
 
-        self.aButton = javax.swing.JButton()
-        self.aButton.setText(u'For Rent')
-        self.aButton.setName('aButton')
+        self.uiButton = javax.swing.JButton()
+        self.uiButton.setText(PatternScriptEntities.BUNDLE['Update Inventory'])
+        self.uiButton.setName('uiButton')
 
-        self.bButton = javax.swing.JButton()
-        self.bButton.setText(u'Post No Bills')
-        self.bButton.setName('bButton')
+        self.saButton = javax.swing.JButton()
+        self.saButton.setText(PatternScriptEntities.BUNDLE['Space Available'])
+        self.saButton.setName('saButton')
 
         self.controlWidgets = []
 
@@ -34,15 +35,15 @@ class TrainPlayerPanel:
 
         tpPanel = javax.swing.JPanel()
 
-        tpPanel.add(self.aButton)
+        tpPanel.add(self.uiButton)
         tpPanel.add(javax.swing.Box.createRigidArea(java.awt.Dimension(20,0)))
-        tpPanel.add(self.bButton)
+        tpPanel.add(self.saButton)
 
         return tpPanel
 
     def getPanelWidgets(self):
 
-        self.controlWidgets.append(self.aButton)
-        self.controlWidgets.append(self.bButton)
+        self.controlWidgets.append(self.uiButton)
+        self.controlWidgets.append(self.saButton)
 
         return self.controlWidgets

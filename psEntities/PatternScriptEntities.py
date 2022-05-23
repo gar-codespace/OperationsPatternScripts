@@ -322,6 +322,26 @@ def printPatternLog():
 
     return
 
+def getAllLocations():
+    '''JMRI sorts the list'''
+
+    allLocations = LM.getLocationsByNameList()
+    locationList = []
+    for item in allLocations:
+        locationList.append(unicode(item.getName(), ENCODING))
+
+    return locationList
+
+def getAllTracksForLocation(location):
+    '''Sets all tracks to false'''
+
+    jmriTrackList = LM.getLocationByName(location).getTracksByNameList(None)
+    trackDict = {}
+    for track in jmriTrackList:
+        trackDict[unicode(track.getName(), ENCODING)] = False
+
+    return trackDict
+
 def getCarColor():
     '''backupConfigFile() is a bit of user edit protection'''
 
