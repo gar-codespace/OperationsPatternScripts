@@ -18,7 +18,7 @@ psLog = logging.getLogger('PS.PT.ModelSetCarsForm')
 
 def testValidityOfForm(setCarsForm, textBoxEntry):
 
-    psLog.debug('testValidityOfForm')
+    psLog.debug('ModelSetCarsForm.testValidityOfForm')
 
     locoCount = len(setCarsForm['locations'][0]['tracks'][0]['locos'])
     carCount = len(setCarsForm['locations'][0]['tracks'][0]['cars'])
@@ -31,7 +31,7 @@ def testValidityOfForm(setCarsForm, textBoxEntry):
 
 def setRsToTrack(setCarsForm, textBoxEntry):
 
-    psLog.debug('setRsToTrack')
+    psLog.debug('ModelSetCarsForm.setRsToTrack')
 
     userInputList = []
     for userInput in textBoxEntry:
@@ -142,7 +142,7 @@ def getSchedule(locationString, trackString):
 
 def exportSetCarsFormToTp(setCarsForm, textBoxEntry):
 
-    psLog.debug('exportSetCarsFormToTp')
+    psLog.debug('ModelSetCarsForm.exportSetCarsFormToTp')
 
     PatternScriptEntities.CheckTpDestination().directoryExists()
 
@@ -166,7 +166,7 @@ def exportSetCarsFormToTp(setCarsForm, textBoxEntry):
 def makeLocationDict(setCarsForm, textBoxEntry):
     '''Replaces car['Set to'] = [ ] with either [Hold] or ["some other valid track"]'''
 
-    psLog.debug('makeLocationDict')
+    psLog.debug('ModelSetCarsForm.makeLocationDict')
 
     trackName = setCarsForm['locations'][0]['tracks'][0]['trackName']
     location = setCarsForm['locations'][0]['locationName']

@@ -83,7 +83,7 @@ class JmriTranslationToTp:
 
     def translateManifestHeader(self, completeJmriManifest):
 
-        self.psLog.debug('translateManifestHeader')
+        self.psLog.debug('Model.translateManifestHeader')
 
         jmriDateAsEpoch = ModelEntities.convertJmriDateToEpoch(completeJmriManifest[u'date'])
         completeJmriManifest['date'] = PatternScriptEntities.timeStamp(jmriDateAsEpoch)
@@ -98,7 +98,7 @@ class JmriTranslationToTp:
 
     def translateManifestBody(self, completeJmriManifest):
 
-        self.psLog.debug('translateManifestBody')
+        self.psLog.debug('Model.translateManifestBody')
 
         locationList = []
         for location in completeJmriManifest[u'locations']:
@@ -120,7 +120,7 @@ class ProcessWorkEventList:
         '''The jason manifest is encoded in HTML Entity'''
         # csv writer does not encode utf-8
 
-        self.psLog.debug('makeTpHeader')
+        self.psLog.debug('Model.makeTpHeader')
         # https://stackoverflow.com/questions/2087370/decode-html-entities-in-python-string
         header = 'HN,' + HTMLParser().unescape(appendedTpSwitchList['railroad']) + '\n'
         header += 'HT,' + HTMLParser().unescape(appendedTpSwitchList['trainName']) + '\n'
@@ -135,7 +135,7 @@ class ProcessWorkEventList:
         '''The jason manifest is encoded in HTML Entity'''
         # csv writer does not encode utf-8
 
-        self.psLog.debug('makeTpLocations')
+        self.psLog.debug('Model.makeTpLocations')
 
         tpLocations = ''
 
@@ -157,7 +157,7 @@ class ProcessWorkEventList:
 
     def writeTpWorkEventListAsJson(self, appendedTpSwitchList):
 
-        self.psLog.debug('writeTpWorkEventListAsJson')
+        self.psLog.debug('Model.writeTpWorkEventListAsJson')
 
         reportTitle = appendedTpSwitchList['trainDescription']
         jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
@@ -182,7 +182,7 @@ class WriteWorkEventListToTp:
 
     def asCsv(self):
 
-        self.psLog.debug('asCsv')
+        self.psLog.debug('Model.asCsv')
 
         try: # Catch TrainPlayer not installed
             with codecsOpen(self.jmriManifestPath, 'wb', encoding=PatternScriptEntities.ENCODING) as csvWorkFile:

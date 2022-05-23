@@ -39,7 +39,7 @@ class ManageGui:
     def makeSubroutinePanel(self):
         '''Make the TrainPlayer controls'''
 
-        self.psLog.debug('makeSubroutinePanel')
+        self.psLog.debug('View.makeSubroutinePanel')
 
         trainPlayerPanel = ViewEntities.TrainPlayerPanel()
         subroutinesPanel = trainPlayerPanel.makeTrainPlayerPanel()

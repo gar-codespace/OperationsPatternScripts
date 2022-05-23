@@ -102,7 +102,7 @@ class StartUp:
     def patternButton(self, EVENT):
         '''Makes a pattern tracks report based on the config file (PR)'''
 
-        self.psLog.debug('patternButton')
+        self.psLog.debug('Controller.patternButton')
 
         Model.updateConfigFile(self.widgets)
 
@@ -129,7 +129,7 @@ class StartUp:
     def setCarsButton(self, EVENT):
         '''Opens a "Pattern Report for Track X" window for each checked track'''
 
-        self.psLog.debug('setCarsButton')
+        self.psLog.debug('Controller.setCarsButton')
 
         Model.updateConfigFile(self.widgets)
 

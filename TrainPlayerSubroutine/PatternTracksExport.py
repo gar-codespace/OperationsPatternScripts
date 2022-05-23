@@ -73,7 +73,7 @@ class TrackPatternTranslationToTp:
     def modifySwitchList(self, setCarsForm, textBoxEntry):
         '''Replaces car['Set to'] = [ ] with the track comment'''
 
-        self.psLog.debug('modifySwitchList')
+        self.psLog.debug('PatternTracksExport.modifySwitchList')
 
         location = setCarsForm['locations'][0]['locationName']
         trackName = setCarsForm['locations'][0]['tracks'][0]['trackName']
@@ -109,7 +109,7 @@ class TrackPatternTranslationToTp:
 
     def appendSwitchList(self, modifiedForm):
 
-        self.psLog.debug('appendSwitchList')
+        self.psLog.debug('PatternTracksExport.appendSwitchList')
 
         headerNames = PatternScriptEntities.readConfigFile('PT')
         reportTitle = PatternScriptEntities.BUNDLE['Work Event List for TrainPlayer']
@@ -148,7 +148,7 @@ class JmriTranslationToTp:
 
     def translateManifestHeader(self, completeJmriManifest):
 
-        self.psLog.debug('translateManifestHeader')
+        self.psLog.debug('PatternTracksExport.translateManifestHeader')
 
         jmriDateAsEpoch = self.convertJmriDateToEpoch(completeJmriManifest[u'date'])
         completeJmriManifest['date'] = PatternScriptEntities.timeStamp(jmriDateAsEpoch)
@@ -175,7 +175,7 @@ class JmriTranslationToTp:
 
     def translateManifestBody(self, completeJmriManifest):
 
-        self.psLog.debug('translateManifestBody')
+        self.psLog.debug('PatternTracksExport.translateManifestBody')
 
         locationList = []
         for location in completeJmriManifest[u'locations']:
@@ -261,7 +261,7 @@ class ProcessWorkEventList:
 
     def writeTpWorkEventListAsJson(self, appendedTpSwitchList):
 
-        self.psLog.debug('writeTpWorkEventListAsJson')
+        self.psLog.debug('PatternTracksExport.writeTpWorkEventListAsJson')
 
         reportTitle = appendedTpSwitchList['trainDescription']
         jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
@@ -277,7 +277,7 @@ class ProcessWorkEventList:
         '''The jason manifest is encoded in HTML Entity'''
         # csv writer does not encode utf-8
 
-        self.psLog.debug('makeTpHeader')
+        self.psLog.debug('PatternTracksExport.makeTpHeader')
         # https://stackoverflow.com/questions/2087370/decode-html-entities-in-python-string
         header = 'HN,' + HTMLParser().unescape(appendedTpSwitchList['railroad']) + '\n'
         header += 'HT,' + HTMLParser().unescape(appendedTpSwitchList['trainName']) + '\n'
@@ -292,7 +292,7 @@ class ProcessWorkEventList:
         '''The jason manifest is encoded in HTML Entity'''
         # csv writer does not encode utf-8
 
-        self.psLog.debug('makeTpLocations')
+        self.psLog.debug('PatternTracksExport.makeTpLocations')
 
         tpLocations = ''
 
@@ -325,7 +325,7 @@ class WriteWorkEventListToTp:
 
     def asCsv(self):
 
-        self.psLog.debug('asCsv')
+        self.psLog.debug('PatternTracksExport.asCsv')
 
         try: # Catch TrainPlayer not installed
             with codecsOpen(self.jmriManifestPath, 'wb', encoding=PatternScriptEntities.ENCODING) as csvWorkFile:

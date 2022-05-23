@@ -37,7 +37,7 @@ class ManageGui:
     def makeSubroutinePanel(self):
         '''Make the pattern tracks controls'''
 
-        self.psLog.debug('makeSubroutinePanel')
+        self.psLog.debug('View.makeSubroutinePanel')
 
         trackPatternPanel = ViewEntities.TrackPatternPanel()
         subroutinesPanel = trackPatternPanel.makeTrackPatternPanel()
@@ -50,7 +50,7 @@ class ManageGui:
 def displayTextSwitchList(textSwitchList):
     '''Opens the text switchlist to Notepad or other'''
 
-    psLog.debug('displayTextSwitchList')
+    psLog.debug('View.displayTextSwitchList')
 
     fileToDisplay = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + textSwitchList.splitlines()[0] + '.txt'
 
