@@ -4,8 +4,7 @@
 
 import jmri
 from apps import Apps
-import java
-import java.beans
+from java.beans import PropertyChangeListener
 import java.awt
 import javax.swing
 
@@ -126,7 +125,6 @@ class Model:
     def validatePatternConfig(self):
         '''To be reworked in v3'''
 
-        # PatternScriptEntities.readConfigFile()
         if not PatternScriptEntities.validateConfigFileVersion(SCRIPT_ROOT):
             PatternScriptEntities.mergeConfigFiles()
             self.psLog.info('Previous PatternConfig.json merged with new')
@@ -184,7 +182,6 @@ class View:
 
     def makeScrollPanel(self, pluginPanel):
 
-        # configPanel = PatternScriptEntities.readConfigFile('CP')
         scrollPanel = javax.swing.JScrollPane(pluginPanel)
         scrollPanel.border = javax.swing.BorderFactory.createLineBorder(java.awt.Color.GRAY)
 
@@ -199,13 +196,13 @@ class View:
 
         uniqueWindow = jmri.util.JmriJFrame()
 
-        # Loop over this in v3
+        # Loop over this part in v3
         asMenuItem = self.makeMenuItem(self.setAsDropDownText())
         tpMenuItem = self.makeMenuItem(self.setTiDropDownText())
         logMenuItem = self.makeMenuItem(self.setLmDropDownText())
         helpMenuItem = self.makeMenuItem(self.setHmDropDownText())
 
-        toolsMenu = javax.swing.JMenu(u'Tools')
+        toolsMenu = javax.swing.JMenu(PatternScriptEntities.BUNDLE['Tools'])
         toolsMenu.add(jmri.jmrit.operations.setup.OptionAction())
         toolsMenu.add(jmri.jmrit.operations.setup.PrintOptionAction())
         toolsMenu.add(jmri.jmrit.operations.setup.BuildReportOptionAction())
