@@ -15,38 +15,38 @@ SCRIPT_REV = 20220101
 def testSelectedItem(selectedItem):
     '''Catches user edit of locations'''
 
-    allLocations = getAllLocations() #String list
+    allLocations = PatternScriptEntities.getAllLocations() #String list
     if selectedItem in allLocations:
         return selectedItem
     else:
         return allLocations[0]
 
-def getAllLocations():
-    '''JMRI sorts the list'''
+# def getAllLocations():
+#     '''JMRI sorts the list'''
+#
+#     allLocations = PatternScriptEntities.LM.getLocationsByNameList()
+#     locationList = []
+#     for item in allLocations:
+#         locationList.append(unicode(item.getName(), PatternScriptEntities.ENCODING))
+#
+#     return locationList
 
-    allLocations = PatternScriptEntities.LM.getLocationsByNameList()
-    locationList = []
-    for item in allLocations:
-        locationList.append(unicode(item.getName(), PatternScriptEntities.ENCODING))
-
-    return locationList
-
-def getAllTracksForLocation(location):
-    '''Sets all tracks to false'''
-
-    jmriTrackList = PatternScriptEntities.LM.getLocationByName(location).getTracksByNameList(None)
-    trackDict = {}
-    for track in jmriTrackList:
-        trackDict[unicode(track.getName(), PatternScriptEntities.ENCODING)] = False
-
-    return trackDict
+# def getAllTracksForLocation(location):
+#     '''Sets all tracks to false'''
+#
+#     jmriTrackList = PatternScriptEntities.LM.getLocationByName(location).getTracksByNameList(None)
+#     trackDict = {}
+#     for track in jmriTrackList:
+#         trackDict[unicode(track.getName(), PatternScriptEntities.ENCODING)] = False
+#
+#     return trackDict
 
 def initializeConfigFile():
     '''initialize or reinitialize the pattern tracks part of the config file on first use, reset, or edit of a location name'''
 
     newConfigFile = PatternScriptEntities.readConfigFile()
     subConfigfile = newConfigFile['PT']
-    allLocations  = getAllLocations()
+    allLocations  = PatternScriptEntities.getAllLocations()
     subConfigfile.update({'AL': allLocations})
     subConfigfile.update({'PL': allLocations[0]})
     subConfigfile.update({'PT': makeInitialTrackList(allLocations[0])})

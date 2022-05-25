@@ -48,13 +48,13 @@ class StartUp:
     def activateWidgets(self):
         '''Maybe get them by name?'''
 
-        self.widgets[0].actionPerformed = self.updateInventory
+        self.widgets[0].actionPerformed = self.inventoryUpdator
         self.widgets[1].actionPerformed = self.bButtonAction
 
         return
 
 
-    def updateInventory(self, EVENT):
+    def inventoryUpdator(self, EVENT):
         '''Updates JMRI rolling stock locations based on TrainPlayer inventory export'''
 
         Model.updateInventory()

@@ -79,13 +79,11 @@ Catches Items:
 Todo:
   Test with two profiles running
   BUNDLE calls seem to be scattered around MainScript
-  CP MI doesn't work
-  Move getAllLocations to MainScriptEntities
-  Move getAllTracksForLocation to MainScriptEntities
 
 Version 3 ideas:
   Implement makePatternScriptsWindow() from config file list
   Fill out TrainPlayer Support subroutine.
+  Use CP MI to create PS window menu items
   mergeConfigFiles()
   Enhance and harden BUNDLE
   Start working on distributed JMRI

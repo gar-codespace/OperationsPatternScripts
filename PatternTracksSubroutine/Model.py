@@ -25,8 +25,8 @@ def updatePatternLocation(selectedItem=None):
 
     configFile = PatternScriptEntities.readConfigFile()
     newLocation = ModelEntities.testSelectedItem(selectedItem)
-    newLocationList = ModelEntities.getAllLocations()
-    newLocationTrackDict = ModelEntities.getAllTracksForLocation(newLocation)
+    newLocationList = PatternScriptEntities.getAllLocations()
+    newLocationTrackDict = PatternScriptEntities.getAllTracksForLocation(newLocation)
     configFile['PT'].update({'PA': False})
     configFile['PT'].update({'PI': False})
     configFile['PT'].update({'PL': newLocation})
@@ -221,7 +221,7 @@ def updateLocations():
     psLog.debug('Model.updateLocations')
     newConfigFile = PatternScriptEntities.readConfigFile()
     subConfigfile = newConfigFile['PT']
-    allLocations  = ModelEntities.getAllLocations()
+    allLocations  = PatternScriptEntities.getAllLocations()
     if not (subConfigfile['AL']): # when this sub is used for the first tims
         subConfigfile.update({'PL': allLocations[0]})
         subConfigfile.update({'PT': ModelEntities.makeInitialTrackList(allLocations[0])})

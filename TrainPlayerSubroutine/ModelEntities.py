@@ -3,6 +3,7 @@
 
 import jmri
 
+from codecs import open as codecsOpen
 import logging
 import time
 
@@ -91,3 +92,61 @@ def parseRollingStockAsDict(rS):
         rsDict[u'FD&Track'] = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.ENCODING) + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
 
     return rsDict
+
+def getTpInventory():
+
+    tpInventoryPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\TrainPlayer Export - Inventory.txt"
+    tpInventory = ''
+
+    try: # Catch TrainPlayer not installed
+        with codecsOpen(tpInventoryPath, 'r', encoding=PatternScriptEntities.ENCODING) as csvWorkFile:
+            tpInventory = [line.rstrip() for line in csvWorkFile]
+            # tpInventory = csvWorkFile.read()
+
+    except IOError:
+        psLog.warning('TrainPlayer directory or file not found')
+
+    return tpInventory
+
+def makeTpInventoryList(tpInventory):
+    '''Returns (CarId,TrackLabel)'''
+
+    tpInventoryList = []
+    for item in tpInventory:
+        splitItem = tuple(item.split(','))
+        tpInventoryList.append(splitItem)
+
+    return tpInventoryList
+
+
+
+class UpdateInventory:
+
+    def __init__(self):
+
+        self.locationHash = {}
+
+        return
+
+    def makeJmriLocationList(self):
+        '''Format: {TrackComment : (LocationName, TrackName)}'''
+
+        allLocations = PatternScriptEntities.getAllLocations()
+        locDict = {}
+
+        for location in allLocations:
+            locationObject = PatternScriptEntities.LM.getLocationByName(location)
+            allTracks = locationObject.getTracksList()
+            for track in allTracks:
+                self.locationHash[track.getComment()] = (locationObject.getName(),track.getName())
+
+        return
+
+    def getSetToLocation(self, tpTrackLabel):
+        '''Returns the location and track objects'''
+
+        locationTrack = self.locationHash[tpTrackLabel]
+        self.location = PatternScriptEntities.LM.getLocationByName(locationTrack[0])
+        self.track = self.location.getTrackByName(locationTrack[1], None)
+
+        return self.location, self.track

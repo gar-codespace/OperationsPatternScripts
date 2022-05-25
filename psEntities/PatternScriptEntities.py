@@ -322,6 +322,17 @@ def printPatternLog():
 
     return
 
+def getRollingStock(rsId):
+
+    try:
+        rs = CM.getById(rsId)
+        if not rs:
+            rs = EM.getById(rsId)
+    except:
+        rs = None
+
+    return rs
+
 def getAllLocations():
     '''JMRI sorts the list'''
 
