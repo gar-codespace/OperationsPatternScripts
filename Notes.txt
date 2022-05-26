@@ -78,6 +78,7 @@ Catches Items:
 
 Todo:
   Test with two profiles running
+  psEntities.writeGenericReport() probably should not write to the switchlists folder
 
 Version 3 ideas:
   Implement makePatternScriptsWindow() from config file list

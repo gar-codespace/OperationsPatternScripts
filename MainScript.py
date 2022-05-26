@@ -10,6 +10,7 @@ import javax.swing
 
 import logging
 import time
+from os import system as osSystem
 from sys import path as sysPath
 
 SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
@@ -460,8 +461,9 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(OPEN_LOG_EVENT)
 
-        PatternScriptEntities.makePatternLog()
-        PatternScriptEntities.printPatternLog()
+        logFileName, patternLog = PatternScriptEntities.makePatternLog()
+        logFilePath = PatternScriptEntities.writeGenericReport(logFileName, patternLog)
+        osSystem(PatternScriptEntities.openEditorByComputerType(logFilePath))
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

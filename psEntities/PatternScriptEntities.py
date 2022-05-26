@@ -139,7 +139,7 @@ def timeStamp(epochTime=0):
 
 def writeGenericReport(fileName, textSwitchList):
 
-    textCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + fileName + '.txt'
+    textCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\patternReports\\' + fileName + '.txt'
     with codecsOpen(textCopyTo, 'wb', encoding=ENCODING) as textWorkFile:
         textWorkFile.write(textSwitchList)
 
@@ -190,7 +190,7 @@ def validateFileDestinationDirestories():
 # Can't use jmri.util.FileUtil.createDirectory().... does not return anything
 
     destDirPath = jmri.util.FileUtil.getProfilePath() + 'operations\\'
-    listOfDirectories = ['csvManifests', 'csvSwitchLists', 'jsonManifests', 'switchLists']
+    listOfDirectories = ['csvManifests', 'csvSwitchLists', 'jsonManifests', 'switchLists', 'patternReports']
     x = 0
     for directory in listOfDirectories:
         try:
@@ -320,23 +320,12 @@ def makePatternLog():
             if (configLoggingIndex['1'] in thisLine and int(buildReportLevel) > 4): # debug
                 outputPatternLog += thisLine
 
-    tempLogFileLocation = jmri.util.FileUtil.getProfilePath() \
-                        + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
-    with codecsOpen(tempLogFileLocation, 'w', encoding=ENCODING) as tempPatternLogFile:
-        tempPatternLogFile.write(outputPatternLog)
+    # tempLogFileLocation = jmri.util.FileUtil.getProfilePath() \
+    #                     + 'operations\\buildstatus\\PatternScriptsLog_temp.temp'
+    # with codecsOpen(tempLogFileLocation, 'w', encoding=ENCODING) as tempPatternLogFile:
+    #     tempPatternLogFile.write(outputPatternLog)
 
-    return
-
-def printPatternLog():
-    '''Opens the pattern log in a text editor'''
-
-    psLog.debug('displayPatternLog')
-
-    tempPatternLog = jmri.util.FileUtil.getProfilePath() \
-                   + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
-    osSystem(openEditorByComputerType(tempPatternLog))
-
-    return
+    return 'PatternScriptsLog_temp', outputPatternLog
 
 def getRollingStock(rsId):
 
@@ -358,16 +347,6 @@ def getAllLocations():
         locationList.append(unicode(item.getName(), ENCODING))
 
     return locationList
-
-def getAllTracksForLocation(location):
-    '''Sets all tracks to false'''
-
-    jmriTrackList = LM.getLocationByName(location).getTracksByNameList(None)
-    trackDict = {}
-    for track in jmriTrackList:
-        trackDict[unicode(track.getName(), ENCODING)] = False
-
-    return trackDict
 
 def getCarColor():
     '''backupConfigFile() is a bit of user edit protection'''
