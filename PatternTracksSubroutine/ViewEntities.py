@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-'''Creates the pattern tracks and its panel'''
+"""Creates the pattern tracks and its panel"""
 
 import jmri
 import java.awt
@@ -14,7 +14,7 @@ SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ViewEntities'
 SCRIPT_REV = 20220101
 
 class TrackPatternPanel:
-    '''Makes the pattern tracks subroutine panel'''
+    """Makes the pattern tracks subroutine panel"""
 
     def __init__(self):
 
@@ -43,7 +43,7 @@ class TrackPatternPanel:
         return
 
     def makeLocationComboBox(self):
-        '''Make the combo box of user selectable locations'''
+        """Make the combo box of user selectable locations"""
 
         patternLabel = javax.swing.JLabel(PatternScriptEntities.BUNDLE['Location:'])
         locationList = self.configFile['AL']
@@ -58,7 +58,7 @@ class TrackPatternPanel:
         return patternComboBox
 
     def makeLocationCheckBoxes(self):
-        '''Any track type and ignore length flags'''
+        """Any track type and ignore length flags"""
 
         flagInputBox = javax.swing.Box(javax.swing.BoxLayout.X_AXIS) # make a box for the label and input box
         # flagInputBox.setPreferredSize(java.awt.Dimension(self.configFile['PW'], self.configFile['PH']))
@@ -68,7 +68,7 @@ class TrackPatternPanel:
         return flagInputBox
 
     def makeTrackCheckBoxes(self):
-        '''Make a panel of check boxes, one for each track'''
+        """Make a panel of check boxes, one for each track"""
 
         rowLabel = javax.swing.JLabel()
         tracksPanel = javax.swing.JPanel()
@@ -90,7 +90,7 @@ class TrackPatternPanel:
         return tracksPanel
 
     def makeButtonPanel(self):
-        '''Button panel added to makeTrackPatternPanel'''
+        """Button panel added to makeTrackPatternPanel"""
 
         buttonPanel = javax.swing.JPanel()
         buttonPanel.setAlignmentX(javax.swing.JPanel.CENTER_ALIGNMENT)
@@ -100,7 +100,7 @@ class TrackPatternPanel:
         return buttonPanel
 
     def getPanelWidgets(self):
-        '''A list of the widgets created by this class'''
+        """A list of the widgets created by this class"""
 
         self.controlObjects.append(self.locationComboBox)
         self.controlObjects.append(self.yardTracksOnly)
@@ -112,7 +112,7 @@ class TrackPatternPanel:
         return self.controlObjects
 
     def makeTrackPatternPanel(self):
-        '''Make the pattern tracks panel object'''
+        """Make the pattern tracks panel object"""
 
         tpPanel = javax.swing.JPanel() # the pattern tracks panel
         tpPanel.setLayout(javax.swing.BoxLayout(tpPanel, javax.swing.BoxLayout.Y_AXIS))
@@ -178,7 +178,12 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
 
         if trackTotals:
             totalLength = lengthOfLocos + lengthOfCars
-            reportSwitchList += PatternScriptEntities.BUNDLE['Total Cars: '] + str(len(track['cars'])) + PatternScriptEntities.BUNDLE[' Track Length: '] + str(trackLength) + PatternScriptEntities.BUNDLE[' Eqpt. Length: '] + str(totalLength) + PatternScriptEntities.BUNDLE[' Available: '] + str(trackLength - totalLength) + '\n\n'
+            reportSwitchList += PatternScriptEntities.BUNDLE['Total Cars: '] \
+                + str(len(track['cars'])) + PatternScriptEntities.BUNDLE[' Track Length: '] \
+                + str(trackLength) + PatternScriptEntities.BUNDLE[' Eqpt. Length: '] \
+                + str(totalLength) + PatternScriptEntities.BUNDLE[' Available: '] \
+                + str(trackLength - totalLength) \
+                + '\n\n'
             reportSwitchList += PatternScriptEntities.BUNDLE['Track Totals for Cars:'] + '\n'
             for track, count in sorted(PatternScriptEntities.occuranceTally(trackTally).items()):
                 reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'

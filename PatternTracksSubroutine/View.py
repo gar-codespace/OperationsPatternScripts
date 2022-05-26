@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-'''View script for the pattern tracks subroutine'''
+"""View script for the pattern tracks subroutine"""
 
 import jmri
 import javax.swing
@@ -21,21 +21,22 @@ class ManageGui:
     def __init__(self):
 
         self.psLog = logging.getLogger('PS.PT.View')
-        # self.configFile = PatternScriptEntities.readConfigFile('PT')
 
         return
 
     def makeSubroutineFrame(self):
-        '''Make the frame that all the pattern tracks controls are added to'''
+        """Make the frame that all the pattern tracks controls are added to"""
 
         subroutineFrame = javax.swing.JPanel() # the pattern tracks panel
         subroutineFrame.setLayout(javax.swing.BoxLayout(subroutineFrame, javax.swing.BoxLayout.Y_AXIS))
-        subroutineFrame.border = javax.swing.BorderFactory.createTitledBorder(PatternScriptEntities.BUNDLE['Pattern Tracks Subroutine'])
+        subroutineFrame.border = javax.swing.BorderFactory.createTitledBorder( \
+                PatternScriptEntities.BUNDLE['Pattern Tracks Subroutine'] \
+                )
 
         return subroutineFrame
 
     def makeSubroutinePanel(self):
-        '''Make the pattern tracks controls'''
+        """Make the pattern tracks controls"""
 
         self.psLog.debug('View.makeSubroutinePanel')
 
@@ -48,10 +49,11 @@ class ManageGui:
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
 def displayTextSwitchList(textSwitchList):
-    '''Opens the text switchlist to Notepad or other'''
+    """Opens the text switchlist to Notepad or other"""
 
     psLog.debug('View.displayTextSwitchList')
 
-    fileToDisplay = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + textSwitchList.splitlines()[0] + '.txt'
+    fileToDisplay = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' \
+                  + textSwitchList.splitlines()[0] + '.txt'
 
     return osSystem(PatternScriptEntities.openEditorByComputerType(fileToDisplay))

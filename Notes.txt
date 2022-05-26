@@ -82,6 +82,7 @@ Todo:
   CP MI doesn't work
   Move getAllLocations to MainScriptEntities
   Move getAllTracksForLocation to MainScriptEntities
+  Have to click twice on yard tracks only box
 
 Version 3 ideas:
   Implement makePatternScriptsWindow() from config file list

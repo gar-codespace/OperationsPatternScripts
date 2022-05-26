@@ -116,7 +116,7 @@ def deleteFd(carObject):
     return
 
 def applySchedule(toTrackObject, carObject):
-    '''If the to-track is a spur, try to set the load/empty requirement for the track'''
+    """If the to-track is a spur, try to set the load/empty requirement for the track"""
 
     location = PatternScriptEntities.readConfigFile('PT')['PL']
     schedule = getSchedule(location, toTrackObject.getName())
@@ -129,7 +129,7 @@ def applySchedule(toTrackObject, carObject):
     return
 
 def getSchedule(locationString, trackString):
-    '''Returns a schedule if there is one'''
+    """Returns a schedule if there is one"""
 
     track = PatternScriptEntities.LM.getLocationByName(locationString).getTrackByName(trackString, 'Spur')
 
@@ -164,7 +164,7 @@ def exportSetCarsFormToTp(setCarsForm, textBoxEntry):
     return
 
 def makeLocationDict(setCarsForm, textBoxEntry):
-    '''Replaces car['Set to'] = [ ] with either [Hold] or ["some other valid track"]'''
+    """Replaces car['Set to'] = [ ] with either [Hold] or ["some other valid track"]"""
 
     psLog.debug('ModelSetCarsForm.makeLocationDict')
 

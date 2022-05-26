@@ -11,7 +11,7 @@ from PatternTracksSubroutine import Model
 from PatternTracksSubroutine import ModelSetCarsForm
 from PatternTracksSubroutine import ViewSetCarsForm
 
-'''Makes a "Set Cars Form for Track X" form for each selected track'''
+"""Makes a 'Set Cars Form for Track X' form for each selected track"""
 
 SCRIPT_NAME = 'OperationsPatternScripts.ControllerSetCarsForm'
 SCRIPT_REV = 20220101
@@ -19,7 +19,7 @@ SCRIPT_REV = 20220101
 _trackNameClickedOn = None
 
 class TextBoxEntryListener(java.awt.event.MouseAdapter):
-    '''When any of the "Set Cars Form for Track X" text inpou boxes is clicked on'''
+    """When any of the 'Set Cars Form for Track X' text inpou boxes is clicked on"""
 
     def __init__(self):
         self.psLog = logging.getLogger('PS.PT.TextBoxEntryListener')
@@ -36,8 +36,9 @@ class TextBoxEntryListener(java.awt.event.MouseAdapter):
         return
 
 class CreatePatternReportGui:
-    '''Creates an instance of each "Set Cars Form for Track X" window,
-    [0] is used to avoid for-loops since there is only 1 location and track'''
+    """Creates an instance of each 'Set Cars Form for Track X' window,
+    [0] is used to avoid for-loops since there is only 1 location and track
+    """
 
     def __init__(self, setCarsForm):
 
@@ -51,7 +52,7 @@ class CreatePatternReportGui:
         return
 
     def makeFrame(self):
-        '''Create a JMRI jFrame window'''
+        """Create a JMRI jFrame window"""
 
         setCarsForTrackForm, self.buttonDict = ViewSetCarsForm.makeSetCarsForTrackForm(self.setCarsForm)
         setCarsForTrackWindow = ViewSetCarsForm.setCarsForTrackWindow(setCarsForTrackForm)
@@ -91,7 +92,7 @@ class CreatePatternReportGui:
             return True
 
     def trackRowButton(self, MOUSE_CLICKED):
-        '''Any button of the "Set Cars Form for Track X" - row of track buttons'''
+        """Any button of the 'Set Cars Form for Track X' - row of track buttons"""
 
         _trackNameClickedOn = unicode(MOUSE_CLICKED.getSource().getText(), PatternScriptEntities.ENCODING)
         global _trackNameClickedOn
@@ -99,7 +100,7 @@ class CreatePatternReportGui:
         return
 
     def scheduleButton(self, MOUSE_CLICKED):
-        '''The named schedule button if displayed on any "Set Cars Form for Track X" window'''
+        """The named schedule button if displayed on any 'Set Cars Form for Track X' window"""
 
         scheduleName = MOUSE_CLICKED.getSource().getText()
         schedule = PatternScriptEntities.SM.getScheduleByName(scheduleName)
@@ -111,12 +112,16 @@ class CreatePatternReportGui:
         return
 
     def printButton(self, MOUSE_CLICKED):
-        '''Makes a Set Cars (SC) switch list for the active "Set Cars Form for Track X" window'''
+        """Makes a Set Cars (SC) switch list for the
+        active 'Set Cars Form for Track X' window
+        """
 
         if not self.quickCheck():
             return
 
-        locationDict = ModelSetCarsForm.makeLocationDict(self.setCarsForm, self.buttonDict['textBoxEntry']) # Replaces [Hold] with a track name
+        locationDict = ModelSetCarsForm.makeLocationDict( \
+                self.setCarsForm, self.buttonDict['textBoxEntry'] \
+                ) # Replaces [Hold] with a track name
         modifiedReport = Model.makeReport(locationDict, 'SC') # Tweaks the header for the report
         Model.printWorkEventList(modifiedReport, trackTotals=False)
 
@@ -128,7 +133,9 @@ class CreatePatternReportGui:
         return
 
     def setButton(self, MOUSE_CLICKED):
-        '''Event that moves cars to the tracks entered in the text box of the "Set Cars Form for Track X" form'''
+        """Event that moves cars to the tracks entered in the text box of
+        the 'Set Cars Form for Track X' form
+        """
 
         if not self.quickCheck():
             return
@@ -144,7 +151,7 @@ class CreatePatternReportGui:
         return
 
     def trainPlayerButton(self, MOUSE_CLICKED):
-        '''Accumulate switch lists into one TrainPlayer switch list'''
+        """Accumulate switch lists into one TrainPlayer switch list"""
 
         if not self.quickCheck():
             return

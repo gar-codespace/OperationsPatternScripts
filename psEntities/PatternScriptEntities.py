@@ -164,7 +164,8 @@ def validateStubFile(currentRootDir):
     helpFilePath = javaIo.File(helpFilePath).toURI()
     helpFilePath = unicode(helpFilePath, ENCODING)
 
-    stubTemplateLocation = jmri.util.FileUtil.getProgramPath() + 'help\\' + psLocale() + '\\local\\stub_template.html'
+    stubTemplateLocation = jmri.util.FileUtil.getProgramPath() + 'help\\' + psLocale() \
+                         + '\\local\\stub_template.html'
     with codecsOpen(stubTemplateLocation, 'r', encoding=ENCODING) as template:
         contents = template.read()
         contents = contents.replace("../index.html#", "")
@@ -212,16 +213,20 @@ def validateConfigFileVersion(currentRootDir):
 
 def backupConfigFile():
 
-    copyFrom = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json')
-    copyTo = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json.bak')
+    copyFrom = javaIo.File(jmri.util.FileUtil.getProfilePath() \
+             + 'operations\\PatternConfig.json')
+    copyTo = javaIo.File(jmri.util.FileUtil.getProfilePath() \
+           + 'operations\\PatternConfig.json.bak')
     jmri.util.FileUtil.copy(copyFrom, copyTo)
 
     return
 
 def restoreConfigFile():
 
-    copyFrom = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\PatternConfig.json.bak')
-    copyTo = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json')
+    copyFrom = javaIo.File(jmri.util.FileUtil.getProfilePath() \
+             + 'operations\PatternConfig.json.bak')
+    copyTo = javaIo.File(jmri.util.FileUtil.getProfilePath() \
+           + 'operations\\PatternConfig.json')
     jmri.util.FileUtil.copy(copyFrom, copyTo)
 
     return
@@ -289,11 +294,12 @@ def makePatternLog():
     buildReportLevel = jmri.jmrit.operations.setup.Setup.getBuildReportLevel()
     configLoggingIndex = readConfigFile('LI')
     logLevel = configLoggingIndex[buildReportLevel]
-    logFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog.txt'
+    logFileLocation = jmri.util.FileUtil.getProfilePath() \
+                    + 'operations\\buildstatus\\PatternScriptsLog.txt'
     with codecsOpen(logFileLocation, 'r', encoding=ENCODING) as patternLogFile:
         while True:
             thisLine = patternLogFile.readline()
-            if not (thisLine):
+            if not thisLine:
                 break
             if (configLoggingIndex['9'] in thisLine and int(buildReportLevel) > 0): # critical
                 outputPatternLog += thisLine
@@ -306,7 +312,8 @@ def makePatternLog():
             if (configLoggingIndex['1'] in thisLine and int(buildReportLevel) > 4): # debug
                 outputPatternLog += thisLine
 
-    tempLogFileLocation = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
+    tempLogFileLocation = jmri.util.FileUtil.getProfilePath() \
+                        + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
     with codecsOpen(tempLogFileLocation, 'w', encoding=ENCODING) as tempPatternLogFile:
         tempPatternLogFile.write(outputPatternLog)
 
@@ -317,7 +324,8 @@ def printPatternLog():
 
     psLog.debug('displayPatternLog')
 
-    tempPatternLog = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
+    tempPatternLog = jmri.util.FileUtil.getProfilePath() \
+                   + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
     osSystem(openEditorByComputerType(tempPatternLog))
 
     return
