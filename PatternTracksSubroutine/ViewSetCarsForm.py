@@ -261,12 +261,12 @@ def MakeSetCarsFooter():
             PatternScriptEntities.BUNDLE['Action'] \
             )
 
-    printButton = javax.swing.JButton(unicode(PatternScriptEntities.BUNDLE['Print'], \
+    printButton = javax.swing.JButton(unicode(PatternScriptEntities.BUNDLE['Switch List'], \
             PatternScriptEntities.ENCODING) \
             )
     combinedFooter.add(printButton)
 
-    setButton = javax.swing.JButton(unicode(PatternScriptEntities.BUNDLE['Set'], \
+    setButton = javax.swing.JButton(unicode(PatternScriptEntities.BUNDLE['Set to Track'], \
             PatternScriptEntities.ENCODING) \
             )
     combinedFooter.add(setButton)

@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-'''View script for the TrainPlayer subroutine'''
+"""View script for the TrainPlayer subroutine"""
 
 import jmri
 import javax.swing
@@ -29,15 +29,17 @@ class ManageGui:
         return
 
     def makeSubroutineFrame(self):
-        '''Make the frame that all the TrainPlayer controls are added to'''
+        """Make the frame that all the TrainPlayer controls are added to"""
 
         subroutineFrame = javax.swing.JPanel() # the track pattern panel
-        subroutineFrame.border = javax.swing.BorderFactory.createTitledBorder(PatternScriptEntities.BUNDLE['TrainPlayer Support Subroutine'])
+        subroutineFrame.border = javax.swing.BorderFactory.createTitledBorder( \
+                PatternScriptEntities.BUNDLE['TrainPlayer Support Subroutine'] \
+                )
 
         return subroutineFrame
 
     def makeSubroutinePanel(self):
-        '''Make the TrainPlayer controls'''
+        """Make the TrainPlayer controls"""
 
         self.psLog.debug('View.makeSubroutinePanel')
 

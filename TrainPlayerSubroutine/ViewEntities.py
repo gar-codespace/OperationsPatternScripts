@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-'''Creates the TrainPlayer panel'''
+"""Creates the TrainPlayer panel"""
 
 import jmri
 import java.awt

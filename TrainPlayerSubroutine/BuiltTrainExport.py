@@ -1,4 +1,4 @@
-'''Exports a TrainPlayer manifest into a csv for import into the TrainPlayer o2o script suite'''
+"""Exports a TrainPlayer manifest into a csv for import into the TrainPlayer o2o script suite"""
 
 import jmri
 import java
@@ -20,14 +20,14 @@ SCRIPT_DIR = 'OperationsPatternScripts'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b4'
 
 class StandAlone():
-    '''Called when this script is used by itself'''
+    """Called when this script is used by itself"""
 
     def __init__(self):
 
         return
 
     def findNewestTrain(self):
-        '''If more than 1 train is built, pick the newest one'''
+        """If more than 1 train is built, pick the newest one"""
 
         if not PatternScriptEntities.TM.isAnyTrainBuilt():
 
@@ -59,7 +59,7 @@ class StandAlone():
 
 
 class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
-    '''Runs on JMRI train manifest builds'''
+    """Runs on JMRI train manifest builds"""
 
     def init(self):
 

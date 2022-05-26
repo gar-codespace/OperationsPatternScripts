@@ -15,21 +15,11 @@ SCRIPT_REV = 20220101
 def testSelectedItem(selectedItem):
     """Catches user edit of locations"""
 
-    allLocations = getAllLocations() #String list
+    allLocations = PatternScriptEntities.getAllLocations() #String list
     if selectedItem in allLocations:
         return selectedItem
     else:
         return allLocations[0]
-
-def getAllLocations():
-    """JMRI sorts the list"""
-
-    allLocations = PatternScriptEntities.LM.getLocationsByNameList()
-    locationList = []
-    for item in allLocations:
-        locationList.append(unicode(item.getName(), PatternScriptEntities.ENCODING))
-
-    return locationList
 
 def getAllTracksForLocation(location):
     """Sets all tracks to false"""
@@ -264,8 +254,8 @@ def makeGenericHeader():
 
     listHeader = {}
     listHeader['railroad'] = unicode(jmri.jmrit.operations.setup.Setup.getRailroadName(), PatternScriptEntities.ENCODING)
-    listHeader['trainName'] = u'Report Type Placeholder'
-    listHeader['trainDescription'] = u'Report Description'
+    listHeader['trainName'] = u'Train Name Placeholder'
+    listHeader['trainDescription'] = u'Train Description Placeholder'
     listHeader['trainComment'] = u'Train Comment Placeholder'
     listHeader['date'] = unicode(PatternScriptEntities.timeStamp(), PatternScriptEntities.ENCODING)
     listHeader['locations'] = []
@@ -294,13 +284,13 @@ def readJsonWorkEventList(workEventName):
 
     return textWorkEventList
 
-def writeTextSwitchList(fileName, textSwitchList):
-
-    textCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + fileName + '.txt'
-    with codecsOpen(textCopyTo, 'wb', encoding=PatternScriptEntities.ENCODING) as textWorkFile:
-        textWorkFile.write(textSwitchList)
-
-    return
+# def writeTextSwitchList(fileName, textSwitchList):
+#
+#     textCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + fileName + '.txt'
+#     with codecsOpen(textCopyTo, 'wb', encoding=PatternScriptEntities.ENCODING) as textWorkFile:
+#         textWorkFile.write(textSwitchList)
+#
+#     return
 
 def makeInitialTrackList(location):
 

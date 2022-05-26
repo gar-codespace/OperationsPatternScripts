@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-'''The TrainPlayer Subroutine will be filled in in V3, this is just the framework'''
+"""The TrainPlayer Subroutine will be filled in in V3, this is just the framework"""
 
 import jmri
 import java.awt.event
@@ -17,7 +17,7 @@ SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.Controller'
 SCRIPT_REV = 20220101
 
 class StartUp:
-    '''Start the TrainPlayer subroutine'''
+    """Start the TrainPlayer subroutine"""
 
     def __init__(self, subroutineFrame=None):
 
@@ -27,7 +27,7 @@ class StartUp:
         return
 
     def makeSubroutineFrame(self):
-        '''Makes the title border frame'''
+        """Makes the title border frame"""
 
         self.subroutineFrame = View.ManageGui().makeSubroutineFrame()
         subroutinePanel = self.makeSubroutinePanel()
@@ -38,7 +38,7 @@ class StartUp:
         return self.subroutineFrame
 
     def makeSubroutinePanel(self):
-        '''Makes the control panel that sits inside the frame'''
+        """Makes the control panel that sits inside the frame"""
 
         self.subroutinePanel, self.widgets = View.ManageGui().makeSubroutinePanel()
         self.activateWidgets()
@@ -48,16 +48,20 @@ class StartUp:
     def activateWidgets(self):
         '''Maybe get them by name?'''
 
-        self.widgets[0].actionPerformed = self.updateInventory
+        self.widgets[0].actionPerformed = self.inventoryUpdator
         self.widgets[1].actionPerformed = self.bButtonAction
 
         return
 
-
-    def updateInventory(self, EVENT):
+    def inventoryUpdator(self, EVENT):
         '''Updates JMRI rolling stock locations based on TrainPlayer inventory export'''
 
-        Model.updateInventory()
+        updatedInventory = Model.UpdateInventory()
+        updatedInventory.update()
+        errorReport = updatedInventory.getErrorReport()
+        reportPath = PatternScriptEntities.writeGenericReport('Update Inventory', errorReport)
+        osSystem(PatternScriptEntities.openEditorByComputerType(reportPath))
+        print(reportPath)
 
         self.psLog.info('Updated Rolling stock locations')
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

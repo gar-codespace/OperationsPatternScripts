@@ -21,7 +21,7 @@ psLog = logging.getLogger('PS.TP.Model')
 print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
 class ExportJmriLocations:
-    '''Writes a list of location names and comments for the whole profile'''
+    """Writes a list of location names and comments for the whole profile"""
 
     def __init__(self):
 
@@ -30,14 +30,15 @@ class ExportJmriLocations:
         return
 
     def makeLocationList(self):
-        '''Creates the TrainPlayer Advanced Ops compatable JMRI location list'''
+        """Creates the TrainPlayer Advanced Ops compatable JMRI location list"""
 
         csvLocations = ''
         i = 0
         for location in PatternScriptEntities.LM.getLocationsByIdList():
             tracks = location.getTracksList()
             for track in tracks:
-                aoLocale = unicode(location.getName(), PatternScriptEntities.ENCODING) + u';' + unicode(track.getName(), PatternScriptEntities.ENCODING)
+                aoLocale = unicode(location.getName(), PatternScriptEntities.ENCODING) \
+                    + u';' + unicode(track.getName(), PatternScriptEntities.ENCODING)
                 trackComment = unicode(track.getComment(), PatternScriptEntities.ENCODING)
                 if not trackComment:
                     i += 1
@@ -48,7 +49,7 @@ class ExportJmriLocations:
         return csvLocations
 
     def toTrainPlayer(self, csvLocations):
-        '''Exports JMRI location;track pairs and track comments for TrainPlayer Advanced Ops'''
+        """Exports JMRI location;track pairs and track comments for TrainPlayer Advanced Ops"""
 
         jmriLocationsPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Locations.csv"
         try: # Catch TrainPlayer not installed
@@ -63,7 +64,7 @@ class ExportJmriLocations:
         return
 
 class JmriTranslationToTp:
-    '''Translate manifests from JMRI for TrainPlayer o2o script compatability'''
+    """Translate manifests from JMRI for TrainPlayer o2o script compatability"""
 
     def __init__(self):
 
@@ -108,7 +109,7 @@ class JmriTranslationToTp:
         return locationList
 
 class ProcessWorkEventList:
-    '''Process the translated work event lists to a CSV list formatted for the TrainPlayer o2o scripts'''
+    """Process the translated work event lists to a CSV list formatted for the TrainPlayer o2o scripts"""
 
     def __init__(self):
 
@@ -117,7 +118,7 @@ class ProcessWorkEventList:
         return
 
     def makeTpHeader(self, appendedTpSwitchList):
-        '''The jason manifest is encoded in HTML Entity'''
+        """The jason manifest is encoded in HTML Entity"""
         # csv writer does not encode utf-8
 
         self.psLog.debug('Model.makeTpHeader')
@@ -132,7 +133,7 @@ class ProcessWorkEventList:
         return header
 
     def makeTpLocations(self, appendedTpSwitchList):
-        '''The jason manifest is encoded in HTML Entity'''
+        """The jason manifest is encoded in HTML Entity"""
         # csv writer does not encode utf-8
 
         self.psLog.debug('Model.makeTpLocations')
@@ -153,7 +154,8 @@ class ProcessWorkEventList:
 
     def makeLine(self, rS):
 
-        return [rS[u'PUSO'], rS[u'Road'] + rS[u'Number'], rS[u'Road'], rS[u'Number'], rS[u'Load'], rS[u'Track'], rS[u'Set to'], rS['FD&Track']]
+        return [rS[u'PUSO'], rS[u'Road'] + rS[u'Number'], rS[u'Road'], rS[u'Number'], \
+            rS[u'Load'], rS[u'Track'], rS[u'Set to'], rS['FD&Track']]
 
     def writeTpWorkEventListAsJson(self, appendedTpSwitchList):
 
@@ -175,7 +177,8 @@ class WriteWorkEventListToTp:
 
         self.psLog = logging.getLogger('PS.TP.WriteWorkEventListToTp')
 
-        self.jmriManifestPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Work Events.csv"
+        self.jmriManifestPath = jmri.util.FileUtil.getHomePath() \
+                + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Work Events.csv"
         self.workEventList = workEventList
 
         return
@@ -194,54 +197,60 @@ class WriteWorkEventListToTp:
 
         return
 
-def updateInventory():
+class UpdateInventory:
 
-    tpInventory = getTpInventory()
-    jmriLocationList = makeJmriLocationList()
-    print(jmriLocationList)
+    def __init__(self):
 
-    for item in tpInventory:
-        item = tuple(item.split(','))
+        self.errorReport = 'Update Inventory Error Report'
+        self.setCarsError = ''
+        self.notFoundError = ''
 
+        tpInventory = ModelEntities.getTpInventory()
+        self.tpInventoryList = ModelEntities.makeTpInventoryList(tpInventory)
 
-    return
+        return
 
-def getTpLocation(comment=None):
+    def update(self):
 
-    return
+        updatedInventory = ModelEntities.ProcessInventory()
+        updatedInventory.makeJmriLocationList()
 
-def getTpInventory():
+        for carLabel, trackLabel in self.tpInventoryList:
 
-    tpInventoryPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\TrainPlayer Export - Inventory.txt"
-    tpInventory = ''
+            rs = PatternScriptEntities.getRollingStock(carLabel)
+            if not rs:
+                continue
 
-    try: # Catch TrainPlayer not installed
-        with codecsOpen(tpInventoryPath, 'r', encoding=PatternScriptEntities.ENCODING) as csvWorkFile:
-            tpInventory = [line.rstrip() for line in csvWorkFile]
-            # tpInventory = csvWorkFile.read()
+            setToLoc, setToTrack = updatedInventory.getSetToLocation(trackLabel)
+            setResult = rs.setLocation(setToLoc, setToTrack)
+            if setResult != 'okay':
+                self.setCarsError += '\n' + setResult + PatternScriptEntities.BUNDLE[' for ID '] + rs.getId()
 
-    except IOError:
-        psLog.warning('TrainPlayer directory or file not found')
+        self.notFoundError = updatedInventory.getErrorReport()
 
-    return tpInventory
+        return
 
-def makeJmriLocationList():
-    '''Returns a tuple(comment, location, track)'''
+    def getErrorReport(self):
 
-    allLocations = PatternScriptEntities.getAllLocations()
+        self.errorReport += '\n\n' + PatternScriptEntities.BUNDLE['List of cars not updated'] + '\n'
+        if self.setCarsError:
+            self.errorReport += self.setCarsError
+        else:
+            self.errorReport += PatternScriptEntities.BUNDLE['No errors']
 
-    locationList = []
-    for location in allLocations:
-        locationObject = PatternScriptEntities.LM.getLocationByName(location)
-        allTracks = locationObject.getTracksList()
-        for track in allTracks:
-            locationList.append((track.getComment(),locationObject.getName(),track.getName()))
+        self.errorReport += '\n\n' + PatternScriptEntities.BUNDLE['List of tracks not found'] + '\n'
+        notFoundErrors = self.processNotFoundErrors()
+        if notFoundErrors:
+            self.errorReport += notFoundErrors
+        else:
+            self.errorReport += PatternScriptEntities.BUNDLE['No errors']
 
-    return locationList
+        return self.errorReport
 
-# def  getAllRS():
-#
-#     allCars = PatternScriptEntities.CM.getByLocationList()
-#     allLocos = PatternScriptEntities.EM.getByLocationList()
-#
-#     return allCars + allLocos
+    def processNotFoundErrors(self):
+
+        processedErrors = ''
+        for error in self.notFoundError:
+            processedErrors += '\n' + PatternScriptEntities.BUNDLE['JMRI track comment not found: '] + error
+
+        return processedErrors

@@ -137,6 +137,14 @@ def timeStamp(epochTime=0):
 
     return time.strftime('%a %b %d %Y %I:%M %p %Z', time.gmtime(epochTime - timeOffset))
 
+def writeGenericReport(fileName, textSwitchList):
+
+    textCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + fileName + '.txt'
+    with codecsOpen(textCopyTo, 'wb', encoding=ENCODING) as textWorkFile:
+        textWorkFile.write(textSwitchList)
+
+    return textCopyTo
+
 def openEditorByComputerType(switchListLocation=None):
     '''Opens a text file in a text editor for each type of computer.'''
 
@@ -329,6 +337,17 @@ def printPatternLog():
     osSystem(openEditorByComputerType(tempPatternLog))
 
     return
+
+def getRollingStock(rsId):
+
+    try:
+        rs = CM.getById(rsId)
+        if not rs:
+            rs = EM.getById(rsId)
+    except:
+        rs = None
+
+    return rs
 
 def getAllLocations():
     '''JMRI sorts the list'''

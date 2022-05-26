@@ -1,6 +1,6 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
-'''These are the classes used by the Pattern Tracks module'''
+"""These are the classes used by the Pattern Tracks module"""
 
 import jmri
 import java
@@ -20,7 +20,7 @@ from psEntities import PatternScriptEntities
 from psBundle import Bundle
 
 class ExportJmriLocations:
-    '''Writes a list of location names and comments for the whole profile'''
+    """Writes a list of location names and comments for the whole profile"""
 
     def __init__(self):
 
@@ -29,14 +29,15 @@ class ExportJmriLocations:
         return
 
     def makeLocationList(self):
-        '''Creates the TrainPlayer Advanced Ops compatable JMRI location list'''
+        """Creates the TrainPlayer Advanced Ops compatable JMRI location list"""
 
         csvLocations = ''
         i = 0
         for location in PatternScriptEntities.LM.getLocationsByIdList():
             tracks = location.getTracksList()
             for track in tracks:
-                aoLocale = unicode(location.getName(), PatternScriptEntities.ENCODING) + u';' + unicode(track.getName(), PatternScriptEntities.ENCODING)
+                aoLocale = unicode(location.getName(), PatternScriptEntities.ENCODING) \
+                    + u';' + unicode(track.getName(), PatternScriptEntities.ENCODING)
                 trackComment = unicode(track.getComment(), PatternScriptEntities.ENCODING)
                 if not trackComment:
                     i += 1
@@ -47,7 +48,7 @@ class ExportJmriLocations:
         return csvLocations
 
     def toTrainPlayer(self, csvLocations):
-        '''Exports JMRI location;track pairs and track comments for TrainPlayer Advanced Ops'''
+        """Exports JMRI location;track pairs and track comments for TrainPlayer Advanced Ops"""
 
         jmriLocationsPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Locations.csv"
         try: # Catch TrainPlayer not installed
@@ -62,7 +63,7 @@ class ExportJmriLocations:
         return
 
 class TrackPatternTranslationToTp:
-    '''Translate Track Patterns from OperationsPatternScripts for TrainPlayer O2O script compatability'''
+    """Translate Track Patterns from OperationsPatternScripts for TrainPlayer O2O script compatability"""
 
     def __init__(self):
 
@@ -71,7 +72,7 @@ class TrackPatternTranslationToTp:
         return
 
     def modifySwitchList(self, setCarsForm, textBoxEntry):
-        '''Replaces car['Set to'] = [ ] with the track comment'''
+        """Replaces car['Set to'] = [ ] with the track comment"""
 
         self.psLog.debug('PatternTracksExport.modifySwitchList')
 
@@ -128,7 +129,7 @@ class TrackPatternTranslationToTp:
         return tpSwitchList
 
 class JmriTranslationToTp:
-    '''Translate manifests from JMRI for TrainPlayer O2O script compatability'''
+    """Translate manifests from JMRI for TrainPlayer O2O script compatability"""
 
     def __init__(self):
 
@@ -162,7 +163,7 @@ class JmriTranslationToTp:
         return completeJmriManifest
 
     def convertJmriDateToEpoch(self, jmriTime):
-        '''2022-02-26T17:16:17.807+0000'''
+        """2022-02-26T17:16:17.807+0000"""
 
         epochTime = time.mktime(time.strptime(jmriTime, "%Y-%m-%dT%H:%M:%S.%f+0000"))
 
@@ -237,7 +238,8 @@ class JmriTranslationToTp:
         rsDict[u'Weight'] = rS[u'weightTons']
         rsDict[u'Track'] = unicode(rS[u'location'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
         # rsDict[u'Set to'] = unicode(lN, PatternScriptEntities.ENCODING) + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
-        rsDict[u'Set to'] = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.ENCODING) + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
+        rsDict[u'Set to'] = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.ENCODING) \
+            + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
         try:
             jFinalDestination = unicode(rS[u'finalDestination'][u'userName'], PatternScriptEntities.ENCODING)
             try:
@@ -246,12 +248,13 @@ class JmriTranslationToTp:
                 jFinalTrack = u'Any'
             rsDict[u'FD&Track'] = jFinalDestination + ';' + jFinalTrack
         except:
-            rsDict[u'FD&Track'] = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.ENCODING) + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
+            rsDict[u'FD&Track'] = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.ENCODING) \
+                + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
 
         return rsDict
 
 class ProcessWorkEventList:
-    '''Process the translated work event lists to a CSV list formatted for the TrainPlayer side scripts'''
+    """Process the translated work event lists to a CSV list formatted for the TrainPlayer side scripts"""
 
     def __init__(self):
 
@@ -274,7 +277,7 @@ class ProcessWorkEventList:
         return
 
     def makeTpHeader(self, appendedTpSwitchList):
-        '''The jason manifest is encoded in HTML Entity'''
+        """The jason manifest is encoded in HTML Entity"""
         # csv writer does not encode utf-8
 
         self.psLog.debug('PatternTracksExport.makeTpHeader')
@@ -289,7 +292,7 @@ class ProcessWorkEventList:
         return header
 
     def makeTpLocations(self, appendedTpSwitchList):
-        '''The jason manifest is encoded in HTML Entity'''
+        """The jason manifest is encoded in HTML Entity"""
         # csv writer does not encode utf-8
 
         self.psLog.debug('PatternTracksExport.makeTpLocations')
@@ -310,7 +313,8 @@ class ProcessWorkEventList:
 
     def makeLine(self, rS):
 
-        return [rS[u'PUSO'], rS[u'Road'] + rS[u'Number'], rS[u'Road'], rS[u'Number'], rS[u'Load'], rS[u'Track'], rS[u'Set to'], rS['FD&Track']]
+        return [rS[u'PUSO'], rS[u'Road'] + rS[u'Number'], rS[u'Road'], rS[u'Number'], \
+            rS[u'Load'], rS[u'Track'], rS[u'Set to'], rS['FD&Track']]
 
 class WriteWorkEventListToTp:
 
@@ -318,7 +322,8 @@ class WriteWorkEventListToTp:
 
         self.psLog = logging.getLogger('PS.TP.WriteWorkEventListToTp')
 
-        self.jmriManifestPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Work Events.csv"
+        self.jmriManifestPath = jmri.util.FileUtil.getHomePath() \
+            + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Work Events.csv"
         self.workEventList = workEventList
 
         return

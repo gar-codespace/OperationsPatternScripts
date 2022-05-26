@@ -5,6 +5,7 @@ import jmri
 import java.awt
 
 import logging
+from os import system as osSystem
 
 from psEntities import PatternScriptEntities
 from PatternTracksSubroutine import Model
@@ -123,7 +124,9 @@ class CreatePatternReportGui:
                 self.setCarsForm, self.buttonDict['textBoxEntry'] \
                 ) # Replaces [Hold] with a track name
         modifiedReport = Model.makeReport(locationDict, 'SC') # Tweaks the header for the report
-        Model.printWorkEventList(modifiedReport, trackTotals=False)
+        workEventPath = Model.makeWorkEventList(modifiedReport, trackTotals=False)
+        osSystem(PatternScriptEntities.openEditorByComputerType(workEventPath))
+        # Model.printWorkEventList(modifiedReport, trackTotals=False)
 
         if jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
             Model.writeCsvSwitchList(modifiedReport, 'SC')

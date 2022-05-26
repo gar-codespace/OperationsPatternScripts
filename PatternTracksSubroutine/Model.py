@@ -25,7 +25,7 @@ def updatePatternLocation(selectedItem=None):
 
     configFile = PatternScriptEntities.readConfigFile()
     newLocation = ModelEntities.testSelectedItem(selectedItem)
-    newLocationList = ModelEntities.getAllLocations()
+    newLocationList = PatternScriptEntities.getAllLocations()
     newLocationTrackDict = ModelEntities.getAllTracksForLocation(newLocation)
     configFile['PT'].update({'PA': False})
     configFile['PT'].update({'PI': False})
@@ -146,30 +146,37 @@ def makeLocationDict(trackList=None):
     return locationDict
 
 def makeReport(locationDict, reportType):
-    """backupConfigFile() is a bit of user edit protection"""
 
     psLog.debug('Model.makeReport')
 
+    if reportType == 'PR':
+        reportTitle = PatternScriptEntities.BUNDLE['Track Pattern Report']
+
+    if reportType == 'SC':
+        reportTitle = PatternScriptEntities.BUNDLE['Switch List for Track']
+
+    if reportType == 'TP':
+        reportTitle = PatternScriptEntities.BUNDLE['Work Event List for TrainPlayer']
+
     modifiedReport = ModelEntities.makeGenericHeader()
+    modifiedReport.update({'trainDescription' : reportTitle})
+    modifiedReport.update({'trainName' : reportTitle})
     modifiedReport['locations'] = [locationDict]
     # put in as a list to maintain compatability with JSON File Format/JMRI manifest export.
 
     return modifiedReport
 
-def printWorkEventList(patternListForJson, trackTotals):
+def makeWorkEventList(patternListForJson, trackTotals):
 
-    psLog.debug('Model.printWorkEventList')
+    psLog.debug('Model.makeWorkEventList')
 
     workEventName = ModelEntities.writeWorkEventListAsJson(patternListForJson)
     textWorkEventList = ModelEntities.readJsonWorkEventList(workEventName)
 
     textListForPrint = ViewEntities.makeTextListForPrint(textWorkEventList, trackTotals)
-    ModelEntities.writeTextSwitchList(workEventName, textListForPrint)
+    PatternScriptEntities.writeGenericReport(workEventName, textListForPrint)
 
-    switchListFile = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + workEventName + '.txt'
-    osSystem(PatternScriptEntities.openEditorByComputerType(switchListFile))
-
-    return
+    return jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + workEventName + '.txt'
 
 def onScButtonPress():
     """"Set Cars" button opens a window for each selected track"""

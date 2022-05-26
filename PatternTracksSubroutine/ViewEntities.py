@@ -30,7 +30,7 @@ class TrackPatternPanel:
         self.ignoreTrackLength.setName('itlCheckBox')
 
         self.ypButton = javax.swing.JButton()
-        self.ypButton.setText(PatternScriptEntities.BUNDLE['Pattern'])
+        self.ypButton.setText(PatternScriptEntities.BUNDLE['Track Pattern Report'])
         self.ypButton.setName('ypButton')
 
         self.scButton = javax.swing.JButton()
@@ -143,9 +143,9 @@ def makeTextReportHeader(textWorkEventList):
     headerNames = PatternScriptEntities.readConfigFile('PT')
 
     textReportHeader    = textWorkEventList['railroad'] + '\n' \
-                        + PatternScriptEntities.BUNDLE['Pattern Report'] + '\n' \
-                        + PatternScriptEntities.BUNDLE['Switching at: '] + headerNames['PL'] + '\n' \
-                        + textWorkEventList['date'] + '\n\n'
+                        + textWorkEventList['trainName'] + '\n' \
+                        + textWorkEventList['date'] + '\n\n' \
+                        + PatternScriptEntities.BUNDLE['Work Location: '] + headerNames['PL'] + '\n\n'
 
     return textReportHeader
 

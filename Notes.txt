@@ -78,14 +78,10 @@ Catches Items:
 
 Todo:
   Test with two profiles running
-  BUNDLE calls seem to be scattered around MainScript
-  CP MI doesn't work
-  Move getAllLocations to MainScriptEntities
-  Move getAllTracksForLocation to MainScriptEntities
-  Have to click twice on yard tracks only box
 
 Version 3 ideas:
   Implement makePatternScriptsWindow() from config file list
+  Implement CP MI
   Fill out TrainPlayer Support subroutine.
   mergeConfigFiles()
   Enhance and harden BUNDLE

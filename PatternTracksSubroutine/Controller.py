@@ -87,13 +87,13 @@ class StartUp:
         configFile['PT'].update({'PT': trackDict})
         configFile['PT'].update({'PA': self.widgets[1].selected})
         configFile['PT'].update({'PI': self.widgets[2].selected})
+        PatternScriptEntities.writeConfigFile(configFile)
 
         subroutinePanel = StartUp(self.subroutineFrame).makeSubroutinePanel()
         self.subroutineFrame.removeAll()
         self.subroutineFrame.add(subroutinePanel)
         self.subroutineFrame.revalidate()
 
-        PatternScriptEntities.writeConfigFile(configFile)
 
         return
 
@@ -115,7 +115,8 @@ class StartUp:
         locationDict = Model.makeLocationDict()
         modifiedReport = Model.makeReport(locationDict, 'PR')
 
-        Model.printWorkEventList(modifiedReport, trackTotals=True)
+        workEventPath = Model.makeWorkEventList(modifiedReport, trackTotals=True)
+        osSystem(PatternScriptEntities.openEditorByComputerType(workEventPath))
 
         if jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
             Model.writeCsvSwitchList(modifiedReport, 'PR')
