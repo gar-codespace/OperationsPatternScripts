@@ -115,7 +115,8 @@ class StartUp:
         locationDict = Model.makeLocationDict()
         modifiedReport = Model.makeReport(locationDict, 'PR')
 
-        workEventPath = Model.makeWorkEventList(modifiedReport, trackTotals=True)
+        workEventName, textListForPrint = Model.makeWorkEventList(modifiedReport, trackTotals=True)
+        workEventPath = PatternScriptEntities.writeGenericReport(workEventName, textListForPrint)
         osSystem(PatternScriptEntities.openEditorByComputerType(workEventPath))
 
         if jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():

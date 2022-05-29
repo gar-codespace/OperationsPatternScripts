@@ -174,9 +174,8 @@ def makeWorkEventList(patternListForJson, trackTotals):
     textWorkEventList = ModelEntities.readJsonWorkEventList(workEventName)
 
     textListForPrint = ViewEntities.makeTextListForPrint(textWorkEventList, trackTotals)
-    PatternScriptEntities.writeGenericReport(workEventName, textListForPrint)
-
-    return jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + workEventName + '.txt'
+    
+    return workEventName, textListForPrint
 
 def onScButtonPress():
     """"Set Cars" button opens a window for each selected track"""

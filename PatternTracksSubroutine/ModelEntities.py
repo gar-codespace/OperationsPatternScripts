@@ -9,7 +9,7 @@ from xml.etree import ElementTree as ET
 
 from psEntities import PatternScriptEntities
 
-SCRIPT_NAME = 'OperationsPatternScripts.TrackPattern.ModelEntities'
+SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ModelEntities'
 SCRIPT_REV = 20220101
 
 def testSelectedItem(selectedItem):
@@ -79,7 +79,8 @@ def getGenericTrackDetails(locationName, trackName):
 
 def sortLocoList(locoList):
     """backupConfigFile() is a bit of user edit protection
-    Sort order of PatternScriptEntities.readConfigFile('PT')['SL'] is top down"""
+    Sort order of PatternScriptEntities.readConfigFile('PT')['SL'] is top down
+    """
 
     sortLocos = PatternScriptEntities.readConfigFile('PT')['SL']
     for sortKey in sortLocos:

@@ -14,7 +14,7 @@ from PatternTracksSubroutine import ViewSetCarsForm
 
 """Makes a 'Set Cars Form for Track X' form for each selected track"""
 
-SCRIPT_NAME = 'OperationsPatternScripts.ControllerSetCarsForm'
+SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ControllerSetCarsForm'
 SCRIPT_REV = 20220101
 
 _trackNameClickedOn = None
@@ -123,10 +123,12 @@ class CreatePatternReportGui:
         locationDict = ModelSetCarsForm.makeLocationDict( \
                 self.setCarsForm, self.buttonDict['textBoxEntry'] \
                 ) # Replaces [Hold] with a track name
-        modifiedReport = Model.makeReport(locationDict, 'SC') # Tweaks the header for the report
-        workEventPath = Model.makeWorkEventList(modifiedReport, trackTotals=False)
+
+        modifiedReport = Model.makeReport(locationDict, 'SC')
+
+        workEventName, textListForPrint = Model.makeWorkEventList(modifiedReport, trackTotals=False)
+        workEventPath = PatternScriptEntities.writeGenericReport(workEventName, textListForPrint)
         osSystem(PatternScriptEntities.openEditorByComputerType(workEventPath))
-        # Model.printWorkEventList(modifiedReport, trackTotals=False)
 
         if jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
             Model.writeCsvSwitchList(modifiedReport, 'SC')

@@ -56,10 +56,13 @@ class BuiltTrainListener(java.beans.PropertyChangeListener):
 
     def propertyChange(self, TRAIN_BUILT):
 
+
         if TRAIN_BUILT.propertyName == 'TrainBuilt' and TRAIN_BUILT.newValue:
-            tpManifest = BuiltTrainExport.ManifestForTrainPlayer()
-            tpManifest.passInTrain(TRAIN_BUILT.getSource())
-            tpManifest.start()
+            isTpDirectory = PatternScriptEntities.CheckTpDestination().directoryExists()
+            if isTpDirectory:
+                tpManifest = BuiltTrainExport.ManifestForTrainPlayer()
+                tpManifest.passInTrain(TRAIN_BUILT.getSource())
+                tpManifest.start()
 
         return
 
@@ -445,7 +448,7 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
             patternConfig['PT'].update({'TI': True})
             TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE["Disable TrainPlayer"])
 
-            PatternScriptEntities.CheckTpDestination().directoryExists()
+            # PatternScriptEntities.CheckTpDestination().directoryExists()
             self.trainsTableModel.addTableModelListener(self.trainsTableListener)
             self.addBuiltTrainListener()
 
@@ -487,7 +490,7 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
         self.model.validatePatternConfig()
         PatternScriptEntities.validateFileDestinationDirestories()
-        PatternScriptEntities.validateStubFile(SCRIPT_ROOT)
+        PatternScriptEntities.validateStubFile().isStubFile()
         self.addTrainPlayerListeners()
         if PatternScriptEntities.readConfigFile()['CP']['AP']:
             self.addPatternScriptsButton()

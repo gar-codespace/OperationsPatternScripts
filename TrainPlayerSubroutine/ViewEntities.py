@@ -8,7 +8,6 @@ import java.awt
 import javax.swing
 
 from psEntities import PatternScriptEntities
-from psBundle import Bundle
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ViewEntities'
 SCRIPT_REV = 20220101

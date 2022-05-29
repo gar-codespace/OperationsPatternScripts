@@ -10,7 +10,7 @@ import javax.swing
 from psEntities import PatternScriptEntities
 from PatternTracksSubroutine import ViewEntities
 
-SCRIPT_NAME = 'OperationsPatternScripts.ViewSetCarsForm'
+SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ViewSetCarsForm'
 SCRIPT_REV = 20220101
 
 def setCarsForTrackWindow(setCarsForTrackForm):

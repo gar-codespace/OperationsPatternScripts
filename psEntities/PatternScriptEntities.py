@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-'''Support methods for all Pattern Script subroutines'''
+"""Support methods for all Pattern Script subroutines"""
 
 import jmri
 from java import io as javaIo
@@ -11,8 +11,6 @@ import logging
 import time
 from json import loads as jsonLoads, dumps as jsonDumps
 from codecs import open as codecsOpen
-from os import mkdir as osMakeDir
-from os import system as osSystem
 
 SCRIPT_NAME = 'OperationsPatternScripts.psEntities.PatternScriptEntities'
 SCRIPT_REV = 20220101
@@ -66,7 +64,7 @@ class Logger:
         return
 
 class CheckTpDestination:
-    '''Verify or create a TrainPlayer destination directory'''
+    """Verify or create a TrainPlayer destination directory"""
 
     def __init__(self):
 
@@ -76,13 +74,15 @@ class CheckTpDestination:
 
     def directoryExists(self):
 
-        try:
-            osMakeDir(jmri.util.FileUtil.getHomePath() + 'AppData\\Roaming\\TrainPlayer\\Reports')
-            self.psLog.warning('TrainPlayer destination directory created')
-        except OSError:
+        tpDirectory = jmri.util.FileUtil.getHomePath() + 'AppData\\Roaming\\TrainPlayer\\Reports\\'
+        tpDrrectoryFlag = javaIo.File(tpDirectory).isDirectory()
+        if tpDrrectoryFlag:
             self.psLog.info('TrainPlayer destination directory OK')
+        else:
+            self.psLog.warning('TrainPlayer destination directory not found')
+            print('TrainPlayer destination directory not found')
 
-        return
+        return tpDrrectoryFlag
 
 def psLocale():
 
@@ -90,7 +90,7 @@ def psLocale():
     # return unicode(PM.getLocale(), ENCODING)
 
 def formatText(item, length):
-    '''Truncate each item to its defined length in PatternConfig.json and add a space at the end'''
+    """Truncate each item to its defined length in PatternConfig.json and add a space at the end"""
 
     if len(item) < length:
         xItem = item.ljust(length)
@@ -100,8 +100,8 @@ def formatText(item, length):
     return xItem + u' '
 
 def occuranceTally(listOfOccurances):
-    '''Tally the occurances of a word in a list and return a dictionary
-    Home grown version of collections.Counter'''
+    """Tally the occurances of a word in a list and return a dictionary
+    Home grown version of collections.Counter"""
 
     dict = {}
     while len(listOfOccurances):
@@ -116,7 +116,9 @@ def occuranceTally(listOfOccurances):
     return dict
 
 def getStubPath():
-    '''Convert an OS path to a browser acceptable URI, there is probably a method that already does this'''
+    """Convert an OS path to a browser acceptable URI.
+    There is probably a method that already does this
+    """
 
     stubPath = 'file:///' + jmri.util.FileUtil.getPreferencesPath() + 'jmrihelp/psStub.html'
     stubPath = stubPath.replace('\\', '/')
@@ -126,7 +128,7 @@ def getStubPath():
     return stubPath
 
 def timeStamp(epochTime=0):
-    '''Valid Time, get local time adjusted for time zone and dst'''
+    """Valid Time, get local time adjusted for time zone and dst"""
 
     if epochTime == 0:
         epochTime = time.time()
@@ -146,7 +148,7 @@ def writeGenericReport(fileName, textSwitchList):
     return textCopyTo
 
 def openEditorByComputerType(switchListLocation=None):
-    '''Opens a text file in a text editor for each type of computer.'''
+    """Opens a text file in a text editor for each type of computer."""
 
     osType = jmri.util.SystemType.getType()
     editorMatrix = readConfigFile('EM')
@@ -156,55 +158,86 @@ def openEditorByComputerType(switchListLocation=None):
     backupConfigFile()
     return openEditor
 
-def validateStubFile(currentRootDir):
-    '''Copy of the JMRI Java version of createStubFile'''
 
-    stubLocation = jmri.util.FileUtil.getPreferencesPath() + '\\jmrihelp\\'
-    try:
-        osMakeDir(stubLocation)
-        psLog.info('Stub location created at: ' + stubLocation)
-    except OSError:
-        psLog.info('Stub location already exists')
 
-    stubFileName = stubLocation + 'psStub.html'
+class validateStubFile:
+    """Copy of the JMRI Java version of createStubFile"""
 
-    helpFilePath = currentRootDir + '\psSupport\psHelp.html'
-    helpFilePath = javaIo.File(helpFilePath).toURI()
-    helpFilePath = unicode(helpFilePath, ENCODING)
+    def __init__(self):
 
-    stubTemplateLocation = jmri.util.FileUtil.getProgramPath() + 'help\\' + psLocale() \
-                         + '\\local\\stub_template.html'
-    with codecsOpen(stubTemplateLocation, 'r', encoding=ENCODING) as template:
-        contents = template.read()
-        contents = contents.replace("../index.html#", "")
-        contents = contents.replace("<!--HELP_KEY-->", helpFilePath)
-        contents = contents.replace("<!--URL_HELP_KEY-->", "")
-    with codecsOpen(stubFileName, 'wb', encoding=ENCODING) as stubWorkFile:
-        stubWorkFile.write(contents)
-        psLog.debug('psStub writen from stub_template')
+        self.stubLocation = jmri.util.FileUtil.getPreferencesPath() + '\\jmrihelp\\'
+        self.stubFileName = self.stubLocation + 'psStub.html'
+        self.helpFilePath = ''
+        self.newStubFile = ''
 
-    return
+        return
+
+    def validateStubLocation(self):
+
+        if javaIo.File(self.stubLocation).mkdir():
+            psLog.info('Stub location created at: ' + self.stubLocation)
+        else:
+            psLog.info('Stub location already exists')
+
+        return
+
+    def makehelpFilePath(self):
+
+        self.helpFilePath = SCRIPT_ROOT + '\psSupport\psHelp.html'
+        self.helpFilePath = javaIo.File(self.helpFilePath).toURI()
+        self.helpFilePath = unicode(self.helpFilePath, ENCODING)
+
+    def updateStubTemplate(self):
+
+        stubTemplateLocation = jmri.util.FileUtil.getProgramPath() + 'help\\' + psLocale() \
+        + '\\local\\stub_template.html'
+
+        with codecsOpen(stubTemplateLocation, 'r', encoding=ENCODING) as template:
+            self.newStubFile = template.read()
+            self.newStubFile = self.newStubFile.replace("../index.html#", "")
+            self.newStubFile = self.newStubFile.replace("<!--HELP_KEY-->", self.helpFilePath)
+            self.newStubFile = self.newStubFile.replace("<!--URL_HELP_KEY-->", "")
+
+        return self.newStubFile
+
+    def writeStubFile(self):
+
+        with codecsOpen(self.stubFileName, 'wb', encoding=ENCODING) as stubWorkFile:
+            stubWorkFile.write(self.newStubFile)
+            psLog.debug('psStub writen from stub_template')
+
+            return
+
+    def isStubFile(self):
+
+        self.validateStubLocation()
+        self.makehelpFilePath()
+        self.updateStubTemplate()
+        self.writeStubFile()
+
+        return
 
 def validateFileDestinationDirestories():
-    '''Checks that the folders this plugin writes to exist'''
-# Can't use jmri.util.FileUtil.createDirectory().... does not return anything
+    """Checks that the folders this plugin writes to exist"""
 
     destDirPath = jmri.util.FileUtil.getProfilePath() + 'operations\\'
     listOfDirectories = ['csvManifests', 'csvSwitchLists', 'jsonManifests', 'switchLists', 'patternReports']
     x = 0
     for directory in listOfDirectories:
-        try:
-            osMakeDir(destDirPath + directory)
-            psLog.warning(directory + ' folder created')
-        except OSError:
+        testDirectory = destDirPath + directory + '\\'
+        if javaIo.File(testDirectory).isDirectory():
             x += 1
-    if (x == len(listOfDirectories)):
+        else:
+            javaIo.File(testDirectory).mkdir()
+            psLog.warning(directory + ' created at ' + destDirPath)
+
+    if x == len(listOfDirectories):
         psLog.info('Destination folders check OK')
 
     return
 
 def validateConfigFileVersion(currentRootDir):
-    '''Checks that the config file is the current version'''
+    """Checks that the config file is the current version"""
 
     configFilePath = currentRootDir + '\psEntities\PatternConfig.json'
     with codecsOpen(configFilePath, 'r', encoding=ENCODING) as validConfigFileLoc:
@@ -240,7 +273,7 @@ def restoreConfigFile():
     return
 
 def mergeConfigFiles():
-    '''Implemented in v3'''
+    """Implemented in v3"""
     return
 
 def readConfigFile(subConfig=None):
@@ -253,7 +286,7 @@ def readConfigFile(subConfig=None):
         return configFile[subConfig]
 
 def tryConfigFile():
-    '''Catch some user edit mistakes'''
+    """Catch some user edit mistakes"""
 
     try:
         configFile = getConfigFile()
@@ -296,12 +329,12 @@ def writeNewConfigFile():
     return
 
 def makePatternLog():
-    '''creates a pattern log for display based on the log level, as set by getBuildReportLevel'''
+    """creates a pattern log for display based on the log level, as set by getBuildReportLevel"""
 
     outputPatternLog = ''
     buildReportLevel = jmri.jmrit.operations.setup.Setup.getBuildReportLevel()
-    configLoggingIndex = readConfigFile('LI')
-    logLevel = configLoggingIndex[buildReportLevel]
+    loggingIndex = readConfigFile('LI')
+    logLevel = loggingIndex[buildReportLevel]
     logFileLocation = jmri.util.FileUtil.getProfilePath() \
                     + 'operations\\buildstatus\\PatternScriptsLog.txt'
     with codecsOpen(logFileLocation, 'r', encoding=ENCODING) as patternLogFile:
@@ -309,21 +342,16 @@ def makePatternLog():
             thisLine = patternLogFile.readline()
             if not thisLine:
                 break
-            if (configLoggingIndex['9'] in thisLine and int(buildReportLevel) > 0): # critical
+            if (loggingIndex['9'] in thisLine and int(buildReportLevel) > 0): # critical
                 outputPatternLog += thisLine
-            if (configLoggingIndex['7'] in thisLine and int(buildReportLevel) > 0): # error
+            if (loggingIndex['7'] in thisLine and int(buildReportLevel) > 0): # error
                 outputPatternLog += thisLine
-            if (configLoggingIndex['5'] in thisLine and int(buildReportLevel) > 0): # warning
+            if (loggingIndex['5'] in thisLine and int(buildReportLevel) > 0): # warning
                 outputPatternLog += thisLine
-            if (configLoggingIndex['3'] in thisLine and int(buildReportLevel) > 2): # info
+            if (loggingIndex['3'] in thisLine and int(buildReportLevel) > 2): # info
                 outputPatternLog += thisLine
-            if (configLoggingIndex['1'] in thisLine and int(buildReportLevel) > 4): # debug
+            if (loggingIndex['1'] in thisLine and int(buildReportLevel) > 4): # debug
                 outputPatternLog += thisLine
-
-    # tempLogFileLocation = jmri.util.FileUtil.getProfilePath() \
-    #                     + 'operations\\buildstatus\\PatternScriptsLog_temp.temp'
-    # with codecsOpen(tempLogFileLocation, 'w', encoding=ENCODING) as tempPatternLogFile:
-    #     tempPatternLogFile.write(outputPatternLog)
 
     return 'PatternScriptsLog_temp', outputPatternLog
 
@@ -339,7 +367,7 @@ def getRollingStock(rsId):
     return rs
 
 def getAllLocations():
-    '''JMRI sorts the list'''
+    """JMRI sorts the list"""
 
     allLocations = LM.getLocationsByNameList()
     locationList = []
@@ -349,7 +377,7 @@ def getAllLocations():
     return locationList
 
 def getCarColor():
-    '''backupConfigFile() is a bit of user edit protection'''
+    """backupConfigFile() is a bit of user edit protection"""
 
     colorDefinition = readConfigFile('CD')
 

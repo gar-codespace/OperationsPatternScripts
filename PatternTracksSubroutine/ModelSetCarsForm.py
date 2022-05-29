@@ -144,22 +144,22 @@ def exportSetCarsFormToTp(setCarsForm, textBoxEntry):
 
     psLog.debug('ModelSetCarsForm.exportSetCarsFormToTp')
 
-    PatternScriptEntities.CheckTpDestination().directoryExists()
+    if PatternScriptEntities.CheckTpDestination().directoryExists():
 
-    jmriExport = PatternTracksExport.ExportJmriLocations()
-    locationList = jmriExport.makeLocationList()
-    jmriExport.toTrainPlayer(locationList)
+        jmriExport = PatternTracksExport.ExportJmriLocations()
+        locationList = jmriExport.makeLocationList()
+        jmriExport.toTrainPlayer(locationList)
 
-    tpSwitchList = PatternTracksExport.TrackPatternTranslationToTp()
-    modifiedSwitchList = tpSwitchList.modifySwitchList(setCarsForm, textBoxEntry)
-    appendedTpSwitchList = tpSwitchList.appendSwitchList(modifiedSwitchList)
+        tpSwitchList = PatternTracksExport.TrackPatternTranslationToTp()
+        modifiedSwitchList = tpSwitchList.modifySwitchList(setCarsForm, textBoxEntry)
+        appendedTpSwitchList = tpSwitchList.appendSwitchList(modifiedSwitchList)
 
-    tpWorkEventProcessor = PatternTracksExport.ProcessWorkEventList()
-    tpWorkEventProcessor.writeTpWorkEventListAsJson(appendedTpSwitchList)
-    tpSwitchListHeader = tpWorkEventProcessor.makeTpHeader(appendedTpSwitchList)
-    tpSwitchListLocations = tpWorkEventProcessor.makeTpLocations(appendedTpSwitchList)
+        tpWorkEventProcessor = PatternTracksExport.ProcessWorkEventList()
+        tpWorkEventProcessor.writeTpWorkEventListAsJson(appendedTpSwitchList)
+        tpSwitchListHeader = tpWorkEventProcessor.makeTpHeader(appendedTpSwitchList)
+        tpSwitchListLocations = tpWorkEventProcessor.makeTpLocations(appendedTpSwitchList)
 
-    PatternTracksExport.WriteWorkEventListToTp(tpSwitchListHeader + tpSwitchListLocations).asCsv()
+        PatternTracksExport.WriteWorkEventListToTp(tpSwitchListHeader + tpSwitchListLocations).asCsv()
 
     return
 

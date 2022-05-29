@@ -9,7 +9,6 @@ from codecs import open as codecsOpen
 from psEntities import PatternScriptEntities
 
 def getBundleForLocale(SCRIPT_ROOT):
-    '''To be expanded in Version 3'''
 
     psLocale = PatternScriptEntities.psLocale() + '.json'
     bundleDir = SCRIPT_ROOT + '\\psBundle\\'

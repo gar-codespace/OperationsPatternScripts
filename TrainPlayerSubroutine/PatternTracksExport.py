@@ -10,8 +10,6 @@ import time
 from json import loads as jsonLoads, dumps as jsonDumps
 from HTMLParser import HTMLParser
 from codecs import open as codecsOpen
-from os import mkdir as osMakeDir
-from sys import path as sysPath
 
 SCRIPT_NAME ='OperationsPatternScripts.TrainPlayerSubroutine.PatternTracksExport'
 SCRIPT_REV = 20220101
@@ -50,13 +48,12 @@ class ExportJmriLocations:
     def toTrainPlayer(self, csvLocations):
         """Exports JMRI location;track pairs and track comments for TrainPlayer Advanced Ops"""
 
-        jmriLocationsPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Locations.csv"
-        try: # Catch TrainPlayer not installed
-            with codecsOpen(jmriLocationsPath, 'wb', encoding=PatternScriptEntities.ENCODING) as csvWorkFile:
-                csvHeader = u'Locale,Industry\n'
-                csvWorkFile.write(csvHeader + csvLocations)
-        except IOError:
-                self.psLog.warning('Directory not found, TrainPlayer locations export did not complete')
+        jmriLocationsPath = jmri.util.FileUtil.getHomePath() \
+                + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Locations.csv"
+
+        with codecsOpen(jmriLocationsPath, 'wb', encoding=PatternScriptEntities.ENCODING) as csvWorkFile:
+            csvHeader = u'Locale,Industry\n'
+            csvWorkFile.write(csvHeader + csvLocations)
 
         print(SCRIPT_NAME + '.ExportJmriLocations ' + str(SCRIPT_REV))
 
@@ -332,11 +329,8 @@ class WriteWorkEventListToTp:
 
         self.psLog.debug('PatternTracksExport.asCsv')
 
-        try: # Catch TrainPlayer not installed
-            with codecsOpen(self.jmriManifestPath, 'wb', encoding=PatternScriptEntities.ENCODING) as csvWorkFile:
-                csvWorkFile.write(self.workEventList)
-        except IOError:
-            self.psLog.warning('Directory not found, TrainPlayer switch list export did not complete')
+        with codecsOpen(self.jmriManifestPath, 'wb', encoding=PatternScriptEntities.ENCODING) as csvWorkFile:
+            csvWorkFile.write(self.workEventList)
 
         print(SCRIPT_NAME + '.WriteWorkEventListToTp ' + str(SCRIPT_REV))
 

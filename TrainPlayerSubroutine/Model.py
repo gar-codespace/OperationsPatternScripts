@@ -4,7 +4,6 @@
 import jmri
 
 import logging
-# import time
 from json import loads as jsonLoads, dumps as jsonDumps
 from os import mkdir as osMakeDir
 from codecs import open as codecsOpen
@@ -17,8 +16,6 @@ SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.Model'
 SCRIPT_REV = 20220101
 
 psLog = logging.getLogger('PS.TP.Model')
-
-print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
 class ExportJmriLocations:
     """Writes a list of location names and comments for the whole profile"""
@@ -51,13 +48,16 @@ class ExportJmriLocations:
     def toTrainPlayer(self, csvLocations):
         """Exports JMRI location;track pairs and track comments for TrainPlayer Advanced Ops"""
 
-        jmriLocationsPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Locations.csv"
-        try: # Catch TrainPlayer not installed
+        if PatternScriptEntities.CheckTpDestination().directoryExists():
+
+            jmriLocationsPath = jmri.util.FileUtil.getHomePath() \
+                    + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Locations.csv"
+
             with codecsOpen(jmriLocationsPath, 'wb', encoding=PatternScriptEntities.ENCODING) as csvWorkFile:
                 csvHeader = u'Locale,Industry\n'
                 csvWorkFile.write(csvHeader + csvLocations)
-        except IOError:
-                self.psLog.warning('Directory not found, TrainPlayer locations export did not complete')
+
+            self.psLog.info('TrainPlayer locations export completed')
 
         print(SCRIPT_NAME + '.ExportJmriLocations ' + str(SCRIPT_REV))
 
@@ -76,7 +76,9 @@ class JmriTranslationToTp:
 
     def getTrainAsDict(self, train):
 
-        manifest = jmri.util.FileUtil.readFile(jmri.jmrit.operations.trains.JsonManifest(train).getFile())
+        manifest = jmri.util.FileUtil.readFile( \
+                jmri.jmrit.operations.trains.JsonManifest(train).getFile() \
+                )
         trainAsDict = jsonLoads(manifest)
         trainAsDict['comment'] = train.getComment()
 
@@ -210,6 +212,13 @@ class UpdateInventory:
 
         return
 
+    def checkList(self):
+
+        if self.tpInventoryList:
+            return True
+        else:
+            return False
+
     def update(self):
 
         updatedInventory = ModelEntities.ProcessInventory()
@@ -224,9 +233,12 @@ class UpdateInventory:
             setToLoc, setToTrack = updatedInventory.getSetToLocation(trackLabel)
             setResult = rs.setLocation(setToLoc, setToTrack)
             if setResult != 'okay':
-                self.setCarsError += '\n' + setResult + PatternScriptEntities.BUNDLE[' for ID '] + rs.getId()
+                self.setCarsError += '\n' + setResult + \
+                        PatternScriptEntities.BUNDLE[' for ID '] + rs.getId()
 
         self.notFoundError = updatedInventory.getErrorReport()
+
+        print(SCRIPT_NAME + '.UpdateInventory ' + str(SCRIPT_REV))
 
         return
 
@@ -239,7 +251,7 @@ class UpdateInventory:
             self.errorReport += PatternScriptEntities.BUNDLE['No errors']
 
         self.errorReport += '\n\n' + PatternScriptEntities.BUNDLE['List of tracks not found'] + '\n'
-        notFoundErrors = self.processNotFoundErrors()
+        notFoundErrors = self.notFoundErrors()
         if notFoundErrors:
             self.errorReport += notFoundErrors
         else:
@@ -247,7 +259,7 @@ class UpdateInventory:
 
         return self.errorReport
 
-    def processNotFoundErrors(self):
+    def notFoundErrors(self):
 
         processedErrors = ''
         for error in self.notFoundError:

@@ -97,16 +97,15 @@ def parseRollingStockAsDict(rS):
 
 def getTpInventory():
 
-    tpInventoryPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\TrainPlayer Export - Inventory.txt"
+    tpInventoryPath = jmri.util.FileUtil.getHomePath() \
+        + "AppData\Roaming\TrainPlayer\Reports\TrainPlayer Export - Inventory.txt"
     tpInventory = ''
 
     try: # Catch TrainPlayer not installed
         with codecsOpen(tpInventoryPath, 'r', encoding=PatternScriptEntities.ENCODING) as csvWorkFile:
             tpInventory = [line.rstrip() for line in csvWorkFile]
-            # tpInventory = csvWorkFile.read()
-
     except IOError:
-        psLog.warning('TrainPlayer directory or file not found')
+        pass
 
     return tpInventory
 
