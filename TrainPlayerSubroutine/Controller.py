@@ -1,12 +1,9 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""The TrainPlayer Subroutine will be filled in in V3, this is just the framework"""
+"""The TrainPlayer Subroutine will be implemented in V3, this is just the framework"""
 
-import jmri
-import java.awt.event
-
-import logging
+# import logging
 from os import system as osSystem
 
 from psEntities import PatternScriptEntities
@@ -21,7 +18,7 @@ class StartUp:
 
     def __init__(self, subroutineFrame=None):
 
-        self.psLog = logging.getLogger('PS.TP.Controller')
+        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.Controller')
         self.subroutineFrame = subroutineFrame
 
         return
@@ -66,7 +63,7 @@ class StartUp:
             self.psLog.info('Updated Rolling stock locations from TrainPlayer')
         else:
             self.psLog.info('No TrainPlayer inventory list to update')
-            
+
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return

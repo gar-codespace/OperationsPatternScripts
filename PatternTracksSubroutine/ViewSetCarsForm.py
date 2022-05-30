@@ -3,10 +3,6 @@
 
 """Display methods for the Set Cars Form for Track X form"""
 
-import jmri
-import java.awt
-import javax.swing
-
 from psEntities import PatternScriptEntities
 from PatternTracksSubroutine import ViewEntities
 
@@ -15,7 +11,7 @@ SCRIPT_REV = 20220101
 
 def setCarsForTrackWindow(setCarsForTrackForm):
 
-    setCarsWindow = jmri.util.JmriJFrame()
+    setCarsWindow = PatternScriptEntities.JMRI.util.JmriJFrame()
     setCarsWindow.add(setCarsForTrackForm)
 
     return setCarsWindow
@@ -25,27 +21,27 @@ def makeSetCarsForTrackForm(setCarsFormData):
 
     buttonDict = {}
 
-    setCarsForm = javax.swing.JPanel()
-    setCarsForm.setLayout(javax.swing.BoxLayout(setCarsForm, javax.swing.BoxLayout.PAGE_AXIS))
+    setCarsForm = PatternScriptEntities.JAVX_SWING.JPanel()
+    setCarsForm.setLayout(PatternScriptEntities.JAVX_SWING.BoxLayout(setCarsForm, PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS))
 
     setCarsFormHeader = makeSetCarsFormHeader(setCarsFormData)
     setCarsForm.add(setCarsFormHeader)
-    setCarsForm.add(javax.swing.JSeparator())
+    setCarsForm.add(PatternScriptEntities.JAVX_SWING.JSeparator())
 
     setCarsRowOfTracks, buttonList = makeSetCarsTrackButtons()
     buttonDict['trackButtons'] = buttonList
     setCarsForm.add(setCarsRowOfTracks)
-    setCarsForm.add(javax.swing.JSeparator())
+    setCarsForm.add(PatternScriptEntities.JAVX_SWING.JSeparator())
 
-    setCarsFormBody = javax.swing.JPanel()
-    setCarsFormBody.setLayout(javax.swing.BoxLayout(setCarsFormBody, javax.swing.BoxLayout.PAGE_AXIS))
+    setCarsFormBody = PatternScriptEntities.JAVX_SWING.JPanel()
+    setCarsFormBody.setLayout(PatternScriptEntities.JAVX_SWING.BoxLayout(setCarsFormBody, PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS))
 
     setCarsEqptRows = MakeSetCarsEqptRows(setCarsFormData)
 
     if setCarsFormData['locations'][0]['tracks'][0]['locos']:
-        locoFormBody = javax.swing.JPanel()
-        locoFormBody.setLayout(javax.swing.BoxLayout(locoFormBody, javax.swing.BoxLayout.PAGE_AXIS))
-        locoFormBody.border = javax.swing.BorderFactory.createTitledBorder( \
+        locoFormBody = PatternScriptEntities.JAVX_SWING.JPanel()
+        locoFormBody.setLayout(PatternScriptEntities.JAVX_SWING.BoxLayout(locoFormBody, PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS))
+        locoFormBody.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder( \
                 PatternScriptEntities.BUNDLE['Locomotives at '] \
                 + setCarsFormData['locations'][0]['tracks'][0]['trackName'] \
                 )
@@ -56,9 +52,9 @@ def makeSetCarsForTrackForm(setCarsFormData):
         setCarsFormBody.add(locoFormBody)
 
     if setCarsFormData['locations'][0]['tracks'][0]['cars']:
-        carFormBody = javax.swing.JPanel()
-        carFormBody.setLayout(javax.swing.BoxLayout(carFormBody, javax.swing.BoxLayout.PAGE_AXIS))
-        carFormBody.border = javax.swing.BorderFactory.createTitledBorder( \
+        carFormBody = PatternScriptEntities.JAVX_SWING.JPanel()
+        carFormBody.setLayout(PatternScriptEntities.JAVX_SWING.BoxLayout(carFormBody, PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS))
+        carFormBody.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder( \
                 PatternScriptEntities.BUNDLE['Cars at '] \
                 + setCarsFormData['locations'][0]['tracks'][0]['trackName'] \
                 )
@@ -70,16 +66,16 @@ def makeSetCarsForTrackForm(setCarsFormData):
 
     buttonDict['textBoxEntry'] = setCarsEqptRows.textBoxEntryList()
 
-    setCarsFormPane = javax.swing.JScrollPane(setCarsFormBody)
+    setCarsFormPane = PatternScriptEntities.JAVX_SWING.JScrollPane(setCarsFormBody)
     setCarsForm.add(setCarsFormPane)
-    setCarsForm.add(javax.swing.JSeparator())
+    setCarsForm.add(PatternScriptEntities.JAVX_SWING.JSeparator())
 
     setCarsSchedule, scheduleButton = makeSetCarsScheduleRow(setCarsFormData)
     buttonDict['scheduleButton'] = []
     if setCarsSchedule and PatternScriptEntities.readConfigFile('PT')['AS']:
         setCarsForm.add(setCarsSchedule)
         buttonDict['scheduleButton'] = scheduleButton
-        setCarsForm.add(javax.swing.JSeparator())
+        setCarsForm.add(PatternScriptEntities.JAVX_SWING.JSeparator())
 
     setCarsFooter = MakeSetCarsFooter()
     buttonDict['footerButtons'] = setCarsFooter.getComponents()
@@ -90,8 +86,8 @@ def makeSetCarsForTrackForm(setCarsFormData):
 def makeSwingBox(xWidth, yHeight):
     """Makes a swing box to the desired size"""
 
-    xName = javax.swing.Box(javax.swing.BoxLayout.X_AXIS)
-    xName.setPreferredSize(java.awt.Dimension(width=xWidth, height=yHeight))
+    xName = PatternScriptEntities.JAVX_SWING.Box(PatternScriptEntities.JAVX_SWING.BoxLayout.X_AXIS)
+    xName.setPreferredSize(PatternScriptEntities.JAVA_AWT.Dimension(width=xWidth, height=yHeight))
 
     return xName
 
@@ -100,18 +96,18 @@ def makeSetCarsFormHeader(setCarsFormData):
 
     configFile = PatternScriptEntities.readConfigFile('PT')
 
-    combinedHeader = javax.swing.JPanel()
-    combinedHeader.setLayout(javax.swing.BoxLayout(combinedHeader, javax.swing.BoxLayout.PAGE_AXIS))
-    combinedHeader.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT)
-    combinedHeader.border = javax.swing.BorderFactory.createEmptyBorder(10,0,10,0)
+    combinedHeader = PatternScriptEntities.JAVX_SWING.JPanel()
+    combinedHeader.setLayout(PatternScriptEntities.JAVX_SWING.BoxLayout(combinedHeader, PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS))
+    combinedHeader.setAlignmentX(PatternScriptEntities.JAVA_AWT.Component.CENTER_ALIGNMENT)
+    combinedHeader.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createEmptyBorder(10,0,10,0)
 
-    headerRRLabel = javax.swing.JLabel(setCarsFormData['railroad'])
-    headerRRLabel.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT)
+    headerRRLabel = PatternScriptEntities.JAVX_SWING.JLabel(setCarsFormData['railroad'])
+    headerRRLabel.setAlignmentX(PatternScriptEntities.JAVA_AWT.Component.CENTER_ALIGNMENT)
     headerRRBox = makeSwingBox(100, configFile['PH'])
     headerRRBox.add(headerRRLabel)
 
-    headerYTLabel = javax.swing.JLabel()
-    headerYTLabel.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT)
+    headerYTLabel = PatternScriptEntities.JAVX_SWING.JLabel()
+    headerYTLabel.setAlignmentX(PatternScriptEntities.JAVA_AWT.Component.CENTER_ALIGNMENT)
     trackName = setCarsFormData['locations'][0]['tracks'][0]['trackName'] # There's only one track
     locationName = setCarsFormData['locations'][0]['locationName'] # There's only one location
     headerYTLabel.setText(PatternScriptEntities.BUNDLE['Set Cars Form for track: '] \
@@ -120,8 +116,8 @@ def makeSetCarsFormHeader(setCarsFormData):
     headerYTBox = makeSwingBox(100, configFile['PH'])
     headerYTBox.add(headerYTLabel)
 
-    headerValidLabel = javax.swing.JLabel(setCarsFormData['date'])
-    headerValidLabel.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT)
+    headerValidLabel = PatternScriptEntities.JAVX_SWING.JLabel(setCarsFormData['date'])
+    headerValidLabel.setAlignmentX(PatternScriptEntities.JAVA_AWT.Component.CENTER_ALIGNMENT)
     headerValidBox = makeSwingBox(100, configFile['PH'])
     headerValidBox.add(headerValidLabel)
 
@@ -136,14 +132,14 @@ def makeSetCarsTrackButtons():
     location =  PatternScriptEntities.readConfigFile('PT')['PL']
     allTracksAtLoc =  PatternScriptEntities.LM.getLocationByName(location).getTracksByNameList(None)
 
-    buttonPanel = javax.swing.JPanel()
-    buttonPanel.border = javax.swing.BorderFactory.createTitledBorder( \
+    buttonPanel = PatternScriptEntities.JAVX_SWING.JPanel()
+    buttonPanel.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder( \
             PatternScriptEntities.BUNDLE['Tracks at '] \
             + location \
             )
     buttonList = []
     for track in allTracksAtLoc:
-        selectTrackButton = javax.swing.JButton(track.getName())
+        selectTrackButton = PatternScriptEntities.JAVX_SWING.JButton(track.getName())
         buttonList.append(selectTrackButton)
         buttonPanel.add(selectTrackButton)
 
@@ -173,25 +169,25 @@ class MakeSetCarsEqptRows():
         locos = self.setCarsFormData['locations'][0]['tracks'][0]['locos']
 
         for loco in locos:
-            combinedInputLine = javax.swing.JPanel()
+            combinedInputLine = PatternScriptEntities.JAVX_SWING.JPanel()
             combinedInputLine.setBackground(PatternScriptEntities.getLocoColor())
             if loco['On Train']:
                 combinedInputLine.setBackground(PatternScriptEntities.getAlertColor())
-            inputText = javax.swing.JTextField(5)
+            inputText = PatternScriptEntities.JAVX_SWING.JTextField(5)
             self.textBoxEntry.append(inputText)
             inputBox = makeSwingBox(self.panelWidth * 6, self.panelHeight)
             inputBox.add(inputText)
             combinedInputLine.add(inputBox)
 
-            for item in jmri.jmrit.operations.setup.Setup.getDropEngineMessageFormat():
-                label = javax.swing.JLabel(loco[PatternScriptEntities.BUNDLE[item]])
+            for item in PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat():
+                label = PatternScriptEntities.JAVX_SWING.JLabel(loco[PatternScriptEntities.BUNDLE[item]])
                 box = makeSwingBox(self.reportWidth[PatternScriptEntities.BUNDLE[item]] \
                         * self.panelWidth, self.panelHeight \
                         )
                 box.add(label)
                 combinedInputLine.add(box)
 
-            combinedInputLine.add(javax.swing.Box.createHorizontalGlue())
+            combinedInputLine.add(PatternScriptEntities.JAVX_SWING.Box.createHorizontalGlue())
 
             listOfLocoRows.append(combinedInputLine)
 
@@ -205,24 +201,24 @@ class MakeSetCarsEqptRows():
         cars = self.setCarsFormData['locations'][0]['tracks'][0]['cars']
 
         for car in cars:
-            combinedInputLine = javax.swing.JPanel()
+            combinedInputLine = PatternScriptEntities.JAVX_SWING.JPanel()
             combinedInputLine.setBackground(PatternScriptEntities.getCarColor())
             if car['On Train']:
                 combinedInputLine.setBackground(PatternScriptEntities.getAlertColor())
-            inputText = javax.swing.JTextField(5)
+            inputText = PatternScriptEntities.JAVX_SWING.JTextField(5)
             self.textBoxEntry.append(inputText)
             inputBox = makeSwingBox(self.panelWidth * 6, self.panelHeight)
             inputBox.add(inputText)
             combinedInputLine.add(inputBox)
 
-            for item in jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
-                label = javax.swing.JLabel(car[PatternScriptEntities.BUNDLE[item]])
+            for item in PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
+                label = PatternScriptEntities.JAVX_SWING.JLabel(car[PatternScriptEntities.BUNDLE[item]])
                 box = makeSwingBox(self.reportWidth[PatternScriptEntities.BUNDLE[item]] \
                         * self.panelWidth, self.panelHeight \
                         )
                 box.add(label)
                 combinedInputLine.add(box)
-            combinedInputLine.add(javax.swing.Box.createHorizontalGlue())
+            combinedInputLine.add(PatternScriptEntities.JAVX_SWING.Box.createHorizontalGlue())
             listOfCarRows.append(combinedInputLine)
 
         PatternScriptEntities.backupConfigFile()
@@ -242,37 +238,37 @@ def makeSetCarsScheduleRow(setCarsFormData):
     schedulePanel = None
     scheduleList = []
     if (scheduleObject):
-        schedulePanel = javax.swing.JPanel()
-        schedulePanel.border = javax.swing.BorderFactory.createTitledBorder( \
+        schedulePanel = PatternScriptEntities.JAVX_SWING.JPanel()
+        schedulePanel.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder( \
                 PatternScriptEntities.BUNDLE['Schedule for '] \
                 + trackName \
                 )
-        scheduleButton = javax.swing.JButton(scheduleObject.getName())
+        scheduleButton = PatternScriptEntities.JAVX_SWING.JButton(scheduleObject.getName())
         scheduleList.append(scheduleButton)
-        schedulePanel.add(javax.swing.JLabel(PatternScriptEntities.BUNDLE['Schedule: ']))
+        schedulePanel.add(PatternScriptEntities.JAVX_SWING.JLabel(PatternScriptEntities.BUNDLE['Schedule: ']))
         schedulePanel.add(scheduleButton)
 
     return schedulePanel, scheduleList
 
 def MakeSetCarsFooter():
 
-    combinedFooter = javax.swing.JPanel()
-    combinedFooter.border = javax.swing.BorderFactory.createTitledBorder( \
+    combinedFooter = PatternScriptEntities.JAVX_SWING.JPanel()
+    combinedFooter.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder( \
             PatternScriptEntities.BUNDLE['Action'] \
             )
 
-    printButton = javax.swing.JButton(unicode(PatternScriptEntities.BUNDLE['Switch List'], \
+    printButton = PatternScriptEntities.JAVX_SWING.JButton(unicode(PatternScriptEntities.BUNDLE['Switch List'], \
             PatternScriptEntities.ENCODING) \
             )
     combinedFooter.add(printButton)
 
-    setButton = javax.swing.JButton(unicode(PatternScriptEntities.BUNDLE['Set to Track'], \
+    setButton = PatternScriptEntities.JAVX_SWING.JButton(unicode(PatternScriptEntities.BUNDLE['Set to Track'], \
             PatternScriptEntities.ENCODING) \
             )
     combinedFooter.add(setButton)
 
     if PatternScriptEntities.readConfigFile('PT')['TI']:
-        trainPlayerButton = javax.swing.JButton(unicode(u'TrainPlayer', \
+        trainPlayerButton = PatternScriptEntities.JAVX_SWING.JButton(unicode(u'TrainPlayer', \
                 PatternScriptEntities.ENCODING) \
                 )
         combinedFooter.add(trainPlayerButton)

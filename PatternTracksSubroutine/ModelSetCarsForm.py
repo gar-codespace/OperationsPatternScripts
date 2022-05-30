@@ -1,10 +1,9 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-import jmri
-import java.awt
+"""Process methods for the Set Cars Form for Track X form"""
 
-import logging
+# import logging
 from codecs import open as codecsOpen
 from json import loads as jsonLoads, dumps as jsonDumps
 
@@ -14,7 +13,7 @@ from TrainPlayerSubroutine import PatternTracksExport
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ModelSetCarsForm'
 SCRIPT_REV = 20220101
-psLog = logging.getLogger('PS.PT.ModelSetCarsForm')
+psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.ModelSetCarsForm')
 
 def testValidityOfForm(setCarsForm, textBoxEntry):
 
@@ -59,7 +58,7 @@ def setRsToTrack(setCarsForm, textBoxEntry):
             setCount += 1
         i += 1
 
-    jmri.jmrit.operations.rollingstock.engines.EngineManagerXml.save()
+    PatternScriptEntities.JMRI.jmrit.operations.rollingstock.engines.EngineManagerXml.save()
 
     for car in setCarsForm['locations'][0]['tracks'][0]['cars']:
         if not unicode(userInputList[i], PatternScriptEntities.ENCODING) in allTracksAtLoc:
@@ -78,7 +77,7 @@ def setRsToTrack(setCarsForm, textBoxEntry):
             setCount += 1
         i += 1
 
-    jmri.jmrit.operations.rollingstock.cars.CarManagerXml.save()
+    PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarManagerXml.save()
 
     psLog.info('Rolling stock count: ' + str(setCount) + ', processed from track: ' + fromTrack)
 

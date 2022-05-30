@@ -1,11 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""Creates the TrainPlayer panel"""
-
-import jmri
-import java.awt
-import javax.swing
+"""Creates the TrainPlayer panel, implemented in v3."""
 
 from psEntities import PatternScriptEntities
 
@@ -18,11 +14,11 @@ class TrainPlayerPanel:
 
         self.configFile = PatternScriptEntities.readConfigFile('TP')
 
-        self.uiButton = javax.swing.JButton()
+        self.uiButton = PatternScriptEntities.JAVX_SWING.JButton()
         self.uiButton.setText(PatternScriptEntities.BUNDLE['Update Inventory'])
         self.uiButton.setName('uiButton')
 
-        self.saButton = javax.swing.JButton()
+        self.saButton = PatternScriptEntities.JAVX_SWING.JButton()
         self.saButton.setText(PatternScriptEntities.BUNDLE['Space Available'])
         self.saButton.setName('saButton')
 
@@ -32,10 +28,10 @@ class TrainPlayerPanel:
 
     def makeTrainPlayerPanel(self):
 
-        tpPanel = javax.swing.JPanel()
+        tpPanel = PatternScriptEntities.JAVX_SWING.JPanel()
 
         tpPanel.add(self.uiButton)
-        tpPanel.add(javax.swing.Box.createRigidArea(java.awt.Dimension(20,0)))
+        tpPanel.add(PatternScriptEntities.JAVX_SWING.Box.createRigidArea(PatternScriptEntities.JAVA_AWT.Dimension(20,0)))
         tpPanel.add(self.saButton)
 
         return tpPanel

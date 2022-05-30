@@ -1,10 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-import jmri
-
 from codecs import open as codecsOpen
-import logging
 import time
 
 from psEntities import PatternScriptEntities
@@ -97,7 +94,7 @@ def parseRollingStockAsDict(rS):
 
 def getTpInventory():
 
-    tpInventoryPath = jmri.util.FileUtil.getHomePath() \
+    tpInventoryPath = PatternScriptEntities.JMRI.util.FileUtil.getHomePath() \
         + "AppData\Roaming\TrainPlayer\Reports\TrainPlayer Export - Inventory.txt"
     tpInventory = ''
 

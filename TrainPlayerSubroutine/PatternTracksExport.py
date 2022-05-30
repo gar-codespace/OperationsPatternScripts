@@ -1,11 +1,8 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
-"""These are the classes used by the Pattern Tracks module"""
+"""Methods called by the pattern tracks subroutine"""
 
-import jmri
-import java
-
-import logging
+# import logging
 import time
 from json import loads as jsonLoads, dumps as jsonDumps
 from HTMLParser import HTMLParser
@@ -22,7 +19,7 @@ class ExportJmriLocations:
 
     def __init__(self):
 
-        self.psLog = logging.getLogger('PS.TP.ExportJmriLocations')
+        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.ExportJmriLocations')
 
         return
 
@@ -48,7 +45,7 @@ class ExportJmriLocations:
     def toTrainPlayer(self, csvLocations):
         """Exports JMRI location;track pairs and track comments for TrainPlayer Advanced Ops"""
 
-        jmriLocationsPath = jmri.util.FileUtil.getHomePath() \
+        jmriLocationsPath = PatternScriptEntities.JMRI.util.FileUtil.getHomePath() \
                 + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Locations.csv"
 
         with codecsOpen(jmriLocationsPath, 'wb', encoding=PatternScriptEntities.ENCODING) as csvWorkFile:
@@ -64,7 +61,7 @@ class TrackPatternTranslationToTp:
 
     def __init__(self):
 
-        self.psLog = logging.getLogger('PS.TP.TrainPlayerTranslationToTp')
+        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.TrainPlayerTranslationToTp')
 
         return
 
@@ -112,7 +109,7 @@ class TrackPatternTranslationToTp:
         headerNames = PatternScriptEntities.readConfigFile('PT')
         reportTitle = PatternScriptEntities.BUNDLE['Work Event List for TrainPlayer']
         # reportTitle = headerNames['TD']['TP']
-        jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
+        jsonFile = PatternScriptEntities.JMRI.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
         with codecsOpen(jsonFile, 'r', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
             jsonSwitchList = jsonWorkFile.read()
         tpSwitchList = jsonLoads(jsonSwitchList)
@@ -130,7 +127,7 @@ class JmriTranslationToTp:
 
     def __init__(self):
 
-        self.psLog = logging.getLogger('PS.TP.JmriTranslationToTp')
+        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.JmriTranslationToTp')
 
         print(SCRIPT_NAME + '.JmriTranslationToTp ' + str(SCRIPT_REV))
 
@@ -138,7 +135,7 @@ class JmriTranslationToTp:
 
     def getTrainAsDict(self, train):
 
-        manifest = jmri.util.FileUtil.readFile(jmri.jmrit.operations.trains.JsonManifest(train).getFile())
+        manifest = PatternScriptEntities.JMRI.util.FileUtil.readFile(PatternScriptEntities.JMRI.jmrit.operations.trains.JsonManifest(train).getFile())
         trainAsDict = jsonLoads(manifest)
         trainAsDict['comment'] = train.getComment()
 
@@ -255,7 +252,7 @@ class ProcessWorkEventList:
 
     def __init__(self):
 
-        self.psLog = logging.getLogger('PS.TP.ProcessWorkEventList')
+        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.ProcessWorkEventList')
 
         return
 
@@ -264,7 +261,7 @@ class ProcessWorkEventList:
         self.psLog.debug('PatternTracksExport.writeTpWorkEventListAsJson')
 
         reportTitle = appendedTpSwitchList['trainDescription']
-        jsonFile = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
+        jsonFile = PatternScriptEntities.JMRI.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
         jsonObject = jsonDumps(appendedTpSwitchList, indent=2, sort_keys=True)
         with codecsOpen(jsonFile, 'wb', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
             jsonWorkFile.write(jsonObject)
@@ -317,9 +314,9 @@ class WriteWorkEventListToTp:
 
     def __init__(self, workEventList):
 
-        self.psLog = logging.getLogger('PS.TP.WriteWorkEventListToTp')
+        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.WriteWorkEventListToTp')
 
-        self.jmriManifestPath = jmri.util.FileUtil.getHomePath() \
+        self.jmriManifestPath = PatternScriptEntities.JMRI.util.FileUtil.getHomePath() \
             + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Work Events.csv"
         self.workEventList = workEventList
 

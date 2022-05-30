@@ -1,12 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""View script for the pattern tracks subroutine"""
-
-import jmri
-import javax.swing
-
-import logging
+# import logging
 from os import system as osSystem
 
 from psEntities import PatternScriptEntities
@@ -14,22 +9,21 @@ from PatternTracksSubroutine import ViewEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.View'
 SCRIPT_REV = 20220101
-psLog = logging.getLogger('PS.PT.View')
 
 class ManageGui:
 
     def __init__(self):
 
-        self.psLog = logging.getLogger('PS.PT.View')
+        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.View')
 
         return
 
     def makeSubroutineFrame(self):
         """Make the frame that all the pattern tracks controls are added to"""
 
-        subroutineFrame = javax.swing.JPanel() # the pattern tracks panel
-        subroutineFrame.setLayout(javax.swing.BoxLayout(subroutineFrame, javax.swing.BoxLayout.Y_AXIS))
-        subroutineFrame.border = javax.swing.BorderFactory.createTitledBorder( \
+        subroutineFrame = PatternScriptEntities.JAVX_SWING.JPanel() # the pattern tracks panel
+        subroutineFrame.setLayout(PatternScriptEntities.JAVX_SWING.BoxLayout(subroutineFrame, PatternScriptEntities.JAVX_SWING.BoxLayout.Y_AXIS))
+        subroutineFrame.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder( \
                 PatternScriptEntities.BUNDLE['Pattern Tracks Subroutine'] \
                 )
 
@@ -53,7 +47,7 @@ def displayTextSwitchList(textSwitchList):
 
     psLog.debug('View.displayTextSwitchList')
 
-    fileToDisplay = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' \
+    fileToDisplay = PatternScriptEntities.JMRI.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' \
                   + textSwitchList.splitlines()[0] + '.txt'
 
     return osSystem(PatternScriptEntities.openEditorByComputerType(fileToDisplay))

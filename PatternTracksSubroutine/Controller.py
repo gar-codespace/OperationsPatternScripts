@@ -1,10 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-import jmri
-import java.awt.event
-
-import logging
+# import logging
 from os import system as osSystem
 
 from psEntities import PatternScriptEntities
@@ -14,13 +11,13 @@ from PatternTracksSubroutine import View
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.Controller'
 SCRIPT_REV = 20220101
 
-class LocationComboBox(java.awt.event.ActionListener):
+class LocationComboBox(PatternScriptEntities.JAVA_AWT.event.ActionListener):
     """Event triggered from location combobox selection"""
 
     def __init__(self, subroutineFrame):
 
         self.subroutineFrame = subroutineFrame
-        self.psLog = logging.getLogger('PS.PT.ComboBox')
+        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.ComboBox')
 
     def actionPerformed(self, EVENT):
 
@@ -39,7 +36,7 @@ class StartUp:
 
     def __init__(self, subroutineFrame=None):
 
-        self.psLog = logging.getLogger('PS.PT.Controller')
+        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.Controller')
         self.subroutineFrame = subroutineFrame
 
         return
@@ -119,7 +116,7 @@ class StartUp:
         workEventPath = PatternScriptEntities.writeGenericReport(workEventName, textListForPrint)
         osSystem(PatternScriptEntities.openEditorByComputerType(workEventPath))
 
-        if jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
+        if PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
             Model.writeCsvSwitchList(modifiedReport, 'PR')
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

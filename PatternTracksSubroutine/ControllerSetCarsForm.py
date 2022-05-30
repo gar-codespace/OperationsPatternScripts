@@ -1,10 +1,9 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-import jmri
-import java.awt
+"""Makes a 'Set Cars Form for Track X' form for each selected track"""
 
-import logging
+# import logging
 from os import system as osSystem
 
 from psEntities import PatternScriptEntities
@@ -12,18 +11,16 @@ from PatternTracksSubroutine import Model
 from PatternTracksSubroutine import ModelSetCarsForm
 from PatternTracksSubroutine import ViewSetCarsForm
 
-"""Makes a 'Set Cars Form for Track X' form for each selected track"""
-
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ControllerSetCarsForm'
 SCRIPT_REV = 20220101
 
 _trackNameClickedOn = None
 
-class TextBoxEntryListener(java.awt.event.MouseAdapter):
+class TextBoxEntryListener(PatternScriptEntities.JAVA_AWT.event.MouseAdapter):
     """When any of the 'Set Cars Form for Track X' text inpou boxes is clicked on"""
 
     def __init__(self):
-        self.psLog = logging.getLogger('PS.PT.TextBoxEntryListener')
+        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.TextBoxEntryListener')
 
         return
 
@@ -43,7 +40,7 @@ class CreatePatternReportGui:
 
     def __init__(self, setCarsForm):
 
-        self.psLog = logging.getLogger('PS.PT.CreatePatternReportGui')
+        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.CreatePatternReportGui')
 
         self.setCarsForm = setCarsForm
         self.locationName = setCarsForm['locations'][0]['locationName']
@@ -106,7 +103,7 @@ class CreatePatternReportGui:
         scheduleName = MOUSE_CLICKED.getSource().getText()
         schedule = PatternScriptEntities.SM.getScheduleByName(scheduleName)
         track = PatternScriptEntities.LM.getLocationByName(self.locationName).getTrackByName(self.trackName, None)
-        jmri.jmrit.operations.locations.schedules.ScheduleEditFrame(schedule, track)
+        PatternScriptEntities.JMRI.jmrit.operations.locations.schedules.ScheduleEditFrame(schedule, track)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -130,7 +127,7 @@ class CreatePatternReportGui:
         workEventPath = PatternScriptEntities.writeGenericReport(workEventName, textListForPrint)
         osSystem(PatternScriptEntities.openEditorByComputerType(workEventPath))
 
-        if jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
+        if PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
             Model.writeCsvSwitchList(modifiedReport, 'SC')
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
@@ -161,7 +158,7 @@ class CreatePatternReportGui:
         if not self.quickCheck():
             return
 
-        MOUSE_CLICKED.getSource().setBackground(java.awt.Color.GREEN)
+        MOUSE_CLICKED.getSource().setBackground(PatternScriptEntities.JAVA_AWT.Color.GREEN)
 
         ModelSetCarsForm.exportSetCarsFormToTp(self.setCarsForm, self.buttonDict['textBoxEntry'])
 

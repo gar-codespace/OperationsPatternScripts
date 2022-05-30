@@ -1,7 +1,8 @@
-"""Exports a TrainPlayer manifest into a csv for import into the TrainPlayer o2o script suite"""
+"""Exports a TrainPlayer manifest into a csv for import into the TrainPlayer o2o script suite.
+Callable from the pattern scripts subroutine or stand alone.
+"""
 
 import jmri
-import java
 
 import logging
 import time
@@ -14,9 +15,8 @@ SCRIPT_NAME ='OperationsPatternScripts.TrainPlayerSubroutine.BuiltTrainExport'
 SCRIPT_REV = 20220101
 
 SCRIPT_DIR = 'OperationsPatternScripts'
+# SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b1'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b2'
-# SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b3'
-# SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b4'
 
 class StandAlone():
     """Called when this script is used by itself"""
@@ -81,7 +81,7 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
 
         timeNow = time.time()
 
-        self.tpLog = logging.getLogger('TP.BuiltTrainExport')
+        self.tpLog = PatternScriptEntities.LOGGING.getLogger('TP.BuiltTrainExport')
         self.logger.initialLogMessage(self.tpLog)
 
         PatternScriptEntities.CheckTpDestination().directoryExists()
@@ -104,7 +104,7 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
         Model.WriteWorkEventListToTp(tpManifestHeader + tpManifestLocations).asCsv()
 
         self.tpLog.info('Export JMRI manifest to TrainPlyer: ' + self.train.getName())
-        self.tpLog.info('Export to TrainPlayer script location: ' + SCRIPT_ROOT)
+        self.tpLog.info('Export to TrainPlayer script location: ' + PLUGIN_ROOT)
         self.tpLog.info('Manifest export (sec): ' + ('%s' % (time.time() - timeNow))[:6])
 
         print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
@@ -116,8 +116,8 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
 
 if __name__ == "__builtin__":
 
-    SCRIPT_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
-    sysPath.append(SCRIPT_ROOT)
+    PLUGIN_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
+    sysPath.append(PLUGIN_ROOT)
     from psEntities import PatternScriptEntities
     from TrainPlayerSubroutine import Model
 
@@ -132,6 +132,6 @@ if __name__ == "__builtin__":
 
 else:
 
-    SCRIPT_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
+    PLUGIN_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
     from psEntities import PatternScriptEntities
     from TrainPlayerSubroutine import Model

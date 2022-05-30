@@ -1,9 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-import jmri
-
-import logging
+# import logging
 from os import path as osPath
 from os import system as osSystem
 from json import loads as jsonLoads, dumps as jsonDumps
@@ -16,7 +14,7 @@ from PatternTracksSubroutine import ControllerSetCarsForm
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.Model'
 SCRIPT_REV = 20220101
-psLog = logging.getLogger('PS.PT.Model')
+psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.Model')
 
 def updatePatternLocation(selectedItem=None):
     """Catches user edits of locations"""
@@ -174,7 +172,7 @@ def makeWorkEventList(patternListForJson, trackTotals):
     textWorkEventList = ModelEntities.readJsonWorkEventList(workEventName)
 
     textListForPrint = ViewEntities.makeTextListForPrint(textWorkEventList, trackTotals)
-    
+
     return workEventName, textListForPrint
 
 def onScButtonPress():
@@ -241,7 +239,7 @@ def writeCsvSwitchList(trackPattern, type):
 
     psLog.debug('Model.writeCsvSwitchList')
 
-    csvCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\csvSwitchLists\\Track Pattern Report.csv'
+    csvCopyTo = PatternScriptEntities.JMRI.util.FileUtil.getProfilePath() + 'operations\\csvSwitchLists\\Track Pattern Report.csv'
     csvObject = ModelEntities.makeCsvSwitchlist(trackPattern)
     with codecsOpen(csvCopyTo, 'wb', encoding=PatternScriptEntities.ENCODING) as csvWorkFile:
         csvWorkFile.write(csvObject)

@@ -3,44 +3,45 @@
 
 """Support methods for all Pattern Script subroutines"""
 
-import jmri
-from java import io as javaIo
-import java.awt
+import jmri as JMRI
+import java.awt as JAVA_AWT
+import javax.swing as JAVAX_SWING
+import logging as LOGGING
 
-import logging
 import time
+from java import io as javaIo
 from json import loads as jsonLoads, dumps as jsonDumps
 from codecs import open as codecsOpen
+
+PLUGIN_ROOT = ''
+ENCODING = ''
+BUNDLE = {}
 
 SCRIPT_NAME = 'OperationsPatternScripts.psEntities.PatternScriptEntities'
 SCRIPT_REV = 20220101
 
-LM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.LocationManager)
-TM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.trains.TrainManager)
-EM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.engines.EngineManager)
-CM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.rollingstock.cars.CarManager)
-SM = jmri.InstanceManager.getDefault(jmri.jmrit.operations.locations.schedules.ScheduleManager)
-PM = jmri.InstanceManager.getDefault(jmri.util.gui.GuiLafPreferencesManager)
+LM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.LocationManager)
+TM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.trains.TrainManager)
+EM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.engines.EngineManager)
+CM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.cars.CarManager)
+SM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.schedules.ScheduleManager)
+PM = JMRI.InstanceManager.getDefault(JMRI.util.gui.GuiLafPreferencesManager)
 
-SCRIPT_ROOT = ''
-ENCODING = ''
-BUNDLE = {}
-
-psLog = logging.getLogger('PS.PE.PatternScriptEntities')
+psLog = LOGGING.getLogger('PS.PE.PatternScriptEntities')
 
 class Logger:
 
     def __init__(self, logPath):
 
-        logFileFormat = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        self.psFileHandler = logging.FileHandler(logPath, mode='w', encoding='utf-8')
+        logFileFormat = LOGGING.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        self.psFileHandler = LOGGING.FileHandler(logPath, mode='w', encoding='utf-8')
         self.psFileHandler.setFormatter(logFileFormat)
 
         return
 
     def startLogger(self, log):
 
-        psLog = logging.getLogger(log)
+        psLog = LOGGING.getLogger(log)
         psLog.setLevel(10)
         psLog.addHandler(self.psFileHandler)
 
@@ -48,7 +49,7 @@ class Logger:
 
     def stopLogger(self, log):
 
-        psLog = logging.getLogger(log)
+        psLog = LOGGING.getLogger(log)
         psLog.removeHandler(self.psFileHandler)
 
         return
@@ -68,13 +69,13 @@ class CheckTpDestination:
 
     def __init__(self):
 
-        self.psLog = logging.getLogger('PS.TP.CheckTpDestination')
+        self.psLog = LOGGING.getLogger('PS.TP.CheckTpDestination')
 
         return
 
     def directoryExists(self):
 
-        tpDirectory = jmri.util.FileUtil.getHomePath() + 'AppData\\Roaming\\TrainPlayer\\Reports\\'
+        tpDirectory = JMRI.util.FileUtil.getHomePath() + 'AppData\\Roaming\\TrainPlayer\\Reports\\'
         tpDrrectoryFlag = javaIo.File(tpDirectory).isDirectory()
         if tpDrrectoryFlag:
             self.psLog.info('TrainPlayer destination directory OK')
@@ -120,7 +121,7 @@ def getStubPath():
     There is probably a method that already does this
     """
 
-    stubPath = 'file:///' + jmri.util.FileUtil.getPreferencesPath() + 'jmrihelp/psStub.html'
+    stubPath = 'file:///' + JMRI.util.FileUtil.getPreferencesPath() + 'jmrihelp/psStub.html'
     stubPath = stubPath.replace('\\', '/')
     stubPath = stubPath.replace(' ', '%20')
     stubPath = stubPath.replace('  ', '%20%20')
@@ -141,7 +142,7 @@ def timeStamp(epochTime=0):
 
 def writeGenericReport(fileName, textSwitchList):
 
-    textCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\patternReports\\' + fileName + '.txt'
+    textCopyTo = JMRI.util.FileUtil.getProfilePath() + 'operations\\patternReports\\' + fileName + '.txt'
     with codecsOpen(textCopyTo, 'wb', encoding=ENCODING) as textWorkFile:
         textWorkFile.write(textSwitchList)
 
@@ -150,7 +151,7 @@ def writeGenericReport(fileName, textSwitchList):
 def openEditorByComputerType(switchListLocation=None):
     """Opens a text file in a text editor for each type of computer."""
 
-    osType = jmri.util.SystemType.getType()
+    osType = JMRI.util.SystemType.getType()
     editorMatrix = readConfigFile('EM')
     textEditor = editorMatrix[str(osType)]
     openEditor = textEditor + '"' + switchListLocation + '"' # Double quotes escapes the & symbol
@@ -165,7 +166,7 @@ class validateStubFile:
 
     def __init__(self):
 
-        self.stubLocation = jmri.util.FileUtil.getPreferencesPath() + '\\jmrihelp\\'
+        self.stubLocation = JMRI.util.FileUtil.getPreferencesPath() + '\\jmrihelp\\'
         self.stubFileName = self.stubLocation + 'psStub.html'
         self.helpFilePath = ''
         self.newStubFile = ''
@@ -183,13 +184,13 @@ class validateStubFile:
 
     def makehelpFilePath(self):
 
-        self.helpFilePath = SCRIPT_ROOT + '\psSupport\psHelp.html'
+        self.helpFilePath = PLUGIN_ROOT + '\psSupport\psHelp.html'
         self.helpFilePath = javaIo.File(self.helpFilePath).toURI()
         self.helpFilePath = unicode(self.helpFilePath, ENCODING)
 
     def updateStubTemplate(self):
 
-        stubTemplateLocation = jmri.util.FileUtil.getProgramPath() + 'help\\' + psLocale() \
+        stubTemplateLocation = JMRI.util.FileUtil.getProgramPath() + 'help\\' + psLocale() \
         + '\\local\\stub_template.html'
 
         with codecsOpen(stubTemplateLocation, 'r', encoding=ENCODING) as template:
@@ -220,7 +221,7 @@ class validateStubFile:
 def validateFileDestinationDirestories():
     """Checks that the folders this plugin writes to exist"""
 
-    destDirPath = jmri.util.FileUtil.getProfilePath() + 'operations\\'
+    destDirPath = JMRI.util.FileUtil.getProfilePath() + 'operations\\'
     listOfDirectories = ['csvManifests', 'csvSwitchLists', 'jsonManifests', 'switchLists', 'patternReports']
     x = 0
     for directory in listOfDirectories:
@@ -254,21 +255,21 @@ def validateConfigFileVersion(currentRootDir):
 
 def backupConfigFile():
 
-    copyFrom = javaIo.File(jmri.util.FileUtil.getProfilePath() \
+    copyFrom = javaIo.File(JMRI.util.FileUtil.getProfilePath() \
              + 'operations\\PatternConfig.json')
-    copyTo = javaIo.File(jmri.util.FileUtil.getProfilePath() \
+    copyTo = javaIo.File(JMRI.util.FileUtil.getProfilePath() \
            + 'operations\\PatternConfig.json.bak')
-    jmri.util.FileUtil.copy(copyFrom, copyTo)
+    JMRI.util.FileUtil.copy(copyFrom, copyTo)
 
     return
 
 def restoreConfigFile():
 
-    copyFrom = javaIo.File(jmri.util.FileUtil.getProfilePath() \
+    copyFrom = javaIo.File(JMRI.util.FileUtil.getProfilePath() \
              + 'operations\PatternConfig.json.bak')
-    copyTo = javaIo.File(jmri.util.FileUtil.getProfilePath() \
+    copyTo = javaIo.File(JMRI.util.FileUtil.getProfilePath() \
            + 'operations\\PatternConfig.json')
-    jmri.util.FileUtil.copy(copyFrom, copyTo)
+    JMRI.util.FileUtil.copy(copyFrom, copyTo)
 
     return
 
@@ -303,7 +304,7 @@ def tryConfigFile():
 
 def getConfigFile():
 
-    configFileLoc = jmri.util.FileUtil.getProfilePath() + 'operations\PatternConfig.json'
+    configFileLoc = JMRI.util.FileUtil.getProfilePath() + 'operations\PatternConfig.json'
 
     with codecsOpen(configFileLoc, 'r', encoding='utf-8') as configWorkFile:
         patternConfig = jsonLoads(configWorkFile.read())
@@ -312,7 +313,7 @@ def getConfigFile():
 
 def writeConfigFile(configFile):
 
-    jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json'
+    jsonCopyTo = JMRI.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json'
     jsonObject = jsonDumps(configFile, indent=2, sort_keys=True)
     with codecsOpen(jsonCopyTo, 'wb', encoding='utf-8') as jsonWorkFile:
         jsonWorkFile.write(jsonObject)
@@ -321,10 +322,10 @@ def writeConfigFile(configFile):
 
 def writeNewConfigFile():
 
-    defaultConfigFilePath = SCRIPT_ROOT + '\psEntities\PatternConfig.json'
+    defaultConfigFilePath = PLUGIN_ROOT + '\psEntities\PatternConfig.json'
     copyFrom = javaIo.File(defaultConfigFilePath)
-    copyTo = javaIo.File(jmri.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json')
-    jmri.util.FileUtil.copy(copyFrom, copyTo)
+    copyTo = javaIo.File(JMRI.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json')
+    JMRI.util.FileUtil.copy(copyFrom, copyTo)
 
     return
 
@@ -332,10 +333,10 @@ def makePatternLog():
     """creates a pattern log for display based on the log level, as set by getBuildReportLevel"""
 
     outputPatternLog = ''
-    buildReportLevel = jmri.jmrit.operations.setup.Setup.getBuildReportLevel()
+    buildReportLevel = JMRI.jmrit.operations.setup.Setup.getBuildReportLevel()
     loggingIndex = readConfigFile('LI')
     logLevel = loggingIndex[buildReportLevel]
-    logFileLocation = jmri.util.FileUtil.getProfilePath() \
+    logFileLocation = JMRI.util.FileUtil.getProfilePath() \
                     + 'operations\\buildstatus\\PatternScriptsLog.txt'
     with codecsOpen(logFileLocation, 'r', encoding=ENCODING) as patternLogFile:
         while True:
@@ -387,7 +388,7 @@ def getCarColor():
     a = colorDefinition['CP'][colorDefinition['carColor']]["A"]
 
     backupConfigFile()
-    return java.awt.Color(r, g, b, a)
+    return JAVA_AWT.Color(r, g, b, a)
 
 def getLocoColor():
 
@@ -399,7 +400,7 @@ def getLocoColor():
     a = colorDefinition['CP'][colorDefinition['locoColor']]["A"]
 
     backupConfigFile()
-    return java.awt.Color(r, g, b, a)
+    return JAVA_AWT.Color(r, g, b, a)
 
 def getAlertColor():
 
@@ -411,4 +412,4 @@ def getAlertColor():
     a = colorDefinition['CP'][colorDefinition['alertColor']]["A"]
 
     backupConfigFile()
-    return java.awt.Color(r, g, b, a)
+    return JAVA_AWT.Color(r, g, b, a)

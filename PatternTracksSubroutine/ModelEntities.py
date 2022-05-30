@@ -1,11 +1,9 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-import jmri
-
 from codecs import open as codecsOpen
 from json import loads as jsonLoads, dumps as jsonDumps
-from xml.etree import ElementTree as ET
+# from xml.etree import ElementTree as ET
 
 from psEntities import PatternScriptEntities
 
@@ -254,7 +252,7 @@ def makeGenericHeader():
     """A generic header info for any switch list, used to make the JSON file"""
 
     listHeader = {}
-    listHeader['railroad'] = unicode(jmri.jmrit.operations.setup.Setup.getRailroadName(), PatternScriptEntities.ENCODING)
+    listHeader['railroad'] = unicode(PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getRailroadName(), PatternScriptEntities.ENCODING)
     listHeader['trainName'] = u'Train Name Placeholder'
     listHeader['trainDescription'] = u'Train Description Placeholder'
     listHeader['trainComment'] = u'Train Comment Placeholder'
@@ -267,7 +265,7 @@ def writeWorkEventListAsJson(switchList):
     """The generic switch list is written as a json"""
 
     switchListName = switchList['trainDescription']
-    jsonCopyTo = jmri.util.FileUtil.getProfilePath() \
+    jsonCopyTo = PatternScriptEntities.JMRI.util.FileUtil.getProfilePath() \
                + 'operations\\jsonManifests\\' + switchListName + '.json'
     jsonObject = jsonDumps(switchList, indent=2, sort_keys=True)
     with codecsOpen(jsonCopyTo, 'wb', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
@@ -277,21 +275,13 @@ def writeWorkEventListAsJson(switchList):
 
 def readJsonWorkEventList(workEventName):
 
-    jsonCopyFrom = jmri.util.FileUtil.getProfilePath() \
+    jsonCopyFrom = PatternScriptEntities.JMRI.util.FileUtil.getProfilePath() \
                  + 'operations\\jsonManifests\\' + workEventName + '.json'
     with codecsOpen(jsonCopyFrom, 'r', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
         jsonEventList = jsonWorkFile.read()
     textWorkEventList = jsonLoads(jsonEventList)
 
     return textWorkEventList
-
-# def writeTextSwitchList(fileName, textSwitchList):
-#
-#     textCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + fileName + '.txt'
-#     with codecsOpen(textCopyTo, 'wb', encoding=PatternScriptEntities.ENCODING) as textWorkFile:
-#         textWorkFile.write(textSwitchList)
-#
-#     return
 
 def makeInitialTrackList(location):
 
@@ -362,7 +352,7 @@ def makeCsvSwitchlist(trackPattern):
 
 def appendJsonBody(trainPlayerSwitchList):
 
-    jsonCopyFrom = jmri.util.FileUtil.getProfilePath() \
+    jsonCopyFrom = PatternScriptEntities.JMRI.util.FileUtil.getProfilePath() \
                  + 'operations\\jsonManifests\\TrainPlayerSwitchlist.json'
     with codecsOpen(jsonCopyFrom, 'r', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
         switchList = jsonWorkFile.read()
@@ -371,7 +361,7 @@ def appendJsonBody(trainPlayerSwitchList):
     jTemp.append(trainPlayerSwitchList)
     jsonSwitchList['locations'] = jTemp
 
-    jsonCopyTo = jmri.util.FileUtil.getProfilePath() \
+    jsonCopyTo = PatternScriptEntities.JMRI.util.FileUtil.getProfilePath() \
                + 'operations\\jsonManifests\\TrainPlayerSwitchlist.json'
     jsonObject = jsonDumps(jsonSwitchList, indent=2, sort_keys=True)
     with codecsOpen(jsonCopyTo, 'wb', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
