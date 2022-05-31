@@ -1,11 +1,8 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-# import logging
 from json import loads as jsonLoads, dumps as jsonDumps
-# from os import mkdir as osMakeDir
 from codecs import open as codecsOpen
-from HTMLParser import HTMLParser
 
 from psEntities import PatternScriptEntities
 from TrainPlayerSubroutine import ModelEntities
@@ -187,12 +184,12 @@ class ProcessWorkEventList:
         # csv writer does not encode utf-8
 
         self.psLog.debug('Model.makeTpHeader')
-        # https://stackoverflow.com/questions/2087370/decode-html-entities-in-python-string
-        header = 'HN,' + HTMLParser().unescape(appendedTpSwitchList['railroad']) + '\n'
-        header += 'HT,' + HTMLParser().unescape(appendedTpSwitchList['trainName']) + '\n'
-        header += 'HD,' + HTMLParser().unescape(appendedTpSwitchList['trainDescription']) + '\n'
-        header += 'HC,' + HTMLParser().unescape(appendedTpSwitchList['trainComment']) + '\n'
-        header += 'HV,' + HTMLParser().unescape(appendedTpSwitchList['date']) + '\n'
+
+        header = 'HN,' + appendedTpSwitchList['railroad'] + '\n'
+        header += 'HT,' + appendedTpSwitchList['trainName'] + '\n'
+        header += 'HD,' + appendedTpSwitchList['trainDescription'] + '\n'
+        header += 'HC,' + appendedTpSwitchList['trainComment'] + '\n'
+        header += 'HV,' + appendedTpSwitchList['date'] + '\n'
         header += u'WT,' + str(len(appendedTpSwitchList['locations'])) + '\n'
 
         return header

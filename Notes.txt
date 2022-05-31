@@ -48,7 +48,7 @@ Tested Items:
     Language changes OK
     Language bundle sketched in, to be expanded
     Bundle added with French test case
-    BUNDLE calls moved to only 'View*' methods and classes
+    BUNDLE calls in 'View*' methods only as much as possible
 
   TrainPlayer
     Add a listener to monitor if a new train is created or deleted, builtTrain listeners updated accordingly

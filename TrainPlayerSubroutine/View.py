@@ -3,9 +3,6 @@
 
 """Implemented in v3"""
 
-# import logging
-# from os import system as osSystem
-
 from psEntities import PatternScriptEntities
 from psBundle import Bundle
 from TrainPlayerSubroutine import ViewEntities
