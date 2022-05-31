@@ -82,8 +82,8 @@ class CheckTpDestination:
         if tpDrrectoryFlag:
             self.psLog.info('TrainPlayer destination directory OK')
         else:
-            self.psLog.warning('TrainPlayer destination directory not found')
-            print('TrainPlayer destination directory not found')
+            self.psLog.warning('TrainPlayer Reports destination directory not found')
+            print('TrainPlayer Reports destination directory not found')
 
         return tpDrrectoryFlag
 

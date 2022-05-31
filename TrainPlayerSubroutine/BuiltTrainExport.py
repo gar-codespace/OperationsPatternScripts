@@ -84,29 +84,32 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
         self.tpLog = PatternScriptEntities.LOGGING.getLogger('TP.BuiltTrainExport')
         self.logger.initialLogMessage(self.tpLog)
 
-        PatternScriptEntities.CheckTpDestination().directoryExists()
+        if PatternScriptEntities.CheckTpDestination().directoryExists():
 
-        jmriExport = Model.ExportJmriLocations()
-        locationList = jmriExport.makeLocationList()
-        jmriExport.toTrainPlayer(locationList)
-        self.tpLog.info('Export JMRI locations to TrainPlayer')
+            jmriExport = Model.ExportJmriLocations()
+            locationList = jmriExport.makeLocationList()
+            jmriExport.toTrainPlayer(locationList)
+            self.tpLog.info('Export JMRI locations to TrainPlayer')
 
-        jmriManifestTranslator = Model.JmriTranslationToTp()
-        builtTrainAsDict = jmriManifestTranslator.getTrainAsDict(self.train)
-        translatedManifest = jmriManifestTranslator.translateManifestHeader(builtTrainAsDict)
-        translatedManifest['locations'] = jmriManifestTranslator.translateManifestBody(builtTrainAsDict)
+            jmriManifestTranslator = Model.JmriTranslationToTp()
+            builtTrainAsDict = jmriManifestTranslator.getTrainAsDict(self.train)
+            translatedManifest = jmriManifestTranslator.translateManifestHeader(builtTrainAsDict)
+            translatedManifest['locations'] = jmriManifestTranslator.translateManifestBody(builtTrainAsDict)
 
-        processedManifest = Model.ProcessWorkEventList()
-        processedManifest.writeTpWorkEventListAsJson(translatedManifest)
-        tpManifestHeader = processedManifest.makeTpHeader(translatedManifest)
-        tpManifestLocations = processedManifest.makeTpLocations(translatedManifest)
+            processedManifest = Model.ProcessWorkEventList()
+            processedManifest.writeTpWorkEventListAsJson(translatedManifest)
+            tpManifestHeader = processedManifest.makeTpHeader(translatedManifest)
+            tpManifestLocations = processedManifest.makeTpLocations(translatedManifest)
 
-        Model.WriteWorkEventListToTp(tpManifestHeader + tpManifestLocations).asCsv()
+            Model.WriteWorkEventListToTp(tpManifestHeader + tpManifestLocations).asCsv()
 
-        self.tpLog.info('Export JMRI manifest to TrainPlyer: ' + self.train.getName())
+            self.tpLog.info('Export JMRI manifest to TrainPlyer: ' + self.train.getName())
+        else:
+            self.tpLog.warning('TrainPlayer Reports directory not found, manifest export did not complete')
+
+
         self.tpLog.info('Export to TrainPlayer script location: ' + PLUGIN_ROOT)
         self.tpLog.info('Manifest export (sec): ' + ('%s' % (time.time() - timeNow))[:6])
-
         print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
         print('Manifest export (sec): ' + ('%s' % (time.time() - timeNow))[:6])
 
