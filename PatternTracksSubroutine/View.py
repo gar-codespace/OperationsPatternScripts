@@ -1,9 +1,6 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-# import logging
-from os import system as osSystem
-
 from psEntities import PatternScriptEntities
 from PatternTracksSubroutine import ViewEntities
 
@@ -22,7 +19,8 @@ class ManageGui:
         """Make the frame that all the pattern tracks controls are added to"""
 
         subroutineFrame = PatternScriptEntities.JAVX_SWING.JPanel() # the pattern tracks panel
-        subroutineFrame.setLayout(PatternScriptEntities.JAVX_SWING.BoxLayout(subroutineFrame, PatternScriptEntities.JAVX_SWING.BoxLayout.Y_AXIS))
+        subroutineFrame.setLayout(PatternScriptEntities.JAVX_SWING.BoxLayout(
+                subroutineFrame, PatternScriptEntities.JAVX_SWING.BoxLayout.Y_AXIS))
         subroutineFrame.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder( \
                 PatternScriptEntities.BUNDLE['Pattern Tracks Subroutine'] \
                 )
@@ -41,13 +39,3 @@ class ManageGui:
         return subroutinesPanel, subroutinePanelWidgets
 
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-
-# def displayTextSwitchList(textSwitchList):
-#     """Opens the text switchlist to Notepad or other"""
-#
-#     psLog.debug('View.displayTextSwitchList')
-#
-#     fileToDisplay = PatternScriptEntities.PROFILE_PATH + 'operations\\switchLists\\' \
-#                   + textSwitchList.splitlines()[0] + '.txt'
-#
-#     return osSystem(PatternScriptEntities.openEditorByComputerType(fileToDisplay))

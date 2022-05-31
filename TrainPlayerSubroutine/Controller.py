@@ -3,9 +3,6 @@
 
 """The TrainPlayer Subroutine will be implemented in V3, this is just the framework"""
 
-# import logging
-# from os import system as osSystem
-
 from psEntities import PatternScriptEntities
 from TrainPlayerSubroutine import Model
 from TrainPlayerSubroutine import View

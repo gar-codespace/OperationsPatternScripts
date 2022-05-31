@@ -1,12 +1,6 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-# import logging
-from os import path as osPath
-# from json import loads as jsonLoads, dumps as jsonDumps
-# from codecs import open as codecsOpen
-# from os import system as osSystem
-
 from psEntities import PatternScriptEntities
 from PatternTracksSubroutine import ModelEntities
 from PatternTracksSubroutine import ViewEntities

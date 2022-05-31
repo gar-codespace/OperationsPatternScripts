@@ -3,7 +3,6 @@
 
 from codecs import open as codecsOpen
 from json import loads as jsonLoads, dumps as jsonDumps
-# from xml.etree import ElementTree as ET
 
 from psEntities import PatternScriptEntities
 

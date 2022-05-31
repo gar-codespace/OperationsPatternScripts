@@ -4,7 +4,7 @@ Callable from the pattern scripts subroutine or stand alone.
 
 import jmri
 
-import logging
+# import logging
 import time
 from json import loads as jsonLoads, dumps as jsonDumps
 # from HTMLParser import HTMLParser

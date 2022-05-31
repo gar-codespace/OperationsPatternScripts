@@ -3,9 +3,6 @@
 
 """Makes a 'Set Cars Form for Track X' form for each selected track"""
 
-# import logging
-# from os import system as osSystem
-
 from psEntities import PatternScriptEntities
 from PatternTracksSubroutine import Model
 from PatternTracksSubroutine import ModelSetCarsForm

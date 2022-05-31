@@ -1,9 +1,6 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-# import logging
-# from os import system as osSystem
-
 from psEntities import PatternScriptEntities
 from PatternTracksSubroutine import Model
 from PatternTracksSubroutine import View

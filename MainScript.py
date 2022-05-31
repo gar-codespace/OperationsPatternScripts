@@ -10,7 +10,6 @@ import logging
 from java.beans import PropertyChangeListener
 from apps import Apps
 import time
-# from os import system as osSystem
 from sys import path as sysPath
 
 SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
@@ -450,7 +449,6 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
             patternConfig['PT'].update({'TI': True})
             TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE["Disable TrainPlayer"])
 
-            # PatternScriptEntities.CheckTpDestination().directoryExists()
             self.trainsTableModel.addTableModelListener(self.trainsTableListener)
             self.addBuiltTrainListener()
 
@@ -470,7 +468,6 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         logFilePath = PatternScriptEntities.PROFILE_PATH + 'operations\\buildstatus\\' + logFileName + '.txt'
         PatternScriptEntities.genericWriteReport(logFilePath, patternLog)
         PatternScriptEntities.genericDisplayReport(logFilePath)
-        # osSystem(PatternScriptEntities.openEditorByComputerType(logFilePath))
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
