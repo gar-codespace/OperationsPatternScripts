@@ -241,6 +241,6 @@ def writeCsvSwitchList(trackPattern):
 
     csvName, csvReport = ModelEntities.makeCsvSwitchlist(trackPattern)
     csvPath = PatternScriptEntities.PROFILE_PATH + 'operations\\csvSwitchLists\\' + csvName + '.csv'
-    PatternScriptEntities.writeGenericReport(csvPath, csvReport)
+    PatternScriptEntities.genericWriteReport(csvPath, csvReport)
 
     return

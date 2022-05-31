@@ -4,7 +4,7 @@
 """Makes a 'Set Cars Form for Track X' form for each selected track"""
 
 # import logging
-from os import system as osSystem
+# from os import system as osSystem
 
 from psEntities import PatternScriptEntities
 from PatternTracksSubroutine import Model
@@ -125,8 +125,9 @@ class CreatePatternReportGui:
 
         workEventName, textListForPrint = Model.makeWorkEventList(modifiedReport, trackTotals=False)
         workEventPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\' + workEventName + '.txt'
-        PatternScriptEntities.writeGenericReport(workEventPath, textListForPrint)
-        osSystem(PatternScriptEntities.openEditorByComputerType(workEventPath))
+        PatternScriptEntities.genericWriteReport(workEventPath, textListForPrint)
+        PatternScriptEntities.genericDisplayReport(workEventPath)
+        # osSystem(PatternScriptEntities.openEditorByComputerType(workEventPath))
 
         if PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
             Model.writeCsvSwitchList(modifiedReport)

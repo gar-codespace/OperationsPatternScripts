@@ -12,6 +12,7 @@ import time
 from java import io as javaIo
 from json import loads as jsonLoads, dumps as jsonDumps
 from codecs import open as codecsOpen
+from os import system as osSystem
 
 PLUGIN_ROOT = ''
 ENCODING = ''
@@ -141,10 +142,16 @@ def timeStamp(epochTime=0):
 
     return time.strftime('%a %b %d %Y %I:%M %p %Z', time.gmtime(epochTime - timeOffset))
 
-def writeGenericReport(filePath, textSwitchList):
+def genericWriteReport(filePath, textSwitchList):
 
     with codecsOpen(filePath, 'wb', encoding=ENCODING) as textWorkFile:
         textWorkFile.write(textSwitchList)
+
+    return
+
+def genericDisplayReport(genericReportPath):
+
+    osSystem(openEditorByComputerType(genericReportPath))
 
     return
 

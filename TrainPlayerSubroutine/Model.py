@@ -52,7 +52,7 @@ class ExportJmriLocations:
                     + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Locations.csv"
 
             jmriLocationsFile = u'Locale,Industry\n' + csvLocations
-            PatternScriptEntities.writeGenericReport(jmriLocationsPath, jmriLocationsFile)
+            PatternScriptEntities.genericWriteReport(jmriLocationsPath, jmriLocationsFile)
 
             self.psLog.info('TrainPlayer locations export completed')
 
@@ -163,7 +163,7 @@ class ProcessWorkEventList:
         reportTitle = appendedTpSwitchList['trainDescription']
         jsonReoprtPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + reportTitle + '.json'
         jsonReport = jsonDumps(appendedTpSwitchList, indent=2, sort_keys=True)
-        PatternScriptEntities.writeGenericReport(jsonReoprtPath, jsonReport)
+        PatternScriptEntities.genericWriteReport(jsonReoprtPath, jsonReport)
 
         print(SCRIPT_NAME + '.ProcessWorkEventList ' + str(SCRIPT_REV))
 
@@ -186,7 +186,7 @@ class WriteWorkEventListToTp:
         self.psLog.debug('Model.asCsv')
 
         try: # Catch TrainPlayer not installed
-            PatternScriptEntities.writeGenericReport(self.jmriManifestPath, self.workEventList)
+            PatternScriptEntities.genericWriteReport(self.jmriManifestPath, self.workEventList)
         except IOError:
             self.psLog.warning('Directory not found, TrainPlayer switch list export did not complete')
 

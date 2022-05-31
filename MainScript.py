@@ -10,7 +10,7 @@ import logging
 from java.beans import PropertyChangeListener
 from apps import Apps
 import time
-from os import system as osSystem
+# from os import system as osSystem
 from sys import path as sysPath
 
 SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
@@ -468,8 +468,9 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         logFileName, patternLog = PatternScriptEntities.makePatternLog()
         logFilePath = PatternScriptEntities.PROFILE_PATH + 'operations\\buildstatus\\' + logFileName + '.txt'
-        PatternScriptEntities.writeGenericReport(logFilePath, patternLog)
-        osSystem(PatternScriptEntities.openEditorByComputerType(logFilePath))
+        PatternScriptEntities.genericWriteReport(logFilePath, patternLog)
+        PatternScriptEntities.genericDisplayReport(logFilePath)
+        # osSystem(PatternScriptEntities.openEditorByComputerType(logFilePath))
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

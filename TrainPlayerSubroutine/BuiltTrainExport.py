@@ -7,7 +7,7 @@ import jmri
 import logging
 import time
 from json import loads as jsonLoads, dumps as jsonDumps
-from HTMLParser import HTMLParser
+# from HTMLParser import HTMLParser
 # from codecs import open as codecsOpen
 from sys import path as sysPath
 

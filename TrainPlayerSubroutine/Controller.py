@@ -4,7 +4,7 @@
 """The TrainPlayer Subroutine will be implemented in V3, this is just the framework"""
 
 # import logging
-from os import system as osSystem
+# from os import system as osSystem
 
 from psEntities import PatternScriptEntities
 from TrainPlayerSubroutine import Model
@@ -58,8 +58,9 @@ class StartUp:
             updatedInventory.update()
             errorReport = updatedInventory.getErrorReport()
             errorReportPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\Update Inventory.txt'
-            PatternScriptEntities.writeGenericReport(errorReportPath, errorReport)
-            osSystem(PatternScriptEntities.openEditorByComputerType(errorReportPath))
+            PatternScriptEntities.genericWriteReport(errorReportPath, errorReport)
+            PatternScriptEntities.genericDisplayReport(errorReportPath)
+            # osSystem(PatternScriptEntities.openEditorByComputerType(errorReportPath))
 
             self.psLog.info('Updated Rolling stock locations from TrainPlayer')
         else:
