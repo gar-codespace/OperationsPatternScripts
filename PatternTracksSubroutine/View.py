@@ -42,12 +42,12 @@ class ManageGui:
 
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
-def displayTextSwitchList(textSwitchList):
-    """Opens the text switchlist to Notepad or other"""
-
-    psLog.debug('View.displayTextSwitchList')
-
-    fileToDisplay = PatternScriptEntities.JMRI.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' \
-                  + textSwitchList.splitlines()[0] + '.txt'
-
-    return osSystem(PatternScriptEntities.openEditorByComputerType(fileToDisplay))
+# def displayTextSwitchList(textSwitchList):
+#     """Opens the text switchlist to Notepad or other"""
+#
+#     psLog.debug('View.displayTextSwitchList')
+#
+#     fileToDisplay = PatternScriptEntities.PROFILE_PATH + 'operations\\switchLists\\' \
+#                   + textSwitchList.splitlines()[0] + '.txt'
+#
+#     return osSystem(PatternScriptEntities.openEditorByComputerType(fileToDisplay))

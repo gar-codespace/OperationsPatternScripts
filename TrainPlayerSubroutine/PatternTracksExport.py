@@ -48,9 +48,8 @@ class ExportJmriLocations:
         jmriLocationsPath = PatternScriptEntities.JMRI.util.FileUtil.getHomePath() \
                 + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Locations.csv"
 
-        with codecsOpen(jmriLocationsPath, 'wb', encoding=PatternScriptEntities.ENCODING) as csvWorkFile:
-            csvHeader = u'Locale,Industry\n'
-            csvWorkFile.write(csvHeader + csvLocations)
+        jmriLocationFile = u'Locale,Industry\n' + csvLocations
+        PatternScriptEntities.writeGenericReport(jmriLocationsPath, jmriLocationFile)
 
         print(SCRIPT_NAME + '.ExportJmriLocations ' + str(SCRIPT_REV))
 
@@ -109,7 +108,7 @@ class TrackPatternTranslationToTp:
         headerNames = PatternScriptEntities.readConfigFile('PT')
         reportTitle = PatternScriptEntities.BUNDLE['Work Event List for TrainPlayer']
         # reportTitle = headerNames['TD']['TP']
-        jsonFile = PatternScriptEntities.JMRI.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
+        jsonFile = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + reportTitle + '.json'
         with codecsOpen(jsonFile, 'r', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
             jsonSwitchList = jsonWorkFile.read()
         tpSwitchList = jsonLoads(jsonSwitchList)
@@ -261,10 +260,9 @@ class ProcessWorkEventList:
         self.psLog.debug('PatternTracksExport.writeTpWorkEventListAsJson')
 
         reportTitle = appendedTpSwitchList['trainDescription']
-        jsonFile = PatternScriptEntities.JMRI.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
-        jsonObject = jsonDumps(appendedTpSwitchList, indent=2, sort_keys=True)
-        with codecsOpen(jsonFile, 'wb', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
-            jsonWorkFile.write(jsonObject)
+        jsonReportPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + reportTitle + '.json'
+        jsonReportFile = jsonDumps(appendedTpSwitchList, indent=2, sort_keys=True)
+        PatternScriptEntities.writeGenericReport(jsonReportPath, jsonReportFile)
 
         print(SCRIPT_NAME + '.ProcessWorkEventList ' + str(SCRIPT_REV))
 
@@ -326,8 +324,7 @@ class WriteWorkEventListToTp:
 
         self.psLog.debug('PatternTracksExport.asCsv')
 
-        with codecsOpen(self.jmriManifestPath, 'wb', encoding=PatternScriptEntities.ENCODING) as csvWorkFile:
-            csvWorkFile.write(self.workEventList)
+        PatternScriptEntities.writeGenericReport(self.jmriManifestPath, self.workEventList)
 
         print(SCRIPT_NAME + '.WriteWorkEventListToTp ' + str(SCRIPT_REV))
 

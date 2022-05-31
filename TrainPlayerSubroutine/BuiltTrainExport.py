@@ -8,7 +8,7 @@ import logging
 import time
 from json import loads as jsonLoads, dumps as jsonDumps
 from HTMLParser import HTMLParser
-from codecs import open as codecsOpen
+# from codecs import open as codecsOpen
 from sys import path as sysPath
 
 SCRIPT_NAME ='OperationsPatternScripts.TrainPlayerSubroutine.BuiltTrainExport'
@@ -65,7 +65,7 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
         self.SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.BuiltTrainExport.ManifestForTrainPlayer'
         self.SCRIPT_REV = 20220101
 
-        logPath = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\BuiltTrainExportLog.txt'
+        logPath = PatternScriptEntities.PROFILE_PATH + 'operations\\buildstatus\\BuiltTrainExportLog.txt'
         self.logger = PatternScriptEntities.Logger(logPath)
         self.logger.startLogger('TP')
 

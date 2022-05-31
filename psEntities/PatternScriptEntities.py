@@ -16,6 +16,7 @@ from codecs import open as codecsOpen
 PLUGIN_ROOT = ''
 ENCODING = ''
 BUNDLE = {}
+PROFILE_PATH = JMRI.util.FileUtil.getProfilePath()
 
 SCRIPT_NAME = 'OperationsPatternScripts.psEntities.PatternScriptEntities'
 SCRIPT_REV = 20220101
@@ -140,13 +141,12 @@ def timeStamp(epochTime=0):
 
     return time.strftime('%a %b %d %Y %I:%M %p %Z', time.gmtime(epochTime - timeOffset))
 
-def writeGenericReport(fileName, textSwitchList):
+def writeGenericReport(filePath, textSwitchList):
 
-    textCopyTo = JMRI.util.FileUtil.getProfilePath() + 'operations\\patternReports\\' + fileName + '.txt'
-    with codecsOpen(textCopyTo, 'wb', encoding=ENCODING) as textWorkFile:
+    with codecsOpen(filePath, 'wb', encoding=ENCODING) as textWorkFile:
         textWorkFile.write(textSwitchList)
 
-    return textCopyTo
+    return
 
 def openEditorByComputerType(switchListLocation=None):
     """Opens a text file in a text editor for each type of computer."""

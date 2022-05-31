@@ -292,8 +292,7 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
     def init(self):
 
-        logPath = PatternScriptEntities.JMRI.util.FileUtil.getProfilePath() \
-                + 'operations\\buildstatus\\PatternScriptsLog.txt'
+        logPath = PatternScriptEntities.PROFILE_PATH  + 'operations\\buildstatus\\PatternScriptsLog.txt'
         self.logger = PatternScriptEntities.Logger(logPath)
         self.logger.startLogger('PS')
 
@@ -468,7 +467,8 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         self.psLog.debug(OPEN_LOG_EVENT)
 
         logFileName, patternLog = PatternScriptEntities.makePatternLog()
-        logFilePath = PatternScriptEntities.writeGenericReport(logFileName, patternLog)
+        logFilePath = PatternScriptEntities.PROFILE_PATH + 'operations\\buildstatus\\' + logFileName + '.txt'
+        PatternScriptEntities.writeGenericReport(logFilePath, patternLog)
         osSystem(PatternScriptEntities.openEditorByComputerType(logFilePath))
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

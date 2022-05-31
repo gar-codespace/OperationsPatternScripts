@@ -265,7 +265,7 @@ def writeWorkEventListAsJson(switchList):
     """The generic switch list is written as a json"""
 
     switchListName = switchList['trainDescription']
-    jsonCopyTo = PatternScriptEntities.JMRI.util.FileUtil.getProfilePath() \
+    jsonCopyTo = PatternScriptEntities.PROFILE_PATH \
                + 'operations\\jsonManifests\\' + switchListName + '.json'
     jsonObject = jsonDumps(switchList, indent=2, sort_keys=True)
     with codecsOpen(jsonCopyTo, 'wb', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
@@ -275,7 +275,7 @@ def writeWorkEventListAsJson(switchList):
 
 def readJsonWorkEventList(workEventName):
 
-    jsonCopyFrom = PatternScriptEntities.JMRI.util.FileUtil.getProfilePath() \
+    jsonCopyFrom = PatternScriptEntities.PROFILE_PATH \
                  + 'operations\\jsonManifests\\' + workEventName + '.json'
     with codecsOpen(jsonCopyFrom, 'r', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
         jsonEventList = jsonWorkFile.read()
@@ -348,11 +348,11 @@ def makeCsvSwitchlist(trackPattern):
                             + car['RWE'] \
                             + '\n'
 
-    return csvSwitchList
+    return trackPattern['trainDescription'], csvSwitchList
 
 def appendJsonBody(trainPlayerSwitchList):
 
-    jsonCopyFrom = PatternScriptEntities.JMRI.util.FileUtil.getProfilePath() \
+    jsonCopyFrom = PatternScriptEntities.PROFILE_PATH \
                  + 'operations\\jsonManifests\\TrainPlayerSwitchlist.json'
     with codecsOpen(jsonCopyFrom, 'r', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
         switchList = jsonWorkFile.read()
@@ -361,7 +361,7 @@ def appendJsonBody(trainPlayerSwitchList):
     jTemp.append(trainPlayerSwitchList)
     jsonSwitchList['locations'] = jTemp
 
-    jsonCopyTo = PatternScriptEntities.JMRI.util.FileUtil.getProfilePath() \
+    jsonCopyTo = PatternScriptEntities.PROFILE_PATH \
                + 'operations\\jsonManifests\\TrainPlayerSwitchlist.json'
     jsonObject = jsonDumps(jsonSwitchList, indent=2, sort_keys=True)
     with codecsOpen(jsonCopyTo, 'wb', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:

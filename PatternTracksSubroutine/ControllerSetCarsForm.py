@@ -124,11 +124,12 @@ class CreatePatternReportGui:
         modifiedReport = Model.makeReport(locationDict, 'SC')
 
         workEventName, textListForPrint = Model.makeWorkEventList(modifiedReport, trackTotals=False)
-        workEventPath = PatternScriptEntities.writeGenericReport(workEventName, textListForPrint)
+        workEventPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\' + workEventName + '.txt'
+        PatternScriptEntities.writeGenericReport(workEventPath, textListForPrint)
         osSystem(PatternScriptEntities.openEditorByComputerType(workEventPath))
 
         if PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
-            Model.writeCsvSwitchList(modifiedReport, 'SC')
+            Model.writeCsvSwitchList(modifiedReport)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

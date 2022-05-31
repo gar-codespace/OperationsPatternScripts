@@ -4,7 +4,7 @@
 # import logging
 from json import loads as jsonLoads, dumps as jsonDumps
 from os import mkdir as osMakeDir
-from codecs import open as codecsOpen
+# from codecs import open as codecsOpen
 from HTMLParser import HTMLParser
 
 from psEntities import PatternScriptEntities
@@ -51,9 +51,8 @@ class ExportJmriLocations:
             jmriLocationsPath = PatternScriptEntities.JMRI.util.FileUtil.getHomePath() \
                     + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Locations.csv"
 
-            with codecsOpen(jmriLocationsPath, 'wb', encoding=PatternScriptEntities.ENCODING) as csvWorkFile:
-                csvHeader = u'Locale,Industry\n'
-                csvWorkFile.write(csvHeader + csvLocations)
+            jmriLocationsFile = u'Locale,Industry\n' + csvLocations
+            PatternScriptEntities.writeGenericReport(jmriLocationsPath, jmriLocationsFile)
 
             self.psLog.info('TrainPlayer locations export completed')
 
@@ -162,10 +161,9 @@ class ProcessWorkEventList:
         self.psLog.debug('Model.writeTpWorkEventListAsJson')
 
         reportTitle = appendedTpSwitchList['trainDescription']
-        jsonFile = PatternScriptEntities.JMRI.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + reportTitle + '.json'
-        jsonObject = jsonDumps(appendedTpSwitchList, indent=2, sort_keys=True)
-        with codecsOpen(jsonFile, 'wb', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
-            jsonWorkFile.write(jsonObject)
+        jsonReoprtPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + reportTitle + '.json'
+        jsonReport = jsonDumps(appendedTpSwitchList, indent=2, sort_keys=True)
+        PatternScriptEntities.writeGenericReport(jsonReoprtPath, jsonReport)
 
         print(SCRIPT_NAME + '.ProcessWorkEventList ' + str(SCRIPT_REV))
 
@@ -188,8 +186,7 @@ class WriteWorkEventListToTp:
         self.psLog.debug('Model.asCsv')
 
         try: # Catch TrainPlayer not installed
-            with codecsOpen(self.jmriManifestPath, 'wb', encoding=PatternScriptEntities.ENCODING) as csvWorkFile:
-                csvWorkFile.write(self.workEventList)
+            PatternScriptEntities.writeGenericReport(self.jmriManifestPath, self.workEventList)
         except IOError:
             self.psLog.warning('Directory not found, TrainPlayer switch list export did not complete')
 

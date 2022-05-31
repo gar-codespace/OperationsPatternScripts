@@ -57,8 +57,9 @@ class StartUp:
         if updatedInventory.checkList():
             updatedInventory.update()
             errorReport = updatedInventory.getErrorReport()
-            reportPath = PatternScriptEntities.writeGenericReport('Update Inventory', errorReport)
-            osSystem(PatternScriptEntities.openEditorByComputerType(reportPath))
+            errorReportPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\Update Inventory.txt'
+            PatternScriptEntities.writeGenericReport(errorReportPath, errorReport)
+            osSystem(PatternScriptEntities.openEditorByComputerType(errorReportPath))
 
             self.psLog.info('Updated Rolling stock locations from TrainPlayer')
         else:

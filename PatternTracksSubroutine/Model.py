@@ -3,9 +3,9 @@
 
 # import logging
 from os import path as osPath
-from os import system as osSystem
-from json import loads as jsonLoads, dumps as jsonDumps
-from codecs import open as codecsOpen
+# from json import loads as jsonLoads, dumps as jsonDumps
+# from codecs import open as codecsOpen
+# from os import system as osSystem
 
 from psEntities import PatternScriptEntities
 from PatternTracksSubroutine import ModelEntities
@@ -234,15 +234,13 @@ def updateLocations():
 
     return newConfigFile
 
-def writeCsvSwitchList(trackPattern, type):
+def writeCsvSwitchList(trackPattern):
     """Rewrite this to write from the json file"""
 
     psLog.debug('Model.writeCsvSwitchList')
 
-    csvCopyTo = PatternScriptEntities.JMRI.util.FileUtil.getProfilePath() + 'operations\\csvSwitchLists\\Track Pattern Report.csv'
-    csvObject = ModelEntities.makeCsvSwitchlist(trackPattern)
-    with codecsOpen(csvCopyTo, 'wb', encoding=PatternScriptEntities.ENCODING) as csvWorkFile:
-        csvWorkFile.write(csvObject)
+    csvName, csvReport = ModelEntities.makeCsvSwitchlist(trackPattern)
+    csvPath = PatternScriptEntities.PROFILE_PATH + 'operations\\csvSwitchLists\\' + csvName + '.csv'
+    PatternScriptEntities.writeGenericReport(csvPath, csvReport)
 
-    PatternScriptEntities.backupConfigFile()
     return
