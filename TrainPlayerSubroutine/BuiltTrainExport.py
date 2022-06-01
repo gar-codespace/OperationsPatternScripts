@@ -5,7 +5,6 @@ Callable from the pattern scripts subroutine or stand alone.
 import jmri
 
 import time
-from json import loads as jsonLoads, dumps as jsonDumps
 from sys import path as sysPath
 
 SCRIPT_NAME ='OperationsPatternScripts.TrainPlayerSubroutine.BuiltTrainExport'
@@ -15,12 +14,37 @@ SCRIPT_DIR = 'OperationsPatternScripts'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b1'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b2'
 
-class StandAlone():
+class StandAloneLogging():
     """Called when this script is used by itself"""
 
     def __init__(self):
 
+        logPath = PatternScriptEntities.PROFILE_PATH  + 'operations\\buildstatus\\BuiltTrainExportLog.txt'
+        self.logger = PatternScriptEntities.Logger(logPath)
         self.tpLog = PatternScriptEntities.LOGGING.getLogger('TP.StandAlone')
+
+        return
+
+    def startLogging(self):
+
+        self.logger.startLogger('TP')
+        self.logger.initialLogMessage(self.tpLog)
+
+        return
+
+    def stopLogging(self):
+
+        self.logger.stopLogger('TP')
+
+        return
+
+
+class FindTrain:
+    """Called when this script is used by itself"""
+
+    def __init__(self):
+
+        self.tpLog = PatternScriptEntities.LOGGING.getLogger('TP.FindTrain')
 
         return
 
@@ -57,7 +81,7 @@ class StandAlone():
 
         manifest = jmri.util.FileUtil.readFile(jmri.jmrit.operations.trains.JsonManifest(train).getFile())
 
-        return jsonLoads(manifest)['date']
+        return PatternScriptEntities.loadJson(manifest)['date']
 
 
 class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
@@ -68,11 +92,14 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
         self.SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.BuiltTrainExport.ManifestForTrainPlayer'
         self.SCRIPT_REV = 20220101
 
-        logPath = PatternScriptEntities.PROFILE_PATH + 'operations\\buildstatus\\BuiltTrainExportLog.txt'
-        self.logger = PatternScriptEntities.Logger(logPath)
-        self.logger.startLogger('TP')
+        self.standAloneLogging = StandAloneLogging()
+        self.tpLog = PatternScriptEntities.LOGGING.getLogger('TP.ManifestForTrainPlayer')
 
         return
+
+    def getNewestTrain(self):
+
+        return FindTrain().findNewestTrain()
 
     def passInTrain(self, train):
 
@@ -82,28 +109,30 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
 
     def handle(self):
 
-        timeNow = time.time()
+        self.standAloneLogging.startLogging()
 
-        self.tpLog = PatternScriptEntities.LOGGING.getLogger('TP.BuiltTrainExport')
-        self.logger.initialLogMessage(self.tpLog)
+        timeNow = time.time()
 
         if PatternScriptEntities.CheckTpDestination().directoryExists():
 
+            self.tpLog.debug('Model.ExportJmriLocations')
             jmriExport = Model.ExportJmriLocations()
             locationList = jmriExport.makeLocationList()
             jmriExport.toTrainPlayer(locationList)
-            self.tpLog.info('Export JMRI locations to TrainPlayer')
 
+            self.tpLog.debug('Model.JmriTranslationToTp')
             jmriManifestTranslator = Model.JmriTranslationToTp()
             builtTrainAsDict = jmriManifestTranslator.getTrainAsDict(self.train)
             translatedManifest = jmriManifestTranslator.translateManifestHeader(builtTrainAsDict)
             translatedManifest['locations'] = jmriManifestTranslator.translateManifestBody(builtTrainAsDict)
 
+            self.tpLog.debug('Model.ProcessWorkEventList')
             processedManifest = Model.ProcessWorkEventList()
             processedManifest.writeTpWorkEventListAsJson(translatedManifest)
             tpManifestHeader = processedManifest.makeTpHeader(translatedManifest)
             tpManifestLocations = processedManifest.makeTpLocations(translatedManifest)
 
+            self.tpLog.debug('Model.WriteWorkEventListToTp')
             Model.WriteWorkEventListToTp(tpManifestHeader + tpManifestLocations).asCsv()
 
             self.tpLog.info('Export JMRI manifest to TrainPlyer: ' + self.train.getName())
@@ -116,7 +145,7 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
         print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
         print('Manifest export (sec): ' + ('%s' % (time.time() - timeNow))[:6])
 
-        self.logger.stopLogger('TP')
+        self.standAloneLogging.stopLogging()
 
         return False
 
@@ -129,11 +158,10 @@ if __name__ == "__builtin__":
 
     PatternScriptEntities.ENCODING = 'utf-8'
 
-    train = StandAlone().findNewestTrain()
-
-    if train:
-        tpManifest = ManifestForTrainPlayer()
-        tpManifest.passInTrain(train)
+    tpManifest = ManifestForTrainPlayer()
+    newestTrain = tpManifest.getNewestTrain()
+    if newestTrain:
+        tpManifest.passInTrain(newestTrain)
         tpManifest.start()
 
 else:
