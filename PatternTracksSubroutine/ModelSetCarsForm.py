@@ -9,11 +9,12 @@ from TrainPlayerSubroutine import Model as tpModel
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ModelSetCarsForm'
 SCRIPT_REV = 20220101
-psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.ModelSetCarsForm')
+
+_psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.ModelSetCarsForm')
 
 def testValidityOfForm(setCarsForm, textBoxEntry):
 
-    psLog.debug('ModelSetCarsForm.testValidityOfForm')
+    _psLog.debug('ModelSetCarsForm.testValidityOfForm')
 
     locoCount = len(setCarsForm['locations'][0]['tracks'][0]['locos'])
     carCount = len(setCarsForm['locations'][0]['tracks'][0]['cars'])
@@ -21,12 +22,12 @@ def testValidityOfForm(setCarsForm, textBoxEntry):
     if len(textBoxEntry) == locoCount + carCount:
         return True
     else:
-        psLog.critical('mismatched input list and car roster lengths')
+        _psLog.critical('mismatched input list and car roster lengths')
         return False
 
 def setRsToTrack(setCarsForm, textBoxEntry):
 
-    psLog.debug('ModelSetCarsForm.setRsToTrack')
+    _psLog.debug('ModelSetCarsForm.setRsToTrack')
 
     userInputList = []
     for userInput in textBoxEntry:
@@ -75,7 +76,7 @@ def setRsToTrack(setCarsForm, textBoxEntry):
 
     PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarManagerXml.save()
 
-    psLog.info('Rolling stock count: ' + str(setCount) + ', processed from track: ' + fromTrack)
+    _psLog.info('Rolling stock count: ' + str(setCount) + ', processed from track: ' + fromTrack)
 
     return
 
@@ -137,7 +138,7 @@ def getSchedule(locationString, trackString):
 
 def exportSetCarsFormToTp(setCarsForm, textBoxEntry):
 
-    psLog.debug('ModelSetCarsForm.exportSetCarsFormToTp')
+    _psLog.debug('ModelSetCarsForm.exportSetCarsFormToTp')
 
     if PatternScriptEntities.CheckTpDestination().directoryExists():
 
@@ -161,7 +162,7 @@ def exportSetCarsFormToTp(setCarsForm, textBoxEntry):
 def makeLocationDict(setCarsForm, textBoxEntry):
     """Replaces car['Set to'] = [ ] with either [Hold] or ["some other valid track"]"""
 
-    psLog.debug('ModelSetCarsForm.makeLocationDict')
+    _psLog.debug('ModelSetCarsForm.makeLocationDict')
 
     trackName = setCarsForm['locations'][0]['tracks'][0]['trackName']
     location = setCarsForm['locations'][0]['locationName']

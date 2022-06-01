@@ -14,7 +14,6 @@ class LocationComboBox(PatternScriptEntities.JAVA_AWT.event.ActionListener):
     def __init__(self, subroutineFrame):
 
         self.subroutineFrame = subroutineFrame
-        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.ComboBox')
 
     def actionPerformed(self, EVENT):
 

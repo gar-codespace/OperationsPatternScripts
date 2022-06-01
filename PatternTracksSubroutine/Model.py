@@ -8,12 +8,13 @@ from PatternTracksSubroutine import ControllerSetCarsForm
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.Model'
 SCRIPT_REV = 20220101
-psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.Model')
+
+_psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.Model')
 
 def updatePatternLocation(selectedItem=None):
     """Catches user edits of locations"""
 
-    psLog.debug('Model.updatePatternLocation')
+    _psLog.debug('Model.updatePatternLocation')
 
     configFile = PatternScriptEntities.readConfigFile()
     newLocation = ModelEntities.testSelectedItem(selectedItem)
@@ -26,14 +27,14 @@ def updatePatternLocation(selectedItem=None):
     configFile['PT'].update({'PT': newLocationTrackDict})
 
     PatternScriptEntities.writeConfigFile(configFile)
-    psLog.info('The track list for location ' + newLocation + ' has been created')
+    _psLog.info('The track list for location ' + newLocation + ' has been created')
 
     return newLocation
 
 def makeNewPatternTracks(location):
     """Makes a new list of all tracks for a location"""
 
-    psLog.debug('Model.makeNewPatternTracks')
+    _psLog.debug('Model.makeNewPatternTracks')
     allTracks = ModelEntities.getTracksByLocation(None)
     trackDict = {}
     for track in allTracks:
@@ -47,22 +48,22 @@ def makeNewPatternTracks(location):
 
 def makeTrackList(location, type):
     """Returns a list of tracks by type for a location"""
-    psLog.debug('Model.makeTrackList')
+    _psLog.debug('Model.makeTrackList')
 
     return ModelEntities.getTracksByLocation(type)
 
 def updatePatternTracks(trackList):
     """Creates a new list of tracks and their default include flag"""
 
-    psLog.debug('Model.updatePatternTracks')
+    _psLog.debug('Model.updatePatternTracks')
     trackDict = {}
     for track in trackList:
         trackDict[track] = False
 
     if (trackDict):
-        psLog.warning('The track list for this location has changed')
+        _psLog.warning('The track list for this location has changed')
     else:
-        psLog.warning('There are no yard tracks for this location')
+        _psLog.warning('There are no yard tracks for this location')
 
     return trackDict
 
@@ -71,7 +72,7 @@ def updateCheckBoxStatus(all, ignore):
     and Ignore Track Length check boxes
     """
 
-    psLog.debug('Model.updateCheckBoxStatus')
+    _psLog.debug('Model.updateCheckBoxStatus')
     newConfigFile = PatternScriptEntities.readConfigFile()
     subConfigfile = newConfigFile['PT']
     subConfigfile.update({'PA': all})
@@ -83,7 +84,7 @@ def updateCheckBoxStatus(all, ignore):
 def updateConfigFile(controls):
     """Updates the pattern tracks part of the config file"""
 
-    psLog.debug('Model.updateConfigFile')
+    _psLog.debug('Model.updateConfigFile')
 
     focusOn = PatternScriptEntities.readConfigFile('PT')
     focusOn.update({"PL": controls[0].getSelectedItem()})
@@ -93,7 +94,7 @@ def updateConfigFile(controls):
     newConfigFile = PatternScriptEntities.readConfigFile()
     newConfigFile.update({"PT": focusOn})
     PatternScriptEntities.writeConfigFile(newConfigFile)
-    psLog.info('Controls settings for configuration file updated')
+    _psLog.info('Controls settings for configuration file updated')
 
     return controls
 
@@ -109,7 +110,7 @@ def verifySelectedTracks():
     validStatus = True
     allTracksList = ModelEntities.getTracksByLocation(None)
     if not allTracksList:
-        psLog.warning('PatternConfig.JSON corrupted, new file written.')
+        _psLog.warning('PatternConfig.JSON corrupted, new file written.')
         return False
     patternTracks = PatternScriptEntities.readConfigFile('PT')['PT']
     for track in patternTracks:
@@ -121,7 +122,7 @@ def verifySelectedTracks():
 def makeLocationDict(trackList=None):
     """Returns the details for the tracks sent in formatted for the json file """
 
-    psLog.debug('Model.makeLocationDict')
+    _psLog.debug('Model.makeLocationDict')
 
     if not trackList:
         trackList = getSelectedTracks()
@@ -139,7 +140,7 @@ def makeLocationDict(trackList=None):
 
 def makeReport(locationDict, reportType):
 
-    psLog.debug('Model.makeReport')
+    _psLog.debug('Model.makeReport')
 
     if reportType == 'PR':
         reportTitle = PatternScriptEntities.BUNDLE['Track Pattern Report']
@@ -160,7 +161,7 @@ def makeReport(locationDict, reportType):
 
 def makeWorkEventList(patternListForJson, trackTotals):
 
-    psLog.debug('Model.makeWorkEventList')
+    _psLog.debug('Model.makeWorkEventList')
 
     workEventName = ModelEntities.writeWorkEventListAsJson(patternListForJson)
     textWorkEventList = ModelEntities.readJsonWorkEventList(workEventName)
@@ -172,11 +173,11 @@ def makeWorkEventList(patternListForJson, trackTotals):
 def onScButtonPress():
     """"Set Cars" button opens a window for each selected track"""
 
-    psLog.debug('Model.onScButtonPress')
+    _psLog.debug('Model.onScButtonPress')
 
     selectedTracks = getSelectedTracks()
     if not selectedTracks:
-        psLog.warning('No tracks were selected for the Set Cars button')
+        _psLog.warning('No tracks were selected for the Set Cars button')
 
         return
 
@@ -193,16 +194,16 @@ def onScButtonPress():
         newWindow.pack()
         newWindow.setVisible(True)
 
-        psLog.info(u'Set Cars Window created for track ' + trackName)
+        _psLog.info(u'Set Cars Window created for track ' + trackName)
         windowOffset += 50
-    psLog.info(str(i) + ' Set Cars windows for ' + locationName + ' created')
+    _psLog.info(str(i) + ' Set Cars windows for ' + locationName + ' created')
 
     return
 
 def resetTrainPlayerSwitchlist():
     """Overwrites the existing file with the header info for the next switch list"""
 
-    psLog.debug('Model.resetTrainPlayerSwitchlist')
+    _psLog.debug('Model.resetTrainPlayerSwitchlist')
 
     locationName = PatternScriptEntities.readConfigFile()['PT']['PL']
     locationDict = {'locationName':locationName, \
@@ -215,10 +216,10 @@ def resetTrainPlayerSwitchlist():
 def updateLocations():
     """Updates the config file with a list of all locations for this profile"""
 
-    psLog.debug('Model.updateLocations')
+    _psLog.debug('Model.updateLocations')
     newConfigFile = PatternScriptEntities.readConfigFile()
     subConfigfile = newConfigFile['PT']
-    allLocations  = ModelEntities.getAllLocations()
+    allLocations  = PatternScriptEntities.getAllLocations()
     if not (subConfigfile['AL']): # when this sub is used for the first tims
         subConfigfile.update({'PL': allLocations[0]})
         subConfigfile.update({'PT': ModelEntities.makeInitialTrackList(allLocations[0])})
@@ -231,7 +232,7 @@ def updateLocations():
 def writeCsvSwitchList(trackPattern):
     """Rewrite this to write from the json file"""
 
-    psLog.debug('Model.writeCsvSwitchList')
+    _psLog.debug('Model.writeCsvSwitchList')
 
     csvName, csvReport = ModelEntities.makeCsvSwitchlist(trackPattern)
     csvPath = PatternScriptEntities.PROFILE_PATH + 'operations\\csvSwitchLists\\' + csvName + '.csv'

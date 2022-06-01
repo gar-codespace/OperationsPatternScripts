@@ -20,10 +20,14 @@ class StandAlone():
 
     def __init__(self):
 
+        self.tpLog = PatternScriptEntities.LOGGING.getLogger('TP.StandAlone')
+
         return
 
     def findNewestTrain(self):
         """If more than 1 train is built, pick the newest one"""
+
+        self.tpLog.debug('findNewestTrain')
 
         if not PatternScriptEntities.TM.isAnyTrainBuilt():
 
@@ -39,6 +43,8 @@ class StandAlone():
         return newestTrain
 
     def getBuiltTrains(self):
+
+        self.tpLog.debug('getBuiltTrains')
 
         builtTrainList = []
         for train in PatternScriptEntities.TM.getTrainsByStatusList():

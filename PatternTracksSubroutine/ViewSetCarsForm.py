@@ -9,6 +9,8 @@ from PatternTracksSubroutine import ViewEntities
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ViewSetCarsForm'
 SCRIPT_REV = 20220101
 
+_psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.ViewSetCarsForm')
+
 def setCarsForTrackWindow(setCarsForTrackForm):
 
     setCarsWindow = PatternScriptEntities.JMRI.util.JmriJFrame()
@@ -19,10 +21,14 @@ def setCarsForTrackWindow(setCarsForTrackForm):
 def makeSetCarsForTrackForm(setCarsFormData):
     """Creates and populates the 'Set Cars Form for Track X' form"""
 
+    _psLog.debug('makeSetCarsForTrackForm')
+
     buttonDict = {}
 
     setCarsForm = PatternScriptEntities.JAVX_SWING.JPanel()
-    setCarsForm.setLayout(PatternScriptEntities.JAVX_SWING.BoxLayout(setCarsForm, PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS))
+    setCarsForm.setLayout(PatternScriptEntities.JAVX_SWING.BoxLayout(
+        setCarsForm, PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS)
+        )
 
     setCarsFormHeader = makeSetCarsFormHeader(setCarsFormData)
     setCarsForm.add(setCarsFormHeader)
@@ -34,13 +40,17 @@ def makeSetCarsForTrackForm(setCarsFormData):
     setCarsForm.add(PatternScriptEntities.JAVX_SWING.JSeparator())
 
     setCarsFormBody = PatternScriptEntities.JAVX_SWING.JPanel()
-    setCarsFormBody.setLayout(PatternScriptEntities.JAVX_SWING.BoxLayout(setCarsFormBody, PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS))
+    setCarsFormBody.setLayout(PatternScriptEntities.JAVX_SWING.BoxLayout(
+        setCarsFormBody, PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS)
+        )
 
     setCarsEqptRows = MakeSetCarsEqptRows(setCarsFormData)
 
     if setCarsFormData['locations'][0]['tracks'][0]['locos']:
         locoFormBody = PatternScriptEntities.JAVX_SWING.JPanel()
-        locoFormBody.setLayout(PatternScriptEntities.JAVX_SWING.BoxLayout(locoFormBody, PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS))
+        locoFormBody.setLayout(PatternScriptEntities.JAVX_SWING.BoxLayout(
+            locoFormBody, PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS)
+            )
         locoFormBody.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder( \
                 PatternScriptEntities.BUNDLE['Locomotives at '] \
                 + setCarsFormData['locations'][0]['tracks'][0]['trackName'] \
@@ -53,7 +63,9 @@ def makeSetCarsForTrackForm(setCarsFormData):
 
     if setCarsFormData['locations'][0]['tracks'][0]['cars']:
         carFormBody = PatternScriptEntities.JAVX_SWING.JPanel()
-        carFormBody.setLayout(PatternScriptEntities.JAVX_SWING.BoxLayout(carFormBody, PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS))
+        carFormBody.setLayout(PatternScriptEntities.JAVX_SWING.BoxLayout(
+            carFormBody, PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS)
+            )
         carFormBody.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder( \
                 PatternScriptEntities.BUNDLE['Cars at '] \
                 + setCarsFormData['locations'][0]['tracks'][0]['trackName'] \
@@ -94,10 +106,14 @@ def makeSwingBox(xWidth, yHeight):
 def makeSetCarsFormHeader(setCarsFormData):
     """Creates the 'Set Cars Form for Track X' forms header"""
 
+    _psLog.debug('makeSetCarsFormHeader')
+
     configFile = PatternScriptEntities.readConfigFile('PT')
 
     combinedHeader = PatternScriptEntities.JAVX_SWING.JPanel()
-    combinedHeader.setLayout(PatternScriptEntities.JAVX_SWING.BoxLayout(combinedHeader, PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS))
+    combinedHeader.setLayout(PatternScriptEntities.JAVX_SWING.BoxLayout(
+        combinedHeader, PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS)
+        )
     combinedHeader.setAlignmentX(PatternScriptEntities.JAVA_AWT.Component.CENTER_ALIGNMENT)
     combinedHeader.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createEmptyBorder(10,0,10,0)
 
@@ -146,6 +162,8 @@ def makeSetCarsTrackButtons():
     return buttonPanel, buttonList
 
 class MakeSetCarsEqptRows():
+
+    _psLog.debug('MakeSetCarsEqptRows')
 
     def __init__(self, setCarsFormData):
 
@@ -231,6 +249,8 @@ class MakeSetCarsEqptRows():
 def makeSetCarsScheduleRow(setCarsFormData):
     """Using [0] to avoid for loop since there is only 1 location and track"""
 
+    _psLog.debug('makeSetCarsScheduleRow')
+
     trackLocation = setCarsFormData['locations'][0]['locationName']
     trackName = setCarsFormData['locations'][0]['tracks'][0]['trackName']
     trackObject = PatternScriptEntities.LM.getLocationByName(trackLocation).getTrackByName(trackName, None)
@@ -239,10 +259,9 @@ def makeSetCarsScheduleRow(setCarsFormData):
     scheduleList = []
     if (scheduleObject):
         schedulePanel = PatternScriptEntities.JAVX_SWING.JPanel()
-        schedulePanel.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder( \
-                PatternScriptEntities.BUNDLE['Schedule for '] \
-                + trackName \
-                )
+        schedulePanel.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder(
+            PatternScriptEntities.BUNDLE['Schedule for '] + trackName
+            )
         scheduleButton = PatternScriptEntities.JAVX_SWING.JButton(scheduleObject.getName())
         scheduleList.append(scheduleButton)
         schedulePanel.add(PatternScriptEntities.JAVX_SWING.JLabel(PatternScriptEntities.BUNDLE['Schedule: ']))
@@ -252,25 +271,27 @@ def makeSetCarsScheduleRow(setCarsFormData):
 
 def MakeSetCarsFooter():
 
-    combinedFooter = PatternScriptEntities.JAVX_SWING.JPanel()
-    combinedFooter.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder( \
-            PatternScriptEntities.BUNDLE['Action'] \
-            )
+    _psLog.debug('MakeSetCarsFooter')
 
-    printButton = PatternScriptEntities.JAVX_SWING.JButton(unicode(PatternScriptEntities.BUNDLE['Switch List'], \
-            PatternScriptEntities.ENCODING) \
-            )
+    combinedFooter = PatternScriptEntities.JAVX_SWING.JPanel()
+    combinedFooter.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder(
+        PatternScriptEntities.BUNDLE['Action']
+        )
+
+    printButton = PatternScriptEntities.JAVX_SWING.JButton(unicode(
+        PatternScriptEntities.BUNDLE['Switch List'], PatternScriptEntities.ENCODING)
+        )
     combinedFooter.add(printButton)
 
-    setButton = PatternScriptEntities.JAVX_SWING.JButton(unicode(PatternScriptEntities.BUNDLE['Set to Track'], \
-            PatternScriptEntities.ENCODING) \
-            )
+    setButton = PatternScriptEntities.JAVX_SWING.JButton(
+        unicode(PatternScriptEntities.BUNDLE['Set to Track'], PatternScriptEntities.ENCODING)
+        )
     combinedFooter.add(setButton)
 
     if PatternScriptEntities.readConfigFile('PT')['TI']:
-        trainPlayerButton = PatternScriptEntities.JAVX_SWING.JButton(unicode(u'TrainPlayer', \
-                PatternScriptEntities.ENCODING) \
-                )
+        trainPlayerButton = PatternScriptEntities.JAVX_SWING.JButton(
+            unicode(u'TrainPlayer', PatternScriptEntities.ENCODING)
+            )
         combinedFooter.add(trainPlayerButton)
 
     return combinedFooter

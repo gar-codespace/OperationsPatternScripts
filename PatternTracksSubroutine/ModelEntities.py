@@ -1,8 +1,9 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-from codecs import open as codecsOpen
-from json import loads as jsonLoads, dumps as jsonDumps
+# from codecs import open as codecsOpen
+# from json import loads as jsonLoads
+# from json import dumps as jsonDumps
 
 from psEntities import PatternScriptEntities
 
@@ -264,21 +265,21 @@ def writeWorkEventListAsJson(switchList):
     """The generic switch list is written as a json"""
 
     switchListName = switchList['trainDescription']
-    jsonCopyTo = PatternScriptEntities.PROFILE_PATH \
+    switchListPath = PatternScriptEntities.PROFILE_PATH \
                + 'operations\\jsonManifests\\' + switchListName + '.json'
-    jsonObject = jsonDumps(switchList, indent=2, sort_keys=True)
-    with codecsOpen(jsonCopyTo, 'wb', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
-        jsonWorkFile.write(jsonObject)
+    switchListReport = PatternScriptEntities.dumpJson(switchList)
 
+    PatternScriptEntities.genericWriteReport(switchListPath, switchListReport)
     return switchListName
 
 def readJsonWorkEventList(workEventName):
 
-    jsonCopyFrom = PatternScriptEntities.PROFILE_PATH \
+    reportPath = PatternScriptEntities.PROFILE_PATH \
                  + 'operations\\jsonManifests\\' + workEventName + '.json'
-    with codecsOpen(jsonCopyFrom, 'r', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
-        jsonEventList = jsonWorkFile.read()
-    textWorkEventList = jsonLoads(jsonEventList)
+
+    jsonEventList = PatternScriptEntities.genericReadReport(reportPath)
+
+    textWorkEventList = PatternScriptEntities.loadJson(jsonEventList)
 
     return textWorkEventList
 
@@ -349,21 +350,26 @@ def makeCsvSwitchlist(trackPattern):
 
     return trackPattern['trainDescription'], csvSwitchList
 
-def appendJsonBody(trainPlayerSwitchList):
-
-    jsonCopyFrom = PatternScriptEntities.PROFILE_PATH \
-                 + 'operations\\jsonManifests\\TrainPlayerSwitchlist.json'
-    with codecsOpen(jsonCopyFrom, 'r', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
-        switchList = jsonWorkFile.read()
-    jsonSwitchList = jsonLoads(switchList)
-    jTemp = jsonSwitchList['locations']
-    jTemp.append(trainPlayerSwitchList)
-    jsonSwitchList['locations'] = jTemp
-
-    jsonCopyTo = PatternScriptEntities.PROFILE_PATH \
-               + 'operations\\jsonManifests\\TrainPlayerSwitchlist.json'
-    jsonObject = jsonDumps(jsonSwitchList, indent=2, sort_keys=True)
-    with codecsOpen(jsonCopyTo, 'wb', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
-        jsonWorkFile.write(jsonObject)
-
-    return
+# def appendJsonBody(trainPlayerSwitchList):
+#
+#     reportPath = PatternScriptEntities.PROFILE_PATH \
+#                  + 'operations\\jsonManifests\\TrainPlayerSwitchlist.json'
+#
+#     jsonEventList = PatternScriptEntities.genericReadReport(reportPath)
+#
+#     jsonSwitchList = PatternScriptEntities.loadJson(switchList)
+#
+#
+#
+#
+#     jTemp = jsonSwitchList['locations']
+#     jTemp.append(trainPlayerSwitchList)
+#     jsonSwitchList['locations'] = jTemp
+#
+#     jsonCopyTo = PatternScriptEntities.PROFILE_PATH \
+#                + 'operations\\jsonManifests\\TrainPlayerSwitchlist.json'
+#     jsonObject = jsonDumps(jsonSwitchList, indent=2, sort_keys=True)
+#     with codecsOpen(jsonCopyTo, 'wb', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
+#         jsonWorkFile.write(jsonObject)
+#
+#     return

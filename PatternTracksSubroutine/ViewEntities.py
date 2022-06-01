@@ -2,7 +2,6 @@
 # © 2021, 2022 Greg Ritacco
 
 from psEntities import PatternScriptEntities
-from psBundle import Bundle
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ViewEntities'
 SCRIPT_REV = 20220101

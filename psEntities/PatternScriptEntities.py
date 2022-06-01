@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""Support methods for all Pattern Script subroutines"""
+"""Support methods and package constants for all Pattern Script subroutines"""
 
 import jmri as JMRI
 import java.awt as JAVA_AWT
@@ -15,9 +15,9 @@ from codecs import open as codecsOpen
 from os import system as osSystem
 
 PLUGIN_ROOT = ''
+PROFILE_PATH = JMRI.util.FileUtil.getProfilePath()
 ENCODING = ''
 BUNDLE = {}
-PROFILE_PATH = JMRI.util.FileUtil.getProfilePath()
 
 SCRIPT_NAME = 'OperationsPatternScripts.psEntities.PatternScriptEntities'
 SCRIPT_REV = 20220101
@@ -104,7 +104,8 @@ def formatText(item, length):
 
 def occuranceTally(listOfOccurances):
     """Tally the occurances of a word in a list and return a dictionary
-    Home grown version of collections.Counter"""
+    Home grown version of collections.Counter
+    """
 
     dict = {}
     while len(listOfOccurances):
@@ -142,10 +143,23 @@ def timeStamp(epochTime=0):
 
     return time.strftime('%a %b %d %Y %I:%M %p %Z', time.gmtime(epochTime - timeOffset))
 
-def genericWriteReport(filePath, textSwitchList):
+def genericReadReport(filePath):
+    """try/except catches initial read of config file"""
+
+    try:
+        ENCODING
+    except UnboundLocalError:
+        ENCODING = 'utf-8'
+
+    with codecsOpen(filePath, 'r', encoding=ENCODING) as textWorkFile:
+        genericReport = textWorkFile.read()
+
+    return genericReport
+
+def genericWriteReport(filePath, genericReport):
 
     with codecsOpen(filePath, 'wb', encoding=ENCODING) as textWorkFile:
-        textWorkFile.write(textSwitchList)
+        textWorkFile.write(genericReport)
 
     return
 
@@ -166,7 +180,17 @@ def openEditorByComputerType(switchListLocation=None):
     backupConfigFile()
     return openEditor
 
+def loadJson(switchList):
 
+    jsonSwitchList = jsonLoads(switchList)
+
+    return jsonSwitchList
+
+def dumpJson(switchList):
+
+    jsonSwitchList = jsonDumps(switchList, indent=2, sort_keys=True)
+
+    return jsonSwitchList
 
 class validateStubFile:
     """Copy of the JMRI Java version of createStubFile"""
@@ -197,24 +221,22 @@ class validateStubFile:
 
     def updateStubTemplate(self):
 
-        stubTemplateLocation = JMRI.util.FileUtil.getProgramPath() + 'help\\' + psLocale() \
-        + '\\local\\stub_template.html'
+        stubTemplateLocation = JMRI.util.FileUtil.getProgramPath() + 'help\\' \
+                + psLocale() + '\\local\\stub_template.html'
 
-        with codecsOpen(stubTemplateLocation, 'r', encoding=ENCODING) as template:
-            self.newStubFile = template.read()
-            self.newStubFile = self.newStubFile.replace("../index.html#", "")
-            self.newStubFile = self.newStubFile.replace("<!--HELP_KEY-->", self.helpFilePath)
-            self.newStubFile = self.newStubFile.replace("<!--URL_HELP_KEY-->", "")
+        self.newStubFile = genericReadReport(stubTemplateLocation)
+        self.newStubFile = self.newStubFile.replace("../index.html#", "")
+        self.newStubFile = self.newStubFile.replace("<!--HELP_KEY-->", self.helpFilePath)
+        self.newStubFile = self.newStubFile.replace("<!--URL_HELP_KEY-->", "")
 
         return self.newStubFile
 
     def writeStubFile(self):
 
-        with codecsOpen(self.stubFileName, 'wb', encoding=ENCODING) as stubWorkFile:
-            stubWorkFile.write(self.newStubFile)
-            psLog.debug('psStub writen from stub_template')
+        genericWriteReport(self.stubFileName, self.newStubFile)
+        psLog.debug('psStub writen from stub_template')
 
-            return
+        return
 
     def isStubFile(self):
 
@@ -248,9 +270,7 @@ def validateConfigFileVersion(currentRootDir):
     """Checks that the config file is the current version"""
 
     configFilePath = currentRootDir + '\psEntities\PatternConfig.json'
-    with codecsOpen(configFilePath, 'r', encoding=ENCODING) as validConfigFileLoc:
-        validPatternConfig = jsonLoads(validConfigFileLoc.read())
-
+    validPatternConfig = loadJson(genericReadReport(configFilePath))
     userPatternConfig = getConfigFile()
 
     if validPatternConfig['CP']['RV'] == userPatternConfig['CP']['RV']:
@@ -262,20 +282,16 @@ def validateConfigFileVersion(currentRootDir):
 
 def backupConfigFile():
 
-    copyFrom = javaIo.File(JMRI.util.FileUtil.getProfilePath() \
-             + 'operations\\PatternConfig.json')
-    copyTo = javaIo.File(JMRI.util.FileUtil.getProfilePath() \
-           + 'operations\\PatternConfig.json.bak')
+    copyFrom = javaIo.File(PROFILE_PATH + 'operations\\PatternConfig.json')
+    copyTo = javaIo.File(PROFILE_PATH + 'operations\\PatternConfig.json.bak')
     JMRI.util.FileUtil.copy(copyFrom, copyTo)
 
     return
 
 def restoreConfigFile():
 
-    copyFrom = javaIo.File(JMRI.util.FileUtil.getProfilePath() \
-             + 'operations\PatternConfig.json.bak')
-    copyTo = javaIo.File(JMRI.util.FileUtil.getProfilePath() \
-           + 'operations\\PatternConfig.json')
+    copyFrom = javaIo.File(JMRI.util.FileUtil.getProfilePath() + 'operations\PatternConfig.json.bak')
+    copyTo = javaIo.File(PROFILE_PATH + 'operations\\PatternConfig.json')
     JMRI.util.FileUtil.copy(copyFrom, copyTo)
 
     return
@@ -311,19 +327,15 @@ def tryConfigFile():
 
 def getConfigFile():
 
-    configFileLoc = JMRI.util.FileUtil.getProfilePath() + 'operations\PatternConfig.json'
+    configFilePath = PROFILE_PATH + 'operations\PatternConfig.json'
 
-    with codecsOpen(configFileLoc, 'r', encoding='utf-8') as configWorkFile:
-        patternConfig = jsonLoads(configWorkFile.read())
-
-    return patternConfig
+    return loadJson(genericReadReport(configFilePath))
 
 def writeConfigFile(configFile):
 
-    jsonCopyTo = JMRI.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json'
-    jsonObject = jsonDumps(configFile, indent=2, sort_keys=True)
-    with codecsOpen(jsonCopyTo, 'wb', encoding='utf-8') as jsonWorkFile:
-        jsonWorkFile.write(jsonObject)
+    configFilePath = PROFILE_PATH + 'operations\\PatternConfig.json'
+    formattedConfigFile = dumpJson(configFile)
+    genericWriteReport(configFilePath, formattedConfigFile)
 
     return
 
@@ -331,7 +343,7 @@ def writeNewConfigFile():
 
     defaultConfigFilePath = PLUGIN_ROOT + '\psEntities\PatternConfig.json'
     copyFrom = javaIo.File(defaultConfigFilePath)
-    copyTo = javaIo.File(JMRI.util.FileUtil.getProfilePath() + 'operations\\PatternConfig.json')
+    copyTo = javaIo.File(PROFILE_PATH + 'operations\\PatternConfig.json')
     JMRI.util.FileUtil.copy(copyFrom, copyTo)
 
     return
@@ -343,23 +355,21 @@ def makePatternLog():
     buildReportLevel = JMRI.jmrit.operations.setup.Setup.getBuildReportLevel()
     loggingIndex = readConfigFile('LI')
     logLevel = loggingIndex[buildReportLevel]
-    logFileLocation = JMRI.util.FileUtil.getProfilePath() \
-                    + 'operations\\buildstatus\\PatternScriptsLog.txt'
-    with codecsOpen(logFileLocation, 'r', encoding=ENCODING) as patternLogFile:
-        while True:
-            thisLine = patternLogFile.readline()
-            if not thisLine:
-                break
-            if (loggingIndex['9'] in thisLine and int(buildReportLevel) > 0): # critical
-                outputPatternLog += thisLine
-            if (loggingIndex['7'] in thisLine and int(buildReportLevel) > 0): # error
-                outputPatternLog += thisLine
-            if (loggingIndex['5'] in thisLine and int(buildReportLevel) > 0): # warning
-                outputPatternLog += thisLine
-            if (loggingIndex['3'] in thisLine and int(buildReportLevel) > 2): # info
-                outputPatternLog += thisLine
-            if (loggingIndex['1'] in thisLine and int(buildReportLevel) > 4): # debug
-                outputPatternLog += thisLine
+
+    logFileLocation = PROFILE_PATH + 'operations\\buildstatus\\PatternScriptsLog.txt'
+    patternLogFile = genericReadReport(logFileLocation)
+    for thisLine in patternLogFile.splitlines():
+
+        if (loggingIndex['9'] in thisLine and int(buildReportLevel) > 0): # critical
+            outputPatternLog += thisLine + '\n'
+        if (loggingIndex['7'] in thisLine and int(buildReportLevel) > 0): # error
+            outputPatternLog += thisLine + '\n'
+        if (loggingIndex['5'] in thisLine and int(buildReportLevel) > 0): # warning
+            outputPatternLog += thisLine + '\n'
+        if (loggingIndex['3'] in thisLine and int(buildReportLevel) > 2): # info
+            outputPatternLog += thisLine + '\n'
+        if (loggingIndex['1'] in thisLine and int(buildReportLevel) > 4): # debug
+            outputPatternLog += thisLine + '\n'
 
     return 'PatternScriptsLog_temp', outputPatternLog
 

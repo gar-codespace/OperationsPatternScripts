@@ -57,7 +57,6 @@ class StartUp:
             errorReportPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\Update Inventory.txt'
             PatternScriptEntities.genericWriteReport(errorReportPath, errorReport)
             PatternScriptEntities.genericDisplayReport(errorReportPath)
-            # osSystem(PatternScriptEntities.openEditorByComputerType(errorReportPath))
 
             self.psLog.info('Updated Rolling stock locations from TrainPlayer')
         else:

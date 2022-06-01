@@ -10,8 +10,6 @@ from TrainPlayerSubroutine import ModelEntities
 SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.Model'
 SCRIPT_REV = 20220101
 
-psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.Model')
-
 class ExportJmriLocations:
     """Writes a list of location names and comments for the whole profile"""
 
@@ -204,7 +202,7 @@ class ProcessWorkEventList:
 
         i = 1
         for location in appendedTpSwitchList['locations']:
-            tpLocations += u'WE,' + str(i) + ',' + HTMLParser().unescape(location['locationName']) + '\n'
+            tpLocations += u'WE,' + str(i) + ',' + location['locationName'] + '\n'
             for track in location['tracks']:
                 for loco in track['locos']:
                     tpLocations += ",".join(self.makeLine(loco)) + '\n'

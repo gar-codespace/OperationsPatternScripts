@@ -12,9 +12,6 @@ from apps import Apps
 import time
 from sys import path as sysPath
 
-SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
-SCRIPT_REV = 20220101
-
 SCRIPT_DIR = 'OperationsPatternScripts'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b1'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b2'
@@ -25,6 +22,9 @@ sysPath.append(PLUGIN_ROOT)
 from psEntities import PatternScriptEntities
 from psBundle import Bundle
 from TrainPlayerSubroutine import BuiltTrainExport
+
+SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
+SCRIPT_REV = 20220101
 
 PatternScriptEntities.JMRI = jmri
 PatternScriptEntities.JAVA_AWT = java.awt
@@ -208,8 +208,9 @@ class View:
         # Loop over this part in v3
         asMenuItem = self.makeMenuItem(self.setAsDropDownText())
         tpMenuItem = self.makeMenuItem(self.setTiDropDownText())
-        logMenuItem = self.makeMenuItem(self.setLmDropDownText())
         helpMenuItem = self.makeMenuItem(self.setHmDropDownText())
+        logMenuItem = self.makeMenuItem(self.setLmDropDownText())
+        gitHubItem = self.makeMenuItem(self.setGhDropDownText())
 
         toolsMenu = PatternScriptEntities.JAVX_SWING.JMenu(PatternScriptEntities.BUNDLE['Tools'])
         toolsMenu.add(PatternScriptEntities.JMRI.jmrit.operations.setup.OptionAction())
@@ -219,8 +220,9 @@ class View:
         toolsMenu.add(tpMenuItem)
 
         helpMenu = PatternScriptEntities.JAVX_SWING.JMenu(PatternScriptEntities.BUNDLE['Help'])
-        helpMenu.add(logMenuItem)
         helpMenu.add(helpMenuItem)
+        helpMenu.add(logMenuItem)
+        helpMenu.add(gitHubItem)
 
         psMenuBar = PatternScriptEntities.JAVX_SWING.JMenuBar()
         psMenuBar.add(toolsMenu)
@@ -273,6 +275,13 @@ class View:
 
         return menuText, 'tpItemSelected'
 
+    def setHmDropDownText(self):
+        """itemMethod - Set the drop down text for the Log menu item"""
+
+        helpMenuText = PatternScriptEntities.BUNDLE['Window Help...']
+
+        return helpMenuText, 'helpItemSelected'
+
     def setLmDropDownText(self):
         """itemMethod - Set the drop down text for the Log menu item"""
 
@@ -280,12 +289,12 @@ class View:
 
         return logMenuText, 'logItemSelected'
 
-    def setHmDropDownText(self):
-        """itemMethod - Set the drop down text for the Log menu item"""
+    def setGhDropDownText(self):
+        """itemMethod - Set the drop down text for the gitHub page item"""
 
-        helpMenuText = PatternScriptEntities.BUNDLE['Window Help...']
+        logMenuText = PatternScriptEntities.BUNDLE['GitHub Page']
 
-        return helpMenuText, 'helpItemSelected'
+        return logMenuText, 'ghItemSelected'
 
 class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
@@ -459,6 +468,16 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         return
 
+    def helpItemSelected(self, OPEN_HELP_EVENT):
+        """menu item-Help/Window help..."""
+
+        self.psLog.debug(OPEN_HELP_EVENT)
+
+        helpStubPath = PatternScriptEntities.getStubPath()
+        PatternScriptEntities.JMRI.util.HelpUtil.openWebPage(helpStubPath)
+
+        return
+
     def logItemSelected(self, OPEN_LOG_EVENT):
         """menu item-Help/View Log"""
 
@@ -473,15 +492,19 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         return
 
-    def helpItemSelected(self, OPEN_HELP_EVENT):
-        """menu item-Help/Window help..."""
+    def ghItemSelected(self, OPEN_GH_EVENT):
+        """menu item-Help/GitHub Page"""
 
-        self.psLog.debug(OPEN_HELP_EVENT)
+        self.psLog.debug(OPEN_GH_EVENT)
 
-        helpStubPath = PatternScriptEntities.getStubPath()
-        PatternScriptEntities.JMRI.util.HelpUtil.openWebPage(helpStubPath)
+        ghPagePath = 'https://github.com//GregRitacco//OperationsPatternScripts'
+        PatternScriptEntities.JMRI.util.HelpUtil.openWebPage(ghPagePath)
 
         return
+
+
+
+
 
     def handle(self):
 
