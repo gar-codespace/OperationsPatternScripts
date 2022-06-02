@@ -7,9 +7,9 @@ import jmri as JMRI
 import java.awt as JAVA_AWT
 import javax.swing as JAVAX_SWING
 import logging as LOGGING
+from java import io as JAVA_IO
 
 import time
-from java import io as javaIo
 from json import loads as jsonLoads, dumps as jsonDumps
 from codecs import open as codecsOpen
 from os import system as osSystem
@@ -29,7 +29,7 @@ CM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.cars.Car
 SM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.schedules.ScheduleManager)
 PM = JMRI.InstanceManager.getDefault(JMRI.util.gui.GuiLafPreferencesManager)
 
-psLog = LOGGING.getLogger('PS.PE.PatternScriptEntities')
+_psLog = LOGGING.getLogger('PS.PE.PatternScriptEntities')
 
 class Logger:
 
@@ -71,14 +71,14 @@ class CheckTpDestination:
 
     def __init__(self):
 
-        self.psLog = LOGGING.getLogger('PS.TP.CheckTpDestination')
+        self.psLog = LOGGING.getLogger('PS.PE.PatternScriptEntities.CheckTpDestination')
 
         return
 
     def directoryExists(self):
 
         tpDirectory = JMRI.util.FileUtil.getHomePath() + 'AppData\\Roaming\\TrainPlayer\\Reports\\'
-        tpDrrectoryFlag = javaIo.File(tpDirectory).isDirectory()
+        tpDrrectoryFlag = JAVA_IO.File(tpDirectory).isDirectory()
         if tpDrrectoryFlag:
             self.psLog.info('TrainPlayer destination directory OK')
         else:
@@ -206,17 +206,17 @@ class validateStubFile:
 
     def validateStubLocation(self):
 
-        if javaIo.File(self.stubLocation).mkdir():
-            psLog.info('Stub location created at: ' + self.stubLocation)
+        if JAVA_IO.File(self.stubLocation).mkdir():
+            _psLog.info('Stub location created at: ' + self.stubLocation)
         else:
-            psLog.info('Stub location already exists')
+            _psLog.info('Stub location already exists')
 
         return
 
     def makehelpFilePath(self):
 
         self.helpFilePath = PLUGIN_ROOT + '\psSupport\psHelp.html'
-        self.helpFilePath = javaIo.File(self.helpFilePath).toURI()
+        self.helpFilePath = JAVA_IO.File(self.helpFilePath).toURI()
         self.helpFilePath = unicode(self.helpFilePath, ENCODING)
 
     def updateStubTemplate(self):
@@ -234,7 +234,7 @@ class validateStubFile:
     def writeStubFile(self):
 
         genericWriteReport(self.stubFileName, self.newStubFile)
-        psLog.debug('psStub writen from stub_template')
+        _psLog.debug('psStub writen from stub_template')
 
         return
 
@@ -255,14 +255,14 @@ def validateFileDestinationDirestories():
     x = 0
     for directory in listOfDirectories:
         testDirectory = destDirPath + directory + '\\'
-        if javaIo.File(testDirectory).isDirectory():
+        if JAVA_IO.File(testDirectory).isDirectory():
             x += 1
         else:
-            javaIo.File(testDirectory).mkdir()
-            psLog.warning(directory + ' created at ' + destDirPath)
+            JAVA_IO.File(testDirectory).mkdir()
+            _psLog.warning(directory + ' created at ' + destDirPath)
 
     if x == len(listOfDirectories):
-        psLog.info('Destination folders check OK')
+        _psLog.info('Destination folders check OK')
 
     return
 
@@ -274,24 +274,24 @@ def validateConfigFileVersion(currentRootDir):
     userPatternConfig = getConfigFile()
 
     if validPatternConfig['CP']['RV'] == userPatternConfig['CP']['RV']:
-        psLog.info('The PatternConfig.json file is the correct version')
+        _psLog.info('The PatternConfig.json file is the correct version')
         return True
     else:
-        psLog.warning('PatternConfig.json version mismatch')
+        _psLog.warning('PatternConfig.json version mismatch')
         return False
 
 def backupConfigFile():
 
-    copyFrom = javaIo.File(PROFILE_PATH + 'operations\\PatternConfig.json')
-    copyTo = javaIo.File(PROFILE_PATH + 'operations\\PatternConfig.json.bak')
+    copyFrom = JAVA_IO.File(PROFILE_PATH + 'operations\\PatternConfig.json')
+    copyTo = JAVA_IO.File(PROFILE_PATH + 'operations\\PatternConfig.json.bak')
     JMRI.util.FileUtil.copy(copyFrom, copyTo)
 
     return
 
 def restoreConfigFile():
 
-    copyFrom = javaIo.File(JMRI.util.FileUtil.getProfilePath() + 'operations\PatternConfig.json.bak')
-    copyTo = javaIo.File(PROFILE_PATH + 'operations\\PatternConfig.json')
+    copyFrom = JAVA_IO.File(JMRI.util.FileUtil.getProfilePath() + 'operations\PatternConfig.json.bak')
+    copyTo = JAVA_IO.File(PROFILE_PATH + 'operations\\PatternConfig.json')
     JMRI.util.FileUtil.copy(copyFrom, copyTo)
 
     return
@@ -317,11 +317,11 @@ def tryConfigFile():
     except ValueError:
         restoreConfigFile()
         configFile = getConfigFile()
-        psLog.warning('Defective PatternConfig.json found, new file restored from backup')
+        _psLog.warning('Defective PatternConfig.json found, new file restored from backup')
     except IOError:
         writeNewConfigFile()
         configFile = getConfigFile()
-        psLog.warning('No PatternConfig.json found, new file written')
+        _psLog.warning('No PatternConfig.json found, new file written')
 
     return configFile
 
@@ -342,8 +342,8 @@ def writeConfigFile(configFile):
 def writeNewConfigFile():
 
     defaultConfigFilePath = PLUGIN_ROOT + '\psEntities\PatternConfig.json'
-    copyFrom = javaIo.File(defaultConfigFilePath)
-    copyTo = javaIo.File(PROFILE_PATH + 'operations\\PatternConfig.json')
+    copyFrom = JAVA_IO.File(defaultConfigFilePath)
+    copyTo = JAVA_IO.File(PROFILE_PATH + 'operations\\PatternConfig.json')
     JMRI.util.FileUtil.copy(copyFrom, copyTo)
 
     return

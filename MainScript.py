@@ -502,10 +502,6 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         return
 
-
-
-
-
     def handle(self):
 
         yTimeNow = time.time()

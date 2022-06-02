@@ -124,7 +124,6 @@ class CreatePatternReportGui:
         workEventPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\' + workEventName + '.txt'
         PatternScriptEntities.genericWriteReport(workEventPath, textListForPrint)
         PatternScriptEntities.genericDisplayReport(workEventPath)
-        # osSystem(PatternScriptEntities.openEditorByComputerType(workEventPath))
 
         if PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
             Model.writeCsvSwitchList(modifiedReport)

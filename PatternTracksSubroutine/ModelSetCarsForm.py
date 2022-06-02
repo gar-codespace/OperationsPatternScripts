@@ -38,8 +38,10 @@ def setRsToTrack(setCarsForm, textBoxEntry):
 
     allTracksAtLoc = ModelEntities.getTracksByLocation(None)
     fromTrack = unicode(setCarsForm['locations'][0]['tracks'][0]['trackName'], PatternScriptEntities.ENCODING)
+    
     for loco in setCarsForm['locations'][0]['tracks'][0]['locos']:
-        if not unicode(userInputList[i], PatternScriptEntities.ENCODING) in allTracksAtLoc: # Catches invalid track typed into box, skips empty entries
+        if not unicode(userInputList[i], PatternScriptEntities.ENCODING) in allTracksAtLoc:
+                # Catches invalid track typed into box, skips empty entries
             i += 1
             continue
         if userInputList[i] == fromTrack:

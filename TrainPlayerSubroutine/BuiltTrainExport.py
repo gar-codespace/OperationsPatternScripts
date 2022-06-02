@@ -85,7 +85,7 @@ class FindTrain:
 
 
 class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
-    """Runs on JMRI train manifest builds"""
+    """Runs on JMRI train builds"""
 
     def init(self):
 

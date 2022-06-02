@@ -1,10 +1,6 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-# from codecs import open as codecsOpen
-# from json import loads as jsonLoads
-# from json import dumps as jsonDumps
-
 from psEntities import PatternScriptEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ModelEntities'
@@ -349,27 +345,3 @@ def makeCsvSwitchlist(trackPattern):
                             + '\n'
 
     return trackPattern['trainDescription'], csvSwitchList
-
-# def appendJsonBody(trainPlayerSwitchList):
-#
-#     reportPath = PatternScriptEntities.PROFILE_PATH \
-#                  + 'operations\\jsonManifests\\TrainPlayerSwitchlist.json'
-#
-#     jsonEventList = PatternScriptEntities.genericReadReport(reportPath)
-#
-#     jsonSwitchList = PatternScriptEntities.loadJson(switchList)
-#
-#
-#
-#
-#     jTemp = jsonSwitchList['locations']
-#     jTemp.append(trainPlayerSwitchList)
-#     jsonSwitchList['locations'] = jTemp
-#
-#     jsonCopyTo = PatternScriptEntities.PROFILE_PATH \
-#                + 'operations\\jsonManifests\\TrainPlayerSwitchlist.json'
-#     jsonObject = jsonDumps(jsonSwitchList, indent=2, sort_keys=True)
-#     with codecsOpen(jsonCopyTo, 'wb', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
-#         jsonWorkFile.write(jsonObject)
-#
-#     return
