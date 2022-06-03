@@ -1,24 +1,20 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-import jmri
-import java.awt
-
-import logging
-from codecs import open as codecsOpen
-from json import loads as jsonLoads, dumps as jsonDumps
+"""Process methods for the Set Cars Form for Track X form"""
 
 from psEntities import PatternScriptEntities
 from PatternTracksSubroutine import ModelEntities
-from TrainPlayerSubroutine import PatternTracksExport
+from TrainPlayerSubroutine import Model as tpModel
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ModelSetCarsForm'
 SCRIPT_REV = 20220101
-psLog = logging.getLogger('PS.PT.ModelSetCarsForm')
+
+_psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.ModelSetCarsForm')
 
 def testValidityOfForm(setCarsForm, textBoxEntry):
 
-    psLog.debug('ModelSetCarsForm.testValidityOfForm')
+    _psLog.debug('ModelSetCarsForm.testValidityOfForm')
 
     locoCount = len(setCarsForm['locations'][0]['tracks'][0]['locos'])
     carCount = len(setCarsForm['locations'][0]['tracks'][0]['cars'])
@@ -26,12 +22,12 @@ def testValidityOfForm(setCarsForm, textBoxEntry):
     if len(textBoxEntry) == locoCount + carCount:
         return True
     else:
-        psLog.critical('mismatched input list and car roster lengths')
+        _psLog.critical('mismatched input list and car roster lengths')
         return False
 
 def setRsToTrack(setCarsForm, textBoxEntry):
 
-    psLog.debug('ModelSetCarsForm.setRsToTrack')
+    _psLog.debug('ModelSetCarsForm.setRsToTrack')
 
     userInputList = []
     for userInput in textBoxEntry:
@@ -42,8 +38,10 @@ def setRsToTrack(setCarsForm, textBoxEntry):
 
     allTracksAtLoc = ModelEntities.getTracksByLocation(None)
     fromTrack = unicode(setCarsForm['locations'][0]['tracks'][0]['trackName'], PatternScriptEntities.ENCODING)
+    
     for loco in setCarsForm['locations'][0]['tracks'][0]['locos']:
-        if not unicode(userInputList[i], PatternScriptEntities.ENCODING) in allTracksAtLoc: # Catches invalid track typed into box, skips empty entries
+        if not unicode(userInputList[i], PatternScriptEntities.ENCODING) in allTracksAtLoc:
+                # Catches invalid track typed into box, skips empty entries
             i += 1
             continue
         if userInputList[i] == fromTrack:
@@ -59,7 +57,7 @@ def setRsToTrack(setCarsForm, textBoxEntry):
             setCount += 1
         i += 1
 
-    jmri.jmrit.operations.rollingstock.engines.EngineManagerXml.save()
+    PatternScriptEntities.JMRI.jmrit.operations.rollingstock.engines.EngineManagerXml.save()
 
     for car in setCarsForm['locations'][0]['tracks'][0]['cars']:
         if not unicode(userInputList[i], PatternScriptEntities.ENCODING) in allTracksAtLoc:
@@ -78,9 +76,9 @@ def setRsToTrack(setCarsForm, textBoxEntry):
             setCount += 1
         i += 1
 
-    jmri.jmrit.operations.rollingstock.cars.CarManagerXml.save()
+    PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarManagerXml.save()
 
-    psLog.info('Rolling stock count: ' + str(setCount) + ', processed from track: ' + fromTrack)
+    _psLog.info('Rolling stock count: ' + str(setCount) + ', processed from track: ' + fromTrack)
 
     return
 
@@ -116,7 +114,7 @@ def deleteFd(carObject):
     return
 
 def applySchedule(toTrackObject, carObject):
-    '''If the to-track is a spur, try to set the load/empty requirement for the track'''
+    """If the to-track is a spur, try to set the load/empty requirement for the track"""
 
     location = PatternScriptEntities.readConfigFile('PT')['PL']
     schedule = getSchedule(location, toTrackObject.getName())
@@ -129,7 +127,7 @@ def applySchedule(toTrackObject, carObject):
     return
 
 def getSchedule(locationString, trackString):
-    '''Returns a schedule if there is one'''
+    """Returns a schedule if there is one"""
 
     track = PatternScriptEntities.LM.getLocationByName(locationString).getTrackByName(trackString, 'Spur')
 
@@ -142,31 +140,31 @@ def getSchedule(locationString, trackString):
 
 def exportSetCarsFormToTp(setCarsForm, textBoxEntry):
 
-    psLog.debug('ModelSetCarsForm.exportSetCarsFormToTp')
+    _psLog.debug('ModelSetCarsForm.exportSetCarsFormToTp')
 
-    PatternScriptEntities.CheckTpDestination().directoryExists()
+    if PatternScriptEntities.CheckTpDestination().directoryExists():
 
-    jmriExport = PatternTracksExport.ExportJmriLocations()
-    locationList = jmriExport.makeLocationList()
-    jmriExport.toTrainPlayer(locationList)
+        jmriExport = tpModel.ExportJmriLocations()
+        locationList = jmriExport.makeLocationList()
+        jmriExport.toTrainPlayer(locationList)
 
-    tpSwitchList = PatternTracksExport.TrackPatternTranslationToTp()
-    modifiedSwitchList = tpSwitchList.modifySwitchList(setCarsForm, textBoxEntry)
-    appendedTpSwitchList = tpSwitchList.appendSwitchList(modifiedSwitchList)
+        tpSwitchList = tpModel.TrackPatternTranslationToTp()
+        modifiedSwitchList = tpSwitchList.modifySwitchList(setCarsForm, textBoxEntry)
+        appendedTpSwitchList = tpSwitchList.appendSwitchList(modifiedSwitchList)
 
-    tpWorkEventProcessor = PatternTracksExport.ProcessWorkEventList()
-    tpWorkEventProcessor.writeTpWorkEventListAsJson(appendedTpSwitchList)
-    tpSwitchListHeader = tpWorkEventProcessor.makeTpHeader(appendedTpSwitchList)
-    tpSwitchListLocations = tpWorkEventProcessor.makeTpLocations(appendedTpSwitchList)
+        tpWorkEventProcessor = tpModel.ProcessWorkEventList()
+        tpWorkEventProcessor.writeTpWorkEventListAsJson(appendedTpSwitchList)
+        tpSwitchListHeader = tpWorkEventProcessor.makeTpHeader(appendedTpSwitchList)
+        tpSwitchListLocations = tpWorkEventProcessor.makeTpLocations(appendedTpSwitchList)
 
-    PatternTracksExport.WriteWorkEventListToTp(tpSwitchListHeader + tpSwitchListLocations).asCsv()
+        tpModel.WriteWorkEventListToTp(tpSwitchListHeader + tpSwitchListLocations).asCsv()
 
     return
 
 def makeLocationDict(setCarsForm, textBoxEntry):
-    '''Replaces car['Set to'] = [ ] with either [Hold] or ["some other valid track"]'''
+    """Replaces car['Set to'] = [ ] with either [Hold] or ["some other valid track"]"""
 
-    psLog.debug('ModelSetCarsForm.makeLocationDict')
+    _psLog.debug('ModelSetCarsForm.makeLocationDict')
 
     trackName = setCarsForm['locations'][0]['tracks'][0]['trackName']
     location = setCarsForm['locations'][0]['locationName']

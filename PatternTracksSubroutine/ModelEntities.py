@@ -1,19 +1,13 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-import jmri
-
-from codecs import open as codecsOpen
-from json import loads as jsonLoads, dumps as jsonDumps
-from xml.etree import ElementTree as ET
-
 from psEntities import PatternScriptEntities
 
-SCRIPT_NAME = 'OperationsPatternScripts.TrackPattern.ModelEntities'
+SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ModelEntities'
 SCRIPT_REV = 20220101
 
 def testSelectedItem(selectedItem):
-    '''Catches user edit of locations'''
+    """Catches user edit of locations"""
 
     allLocations = PatternScriptEntities.getAllLocations() #String list
     if selectedItem in allLocations:
@@ -21,32 +15,24 @@ def testSelectedItem(selectedItem):
     else:
         return allLocations[0]
 
-# def getAllLocations():
-#     '''JMRI sorts the list'''
-#
-#     allLocations = PatternScriptEntities.LM.getLocationsByNameList()
-#     locationList = []
-#     for item in allLocations:
-#         locationList.append(unicode(item.getName(), PatternScriptEntities.ENCODING))
-#
-#     return locationList
+def getAllTracksForLocation(location):
+    """Sets all tracks to false"""
 
-# def getAllTracksForLocation(location):
-#     '''Sets all tracks to false'''
-#
-#     jmriTrackList = PatternScriptEntities.LM.getLocationByName(location).getTracksByNameList(None)
-#     trackDict = {}
-#     for track in jmriTrackList:
-#         trackDict[unicode(track.getName(), PatternScriptEntities.ENCODING)] = False
-#
-#     return trackDict
+    jmriTrackList = PatternScriptEntities.LM.getLocationByName(location).getTracksByNameList(None)
+    trackDict = {}
+    for track in jmriTrackList:
+        trackDict[unicode(track.getName(), PatternScriptEntities.ENCODING)] = False
+
+    return trackDict
 
 def initializeConfigFile():
-    '''initialize or reinitialize the pattern tracks part of the config file on first use, reset, or edit of a location name'''
+    """initialize or reinitialize the pattern tracks part of the config file
+    on first use, reset, or edit of a location name
+    """
 
     newConfigFile = PatternScriptEntities.readConfigFile()
     subConfigfile = newConfigFile['PT']
-    allLocations  = PatternScriptEntities.getAllLocations()
+    allLocations  = getAllLocations()
     subConfigfile.update({'AL': allLocations})
     subConfigfile.update({'PL': allLocations[0]})
     subConfigfile.update({'PT': makeInitialTrackList(allLocations[0])})
@@ -66,7 +52,7 @@ def getTracksByLocation(trackType):
         return allTracksList
 
 def updateTrackCheckBoxes(trackCheckBoxes):
-    '''Returns a dictionary of track names and their check box status'''
+    """Returns a dictionary of track names and their check box status"""
 
     dict = {}
     for item in trackCheckBoxes:
@@ -75,7 +61,7 @@ def updateTrackCheckBoxes(trackCheckBoxes):
     return dict
 
 def getGenericTrackDetails(locationName, trackName):
-    '''The loco and car lists are sorted at this level, used to make the JSON file'''
+    """The loco and car lists are sorted at this level, used to make the JSON file"""
 
     genericTrackDetails = {}
     genericTrackDetails['trackName'] = trackName
@@ -86,8 +72,9 @@ def getGenericTrackDetails(locationName, trackName):
     return genericTrackDetails
 
 def sortLocoList(locoList):
-    '''backupConfigFile() is a bit of user edit protection
-    Sort order of PatternScriptEntities.readConfigFile('PT')['SL'] is top down'''
+    """backupConfigFile() is a bit of user edit protection
+    Sort order of PatternScriptEntities.readConfigFile('PT')['SL'] is top down
+    """
 
     sortLocos = PatternScriptEntities.readConfigFile('PT')['SL']
     for sortKey in sortLocos:
@@ -97,7 +84,7 @@ def sortLocoList(locoList):
     return locoList
 
 def getRsOnTrains():
-    '''Make a list of all rolling stock that are on built trains'''
+    """Make a list of all rolling stock that are on built trains"""
 
     builtTrainList = []
     for train in PatternScriptEntities.TM.getTrainsByStatusList():
@@ -112,7 +99,7 @@ def getRsOnTrains():
     return listOfAssignedRs
 
 def getLocoListForTrack(track):
-    '''Creates a generic locomotive list for a track, used to make the JSON file'''
+    """Creates a generic locomotive list for a track, used to make the JSON file"""
 
     location = PatternScriptEntities.readConfigFile('PT')['PL']
     locoList = getLocoObjects(location, track)
@@ -127,9 +114,11 @@ def getLocoObjects(location, track):
     return [loco for loco in allLocos if loco.getLocationName() == location and loco.getTrackName() == track]
 
 def getDetailsForLocoAsDict(locoObject):
-    '''backupConfigFile() is a bit of user edit protection
+    """backupConfigFile() is a bit of user edit protection
     Mimics jmri.jmrit.operations.setup.Setup.getEngineAttributes()
-    [u'Road', u'Number', u'Type', u'Model', u'Length', u'Weight', u'Consist', u'Owner', u'Track', u'Location', u'Destination', u'Comment']'''
+    [u'Road', u'Number', u'Type', u'Model', u'Length', u'Weight', u'Consist',
+    u'Owner', u'Track', u'Location', u'Destination', u'Comment']
+    """
 
     listOfAssignedRs = getRsOnTrains()
     locoDetailDict = {}
@@ -164,8 +153,8 @@ def getDetailsForLocoAsDict(locoObject):
     return locoDetailDict
 
 def sortCarList(carList):
-    '''backupConfigFile() is a bit of user edit protection
-    Sort order of PatternScriptEntities.readConfigFile('PT')['SC'] is top down'''
+    """backupConfigFile() is a bit of user edit protection
+    Sort order of PatternScriptEntities.readConfigFile('PT')['SC'] is top down"""
 
     sortCars = PatternScriptEntities.readConfigFile('PT')['SC']
     for sortKey in sortCars:
@@ -175,7 +164,7 @@ def sortCarList(carList):
     return carList
 
 def getCarListForTrack(track):
-    '''A list of car attributes as a dictionary'''
+    """A list of car attributes as a dictionary"""
 
     location = PatternScriptEntities.readConfigFile('PT')['PL']
     carList = getCarObjects(location, track)
@@ -189,9 +178,13 @@ def getCarObjects(location, track):
     return [car for car in allCars if car.getLocationName() == location and car.getTrackName() == track]
 
 def getDetailsForCarAsDict(carObject):
-    '''backupConfigFile() is a bit of user edit protection
+    """backupConfigFile() is a bit of user edit protection
     Mimics jmri.jmrit.operations.setup.Setup.getCarAttributes()
-    [u'Road', u'Number', u'Type', u'Length', u'Weight', u'Load', u'Load Type', u'Hazardous', u'Color', u'Kernel', u'Kernel Size', u'Owner', u'Track', u'Location', u'Destination', u'Dest&Track', u'Final Dest', u'FD&Track', u'Comment', u'SetOut Msg', u'PickUp Msg', u'RWE']'''
+    [u'Road', u'Number', u'Type', u'Length', u'Weight', u'Load', u'Load Type',
+    u'Hazardous', u'Color', u'Kernel', u'Kernel Size', u'Owner', u'Track',
+    u'Location', u'Destination', u'Dest&Track', u'Final Dest', u'FD&Track',
+    u'Comment', u'SetOut Msg', u'PickUp Msg', u'RWE']
+    """
 
     fdStandIn = PatternScriptEntities.readConfigFile('PT')
 
@@ -225,13 +218,15 @@ def getDetailsForCarAsDict(carObject):
         carDetailDict[u'Dest&Track'] = fdStandIn['DT']
     else:
         carDetailDict[u'Destination'] = carObject.getDestinationName()
-        carDetailDict[u'Dest&Track'] = carObject.getDestinationName() + ', ' + carObject.getDestinationTrackName()
+        carDetailDict[u'Dest&Track'] = carObject.getDestinationName() \
+                                     + ', ' + carObject.getDestinationTrackName()
     if not (carObject.getFinalDestinationName()):
         carDetailDict[u'Final Dest'] = fdStandIn['FD']
         carDetailDict[u'FD&Track'] = fdStandIn['FT']
     else:
         carDetailDict[u'Final Dest'] = carObject.getFinalDestinationName()
-        carDetailDict[u'FD&Track'] = carObject.getFinalDestinationName() + ', ' + carObject.getFinalDestinationTrackName()
+        carDetailDict[u'FD&Track'] = carObject.getFinalDestinationName() \
+                                   + ', ' + carObject.getFinalDestinationTrackName()
     carDetailDict[u'Comment'] = carObject.getComment()
     trackId =  PatternScriptEntities.LM.getLocationByName(carObject.getLocationName()).getTrackById(carObject.getTrackId())
     carDetailDict[u'SetOut Msg'] = trackId.getCommentSetout()
@@ -250,12 +245,12 @@ def getDetailsForCarAsDict(carObject):
     return carDetailDict
 
 def makeGenericHeader():
-    '''A generic header info for any switch list, used to make the JSON file'''
+    """A generic header info for any switch list, used to make the JSON file"""
 
     listHeader = {}
-    listHeader['railroad'] = unicode(jmri.jmrit.operations.setup.Setup.getRailroadName(), PatternScriptEntities.ENCODING)
-    listHeader['trainName'] = u'Report Type Placeholder'
-    listHeader['trainDescription'] = u'Report Description'
+    listHeader['railroad'] = unicode(PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getRailroadName(), PatternScriptEntities.ENCODING)
+    listHeader['trainName'] = u'Train Name Placeholder'
+    listHeader['trainDescription'] = u'Train Description Placeholder'
     listHeader['trainComment'] = u'Train Comment Placeholder'
     listHeader['date'] = unicode(PatternScriptEntities.timeStamp(), PatternScriptEntities.ENCODING)
     listHeader['locations'] = []
@@ -263,32 +258,26 @@ def makeGenericHeader():
     return listHeader
 
 def writeWorkEventListAsJson(switchList):
-    '''The generic switch list is written as a json'''
+    """The generic switch list is written as a json"""
 
     switchListName = switchList['trainDescription']
-    jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + switchListName + '.json'
-    jsonObject = jsonDumps(switchList, indent=2, sort_keys=True)
-    with codecsOpen(jsonCopyTo, 'wb', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
-        jsonWorkFile.write(jsonObject)
+    switchListPath = PatternScriptEntities.PROFILE_PATH \
+               + 'operations\\jsonManifests\\' + switchListName + '.json'
+    switchListReport = PatternScriptEntities.dumpJson(switchList)
 
+    PatternScriptEntities.genericWriteReport(switchListPath, switchListReport)
     return switchListName
 
 def readJsonWorkEventList(workEventName):
 
-    jsonCopyFrom = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\' + workEventName + '.json'
-    with codecsOpen(jsonCopyFrom, 'r', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
-        jsonEventList = jsonWorkFile.read()
-    textWorkEventList = jsonLoads(jsonEventList)
+    reportPath = PatternScriptEntities.PROFILE_PATH \
+                 + 'operations\\jsonManifests\\' + workEventName + '.json'
+
+    jsonEventList = PatternScriptEntities.genericReadReport(reportPath)
+
+    textWorkEventList = PatternScriptEntities.loadJson(jsonEventList)
 
     return textWorkEventList
-
-def writeTextSwitchList(fileName, textSwitchList):
-
-    textCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\switchLists\\' + fileName + '.txt'
-    with codecsOpen(textCopyTo, 'wb', encoding=PatternScriptEntities.ENCODING) as textWorkFile:
-        textWorkFile.write(textSwitchList)
-
-    return
 
 def makeInitialTrackList(location):
 
@@ -355,21 +344,4 @@ def makeCsvSwitchlist(trackPattern):
                             + car['RWE'] \
                             + '\n'
 
-    return csvSwitchList
-
-def appendJsonBody(trainPlayerSwitchList):
-
-    jsonCopyFrom = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\TrainPlayerSwitchlist.json'
-    with codecsOpen(jsonCopyFrom, 'r', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
-        switchList = jsonWorkFile.read()
-    jsonSwitchList = jsonLoads(switchList)
-    jTemp = jsonSwitchList['locations']
-    jTemp.append(trainPlayerSwitchList)
-    jsonSwitchList['locations'] = jTemp
-
-    jsonCopyTo = jmri.util.FileUtil.getProfilePath() + 'operations\\jsonManifests\\TrainPlayerSwitchlist.json'
-    jsonObject = jsonDumps(jsonSwitchList, indent=2, sort_keys=True)
-    with codecsOpen(jsonCopyTo, 'wb', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
-        jsonWorkFile.write(jsonObject)
-
-    return
+    return trackPattern['trainDescription'], csvSwitchList

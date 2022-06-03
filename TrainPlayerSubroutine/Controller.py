@@ -1,13 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-'''The TrainPlayer Subroutine will be filled in in V3, this is just the framework'''
-
-import jmri
-import java.awt.event
-
-import logging
-from os import system as osSystem
+"""The TrainPlayer Subroutine will be implemented in V3, this is just the framework"""
 
 from psEntities import PatternScriptEntities
 from TrainPlayerSubroutine import Model
@@ -17,17 +11,17 @@ SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.Controller'
 SCRIPT_REV = 20220101
 
 class StartUp:
-    '''Start the TrainPlayer subroutine'''
+    """Start the TrainPlayer subroutine"""
 
     def __init__(self, subroutineFrame=None):
 
-        self.psLog = logging.getLogger('PS.TP.Controller')
+        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.Controller')
         self.subroutineFrame = subroutineFrame
 
         return
 
     def makeSubroutineFrame(self):
-        '''Makes the title border frame'''
+        """Makes the title border frame"""
 
         self.subroutineFrame = View.ManageGui().makeSubroutineFrame()
         subroutinePanel = self.makeSubroutinePanel()
@@ -38,7 +32,7 @@ class StartUp:
         return self.subroutineFrame
 
     def makeSubroutinePanel(self):
-        '''Makes the control panel that sits inside the frame'''
+        """Makes the control panel that sits inside the frame"""
 
         self.subroutinePanel, self.widgets = View.ManageGui().makeSubroutinePanel()
         self.activateWidgets()
@@ -53,13 +47,21 @@ class StartUp:
 
         return
 
-
     def inventoryUpdator(self, EVENT):
         '''Updates JMRI rolling stock locations based on TrainPlayer inventory export'''
 
-        Model.updateInventory()
+        updatedInventory = Model.UpdateInventory()
+        if updatedInventory.checkList():
+            updatedInventory.update()
+            errorReport = updatedInventory.getErrorReport()
+            errorReportPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\Update Inventory.txt'
+            PatternScriptEntities.genericWriteReport(errorReportPath, errorReport)
+            PatternScriptEntities.genericDisplayReport(errorReportPath)
 
-        self.psLog.info('Updated Rolling stock locations')
+            self.psLog.info('Updated Rolling stock locations from TrainPlayer')
+        else:
+            self.psLog.info('No TrainPlayer inventory list to update')
+
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return

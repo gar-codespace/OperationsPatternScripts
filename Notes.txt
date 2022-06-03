@@ -4,6 +4,7 @@ Comments:
 Tested Items:
   Plugin
     Handle multiple versions OK
+    Handles font size change OK
     Test for file write locations OK
     All Set Cars windows close when Pattern Scripts window is closed OK
     PatternConfig.json version check OK
@@ -48,7 +49,7 @@ Tested Items:
     Language changes OK
     Language bundle sketched in, to be expanded
     Bundle added with French test case
-    BUNDLE calls moved to only 'View*' methods and classes
+    BUNDLE calls placed in 'View' methods only as much as possible
 
   TrainPlayer
     Add a listener to monitor if a new train is created or deleted, builtTrain listeners updated accordingly
@@ -78,12 +79,11 @@ Catches Items:
 
 Todo:
   Test with two profiles running
-  BUNDLE calls seem to be scattered around MainScript
 
 Version 3 ideas:
   Implement makePatternScriptsWindow() from config file list
+  Implement CP MI
   Fill out TrainPlayer Support subroutine.
-  Use CP MI to create PS window menu items
   mergeConfigFiles()
   Enhance and harden BUNDLE
   Start working on distributed JMRI

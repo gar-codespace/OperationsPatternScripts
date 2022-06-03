@@ -1,28 +1,23 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-import jmri
-import java.awt
-
-import logging
+"""Makes a 'Set Cars Form for Track X' form for each selected track"""
 
 from psEntities import PatternScriptEntities
 from PatternTracksSubroutine import Model
 from PatternTracksSubroutine import ModelSetCarsForm
 from PatternTracksSubroutine import ViewSetCarsForm
 
-'''Makes a "Set Cars Form for Track X" form for each selected track'''
-
-SCRIPT_NAME = 'OperationsPatternScripts.ControllerSetCarsForm'
+SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ControllerSetCarsForm'
 SCRIPT_REV = 20220101
 
 _trackNameClickedOn = None
 
-class TextBoxEntryListener(java.awt.event.MouseAdapter):
-    '''When any of the "Set Cars Form for Track X" text inpou boxes is clicked on'''
+class TextBoxEntryListener(PatternScriptEntities.JAVA_AWT.event.MouseAdapter):
+    """When any of the 'Set Cars Form for Track X' text inpou boxes is clicked on"""
 
     def __init__(self):
-        self.psLog = logging.getLogger('PS.PT.TextBoxEntryListener')
+        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.TextBoxEntryListener')
 
         return
 
@@ -36,12 +31,13 @@ class TextBoxEntryListener(java.awt.event.MouseAdapter):
         return
 
 class CreatePatternReportGui:
-    '''Creates an instance of each "Set Cars Form for Track X" window,
-    [0] is used to avoid for-loops since there is only 1 location and track'''
+    """Creates an instance of each 'Set Cars Form for Track X' window,
+    [0] is used to avoid for-loops since there is only 1 location and track
+    """
 
     def __init__(self, setCarsForm):
 
-        self.psLog = logging.getLogger('PS.PT.CreatePatternReportGui')
+        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.CreatePatternReportGui')
 
         self.setCarsForm = setCarsForm
         self.locationName = setCarsForm['locations'][0]['locationName']
@@ -51,7 +47,7 @@ class CreatePatternReportGui:
         return
 
     def makeFrame(self):
-        '''Create a JMRI jFrame window'''
+        """Create a JMRI jFrame window"""
 
         setCarsForTrackForm, self.buttonDict = ViewSetCarsForm.makeSetCarsForTrackForm(self.setCarsForm)
         setCarsForTrackWindow = ViewSetCarsForm.setCarsForTrackWindow(setCarsForTrackForm)
@@ -91,7 +87,7 @@ class CreatePatternReportGui:
             return True
 
     def trackRowButton(self, MOUSE_CLICKED):
-        '''Any button of the "Set Cars Form for Track X" - row of track buttons'''
+        """Any button of the 'Set Cars Form for Track X' - row of track buttons"""
 
         _trackNameClickedOn = unicode(MOUSE_CLICKED.getSource().getText(), PatternScriptEntities.ENCODING)
         global _trackNameClickedOn
@@ -99,36 +95,47 @@ class CreatePatternReportGui:
         return
 
     def scheduleButton(self, MOUSE_CLICKED):
-        '''The named schedule button if displayed on any "Set Cars Form for Track X" window'''
+        """The named schedule button if displayed on any 'Set Cars Form for Track X' window"""
 
         scheduleName = MOUSE_CLICKED.getSource().getText()
         schedule = PatternScriptEntities.SM.getScheduleByName(scheduleName)
         track = PatternScriptEntities.LM.getLocationByName(self.locationName).getTrackByName(self.trackName, None)
-        jmri.jmrit.operations.locations.schedules.ScheduleEditFrame(schedule, track)
+        PatternScriptEntities.JMRI.jmrit.operations.locations.schedules.ScheduleEditFrame(schedule, track)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 
     def printButton(self, MOUSE_CLICKED):
-        '''Makes a Set Cars (SC) switch list for the active "Set Cars Form for Track X" window'''
+        """Makes a Set Cars (SC) switch list for the
+        active 'Set Cars Form for Track X' window
+        """
 
         if not self.quickCheck():
             return
 
-        locationDict = ModelSetCarsForm.makeLocationDict(self.setCarsForm, self.buttonDict['textBoxEntry']) # Replaces [Hold] with a track name
-        modifiedReport = Model.makeReport(locationDict, 'SC') # Tweaks the header for the report
-        Model.printWorkEventList(modifiedReport, trackTotals=False)
+        locationDict = ModelSetCarsForm.makeLocationDict( \
+                self.setCarsForm, self.buttonDict['textBoxEntry'] \
+                ) # Replaces [Hold] with a track name
 
-        if jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
-            Model.writeCsvSwitchList(modifiedReport, 'SC')
+        modifiedReport = Model.makeReport(locationDict, 'SC')
+
+        workEventName, textListForPrint = Model.makeWorkEventList(modifiedReport, trackTotals=False)
+        workEventPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\' + workEventName + '.txt'
+        PatternScriptEntities.genericWriteReport(workEventPath, textListForPrint)
+        PatternScriptEntities.genericDisplayReport(workEventPath)
+
+        if PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
+            Model.writeCsvSwitchList(modifiedReport)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 
     def setButton(self, MOUSE_CLICKED):
-        '''Event that moves cars to the tracks entered in the text box of the "Set Cars Form for Track X" form'''
+        """Event that moves cars to the tracks entered in the text box of
+        the 'Set Cars Form for Track X' form
+        """
 
         if not self.quickCheck():
             return
@@ -144,12 +151,12 @@ class CreatePatternReportGui:
         return
 
     def trainPlayerButton(self, MOUSE_CLICKED):
-        '''Accumulate switch lists into one TrainPlayer switch list'''
+        """Accumulate switch lists into one TrainPlayer switch list"""
 
         if not self.quickCheck():
             return
 
-        MOUSE_CLICKED.getSource().setBackground(java.awt.Color.GREEN)
+        MOUSE_CLICKED.getSource().setBackground(PatternScriptEntities.JAVA_AWT.Color.GREEN)
 
         ModelSetCarsForm.exportSetCarsFormToTp(self.setCarsForm, self.buttonDict['textBoxEntry'])
 

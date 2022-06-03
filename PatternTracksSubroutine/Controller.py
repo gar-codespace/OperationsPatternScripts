@@ -1,12 +1,6 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-import jmri
-import java.awt.event
-
-import logging
-from os import system as osSystem
-
 from psEntities import PatternScriptEntities
 from PatternTracksSubroutine import Model
 from PatternTracksSubroutine import View
@@ -14,13 +8,12 @@ from PatternTracksSubroutine import View
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.Controller'
 SCRIPT_REV = 20220101
 
-class LocationComboBox(java.awt.event.ActionListener):
-    '''Event triggered from location combobox selection'''
+class LocationComboBox(PatternScriptEntities.JAVA_AWT.event.ActionListener):
+    """Event triggered from location combobox selection"""
 
     def __init__(self, subroutineFrame):
 
         self.subroutineFrame = subroutineFrame
-        self.psLog = logging.getLogger('PS.PT.ComboBox')
 
     def actionPerformed(self, EVENT):
 
@@ -35,17 +28,17 @@ class LocationComboBox(java.awt.event.ActionListener):
         return
 
 class StartUp:
-    '''Start the pattern tracks subroutine'''
+    """Start the pattern tracks subroutine"""
 
     def __init__(self, subroutineFrame=None):
 
-        self.psLog = logging.getLogger('PS.PT.Controller')
+        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.Controller')
         self.subroutineFrame = subroutineFrame
 
         return
 
     def makeSubroutineFrame(self):
-        '''Makes the title border frame'''
+        """Makes the title border frame"""
 
         self.subroutineFrame = View.ManageGui().makeSubroutineFrame()
         subroutinePanel = self.makeSubroutinePanel()
@@ -56,7 +49,7 @@ class StartUp:
         return self.subroutineFrame
 
     def makeSubroutinePanel(self):
-        '''Makes the control panel that sits inside the frame'''
+        """Makes the control panel that sits inside the frame"""
 
         if not PatternScriptEntities.readConfigFile('PT')['AL']:
             Model.updateLocations()
@@ -72,7 +65,6 @@ class StartUp:
         self.widgets[1].actionPerformed = self.yardTrackOnlyCheckBox
         self.widgets[4].actionPerformed = self.patternButton
         self.widgets[5].actionPerformed = self.setCarsButton
-        # self.widgets[6].actionPerformed = self.viewLogButton
 
         return
 
@@ -88,19 +80,17 @@ class StartUp:
         configFile['PT'].update({'PT': trackDict})
         configFile['PT'].update({'PA': self.widgets[1].selected})
         configFile['PT'].update({'PI': self.widgets[2].selected})
+        PatternScriptEntities.writeConfigFile(configFile)
 
         subroutinePanel = StartUp(self.subroutineFrame).makeSubroutinePanel()
         self.subroutineFrame.removeAll()
         self.subroutineFrame.add(subroutinePanel)
         self.subroutineFrame.revalidate()
 
-        PatternScriptEntities.writeConfigFile(configFile)
-        # PatternScriptEntities.backupConfigFile()
-
         return
 
     def patternButton(self, EVENT):
-        '''Makes a pattern tracks report based on the config file (PR)'''
+        """Makes a pattern tracks report based on the config file (PR)"""
 
         self.psLog.debug('Controller.patternButton')
 
@@ -117,17 +107,20 @@ class StartUp:
         locationDict = Model.makeLocationDict()
         modifiedReport = Model.makeReport(locationDict, 'PR')
 
-        Model.printWorkEventList(modifiedReport, trackTotals=True)
+        workEventName, textListForPrint = Model.makeWorkEventList(modifiedReport, trackTotals=True)
+        workEventPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\' + workEventName + '.txt'
+        PatternScriptEntities.genericWriteReport(workEventPath, textListForPrint)
+        PatternScriptEntities.genericDisplayReport(workEventPath)
 
-        if jmri.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
-            Model.writeCsvSwitchList(modifiedReport, 'PR')
+        if PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
+            Model.writeCsvSwitchList(modifiedReport)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 
     def setCarsButton(self, EVENT):
-        '''Opens a "Pattern Report for Track X" window for each checked track'''
+        """Opens a "Pattern Report for Track X" window for each checked track"""
 
         self.psLog.debug('Controller.setCarsButton')
 

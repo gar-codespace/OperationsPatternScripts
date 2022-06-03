@@ -80,7 +80,7 @@
     "PW" : 1500,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 2022
+    "RV" : 20220601
   },
   "EM": {
     "1": "Mac Classic ",
@@ -104,9 +104,9 @@
     "PL" : "",
     "PT" : {
     },
-    "PA" : true,
-    "PI" : true,
-    "TI" : false,
+    "PA" : false,
+    "PI" : false,
+    "TI" : true,
     "AS" : true,
     "PW" : 260,
     "PH" : 16,

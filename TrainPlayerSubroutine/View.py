@@ -1,14 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-'''View script for the TrainPlayer subroutine'''
-
-import jmri
-import javax.swing
-import java.awt
-
-import logging
-from os import system as osSystem
+"""Implemented in v3"""
 
 from psEntities import PatternScriptEntities
 from psBundle import Bundle
@@ -17,27 +10,28 @@ from TrainPlayerSubroutine import ViewEntities
 SCRIPT_NAME = 'OperationsPatternScripts.TrianPlayerSubroutine.View'
 SCRIPT_REV = 20220101
 
-psLog = logging.getLogger('PS.TrainPlayer.View')
 
 class ManageGui:
 
     def __init__(self):
 
-        self.psLog = logging.getLogger('PS.TP.View')
+        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.TrainPlayer.View')
         self.configFile = PatternScriptEntities.readConfigFile('TP')
 
         return
 
     def makeSubroutineFrame(self):
-        '''Make the frame that all the TrainPlayer controls are added to'''
+        """Make the frame that all the TrainPlayer controls are added to"""
 
-        subroutineFrame = javax.swing.JPanel() # the track pattern panel
-        subroutineFrame.border = javax.swing.BorderFactory.createTitledBorder(PatternScriptEntities.BUNDLE['TrainPlayer Support Subroutine'])
+        subroutineFrame = PatternScriptEntities.JAVX_SWING.JPanel() # the track pattern panel
+        subroutineFrame.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder( \
+                PatternScriptEntities.BUNDLE['TrainPlayer Support Subroutine'] \
+                )
 
         return subroutineFrame
 
     def makeSubroutinePanel(self):
-        '''Make the TrainPlayer controls'''
+        """Make the TrainPlayer controls"""
 
         self.psLog.debug('View.makeSubroutinePanel')
 

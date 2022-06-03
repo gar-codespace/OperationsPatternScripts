@@ -1,38 +1,42 @@
 # © 2021, 2022 Greg Ritacco
 
-'''Pattern Scripts plugin for JMRI Operations Pro'''
+"""Pattern Scripts plugin for JMRI Operations Pro"""
 
 import jmri
-from apps import Apps
-from java.beans import PropertyChangeListener
 import java.awt
 import javax.swing
-
 import logging
+
+from java.beans import PropertyChangeListener
+from apps import Apps
 import time
 from sys import path as sysPath
 
-SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
-SCRIPT_REV = 20220101
-
 SCRIPT_DIR = 'OperationsPatternScripts'
+# SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b1'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b2'
-# SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b3'
-# SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b4'
 
-SCRIPT_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
+PLUGIN_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
 
-sysPath.append(SCRIPT_ROOT)
+sysPath.append(PLUGIN_ROOT)
 from psEntities import PatternScriptEntities
 from psBundle import Bundle
 from TrainPlayerSubroutine import BuiltTrainExport
 
-PatternScriptEntities.SCRIPT_ROOT = SCRIPT_ROOT
-PatternScriptEntities.ENCODING = PatternScriptEntities.readConfigFile('CP')['SE']
-PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale(SCRIPT_ROOT)
+SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
+SCRIPT_REV = 20220101
 
-class TrainsTableListener(javax.swing.event.TableModelListener):
-    '''Catches user add or remove train while TrainPlayer support is enabled'''
+PatternScriptEntities.JMRI = jmri
+PatternScriptEntities.JAVA_AWT = java.awt
+PatternScriptEntities.JAVX_SWING = javax.swing
+PatternScriptEntities.LOGGING = logging
+
+PatternScriptEntities.PLUGIN_ROOT = PLUGIN_ROOT
+PatternScriptEntities.ENCODING = PatternScriptEntities.readConfigFile('CP')['SE']
+PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale(PLUGIN_ROOT)
+
+class TrainsTableListener(PatternScriptEntities.JAVX_SWING.event.TableModelListener):
+    """Catches user add or remove train while TrainPlayer support is enabled"""
 
     def __init__(self, builtTrainListener):
 
@@ -44,35 +48,40 @@ class TrainsTableListener(javax.swing.event.TableModelListener):
 
         trainList = PatternScriptEntities.TM.getTrainsByIdList()
         for train in trainList:
-            train.removePropertyChangeListener(self.builtTrainListener) # Does not throw error if there is no listener to remove :)
+            train.removePropertyChangeListener(self.builtTrainListener)
+            # Does not throw error if there is no listener to remove :)
             train.addPropertyChangeListener(self.builtTrainListener)
 
         return
 
 class BuiltTrainListener(java.beans.PropertyChangeListener):
-    '''Starts TrainPlayer manifest export on trainBuilt'''
+    """Starts TrainPlayer manifest export on trainBuilt"""
 
     def propertyChange(self, TRAIN_BUILT):
 
-        if TRAIN_BUILT.propertyName == 'TrainBuilt' and TRAIN_BUILT.newValue:
+        if TRAIN_BUILT.propertyName == 'TrainBuilt' and TRAIN_BUILT.newValue \
+                and PatternScriptEntities.CheckTpDestination().directoryExists():
+
             tpManifest = BuiltTrainExport.ManifestForTrainPlayer()
             tpManifest.passInTrain(TRAIN_BUILT.getSource())
             tpManifest.start()
 
         return
 
-class PatternScriptsWindowListener(java.awt.event.WindowListener):
-    '''Listener to respond to the plugin window operations. A bit verbose because of intended expansion in v3'''
+class PatternScriptsWindowListener(PatternScriptEntities.JAVA_AWT.event.WindowListener):
+    """Listener to respond to the plugin window operations.
+    A bit verbose because of intended expansion in v3.
+    """
 
     def __init__(self):
 
         return
 
     def closeSetCarsWindows(self):
-        '''Close all the Set Cars windows when the Pattern Scripts window is closed'''
+        """Close all the Set Cars windows when the Pattern Scripts window is closed"""
 
-        for frameName in jmri.util.JmriJFrame.getFrameList():
-            frame = jmri.util.JmriJFrame.getFrame(frameName)
+        for frameName in PatternScriptEntities.JMRI.util.JmriJFrame.getFrameList():
+            frame = PatternScriptEntities.JMRI.util.JmriJFrame.getFrame(frameName)
             if frame.getName() == 'setCarsWindow':
                 frame.setVisible(False)
                 frame.dispose()
@@ -118,14 +127,14 @@ class Model:
 
     def __init__(self):
 
-        self.psLog = logging.getLogger('PS.Model')
+        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.Model')
 
         return
 
     def validatePatternConfig(self):
-        '''To be reworked in v3'''
+        """To be reworked in v3"""
 
-        if not PatternScriptEntities.validateConfigFileVersion(SCRIPT_ROOT):
+        if not PatternScriptEntities.validateConfigFileVersion(PLUGIN_ROOT):
             PatternScriptEntities.mergeConfigFiles()
             self.psLog.info('Previous PatternConfig.json merged with new')
             PatternScriptEntities.writeNewConfigFile()
@@ -136,7 +145,7 @@ class Model:
     def makePatternScriptsPanel(self, pluginPanel):
 
         for subroutine in self.makeSubroutineList():
-            pluginPanel.add(javax.swing.Box.createRigidArea(java.awt.Dimension(0,10)))
+            pluginPanel.add(PatternScriptEntities.JAVX_SWING.Box.createRigidArea(PatternScriptEntities.JAVA_AWT.Dimension(0,10)))
             pluginPanel.add(subroutine)
         return pluginPanel
 
@@ -158,7 +167,7 @@ class View:
 
     def __init__(self, scrollPanel):
 
-        self.psLog = logging.getLogger('PS.View')
+        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.View')
 
         self.controlPanel = scrollPanel
         self.psPluginMenuItems = []
@@ -167,23 +176,23 @@ class View:
 
     def makePsButton(self):
 
-        psButton = javax.swing.JButton(name='psButton')
+        psButton = PatternScriptEntities.JAVX_SWING.JButton(name='psButton')
         psButton.setText(PatternScriptEntities.BUNDLE['Pattern Scripts'])
 
         return psButton
 
     def makePluginPanel(self):
-        '''Still not sure if it should be a panel or box'''
+        """Still not sure if it should be a panel or box"""
 
-        # pluginPanel = javax.swing.JPanel()
-        pluginPanel = javax.swing.Box(javax.swing.BoxLayout.PAGE_AXIS)
+        # pluginPanel = PatternScriptEntities.JAVX_SWING.JPanel()
+        pluginPanel = PatternScriptEntities.JAVX_SWING.Box(PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS)
 
         return pluginPanel
 
     def makeScrollPanel(self, pluginPanel):
 
-        scrollPanel = javax.swing.JScrollPane(pluginPanel)
-        scrollPanel.border = javax.swing.BorderFactory.createLineBorder(java.awt.Color.GRAY)
+        scrollPanel = PatternScriptEntities.JAVX_SWING.JScrollPane(pluginPanel)
+        scrollPanel.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createLineBorder(PatternScriptEntities.JAVA_AWT.Color.GRAY)
 
         return scrollPanel
 
@@ -192,31 +201,33 @@ class View:
         return self.psPluginMenuItems
 
     def makePatternScriptsWindow(self):
-        '''In v3, implement this with loops, using values from config file'''
+        """In v3, implement this with loops, using values from config file"""
 
-        uniqueWindow = jmri.util.JmriJFrame()
+        uniqueWindow = PatternScriptEntities.JMRI.util.JmriJFrame()
 
         # Loop over this part in v3
         asMenuItem = self.makeMenuItem(self.setAsDropDownText())
         tpMenuItem = self.makeMenuItem(self.setTiDropDownText())
-        logMenuItem = self.makeMenuItem(self.setLmDropDownText())
         helpMenuItem = self.makeMenuItem(self.setHmDropDownText())
+        logMenuItem = self.makeMenuItem(self.setLmDropDownText())
+        gitHubItem = self.makeMenuItem(self.setGhDropDownText())
 
-        toolsMenu = javax.swing.JMenu(PatternScriptEntities.BUNDLE['Tools'])
-        toolsMenu.add(jmri.jmrit.operations.setup.OptionAction())
-        toolsMenu.add(jmri.jmrit.operations.setup.PrintOptionAction())
-        toolsMenu.add(jmri.jmrit.operations.setup.BuildReportOptionAction())
+        toolsMenu = PatternScriptEntities.JAVX_SWING.JMenu(PatternScriptEntities.BUNDLE['Tools'])
+        toolsMenu.add(PatternScriptEntities.JMRI.jmrit.operations.setup.OptionAction())
+        toolsMenu.add(PatternScriptEntities.JMRI.jmrit.operations.setup.PrintOptionAction())
+        toolsMenu.add(PatternScriptEntities.JMRI.jmrit.operations.setup.BuildReportOptionAction())
         toolsMenu.add(asMenuItem)
         toolsMenu.add(tpMenuItem)
 
-        helpMenu = javax.swing.JMenu(PatternScriptEntities.BUNDLE['Help'])
-        helpMenu.add(logMenuItem)
+        helpMenu = PatternScriptEntities.JAVX_SWING.JMenu(PatternScriptEntities.BUNDLE['Help'])
         helpMenu.add(helpMenuItem)
+        helpMenu.add(logMenuItem)
+        helpMenu.add(gitHubItem)
 
-        psMenuBar = javax.swing.JMenuBar()
+        psMenuBar = PatternScriptEntities.JAVX_SWING.JMenuBar()
         psMenuBar.add(toolsMenu)
-        psMenuBar.add(jmri.jmrit.operations.OperationsMenu())
-        psMenuBar.add(jmri.util.WindowMenu(uniqueWindow))
+        psMenuBar.add(PatternScriptEntities.JMRI.jmrit.operations.OperationsMenu())
+        psMenuBar.add(PatternScriptEntities.JMRI.util.WindowMenu(uniqueWindow))
         psMenuBar.add(helpMenu)
 
         uniqueWindow.setName('patternScriptsWindow')
@@ -236,14 +247,14 @@ class View:
 
         itemText, itemName = itemMethod
 
-        menuItem = javax.swing.JMenuItem(itemText)
+        menuItem = PatternScriptEntities.JAVX_SWING.JMenuItem(itemText)
         menuItem.setName(itemName)
         self.psPluginMenuItems.append(menuItem)
 
         return menuItem
 
     def setAsDropDownText(self):
-        '''itemMethod - Set the drop down text per the Apply Schedule flag'''
+        """itemMethod - Set the drop down text per the Apply Schedule flag"""
 
         patternConfig = PatternScriptEntities.readConfigFile('PT')
         if patternConfig['AS']:
@@ -254,7 +265,7 @@ class View:
         return menuText, 'asItemSelected'
 
     def setTiDropDownText(self):
-        '''itemMethod - Set the drop down text per the TrainPlayer Include flag'''
+        """itemMethod - Set the drop down text per the TrainPlayer Include flag"""
 
         patternConfig = PatternScriptEntities.readConfigFile('PT')
         if patternConfig['TI']:
@@ -264,31 +275,38 @@ class View:
 
         return menuText, 'tpItemSelected'
 
-    def setLmDropDownText(self):
-        '''itemMethod - Set the drop down text for the Log menu item'''
-
-        logMenuText = PatternScriptEntities.BUNDLE['View Log']
-
-        return logMenuText, 'logItemSelected'
-
     def setHmDropDownText(self):
-        '''itemMethod - Set the drop down text for the Log menu item'''
+        """itemMethod - Set the drop down text for the Log menu item"""
 
         helpMenuText = PatternScriptEntities.BUNDLE['Window Help...']
 
         return helpMenuText, 'helpItemSelected'
 
-class Controller(jmri.jmrit.automat.AbstractAutomaton):
+    def setLmDropDownText(self):
+        """itemMethod - Set the drop down text for the Log menu item"""
+
+        logMenuText = PatternScriptEntities.BUNDLE['View Log']
+
+        return logMenuText, 'logItemSelected'
+
+    def setGhDropDownText(self):
+        """itemMethod - Set the drop down text for the gitHub page item"""
+
+        logMenuText = PatternScriptEntities.BUNDLE['GitHub Page']
+
+        return logMenuText, 'ghItemSelected'
+
+class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
     def init(self):
 
-        logPath = jmri.util.FileUtil.getProfilePath() + 'operations\\buildstatus\\PatternScriptsLog.txt'
+        logPath = PatternScriptEntities.PROFILE_PATH  + 'operations\\buildstatus\\PatternScriptsLog.txt'
         self.logger = PatternScriptEntities.Logger(logPath)
         self.logger.startLogger('PS')
 
         self.model = Model()
 
-        self.trainsTableModel = jmri.jmrit.operations.trains.TrainsTableModel()
+        self.trainsTableModel = PatternScriptEntities.JMRI.jmrit.operations.trains.TrainsTableModel()
         self.builtTrainListener = BuiltTrainListener()
         self.trainsTableListener = TrainsTableListener(self.builtTrainListener)
 
@@ -297,7 +315,7 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
         return
 
     def addPatternScriptsButton(self):
-        '''The Pattern Scripts button on the PanelPro frame'''
+        """The Pattern Scripts button on the PanelPro frame"""
 
         self.patternScriptsButton = View(None).makePsButton()
         self.patternScriptsButton.actionPerformed = self.patternScriptsButtonAction
@@ -358,8 +376,8 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
     def closePsWindow(self):
 
-        for frameName in jmri.util.JmriJFrame.getFrameList():
-            frame = jmri.util.JmriJFrame.getFrame(frameName)
+        for frameName in PatternScriptEntities.JMRI.util.JmriJFrame.getFrameList():
+            frame = PatternScriptEntities.JMRI.util.JmriJFrame.getFrame(frameName)
             if frame.getName() == 'patternScriptsWindow':
                 updateWindowParams(frame)
                 frame.setVisible(False)
@@ -391,7 +409,9 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
         return
 
     def addMenuItemListeners(self):
-        '''Use the pull down item names as the attribute to set the listener: asItemSelected, tpItemSelected, logItemSelected, helpItemSelected'''
+        """Use the pull down item names as the attribute to set the
+        listener: asItemSelected, tpItemSelected, logItemSelected, helpItemSelected
+        """
 
         for menuItem in self.menuItemList:
             menuItem.addActionListener(getattr(self, menuItem.getName()))
@@ -399,7 +419,7 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
         return
 
     def asItemSelected(self, AS_ACTIVATE_EVENT):
-        '''menu item-Tools/Apply Schedule'''
+        """menu item-Tools/Apply Schedule"""
 
         self.psLog.debug(AS_ACTIVATE_EVENT)
         patternConfig = PatternScriptEntities.readConfigFile()
@@ -420,7 +440,7 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
         return
 
     def tpItemSelected(self, TP_ACTIVATE_EVENT):
-        '''menu item-Tools/Enable Trainplayer'''
+        """menu item-Tools/Enable Trainplayer"""
 
         self.psLog.debug(TP_ACTIVATE_EVENT)
         patternConfig = PatternScriptEntities.readConfigFile()
@@ -438,7 +458,6 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
             patternConfig['PT'].update({'TI': True})
             TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE["Disable TrainPlayer"])
 
-            PatternScriptEntities.CheckTpDestination().directoryExists()
             self.trainsTableModel.addTableModelListener(self.trainsTableListener)
             self.addBuiltTrainListener()
 
@@ -449,44 +468,56 @@ class Controller(jmri.jmrit.automat.AbstractAutomaton):
 
         return
 
+    def helpItemSelected(self, OPEN_HELP_EVENT):
+        """menu item-Help/Window help..."""
+
+        self.psLog.debug(OPEN_HELP_EVENT)
+
+        helpStubPath = PatternScriptEntities.getStubPath()
+        PatternScriptEntities.JMRI.util.HelpUtil.openWebPage(helpStubPath)
+
+        return
+
     def logItemSelected(self, OPEN_LOG_EVENT):
-        '''menu item-Help/View Log'''
+        """menu item-Help/View Log"""
 
         self.psLog.debug(OPEN_LOG_EVENT)
 
-        PatternScriptEntities.makePatternLog()
-        PatternScriptEntities.printPatternLog()
+        logFileName, patternLog = PatternScriptEntities.makePatternLog()
+        logFilePath = PatternScriptEntities.PROFILE_PATH + 'operations\\buildstatus\\' + logFileName + '.txt'
+        PatternScriptEntities.genericWriteReport(logFilePath, patternLog)
+        PatternScriptEntities.genericDisplayReport(logFilePath)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 
-    def helpItemSelected(self, OPEN_HELP_EVENT):
-        '''menu item-Help/Window help...'''
+    def ghItemSelected(self, OPEN_GH_EVENT):
+        """menu item-Help/GitHub Page"""
 
-        self.psLog.debug(OPEN_HELP_EVENT)
+        self.psLog.debug(OPEN_GH_EVENT)
 
-        helpStubPath = PatternScriptEntities.getStubPath()
-        jmri.util.HelpUtil.openWebPage(helpStubPath)
+        ghPagePath = 'https://github.com//GregRitacco//OperationsPatternScripts'
+        PatternScriptEntities.JMRI.util.HelpUtil.openWebPage(ghPagePath)
 
         return
 
     def handle(self):
 
         yTimeNow = time.time()
-        self.psLog = logging.getLogger('PS.Controller')
+        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.Controller')
         self.logger.initialLogMessage(self.psLog)
 
         self.model.validatePatternConfig()
         PatternScriptEntities.validateFileDestinationDirestories()
-        PatternScriptEntities.validateStubFile(SCRIPT_ROOT)
+        PatternScriptEntities.validateStubFile().isStubFile()
         self.addTrainPlayerListeners()
         if PatternScriptEntities.readConfigFile()['CP']['AP']:
             self.addPatternScriptsButton()
 
-        self.psLog.info('Current Pattern Scripts directory: ' + SCRIPT_ROOT)
+        self.psLog.info('Current Pattern Scripts directory: ' + PLUGIN_ROOT)
         self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
-        print('Current Pattern Scripts directory: ' + SCRIPT_ROOT)
+        print('Current Pattern Scripts directory: ' + PLUGIN_ROOT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return False

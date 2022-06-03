@@ -1,10 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-import jmri
-
 from codecs import open as codecsOpen
-import logging
 import time
 
 from psEntities import PatternScriptEntities
@@ -13,7 +10,7 @@ SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.ModelEntities'
 SCRIPT_REV = 20220101
 
 def convertJmriDateToEpoch(jmriTime):
-    '''2022-02-26T17:16:17.807+0000'''
+    """2022-02-26T17:16:17.807+0000"""
 
     epochTime = time.mktime(time.strptime(jmriTime, "%Y-%m-%dT%H:%M:%S.%f+0000"))
 
@@ -80,7 +77,8 @@ def parseRollingStockAsDict(rS):
     rsDict[u'Length'] = rS[u'length']
     rsDict[u'Weight'] = rS[u'weightTons']
     rsDict[u'Track'] = unicode(rS[u'location'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
-    rsDict[u'Set to'] = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.ENCODING) + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
+    rsDict[u'Set to'] = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.ENCODING) \
+        + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
     try:
         jFinalDestination = unicode(rS[u'finalDestination'][u'userName'], PatternScriptEntities.ENCODING)
         try:
@@ -89,22 +87,22 @@ def parseRollingStockAsDict(rS):
             jFinalTrack = u'Any'
         rsDict[u'FD&Track'] = jFinalDestination + ';' + jFinalTrack
     except:
-        rsDict[u'FD&Track'] = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.ENCODING) + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
+        rsDict[u'FD&Track'] = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.ENCODING) \
+            + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
 
     return rsDict
 
 def getTpInventory():
 
-    tpInventoryPath = jmri.util.FileUtil.getHomePath() + "AppData\Roaming\TrainPlayer\Reports\TrainPlayer Export - Inventory.txt"
+    tpInventoryPath = PatternScriptEntities.JMRI.util.FileUtil.getHomePath() \
+        + "AppData\Roaming\TrainPlayer\Reports\TrainPlayer Export - Inventory.txt"
     tpInventory = ''
 
     try: # Catch TrainPlayer not installed
         with codecsOpen(tpInventoryPath, 'r', encoding=PatternScriptEntities.ENCODING) as csvWorkFile:
             tpInventory = [line.rstrip() for line in csvWorkFile]
-            # tpInventory = csvWorkFile.read()
-
     except IOError:
-        psLog.warning('TrainPlayer directory or file not found')
+        pass
 
     return tpInventory
 
@@ -120,11 +118,12 @@ def makeTpInventoryList(tpInventory):
 
 
 
-class UpdateInventory:
+class ProcessInventory:
 
     def __init__(self):
 
         self.locationHash = {}
+        self.errorReport = []
 
         return
 
@@ -145,8 +144,16 @@ class UpdateInventory:
     def getSetToLocation(self, tpTrackLabel):
         '''Returns the location and track objects'''
 
-        locationTrack = self.locationHash[tpTrackLabel]
-        self.location = PatternScriptEntities.LM.getLocationByName(locationTrack[0])
-        self.track = self.location.getTrackByName(locationTrack[1], None)
+        errorReport = ''
+        try:
+            locationTrack = self.locationHash[tpTrackLabel]
+            self.location = PatternScriptEntities.LM.getLocationByName(locationTrack[0])
+            self.track = self.location.getTrackByName(locationTrack[1], None)
+        except KeyError:
+            self.errorReport.append(tpTrackLabel)
 
         return self.location, self.track
+
+    def getErrorReport(self):
+
+        return self.errorReport
