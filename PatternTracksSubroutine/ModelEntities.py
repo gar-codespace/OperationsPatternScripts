@@ -227,6 +227,16 @@ def getDetailsForCarAsDict(carObject):
         carDetailDict[u'Final Dest'] = carObject.getFinalDestinationName()
         carDetailDict[u'FD&Track'] = carObject.getFinalDestinationName() \
                                    + ', ' + carObject.getFinalDestinationTrackName()
+
+
+
+    if not carObject.getFinalDestinationTrackName():
+        carDetailDict[u'FD Track'] = fdStandIn['FT']
+    else:
+        carDetailDict[u'FD Track'] = carObject.getFinalDestinationTrackName()
+
+
+
     carDetailDict[u'Comment'] = carObject.getComment()
     trackId =  PatternScriptEntities.LM.getLocationByName(carObject.getLocationName()).getTrackById(carObject.getTrackId())
     carDetailDict[u'SetOut Msg'] = trackId.getCommentSetout()

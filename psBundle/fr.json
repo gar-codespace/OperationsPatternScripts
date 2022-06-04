@@ -40,6 +40,8 @@
   "Action" : "Actionz",
   "Switch List" : "Switch List",
   "Set to Track" : "Set to Track",
+  "No final destination" : "No final destination",
+  "No FD track" : "No FD track",
 
   "TrainPlayer Support Subroutine" : "Translation Items, do not edit this line",
   "TrainPlayer Support Subroutine" : "Sous-routine de support TrainPlayer",
@@ -70,6 +72,7 @@
   "Destination" : "Destination",
   "Dest & Voie" : "Dest&Track",
   "Dest Finale" : "Final Dest",
+  "FD Track" : "FD Track",
   "DF & Voie" : "FD&Track",
   "Commentaire" : "Comment",
   "Msg Déspose" : "Setout Msg",

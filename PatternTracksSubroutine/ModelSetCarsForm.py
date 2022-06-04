@@ -38,7 +38,7 @@ def setRsToTrack(setCarsForm, textBoxEntry):
 
     allTracksAtLoc = ModelEntities.getTracksByLocation(None)
     fromTrack = unicode(setCarsForm['locations'][0]['tracks'][0]['trackName'], PatternScriptEntities.ENCODING)
-    
+
     for loco in setCarsForm['locations'][0]['tracks'][0]['locos']:
         if not unicode(userInputList[i], PatternScriptEntities.ENCODING) in allTracksAtLoc:
                 # Catches invalid track typed into box, skips empty entries
@@ -144,9 +144,9 @@ def exportSetCarsFormToTp(setCarsForm, textBoxEntry):
 
     if PatternScriptEntities.CheckTpDestination().directoryExists():
 
-        jmriExport = tpModel.ExportJmriLocations()
-        locationList = jmriExport.makeLocationList()
-        jmriExport.toTrainPlayer(locationList)
+        # jmriExport = tpModel.ExportJmriLocations()
+        # locationList = jmriExport.makeLocationList()
+        # jmriExport.toTrainPlayer(locationList)
 
         tpSwitchList = tpModel.TrackPatternTranslationToTp()
         modifiedSwitchList = tpSwitchList.modifySwitchList(setCarsForm, textBoxEntry)
