@@ -144,6 +144,18 @@ def timeStamp(epochTime=0):
 
     return time.strftime('%a %b %d %Y %I:%M %p %Z', time.gmtime(epochTime - timeOffset))
 
+def convertJmriDateToEpoch(jmriTime):
+    """2022-02-26T17:16:17.807+0000"""
+
+    epochTime = time.mktime(time.strptime(jmriTime, "%Y-%m-%dT%H:%M:%S.%f+0000"))
+
+    if time.localtime(epochTime).tm_isdst and time.daylight: # If local dst and dst are both 1
+        epochTime -= time.altzone
+    else:
+        epochTime -= time.timezone # in seconds
+
+    return epochTime
+
 def genericReadReport(filePath):
     """try/except catches initial read of config file"""
 
@@ -219,6 +231,8 @@ class validateStubFile:
         self.helpFilePath = PLUGIN_ROOT + '\psSupport\psHelp.html'
         self.helpFilePath = JAVA_IO.File(self.helpFilePath).toURI()
         self.helpFilePath = unicode(self.helpFilePath, ENCODING)
+
+        return
 
     def updateStubTemplate(self):
 

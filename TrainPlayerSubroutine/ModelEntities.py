@@ -1,25 +1,25 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-from codecs import open as codecsOpen
-import time
+# from codecs import open as codecsOpen
+# import time
 
 from psEntities import PatternScriptEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.ModelEntities'
 SCRIPT_REV = 20220101
 
-def convertJmriDateToEpoch(jmriTime):
-    """2022-02-26T17:16:17.807+0000"""
-
-    epochTime = time.mktime(time.strptime(jmriTime, "%Y-%m-%dT%H:%M:%S.%f+0000"))
-
-    if time.localtime(epochTime).tm_isdst and time.daylight: # If local dst and dst are both 1
-        epochTime -= time.altzone
-    else:
-        epochTime -= time.timezone # in seconds
-
-    return epochTime
+# def convertJmriDateToEpoch(jmriTime):
+#     """2022-02-26T17:16:17.807+0000"""
+#
+#     epochTime = time.mktime(time.strptime(jmriTime, "%Y-%m-%dT%H:%M:%S.%f+0000"))
+#
+#     if time.localtime(epochTime).tm_isdst and time.daylight: # If local dst and dst are both 1
+#         epochTime -= time.altzone
+#     else:
+#         epochTime -= time.timezone # in seconds
+#
+#     return epochTime
 
 def parseJmriLocations(location):
     """called from JmriTranslationToTpt"""
@@ -103,25 +103,14 @@ def getTpInventory():
 
     tpInventoryPath = PatternScriptEntities.JMRI.util.FileUtil.getHomePath() \
         + "AppData\Roaming\TrainPlayer\Reports\TrainPlayer Export - Inventory.txt"
-    tpInventory = ''
 
     try: # Catch TrainPlayer not installed
+        tpInventory = PatternScriptEntities.genericReadReport(tpInventoryPath).split('\n')
 
-        x = PatternScriptEntities.genericReadReport(tpInventoryPath)
-        # y = x.rstrip()
-        # y = [line.rstrip("\n") for line in x.readline()]
-        y = "['"
-        y += x.replace(' \n', '),(')
-        y += ')]'
-
-        print(y)
-        with codecsOpen(tpInventoryPath, 'r', encoding=PatternScriptEntities.ENCODING) as csvWorkFile:
-            tpInventory = [line.rstrip() for line in csvWorkFile]
     except IOError:
-        pass
-    print(tpInventory)
+        tpInventory = ''
+
     return tpInventory
-    # return y
 
 def makeTpInventoryList(tpInventory):
     '''Returns (CarId,TrackLabel)'''
@@ -132,8 +121,6 @@ def makeTpInventoryList(tpInventory):
         tpInventoryList.append(splitItem)
 
     return tpInventoryList
-
-
 
 class ProcessInventory:
 

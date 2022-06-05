@@ -2,7 +2,7 @@
 # © 2021, 2022 Greg Ritacco
 
 # from json import loads as jsonLoads, dumps as jsonDumps
-from codecs import open as codecsOpen
+# from codecs import open as codecsOpen
 
 from psEntities import PatternScriptEntities
 from TrainPlayerSubroutine import ModelEntities
@@ -190,10 +190,18 @@ class TrackPatternTranslationToTp:
         headerNames = PatternScriptEntities.readConfigFile('PT')
         reportTitle = PatternScriptEntities.BUNDLE['Work Event List for TrainPlayer']
         # reportTitle = headerNames['TD']['TP']
+
         jsonFile = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + reportTitle + '.json'
-        with codecsOpen(jsonFile, 'r', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
-            jsonSwitchList = jsonWorkFile.read()
-        tpSwitchList = jsonLoads(jsonSwitchList)
+        jsonSwitchList = PatternScriptEntities.genericReadReport(jsonFile)
+        tpSwitchList =  PatternScriptEntities.loadJson(jsonSwitchList)
+
+
+
+
+
+        # with codecsOpen(jsonFile, 'r', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
+        #     jsonSwitchList = jsonWorkFile.read()
+        # tpSwitchList = jsonLoads(jsonSwitchList)
 
         for loco in modifiedForm['locations'][0]['tracks'][0]['locos']:
             tpSwitchList['locations'][0]['tracks'][0]['locos'].append(loco)
@@ -229,7 +237,7 @@ class JmriTranslationToTp:
 
         self.psLog.debug('Model.translateManifestHeader')
 
-        jmriDateAsEpoch = ModelEntities.convertJmriDateToEpoch(completeJmriManifest[u'date'])
+        jmriDateAsEpoch = PatternScriptEntities.convertJmriDateToEpoch(completeJmriManifest[u'date'])
         completeJmriManifest['date'] = PatternScriptEntities.timeStamp(jmriDateAsEpoch)
         completeJmriManifest['trainDescription'] = completeJmriManifest['description']
         completeJmriManifest['trainName'] = completeJmriManifest['userName']
