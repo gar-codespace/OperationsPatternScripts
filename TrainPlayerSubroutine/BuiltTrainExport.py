@@ -115,10 +115,10 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
 
         if PatternScriptEntities.CheckTpDestination().directoryExists():
 
-            self.tpLog.debug('Model.ExportJmriLocations')
-            jmriExport = Model.ExportJmriLocations()
-            locationList = jmriExport.makeLocationList()
-            jmriExport.toTrainPlayer(locationList)
+            # self.tpLog.debug('Model.ExportJmriLocations')
+            # jmriExport = Model.ExportJmriLocations()
+            # locationList = jmriExport.makeLocationList()
+            # jmriExport.toTrainPlayer(locationList)
 
             self.tpLog.debug('Model.JmriTranslationToTp')
             jmriManifestTranslator = Model.JmriTranslationToTp()

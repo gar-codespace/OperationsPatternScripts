@@ -8,6 +8,7 @@ import java.awt as JAVA_AWT
 import javax.swing as JAVAX_SWING
 import logging as LOGGING
 from java import io as JAVA_IO
+from HTMLParser import HTMLParser as HTML_PARSER
 
 import time
 from json import loads as jsonLoads, dumps as jsonDumps

@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-from json import loads as jsonLoads, dumps as jsonDumps
+# from json import loads as jsonLoads, dumps as jsonDumps
 from codecs import open as codecsOpen
 
 from psEntities import PatternScriptEntities
@@ -19,41 +19,123 @@ class ExportJmriLocations:
 
         return
 
-    def makeLocationList(self):
-        """Creates the TrainPlayer Advanced Ops compatable JMRI location list"""
+    # def makeLocationList(self):
+    #     """Creates the TrainPlayer Advanced Ops compatable JMRI location list"""
+    #
+    #     csvLocations = ''
+    #     i = 0
+    #     for location in PatternScriptEntities.LM.getLocationsByIdList():
+    #         tracks = location.getTracksList()
+    #         for track in tracks:
+    #             aoLocale = unicode(location.getName(), PatternScriptEntities.ENCODING) \
+    #                 + u';' + unicode(track.getName(), PatternScriptEntities.ENCODING)
+    #             trackComment = unicode(track.getComment(), PatternScriptEntities.ENCODING)
+    #             if not trackComment:
+    #                 i += 1
+    #             csvLocations += aoLocale + ',' + trackComment + '\n'
+    #
+    #     self.psLog.info(str(i) + ' missing track comments for locations export to TrainPlayer')
+    #
+    #     return csvLocations
 
-        csvLocations = ''
-        i = 0
+    def makeLocationHash(self):
+
+        locationHash = {}
+
         for location in PatternScriptEntities.LM.getLocationsByIdList():
+            locationName = unicode(location.getName(), PatternScriptEntities.ENCODING)
             tracks = location.getTracksList()
             for track in tracks:
-                aoLocale = unicode(location.getName(), PatternScriptEntities.ENCODING) \
-                    + u';' + unicode(track.getName(), PatternScriptEntities.ENCODING)
+                trackName = unicode(track.getName(), PatternScriptEntities.ENCODING)
                 trackComment = unicode(track.getComment(), PatternScriptEntities.ENCODING)
-                if not trackComment:
-                    i += 1
-                csvLocations += aoLocale + ',' + trackComment + '\n'
+                locationHash[locationName + u';' + trackName] = trackComment
 
-        self.psLog.info(str(i) + ' missing track comments for locations export to TrainPlayer')
+        return locationHash
 
-        return csvLocations
+    # def toTrainPlayer(self, csvLocations):
+    #     """Exports JMRI location;track pairs and track comments for TrainPlayer Advanced Ops"""
+    #
+    #     if PatternScriptEntities.CheckTpDestination().directoryExists():
+    #
+    #         jmriLocationsPath = PatternScriptEntities.JMRI.util.FileUtil.getHomePath() \
+    #                 + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Locations.csv"
+    #
+    #         jmriLocationsFile = u'Locale,Industry\n' + csvLocations
+    #         PatternScriptEntities.genericWriteReport(jmriLocationsPath, jmriLocationsFile)
+    #
+    #         self.psLog.info('TrainPlayer locations export completed')
+    #
+    #     print(SCRIPT_NAME + '.ExportJmriLocations ' + str(SCRIPT_REV))
+    #
+    #     return
 
-    def toTrainPlayer(self, csvLocations):
-        """Exports JMRI location;track pairs and track comments for TrainPlayer Advanced Ops"""
+class TrackPatternTranslationToTp:
+    """Translate Track Patterns from OperationsPatternScripts for TrainPlayer O2O script compatability"""
 
-        if PatternScriptEntities.CheckTpDestination().directoryExists():
+    def __init__(self):
 
-            jmriLocationsPath = PatternScriptEntities.JMRI.util.FileUtil.getHomePath() \
-                    + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Locations.csv"
-
-            jmriLocationsFile = u'Locale,Industry\n' + csvLocations
-            PatternScriptEntities.genericWriteReport(jmriLocationsPath, jmriLocationsFile)
-
-            self.psLog.info('TrainPlayer locations export completed')
-
-        print(SCRIPT_NAME + '.ExportJmriLocations ' + str(SCRIPT_REV))
+        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.TrainPlayerTranslationToTp')
 
         return
+
+    def modifySwitchList(self, setCarsForm, textBoxEntry):
+        """Replaces car['Set to'] = [ ] with the track comment"""
+
+        self.psLog.debug('PatternTracksExport.modifySwitchList')
+
+        location = setCarsForm['locations'][0]['locationName']
+        trackName = setCarsForm['locations'][0]['tracks'][0]['trackName']
+        locationTracks = PatternScriptEntities.LM.getLocationByName(location).getTracksList()
+        trackList = []
+        for track in locationTracks:
+            trackList.append(track.getName())
+
+        userInputList = []
+        for userInput in textBoxEntry:
+            inputText = unicode(userInput.getText(), PatternScriptEntities.ENCODING)
+            if inputText in trackList:
+                userInputList.append(inputText)
+            else:
+                userInputList.append(trackName)
+
+        i = 0
+        locoList = []
+        for loco in setCarsForm['locations'][0]['tracks'][0]['locos']:
+            loco['Set to'] = location + ';' + userInputList[i]
+            locoList.append(loco)
+            i += 1
+        setCarsForm['locations'][0]['tracks'][0]['locos'] = locoList
+
+        carList = []
+        for car in setCarsForm['locations'][0]['tracks'][0]['cars']:
+            car['Set to'] = location + ';' +  userInputList[i]
+            carList.append(car)
+            i += 1
+        setCarsForm['locations'][0]['tracks'][0]['cars'] = carList
+
+        return setCarsForm
+
+    def appendSwitchList(self, modifiedForm):
+
+        self.psLog.debug('PatternTracksExport.appendSwitchList')
+
+        headerNames = PatternScriptEntities.readConfigFile('PT')
+        reportTitle = PatternScriptEntities.BUNDLE['Work Event List for TrainPlayer']
+        # reportTitle = headerNames['TD']['TP']
+        jsonFile = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + reportTitle + '.json'
+        jsonSwitchList = PatternScriptEntities.genericReadReport(jsonFile)
+        # with codecsOpen(jsonFile, 'r', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
+        #     jsonSwitchList = jsonWorkFile.read()
+        # tpSwitchList = jsonLoads(jsonSwitchList)
+        tpSwitchList = PatternScriptEntities.loadJson(jsonSwitchList)
+
+        for loco in modifiedForm['locations'][0]['tracks'][0]['locos']:
+            tpSwitchList['locations'][0]['tracks'][0]['locos'].append(loco)
+
+        for car in modifiedForm['locations'][0]['tracks'][0]['cars']:
+            tpSwitchList['locations'][0]['tracks'][0]['cars'].append(car)
+
+        return tpSwitchList
 
 class TrackPatternTranslationToTp:
     """Translate Track Patterns from OperationsPatternScripts for TrainPlayer O2O script compatability"""
@@ -137,7 +219,8 @@ class JmriTranslationToTp:
         manifest = PatternScriptEntities.JMRI.util.FileUtil.readFile( \
                 PatternScriptEntities.JMRI.jmrit.operations.trains.JsonManifest(train).getFile() \
                 )
-        trainAsDict = jsonLoads(manifest)
+        # trainAsDict = jsonLoads(manifest)
+        trainAsDict = PatternScriptEntities.loadJson(manifest)
         trainAsDict['comment'] = train.getComment()
 
         return trainAsDict
@@ -174,6 +257,7 @@ class ProcessWorkEventList:
     def __init__(self):
 
         self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.ProcessWorkEventList')
+        self.locationHash = ExportJmriLocations().makeLocationHash()
 
         return
 
@@ -182,12 +266,12 @@ class ProcessWorkEventList:
         # csv writer does not encode utf-8
 
         self.psLog.debug('Model.makeTpHeader')
-
-        header = 'HN,' + appendedTpSwitchList['railroad'] + '\n'
-        header += 'HT,' + appendedTpSwitchList['trainName'] + '\n'
-        header += 'HD,' + appendedTpSwitchList['trainDescription'] + '\n'
-        header += 'HC,' + appendedTpSwitchList['trainComment'] + '\n'
-        header += 'HV,' + appendedTpSwitchList['date'] + '\n'
+        # https://stackoverflow.com/questions/2087370/decode-html-entities-in-python-string
+        header = 'HN,' + PatternScriptEntities.HTML_PARSER().unescape(appendedTpSwitchList['railroad']) + '\n'
+        header += 'HT,' + PatternScriptEntities.HTML_PARSER().unescape(appendedTpSwitchList['trainName']) + '\n'
+        header += 'HD,' + PatternScriptEntities.HTML_PARSER().unescape(appendedTpSwitchList['trainDescription']) + '\n'
+        header += 'HC,' + PatternScriptEntities.HTML_PARSER().unescape(appendedTpSwitchList['trainComment']) + '\n'
+        header += 'HV,' + PatternScriptEntities.HTML_PARSER().unescape(appendedTpSwitchList['date']) + '\n'
         header += u'WT,' + str(len(appendedTpSwitchList['locations'])) + '\n'
 
         return header
@@ -214,8 +298,12 @@ class ProcessWorkEventList:
 
     def makeLine(self, rS):
 
+        trackComment = self.locationHash[rS[u'Set to']]
+        FDandT = rS['Final Dest'] + ';' + rS['FD Track']
+
         return [rS[u'PUSO'], rS[u'Road'] + rS[u'Number'], rS[u'Road'], rS[u'Number'], \
-            rS[u'Load'], rS[u'Track'], rS[u'Set to'], rS['FD&Track']]
+                rS[u'Load'], rS[u'Track'], rS[u'Set to'], FDandT, trackComment
+                ]
 
     def writeTpWorkEventListAsJson(self, appendedTpSwitchList):
 
@@ -223,7 +311,8 @@ class ProcessWorkEventList:
 
         reportTitle = appendedTpSwitchList['trainDescription']
         jsonReoprtPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + reportTitle + '.json'
-        jsonReport = jsonDumps(appendedTpSwitchList, indent=2, sort_keys=True)
+        # jsonReport = jsonDumps(appendedTpSwitchList, indent=2, sort_keys=True)
+        jsonReport = PatternScriptEntities.dumpJson(appendedTpSwitchList)
         PatternScriptEntities.genericWriteReport(jsonReoprtPath, jsonReport)
 
         print(SCRIPT_NAME + '.ProcessWorkEventList ' + str(SCRIPT_REV))

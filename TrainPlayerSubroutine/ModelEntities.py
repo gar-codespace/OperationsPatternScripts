@@ -22,6 +22,7 @@ def convertJmriDateToEpoch(jmriTime):
     return epochTime
 
 def parseJmriLocations(location):
+    """called from JmriTranslationToTpt"""
 
     tpLocation = {}
     tpLocation['locationName'] = location['userName']
@@ -66,30 +67,36 @@ def parseRollingStockAsDict(rS):
         rsDict[u'Model'] = rS[u'model']
     except KeyError:
         rsDict[u'Model'] = 'N/A'
+
     try:
         rsDict[u'Type'] = rS[u'carType'] + "-" + rS[u'carSubType']
     except:
         rsDict[u'Type'] = rS[u'carType']
+
     try:
         rsDict[u'Load'] = rS['load']
     except:
         rsDict[u'Load'] = 'O'
+
     rsDict[u'Length'] = rS[u'length']
     rsDict[u'Weight'] = rS[u'weightTons']
     rsDict[u'Track'] = unicode(rS[u'location'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
     rsDict[u'Set to'] = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.ENCODING) \
         + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
+
     try:
         jFinalDestination = unicode(rS[u'finalDestination'][u'userName'], PatternScriptEntities.ENCODING)
-        try:
-            jFinalTrack = unicode(rS[u'finalDestination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
-        except KeyError:
-            jFinalTrack = u'Any'
-        rsDict[u'FD&Track'] = jFinalDestination + ';' + jFinalTrack
     except:
-        rsDict[u'FD&Track'] = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.ENCODING) \
-            + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
+        jFinalDestination = PatternScriptEntities.BUNDLE['No final destination']
 
+    try:
+        jFinalTrack = unicode(rS[u'finalDestination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
+    except:
+        jFinalTrack = PatternScriptEntities.BUNDLE['No FD track']
+
+    rsDict[u'Final Dest'] = jFinalDestination
+    rsDict[u'FD Track'] = jFinalTrack
+    rsDict[u'FD&Track'] = jFinalDestination + u';' + jFinalTrack
     return rsDict
 
 def getTpInventory():
@@ -99,12 +106,22 @@ def getTpInventory():
     tpInventory = ''
 
     try: # Catch TrainPlayer not installed
+
+        x = PatternScriptEntities.genericReadReport(tpInventoryPath)
+        # y = x.rstrip()
+        # y = [line.rstrip("\n") for line in x.readline()]
+        y = "['"
+        y += x.replace(' \n', '),(')
+        y += ')]'
+
+        print(y)
         with codecsOpen(tpInventoryPath, 'r', encoding=PatternScriptEntities.ENCODING) as csvWorkFile:
             tpInventory = [line.rstrip() for line in csvWorkFile]
     except IOError:
         pass
-
+    print(tpInventory)
     return tpInventory
+    # return y
 
 def makeTpInventoryList(tpInventory):
     '''Returns (CarId,TrackLabel)'''

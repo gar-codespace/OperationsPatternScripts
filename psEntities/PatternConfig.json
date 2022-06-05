@@ -80,7 +80,7 @@
     "PW" : 1500,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20220601
+    "RV" : 20220101
   },
   "EM": {
     "1": "Mac Classic ",
@@ -111,9 +111,9 @@
     "PW" : 260,
     "PH" : 16,
     "DS" : "*No Waybill",
-    "DT" : "*No Waybill",
+    "DT" : "*Any Line",
     "FD" : "*Via Staging",
-    "FT" : "*Via Staging",
+    "FT" : "*Any Line",
     "SL": [
       "Model"
     ],
@@ -145,6 +145,7 @@
       "Destination" : 15,
       "Dest&Track" : 30,
       "Final Dest" : 11,
+      "FD Track" : 15,
       "FD&Track" : 21,
       "Comment" : 15,
       "SetOut Msg" : 12,
