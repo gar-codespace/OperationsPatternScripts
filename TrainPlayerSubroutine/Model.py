@@ -356,7 +356,8 @@ class UpdateInventory:
 
         self.errorReport = 'Update Inventory Error Report'
         self.setCarsError = ''
-        self.notFoundError = ''
+        self.carsNotFound = ''
+        self.locationNotFound = ''
 
         tpInventory = ModelEntities.getTpInventory()
         self.tpInventoryList = ModelEntities.makeTpInventoryList(tpInventory)
@@ -372,22 +373,24 @@ class UpdateInventory:
 
     def update(self):
 
-        updatedInventory = ModelEntities.ProcessInventory()
-        updatedInventory.makeJmriLocationList()
+        jmriLocationHash = ModelEntities.makeJmriLocationHash()
 
         for carLabel, trackLabel in self.tpInventoryList:
 
             rs = PatternScriptEntities.getRollingStock(carLabel)
             if not rs:
+                self.carsNotFound += '\n' + carLabel
                 continue
 
-            setToLoc, setToTrack = updatedInventory.getSetToLocation(trackLabel)
+            try:
+                setToLoc, setToTrack = ModelEntities.getSetToLocationAndTrack(jmriLocationHash[trackLabel])
+            except KeyError:
+                self.locationNotFound += '\n' + trackLabel + ' - not a JMRI track track comment'
+                continue
+
             setResult = rs.setLocation(setToLoc, setToTrack)
             if setResult != 'okay':
-                self.setCarsError += '\n' + setResult + \
-                        PatternScriptEntities.BUNDLE[' for ID '] + rs.getId()
-
-        self.notFoundError = updatedInventory.getErrorReport()
+                self.setCarsError += '\n' + rs.getId()  + ' - ' + setResult
 
         print(SCRIPT_NAME + '.UpdateInventory ' + str(SCRIPT_REV))
 
@@ -395,25 +398,13 @@ class UpdateInventory:
 
     def getErrorReport(self):
 
-        self.errorReport += '\n\n' + PatternScriptEntities.BUNDLE['List of cars not updated'] + '\n'
-        if self.setCarsError:
-            self.errorReport += self.setCarsError
-        else:
-            self.errorReport += PatternScriptEntities.BUNDLE['No errors']
+        self.errorReport += '\n\n' + PatternScriptEntities.BUNDLE['List of rolling stock not updated:']
+        self.errorReport += '\n' + self.setCarsError
 
-        self.errorReport += '\n\n' + PatternScriptEntities.BUNDLE['List of tracks not found'] + '\n'
-        notFoundErrors = self.notFoundErrors()
-        if notFoundErrors:
-            self.errorReport += notFoundErrors
-        else:
-            self.errorReport += PatternScriptEntities.BUNDLE['No errors']
+        self.errorReport += '\n\n' + PatternScriptEntities.BUNDLE['List of tracks not found:']
+        self.errorReport += '\n' + self.locationNotFound
+
+        self.errorReport += '\n\n' + PatternScriptEntities.BUNDLE['TrainPlayer cars not found in JMRI roster:']
+        self.errorReport += '\n' + self.carsNotFound
 
         return self.errorReport
-
-    def notFoundErrors(self):
-
-        processedErrors = ''
-        for error in self.notFoundError:
-            processedErrors += '\n' + PatternScriptEntities.BUNDLE['JMRI track comment not found: '] + error
-
-        return processedErrors

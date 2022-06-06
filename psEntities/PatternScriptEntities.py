@@ -237,7 +237,11 @@ class validateStubFile:
     def updateStubTemplate(self):
 
         stubTemplateLocation = JMRI.util.FileUtil.getProgramPath() + 'help\\' \
-                + psLocale() + '\\local\\stub_template.html'
+                + psLocale()[:2] + '\\local\\stub_template.html'
+
+        # if not JAVA_IO.File(stubTemplateLocation).isFile():
+        #     stubTemplateLocation = JMRI.util.FileUtil.getProgramPath() + 'help\\' \
+        #             + psLocale()[:2] + '\\local\\stub_template.html'
 
         self.newStubFile = genericReadReport(stubTemplateLocation)
         self.newStubFile = self.newStubFile.replace("../index.html#", "")

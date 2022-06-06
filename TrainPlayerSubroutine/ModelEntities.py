@@ -122,42 +122,32 @@ def makeTpInventoryList(tpInventory):
 
     return tpInventoryList
 
-class ProcessInventory:
+def makeJmriLocationHash():
+    '''Format: {TrackComment : (LocationName, TrackName)}'''
 
-    def __init__(self):
+    allLocations = PatternScriptEntities.getAllLocations()
+    locationHash = {}
 
-        self.locationHash = {}
-        self.errorReport = []
+    for location in allLocations:
+        locationObject = PatternScriptEntities.LM.getLocationByName(location)
+        allTracks = locationObject.getTracksList()
+        for track in allTracks:
+            locationHash[track.getComment()] = (locationObject.getName(),track.getName())
 
+    return locationHash
+
+def getSetToLocationAndTrack(jmriHashResult):
+    '''jmriHashResult is a tuple (location, track) returned by looking up
+    TrainPlayer track comment from makeJmriLocationHash
+    '''
+
+    try:
+        locationTrack = jmriHashResult[0]
+        jmriLocation = PatternScriptEntities.LM.getLocationByName(jmriHashResult[0])
+        jmriTrack = jmriLocation.getTrackByName(jmriHashResult[1], None)
+    except KeyError:
+        return
+    except AttributeError:
         return
 
-    def makeJmriLocationList(self):
-        '''Format: {TrackComment : (LocationName, TrackName)}'''
-
-        allLocations = PatternScriptEntities.getAllLocations()
-        locDict = {}
-
-        for location in allLocations:
-            locationObject = PatternScriptEntities.LM.getLocationByName(location)
-            allTracks = locationObject.getTracksList()
-            for track in allTracks:
-                self.locationHash[track.getComment()] = (locationObject.getName(),track.getName())
-
-        return
-
-    def getSetToLocation(self, tpTrackLabel):
-        '''Returns the location and track objects'''
-
-        errorReport = ''
-        try:
-            locationTrack = self.locationHash[tpTrackLabel]
-            self.location = PatternScriptEntities.LM.getLocationByName(locationTrack[0])
-            self.track = self.location.getTrackByName(locationTrack[1], None)
-        except KeyError:
-            self.errorReport.append(tpTrackLabel)
-
-        return self.location, self.track
-
-    def getErrorReport(self):
-
-        return self.errorReport
+    return jmriLocation, jmriTrack

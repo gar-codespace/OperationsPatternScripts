@@ -155,7 +155,9 @@ if __name__ == "__builtin__":
     sysPath.append(PLUGIN_ROOT)
     from psEntities import PatternScriptEntities
     from TrainPlayerSubroutine import Model
+    from psBundle import Bundle
 
+    PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale(PLUGIN_ROOT)
     PatternScriptEntities.ENCODING = 'utf-8'
 
     tpManifest = ManifestForTrainPlayer()

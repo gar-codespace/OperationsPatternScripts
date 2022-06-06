@@ -4,7 +4,7 @@
 """Implemented in v3"""
 
 from psEntities import PatternScriptEntities
-from psBundle import Bundle
+# from psBundle import Bundle
 from TrainPlayerSubroutine import ViewEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.TrianPlayerSubroutine.View'
