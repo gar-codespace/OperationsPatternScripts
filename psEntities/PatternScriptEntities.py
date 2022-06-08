@@ -4,8 +4,8 @@
 """Support methods and package constants for all Pattern Script subroutines"""
 
 import jmri as JMRI
-import java.awt as JAVA_AWT
-import javax.swing as JAVAX_SWING
+# import java.awt as JAVA_AWT
+# import javax.swing as JAVAX_SWING
 import logging as LOGGING
 from java import io as JAVA_IO
 from HTMLParser import HTMLParser as HTML_PARSER

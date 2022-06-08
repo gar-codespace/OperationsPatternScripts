@@ -5,12 +5,12 @@
 import jmri
 import java.awt
 import javax.swing
-import logging
-
+from sys import path as sysPath
+# import logging
+#
 from java.beans import PropertyChangeListener
 from apps import Apps
 import time
-from sys import path as sysPath
 
 SCRIPT_DIR = 'OperationsPatternScripts'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b1'
@@ -29,7 +29,11 @@ SCRIPT_REV = 20220101
 PatternScriptEntities.JMRI = jmri
 PatternScriptEntities.JAVA_AWT = java.awt
 PatternScriptEntities.JAVX_SWING = javax.swing
-PatternScriptEntities.LOGGING = logging
+# PatternScriptEntities.LOGGING = logging
+
+# from java.beans import PropertyChangeListener
+# from apps import Apps
+# import time
 
 PatternScriptEntities.PLUGIN_ROOT = PLUGIN_ROOT
 PatternScriptEntities.ENCODING = PatternScriptEntities.readConfigFile('CP')['SE']

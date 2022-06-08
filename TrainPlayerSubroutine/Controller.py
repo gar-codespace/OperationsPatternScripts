@@ -51,16 +51,17 @@ class StartUp:
         '''Updates JMRI rolling stock locations based on TrainPlayer inventory export'''
 
         updatedInventory = Model.UpdateInventory()
-        if updatedInventory.checkList():
-            updatedInventory.update()
-            errorReport = updatedInventory.getErrorReport()
-            errorReportPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\Update Inventory.txt'
-            PatternScriptEntities.genericWriteReport(errorReportPath, errorReport)
-            PatternScriptEntities.genericDisplayReport(errorReportPath)
-
-            self.psLog.info('Updated Rolling stock locations from TrainPlayer')
-        else:
+        if not updatedInventory.checkList():
             self.psLog.info('No TrainPlayer inventory list to update')
+            return
+            
+        updatedInventory.update()
+        errorReport = updatedInventory.getErrorReport()
+        errorReportPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\Update Inventory.txt'
+        PatternScriptEntities.genericWriteReport(errorReportPath, errorReport)
+        PatternScriptEntities.genericDisplayReport(errorReportPath)
+
+        self.psLog.info('Updated Rolling stock locations from TrainPlayer')
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

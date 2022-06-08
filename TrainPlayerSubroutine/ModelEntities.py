@@ -1,25 +1,10 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-# from codecs import open as codecsOpen
-# import time
-
 from psEntities import PatternScriptEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.ModelEntities'
 SCRIPT_REV = 20220101
-
-# def convertJmriDateToEpoch(jmriTime):
-#     """2022-02-26T17:16:17.807+0000"""
-#
-#     epochTime = time.mktime(time.strptime(jmriTime, "%Y-%m-%dT%H:%M:%S.%f+0000"))
-#
-#     if time.localtime(epochTime).tm_isdst and time.daylight: # If local dst and dst are both 1
-#         epochTime -= time.altzone
-#     else:
-#         epochTime -= time.timezone # in seconds
-#
-#     return epochTime
 
 def parseJmriLocations(location):
     """called from JmriTranslationToTpt"""

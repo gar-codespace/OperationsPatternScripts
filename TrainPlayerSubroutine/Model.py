@@ -1,9 +1,6 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-# from json import loads as jsonLoads, dumps as jsonDumps
-# from codecs import open as codecsOpen
-
 from psEntities import PatternScriptEntities
 from TrainPlayerSubroutine import ModelEntities
 
@@ -19,25 +16,6 @@ class ExportJmriLocations:
 
         return
 
-    # def makeLocationList(self):
-    #     """Creates the TrainPlayer Advanced Ops compatable JMRI location list"""
-    #
-    #     csvLocations = ''
-    #     i = 0
-    #     for location in PatternScriptEntities.LM.getLocationsByIdList():
-    #         tracks = location.getTracksList()
-    #         for track in tracks:
-    #             aoLocale = unicode(location.getName(), PatternScriptEntities.ENCODING) \
-    #                 + u';' + unicode(track.getName(), PatternScriptEntities.ENCODING)
-    #             trackComment = unicode(track.getComment(), PatternScriptEntities.ENCODING)
-    #             if not trackComment:
-    #                 i += 1
-    #             csvLocations += aoLocale + ',' + trackComment + '\n'
-    #
-    #     self.psLog.info(str(i) + ' missing track comments for locations export to TrainPlayer')
-    #
-    #     return csvLocations
-
     def makeLocationHash(self):
 
         locationHash = {}
@@ -51,23 +29,6 @@ class ExportJmriLocations:
                 locationHash[locationName + u';' + trackName] = trackComment
 
         return locationHash
-
-    # def toTrainPlayer(self, csvLocations):
-    #     """Exports JMRI location;track pairs and track comments for TrainPlayer Advanced Ops"""
-    #
-    #     if PatternScriptEntities.CheckTpDestination().directoryExists():
-    #
-    #         jmriLocationsPath = PatternScriptEntities.JMRI.util.FileUtil.getHomePath() \
-    #                 + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Locations.csv"
-    #
-    #         jmriLocationsFile = u'Locale,Industry\n' + csvLocations
-    #         PatternScriptEntities.genericWriteReport(jmriLocationsPath, jmriLocationsFile)
-    #
-    #         self.psLog.info('TrainPlayer locations export completed')
-    #
-    #     print(SCRIPT_NAME + '.ExportJmriLocations ' + str(SCRIPT_REV))
-    #
-    #     return
 
 class TrackPatternTranslationToTp:
     """Translate Track Patterns from OperationsPatternScripts for TrainPlayer O2O script compatability"""
@@ -356,7 +317,7 @@ class UpdateInventory:
 
         self.errorReport = 'Update Inventory Error Report'
         self.setCarsError = ''
-        self.carsNotFound = ''
+        self.carsNotFound = [] # A list so it can be sorted
         self.locationNotFound = ''
 
         tpInventory = ModelEntities.getTpInventory()
@@ -379,7 +340,7 @@ class UpdateInventory:
 
             rs = PatternScriptEntities.getRollingStock(carLabel)
             if not rs:
-                self.carsNotFound += '\n' + carLabel
+                self.carsNotFound.append(carLabel)
                 continue
 
             try:
@@ -405,6 +366,6 @@ class UpdateInventory:
         self.errorReport += '\n' + self.locationNotFound
 
         self.errorReport += '\n\n' + PatternScriptEntities.BUNDLE['TrainPlayer cars not found in JMRI roster:']
-        self.errorReport += '\n' + self.carsNotFound
+        self.errorReport += '\n' + '\n'.join(sorted(self.carsNotFound[1:-1])) # [0] is the header
 
         return self.errorReport
