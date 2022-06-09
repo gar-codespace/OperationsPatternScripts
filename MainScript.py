@@ -208,7 +208,8 @@ class View:
         helpMenuItem = self.makeMenuItem(self.setHmDropDownText())
         logMenuItem = self.makeMenuItem(self.setLmDropDownText())
         gitHubItem = self.makeMenuItem(self.setGhDropDownText())
-        editConfigItem = self.makeMenuItem(self.setGEcDropDownText())
+        editConfigItem = self.makeMenuItem(self.setEcDropDownText())
+        opsFolderItem = self.makeMenuItem(self.setOfDropDownText())
 
         toolsMenu = PatternScriptEntities.JAVX_SWING.JMenu(PatternScriptEntities.BUNDLE['Tools'])
         toolsMenu.add(PatternScriptEntities.JMRI.jmrit.operations.setup.OptionAction())
@@ -219,8 +220,9 @@ class View:
 
         helpMenu = PatternScriptEntities.JAVX_SWING.JMenu(PatternScriptEntities.BUNDLE['Help'])
         helpMenu.add(helpMenuItem)
-        helpMenu.add(logMenuItem)
         helpMenu.add(gitHubItem)
+        helpMenu.add(opsFolderItem)
+        helpMenu.add(logMenuItem)
         helpMenu.add(editConfigItem)
 
         psMenuBar = PatternScriptEntities.JAVX_SWING.JMenuBar()
@@ -295,12 +297,19 @@ class View:
 
         return menuText, 'ghItemSelected'
 
-    def setGEcDropDownText(self):
+    def setEcDropDownText(self):
         """itemMethod - Set the drop down text for the edit config file item"""
 
         menuText = PatternScriptEntities.BUNDLE['Edit Config File']
 
         return menuText, 'ecItemSelected'
+
+    def setOfDropDownText(self):
+        """itemMethod - Set the drop down text for the edit config file item"""
+
+        menuText = PatternScriptEntities.BUNDLE['Operations Folder']
+
+        return menuText, 'ofItemSelected'
 
 class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
@@ -528,6 +537,20 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
             PatternScriptEntities.genericDisplayReport(fileToOpen)
         else:
             self.psLog.warning('Not found: ' + logFilePath)
+
+        return
+
+    def ofItemSelected(self, OPEN_OF_EVENT):
+        """menu item-Help/Operations Folder"""
+
+        self.psLog.debug(OPEN_OF_EVENT)
+
+        opsFolderPath = PatternScriptEntities.PROFILE_PATH + 'operations\\'
+        opsFolder = PatternScriptEntities.JAVA_IO.File(opsFolderPath)
+        if opsFolder.exists():
+            PatternScriptEntities.JAVA_AWT.Desktop.getDesktop().open(opsFolder)
+        else:
+            self.psLog.warning('Not found: ' + opsFolderPath)
 
         return
 
