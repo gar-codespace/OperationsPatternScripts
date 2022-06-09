@@ -82,12 +82,8 @@ class TrackPatternTranslationToTp:
 
         headerNames = PatternScriptEntities.readConfigFile('PT')
         reportTitle = PatternScriptEntities.BUNDLE['Work Event List for TrainPlayer']
-        # reportTitle = headerNames['TD']['TP']
         jsonFile = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + reportTitle + '.json'
         jsonSwitchList = PatternScriptEntities.genericReadReport(jsonFile)
-        # with codecsOpen(jsonFile, 'r', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
-        #     jsonSwitchList = jsonWorkFile.read()
-        # tpSwitchList = jsonLoads(jsonSwitchList)
         tpSwitchList = PatternScriptEntities.loadJson(jsonSwitchList)
 
         for loco in modifiedForm['locations'][0]['tracks'][0]['locos']:
@@ -150,19 +146,9 @@ class TrackPatternTranslationToTp:
 
         headerNames = PatternScriptEntities.readConfigFile('PT')
         reportTitle = PatternScriptEntities.BUNDLE['Work Event List for TrainPlayer']
-        # reportTitle = headerNames['TD']['TP']
-
         jsonFile = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + reportTitle + '.json'
         jsonSwitchList = PatternScriptEntities.genericReadReport(jsonFile)
         tpSwitchList =  PatternScriptEntities.loadJson(jsonSwitchList)
-
-
-
-
-
-        # with codecsOpen(jsonFile, 'r', encoding=PatternScriptEntities.ENCODING) as jsonWorkFile:
-        #     jsonSwitchList = jsonWorkFile.read()
-        # tpSwitchList = jsonLoads(jsonSwitchList)
 
         for loco in modifiedForm['locations'][0]['tracks'][0]['locos']:
             tpSwitchList['locations'][0]['tracks'][0]['locos'].append(loco)
@@ -188,7 +174,7 @@ class JmriTranslationToTp:
         manifest = PatternScriptEntities.JMRI.util.FileUtil.readFile( \
                 PatternScriptEntities.JMRI.jmrit.operations.trains.JsonManifest(train).getFile() \
                 )
-        # trainAsDict = jsonLoads(manifest)
+
         trainAsDict = PatternScriptEntities.loadJson(manifest)
         trainAsDict['comment'] = train.getComment()
 
@@ -280,7 +266,6 @@ class ProcessWorkEventList:
 
         reportTitle = appendedTpSwitchList['trainDescription']
         jsonReoprtPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + reportTitle + '.json'
-        # jsonReport = jsonDumps(appendedTpSwitchList, indent=2, sort_keys=True)
         jsonReport = PatternScriptEntities.dumpJson(appendedTpSwitchList)
         PatternScriptEntities.genericWriteReport(jsonReoprtPath, jsonReport)
 

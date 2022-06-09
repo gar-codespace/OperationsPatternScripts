@@ -69,18 +69,11 @@
       "PatternTracksSubroutine" : true,
       "TrainPlayerSubroutine" : true
     },
-    "MI" : {
-      "Description" : ["Implement in v3"],
-      "Tools" : ["asItemSelected", "tpItemSelected"],
-      "OperationsPro" : [],
-      "Window" : [],
-      "Help" : ["logItemSelected"]
-    },
     "PH" : 220,
     "PW" : 1500,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20220101
+    "RV" : 20220601
   },
   "EM": {
     "1": "Mac Classic ",

@@ -9,7 +9,7 @@ SCRIPT_REV = 20220101
 def testSelectedItem(selectedItem):
     """Catches user edit of locations"""
 
-    allLocations = PatternScriptEntities.getAllLocations() #String list
+    allLocations = PatternScriptEntities.getAllLocations() #List of strings
     if selectedItem in allLocations:
         return selectedItem
     else:
@@ -213,6 +213,7 @@ def getDetailsForCarAsDict(carObject):
     carDetailDict[u'Owner'] = carObject.getOwner()
     carDetailDict[u'Track'] = carObject.getTrackName()
     carDetailDict[u'Location'] = carObject.getLocationName()
+    
     if not (carObject.getDestinationName()):
         carDetailDict[u'Destination'] = fdStandIn['DS']
         carDetailDict[u'Dest&Track'] = fdStandIn['DT']
@@ -220,6 +221,7 @@ def getDetailsForCarAsDict(carObject):
         carDetailDict[u'Destination'] = carObject.getDestinationName()
         carDetailDict[u'Dest&Track'] = carObject.getDestinationName() \
                                      + ', ' + carObject.getDestinationTrackName()
+
     if not (carObject.getFinalDestinationName()):
         carDetailDict[u'Final Dest'] = fdStandIn['FD']
         carDetailDict[u'FD&Track'] = fdStandIn['FT']
@@ -228,14 +230,10 @@ def getDetailsForCarAsDict(carObject):
         carDetailDict[u'FD&Track'] = carObject.getFinalDestinationName() \
                                    + ', ' + carObject.getFinalDestinationTrackName()
 
-
-
     if not carObject.getFinalDestinationTrackName():
         carDetailDict[u'FD Track'] = fdStandIn['FT']
     else:
         carDetailDict[u'FD Track'] = carObject.getFinalDestinationTrackName()
-
-
 
     carDetailDict[u'Comment'] = carObject.getComment()
     trackId =  PatternScriptEntities.LM.getLocationByName(carObject.getLocationName()).getTrackById(carObject.getTrackId())

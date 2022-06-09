@@ -198,18 +198,16 @@ class View:
         return self.psPluginMenuItems
 
     def makePatternScriptsWindow(self):
-        """In v3, implement this with loops, using values from config file"""
 
         uniqueWindow = PatternScriptEntities.JMRI.util.JmriJFrame()
 
-        # Loop over this part in v3
         asMenuItem = self.makeMenuItem(self.setAsDropDownText())
         tpMenuItem = self.makeMenuItem(self.setTiDropDownText())
         helpMenuItem = self.makeMenuItem(self.setHmDropDownText())
+        gitHubMenuItem = self.makeMenuItem(self.setGhDropDownText())
+        opsFolderMenuItem = self.makeMenuItem(self.setOfDropDownText())
         logMenuItem = self.makeMenuItem(self.setLmDropDownText())
-        gitHubItem = self.makeMenuItem(self.setGhDropDownText())
-        editConfigItem = self.makeMenuItem(self.setEcDropDownText())
-        opsFolderItem = self.makeMenuItem(self.setOfDropDownText())
+        editConfigMenuItem = self.makeMenuItem(self.setEcDropDownText())
 
         toolsMenu = PatternScriptEntities.JAVX_SWING.JMenu(PatternScriptEntities.BUNDLE['Tools'])
         toolsMenu.add(PatternScriptEntities.JMRI.jmrit.operations.setup.OptionAction())
@@ -220,10 +218,10 @@ class View:
 
         helpMenu = PatternScriptEntities.JAVX_SWING.JMenu(PatternScriptEntities.BUNDLE['Help'])
         helpMenu.add(helpMenuItem)
-        helpMenu.add(gitHubItem)
-        helpMenu.add(opsFolderItem)
+        helpMenu.add(gitHubMenuItem)
+        helpMenu.add(opsFolderMenuItem)
         helpMenu.add(logMenuItem)
-        helpMenu.add(editConfigItem)
+        helpMenu.add(editConfigMenuItem)
 
         psMenuBar = PatternScriptEntities.JAVX_SWING.JMenuBar()
         psMenuBar.add(toolsMenu)

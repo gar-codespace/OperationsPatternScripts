@@ -109,9 +109,9 @@ class validateStubFile:
 
     def makehelpFilePath(self):
 
-        self.helpFilePath = PLUGIN_ROOT + '\psSupport\psHelp.html'
-        self.helpFilePath = JAVA_IO.File(self.helpFilePath).toURI()
-        self.helpFilePath = unicode(self.helpFilePath, ENCODING)
+        helpFilePath = PLUGIN_ROOT + '\psSupport\psHelp.html'
+        helpFileUri = JAVA_IO.File(helpFilePath).toURI()
+        self.helpFilePath = unicode(helpFileUri, ENCODING)
 
         return
 
@@ -120,10 +120,10 @@ class validateStubFile:
         stubTemplateLocation = JMRI.util.FileUtil.getProgramPath() + 'help\\' \
                 + psLocale()[:2] + '\\local\\stub_template.html'
 
-        self.newStubFile = genericReadReport(stubTemplateLocation)
-        self.newStubFile = self.newStubFile.replace("../index.html#", "")
-        self.newStubFile = self.newStubFile.replace("<!--HELP_KEY-->", self.helpFilePath)
-        self.newStubFile = self.newStubFile.replace("<!--URL_HELP_KEY-->", "")
+        stubTemplate = genericReadReport(stubTemplateLocation)
+        stubTemplate = stubTemplate.replace("../index.html#", "")
+        stubTemplate = stubTemplate.replace("<!--HELP_KEY-->", self.helpFilePath)
+        self.newStubFile = stubTemplate.replace("<!--URL_HELP_KEY-->", "")
 
         return self.newStubFile
 
@@ -247,7 +247,7 @@ def genericDisplayReport(genericReportPath):
     JAVA_AWT.Desktop.getDesktop().edit(genericReportPath)
 
     return
-    
+
 def loadJson(switchList):
 
     jsonSwitchList = jsonLoads(switchList)

@@ -81,10 +81,8 @@ Todo:
   Test with two profiles running
 
 Version 3 ideas:
-  Implement makePatternScriptsWindow() from config file list
-  Implement CP MI
-  Fill out TrainPlayer Support subroutine.
-  mergeConfigFiles()
+  Implement TrainPlayer Support subroutine.
+  Implement mergeConfigFiles()
   Enhance and harden BUNDLE
   Start working on distributed JMRI
     Set Cars windows add work to work list or docket, similar to TrainPlayer button, add Yardmaster button to Set Cars windows. Work can then be reported as it's done.

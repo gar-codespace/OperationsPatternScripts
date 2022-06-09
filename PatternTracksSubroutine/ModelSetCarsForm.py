@@ -144,10 +144,6 @@ def exportSetCarsFormToTp(setCarsForm, textBoxEntry):
 
     if PatternScriptEntities.CheckTpDestination().directoryExists():
 
-        # jmriExport = tpModel.ExportJmriLocations()
-        # locationList = jmriExport.makeLocationList()
-        # jmriExport.toTrainPlayer(locationList)
-
         tpSwitchList = tpModel.TrackPatternTranslationToTp()
         modifiedSwitchList = tpSwitchList.modifySwitchList(setCarsForm, textBoxEntry)
         appendedTpSwitchList = tpSwitchList.appendSwitchList(modifiedSwitchList)
