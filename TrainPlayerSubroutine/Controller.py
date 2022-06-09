@@ -54,12 +54,17 @@ class StartUp:
         if not updatedInventory.checkList():
             self.psLog.info('No TrainPlayer inventory list to update')
             return
-            
+
         updatedInventory.update()
         errorReport = updatedInventory.getErrorReport()
         errorReportPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\Update Inventory.txt'
         PatternScriptEntities.genericWriteReport(errorReportPath, errorReport)
-        PatternScriptEntities.genericDisplayReport(errorReportPath)
+
+        fileToOpen = PatternScriptEntities.JAVA_IO.File(errorReportPath)
+        if fileToOpen.isFile():
+            PatternScriptEntities.genericDisplayReport(fileToOpen)
+        else:
+            self.psLog.warning('Not found: ' + workEventPath)
 
         self.psLog.info('Updated Rolling stock locations from TrainPlayer')
 

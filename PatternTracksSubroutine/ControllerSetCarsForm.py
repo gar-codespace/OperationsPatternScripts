@@ -123,7 +123,13 @@ class CreatePatternReportGui:
         workEventName, textListForPrint = Model.makeWorkEventList(modifiedReport, trackTotals=False)
         workEventPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\' + workEventName + '.txt'
         PatternScriptEntities.genericWriteReport(workEventPath, textListForPrint)
-        PatternScriptEntities.genericDisplayReport(workEventPath)
+        # PatternScriptEntities.genericDisplayReport(workEventPath)
+
+        fileToOpen = PatternScriptEntities.JAVA_IO.File(workEventPath)
+        if fileToOpen.isFile():
+            PatternScriptEntities.genericDisplayReport(fileToOpen)
+        else:
+            self.psLog.warning('Not found: ' + workEventPath)
 
         if PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
             Model.writeCsvSwitchList(modifiedReport)

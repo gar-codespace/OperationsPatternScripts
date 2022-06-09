@@ -6,10 +6,9 @@ import jmri
 import java.awt
 import javax.swing
 from sys import path as sysPath
-# import logging
-#
+
 from java.beans import PropertyChangeListener
-from apps import Apps
+from apps import Apps, FileLocationPane
 import time
 
 SCRIPT_DIR = 'OperationsPatternScripts'
@@ -29,11 +28,6 @@ SCRIPT_REV = 20220101
 PatternScriptEntities.JMRI = jmri
 PatternScriptEntities.JAVA_AWT = java.awt
 PatternScriptEntities.JAVX_SWING = javax.swing
-# PatternScriptEntities.LOGGING = logging
-
-# from java.beans import PropertyChangeListener
-# from apps import Apps
-# import time
 
 PatternScriptEntities.PLUGIN_ROOT = PLUGIN_ROOT
 PatternScriptEntities.ENCODING = PatternScriptEntities.readConfigFile('CP')['SE']
@@ -186,7 +180,6 @@ class View:
         return psButton
 
     def makePluginPanel(self):
-        """Still not sure if it should be a panel or box"""
 
         # pluginPanel = PatternScriptEntities.JAVX_SWING.JPanel()
         pluginPanel = PatternScriptEntities.JAVX_SWING.Box(PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS)
@@ -215,6 +208,7 @@ class View:
         helpMenuItem = self.makeMenuItem(self.setHmDropDownText())
         logMenuItem = self.makeMenuItem(self.setLmDropDownText())
         gitHubItem = self.makeMenuItem(self.setGhDropDownText())
+        editConfigItem = self.makeMenuItem(self.setGEcDropDownText())
 
         toolsMenu = PatternScriptEntities.JAVX_SWING.JMenu(PatternScriptEntities.BUNDLE['Tools'])
         toolsMenu.add(PatternScriptEntities.JMRI.jmrit.operations.setup.OptionAction())
@@ -227,6 +221,7 @@ class View:
         helpMenu.add(helpMenuItem)
         helpMenu.add(logMenuItem)
         helpMenu.add(gitHubItem)
+        helpMenu.add(editConfigItem)
 
         psMenuBar = PatternScriptEntities.JAVX_SWING.JMenuBar()
         psMenuBar.add(toolsMenu)
@@ -282,23 +277,30 @@ class View:
     def setHmDropDownText(self):
         """itemMethod - Set the drop down text for the Log menu item"""
 
-        helpMenuText = PatternScriptEntities.BUNDLE['Window Help...']
+        menuText = PatternScriptEntities.BUNDLE['Window Help...']
 
-        return helpMenuText, 'helpItemSelected'
+        return menuText, 'helpItemSelected'
 
     def setLmDropDownText(self):
         """itemMethod - Set the drop down text for the Log menu item"""
 
-        logMenuText = PatternScriptEntities.BUNDLE['View Log']
+        menuText = PatternScriptEntities.BUNDLE['View Log']
 
-        return logMenuText, 'logItemSelected'
+        return menuText, 'logItemSelected'
 
     def setGhDropDownText(self):
         """itemMethod - Set the drop down text for the gitHub page item"""
 
-        logMenuText = PatternScriptEntities.BUNDLE['GitHub Page']
+        menuText = PatternScriptEntities.BUNDLE['GitHub Page']
 
-        return logMenuText, 'ghItemSelected'
+        return menuText, 'ghItemSelected'
+
+    def setGEcDropDownText(self):
+        """itemMethod - Set the drop down text for the edit config file item"""
+
+        menuText = PatternScriptEntities.BUNDLE['Edit Config File']
+
+        return menuText, 'ecItemSelected'
 
 class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
@@ -477,8 +479,12 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(OPEN_HELP_EVENT)
 
-        helpStubPath = PatternScriptEntities.getStubPath()
-        PatternScriptEntities.JMRI.util.HelpUtil.openWebPage(helpStubPath)
+        stubPath = PatternScriptEntities.JMRI.util.FileUtil.getPreferencesPath() + 'jmrihelp/psStub.html'
+        stubUri = PatternScriptEntities.JAVA_IO.File(stubPath).toURI()
+        if PatternScriptEntities.JAVA_IO.File(stubUri).isFile():
+            PatternScriptEntities.JAVA_AWT.Desktop.getDesktop().browse(stubUri)
+        else:
+            self.psLog.warning('Help file not found')
 
         return
 
@@ -490,7 +496,12 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         logFileName, patternLog = PatternScriptEntities.makePatternLog()
         logFilePath = PatternScriptEntities.PROFILE_PATH + 'operations\\buildstatus\\' + logFileName + '.txt'
         PatternScriptEntities.genericWriteReport(logFilePath, patternLog)
-        PatternScriptEntities.genericDisplayReport(logFilePath)
+
+        fileToOpen = PatternScriptEntities.JAVA_IO.File(logFilePath)
+        if fileToOpen.isFile():
+            PatternScriptEntities.genericDisplayReport(fileToOpen)
+        else:
+            self.psLog.warning('Not found: ' + logFilePath)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -503,6 +514,20 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         ghPagePath = 'https://github.com//GregRitacco//OperationsPatternScripts'
         PatternScriptEntities.JMRI.util.HelpUtil.openWebPage(ghPagePath)
+
+        return
+
+    def ecItemSelected(self, OPEN_EC_EVENT):
+        """menu item-Help/Edit Config File"""
+
+        self.psLog.debug(OPEN_EC_EVENT)
+
+        configPath = PatternScriptEntities.PROFILE_PATH + 'operations\\PatternConfig.json'
+        fileToOpen = PatternScriptEntities.JAVA_IO.File(configPath)
+        if fileToOpen.isFile():
+            PatternScriptEntities.genericDisplayReport(fileToOpen)
+        else:
+            self.psLog.warning('Not found: ' + logFilePath)
 
         return
 

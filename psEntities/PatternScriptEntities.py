@@ -4,8 +4,6 @@
 """Support methods and package constants for all Pattern Script subroutines"""
 
 import jmri as JMRI
-# import java.awt as JAVA_AWT
-# import javax.swing as JAVAX_SWING
 import logging as LOGGING
 from java import io as JAVA_IO
 from HTMLParser import HTMLParser as HTML_PARSER
@@ -88,6 +86,63 @@ class CheckTpDestination:
 
         return tpDrrectoryFlag
 
+class validateStubFile:
+    """Copy of the JMRI Java version of createStubFile"""
+
+    def __init__(self):
+
+        self.stubLocation = JMRI.util.FileUtil.getPreferencesPath() + '\\jmrihelp\\'
+        self.stubFileName = self.stubLocation + 'psStub.html'
+        self.helpFilePath = ''
+        self.newStubFile = ''
+
+        return
+
+    def validateStubLocation(self):
+
+        if JAVA_IO.File(self.stubLocation).mkdir():
+            _psLog.info('Stub location created at: ' + self.stubLocation)
+        else:
+            _psLog.info('Stub location already exists')
+
+        return
+
+    def makehelpFilePath(self):
+
+        self.helpFilePath = PLUGIN_ROOT + '\psSupport\psHelp.html'
+        self.helpFilePath = JAVA_IO.File(self.helpFilePath).toURI()
+        self.helpFilePath = unicode(self.helpFilePath, ENCODING)
+
+        return
+
+    def updateStubTemplate(self):
+
+        stubTemplateLocation = JMRI.util.FileUtil.getProgramPath() + 'help\\' \
+                + psLocale()[:2] + '\\local\\stub_template.html'
+
+        self.newStubFile = genericReadReport(stubTemplateLocation)
+        self.newStubFile = self.newStubFile.replace("../index.html#", "")
+        self.newStubFile = self.newStubFile.replace("<!--HELP_KEY-->", self.helpFilePath)
+        self.newStubFile = self.newStubFile.replace("<!--URL_HELP_KEY-->", "")
+
+        return self.newStubFile
+
+    def writeStubFile(self):
+
+        genericWriteReport(self.stubFileName, self.newStubFile)
+        _psLog.debug('psStub writen from stub_template')
+
+        return
+
+    def isStubFile(self):
+
+        self.validateStubLocation()
+        self.makehelpFilePath()
+        self.updateStubTemplate()
+        self.writeStubFile()
+
+        return
+
 def psLocale():
 
     return PM.getLocale().toString()
@@ -120,17 +175,26 @@ def occuranceTally(listOfOccurances):
 
     return dict
 
-def getStubPath():
-    """Convert an OS path to a browser acceptable URI.
-    There is probably a method that already does this
-    """
+def getRollingStock(rsId):
 
-    stubPath = 'file:///' + JMRI.util.FileUtil.getPreferencesPath() + 'jmrihelp/psStub.html'
-    stubPath = stubPath.replace('\\', '/')
-    stubPath = stubPath.replace(' ', '%20')
-    stubPath = stubPath.replace('  ', '%20%20')
+    try:
+        rs = CM.getById(rsId)
+        if not rs:
+            rs = EM.getById(rsId)
+    except:
+        rs = None
 
-    return stubPath
+    return rs
+
+def getAllLocations():
+    """JMRI sorts the list"""
+
+    allLocations = LM.getLocationsByNameList()
+    locationList = []
+    for item in allLocations:
+        locationList.append(unicode(item.getName(), ENCODING))
+
+    return locationList
 
 def timeStamp(epochTime=0):
     """Valid Time, get local time adjusted for time zone and dst"""
@@ -177,22 +241,13 @@ def genericWriteReport(filePath, genericReport):
     return
 
 def genericDisplayReport(genericReportPath):
+    """Dealer's choice, the JMRI or Java version"""
 
-    osSystem(openEditorByComputerType(genericReportPath))
+    # JMRI.util.HelpUtil.openWindowsFile(genericReportPath)
+    JAVA_AWT.Desktop.getDesktop().edit(genericReportPath)
 
     return
-
-def openEditorByComputerType(switchListLocation=None):
-    """Opens a text file in a text editor for each type of computer."""
-
-    osType = JMRI.util.SystemType.getType()
-    editorMatrix = readConfigFile('EM')
-    textEditor = editorMatrix[str(osType)]
-    openEditor = textEditor + '"' + switchListLocation + '"' # Double quotes escapes the & symbol
-
-    backupConfigFile()
-    return openEditor
-
+    
 def loadJson(switchList):
 
     jsonSwitchList = jsonLoads(switchList)
@@ -204,67 +259,6 @@ def dumpJson(switchList):
     jsonSwitchList = jsonDumps(switchList, indent=2, sort_keys=True)
 
     return jsonSwitchList
-
-class validateStubFile:
-    """Copy of the JMRI Java version of createStubFile"""
-
-    def __init__(self):
-
-        self.stubLocation = JMRI.util.FileUtil.getPreferencesPath() + '\\jmrihelp\\'
-        self.stubFileName = self.stubLocation + 'psStub.html'
-        self.helpFilePath = ''
-        self.newStubFile = ''
-
-        return
-
-    def validateStubLocation(self):
-
-        if JAVA_IO.File(self.stubLocation).mkdir():
-            _psLog.info('Stub location created at: ' + self.stubLocation)
-        else:
-            _psLog.info('Stub location already exists')
-
-        return
-
-    def makehelpFilePath(self):
-
-        self.helpFilePath = PLUGIN_ROOT + '\psSupport\psHelp.html'
-        self.helpFilePath = JAVA_IO.File(self.helpFilePath).toURI()
-        self.helpFilePath = unicode(self.helpFilePath, ENCODING)
-
-        return
-
-    def updateStubTemplate(self):
-
-        stubTemplateLocation = JMRI.util.FileUtil.getProgramPath() + 'help\\' \
-                + psLocale()[:2] + '\\local\\stub_template.html'
-
-        # if not JAVA_IO.File(stubTemplateLocation).isFile():
-        #     stubTemplateLocation = JMRI.util.FileUtil.getProgramPath() + 'help\\' \
-        #             + psLocale()[:2] + '\\local\\stub_template.html'
-
-        self.newStubFile = genericReadReport(stubTemplateLocation)
-        self.newStubFile = self.newStubFile.replace("../index.html#", "")
-        self.newStubFile = self.newStubFile.replace("<!--HELP_KEY-->", self.helpFilePath)
-        self.newStubFile = self.newStubFile.replace("<!--URL_HELP_KEY-->", "")
-
-        return self.newStubFile
-
-    def writeStubFile(self):
-
-        genericWriteReport(self.stubFileName, self.newStubFile)
-        _psLog.debug('psStub writen from stub_template')
-
-        return
-
-    def isStubFile(self):
-
-        self.validateStubLocation()
-        self.makehelpFilePath()
-        self.updateStubTemplate()
-        self.writeStubFile()
-
-        return
 
 def validateFileDestinationDirestories():
     """Checks that the folders this plugin writes to exist"""
@@ -392,27 +386,6 @@ def makePatternLog():
 
     return 'PatternScriptsLog_temp', outputPatternLog
 
-def getRollingStock(rsId):
-
-    try:
-        rs = CM.getById(rsId)
-        if not rs:
-            rs = EM.getById(rsId)
-    except:
-        rs = None
-
-    return rs
-
-def getAllLocations():
-    """JMRI sorts the list"""
-
-    allLocations = LM.getLocationsByNameList()
-    locationList = []
-    for item in allLocations:
-        locationList.append(unicode(item.getName(), ENCODING))
-
-    return locationList
-
 def getCarColor():
     """backupConfigFile() is a bit of user edit protection"""
 
@@ -449,3 +422,17 @@ def getAlertColor():
 
     backupConfigFile()
     return JAVA_AWT.Color(r, g, b, a)
+
+
+# def openEditorByComputerType(switchListLocation=None):
+#     """Opens a text file in a text editor for each type of computer.
+#     Version 3
+#     """
+#
+#     osType = JMRI.util.SystemType.getType()
+#     editorMatrix = readConfigFile('EM')
+#     textEditor = editorMatrix[str(osType)]
+#     openEditor = textEditor + '"' + switchListLocation + '"' # Double quotes escapes the & symbol
+#
+#     backupConfigFile()
+#     return openEditor
