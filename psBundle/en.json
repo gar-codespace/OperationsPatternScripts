@@ -1,5 +1,6 @@
 {
-  "Pattern Tracks Subroutine" : "Translation Items, do not edit this line",
+  "version" : 20220601,
+  "Translate Plugin" : "Translate Plugin",
   "Pattern Tracks Subroutine" : "Pattern Tracks Subroutine",
   "Pattern Scripts" : "Pattern Scripts",
   "Restart Pattern Scripts" : "Restart from PatternConfig Backup",
@@ -45,7 +46,6 @@
   "No final destination" : "No final destination",
   "No FD track" : "No FD track",
 
-  "TrainPlayer Support Subroutine" : "Translation Items, do not edit this line",
   "TrainPlayer Support Subroutine" : "TrainPlayer Support Subroutine",
   "Update Inventory" : "Update Inventory",
   "Space Available" : "This Space For Rent",
@@ -57,7 +57,6 @@
   "No errors" : "No errors",
   "TrainPlayer track has no JMRI track comment: " : "TrainPlayer track has no JMRI track comment: ",
 
-  "Pattern Report for Track" : "Translation Items, do not edit these items",
   "Input": "Input",
   "Road" : "Road",
   "Number" : "Number",

@@ -31,7 +31,7 @@ PatternScriptEntities.JAVX_SWING = javax.swing
 
 PatternScriptEntities.PLUGIN_ROOT = PLUGIN_ROOT
 PatternScriptEntities.ENCODING = PatternScriptEntities.readConfigFile('CP')['SE']
-PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale(PLUGIN_ROOT)
+PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale()
 
 class TrainsTableListener(PatternScriptEntities.JAVX_SWING.event.TableModelListener):
     """Catches user add or remove train while TrainPlayer support is enabled"""
@@ -203,6 +203,7 @@ class View:
 
         asMenuItem = self.makeMenuItem(self.setAsDropDownText())
         tpMenuItem = self.makeMenuItem(self.setTiDropDownText())
+        ptMenuItem = self.makeMenuItem(self.setPtDropDownText())
         helpMenuItem = self.makeMenuItem(self.setHmDropDownText())
         gitHubMenuItem = self.makeMenuItem(self.setGhDropDownText())
         opsFolderMenuItem = self.makeMenuItem(self.setOfDropDownText())
@@ -215,6 +216,7 @@ class View:
         toolsMenu.add(PatternScriptEntities.JMRI.jmrit.operations.setup.BuildReportOptionAction())
         toolsMenu.add(asMenuItem)
         toolsMenu.add(tpMenuItem)
+        toolsMenu.add(ptMenuItem)
 
         helpMenu = PatternScriptEntities.JAVX_SWING.JMenu(PatternScriptEntities.BUNDLE['Help'])
         helpMenu.add(helpMenuItem)
@@ -273,6 +275,13 @@ class View:
             menuText = PatternScriptEntities.BUNDLE['Enable TrainPlayer']
 
         return menuText, 'tpItemSelected'
+
+    def setPtDropDownText(self):
+        """itemMethod - Set the drop down text for the Translate Plugin item"""
+
+        menuText = PatternScriptEntities.BUNDLE['Translate Plugin']
+
+        return menuText, 'ptItemSelected'
 
     def setHmDropDownText(self):
         """itemMethod - Set the drop down text for the Log menu item"""
@@ -481,6 +490,15 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         return
 
+    def ptItemSelected(self, TRANSLATE_PLUGIN_EVENT):
+        """menu item-Tools/Translate Plugin"""
+
+        self.psLog.debug(TRANSLATE_PLUGIN_EVENT)
+
+        Bundle.createBundleForLocale()
+
+        return
+
     def helpItemSelected(self, OPEN_HELP_EVENT):
         """menu item-Help/Window help..."""
 
@@ -553,6 +571,8 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         return
 
     def handle(self):
+
+        # Bundle.translateItems()
 
         yTimeNow = time.time()
         self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.Controller')
