@@ -123,30 +123,63 @@ def getDetailsForLocoAsDict(locoObject):
     listOfAssignedRs = getRsOnTrains()
     locoDetailDict = {}
 
-    locoDetailDict[u'Road'] = locoObject.getRoadName()
-    locoDetailDict[u'Number'] = locoObject.getNumber()
-    locoDetailDict[u'Type'] = locoObject.getTypeName()
-    locoDetailDict[u'Model'] = locoObject.getModel()
-    locoDetailDict[u'Length'] = locoObject.getLength()
-    locoDetailDict[u'Weight'] = locoObject.getWeightTons()
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Road')
+    locoDetailDict[lineKey] = locoObject.getRoadName()
+
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Number')
+    locoDetailDict[lineKey] = locoObject.getNumber()
+
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Type')
+    locoDetailDict[lineKey] = locoObject.getTypeName()
+
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Model')
+    locoDetailDict[lineKey] = locoObject.getModel()
+
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Length')
+    locoDetailDict[lineKey] = locoObject.getLength()
+
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Weight')
+    locoDetailDict[lineKey] = locoObject.getWeightTons()
+
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Consist')
     try:
-        locoDetailDict[u'Consist'] = locoObject.getConsist().getName()
+        locoDetailDict[lineKey] = locoObject.getConsist().getName()
     except:
-        locoDetailDict[u'Consist'] = 'Single'
-    locoDetailDict[u'Owner'] = str(locoObject.getOwner())
-    locoDetailDict[u'Track'] = locoObject.getTrackName()
-    locoDetailDict[u'Location'] = locoObject.getLocation().getName()
-    locoDetailDict[u'Destination'] = locoObject.getDestinationName()
-    locoDetailDict[u'Comment'] = locoObject.getComment()
+        locoDetailDict[lineKey] = PatternScriptEntities.BUNDLE['Single']
+
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Owner')
+    locoDetailDict[lineKey] = str(locoObject.getOwner())
+
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Track')
+    locoDetailDict[lineKey] = locoObject.getTrackName()
+
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Location')
+    locoDetailDict[lineKey] = locoObject.getLocation().getName()
+
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Destination')
+    locoDetailDict[lineKey] = locoObject.getDestinationName()
+
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Comment')
+    locoDetailDict[lineKey] = locoObject.getComment()
+
 # Not part of JMRI engine attributes
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Load')
+    locoDetailDict[lineKey] = u'O'
+
+    lineKey = PatternScriptEntities.SB.handleGetMessage('FD&Track')
+    locoDetailDict[lineKey] = PatternScriptEntities.readConfigFile('PT')['DS']
+
+    lineKey = PatternScriptEntities.BUNDLE['On Train']
     if locoObject in listOfAssignedRs: # Flag to mark if RS is on a built train
-        locoDetailDict[u'On Train'] = True
+        locoDetailDict[lineKey] = True
     else:
-        locoDetailDict[u'On Train'] = False
-    locoDetailDict[u'Set to'] = '[  ] '
+        locoDetailDict[lineKey] = False
+
+    lineKey = PatternScriptEntities.BUNDLE['Set to']
+    locoDetailDict[lineKey] = '[  ] '
+
     locoDetailDict[u'PUSO'] = u'SL'
-    locoDetailDict[u'Load'] = u'O'
-    locoDetailDict[u'FD&Track'] = PatternScriptEntities.readConfigFile('PT')['DS']
+
     locoDetailDict[u' '] = u' ' # Catches KeyError - empty box added to getDropEngineMessageFormat
 
     PatternScriptEntities.backupConfigFile()
@@ -191,61 +224,105 @@ def getDetailsForCarAsDict(carObject):
     listOfAssignedRs = getRsOnTrains()
     carDetailDict = {}
 
-    carDetailDict[u'Road'] = carObject.getRoadName()
-    carDetailDict[u'Number'] = carObject.getNumber()
-    carDetailDict[u'Type'] = carObject.getTypeName()
-    carDetailDict[u'Length'] = carObject.getLength()
-    carDetailDict[u'Weight'] = carObject.getWeightTons()
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Road')
+    carDetailDict[lineKey] = carObject.getRoadName()
+
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Number')
+    carDetailDict[lineKey] = carObject.getNumber()
+
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Type')
+    carDetailDict[lineKey] = carObject.getTypeName()
+
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Length')
+    carDetailDict[lineKey] = carObject.getLength()
+
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Weight')
+    carDetailDict[lineKey] = carObject.getWeightTons()
+
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Load')
     if carObject.isCaboose() or carObject.isPassenger():
-        carDetailDict[u'Load'] = u'O'
+        carDetailDict[lineKey] = u'O'
     else:
-        carDetailDict[u'Load'] = carObject.getLoadName()
+        carDetailDict[lineKey] = carObject.getLoadName()
+
+    # lineKey = PatternScriptEntities.CB.handleGetMessage('Load Type ')
+    # x = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarLoads.Bundle().handleGetMessage('Load Type')
     carDetailDict[u'Load Type'] = carObject.getLoadType()
-    carDetailDict[u'Hazardous'] = carObject.isHazardous()
-    carDetailDict[u'Color'] = carObject.getColor()
-    carDetailDict[u'Kernel'] = carObject.getKernelName()
+
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Hazardous')
+    carDetailDict[lineKey] = carObject.isHazardous()
+
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Color')
+    carDetailDict[lineKey] = carObject.getColor()
+
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Kernel')
+    carDetailDict[lineKey] = carObject.getKernelName()
+
     allCarObjects =  PatternScriptEntities.CM.getByIdList()
     for car in allCarObjects:
         i = 0
         if (car.getKernelName() == carObject.getKernelName()):
             i += 1
+    # lineKey = PatternScriptEntities.SB.handleGetMessage('Kernel Size')
     carDetailDict[u'Kernel Size'] = str(i)
-    carDetailDict[u'Owner'] = carObject.getOwner()
-    carDetailDict[u'Track'] = carObject.getTrackName()
-    carDetailDict[u'Location'] = carObject.getLocationName()
-    
+
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Owner')
+    carDetailDict[lineKey] = carObject.getOwner()
+
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Track')
+    carDetailDict[lineKey] = carObject.getTrackName()
+
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Location')
+    carDetailDict[lineKey] = carObject.getLocationName()
+
+    lineKey1 = PatternScriptEntities.SB.handleGetMessage('Destination')
+    lineKey2 = PatternScriptEntities.SB.handleGetMessage('Dest&Track')
     if not (carObject.getDestinationName()):
-        carDetailDict[u'Destination'] = fdStandIn['DS']
-        carDetailDict[u'Dest&Track'] = fdStandIn['DT']
+        carDetailDict[lineKey1] = fdStandIn['DS']
+        carDetailDict[lineKey2] = fdStandIn['DT']
     else:
-        carDetailDict[u'Destination'] = carObject.getDestinationName()
-        carDetailDict[u'Dest&Track'] = carObject.getDestinationName() \
+        carDetailDict[lineKey1] = carObject.getDestinationName()
+        carDetailDict[lineKey2] = carObject.getDestinationName() \
                                      + ', ' + carObject.getDestinationTrackName()
 
+    # lineKey1 = PatternScriptEntities.SB.handleGetMessage('Final Dest')
+    lineKey2 = PatternScriptEntities.SB.handleGetMessage('FD&Track')
     if not (carObject.getFinalDestinationName()):
         carDetailDict[u'Final Dest'] = fdStandIn['FD']
-        carDetailDict[u'FD&Track'] = fdStandIn['FT']
+        carDetailDict[lineKey2] = fdStandIn['FT']
     else:
         carDetailDict[u'Final Dest'] = carObject.getFinalDestinationName()
-        carDetailDict[u'FD&Track'] = carObject.getFinalDestinationName() \
+        carDetailDict[lineKey2] = carObject.getFinalDestinationName() \
                                    + ', ' + carObject.getFinalDestinationTrackName()
 
+    # lineKey = PatternScriptEntities.SB.handleGetMessage('FD Track')
     if not carObject.getFinalDestinationTrackName():
         carDetailDict[u'FD Track'] = fdStandIn['FT']
     else:
         carDetailDict[u'FD Track'] = carObject.getFinalDestinationTrackName()
 
-    carDetailDict[u'Comment'] = carObject.getComment()
+    lineKey = PatternScriptEntities.SB.handleGetMessage('Comment')
+    carDetailDict[lineKey] = carObject.getComment()
+
     trackId =  PatternScriptEntities.LM.getLocationByName(carObject.getLocationName()).getTrackById(carObject.getTrackId())
+    # lineKey = PatternScriptEntities.SB.handleGetMessage('SetOut Msg')
     carDetailDict[u'SetOut Msg'] = trackId.getCommentSetout()
+    # lineKey = PatternScriptEntities.SB.handleGetMessage('PickUp Msg')
     carDetailDict[u'PickUp Msg'] = trackId.getCommentPickup()
-    carDetailDict[u'RWE'] = carObject.getReturnWhenEmptyDestinationName()
+
+
+    lineKey = PatternScriptEntities.SB.handleGetMessage('RWE')
+    carDetailDict[lineKey] = carObject.getReturnWhenEmptyDestinationName()
 # Not part of JMRI car attributes
+    lineKey = PatternScriptEntities.BUNDLE['On Train']
     if carObject in listOfAssignedRs: # Flag to mark if RS is on a built train
-        carDetailDict[u'On Train'] = True
+        carDetailDict[lineKey] = True
     else:
-        carDetailDict[u'On Train'] = False
-    carDetailDict[u'Set to'] = '[  ] '
+        carDetailDict[lineKey] = False
+
+    lineKey = PatternScriptEntities.BUNDLE['Set to']
+    carDetailDict[lineKey] = '[  ] '
+
     carDetailDict[u'PUSO'] = u'SC'
     carDetailDict[u' '] = u' ' # Catches KeyError - empty box added to getLocalSwitchListMessageFormat
 

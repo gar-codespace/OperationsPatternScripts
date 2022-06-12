@@ -14,13 +14,15 @@ SCRIPT_REV = 20220101
 def createBundleForLocale():
     """Creates a new bundle for JMRI's locale setting"""
 
+    # xyz = PatternScriptEntities.JMRI.jmrit.operations.Bundle()
+    # print(xyz.handleGetMessage('Length'))
+
     bundleDir = PatternScriptEntities.PLUGIN_ROOT + '\\psBundle\\'
     bundleTarget = bundleDir + PatternScriptEntities.psLocale() + '.jso'
 
     translatedItems = translateItems()
     translatedAttributes = translateAttributes()
     mergedTranslation = translatedItems.update(translatedAttributes)
-    print(mergedTranslation)
 
     translation = PatternScriptEntities.dumpJson(translatedItems)
     PatternScriptEntities.genericWriteReport(bundleTarget, translation)

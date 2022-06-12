@@ -21,6 +21,10 @@ BUNDLE = {}
 SCRIPT_NAME = 'OperationsPatternScripts.psEntities.PatternScriptEntities'
 SCRIPT_REV = 20220101
 
+OB = JMRI.jmrit.operations.Bundle() #Operations Bundle
+SB = JMRI.jmrit.operations.setup.Bundle()
+CB = JMRI.jmrit.operations.rollingstock.cars.Bundle()
+
 LM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.LocationManager)
 TM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.trains.TrainManager)
 EM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.engines.EngineManager)
