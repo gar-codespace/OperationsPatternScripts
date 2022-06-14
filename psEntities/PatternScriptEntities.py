@@ -17,13 +17,13 @@ PLUGIN_ROOT = ''
 PROFILE_PATH = JMRI.util.FileUtil.getProfilePath()
 ENCODING = ''
 BUNDLE = {}
+J_BUNDLE = JMRI.jmrit.operations.setup.Setup()
+REPORT_ITEM_WIDTH_MATRIX = {}
+
+SB = JMRI.jmrit.operations.setup.Bundle()
 
 SCRIPT_NAME = 'OperationsPatternScripts.psEntities.PatternScriptEntities'
 SCRIPT_REV = 20220101
-
-OB = JMRI.jmrit.operations.Bundle() #Operations Bundle
-SB = JMRI.jmrit.operations.setup.Bundle()
-CB = JMRI.jmrit.operations.rollingstock.cars.Bundle()
 
 LM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.LocationManager)
 TM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.trains.TrainManager)
@@ -33,6 +33,21 @@ SM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.schedules.S
 PM = JMRI.InstanceManager.getDefault(JMRI.util.gui.GuiLafPreferencesManager)
 
 _psLog = LOGGING.getLogger('PS.PE.PatternScriptEntities')
+
+
+def makeReportItemWidthMatrix():
+    """The report widths for each of the rolling stock attributes is defined in the config file.
+    The keys for the width values need to be translated into whatever language the current profile is using.
+    """
+
+    reportItemMatrix = {}
+
+    reportWidths = readConfigFile('PT')['AW']
+    for rItem in reportWidths:
+        reportItemMatrix[SB.handleGetMessage(rItem)] = reportWidths[rItem]
+
+    reportItemMatrix[' '] = 1 # catches empty box added to Manifest Print Options
+    return reportItemMatrix
 
 class Logger:
 

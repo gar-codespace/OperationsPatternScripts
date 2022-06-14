@@ -144,7 +144,8 @@ def makeTextReportHeader(textWorkEventList):
 
 def makeTextReportLocations(textWorkEventList, trackTotals):
 
-    reportWidth = PatternScriptEntities.readConfigFile('PT')['RW']
+    # reportWidth = PatternScriptEntities.readConfigFile('PT')['RW']
+    reportWidth = PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX
     locoItems = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
     carItems = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
 
@@ -160,14 +161,14 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
         switchListRow = ''
 
         for loco in track['locos']:
-            lengthOfLocos += int(loco['Length']) + 4
+            lengthOfLocos += int(loco[PatternScriptEntities.SB.handleGetMessage('Length')]) + 4
             reportSwitchList += loco['Set to'] + loopThroughRs('loco', loco) + '\n'
 
         for car in track['cars']:
-            lengthOfCars += int(car['Length']) + 4
+            lengthOfCars += int(car[PatternScriptEntities.SB.handleGetMessage('Length')]) + 4
             reportSwitchList += car['Set to'] + loopThroughRs('car', car) + '\n'
-            trackTally.append(car['Final Dest'])
-            reportTally.append(car['Final Dest'])
+            trackTally.append(car[PatternScriptEntities.SB.handleGetMessage('Final_Dest')])
+            reportTally.append(car[PatternScriptEntities.SB.handleGetMessage('Final_Dest')])
 
         if trackTotals:
             totalLength = lengthOfLocos + lengthOfCars
@@ -191,7 +192,7 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
 
 def loopThroughRs(type, rsAttribs):
 
-    reportWidth = PatternScriptEntities.readConfigFile('PT')['RW']
+    reportWidth = PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX
     switchListRow = ''
 
     if type == 'loco':
@@ -200,7 +201,8 @@ def loopThroughRs(type, rsAttribs):
         messageFormat = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
 
     for item in messageFormat:
-        itemWidth = reportWidth[PatternScriptEntities.BUNDLE[item]]
-        switchListRow += PatternScriptEntities.formatText(rsAttribs[PatternScriptEntities.BUNDLE[item]], itemWidth)
+
+        itemWidth = reportWidth[item]
+        switchListRow += PatternScriptEntities.formatText(rsAttribs[item], itemWidth)
 
     return switchListRow

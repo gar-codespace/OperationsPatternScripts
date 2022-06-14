@@ -33,6 +33,7 @@ PatternScriptEntities.PLUGIN_ROOT = PLUGIN_ROOT
 PatternScriptEntities.ENCODING = PatternScriptEntities.readConfigFile('CP')['SE']
 PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale()
 
+
 class TrainsTableListener(PatternScriptEntities.JAVX_SWING.event.TableModelListener):
     """Catches user add or remove train while TrainPlayer support is enabled"""
 
@@ -375,7 +376,7 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         return
 
     def patternScriptsButtonAction(self, MOUSE_CLICKED):
-
+        
         self.patternScriptsButton.setText(PatternScriptEntities.BUNDLE['Restart Pattern Scripts'])
         self.patternScriptsButton.actionPerformed = self.patternScriptsButtonRestartAction
         self.buildThePlugin()

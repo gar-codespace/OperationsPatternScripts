@@ -73,7 +73,7 @@
     "PW" : 1500,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20220601
+    "RV" : 20220607
   },
   "EM": {
     "1": "Mac Classic ",
@@ -111,12 +111,11 @@
       "Model"
     ],
     "SC": [
-      "Load Type",
+      "Load_Type",
       "FD&Track"
     ],
     "RM": 8,
-    "RW": {
-      "Input": 6,
+    "AW": {
       "Model": 5,
       "Road" : 5,
       "Number" : 7,
@@ -124,27 +123,24 @@
       "Length" : 7,
       "Weight" : 7,
       "Load" : 6,
-      "Load Type" : 5,
-      "Loco Type" : 18,
+      "Load_Type" : 5,
       "Owner" : 20,
       "Consist" : 8,
       "Hazardous" : 10,
       "Color" : 6,
       "Kernel" : 7,
-      "Kernel Size" : 12,
+      "Kernel_Size" : 12,
       "Owner" : 6,
       "Track" : 6,
       "Location" : 9,
       "Destination" : 15,
       "Dest&Track" : 30,
-      "Final Dest" : 11,
-      "FD Track" : 15,
+      "Final_Dest" : 11,
       "FD&Track" : 21,
       "Comment" : 15,
-      "SetOut Msg" : 12,
-      "PickUp Msg" : 12,
-      "RWE" : 10,
-      " " : 0
+      "SetOut_Msg" : 12,
+      "PickUp_Msg" : 12,
+      "RWE" : 10
     }
   },
   "TP" : {

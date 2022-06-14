@@ -78,7 +78,8 @@ def sortLocoList(locoList):
 
     sortLocos = PatternScriptEntities.readConfigFile('PT')['SL']
     for sortKey in sortLocos:
-        locoList.sort(key=lambda row: row[sortKey])
+        translatedkey = PatternScriptEntities.SB.handleGetMessage(sortKey)
+        locoList.sort(key=lambda row: row[translatedkey])
 
     PatternScriptEntities.backupConfigFile()
     return locoList
@@ -116,73 +117,48 @@ def getLocoObjects(location, track):
 def getDetailsForLocoAsDict(locoObject):
     """backupConfigFile() is a bit of user edit protection
     Mimics jmri.jmrit.operations.setup.Setup.getEngineAttributes()
-    [u'Road', u'Number', u'Type', u'Model', u'Length', u'Weight', u'Consist',
-    u'Owner', u'Track', u'Location', u'Destination', u'Comment']
+    Dealers choice, either:
+        PatternScriptEntities.J_BUNDLE.ROAD
+        or
+        PatternScriptEntities.SB.handleGetMessage('Road')
     """
 
     listOfAssignedRs = getRsOnTrains()
     locoDetailDict = {}
 
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Road')
-    locoDetailDict[lineKey] = locoObject.getRoadName()
+    locoDetailDict[PatternScriptEntities.J_BUNDLE.ROAD] = locoObject.getRoadName()
+    locoDetailDict[PatternScriptEntities.J_BUNDLE.NUMBER] = locoObject.getNumber()
+    locoDetailDict[PatternScriptEntities.J_BUNDLE.TYPE] = locoObject.getTypeName()
+    locoDetailDict[PatternScriptEntities.J_BUNDLE.MODEL] = locoObject.getModel()
+    locoDetailDict[PatternScriptEntities.J_BUNDLE.LENGTH] = locoObject.getLength()
+    locoDetailDict[PatternScriptEntities.J_BUNDLE.WEIGHT] = locoObject.getWeightTons()
 
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Number')
-    locoDetailDict[lineKey] = locoObject.getNumber()
-
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Type')
-    locoDetailDict[lineKey] = locoObject.getTypeName()
-
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Model')
-    locoDetailDict[lineKey] = locoObject.getModel()
-
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Length')
-    locoDetailDict[lineKey] = locoObject.getLength()
-
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Weight')
-    locoDetailDict[lineKey] = locoObject.getWeightTons()
-
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Consist')
     try:
-        locoDetailDict[lineKey] = locoObject.getConsist().getName()
+        locoDetailDict[PatternScriptEntities.J_BUNDLE.CONSIST] = locoObject.getConsist().getName()
     except:
-        locoDetailDict[lineKey] = PatternScriptEntities.BUNDLE['Single']
+        locoDetailDict[PatternScriptEntities.J_BUNDLE.CONSIST] = PatternScriptEntities.BUNDLE['Single']
 
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Owner')
-    locoDetailDict[lineKey] = str(locoObject.getOwner())
-
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Track')
-    locoDetailDict[lineKey] = locoObject.getTrackName()
-
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Location')
-    locoDetailDict[lineKey] = locoObject.getLocation().getName()
-
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Destination')
-    locoDetailDict[lineKey] = locoObject.getDestinationName()
-
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Comment')
-    locoDetailDict[lineKey] = locoObject.getComment()
+    locoDetailDict[PatternScriptEntities.J_BUNDLE.OWNER] = str(locoObject.getOwner())
+    locoDetailDict[PatternScriptEntities.J_BUNDLE.TRACK] = locoObject.getTrackName()
+    locoDetailDict[PatternScriptEntities.J_BUNDLE.LOCATION] = locoObject.getLocation().getName()
+    locoDetailDict[PatternScriptEntities.J_BUNDLE.DESTINATION] = locoObject.getDestinationName()
+    locoDetailDict[PatternScriptEntities.J_BUNDLE.COMMENT] = locoObject.getComment()
 
 # Not part of JMRI engine attributes
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Load')
-    locoDetailDict[lineKey] = u'O'
+    locoDetailDict[PatternScriptEntities.J_BUNDLE.LOAD] = u'O'
+    locoDetailDict[PatternScriptEntities.J_BUNDLE.FINAL_DEST_TRACK] = PatternScriptEntities.readConfigFile('PT')['DS']
 
-    lineKey = PatternScriptEntities.SB.handleGetMessage('FD&Track')
-    locoDetailDict[lineKey] = PatternScriptEntities.readConfigFile('PT')['DS']
-
-    lineKey = PatternScriptEntities.BUNDLE['On Train']
     if locoObject in listOfAssignedRs: # Flag to mark if RS is on a built train
-        locoDetailDict[lineKey] = True
+        locoDetailDict[PatternScriptEntities.BUNDLE['On Train']] = True
     else:
-        locoDetailDict[lineKey] = False
+        locoDetailDict[PatternScriptEntities.BUNDLE['On Train']] = False
 
-    lineKey = PatternScriptEntities.BUNDLE['Set to']
-    locoDetailDict[lineKey] = '[  ] '
-
+    locoDetailDict[PatternScriptEntities.BUNDLE['Set to']] = '[  ] '
     locoDetailDict[u'PUSO'] = u'SL'
-
     locoDetailDict[u' '] = u' ' # Catches KeyError - empty box added to getDropEngineMessageFormat
 
     PatternScriptEntities.backupConfigFile()
+
     return locoDetailDict
 
 def sortCarList(carList):
@@ -191,7 +167,8 @@ def sortCarList(carList):
 
     sortCars = PatternScriptEntities.readConfigFile('PT')['SC']
     for sortKey in sortCars:
-        carList.sort(key=lambda row: row[sortKey])
+        translatedkey = PatternScriptEntities.SB.handleGetMessage(sortKey)
+        carList.sort(key=lambda row: row[translatedkey])
 
     PatternScriptEntities.backupConfigFile()
     return carList
@@ -213,10 +190,10 @@ def getCarObjects(location, track):
 def getDetailsForCarAsDict(carObject):
     """backupConfigFile() is a bit of user edit protection
     Mimics jmri.jmrit.operations.setup.Setup.getCarAttributes()
-    [u'Road', u'Number', u'Type', u'Length', u'Weight', u'Load', u'Load Type',
-    u'Hazardous', u'Color', u'Kernel', u'Kernel Size', u'Owner', u'Track',
-    u'Location', u'Destination', u'Dest&Track', u'Final Dest', u'FD&Track',
-    u'Comment', u'SetOut Msg', u'PickUp Msg', u'RWE']
+    Dealers choice, either:
+        PatternScriptEntities.J_BUNDLE.ROAD
+        or
+        PatternScriptEntities.SB.handleGetMessage('Road')
     """
 
     fdStandIn = PatternScriptEntities.readConfigFile('PT')
@@ -224,95 +201,52 @@ def getDetailsForCarAsDict(carObject):
     listOfAssignedRs = getRsOnTrains()
     carDetailDict = {}
 
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Road')
-    carDetailDict[lineKey] = carObject.getRoadName()
-
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Number')
-    carDetailDict[lineKey] = carObject.getNumber()
-
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Type')
-    carDetailDict[lineKey] = carObject.getTypeName()
-
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Length')
-    carDetailDict[lineKey] = carObject.getLength()
-
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Weight')
-    carDetailDict[lineKey] = carObject.getWeightTons()
-
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Load')
+    carDetailDict[PatternScriptEntities.J_BUNDLE.ROAD] = carObject.getRoadName()
+    carDetailDict[PatternScriptEntities.J_BUNDLE.NUMBER] = carObject.getNumber()
+    carDetailDict[PatternScriptEntities.J_BUNDLE.TYPE] = carObject.getTypeName()
+    carDetailDict[PatternScriptEntities.J_BUNDLE.LENGTH] = carObject.getLength()
+    carDetailDict[PatternScriptEntities.J_BUNDLE.WEIGHT] = carObject.getWeightTons()
     if carObject.isCaboose() or carObject.isPassenger():
-        carDetailDict[lineKey] = u'O'
+        carDetailDict[PatternScriptEntities.J_BUNDLE.LOAD] = u'O'
     else:
-        carDetailDict[lineKey] = carObject.getLoadName()
+        carDetailDict[PatternScriptEntities.J_BUNDLE.LOAD] = carObject.getLoadName()
+    carDetailDict[PatternScriptEntities.J_BUNDLE.LOAD_TYPE] = carObject.getLoadType()
+    carDetailDict[PatternScriptEntities.J_BUNDLE.HAZARDOUS] = carObject.isHazardous()
+    carDetailDict[PatternScriptEntities.J_BUNDLE.COLOR] = carObject.getColor()
+    carDetailDict[PatternScriptEntities.J_BUNDLE.KERNEL] = carObject.getKernelName()
 
-    # lineKey = PatternScriptEntities.CB.handleGetMessage('Load Type ')
-    # x = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarLoads.Bundle().handleGetMessage('Load Type')
-    carDetailDict[u'Load Type'] = carObject.getLoadType()
-
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Hazardous')
-    carDetailDict[lineKey] = carObject.isHazardous()
-
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Color')
-    carDetailDict[lineKey] = carObject.getColor()
-
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Kernel')
-    carDetailDict[lineKey] = carObject.getKernelName()
-
-    allCarObjects =  PatternScriptEntities.CM.getByIdList()
-    for car in allCarObjects:
-        i = 0
+    for i, car in enumerate(PatternScriptEntities.CM.getByIdList()):
         if (car.getKernelName() == carObject.getKernelName()):
             i += 1
-    # lineKey = PatternScriptEntities.SB.handleGetMessage('Kernel Size')
-    carDetailDict[u'Kernel Size'] = str(i)
+    carDetailDict[PatternScriptEntities.J_BUNDLE.KERNEL_SIZE] = str(i)
 
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Owner')
-    carDetailDict[lineKey] = carObject.getOwner()
+    carDetailDict[PatternScriptEntities.J_BUNDLE.OWNER] = str(carObject.getOwner())
+    carDetailDict[PatternScriptEntities.J_BUNDLE.TRACK] = carObject.getTrackName()
+    carDetailDict[PatternScriptEntities.J_BUNDLE.LOCATION] = carObject.getLocationName()
 
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Track')
-    carDetailDict[lineKey] = carObject.getTrackName()
-
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Location')
-    carDetailDict[lineKey] = carObject.getLocationName()
-
-    lineKey1 = PatternScriptEntities.SB.handleGetMessage('Destination')
-    lineKey2 = PatternScriptEntities.SB.handleGetMessage('Dest&Track')
     if not (carObject.getDestinationName()):
-        carDetailDict[lineKey1] = fdStandIn['DS']
-        carDetailDict[lineKey2] = fdStandIn['DT']
+        carDetailDict[PatternScriptEntities.J_BUNDLE.DESTINATION] = fdStandIn['DS']
+        carDetailDict[PatternScriptEntities.J_BUNDLE.DEST_TRACK] = fdStandIn['DT']
     else:
-        carDetailDict[lineKey1] = carObject.getDestinationName()
-        carDetailDict[lineKey2] = carObject.getDestinationName() \
+        carDetailDict[PatternScriptEntities.J_BUNDLE.DESTINATION] = carObject.getDestinationName()
+        carDetailDict[PatternScriptEntities.J_BUNDLE.DEST_TRACK] = carObject.getDestinationName() \
                                      + ', ' + carObject.getDestinationTrackName()
 
-    # lineKey1 = PatternScriptEntities.SB.handleGetMessage('Final Dest')
-    lineKey2 = PatternScriptEntities.SB.handleGetMessage('FD&Track')
     if not (carObject.getFinalDestinationName()):
-        carDetailDict[u'Final Dest'] = fdStandIn['FD']
-        carDetailDict[lineKey2] = fdStandIn['FT']
+        carDetailDict[PatternScriptEntities.J_BUNDLE.FINAL_DEST] = fdStandIn['FD']
+        carDetailDict[PatternScriptEntities.J_BUNDLE.FINAL_DEST_TRACK] = fdStandIn['FT']
     else:
-        carDetailDict[u'Final Dest'] = carObject.getFinalDestinationName()
-        carDetailDict[lineKey2] = carObject.getFinalDestinationName() \
+        carDetailDict[PatternScriptEntities.J_BUNDLE.FINAL_DEST] = carObject.getFinalDestinationName()
+        carDetailDict[PatternScriptEntities.J_BUNDLE.FINAL_DEST_TRACK] = carObject.getFinalDestinationName() \
                                    + ', ' + carObject.getFinalDestinationTrackName()
 
-    # lineKey = PatternScriptEntities.SB.handleGetMessage('FD Track')
-    if not carObject.getFinalDestinationTrackName():
-        carDetailDict[u'FD Track'] = fdStandIn['FT']
-    else:
-        carDetailDict[u'FD Track'] = carObject.getFinalDestinationTrackName()
+    carDetailDict[PatternScriptEntities.J_BUNDLE.COMMENT] = carObject.getComment()
 
-    lineKey = PatternScriptEntities.SB.handleGetMessage('Comment')
-    carDetailDict[lineKey] = carObject.getComment()
+    trackId = PatternScriptEntities.LM.getLocationByName(carObject.getLocationName()).getTrackById(carObject.getTrackId())
+    carDetailDict[PatternScriptEntities.J_BUNDLE.DROP_COMMENT] = trackId.getCommentSetout()
+    carDetailDict[PatternScriptEntities.J_BUNDLE.PICKUP_COMMENT] = trackId.getCommentPickup()
+    carDetailDict[PatternScriptEntities.J_BUNDLE.RWE] = carObject.getReturnWhenEmptyDestinationName()
 
-    trackId =  PatternScriptEntities.LM.getLocationByName(carObject.getLocationName()).getTrackById(carObject.getTrackId())
-    # lineKey = PatternScriptEntities.SB.handleGetMessage('SetOut Msg')
-    carDetailDict[u'SetOut Msg'] = trackId.getCommentSetout()
-    # lineKey = PatternScriptEntities.SB.handleGetMessage('PickUp Msg')
-    carDetailDict[u'PickUp Msg'] = trackId.getCommentPickup()
-
-
-    lineKey = PatternScriptEntities.SB.handleGetMessage('RWE')
-    carDetailDict[lineKey] = carObject.getReturnWhenEmptyDestinationName()
 # Not part of JMRI car attributes
     lineKey = PatternScriptEntities.BUNDLE['On Train']
     if carObject in listOfAssignedRs: # Flag to mark if RS is on a built train
@@ -387,46 +321,46 @@ def makeCsvSwitchlist(trackPattern):
         for loco in track['locos']:
             csvSwitchList +=  loco['Set to'] + ',' \
                             + loco['PUSO'] + ',' \
-                            + loco['Road'] + ',' \
-                            + loco['Number'] + ',' \
-                            + loco['Type'] + ',' \
-                            + loco['Model'] + ',' \
-                            + loco['Length'] + ',' \
-                            + loco['Weight'] + ',' \
-                            + loco['Consist'] + ',' \
-                            + loco['Owner'] + ',' \
-                            + loco['Track'] + ',' \
-                            + loco['Location'] + ',' \
-                            + loco['Destination'] + ',' \
-                            + loco['Comment'] + ',' \
-                            + loco['Load'] + ',' \
-                            + loco['FD&Track'] + ',' \
+                            + loco[PatternScriptEntities.SB.handleGetMessage('Road')] + ',' \
+                            + loco[PatternScriptEntities.SB.handleGetMessage('Number')] + ',' \
+                            + loco[PatternScriptEntities.SB.handleGetMessage('Type')] + ',' \
+                            + loco[PatternScriptEntities.SB.handleGetMessage('Model')] + ',' \
+                            + loco[PatternScriptEntities.SB.handleGetMessage('Length')] + ',' \
+                            + loco[PatternScriptEntities.SB.handleGetMessage('Weight')] + ',' \
+                            + loco[PatternScriptEntities.SB.handleGetMessage('Consist')] + ',' \
+                            + loco[PatternScriptEntities.SB.handleGetMessage('Owner')] + ',' \
+                            + loco[PatternScriptEntities.SB.handleGetMessage('Track')] + ',' \
+                            + loco[PatternScriptEntities.SB.handleGetMessage('Location')] + ',' \
+                            + loco[PatternScriptEntities.SB.handleGetMessage('Destination')] + ',' \
+                            + loco[PatternScriptEntities.SB.handleGetMessage('Comment')] + ',' \
+                            + loco[PatternScriptEntities.SB.handleGetMessage('Load')] + ',' \
+                            + loco[PatternScriptEntities.SB.handleGetMessage('FD&Track')] + ',' \
                             + '\n'
         for car in track['cars']:
             csvSwitchList +=  car['Set to'] + ',' \
                             + car['PUSO'] + ',' \
-                            + car['Road'] + ',' \
-                            + car['Number'] + ',' \
-                            + car['Type'] + ',' \
-                            + car['Length'] + ',' \
-                            + car['Weight'] + ',' \
-                            + car['Load'] + ',' \
-                            + car['Track'] + ',' \
-                            + car['FD&Track'] + ',' \
-                            + car['Load Type'] + ',' \
-                            + str(car['Hazardous']) + ',' \
-                            + car['Color'] + ',' \
-                            + car['Kernel'] + ',' \
-                            + car['Kernel Size'] + ',' \
-                            + car['Owner'] + ',' \
-                            + car['Location'] + ',' \
-                            + car['Destination'] + ',' \
-                            + car['Dest&Track'] + ',' \
-                            + car['Final Dest'] + ',' \
-                            + car['Comment'] + ',' \
-                            + car['SetOut Msg'] + ',' \
-                            + car['PickUp Msg'] + ',' \
-                            + car['RWE'] \
+                            + car[PatternScriptEntities.SB.handleGetMessage('Road')] + ',' \
+                            + car[PatternScriptEntities.SB.handleGetMessage('Number')] + ',' \
+                            + car[PatternScriptEntities.SB.handleGetMessage('Type')] + ',' \
+                            + car[PatternScriptEntities.SB.handleGetMessage('Length')] + ',' \
+                            + car[PatternScriptEntities.SB.handleGetMessage('Weight')] + ',' \
+                            + car[PatternScriptEntities.SB.handleGetMessage('Load')] + ',' \
+                            + car[PatternScriptEntities.SB.handleGetMessage('Track')] + ',' \
+                            + car[PatternScriptEntities.SB.handleGetMessage('FD&Track')] + ',' \
+                            + car[PatternScriptEntities.SB.handleGetMessage('Load_Type')] + ',' \
+                            + str(car[PatternScriptEntities.SB.handleGetMessage('Hazardous')]) + ',' \
+                            + car[PatternScriptEntities.SB.handleGetMessage('Color')] + ',' \
+                            + car[PatternScriptEntities.SB.handleGetMessage('Kernel')] + ',' \
+                            + car[PatternScriptEntities.SB.handleGetMessage('Kernel_Size')] + ',' \
+                            + car[PatternScriptEntities.SB.handleGetMessage('Owner')] + ',' \
+                            + car[PatternScriptEntities.SB.handleGetMessage('Location')] + ',' \
+                            + car[PatternScriptEntities.SB.handleGetMessage('Destination')] + ',' \
+                            + car[PatternScriptEntities.SB.handleGetMessage('Dest&Track')] + ',' \
+                            + car[PatternScriptEntities.SB.handleGetMessage('Final_Dest')] + ',' \
+                            + car[PatternScriptEntities.SB.handleGetMessage('Comment')] + ',' \
+                            + car[PatternScriptEntities.SB.handleGetMessage('SetOut_Msg')] + ',' \
+                            + car[PatternScriptEntities.SB.handleGetMessage('PickUp_Msg')] + ',' \
+                            + car[PatternScriptEntities.SB.handleGetMessage('RWE')] \
                             + '\n'
 
     return trackPattern['trainDescription'], csvSwitchList

@@ -45,27 +45,30 @@ def parseJmriLocations(location):
 def parseRollingStockAsDict(rS):
 
     rsDict = {}
-    rsDict['Road'] = unicode(rS[u'road'], PatternScriptEntities.ENCODING)
-    rsDict['Number'] = rS[u'number']
+
+
+    PatternScriptEntities.SB.handleGetMessage('Road')
+    rsDict[PatternScriptEntities.SB.handleGetMessage('Road')] = unicode(rS[u'road'], PatternScriptEntities.ENCODING)
+    rsDict[PatternScriptEntities.SB.handleGetMessage('Number')] = rS[u'number']
 
     try:
-        rsDict[u'Model'] = rS[u'model']
+        rsDict[PatternScriptEntities.SB.handleGetMessage('Model')] = rS[u'model']
     except KeyError:
-        rsDict[u'Model'] = 'N/A'
+        rsDict[PatternScriptEntities.SB.handleGetMessage('Model')] = 'N/A'
 
     try:
-        rsDict[u'Type'] = rS[u'carType'] + "-" + rS[u'carSubType']
+        rsDict[PatternScriptEntities.SB.handleGetMessage('Type')] = rS[u'carType'] + "-" + rS[u'carSubType']
     except:
-        rsDict[u'Type'] = rS[u'carType']
+        rsDict[PatternScriptEntities.SB.handleGetMessage('Type')] = rS[u'carType']
 
     try:
-        rsDict[u'Load'] = rS['load']
+        rsDict[PatternScriptEntities.SB.handleGetMessage('Load')] = rS['load']
     except:
-        rsDict[u'Load'] = 'O'
+        rsDict[PatternScriptEntities.SB.handleGetMessage('Load')] = 'O'
 
-    rsDict[u'Length'] = rS[u'length']
-    rsDict[u'Weight'] = rS[u'weightTons']
-    rsDict[u'Track'] = unicode(rS[u'location'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
+    rsDict[PatternScriptEntities.SB.handleGetMessage('Length')] = rS[u'length']
+    rsDict[PatternScriptEntities.SB.handleGetMessage('Weight')] = rS[u'weightTons']
+    rsDict[PatternScriptEntities.SB.handleGetMessage('Track')] = unicode(rS[u'location'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
     rsDict[u'Set to'] = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.ENCODING) \
         + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
 
@@ -79,9 +82,9 @@ def parseRollingStockAsDict(rS):
     except:
         jFinalTrack = PatternScriptEntities.BUNDLE['No FD track']
 
-    rsDict[u'Final Dest'] = jFinalDestination
-    rsDict[u'FD Track'] = jFinalTrack
-    rsDict[u'FD&Track'] = jFinalDestination + u';' + jFinalTrack
+    rsDict[PatternScriptEntities.SB.handleGetMessage('Final_Dest')] = jFinalDestination
+    # rsDict[u'FD Track'] = jFinalTrack
+    rsDict[PatternScriptEntities.SB.handleGetMessage('FD&Track')] = jFinalDestination + u';' + jFinalTrack
     return rsDict
 
 def getTpInventory():

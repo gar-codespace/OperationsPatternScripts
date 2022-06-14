@@ -170,7 +170,8 @@ class MakeSetCarsEqptRows():
         self.SCRIPT_NAME = 'OperationsPatternScripts.MakeSetCarsEqptRows'
         self.SCRIPT_REV = 20220101
 
-        self.reportWidth = PatternScriptEntities.readConfigFile('PT')['RW']
+        # self.reportWidth = PatternScriptEntities.readConfigFile('PT')['RW']
+        self.reportWidth = PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX
         fontSize = PatternScriptEntities.PM.getFontSize()
         self.panelHeight = fontSize + 4
         self.panelWidth = fontSize - 2
@@ -198,8 +199,8 @@ class MakeSetCarsEqptRows():
             combinedInputLine.add(inputBox)
 
             for item in PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat():
-                label = PatternScriptEntities.JAVX_SWING.JLabel(loco[PatternScriptEntities.BUNDLE[item]])
-                box = makeSwingBox(self.reportWidth[PatternScriptEntities.BUNDLE[item]] \
+                label = PatternScriptEntities.JAVX_SWING.JLabel(loco[item])
+                box = makeSwingBox(self.reportWidth[item] \
                         * self.panelWidth, self.panelHeight \
                         )
                 box.add(label)
@@ -230,8 +231,8 @@ class MakeSetCarsEqptRows():
             combinedInputLine.add(inputBox)
 
             for item in PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
-                label = PatternScriptEntities.JAVX_SWING.JLabel(car[PatternScriptEntities.BUNDLE[item]])
-                box = makeSwingBox(self.reportWidth[PatternScriptEntities.BUNDLE[item]] \
+                label = PatternScriptEntities.JAVX_SWING.JLabel(car[item])
+                box = makeSwingBox(self.reportWidth[item] \
                         * self.panelWidth, self.panelHeight \
                         )
                 box.add(label)

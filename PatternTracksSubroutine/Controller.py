@@ -96,6 +96,8 @@ class StartUp:
 
         Model.updateConfigFile(self.widgets)
 
+        PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX = PatternScriptEntities.makeReportItemWidthMatrix()
+
         if not Model.verifySelectedTracks():
             self.psLog.warning('Track not found, re-select the location')
             return
@@ -130,6 +132,8 @@ class StartUp:
         self.psLog.debug('Controller.setCarsButton')
 
         Model.updateConfigFile(self.widgets)
+
+        PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX = PatternScriptEntities.makeReportItemWidthMatrix()
 
         if not Model.verifySelectedTracks():
             self.psLog.warning('Track not found, re-select the location')

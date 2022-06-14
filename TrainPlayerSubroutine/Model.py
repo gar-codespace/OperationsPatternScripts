@@ -185,7 +185,8 @@ class JmriTranslationToTp:
         self.psLog.debug('Model.translateManifestHeader')
 
         jmriDateAsEpoch = PatternScriptEntities.convertJmriDateToEpoch(completeJmriManifest[u'date'])
-        completeJmriManifest['date'] = PatternScriptEntities.timeStamp(jmriDateAsEpoch)
+        # completeJmriManifest['date'] = PatternScriptEntities.timeStamp(jmriDateAsEpoch)
+        completeJmriManifest['date'] = completeJmriManifest['date']
         completeJmriManifest['trainDescription'] = completeJmriManifest['description']
         completeJmriManifest['trainName'] = completeJmriManifest['userName']
         completeJmriManifest['trainComment'] = completeJmriManifest['comment']
@@ -253,12 +254,29 @@ class ProcessWorkEventList:
 
     def makeLine(self, rS):
 
-        trackComment = self.locationHash[rS[u'Set to']]
-        FDandT = rS['Final Dest'] + ';' + rS['FD Track']
+        PatternScriptEntities.SB.handleGetMessage('Road')
 
-        return [rS[u'PUSO'], rS[u'Road'] + rS[u'Number'], rS[u'Road'], rS[u'Number'], \
-                rS[u'Load'], rS[u'Track'], rS[u'Set to'], FDandT, trackComment
+        trackComment = self.locationHash[rS[u'Set to']]
+        FDandT = rS[PatternScriptEntities.SB.handleGetMessage('FD&Track')]
+        # FDandT = rS['Final Dest'] + ';' + rS['FD Track']
+        ID = rS[PatternScriptEntities.SB.handleGetMessage('Road')] + rS[PatternScriptEntities.SB.handleGetMessage('Number')]
+
+        rsLine  = [rS[u'PUSO'] + ',' \
+                + ID + ',' \
+                + rS[PatternScriptEntities.SB.handleGetMessage('Road')] + ',' \
+                + rS[PatternScriptEntities.SB.handleGetMessage('Number')] + ',' \
+                + rS[PatternScriptEntities.SB.handleGetMessage('Load')] + ',' \
+                + rS[PatternScriptEntities.SB.handleGetMessage('Track')] + ',' \
+                + rS[u'Set to'] + ',' \
+                + FDandT + ',' \
+                + trackComment
                 ]
+
+
+        # return [rS[u'PUSO'], rS[u'Road'] + rS[u'Number'], rS[u'Road'], rS[u'Number'], \
+        #         rS[u'Load'], rS[u'Track'], rS[u'Set to'], FDandT, trackComment
+        #         ]
+        return rsLine
 
     def writeTpWorkEventListAsJson(self, appendedTpSwitchList):
 
