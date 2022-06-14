@@ -79,6 +79,8 @@ Catches Items:
 
 Todo:
   Test with two profiles running
+  Kernel size not calculating correctly
+  What to do about missing locale for stub template
 
 Version 3 ideas:
   Implement TrainPlayer Support subroutine.

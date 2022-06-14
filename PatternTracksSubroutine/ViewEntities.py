@@ -13,12 +13,12 @@ class TrackPatternPanel:
 
         self.configFile = PatternScriptEntities.readConfigFile('PT')
         self.yardTracksOnly = PatternScriptEntities.JAVX_SWING.JCheckBox()
-        self.yardTracksOnly.setText(PatternScriptEntities.BUNDLE['Yard tracks only '])
+        self.yardTracksOnly.setText(PatternScriptEntities.BUNDLE['Yard tracks only'] + ' ')
         self.yardTracksOnly.setSelected(self.configFile['PA'])
         self.yardTracksOnly.setName('ytoCheckBox')
 
         self.ignoreTrackLength = PatternScriptEntities.JAVX_SWING.JCheckBox()
-        self.ignoreTrackLength.setText(PatternScriptEntities.BUNDLE['Ignore track length '])
+        self.ignoreTrackLength.setText(PatternScriptEntities.BUNDLE['Ignore track length'] + ' ')
         self.ignoreTrackLength.setSelected(self.configFile['PI'])
         self.ignoreTrackLength.setName('itlCheckBox')
 
@@ -69,7 +69,7 @@ class TrackPatternPanel:
         tracksPanel.add(rowLabel)
         trackDict = self.configFile['PT'] # pattern tracks
         if (trackDict):
-            rowLabel.text = PatternScriptEntities.BUNDLE['Track List: ']
+            rowLabel.text = PatternScriptEntities.BUNDLE['Track List:'] + ' '
             for track, flag in sorted(trackDict.items()):
                 trackCheckBox = tracksPanel.add(PatternScriptEntities.JAVX_SWING.JCheckBox(track, flag))
                 self.trackCheckBoxes.append(trackCheckBox)
@@ -138,7 +138,7 @@ def makeTextReportHeader(textWorkEventList):
     textReportHeader    = textWorkEventList['railroad'] + '\n' \
                         + textWorkEventList['trainName'] + '\n' \
                         + textWorkEventList['date'] + '\n\n' \
-                        + PatternScriptEntities.BUNDLE['Work Location: '] + headerNames['PL'] + '\n\n'
+                        + PatternScriptEntities.BUNDLE['Work Location:'] + ' ' + headerNames['PL'] + '\n\n'
 
     return textReportHeader
 
@@ -157,7 +157,7 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
         trackTally = []
         trackName = track['trackName']
         trackLength = track['length']
-        reportSwitchList += PatternScriptEntities.BUNDLE['Track: '] + trackName + '\n'
+        reportSwitchList += PatternScriptEntities.BUNDLE['Track:'] + ' ' + trackName + '\n'
         switchListRow = ''
 
         for loco in track['locos']:
@@ -172,10 +172,10 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
 
         if trackTotals:
             totalLength = lengthOfLocos + lengthOfCars
-            reportSwitchList += PatternScriptEntities.BUNDLE['Total Cars: '] \
-                + str(len(track['cars'])) + PatternScriptEntities.BUNDLE[' Track Length: '] \
-                + str(trackLength) + PatternScriptEntities.BUNDLE[' Eqpt. Length: '] \
-                + str(totalLength) + PatternScriptEntities.BUNDLE[' Available: '] \
+            reportSwitchList += PatternScriptEntities.BUNDLE['Total Cars:'] + ' ' \
+                + str(len(track['cars'])) + ' ' + PatternScriptEntities.BUNDLE['Track Length:']  + ' ' \
+                + str(trackLength) +  ' ' + PatternScriptEntities.BUNDLE['Eqpt. Length:']  + ' ' \
+                + str(totalLength) + ' ' +  PatternScriptEntities.BUNDLE['Available:']  + ' '  \
                 + str(trackLength - totalLength) \
                 + '\n\n'
             reportSwitchList += PatternScriptEntities.BUNDLE['Track Totals for Cars:'] + '\n'

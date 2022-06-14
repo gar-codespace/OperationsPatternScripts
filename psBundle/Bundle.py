@@ -14,15 +14,10 @@ SCRIPT_REV = 20220101
 def createBundleForLocale():
     """Creates a new bundle for JMRI's locale setting"""
 
-    # xyz = PatternScriptEntities.JMRI.jmrit.operations.Bundle()
-    # print(xyz.handleGetMessage('Length'))
-
     bundleDir = PatternScriptEntities.PLUGIN_ROOT + '\\psBundle\\'
-    bundleTarget = bundleDir + PatternScriptEntities.psLocale() + '.jso'
+    bundleTarget = bundleDir + PatternScriptEntities.psLocale() + '.json'
 
     translatedItems = translateItems()
-    translatedAttributes = translateAttributes()
-    mergedTranslation = translatedItems.update(translatedAttributes)
 
     translation = PatternScriptEntities.dumpJson(translatedItems)
     PatternScriptEntities.genericWriteReport(bundleTarget, translation)
@@ -47,6 +42,31 @@ def getBundleForLocale():
 
     return bundleFile
 
+def translateItems():
+    """Based on https://gist.github.com/snim2/561630
+    https://stackoverflow.com/questions/10115126/python-requests-close-http-connection#15511852
+    """
+
+    bundleTemplate = getBundleTemplate()
+    translationDict = {'version' : SCRIPT_REV}
+    translator = useDeepL()
+
+    for item in bundleTemplate:
+
+        url = translator.getTheUrl(item)
+
+        try:
+            response = urlopen(url)
+            translation = PatternScriptEntities.loadJson(response.read())
+            translatedLine = translator.parseResult(translation)
+            response.close()
+        except:
+            translatedLine = item
+
+        translationDict[item] = translatedLine
+
+    return translationDict
+
 def getBundleTemplate():
 
     bundleFileLocation = PatternScriptEntities.PLUGIN_ROOT + '\\psBundle\\bundleTemplate.txt'
@@ -57,34 +77,29 @@ def getBundleTemplate():
 
     return bundleTemplate
 
-def translateItems():
 
-    BASE_URL = 'https://api-free.deepl.com/v2/translate?'
-    AUTH_KEY = ''
-    SOURCE_LANG = 'en'
+class useDeepL:
+    """Specifics for using DeepL"""
 
-    bundleTemplate = getBundleTemplate()
-    translationDict = {'version' : SCRIPT_REV}
-    # translationDict['version'] = SCRIPT_REV
-    # targetLang = PatternScriptEntities.psLocale()
-    targetLang = 'fr'
+    def __init__(self):
 
-    for item in bundleTemplate:
-        params = urlencode( (('auth_key', AUTH_KEY),
+        self.BASE_URL = 'https://api-free.deepl.com/v2/translate?'
+        self.AUTH_KEY = ''
+        self.SOURCE_LANG = 'en'
+
+        return
+
+    def getTheUrl(self, item):
+
+        params = urlencode( (('auth_key', self.AUTH_KEY),
                                  ('text', item),
-                                 ('source_lang', SOURCE_LANG),
-                                 ('target_lang', targetLang),
-                                 ('split_sentences', 0)) )
+                                 ('source_lang', self.SOURCE_LANG),
+                                 ('target_lang', PatternScriptEntities.psLocale()),
+                                 ('split_sentences', 0))
+                                 )
 
-        url = BASE_URL + params
+        return self.BASE_URL + params
 
-        response = PatternScriptEntities.loadJson(urlopen(url).read())
-        translation = response['translations'][0]['text']
+    def parseResult(self, translation):
 
-        translationDict[item] = translation
-
-    return translationDict
-
-def translateAttributes():
-
-    return {'attribute' : 'attribute'}
+        return translation['translations'][0]['text']

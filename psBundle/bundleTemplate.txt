@@ -1,1 +1,56 @@
 Translate Plugin
+Pattern Tracks Subroutine
+Pattern Scripts
+Restart Pattern Scripts
+Tools
+Help
+Window Help...
+View Log
+GitHub Page
+Edit Config File
+Operations Folder
+Do Not Apply Schedule
+Apply Schedule
+Disable TrainPlayer
+Enable TrainPlayer
+Yard tracks only
+Ignore track length
+Set Cars
+Track:
+Work Location:
+Track Pattern Report
+Switch List for Track
+Work Event List for TrainPlayer
+Switch List for Selected Tracks
+Total Cars:
+Track Length:
+Eqpt. Length:
+Available:
+Track Totals for Cars:
+Report Totals for Cars:
+Location:
+Track List:
+Single
+On Train
+Set to
+There are no yard tracks for this location
+Set Cars Form for track:
+at
+Tracks at
+Locomotives at
+Cars at
+Schedule for
+Schedule:
+Action
+Switch List
+Set to Track
+No final destination
+No FD track
+
+TrainPlayer Support Subroutine
+Update Inventory
+Space Available
+Update Inventory Error Report
+List of rolling stock not updated:
+List of tracks not found:
+TrainPlayer cars not found in JMRI roster:

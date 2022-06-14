@@ -52,8 +52,8 @@ def makeSetCarsForTrackForm(setCarsFormData):
             locoFormBody, PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS)
             )
         locoFormBody.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder( \
-                PatternScriptEntities.BUNDLE['Locomotives at '] \
-                + setCarsFormData['locations'][0]['tracks'][0]['trackName'] \
+                PatternScriptEntities.BUNDLE['Locomotives at'] \
+                +  ' ' + setCarsFormData['locations'][0]['tracks'][0]['trackName'] \
                 )
 
         setCarsLocoRows = setCarsEqptRows.makeSetCarsLocoRows()
@@ -67,8 +67,8 @@ def makeSetCarsForTrackForm(setCarsFormData):
             carFormBody, PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS)
             )
         carFormBody.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder( \
-                PatternScriptEntities.BUNDLE['Cars at '] \
-                + setCarsFormData['locations'][0]['tracks'][0]['trackName'] \
+                PatternScriptEntities.BUNDLE['Cars at'] \
+                +  ' ' + setCarsFormData['locations'][0]['tracks'][0]['trackName'] \
                 )
 
         setCarsCarRows = setCarsEqptRows.makeSetCarsCarRows()
@@ -126,8 +126,8 @@ def makeSetCarsFormHeader(setCarsFormData):
     headerYTLabel.setAlignmentX(PatternScriptEntities.JAVA_AWT.Component.CENTER_ALIGNMENT)
     trackName = setCarsFormData['locations'][0]['tracks'][0]['trackName'] # There's only one track
     locationName = setCarsFormData['locations'][0]['locationName'] # There's only one location
-    headerYTLabel.setText(PatternScriptEntities.BUNDLE['Set Cars Form for track: '] \
-            + trackName + PatternScriptEntities.BUNDLE[' at '] \
+    headerYTLabel.setText(PatternScriptEntities.BUNDLE['Set Cars Form for track:'] + ' ' \
+            + trackName + ' ' + PatternScriptEntities.BUNDLE['at'] \
             + locationName)
     headerYTBox = makeSwingBox(100, configFile['PH'])
     headerYTBox.add(headerYTLabel)
@@ -150,8 +150,8 @@ def makeSetCarsTrackButtons():
 
     buttonPanel = PatternScriptEntities.JAVX_SWING.JPanel()
     buttonPanel.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder( \
-            PatternScriptEntities.BUNDLE['Tracks at '] \
-            + location \
+            PatternScriptEntities.BUNDLE['Tracks at'] \
+            +  ' ' + location \
             )
     buttonList = []
     for track in allTracksAtLoc:
@@ -261,11 +261,11 @@ def makeSetCarsScheduleRow(setCarsFormData):
     if (scheduleObject):
         schedulePanel = PatternScriptEntities.JAVX_SWING.JPanel()
         schedulePanel.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder(
-            PatternScriptEntities.BUNDLE['Schedule for '] + trackName
+            PatternScriptEntities.BUNDLE['Schedule for'] + ' ' + trackName
             )
         scheduleButton = PatternScriptEntities.JAVX_SWING.JButton(scheduleObject.getName())
         scheduleList.append(scheduleButton)
-        schedulePanel.add(PatternScriptEntities.JAVX_SWING.JLabel(PatternScriptEntities.BUNDLE['Schedule: ']))
+        schedulePanel.add(PatternScriptEntities.JAVX_SWING.JLabel(PatternScriptEntities.BUNDLE['Schedule:'] + ' '))
         schedulePanel.add(scheduleButton)
 
     return schedulePanel, scheduleList

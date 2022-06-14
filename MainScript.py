@@ -376,7 +376,7 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         return
 
     def patternScriptsButtonAction(self, MOUSE_CLICKED):
-        
+
         self.patternScriptsButton.setText(PatternScriptEntities.BUNDLE['Restart Pattern Scripts'])
         self.patternScriptsButton.actionPerformed = self.patternScriptsButtonRestartAction
         self.buildThePlugin()
@@ -497,6 +497,7 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         self.psLog.debug(TRANSLATE_PLUGIN_EVENT)
 
         Bundle.createBundleForLocale()
+        # PatternScriptEntities.JMRI.jmrit.jython.JythonWindow().actionPerformed(None)
 
         return
 
