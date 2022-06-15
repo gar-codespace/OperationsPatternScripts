@@ -319,7 +319,7 @@ def makeCsvSwitchlist(trackPattern):
     for track in trackPattern['locations'][0]['tracks']: # There is only one location
         csvSwitchList += u'TN,Track name,' + unicode(track['trackName'], PatternScriptEntities.ENCODING) + '\n'
         for loco in track['locos']:
-            csvSwitchList +=  loco['Set to'] + ',' \
+            csvSwitchList +=  loco[PatternScriptEntities.BUNDLE['Set to']] + ',' \
                             + loco['PUSO'] + ',' \
                             + loco[PatternScriptEntities.SB.handleGetMessage('Road')] + ',' \
                             + loco[PatternScriptEntities.SB.handleGetMessage('Number')] + ',' \
@@ -337,7 +337,7 @@ def makeCsvSwitchlist(trackPattern):
                             + loco[PatternScriptEntities.SB.handleGetMessage('FD&Track')] + ',' \
                             + '\n'
         for car in track['cars']:
-            csvSwitchList +=  car['Set to'] + ',' \
+            csvSwitchList +=  car[PatternScriptEntities.BUNDLE['Set to']] + ',' \
                             + car['PUSO'] + ',' \
                             + car[PatternScriptEntities.SB.handleGetMessage('Road')] + ',' \
                             + car[PatternScriptEntities.SB.handleGetMessage('Number')] + ',' \

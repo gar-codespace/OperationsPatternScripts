@@ -138,6 +138,8 @@ class validateStubFile:
 
         stubTemplateLocation = JMRI.util.FileUtil.getProgramPath() + 'help\\' \
                 + psLocale()[:2] + '\\local\\stub_template.html'
+        if not JAVA_IO.File(stubTemplateLocation).isFile():
+            stubTemplateLocation = PLUGIN_ROOT + '\psEntities\stub_template.html'
 
         stubTemplate = genericReadReport(stubTemplateLocation)
         stubTemplate = stubTemplate.replace("../index.html#", "")
@@ -298,10 +300,10 @@ def validateFileDestinationDirestories():
 
     return
 
-def validateConfigFileVersion(currentRootDir):
+def validateConfigFileVersion():
     """Checks that the config file is the current version"""
 
-    configFilePath = currentRootDir + '\psEntities\PatternConfig.json'
+    configFilePath = PLUGIN_ROOT + '\psEntities\PatternConfig.json'
     validPatternConfig = loadJson(genericReadReport(configFilePath))
     userPatternConfig = getConfigFile()
 

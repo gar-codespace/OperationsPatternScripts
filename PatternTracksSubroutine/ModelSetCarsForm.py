@@ -158,7 +158,7 @@ def exportSetCarsFormToTp(setCarsForm, textBoxEntry):
     return
 
 def makeLocationDict(setCarsForm, textBoxEntry):
-    """Replaces car['Set to'] = [ ] with either [Hold] or ["some other valid track"]"""
+    """Replaces car['Set to'] = [ ] with either [Hold] or ['some other valid track']"""
 
     _psLog.debug('ModelSetCarsForm.makeLocationDict')
 
@@ -178,21 +178,21 @@ def makeLocationDict(setCarsForm, textBoxEntry):
     i = 0
     locoList = []
     for loco in setCarsForm['locations'][0]['tracks'][0]['locos']:
-        setTrack = u'Hold'
+        setTrack = PatternScriptEntities.BUNDLE['Hold']
         userInput = unicode(userInputList[i], PatternScriptEntities.ENCODING)
         if userInput in allTracksAtLoc and userInput != trackName:
             setTrack = userInput
-        loco['Set to'] = PatternScriptEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
+        loco[PatternScriptEntities.BUNDLE['Set to']] = PatternScriptEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
         locoList.append(loco)
         i += 1
 
     carList = []
     for car in setCarsForm['locations'][0]['tracks'][0]['cars']:
-        setTrack = u'Hold'
+        setTrack = PatternScriptEntities.BUNDLE['Hold']
         userInput = unicode(userInputList[i], PatternScriptEntities.ENCODING)
         if userInput in allTracksAtLoc and userInput != trackName:
             setTrack = userInput
-        car['Set to'] = PatternScriptEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
+        car[PatternScriptEntities.BUNDLE['Set to']] = PatternScriptEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
         carList.append(car)
         i += 1
 

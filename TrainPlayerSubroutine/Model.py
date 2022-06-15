@@ -318,7 +318,7 @@ class UpdateInventory:
 
     def __init__(self):
 
-        self.errorReport = 'Update Inventory Error Report'
+        self.errorReport = PatternScriptEntities.BUNDLE['Update Inventory Error Report']
         self.setCarsError = ''
         self.carsNotFound = [] # A list so it can be sorted
         self.locationNotFound = ''

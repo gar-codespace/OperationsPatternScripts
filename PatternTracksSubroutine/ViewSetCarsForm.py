@@ -190,7 +190,7 @@ class MakeSetCarsEqptRows():
         for loco in locos:
             combinedInputLine = PatternScriptEntities.JAVX_SWING.JPanel()
             combinedInputLine.setBackground(PatternScriptEntities.getLocoColor())
-            if loco['On Train']:
+            if loco[PatternScriptEntities.BUNDLE['On Train']]:
                 combinedInputLine.setBackground(PatternScriptEntities.getAlertColor())
             inputText = PatternScriptEntities.JAVX_SWING.JTextField(5)
             self.textBoxEntry.append(inputText)
@@ -222,7 +222,7 @@ class MakeSetCarsEqptRows():
         for car in cars:
             combinedInputLine = PatternScriptEntities.JAVX_SWING.JPanel()
             combinedInputLine.setBackground(PatternScriptEntities.getCarColor())
-            if car['On Train']:
+            if car[PatternScriptEntities.BUNDLE['On Train']]:
                 combinedInputLine.setBackground(PatternScriptEntities.getAlertColor())
             inputText = PatternScriptEntities.JAVX_SWING.JTextField(5)
             self.textBoxEntry.append(inputText)
@@ -285,7 +285,7 @@ def MakeSetCarsFooter():
     combinedFooter.add(printButton)
 
     setButton = PatternScriptEntities.JAVX_SWING.JButton(
-        unicode(PatternScriptEntities.BUNDLE['Set to Track'], PatternScriptEntities.ENCODING)
+        unicode(PatternScriptEntities.BUNDLE['Set Cars to Track'], PatternScriptEntities.ENCODING)
         )
     combinedFooter.add(setButton)
 

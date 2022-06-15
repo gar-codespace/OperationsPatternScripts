@@ -133,7 +133,7 @@ class Model:
     def validatePatternConfig(self):
         """To be reworked in v3"""
 
-        if not PatternScriptEntities.validateConfigFileVersion(PLUGIN_ROOT):
+        if not PatternScriptEntities.validateConfigFileVersion():
             PatternScriptEntities.mergeConfigFiles()
             self.psLog.info('Previous PatternConfig.json merged with new')
             PatternScriptEntities.writeNewConfigFile()
@@ -294,14 +294,14 @@ class View:
     def setLmDropDownText(self):
         """itemMethod - Set the drop down text for the Log menu item"""
 
-        menuText = PatternScriptEntities.BUNDLE['View Log']
+        menuText = PatternScriptEntities.BUNDLE['View Log File']
 
         return menuText, 'logItemSelected'
 
     def setGhDropDownText(self):
         """itemMethod - Set the drop down text for the gitHub page item"""
 
-        menuText = PatternScriptEntities.BUNDLE['GitHub Page']
+        menuText = PatternScriptEntities.BUNDLE['GitHub Web Page']
 
         return menuText, 'ghItemSelected'
 
@@ -409,6 +409,8 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         return
 
     def buildThePlugin(self):
+
+        PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale()
 
         view = View(None)
         emptyPluginPanel = view.makePluginPanel()

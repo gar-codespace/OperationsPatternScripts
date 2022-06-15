@@ -27,7 +27,7 @@ class TrackPatternPanel:
         self.ypButton.setName('ypButton')
 
         self.scButton = PatternScriptEntities.JAVX_SWING.JButton()
-        self.scButton.setText(PatternScriptEntities.BUNDLE['Set Cars'])
+        self.scButton.setText(PatternScriptEntities.BUNDLE['Set Cars to Track'])
         self.scButton.setName('scButton')
 
         self.trackCheckBoxes = []
@@ -162,11 +162,11 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
 
         for loco in track['locos']:
             lengthOfLocos += int(loco[PatternScriptEntities.SB.handleGetMessage('Length')]) + 4
-            reportSwitchList += loco['Set to'] + loopThroughRs('loco', loco) + '\n'
+            reportSwitchList += loco[PatternScriptEntities.BUNDLE['Set to']] + loopThroughRs('loco', loco) + '\n'
 
         for car in track['cars']:
             lengthOfCars += int(car[PatternScriptEntities.SB.handleGetMessage('Length')]) + 4
-            reportSwitchList += car['Set to'] + loopThroughRs('car', car) + '\n'
+            reportSwitchList += car[PatternScriptEntities.BUNDLE['Set to']] + loopThroughRs('car', car) + '\n'
             trackTally.append(car[PatternScriptEntities.SB.handleGetMessage('Final_Dest')])
             reportTally.append(car[PatternScriptEntities.SB.handleGetMessage('Final_Dest')])
 

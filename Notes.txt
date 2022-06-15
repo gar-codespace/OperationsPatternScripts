@@ -1,3 +1,8 @@
+
+Todo:
+  Test with two profiles running
+  Kernel size not calculating correctly
+  
 Comments:
   Schedule does not prevent setting a car to a track
 
@@ -76,11 +81,6 @@ Catches Items:
   KeyError when editing config file crashed plugin, bummer. Restart button bale out.
   Catches user add/remove train while TP export is enabled
   Catches user edit train while TP export is enabled
-
-Todo:
-  Test with two profiles running
-  Kernel size not calculating correctly
-  What to do about missing locale for stub template
 
 Version 3 ideas:
   Implement TrainPlayer Support subroutine.

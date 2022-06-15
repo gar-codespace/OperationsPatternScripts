@@ -5,8 +5,8 @@ Restart Pattern Scripts
 Tools
 Help
 Window Help...
-View Log
-GitHub Page
+View Log File
+GitHub Web Page
 Edit Config File
 Operations Folder
 Do Not Apply Schedule
@@ -15,8 +15,9 @@ Disable TrainPlayer
 Enable TrainPlayer
 Yard tracks only
 Ignore track length
-Set Cars
+Set Cars to Track
 Track:
+Hold
 Work Location:
 Track Pattern Report
 Switch List for Track
