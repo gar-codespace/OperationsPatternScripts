@@ -30,69 +30,69 @@ class ExportJmriLocations:
 
         return locationHash
 
-class TrackPatternTranslationToTp:
-    """Translate Track Patterns from OperationsPatternScripts for TrainPlayer O2O script compatability"""
-
-    def __init__(self):
-
-        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.TrainPlayerTranslationToTp')
-
-        return
-
-    def modifySwitchList(self, setCarsForm, textBoxEntry):
-        """Replaces car['Set to'] = [ ] with the track comment"""
-
-        self.psLog.debug('PatternTracksExport.modifySwitchList')
-
-        location = setCarsForm['locations'][0]['locationName']
-        trackName = setCarsForm['locations'][0]['tracks'][0]['trackName']
-        locationTracks = PatternScriptEntities.LM.getLocationByName(location).getTracksList()
-        trackList = []
-        for track in locationTracks:
-            trackList.append(track.getName())
-
-        userInputList = []
-        for userInput in textBoxEntry:
-            inputText = unicode(userInput.getText(), PatternScriptEntities.ENCODING)
-            if inputText in trackList:
-                userInputList.append(inputText)
-            else:
-                userInputList.append(trackName)
-
-        i = 0
-        locoList = []
-        for loco in setCarsForm['locations'][0]['tracks'][0]['locos']:
-            loco['Set to'] = location + ';' + userInputList[i]
-            locoList.append(loco)
-            i += 1
-        setCarsForm['locations'][0]['tracks'][0]['locos'] = locoList
-
-        carList = []
-        for car in setCarsForm['locations'][0]['tracks'][0]['cars']:
-            car['Set to'] = location + ';' +  userInputList[i]
-            carList.append(car)
-            i += 1
-        setCarsForm['locations'][0]['tracks'][0]['cars'] = carList
-
-        return setCarsForm
-
-    def appendSwitchList(self, modifiedForm):
-
-        self.psLog.debug('PatternTracksExport.appendSwitchList')
-
-        headerNames = PatternScriptEntities.readConfigFile('PT')
-        reportTitle = PatternScriptEntities.BUNDLE['Work Event List for TrainPlayer']
-        jsonFile = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + reportTitle + '.json'
-        jsonSwitchList = PatternScriptEntities.genericReadReport(jsonFile)
-        tpSwitchList = PatternScriptEntities.loadJson(jsonSwitchList)
-
-        for loco in modifiedForm['locations'][0]['tracks'][0]['locos']:
-            tpSwitchList['locations'][0]['tracks'][0]['locos'].append(loco)
-
-        for car in modifiedForm['locations'][0]['tracks'][0]['cars']:
-            tpSwitchList['locations'][0]['tracks'][0]['cars'].append(car)
-
-        return tpSwitchList
+# class TrackPatternTranslationToTp:
+#     """Translate Track Patterns from OperationsPatternScripts for TrainPlayer O2O script compatability"""
+#
+#     def __init__(self):
+#
+#         self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.TrainPlayerTranslationToTp')
+#
+#         return
+#
+#     def modifySwitchList(self, setCarsForm, textBoxEntry):
+#         """Replaces car['Set to'] = [ ] with the track comment"""
+#
+#         self.psLog.debug('PatternTracksExport.modifySwitchList')
+#
+#         location = setCarsForm['locations'][0]['locationName']
+#         trackName = setCarsForm['locations'][0]['tracks'][0]['trackName']
+#         locationTracks = PatternScriptEntities.LM.getLocationByName(location).getTracksList()
+#         trackList = []
+#         for track in locationTracks:
+#             trackList.append(track.getName())
+#
+#         userInputList = []
+#         for userInput in textBoxEntry:
+#             inputText = unicode(userInput.getText(), PatternScriptEntities.ENCODING)
+#             if inputText in trackList:
+#                 userInputList.append(inputText)
+#             else:
+#                 userInputList.append(trackName)
+#
+#         i = 0
+#         locoList = []
+#         for loco in setCarsForm['locations'][0]['tracks'][0]['locos']:
+#             loco['Set to'] = location + ';' + userInputList[i]
+#             locoList.append(loco)
+#             i += 1
+#         setCarsForm['locations'][0]['tracks'][0]['locos'] = locoList
+#
+#         carList = []
+#         for car in setCarsForm['locations'][0]['tracks'][0]['cars']:
+#             car['Set to'] = location + ';' +  userInputList[i]
+#             carList.append(car)
+#             i += 1
+#         setCarsForm['locations'][0]['tracks'][0]['cars'] = carList
+#
+#         return setCarsForm
+#
+#     def appendSwitchList(self, modifiedForm):
+#
+#         self.psLog.debug('PatternTracksExport.appendSwitchList')
+#
+#         headerNames = PatternScriptEntities.readConfigFile('PT')
+#         reportTitle = PatternScriptEntities.BUNDLE['Work Event List for TrainPlayer']
+#         jsonFile = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + reportTitle + '.json'
+#         jsonSwitchList = PatternScriptEntities.genericReadReport(jsonFile)
+#         tpSwitchList = PatternScriptEntities.loadJson(jsonSwitchList)
+#
+#         for loco in modifiedForm['locations'][0]['tracks'][0]['locos']:
+#             tpSwitchList['locations'][0]['tracks'][0]['locos'].append(loco)
+#
+#         for car in modifiedForm['locations'][0]['tracks'][0]['cars']:
+#             tpSwitchList['locations'][0]['tracks'][0]['cars'].append(car)
+#
+#         return tpSwitchList
 
 class TrackPatternTranslationToTp:
     """Translate Track Patterns from OperationsPatternScripts for TrainPlayer O2O script compatability"""
@@ -185,8 +185,8 @@ class JmriTranslationToTp:
         self.psLog.debug('Model.translateManifestHeader')
 
         jmriDateAsEpoch = PatternScriptEntities.convertJmriDateToEpoch(completeJmriManifest[u'date'])
-        # completeJmriManifest['date'] = PatternScriptEntities.timeStamp(jmriDateAsEpoch)
-        completeJmriManifest['date'] = completeJmriManifest['date']
+        completeJmriManifest['date'] = PatternScriptEntities.timeStamp(jmriDateAsEpoch)
+        # completeJmriManifest['date'] = completeJmriManifest['date']
         completeJmriManifest['trainDescription'] = completeJmriManifest['description']
         completeJmriManifest['trainName'] = completeJmriManifest['userName']
         completeJmriManifest['trainComment'] = completeJmriManifest['comment']
@@ -218,11 +218,12 @@ class ProcessWorkEventList:
         return
 
     def makeTpHeader(self, appendedTpSwitchList):
-        """The jason manifest is encoded in HTML Entity"""
-        # csv writer does not encode utf-8
+        """The jason manifest is encoded in HTML Entity,
+        csv writer does not encode utf-8,
+        stolen from: https://stackoverflow.com/questions/2087370/decode-html-entities-in-python-string
+        """
 
         self.psLog.debug('Model.makeTpHeader')
-        # https://stackoverflow.com/questions/2087370/decode-html-entities-in-python-string
         header = 'HN,' + PatternScriptEntities.HTML_PARSER().unescape(appendedTpSwitchList['railroad']) + '\n'
         header += 'HT,' + PatternScriptEntities.HTML_PARSER().unescape(appendedTpSwitchList['trainName']) + '\n'
         header += 'HD,' + PatternScriptEntities.HTML_PARSER().unescape(appendedTpSwitchList['trainDescription']) + '\n'
@@ -233,8 +234,9 @@ class ProcessWorkEventList:
         return header
 
     def makeTpLocations(self, appendedTpSwitchList):
-        """The jason manifest is encoded in HTML Entity"""
-        # csv writer does not encode utf-8
+        """The jason manifest is encoded in HTML Entity,
+        csv writer does not encode utf-8
+        """
 
         self.psLog.debug('Model.makeTpLocations')
 
@@ -254,11 +256,11 @@ class ProcessWorkEventList:
 
     def makeLine(self, rS):
 
-        PatternScriptEntities.SB.handleGetMessage('Road')
-
         trackComment = self.locationHash[rS[u'Set to']]
+
         FDandT = rS[PatternScriptEntities.SB.handleGetMessage('FD&Track')]
-        # FDandT = rS['Final Dest'] + ';' + rS['FD Track']
+        FDandT = FDandT.replace(', ', ';')
+
         ID = rS[PatternScriptEntities.SB.handleGetMessage('Road')] + rS[PatternScriptEntities.SB.handleGetMessage('Number')]
 
         rsLine  = [rS[u'PUSO'] + ',' \
@@ -271,11 +273,7 @@ class ProcessWorkEventList:
                 + FDandT + ',' \
                 + trackComment
                 ]
-
-
-        # return [rS[u'PUSO'], rS[u'Road'] + rS[u'Number'], rS[u'Road'], rS[u'Number'], \
-        #         rS[u'Load'], rS[u'Track'], rS[u'Set to'], FDandT, trackComment
-        #         ]
+                
         return rsLine
 
     def writeTpWorkEventListAsJson(self, appendedTpSwitchList):

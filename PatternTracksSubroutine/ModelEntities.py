@@ -215,10 +215,27 @@ def getDetailsForCarAsDict(carObject):
     carDetailDict[PatternScriptEntities.J_BUNDLE.COLOR] = carObject.getColor()
     carDetailDict[PatternScriptEntities.J_BUNDLE.KERNEL] = carObject.getKernelName()
 
-    for i, car in enumerate(PatternScriptEntities.CM.getByIdList()):
-        if (car.getKernelName() == carObject.getKernelName()):
-            i += 1
-    carDetailDict[PatternScriptEntities.J_BUNDLE.KERNEL_SIZE] = str(i)
+
+
+    carDetailDict[PatternScriptEntities.J_BUNDLE.KERNEL_SIZE] = '0'
+
+    kernelTally = []
+    for car in PatternScriptEntities.CM.getByIdList():
+        kernelTally.append(car.getKernelName())
+    #
+    #
+    #
+    # if carObject.getKernelName():
+    # i = 0
+    #     if car.getKernelName() == carObject.getKernelName():
+    #         i += 1
+    # carDetailDict[PatternScriptEntities.J_BUNDLE.KERNEL_SIZE] = str(i)
+
+
+
+
+
+
 
     carDetailDict[PatternScriptEntities.J_BUNDLE.OWNER] = str(carObject.getOwner())
     carDetailDict[PatternScriptEntities.J_BUNDLE.TRACK] = carObject.getTrackName()

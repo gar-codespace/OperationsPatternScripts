@@ -1,57 +1,56 @@
-Translate Plugin
-Pattern Tracks Subroutine
-Pattern Scripts
-Restart Pattern Scripts
-Tools
-Help
-Window Help...
-View Log File
-GitHub Web Page
-Edit Config File
-Operations Folder
-Do Not Apply Schedule
-Apply Schedule
-Disable TrainPlayer
-Enable TrainPlayer
-Yard tracks only
-Ignore track length
-Set Cars to Track
-Track:
-Hold
-Work Location:
-Track Pattern Report
-Switch List for Track
-Work Event List for TrainPlayer
-Switch List for Selected Tracks
-Total Cars:
-Track Length:
-Eqpt. Length:
-Available:
-Track Totals for Cars:
-Report Totals for Cars:
-Location:
-Track List:
-Single
-On Train
-Set to
-There are no yard tracks for this location
-Set Cars Form for track:
-at
-Tracks at
-Locomotives at
-Cars at
-Schedule for
-Schedule:
 Action
-Switch List
-Set to Track
-No final destination
-No FD track
-
-TrainPlayer Support Subroutine
-Update Inventory
-Space Available
-Update Inventory Error Report
+Apply Schedule
+at
+Available:
+Cars at
+Disable TrainPlayer
+Do Not Apply Schedule
+Edit Config File
+Enable TrainPlayer
+Eqpt. Length:
+GitHub Web Page
+Help
+Hold
+Ignore track length
 List of rolling stock not updated:
 List of tracks not found:
+Location:
+Locomotives at
+No FD track
+No final destination
+On Train
+Operations Folder
+Pattern Scripts
+Pattern Tracks Subroutine
+Report Totals for Cars:
+Restart Pattern Scripts
+Schedule for
+Schedule:
+Set Cars Form for track:
+Set Cars to Track
+Set to
+Set to Track
+Single
+Space Available
+Switch List
+Switch List for Selected Tracks
+Switch List for Track
+There are no yard tracks for this location
+Tools
+Total Cars:
+Track Length:
+Track List:
+Track Pattern Report
+Track Totals for Cars:
+Track:
+Tracks at
 TrainPlayer cars not found in JMRI roster:
+TrainPlayer Support Subroutine
+Translate Plugin
+Update Inventory
+Update Inventory Error Report
+View Log File
+Window Help...
+Work Event List for TrainPlayer
+Work Location:
+Yard tracks only

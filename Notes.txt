@@ -2,7 +2,9 @@
 Todo:
   Test with two profiles running
   Kernel size not calculating correctly
-  
+  How to publish DeepL
+  Harden up Bundle against web errors  
+
 Comments:
   Schedule does not prevent setting a car to a track
 
@@ -19,6 +21,8 @@ Tested Items:
     Pattern Scripts plugin hardened against errors  more or less. CBB
     Plugin restarts OK
     On defective config file, plugin first tries to restore from the bak file OK
+    Plugin switches language OK
+    Bundle creates new translation OK
 
   Reports
     Ignore Track Length works with yard tracks
