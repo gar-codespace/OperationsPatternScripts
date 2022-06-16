@@ -385,6 +385,8 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
     def patternScriptsButtonRestartAction(self, MOUSE_CLICKED):
 
+        MOUSE_CLICKED.getSource().setText(PatternScriptEntities.BUNDLE["Restart Pattern Scripts"])
+
         self.removeTrainsTableListener()
         self.removeBuiltTrainListener()
         self.closePsWindow()

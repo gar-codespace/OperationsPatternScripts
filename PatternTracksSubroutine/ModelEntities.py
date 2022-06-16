@@ -178,8 +178,11 @@ def getCarListForTrack(track):
 
     location = PatternScriptEntities.readConfigFile('PT')['PL']
     carList = getCarObjects(location, track)
+    kernelTally = getKernelTally()
 
-    return [getDetailsForCarAsDict(car) for car in carList]
+    carDetails = [getDetailsForCarAsDict(car, kernelTally) for car in carList]
+
+    return carDetails
 
 def getCarObjects(location, track):
 
@@ -187,7 +190,19 @@ def getCarObjects(location, track):
 
     return [car for car in allCars if car.getLocationName() == location and car.getTrackName() == track]
 
-def getDetailsForCarAsDict(carObject):
+def getKernelTally():
+
+    tally = []
+    for car in PatternScriptEntities.CM.getByIdList():
+        kernelName = car.getKernelName()
+        if kernelName:
+            tally.append(kernelName)
+
+    kernelTally = PatternScriptEntities.occuranceTally(tally)
+
+    return kernelTally
+
+def getDetailsForCarAsDict(carObject, kernelTally):
     """backupConfigFile() is a bit of user edit protection
     Mimics jmri.jmrit.operations.setup.Setup.getCarAttributes()
     Dealers choice, either:
@@ -215,27 +230,9 @@ def getDetailsForCarAsDict(carObject):
     carDetailDict[PatternScriptEntities.J_BUNDLE.COLOR] = carObject.getColor()
     carDetailDict[PatternScriptEntities.J_BUNDLE.KERNEL] = carObject.getKernelName()
 
-
-
     carDetailDict[PatternScriptEntities.J_BUNDLE.KERNEL_SIZE] = '0'
-
-    kernelTally = []
-    for car in PatternScriptEntities.CM.getByIdList():
-        kernelTally.append(car.getKernelName())
-    #
-    #
-    #
-    # if carObject.getKernelName():
-    # i = 0
-    #     if car.getKernelName() == carObject.getKernelName():
-    #         i += 1
-    # carDetailDict[PatternScriptEntities.J_BUNDLE.KERNEL_SIZE] = str(i)
-
-
-
-
-
-
+    if carObject.getKernelName():
+        carDetailDict[PatternScriptEntities.J_BUNDLE.KERNEL_SIZE] = str(kernelTally[carObject.getKernelName()])
 
     carDetailDict[PatternScriptEntities.J_BUNDLE.OWNER] = str(carObject.getOwner())
     carDetailDict[PatternScriptEntities.J_BUNDLE.TRACK] = carObject.getTrackName()
