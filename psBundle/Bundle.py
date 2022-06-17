@@ -7,6 +7,7 @@ from urllib2 import urlopen
 from urllib import urlencode
 
 from psEntities import PatternScriptEntities
+from psBundle import Keys
 
 SCRIPT_NAME = 'OperationsPatternScripts.psBundle.Bundle'
 SCRIPT_REV = 20220101
@@ -51,6 +52,10 @@ def translateItems():
     translationDict = {'version' : SCRIPT_REV}
     translator = useDeepL()
 
+    if not quickCheck(translator, bundleTemplate[0]):
+
+        return
+
     for item in bundleTemplate:
 
         url = translator.getTheUrl(item)
@@ -66,6 +71,21 @@ def translateItems():
         translationDict[item] = translatedLine
 
     return translationDict
+
+def quickCheck(translator, item):
+
+    url = translator.getTheUrl(item)
+
+    try:
+        response = urlopen(url)
+        translation = PatternScriptEntities.loadJson(response.read())
+        translatedLine = translator.parseResult(translation)
+        response.close()
+        print('Connection Ok')
+        return True
+    except:
+        print('Connection failed')
+        return False
 
 def getBundleTemplate():
 
@@ -84,7 +104,7 @@ class useDeepL:
     def __init__(self):
 
         self.BASE_URL = 'https://api-free.deepl.com/v2/translate?'
-        self.AUTH_KEY = ''
+        self.AUTH_KEY = Keys.DEEPL_KEY
         self.SOURCE_LANG = 'en'
 
         return

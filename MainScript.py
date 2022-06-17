@@ -386,6 +386,8 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
     def patternScriptsButtonRestartAction(self, MOUSE_CLICKED):
 
         PatternScriptEntities.deleteConfigFile()
+        PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale()
+        self.patternScriptsButton.setText(PatternScriptEntities.BUNDLE['Restart with default settings'])
 
         self.removeTrainsTableListener()
         self.removeBuiltTrainListener()
@@ -502,7 +504,6 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         self.psLog.debug(TRANSLATE_PLUGIN_EVENT)
 
         Bundle.createBundleForLocale()
-        # PatternScriptEntities.JMRI.jmrit.jython.JythonWindow().actionPerformed(None)
 
         return
 
