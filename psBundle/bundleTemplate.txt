@@ -23,7 +23,7 @@ Operations Folder
 Pattern Scripts
 Pattern Tracks Subroutine
 Report Totals for Cars:
-Restart Pattern Scripts
+Restart with default settings
 Schedule for
 Schedule:
 Set Cars Form for track:

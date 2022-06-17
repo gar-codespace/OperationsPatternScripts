@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""Choose or create a language translation bundle for the current local"""
+"""Choose or create a language translation bundle for the current locale"""
 
 from urllib2 import urlopen
 from urllib import urlencode

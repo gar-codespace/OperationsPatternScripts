@@ -377,7 +377,7 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
     def patternScriptsButtonAction(self, MOUSE_CLICKED):
 
-        self.patternScriptsButton.setText(PatternScriptEntities.BUNDLE['Restart Pattern Scripts'])
+        self.patternScriptsButton.setText(PatternScriptEntities.BUNDLE['Restart with default settings'])
         self.patternScriptsButton.actionPerformed = self.patternScriptsButtonRestartAction
         self.buildThePlugin()
 
@@ -385,17 +385,18 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
     def patternScriptsButtonRestartAction(self, MOUSE_CLICKED):
 
-        MOUSE_CLICKED.getSource().setText(PatternScriptEntities.BUNDLE["Restart Pattern Scripts"])
+        PatternScriptEntities.deleteConfigFile()
 
         self.removeTrainsTableListener()
         self.removeBuiltTrainListener()
+
         self.closePsWindow()
         self.logger.stopLogger('PS')
+
         self.logger.startLogger('PS')
         self.buildThePlugin()
-        self.psLog.info('Pattern Scripts plugin restarted')
 
-        PatternScriptEntities.restoreConfigFile()
+        self.psLog.info('Pattern Scripts plugin restarted')
 
         return
 
@@ -556,9 +557,10 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         configPath = PatternScriptEntities.PROFILE_PATH + 'operations\\PatternConfig.json'
         fileToOpen = PatternScriptEntities.JAVA_IO.File(configPath)
         if fileToOpen.isFile():
+            apps.SystemConsole.getConsole().setVisible(True)
             PatternScriptEntities.genericDisplayReport(fileToOpen)
         else:
-            self.psLog.warning('Not found: ' + logFilePath)
+            self.psLog.warning('Not found: ' + configPath)
 
         return
 

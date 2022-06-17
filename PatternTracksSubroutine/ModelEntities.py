@@ -72,16 +72,18 @@ def getGenericTrackDetails(locationName, trackName):
     return genericTrackDetails
 
 def sortLocoList(locoList):
-    """backupConfigFile() is a bit of user edit protection
-    Sort order of PatternScriptEntities.readConfigFile('PT')['SL'] is top down
+    """Try/Except protects against bad edit of config file
+    Sort order of PatternScriptEntities.readConfigFile('RM')['SL'] is top down
     """
 
-    sortLocos = PatternScriptEntities.readConfigFile('PT')['SL']
+    sortLocos = PatternScriptEntities.readConfigFile('RM')['SL']
     for sortKey in sortLocos:
-        translatedkey = PatternScriptEntities.SB.handleGetMessage(sortKey)
-        locoList.sort(key=lambda row: row[translatedkey])
+        try:
+            translatedkey = PatternScriptEntities.SB.handleGetMessage(sortKey)
+            locoList.sort(key=lambda row: row[translatedkey])
+        except:
+            pass
 
-    PatternScriptEntities.backupConfigFile()
     return locoList
 
 def getRsOnTrains():
@@ -122,6 +124,7 @@ def getDetailsForLocoAsDict(locoObject):
         or
         PatternScriptEntities.SB.handleGetMessage('Road')
     """
+    standin = PatternScriptEntities.readConfigFile('RM')
 
     listOfAssignedRs = getRsOnTrains()
     locoDetailDict = {}
@@ -141,12 +144,17 @@ def getDetailsForLocoAsDict(locoObject):
     locoDetailDict[PatternScriptEntities.J_BUNDLE.OWNER] = str(locoObject.getOwner())
     locoDetailDict[PatternScriptEntities.J_BUNDLE.TRACK] = locoObject.getTrackName()
     locoDetailDict[PatternScriptEntities.J_BUNDLE.LOCATION] = locoObject.getLocation().getName()
-    locoDetailDict[PatternScriptEntities.J_BUNDLE.DESTINATION] = locoObject.getDestinationName()
+    dest = locoObject.getDestinationName()
+    if dest:
+        locoDetailDict[PatternScriptEntities.J_BUNDLE.DESTINATION] = dest
+    else:
+        locoDetailDict[PatternScriptEntities.J_BUNDLE.DESTINATION] = standin['DS']
+        
     locoDetailDict[PatternScriptEntities.J_BUNDLE.COMMENT] = locoObject.getComment()
 
 # Not part of JMRI engine attributes
     locoDetailDict[PatternScriptEntities.J_BUNDLE.LOAD] = u'O'
-    locoDetailDict[PatternScriptEntities.J_BUNDLE.FINAL_DEST_TRACK] = PatternScriptEntities.readConfigFile('PT')['DS']
+    locoDetailDict[PatternScriptEntities.J_BUNDLE.FINAL_DEST_TRACK] = PatternScriptEntities.readConfigFile('RM')['DS']
 
     if locoObject in listOfAssignedRs: # Flag to mark if RS is on a built train
         locoDetailDict[PatternScriptEntities.BUNDLE['On Train']] = True
@@ -157,20 +165,22 @@ def getDetailsForLocoAsDict(locoObject):
     locoDetailDict[u'PUSO'] = u'SL'
     locoDetailDict[u' '] = u' ' # Catches KeyError - empty box added to getDropEngineMessageFormat
 
-    PatternScriptEntities.backupConfigFile()
+    # PatternScriptEntities.backupConfigFile()
 
     return locoDetailDict
 
 def sortCarList(carList):
-    """backupConfigFile() is a bit of user edit protection
-    Sort order of PatternScriptEntities.readConfigFile('PT')['SC'] is top down"""
+    """Try/Except protects against bad edit of config file
+    Sort order of PatternScriptEntities.readConfigFile('RM')['SC'] is top down"""
 
-    sortCars = PatternScriptEntities.readConfigFile('PT')['SC']
+    sortCars = PatternScriptEntities.readConfigFile('RM')['SC']
     for sortKey in sortCars:
-        translatedkey = PatternScriptEntities.SB.handleGetMessage(sortKey)
-        carList.sort(key=lambda row: row[translatedkey])
+        try:
+            translatedkey = PatternScriptEntities.SB.handleGetMessage(sortKey)
+            carList.sort(key=lambda row: row[translatedkey])
+        except:
+            pass
 
-    PatternScriptEntities.backupConfigFile()
     return carList
 
 def getCarListForTrack(track):
@@ -203,7 +213,7 @@ def getKernelTally():
     return kernelTally
 
 def getDetailsForCarAsDict(carObject, kernelTally):
-    """backupConfigFile() is a bit of user edit protection
+    """Bad user edits are not caught, user starts over.
     Mimics jmri.jmrit.operations.setup.Setup.getCarAttributes()
     Dealers choice, either:
         PatternScriptEntities.J_BUNDLE.ROAD
@@ -211,7 +221,7 @@ def getDetailsForCarAsDict(carObject, kernelTally):
         PatternScriptEntities.SB.handleGetMessage('Road')
     """
 
-    fdStandIn = PatternScriptEntities.readConfigFile('PT')
+    standin = PatternScriptEntities.readConfigFile('RM')
 
     listOfAssignedRs = getRsOnTrains()
     carDetailDict = {}
@@ -239,16 +249,16 @@ def getDetailsForCarAsDict(carObject, kernelTally):
     carDetailDict[PatternScriptEntities.J_BUNDLE.LOCATION] = carObject.getLocationName()
 
     if not (carObject.getDestinationName()):
-        carDetailDict[PatternScriptEntities.J_BUNDLE.DESTINATION] = fdStandIn['DS']
-        carDetailDict[PatternScriptEntities.J_BUNDLE.DEST_TRACK] = fdStandIn['DT']
+        carDetailDict[PatternScriptEntities.J_BUNDLE.DESTINATION] = standin['DS']
+        carDetailDict[PatternScriptEntities.J_BUNDLE.DEST_TRACK] = standin['DS'] + ',' + standin['DT']
     else:
         carDetailDict[PatternScriptEntities.J_BUNDLE.DESTINATION] = carObject.getDestinationName()
         carDetailDict[PatternScriptEntities.J_BUNDLE.DEST_TRACK] = carObject.getDestinationName() \
                                      + ', ' + carObject.getDestinationTrackName()
 
     if not (carObject.getFinalDestinationName()):
-        carDetailDict[PatternScriptEntities.J_BUNDLE.FINAL_DEST] = fdStandIn['FD']
-        carDetailDict[PatternScriptEntities.J_BUNDLE.FINAL_DEST_TRACK] = fdStandIn['FT']
+        carDetailDict[PatternScriptEntities.J_BUNDLE.FINAL_DEST] = standin['FD']
+        carDetailDict[PatternScriptEntities.J_BUNDLE.FINAL_DEST_TRACK] = standin['FD'] + ',' + standin['FT']
     else:
         carDetailDict[PatternScriptEntities.J_BUNDLE.FINAL_DEST] = carObject.getFinalDestinationName()
         carDetailDict[PatternScriptEntities.J_BUNDLE.FINAL_DEST_TRACK] = carObject.getFinalDestinationName() \
@@ -274,7 +284,7 @@ def getDetailsForCarAsDict(carObject, kernelTally):
     carDetailDict[u'PUSO'] = u'SC'
     carDetailDict[u' '] = u' ' # Catches KeyError - empty box added to getLocalSwitchListMessageFormat
 
-    PatternScriptEntities.backupConfigFile()
+    # PatternScriptEntities.backupConfigFile()
     return carDetailDict
 
 def makeGenericHeader():

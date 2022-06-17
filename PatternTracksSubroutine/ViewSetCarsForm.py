@@ -178,6 +178,10 @@ class MakeSetCarsEqptRows():
         self.setCarsFormData = setCarsFormData
         self.textBoxEntry = []
 
+        self.carColor = PatternScriptEntities.getCarColor()
+        self.locoColor = PatternScriptEntities.getLocoColor()
+        self.alertColor = PatternScriptEntities.getAlertColor()
+
         return
 
     def makeSetCarsLocoRows(self):
@@ -188,9 +192,9 @@ class MakeSetCarsEqptRows():
 
         for loco in locos:
             combinedInputLine = PatternScriptEntities.JAVX_SWING.JPanel()
-            combinedInputLine.setBackground(PatternScriptEntities.getLocoColor())
+            combinedInputLine.setBackground(self.locoColor)
             if loco[PatternScriptEntities.BUNDLE['On Train']]:
-                combinedInputLine.setBackground(PatternScriptEntities.getAlertColor())
+                combinedInputLine.setBackground(self.alertColor)
             inputText = PatternScriptEntities.JAVX_SWING.JTextField(5)
             self.textBoxEntry.append(inputText)
             inputBox = makeSwingBox(self.panelWidth * 6, self.panelHeight)
@@ -209,7 +213,7 @@ class MakeSetCarsEqptRows():
 
             listOfLocoRows.append(combinedInputLine)
 
-        PatternScriptEntities.backupConfigFile()
+        # PatternScriptEntities.backupConfigFile()
         return listOfLocoRows
 
     def makeSetCarsCarRows(self):
@@ -220,9 +224,9 @@ class MakeSetCarsEqptRows():
 
         for car in cars:
             combinedInputLine = PatternScriptEntities.JAVX_SWING.JPanel()
-            combinedInputLine.setBackground(PatternScriptEntities.getCarColor())
+            combinedInputLine.setBackground(self.carColor)
             if car[PatternScriptEntities.BUNDLE['On Train']]:
-                combinedInputLine.setBackground(PatternScriptEntities.getAlertColor())
+                combinedInputLine.setBackground(self.alertColor)
             inputText = PatternScriptEntities.JAVX_SWING.JTextField(5)
             self.textBoxEntry.append(inputText)
             inputBox = makeSwingBox(self.panelWidth * 6, self.panelHeight)
@@ -239,7 +243,7 @@ class MakeSetCarsEqptRows():
             combinedInputLine.add(PatternScriptEntities.JAVX_SWING.Box.createHorizontalGlue())
             listOfCarRows.append(combinedInputLine)
 
-        PatternScriptEntities.backupConfigFile()
+        # PatternScriptEntities.backupConfigFile()
         return listOfCarRows
 
     def textBoxEntryList(self):

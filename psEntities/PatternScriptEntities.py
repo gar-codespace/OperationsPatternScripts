@@ -171,7 +171,7 @@ def makeReportItemWidthMatrix():
 
     reportItemMatrix = {}
 
-    reportWidths = readConfigFile('PT')['AW']
+    reportWidths = readConfigFile('RM')['AW']
     for rItem in reportWidths:
         reportItemMatrix[SB.handleGetMessage(rItem)] = reportWidths[rItem]
 
@@ -382,6 +382,13 @@ def writeNewConfigFile():
 
     return
 
+def deleteConfigFile():
+
+    configFilePath = PROFILE_PATH + 'operations\PatternConfig.json'
+    JAVA_IO.File(configFilePath).delete()
+
+    return
+
 def makePatternLog():
     """creates a pattern log for display based on the log level, as set by getBuildReportLevel"""
 
@@ -415,42 +422,49 @@ def logIndex():
 
     return loggingIndex
 
+def getGenericColor(colorName):
+    """A bit of protection against bad edits"""
+
+    colorPalette = readConfigFile('CD')['CP']
+
+    try:
+        r = colorPalette[colorName]["R"]
+        g = colorPalette[colorName]["G"]
+        b = colorPalette[colorName]["B"]
+        a = colorPalette[colorName]["A"]
+
+        return JAVA_AWT.Color(r, g, b, a)
+
+    except KeyError:
+
+        return None
+
 def getCarColor():
-    """backupConfigFile() is a bit of user edit protection"""
 
-    colorDefinition = readConfigFile('CD')
+    colorName = readConfigFile('CD')['carColor']
+    color = getGenericColor(colorName)
+    if not color:
+        _psLog.warning('Car color definition not found in PatternConfig.json')
 
-    r = colorDefinition['CP'][colorDefinition['carColor']]["R"]
-    g = colorDefinition['CP'][colorDefinition['carColor']]["G"]
-    b = colorDefinition['CP'][colorDefinition['carColor']]["B"]
-    a = colorDefinition['CP'][colorDefinition['carColor']]["A"]
-
-    backupConfigFile()
-    return JAVA_AWT.Color(r, g, b, a)
+    return color
 
 def getLocoColor():
 
-    colorDefinition = readConfigFile('CD')
+    colorName = readConfigFile('CD')['locoColor']
+    color = getGenericColor(colorName)
+    if not color:
+        _psLog.warning('Engine color definition not found in PatternConfig.json')
 
-    r = colorDefinition['CP'][colorDefinition['locoColor']]["R"]
-    g = colorDefinition['CP'][colorDefinition['locoColor']]["G"]
-    b = colorDefinition['CP'][colorDefinition['locoColor']]["B"]
-    a = colorDefinition['CP'][colorDefinition['locoColor']]["A"]
-
-    backupConfigFile()
-    return JAVA_AWT.Color(r, g, b, a)
+    return color
 
 def getAlertColor():
 
-    colorDefinition = readConfigFile('CD')
+    colorName = readConfigFile('CD')['alertColor']
+    color = getGenericColor(colorName)
+    if not color:
+        _psLog.warning('Alert color definition not found in PatternConfig.json')
 
-    r = colorDefinition['CP'][colorDefinition['alertColor']]["R"]
-    g = colorDefinition['CP'][colorDefinition['alertColor']]["G"]
-    b = colorDefinition['CP'][colorDefinition['alertColor']]["B"]
-    a = colorDefinition['CP'][colorDefinition['alertColor']]["A"]
-
-    backupConfigFile()
-    return JAVA_AWT.Color(r, g, b, a)
+    return color
 
 """ Items from Config File that may be put back:"""
 

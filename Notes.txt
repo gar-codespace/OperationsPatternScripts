@@ -1,6 +1,7 @@
 
 Todo:
   How to publish DeepL
+  How to use locale modifier, IE en-GB
   Harden up Bundle against web errors
 
 Comments:
