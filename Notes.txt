@@ -1,9 +1,7 @@
 
 Todo:
-  Test with two profiles running
-  Kernel size not calculating correctly
   How to publish DeepL
-  Harden up Bundle against web errors  
+  Harden up Bundle against web errors
 
 Comments:
   Schedule does not prevent setting a car to a track
@@ -12,6 +10,7 @@ Tested Items:
   Plugin
     Handle multiple versions OK
     Handles font size change OK
+    Works if two instances of PanelPro are open
     Test for file write locations OK
     All Set Cars windows close when Pattern Scripts window is closed OK
     PatternConfig.json version check OK

@@ -15,7 +15,7 @@ def createBundleForLocale():
     """Creates a new bundle for JMRI's locale setting"""
 
     bundleDir = PatternScriptEntities.PLUGIN_ROOT + '\\psBundle\\'
-    bundleTarget = bundleDir + PatternScriptEntities.psLocale() + '.json'
+    bundleTarget = bundleDir + PatternScriptEntities.psLocale()[:2] + '.json'
 
     translatedItems = translateItems()
 

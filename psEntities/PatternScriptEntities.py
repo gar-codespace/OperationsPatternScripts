@@ -166,7 +166,7 @@ class validateStubFile:
 
 def psLocale():
 
-    return PM.getLocale().toString()[:2]
+    return PM.getLocale().toString()
     # return unicode(PM.getLocale(), ENCODING)
 
 def formatText(item, length):
