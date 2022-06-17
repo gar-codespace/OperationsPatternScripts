@@ -143,7 +143,7 @@ In other cases, if a mistake is made editing the PatternConfig.json file, the pl
 <pre>
   "CP" : {
     "AP" : true, <font color="blue">Add button to Panel Pro frame, plugin is not displayed but still enabled</font>
-    "SE" : "utf-8", <font color="blue">Implemented in Version 3</font>
+    "SE" : "utf-8", <font color="blue">May be expanded in Version 3</font>
     "SI" : { <font color="blue">Script Includes</font>
       "PatternTracksSubroutine" : true, <font color="blue">Include this subroutine in the Control Panel</font>
       "TrainPlayerSubroutine" : false <font color="blue">Available in Version 3</font>
@@ -153,28 +153,6 @@ In other cases, if a mistake is made editing the PatternConfig.json file, the pl
     "PX" : 0, <font color="blue">Not Implemented</font>
     "PY" : 0, <font color="blue">Not Implemented</font>
     "RV" : 20220205 <font color="blue">Version control</font>
-  },
-</pre>
-<h3>Editor Matrix</h3>
-<pre>
-  "EM": { <font color="blue">To be implemented in version 3</font>
-    "1": "<font color="blue">Mac Classic</font> ",
-    "2": "<font color="blue">open -a TextEdit</font> ", <font color="blue">OSX</font>
-    "4": "<font color="blue">start notepad.exe</font> ", <font color="blue">Windows</font>
-    "5": "<font color="blue">nano</font> ", <font color="blue">Linux</font>
-    "6": "<font color="blue">OS2</font> ",
-    "7": "<font color="blue">kwrite</font> " <font color="blue">Unix</font>
-  },
-</pre>
-<h3>Logging Index</h3>
-<pre>
-  "LI": {
-    "0" : "Editing these is not recommended",
-    "9": "- CRITICAL -",
-    "7": "- ERROR -",
-    "5": "- WARNING -",
-    "3": "- INFO -",
-    "1": "- DEBUG -"
   },
 </pre>
 <h3>Pattern Tracks</h3>
@@ -192,9 +170,9 @@ In other cases, if a mistake is made editing the PatternConfig.json file, the pl
     "PW" : 260, <font color="blue">Pattern Width</font>
     "PH" : 16, <font color="blue">Pattern Height</font>
     "DS" : "<font color="green">*No Waybill</font>", <font color="blue">Destination standin</font>
-    "DT" : "<font color="green">*No Waybill</font>", <font color="blue">Destination Track standin</font>
+    "DT" : "<font color="green">*Any Line</font>", <font color="blue">Destination Track standin</font>
     "FD" : "<font color="green">*Via Staging</font>", <font color="blue">Final Destination standin</font>
-    "FT" : "<font color="green">*Via Staging</font>", <font color="blue">Final Destination track standin</font>
+    "FT" : "<font color="green">*Any Line</font>", <font color="blue">Final Destination track standin</font>
     "SL": [ <font color="blue">Sort Locomotives</font>
       "<font color="green">Model</font>"
     ],

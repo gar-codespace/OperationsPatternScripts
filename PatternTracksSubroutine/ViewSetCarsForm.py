@@ -170,7 +170,6 @@ class MakeSetCarsEqptRows():
         self.SCRIPT_NAME = 'OperationsPatternScripts.MakeSetCarsEqptRows'
         self.SCRIPT_REV = 20220101
 
-        # self.reportWidth = PatternScriptEntities.readConfigFile('PT')['RW']
         self.reportWidth = PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX
         fontSize = PatternScriptEntities.PM.getFontSize()
         self.panelHeight = fontSize + 4

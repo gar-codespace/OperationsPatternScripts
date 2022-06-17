@@ -321,7 +321,7 @@ def makeInitialTrackList(location):
     return trackDict
 
 def makeCsvSwitchlist(trackPattern):
-    # CSV writer does not support utf-8
+    """CSV writer does not support utf-8"""
 
     csvSwitchList = u'Operator,Description,Parameters\n' \
                     u'RT,Report Type,' + trackPattern['trainDescription'] + '\n' \

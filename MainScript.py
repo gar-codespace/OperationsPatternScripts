@@ -217,6 +217,7 @@ class View:
         toolsMenu.add(PatternScriptEntities.JMRI.jmrit.operations.setup.BuildReportOptionAction())
         toolsMenu.add(asMenuItem)
         toolsMenu.add(tpMenuItem)
+        toolsMenu.add(editConfigMenuItem)
         toolsMenu.add(ptMenuItem)
 
         helpMenu = PatternScriptEntities.JAVX_SWING.JMenu(PatternScriptEntities.BUNDLE['Help'])
@@ -224,7 +225,6 @@ class View:
         helpMenu.add(gitHubMenuItem)
         helpMenu.add(opsFolderMenuItem)
         helpMenu.add(logMenuItem)
-        helpMenu.add(editConfigMenuItem)
 
         psMenuBar = PatternScriptEntities.JAVX_SWING.JMenuBar()
         psMenuBar.add(toolsMenu)

@@ -34,21 +34,6 @@ PM = JMRI.InstanceManager.getDefault(JMRI.util.gui.GuiLafPreferencesManager)
 
 _psLog = LOGGING.getLogger('PS.PE.PatternScriptEntities')
 
-
-def makeReportItemWidthMatrix():
-    """The report widths for each of the rolling stock attributes is defined in the config file.
-    The keys for the width values need to be translated into whatever language the current profile is using.
-    """
-
-    reportItemMatrix = {}
-
-    reportWidths = readConfigFile('PT')['AW']
-    for rItem in reportWidths:
-        reportItemMatrix[SB.handleGetMessage(rItem)] = reportWidths[rItem]
-
-    reportItemMatrix[' '] = 1 # catches empty box added to Manifest Print Options
-    return reportItemMatrix
-
 class Logger:
 
     def __init__(self, logPath):
@@ -178,6 +163,21 @@ def formatText(item, length):
         xItem = item[:length]
 
     return xItem + u' '
+
+def makeReportItemWidthMatrix():
+    """The report widths for each of the rolling stock attributes is defined in the config file.
+    The keys for the width values are translated into whatever language the current profile is using.
+    """
+
+    reportItemMatrix = {}
+
+    reportWidths = readConfigFile('PT')['AW']
+    for rItem in reportWidths:
+        reportItemMatrix[SB.handleGetMessage(rItem)] = reportWidths[rItem]
+
+    reportItemMatrix[' '] = 1 # catches empty box added to Manifest Print Options
+
+    return reportItemMatrix
 
 def occuranceTally(listOfOccurances):
     """Tally the occurances of a word in a list and return a dictionary
@@ -387,7 +387,8 @@ def makePatternLog():
 
     outputPatternLog = ''
     buildReportLevel = JMRI.jmrit.operations.setup.Setup.getBuildReportLevel()
-    loggingIndex = readConfigFile('LI')
+    # loggingIndex = readConfigFile('LI')
+    loggingIndex = logIndex()
     logLevel = loggingIndex[buildReportLevel]
 
     logFileLocation = PROFILE_PATH + 'operations\\buildstatus\\PatternScriptsLog.txt'
@@ -406,6 +407,13 @@ def makePatternLog():
             outputPatternLog += thisLine + '\n'
 
     return 'PatternScriptsLog_temp', outputPatternLog
+
+def logIndex():
+    """Moved here but may be put back into configFile"""
+
+    loggingIndex = {"9": "- CRITICAL -", "7": "- ERROR -", "5": "- WARNING -", "3": "- INFO -", "1": "- DEBUG -"}
+
+    return loggingIndex
 
 def getCarColor():
     """backupConfigFile() is a bit of user edit protection"""
@@ -444,16 +452,24 @@ def getAlertColor():
     backupConfigFile()
     return JAVA_AWT.Color(r, g, b, a)
 
+""" Items from Config File that may be put back:"""
 
-# def openEditorByComputerType(switchListLocation=None):
-#     """Opens a text file in a text editor for each type of computer.
-#     Version 3
-#     """
-#
-#     osType = JMRI.util.SystemType.getType()
-#     editorMatrix = readConfigFile('EM')
-#     textEditor = editorMatrix[str(osType)]
-#     openEditor = textEditor + '"' + switchListLocation + '"' # Double quotes escapes the & symbol
-#
-#     backupConfigFile()
-#     return openEditor
+
+    #   "EM": {
+    #     "1": "Mac Classic ",
+    #     "2": "open -a TextEdit ",
+    #     "4": "start notepad.exe ",
+    #     "5": "nano ",
+    #     "6": "OS2 ",
+    #     "7": "kwrite "
+    #   },
+    #
+    #
+    # "LI": {
+    #   "0" : "Editing these is not recommended",
+    #   "9": "- CRITICAL -",
+    #   "7": "- ERROR -",
+    #   "5": "- WARNING -",
+    #   "3": "- INFO -",
+    #   "1": "- DEBUG -"
+    # },
