@@ -504,6 +504,7 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         self.psLog.debug(TRANSLATE_PLUGIN_EVENT)
 
         Bundle.createBundleForLocale()
+        # Bundle.MakeBundle().start()
 
         return
 
