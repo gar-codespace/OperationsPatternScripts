@@ -13,24 +13,11 @@ from psBundle import Keys
 SCRIPT_NAME = 'OperationsPatternScripts.psBundle.Bundle'
 SCRIPT_REV = 20220101
 
+_psLog = PatternScriptEntities.LOGGING.getLogger('PS.B.Bundle')
 _base_Translation = []
 
-def createBundleForLocale():
-    """Creates a new bundle for JMRI's locale setting"""
-
-    bundleDir = PatternScriptEntities.PLUGIN_ROOT + '\\psBundle\\'
-    bundleTarget = bundleDir + PatternScriptEntities.psLocale()[:2] + '.json'
-
-    translatedItems = translateItems()
-
-    translation = PatternScriptEntities.dumpJson(translatedItems)
-    PatternScriptEntities.genericWriteReport(bundleTarget, translation)
-
-    print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-
-    return
-
 def getBundleForLocale():
+    """Gets the bundle for the current locale if it exists, otherwise english."""
 
     psLocale = PatternScriptEntities.psLocale() + '.json'
     bundleDir = PatternScriptEntities.PLUGIN_ROOT + '\\psBundle\\'
@@ -46,16 +33,80 @@ def getBundleForLocale():
 
     return bundleFile
 
-def translateItems():
+def getHelpPageForLocale():
+    """Gets the help page for the current locale, otherwise english."""
+
+    psLocale = PatternScriptEntities.psLocale() + '.json'
+    bundleDir = PatternScriptEntities.PLUGIN_ROOT + '\\psBundle\\'
+    fileList = PatternScriptEntities.JAVA_IO.File(bundleDir).list()
+
+    if psLocale in fileList:
+        bundleFileLocation = bundleDir + 'help.' + psLocale + '.json'
+    else:
+        bundleFileLocation = bundleDir + 'help.en.json'
+
+    helpBundleFile = PatternScriptEntities.genericReadReport(bundleFileLocation)
+
+def makeHelpPageForLocale():
+    """Makes the help page for the current locale."""
+    return
+
+
+def createBundleForLocale():
+    """Creates a new plugin bundle for JMRI's locale setting."""
+
+    bundleDir = PatternScriptEntities.PLUGIN_ROOT + '\\psBundle\\'
+
+    bundleSource = bundleDir + 'templateBundle.txt'
+    bundleTarget = bundleDir + PatternScriptEntities.psLocale()[:2] + '.json'
+
+    fileToTranslate = getBundleTemplate(bundleSource)
+    translateBundle(bundleTarget, fileToTranslate)
+
+    print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+    return
+
+def createBundleForHelpPage():
+    """Creates a new help page bundle for JMRI's locale setting."""
+
+    bundleDir = PatternScriptEntities.PLUGIN_ROOT + '\\psBundle\\'
+
+    bundleSource = bundleDir + 'templateHelpPage.txt'
+    bundleTarget = bundleDir + PatternScriptEntities.psLocale()[:2] + '.help.json'
+
+    fileToTranslate = getBundleTemplate(bundleSource)
+    translateBundle(bundleTarget, fileToTranslate)
+
+    print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+    return
+
+def getBundleTemplate(file):
+
+    baseTemplate = PatternScriptEntities.genericReadReport(file)
+
+    bundleTemplate = baseTemplate.splitlines()
+
+    return bundleTemplate
+
+def translateBundle(bundleTarget, fileToTranslate):
+
+    translatedItems = translateItems(fileToTranslate)
+    translation = PatternScriptEntities.dumpJson(translatedItems)
+    PatternScriptEntities.genericWriteReport(bundleTarget, translation)
+
+    return
+
+def translateItems(file):
     """Based on https://gist.github.com/snim2/561630
     https://stackoverflow.com/questions/10115126/python-requests-close-http-connection#15511852
     """
 
-    bundleTemplate = getBundleTemplate()
     translationDict = {'version' : SCRIPT_REV}
     translator = useDeepL()
 
-    for item in bundleTemplate:
+    for item in file:
 
         url = translator.getTheUrl(item)
 
@@ -63,9 +114,15 @@ def translateItems():
         bundleItem.passInUrl(url, item)
         bundleItem.start()
 
-    timeOut = time.time() + 60 # times out after 60 seconds
+    timeOut = time.time() + 10
     while True: # Homebrew version of await
-        if len(_base_Translation) == len(bundleTemplate) or time.time() > timeOut:
+        if time.time() > timeOut:
+            _psLog.warning('Connection Timed Out')
+            print('Connection Timed Out')
+            break
+        if len(_base_Translation) == len(file):
+            _psLog.info('Translation Completed')
+            print('Translation Completed')
             break
 
     for item in _base_Translation:
@@ -74,31 +131,6 @@ def translateItems():
 
     return translationDict
 
-def quickCheck(translator, item):
-
-    url = translator.getTheUrl(item)
-
-    try:
-        response = urlopen(url)
-        translation = PatternScriptEntities.loadJson(response.read())
-        translatedLine = translator.parseResult(translation)
-        response.close()
-        print('Connection Ok')
-        return True
-    except:
-        print('Connection failed')
-        return False
-
-def getBundleTemplate():
-
-    bundleFileLocation = PatternScriptEntities.PLUGIN_ROOT + '\\psBundle\\bundleTemplate.txt'
-
-    baseTemplate = PatternScriptEntities.genericReadReport(bundleFileLocation)
-
-    bundleTemplate = baseTemplate.splitlines()
-
-    return bundleTemplate
-
 
 class useDeepL:
     """Specifics for using DeepL"""
@@ -106,6 +138,7 @@ class useDeepL:
     def __init__(self):
 
         self.BASE_URL = 'https://api-free.deepl.com/v2/translate?'
+        self.DOCUMENT_URL = 'https://api-free.deepl.com/v2/document?'
         self.AUTH_KEY = Keys.DEEPL_KEY
         self.SOURCE_LANG = 'en'
 
@@ -125,13 +158,17 @@ class useDeepL:
     def parseResult(self, response):
 
         source = response['source']
-        translation = response['translations'][0]['text']
+        error = response['error']
+        try:
+            translation = response['translations'][0]['text']
+        except:
+            translation = error
 
         return (source, translation)
 
 
 class MakeBundleItem(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
-    """Homebrew version of concurrency"""
+    """Homebrew version of concurrency."""
 
     def init(self):
 
@@ -147,86 +184,21 @@ class MakeBundleItem(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton)
     def handle(self):
         """Harden this against errors"""
 
-        response = urlopen(self.url)
-        translation = PatternScriptEntities.loadJson(response.read())
-        response.close()
+        translation = {}
+        response = None
+
+        for i in range(2):
+            try:
+                response = urlopen(self.url)
+                translation = PatternScriptEntities.loadJson(response.read())
+                response.close()
+            except:
+                _psLog.warning('Not translated: ' + self.item)
+            if response:
+                break
+
         translation['source'] = self.item
+        translation['error'] = self.item
         _base_Translation.append(translation)
 
         return False
-
-
-# class MakeBundle(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
-#
-#     def init(self):
-#
-#         self.bundleDir = PatternScriptEntities.PLUGIN_ROOT + '\\psBundle\\'
-#         self.bundleTemplate = self.bundleDir + 'bundleTemplate.txt'
-#
-#         return
-#
-#     def quickCheck(self, translator, item):
-#
-#         url = translator.getTheUrl(item)
-#
-#         try:
-#             response = urlopen(url)
-#             translation = PatternScriptEntities.loadJson(response.read())
-#             translatedLine = translator.parseResult(translation)
-#             response.close()
-#             print('Connection Ok')
-#             return True
-#         except:
-#             print('Connection failed')
-#             return False
-#
-#     def getBundleTemplate(self):
-#
-#         baseTemplate = PatternScriptEntities.genericReadReport(self.bundleTemplate)
-#
-#         bundleTemplate = baseTemplate.splitlines()
-#
-#         return bundleTemplate
-#
-#     def translateItems(self):
-#         """Based on https://gist.github.com/snim2/561630
-#         https://stackoverflow.com/questions/10115126/python-requests-close-http-connection#15511852
-#         """
-#
-#         bundleTemplate = self.getBundleTemplate()
-#         translatedItems = {'version' : SCRIPT_REV}
-#         translator = useDeepL()
-#
-#         # if not quickCheck(translator, bundleTemplate[0]):
-#         #
-#         #     return
-#
-#         for item in bundleTemplate:
-#
-#             url = translator.getTheUrl(item)
-#
-#             try:
-#                 response = urlopen(url)
-#                 translation = PatternScriptEntities.loadJson(response.read())
-#                 translatedLine = translator.parseResult(translation)
-#                 response.close()
-#             except:
-#                 translatedLine = item
-#
-#             translatedItems[item] = translatedLine
-#
-#         print('Done')
-#         return translatedItems
-#
-#     def handle(self):
-#
-#         bundleTarget = self.bundleDir + PatternScriptEntities.psLocale()[:2] + '.json'
-#
-#         translatedItems = self.translateItems()
-#
-#         translation = PatternScriptEntities.dumpJson(translatedItems)
-#         PatternScriptEntities.genericWriteReport(bundleTarget, translation)
-#
-#         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-#
-#         return False
