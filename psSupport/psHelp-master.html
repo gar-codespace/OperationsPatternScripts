@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<title>Pattern Scripts Help</title>
+<meta name="AUTHOR" content="Greg Ritacco">
+<meta name="PROJECT" content="Pattern scripts for JMRI">
+<meta name="VERSION" content="2.0.0">
+<style>
+  html * {
+    font-family: verdana;
+  }
+  h1 {
+    margin-left: 10px;
+  }
+  h2 {
+    margin-left: 20px;
+  }
+  h3 {
+    margin-left: 30px;
+  }
+  p {
+    margin-left: 30px;
+  }
+  img {
+    margin-left: 30px;
+  }
+  pre {
+    margin-left: 30px;
+  }
+</style>
+</head>
+
+<body>
+
+<h1>Help Page - Pattern Scripts plugin for JMRI</h1>
+<h2>Introduction</h2>
+<p>This program is a plugin for JMRI Operations Pro. With it, the user can generate pattern reports for tracks at a single location.
+  Additionally, cars can be moved from track to track within a location, and optionally, if a car is moved onto a spur, the schedule for that spur can be applied.
+  Support for my TrainPlayer suite of scripts is also included. The use of this plugin is documented in the following list of videos.</p>
+
+
+<h2>Video Documentation</h2>
+<p>How to add this plugin to JMRI</p>
+<p><A HREF="https://youtu.be/GjPtXk3oKmc">How to set up this plugin</A></p>
+<p><A HREF="https://youtu.be/IdXvxyo-E3Y">Demonstration at a yard</A></p>
+<p><A HREF="https://youtu.be/2Tv6sUMDD_Y">Demonstration at industry</A></p>
+<p>How to modify this plugin</p>
+<p>Use this plugin with TrainPlayer</p>
+
+
+<h2>Organization</h2>
+<p>The following chart shows the code structure of this plugin.</P>
+<img src="FlowChart1.png" alt="<Flow Chart Image>">
+
+<h2>Plugin Layout</h2>
+<p>OperationsPatternScripts.MainScript.View.makePatternScriptsWindow()</p>
+<img src="PluginLayout1.png" alt="<Plugin Layout Image>">
+
+<h2>Pattern Scripts Subroutine</h2>
+<p>OperationsPatternScripts.PatternTracksSubroutine.Controller.makeSubroutinePanel()</p>
+<img src="PatternScriptsSubroutine1.png" alt="<Pattern Scripts Window Image>">
+
+<h2>Pattern Report for Track Window</h2>
+<p>OperationsPatternScripts.ControllerSetCarsForm.CreatePatternReportGui.makeFrame()</p>
+<img src="PatternReportForTrackWindow1.png" alt="<Pattern Report for Track Window Image>">
+
+
+<h2>Track Pattern and Switch List JSON format</h2>
+<p>The pattern reports and TrainPlayer exports all start with the creation of a JSON file.
+  The file is created by this plugin and in the case of TrainPlayer manifest exports the JSON is created by modifying the JMRI generated manifest JSON.
+  All the JSON files are written to the jsonManifests folder. They follow the illustrated format:</p>
+  <img src="ReportFileFormat1.png" alt="<JSON format for reports>">
+
+<h2>Key – PatternConfig.json</h2>
+<p>Each JMRI profile gets its own configuration file, which is named PatternConfig.json. It is found in the operations folder, and is used to provide custom settings for each profile and record user inputs.
+<br><font color="blue">The description of each element is in blue</font>
+<br><font color="green">User editable keys are described in green</font>
+<br>Guard rails of sorts have been put up around the values marked in green, but even so this plugin is not able to catch every type of mistake that can be made when editing the PatternConfig.json file, and in some cases the plugin might crash.
+ If that happens, press the 'Restart from PatternConfig Backup" button and the plugin will use the last good PatternConfig.json file as a new starting off point.
+In other cases, if a mistake is made editing the PatternConfig.json file, the plugin will replace it with the default file, and the user will have to start over.
+<br>Worst case, simply delete the Pattern Config.json file and the plugin will create a new one.</p>
+
+<h3><font color="green">Color Definations</font></h3>
+<pre>
+  "CD": {
+    "CP": { <font color="blue">Color Pallett</font>
+      "<font color="green">BLANCH</font>": { <font color="blue">Any of these colors can be changed</font>
+        "A": <font color="green">255</font>, <font color="blue">Alpha value</font>
+        "B": <font color="green">225</font>, <font color="blue">Blue value</font>
+        "D": <font color="green">Light grey</font>, <font color="blue">Vague Description</font>
+        "G": <font color="green">225</font>, <font color="blue">Green value</font>
+        "R": <font color="green">225</font> <font color="blue">Blue value</font>
+      },
+      "DUST": {
+        "A": 255,
+        "B": 218,
+        "D": "Light tan",
+        "G": 242,
+        "R": 252
+      },
+      "FADED": {
+        "A": 255,
+        "B": 245,
+        "D": "Light purple",
+        "G": 225,
+        "R": 237
+      },
+      "LICHEN": {
+        "A": 255,
+        "B": 244,
+        "D": "Light green",
+        "G": 255,
+        "R": 236
+      },
+      "PALE": {
+        "A": 255,
+        "B": 250,
+        "D": "Light blue",
+        "G": 243,
+        "R": 237
+      },
+      "PETAL": {
+        "A": 255,
+        "B": 224,
+        "D": "Light red",
+        "G": 208,
+        "R": 240
+      }
+    },
+    "locoColor": <font color="green">"FADED"</font>, <font color="blue">No color can be specified with ""</font>
+    "carColor": <font color="green">"DUST"</font>,
+    "alertColor": <font color="green">"PETAL"</font>
+  },
+</pre>
+<h3><font color="blue">Control Panel</font></h3>
+<pre>
+  <font color="blue">Do not edit these</font>
+  "CP" : {
+    "AP" : true, <font color="blue">Add button to Panel Pro frame, plugin is not displayed but still enabled</font>
+    "SE" : "utf-8", <font color="blue">May be expanded in Version 3</font>
+    "SI" : { <font color="blue">Script Includes</font>
+      "PatternTracksSubroutine" : true, <font color="blue">Include this subroutine in the Control Panel</font>
+      "TrainPlayerSubroutine" : false <font color="blue">Available in Version 3</font>
+    },
+    "PH" : 220, <font color="blue">Default panel height</font>
+    "PW" : 1500, <font color="blue">Default panel width</font>
+    "PX" : 0, <font color="blue">Not Implemented</font>
+    "PY" : 0, <font color="blue">Not Implemented</font>
+    "RV" : 20220205 <font color="blue">Version control</font>
+  },
+</pre>
+<h3><font color="blue">Pattern Tracks</font></h3>
+<pre>
+  <font color="blue">Do not edit these</font>
+  "PT" : {
+    "AL" : [ <font color="blue">All Locations (written by this plugin)</font>
+    ],
+    "PL" : "", <font color="blue">Pattern Location (written by this plugin)</font>
+    "PT" : { <font color="blue">Pattern Tracks (written by this plugin)</font>
+    },
+    "PA" : false, <font color="blue">Yard Tracks Only flag (set by user)</font>
+    "PI" : false, <font color="blue">Ignore Track Length flag (set by user)</font>
+    "AS" : true, <font color="blue">Apply Schedule flag (set by user)</font>
+    "TI" : false, <font color="blue">TrainPlayer Include flag (set by user)</font>
+    "PW" : 260, <font color="blue">Pattern Width</font>
+    "PH" : 16, <font color="blue">Pattern Height</font>
+    "RM": 8, <font color="blue">Row Multiplier</font>
+</pre>
+<h3><font color="green">Report Modifiers</font></h3>
+<pre>
+  "RM" : {
+    "DS" : "<font color="green">*No Waybill</font>", <font color="blue">Destination standin</font>
+    "DT" : "<font color="green">*Not Consigned</font>", <font color="blue">Destination Track standin</font>
+    "FD" : "<font color="green">*Via Staging</font>", <font color="blue">Final Destination standin</font>
+    "FT" : "<font color="green">*Any Line</font>", <font color="blue">Final destination Track standin</font>
+    "SL": [ <font color="blue">Sort Locomotives</font>
+      "<font color="green">Model</font>"
+    ],
+    "SC": [ <font color="blue">Sort Cars</font>
+      "<font color="green">Load Type</font>",
+      "<font color="green">FD&Track</font>"
+    ],
+    "AW": { <font color="blue">Attribute Width</font>
+      "Input": <font color="green">6</font>,
+      "Model": <font color="green">5</font>,
+      "Road" : <font color="green">5</font>,
+      "Number" : <font color="green">7</font>,
+      "Type" : <font color="green">6</font>,
+      "Length" : <font color="green">7</font>,
+      "Weight" : <font color="green">7</font>,
+      "Load" : <font color="green">6</font>,
+      "Load Type" : <font color="green">5</font>,
+      "Loco Type" : <font color="green">18</font>,
+      "Owner" : <font color="green">20</font>,
+      "Consist" : <font color="green">8</font>,
+      "Hazardous" : <font color="green">10</font>,
+      "Color" : <font color="green">6</font>,
+      "Kernel" : <font color="green">7</font>,
+      "Kernel Size" : <font color="green">12</font>,
+      "Owner" : <font color="green">6</font>,
+      "Track" : <font color="green">6</font>,
+      "Location" : <font color="green">9</font>,
+      "Destination" : <font color="green">15</font>,
+      "Dest&Track" : <font color="green">30</font>,
+      "Final Dest" : <font color="green">11</font>,
+      "FD&Track" : <font color="green">21</font>,
+      "Comment" : <font color="green">15</font>,
+      "SetOut Msg" : <font color="green">12</font>,
+      "PickUp Msg" : <font color="green">12</font>,
+      "RWE" : <font color="green">10</font>,
+      " " : 0
+    }
+  },
+</pre>
+<h3>TrainPlayer (Implemented in version 3)</h3>
+
+</body>
+
+</html>

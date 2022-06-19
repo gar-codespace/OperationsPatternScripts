@@ -13,7 +13,7 @@ from psBundle import Keys
 SCRIPT_NAME = 'OperationsPatternScripts.psBundle.Bundle'
 SCRIPT_REV = 20220101
 
-BASE_TRANSLATION = []
+_base_Translation = []
 
 def createBundleForLocale():
     """Creates a new bundle for JMRI's locale setting"""
@@ -65,10 +65,10 @@ def translateItems():
 
     timeOut = time.time() + 60 # times out after 60 seconds
     while True: # Homebrew version of await
-        if len(BASE_TRANSLATION) == len(bundleTemplate) or time.time() > timeOut:
+        if len(_base_Translation) == len(bundleTemplate) or time.time() > timeOut:
             break
 
-    for item in BASE_TRANSLATION:
+    for item in _base_Translation:
         translatedLine = translator.parseResult(item)
         translationDict[translatedLine[0]] = translatedLine[1]
 
@@ -151,7 +151,7 @@ class MakeBundleItem(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton)
         translation = PatternScriptEntities.loadJson(response.read())
         response.close()
         translation['source'] = self.item
-        BASE_TRANSLATION.append(translation)
+        _base_Translation.append(translation)
 
         return False
 
