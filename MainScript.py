@@ -503,8 +503,8 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(TRANSLATE_PLUGIN_EVENT)
 
-        Bundle.createBundleForLocale()
-        # Bundle.createBundleForHelpPage()
+        # Bundle.createBundleForLocale()
+        Bundle.createBundleForHelpPage()
 
         return
 
@@ -581,8 +581,6 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         return
 
     def handle(self):
-
-        # Bundle.translateItems()
 
         yTimeNow = time.time()
         self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.Controller')

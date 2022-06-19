@@ -49,6 +49,23 @@ def getHelpPageForLocale():
 
 def makeHelpPageForLocale():
     """Makes the help page for the current locale."""
+
+    helpDir = PatternScriptEntities.PLUGIN_ROOT + '\\psBundle\\'
+
+    helpSource = helpDir + 'templatePsHelp.html.txt'
+    helpBase = PatternScriptEntities.genericReadReport(helpSource)
+
+    translationMatrixSource = helpDir + PatternScriptEntities.psLocale() + '.help.json'
+    helpMatrix = PatternScriptEntities.genericReadReport(translationMatrixSource)
+    helpMatrix = PatternScriptEntities.loadJson(helpMatrix)
+
+    for hKey, hValue in helpMatrix.items():
+
+        helpBase = helpBase.replace(unicode(hKey, PatternScriptEntities.ENCODING), unicode(hValue, PatternScriptEntities.ENCODING))
+
+    helpTarget = PatternScriptEntities.PLUGIN_ROOT + '\\psSupport\\' + 'psHelp.' + PatternScriptEntities.psLocale() + '.html'
+    PatternScriptEntities.genericWriteReport(helpTarget, helpBase)
+
     return
 
 
@@ -77,6 +94,8 @@ def createBundleForHelpPage():
 
     fileToTranslate = getBundleTemplate(bundleSource)
     translateBundle(bundleTarget, fileToTranslate)
+
+    makeHelpPageForLocale()
 
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -114,7 +133,7 @@ def translateItems(file):
         bundleItem.passInUrl(url, item)
         bundleItem.start()
 
-    timeOut = time.time() + 10
+    timeOut = time.time() + 20
     while True: # Homebrew version of await
         if time.time() > timeOut:
             _psLog.warning('Connection Timed Out')

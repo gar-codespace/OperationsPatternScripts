@@ -33,14 +33,14 @@
 
 <body>
 
-<h1>Help Page - Pattern Scripts plugin for JMRI</h1>
+<h1>Page d'aide - Plugin Pattern Scripts pour JMRI</h1>
 <h2>Introduction</h2>
 <p>This program is a plugin for JMRI Operations Pro. With it, the user can generate pattern reports for tracks at a single location.
   Additionally, cars can be moved from track to track within a location, and optionally, if a car is moved onto a spur, the schedule for that spur can be applied.
   Support for my TrainPlayer suite of scripts is also included. The use of this plugin is documented in the following list of videos.</p>
 
 
-<h2>Video Documentation</h2>
+<h2>Documentation vidéo</h2>
 <p>These videio are recorded in the english language.</p>
 <p>How to add this plugin to JMRI</p>
 <p><A HREF="https://youtu.be/GjPtXk3oKmc">How to set up this plugin</A></p>
@@ -50,30 +50,30 @@
 <p>Use this plugin with TrainPlayer</p>
 
 
-<h2>Organization</h2>
+<h2>Organisation</h2>
 <p>The following chart shows the code structure of this plugin.</P>
 <img src="FlowChart1.png" alt="<Flow Chart Image>">
 
-<h2>Plugin Layout</h2>
+<h2>Mise en page du plugin</h2>
 <p>OperationsPatternScripts.MainScript.View.makePatternScriptsWindow()</p>
-<img src="PluginLayout1.png" alt="<Plugin Layout Image>">
+<img src="PluginLayout1.png" alt="<Mise en page du plugin Image>">
 
-<h2>Pattern Scripts Subroutine</h2>
+<h2>Sous-routine de scripts de motifs</h2>
 <p>OperationsPatternScripts.PatternTracksSubroutine.Controller.makeSubroutinePanel()</p>
 <img src="PatternScriptsSubroutine1.png" alt="<Pattern Scripts Window Image>">
 
-<h2>Pattern Report for Track Window</h2>
+<h2>Rapport sur les motifs de la fenêtre de suivi</h2>
 <p>OperationsPatternScripts.ControllerSetCarsForm.CreatePatternReportGui.makeFrame()</p>
-<img src="PatternReportForTrackWindow1.png" alt="<Pattern Report for Track Window Image>">
+<img src="PatternReportForTrackWindow1.png" alt="<Rapport sur les motifs de la fenêtre de suivi Image>">
 
 
-<h2>Track Pattern and Switch List JSON format</h2>
+<h2>Format JSON pour le modèle de piste et la liste des aiguillages</h2>
 <p>The pattern reports and TrainPlayer exports all start with the creation of a JSON file.
   The file is created by this plugin and in the case of TrainPlayer manifest exports the JSON is created by modifying the JMRI generated manifest JSON.
   All the JSON files are written to the jsonManifests folder. They follow the illustrated format:</p>
   <img src="ReportFileFormat1.png" alt="<JSON format for reports>">
 
-<h2>Key – PatternConfig.json</h2>
+<h2>Clé – PatternConfig.json</h2>
 <p>Each JMRI profile gets its own configuration file, which is named PatternConfig.json. It is found in the operations folder, and is used to provide custom settings for each profile and record user inputs.
 <br><font color="blue">The description of each element is in blue</font>
 <br><font color="green">User editable keys are described in green</font>
@@ -214,7 +214,7 @@ In other cases, if a mistake is made editing the PatternConfig.json file, the pl
     }
   },
 </pre>
-<h3>TrainPlayer (Implemented in version 3)</h3>
+<h3>TrainPlayer (Implemented in 20220101 3)</h3>
 
 </body>
 
