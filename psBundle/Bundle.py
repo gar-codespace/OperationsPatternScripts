@@ -47,27 +47,6 @@ def getHelpPageForLocale():
 
     helpBundleFile = PatternScriptEntities.genericReadReport(bundleFileLocation)
 
-def makeHelpPageForLocale():
-    """Makes the help page for the current locale."""
-
-    helpDir = PatternScriptEntities.PLUGIN_ROOT + '\\psBundle\\'
-
-    helpSource = helpDir + 'templatePsHelp.html.txt'
-    helpBase = PatternScriptEntities.genericReadReport(helpSource)
-
-    translationMatrixSource = helpDir + PatternScriptEntities.psLocale() + '.help.json'
-    helpMatrix = PatternScriptEntities.genericReadReport(translationMatrixSource)
-    helpMatrix = PatternScriptEntities.loadJson(helpMatrix)
-
-    for hKey, hValue in helpMatrix.items():
-
-        helpBase = helpBase.replace(unicode(hKey, PatternScriptEntities.ENCODING), unicode(hValue, PatternScriptEntities.ENCODING))
-
-    helpTarget = PatternScriptEntities.PLUGIN_ROOT + '\\psSupport\\' + 'psHelp.' + PatternScriptEntities.psLocale() + '.html'
-    PatternScriptEntities.genericWriteReport(helpTarget, helpBase)
-
-    return
-
 
 def createBundleForLocale():
     """Creates a new plugin bundle for JMRI's locale setting."""
@@ -90,7 +69,7 @@ def createBundleForHelpPage():
     bundleDir = PatternScriptEntities.PLUGIN_ROOT + '\\psBundle\\'
 
     bundleSource = bundleDir + 'templateHelpPage.txt'
-    bundleTarget = bundleDir + PatternScriptEntities.psLocale()[:2] + '.help.json'
+    bundleTarget = bundleDir + 'help.' + PatternScriptEntities.psLocale()[:2] + '.json'
 
     fileToTranslate = getBundleTemplate(bundleSource)
     translateBundle(bundleTarget, fileToTranslate)
@@ -98,6 +77,25 @@ def createBundleForHelpPage():
     makeHelpPageForLocale()
 
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+def makeHelpPageForLocale():
+    """Makes the help page for the current locale."""
+
+    helpDir = PatternScriptEntities.PLUGIN_ROOT + '\\psBundle\\'
+
+    helpSource = helpDir + 'templatePsHelp.html.txt'
+    helpBase = PatternScriptEntities.genericReadReport(helpSource)
+
+    translationMatrixSource = helpDir + 'help.' + PatternScriptEntities.psLocale() + '.json'
+    helpMatrix = PatternScriptEntities.genericReadReport(translationMatrixSource)
+    helpMatrix = PatternScriptEntities.loadJson(helpMatrix)
+
+    for hKey, hValue in helpMatrix.items():
+
+        helpBase = helpBase.replace(unicode(hKey, PatternScriptEntities.ENCODING), unicode(hValue, PatternScriptEntities.ENCODING))
+
+    helpTarget = PatternScriptEntities.PLUGIN_ROOT + '\\psSupport\\' + 'psHelp.' + PatternScriptEntities.psLocale() + '.html'
+    PatternScriptEntities.genericWriteReport(helpTarget, helpBase)
 
     return
 
@@ -133,7 +131,7 @@ def translateItems(file):
         bundleItem.passInUrl(url, item)
         bundleItem.start()
 
-    timeOut = time.time() + 20
+    timeOut = time.time() + 30
     while True: # Homebrew version of await
         if time.time() > timeOut:
             _psLog.warning('Connection Timed Out')
@@ -206,7 +204,7 @@ class MakeBundleItem(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton)
         translation = {}
         response = None
 
-        for i in range(2):
+        for i in range(4):
             try:
                 response = urlopen(self.url)
                 translation = PatternScriptEntities.loadJson(response.read())

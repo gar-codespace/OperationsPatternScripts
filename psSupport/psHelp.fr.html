@@ -35,23 +35,23 @@
 
 <h1>Page d'aide - Plugin Pattern Scripts pour JMRI</h1>
 <h2>Introduction</h2>
-<p>This program is a plugin for JMRI Operations Pro. With it, the user can generate pattern reports for tracks at a single location.
-  Additionally, cars can be moved from track to track within a location, and optionally, if a car is moved onto a spur, the schedule for that spur can be applied.
-  Support for my TrainPlayer suite of scripts is also included. The use of this plugin is documented in the following list of videos.</p>
+<p>Ce programme est un plugin pour JMRI Operations Pro. Avec lui, l'utilisateur peut générer des rapports de modèle pour les pistes à un seul endroit.
+  De plus, les wagons peuvent être déplacés de voie en voie à l'intérieur d'un emplacement et, en option, si un wagon est déplacé sur un embranchement, le programme de cet embranchement peut être appliqué.
+  Le support de ma suite de scripts TrainPlayer est également inclus. L'utilisation de ce plugin est documentée dans la liste suivante de vidéos.</p>
 
 
 <h2>Documentation vidéo</h2>
-<p>These videio are recorded in the english language.</p>
-<p>How to add this plugin to JMRI</p>
-<p><A HREF="https://youtu.be/GjPtXk3oKmc">How to set up this plugin</A></p>
-<p><A HREF="https://youtu.be/IdXvxyo-E3Y">Demonstration at a yard</A></p>
-<p><A HREF="https://youtu.be/2Tv6sUMDD_Y">Demonstration at industry</A></p>
-<p>How to modify this plugin</p>
-<p>Use this plugin with TrainPlayer</p>
+<p>Ces vidéos sont enregistrées en langue anglaise.</p>
+<p>Comment ajouter ce plugin à JMRI</p>
+<p><A HREF="https://youtu.be/GjPtXk3oKmc">Comment configurer ce plugin</A></p>
+<p><A HREF="https://youtu.be/IdXvxyo-E3Y">Démonstration dans un chantier</A></p>
+<p><A HREF="https://youtu.be/2Tv6sUMDD_Y">Démonstration dans l'industrie</A></p>
+<p>Comment modifier ce plugin</p>
+<p>Utilisez ce plugin avec TrainPlayer</p>
 
 
 <h2>Organisation</h2>
-<p>The following chart shows the code structure of this plugin.</P>
+<p>Le tableau suivant montre la structure du code de ce plugin.</P>
 <img src="FlowChart1.png" alt="<Flow Chart Image>">
 
 <h2>Mise en page du plugin</h2>
@@ -68,30 +68,30 @@
 
 
 <h2>Format JSON pour le modèle de piste et la liste des aiguillages</h2>
-<p>The pattern reports and TrainPlayer exports all start with the creation of a JSON file.
-  The file is created by this plugin and in the case of TrainPlayer manifest exports the JSON is created by modifying the JMRI generated manifest JSON.
-  All the JSON files are written to the jsonManifests folder. They follow the illustrated format:</p>
+<p>Les rapports de modèle et les exportations TrainPlayer commencent tous par la création d'un fichier JSON.
+  Le fichier est créé par ce plugin et dans le cas des exportations de manifestes TrainPlayer, le JSON est créé en modifiant le JSON du manifeste généré par JMRI.
+  Tous les fichiers JSON sont écrits dans le dossier jsonManifests et suivent le format illustré :</p>
   <img src="ReportFileFormat1.png" alt="<JSON format for reports>">
 
 <h2>Clé – PatternConfig.json</h2>
-<p>Each JMRI profile gets its own configuration file, which is named PatternConfig.json. It is found in the operations folder, and is used to provide custom settings for each profile and record user inputs.
-<br><font color="blue">The description of each element is in blue</font>
-<br><font color="green">User editable keys are described in green</font>
-<br>Guard rails of sorts have been put up around the values marked in green, but even so this plugin is not able to catch every type of mistake that can be made when editing the PatternConfig.json file, and in some cases the plugin might crash.
- If that happens, press the 'Restart from PatternConfig Backup" button and the plugin will use the last good PatternConfig.json file as a new starting off point.
-In other cases, if a mistake is made editing the PatternConfig.json file, the plugin will replace it with the default file, and the user will have to start over.
-<br>Worst case, simply delete the Pattern Config.json file and the plugin will create a new one.</p>
+<p>Chaque profil JMRI reçoit son propre fichier de configuration, nommé PatternConfig.json. Il se trouve dans le dossier des opérations, et est utilisé pour fournir des paramètres personnalisés pour chaque profil et enregistrer les entrées de l'utilisateur.
+<br><font color="blue">La description de chaque élément est en bleu</font>
+<br><font color="green">Les clés modifiables par l'utilisateur sont décrites en vert</font>
+<br>Des garde-fous ont été mis en place autour des valeurs marquées en vert, mais même ainsi, ce plugin n'est pas en mesure d'attraper tous les types d'erreurs qui peuvent être faites lors de l'édition du fichier PatternConfig.json, et dans certains cas, le plugin peut planter.
+ Dans ce cas, appuyez sur le bouton "Restart from PatternConfig Backup" et le plugin utilisera le dernier bon fichier PatternConfig.json comme nouveau point de départ.
+Dans d'autres cas, si une erreur est commise en modifiant le fichier PatternConfig.json, le plugin le remplacera par le fichier par défaut et l'utilisateur devra recommencer.
+<br>Dans le pire des cas, il suffit de supprimer le fichier Pattern Config.json et le plugin en créera un nouveau.</p>
 
-<h3><font color="green">Color Definations</font></h3>
+<h3><font color="green">Définitions des couleurs</font></h3>
 <pre>
   "CD": {
-    "CP": { <font color="blue">Color Pallett</font>
-      "<font color="green">BLANCH</font>": { <font color="blue">Any of these colors can be changed</font>
-        "A": <font color="green">255</font>, <font color="blue">Alpha value</font>
-        "B": <font color="green">225</font>, <font color="blue">Blue value</font>
-        "D": <font color="green">Light grey</font>, <font color="blue">Vague Description</font>
-        "G": <font color="green">225</font>, <font color="blue">Green value</font>
-        "R": <font color="green">225</font> <font color="blue">Blue value</font>
+    "CP": { <font color="blue">Palette de couleurs</font>
+      "<font color="green">BLANCH</font>": { <font color="blue">N'importe laquelle de ces couleurs peut être changée</font>
+        "A": <font color="green">255</font>, <font color="blue">Valeur alpha</font>
+        "B": <font color="green">225</font>, <font color="blue">Valeur bleue</font>
+        "D": <font color="green">Light grey</font>, <font color="blue">Description vague</font>
+        "G": <font color="green">225</font>, <font color="blue">Valeur verte</font>
+        "R": <font color="green">225</font> <font color="blue">Valeur rouge</font>
       },
       "DUST": {
         "A": 255,
@@ -129,60 +129,60 @@ In other cases, if a mistake is made editing the PatternConfig.json file, the pl
         "R": 240
       }
     },
-    "locoColor": <font color="green">"FADED"</font>, <font color="blue">No color can be specified with ""</font>
+    "locoColor": <font color="green">"FADED"</font>, <font color="blue">Aucune couleur ne peut être spécifiée avec ""</font>
     "carColor": <font color="green">"DUST"</font>,
     "alertColor": <font color="green">"PETAL"</font>
   },
 </pre>
 <h3><font color="blue">Control Panel</font></h3>
 <pre>
-  <font color="blue">Do not edit these</font>
+  <font color="blue">Ne pas modifier ces</font>
   "CP" : {
-    "AP" : true, <font color="blue">Add button to Panel Pro frame, plugin is not displayed but still enabled</font>
-    "SE" : "utf-8", <font color="blue">May be expanded in Version 3</font>
-    "SI" : { <font color="blue">Script Includes</font>
-      "PatternTracksSubroutine" : true, <font color="blue">Include this subroutine in the Control Panel</font>
-      "TrainPlayerSubroutine" : false <font color="blue">Available in Version 3</font>
+    "AP" : true, <font color="blue">Ajout d'un bouton au cadre de Panel Pro, le plugin n'est pas affiché mais toujours activé</font>
+    "SE" : "utf-8", <font color="blue">Peut être étendu dans la v3</font>
+    "SI" : { <font color="blue">Le scénario comprend</font>
+      "PatternTracksSubroutine" : true, <font color="blue">Incluez ce sous-programme dans le Panneau de configuration.</font>
+      "TrainPlayerSubroutine" : false <font color="blue">Disponible dans la v3</font>
     },
-    "PH" : 220, <font color="blue">Default panel height</font>
-    "PW" : 1500, <font color="blue">Default panel width</font>
-    "PX" : 0, <font color="blue">Not Implemented</font>
-    "PY" : 0, <font color="blue">Not Implemented</font>
-    "RV" : 20220205 <font color="blue">Version control</font>
+    "PH" : 220, <font color="blue">Hauteur du panneau par défaut</font>
+    "PW" : 1500, <font color="blue">Largeur du panneau par défaut</font>
+    "PX" : 0, <font color="blue">Non mis en œuvre</font>
+    "PY" : 0, <font color="blue">Non mis en œuvre</font>
+    "RV" : 20220205 <font color="blue">Contrôle des révisions</font>
   },
 </pre>
 <h3><font color="blue">Pattern Tracks</font></h3>
 <pre>
-  <font color="blue">Do not edit these</font>
+  <font color="blue">Ne pas modifier ces</font>
   "PT" : {
-    "AL" : [ <font color="blue">All Locations (written by this plugin)</font>
+    "AL" : [ <font color="blue">Tous les emplacements (écrits par ce plugin)</font>
     ],
-    "PL" : "", <font color="blue">Pattern Location (written by this plugin)</font>
-    "PT" : { <font color="blue">Pattern Tracks (written by this plugin)</font>
+    "PL" : "", <font color="blue">Pattern Location (écrit par ce plugin)</font>
+    "PT" : { <font color="blue">Pistes de motifs (écrites par ce plugin)</font>
     },
-    "PA" : false, <font color="blue">Yard Tracks Only flag (set by user)</font>
-    "PI" : false, <font color="blue">Ignore Track Length flag (set by user)</font>
-    "AS" : true, <font color="blue">Apply Schedule flag (set by user)</font>
+    "PA" : false, <font color="blue">Drapeau "Yard Tracks Only" (défini par l'utilisateur)</font>
+    "PI" : false, <font color="blue">Ignorer le drapeau de longueur de piste (défini par l'utilisateur)</font>
+    "AS" : true, <font color="blue">Appliquer le drapeau du calendrier (défini par l'utilisateur)</font>
     "TI" : false, <font color="blue">TrainPlayer Include flag (set by user)</font>
-    "PW" : 260, <font color="blue">Pattern Width</font>
-    "PH" : 16, <font color="blue">Pattern Height</font>
-    "RM": 8, <font color="blue">Row Multiplier</font>
+    "PW" : 260, <font color="blue">Largeur du motif</font>
+    "PH" : 16, <font color="blue">Hauteur du motif</font>
+    "RM": 8, <font color="blue">Multiplicateur de rangs</font>
 </pre>
 <h3><font color="green">Report Modifiers</font></h3>
 <pre>
   "RM" : {
     "DS" : "<font color="green">*No Waybill</font>", <font color="blue">Destination standin</font>
     "DT" : "<font color="green">*Not Consigned</font>", <font color="blue">Destination Track standin</font>
-    "FD" : "<font color="green">*Via Staging</font>", <font color="blue">Final Destination standin</font>
-    "FT" : "<font color="green">*Any Line</font>", <font color="blue">Final destination Track standin</font>
-    "SL": [ <font color="blue">Sort Locomotives</font>
+    "FD" : "<font color="green">*Via Staging</font>", <font color="blue">Le standin de Destination finale</font>
+    "FT" : "<font color="green">*Any Line</font>", <font color="blue">Destination finale Track standin</font>
+    "SL": [ <font color="blue">Trier les locomotives</font>
       "<font color="green">Model</font>"
     ],
-    "SC": [ <font color="blue">Sort Cars</font>
+    "SC": [ <font color="blue">Trier les voitures</font>
       "<font color="green">Load Type</font>",
       "<font color="green">FD&Track</font>"
     ],
-    "AW": { <font color="blue">Attribute Width</font>
+    "AW": { <font color="blue">Largeur de l'attribut</font>
       "Input": <font color="green">6</font>,
       "Model": <font color="green">5</font>,
       "Road" : <font color="green">5</font>,
@@ -214,7 +214,7 @@ In other cases, if a mistake is made editing the PatternConfig.json file, the pl
     }
   },
 </pre>
-<h3>TrainPlayer (Implemented in 20220101 3)</h3>
+<h3>TrainPlayer (Implemented in v3)</h3>
 
 </body>
 

@@ -387,6 +387,7 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         PatternScriptEntities.deleteConfigFile()
         PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale()
+        PatternScriptEntities.validateStubFile().isStubFile()
         self.patternScriptsButton.setText(PatternScriptEntities.BUNDLE['Restart with default settings'])
 
         self.removeTrainsTableListener()
@@ -503,8 +504,8 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(TRANSLATE_PLUGIN_EVENT)
 
-        # Bundle.createBundleForLocale()
         Bundle.createBundleForHelpPage()
+        Bundle.createBundleForLocale()
 
         return
 
