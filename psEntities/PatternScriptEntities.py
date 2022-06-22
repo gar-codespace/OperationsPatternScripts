@@ -113,9 +113,9 @@ class validateStubFile:
 
     def makehelpFilePath(self):
 
-        helpFilePath = PLUGIN_ROOT + '\psSupport\psHelp.' + psLocale() + '.html'
+        helpFilePath = PLUGIN_ROOT + '\psSupport\Help.' + psLocale() + '.html'
         if not JAVA_IO.File(helpFilePath).isFile():
-            helpFilePath = PLUGIN_ROOT + '\psSupport\psHelp.en.html'
+            helpFilePath = PLUGIN_ROOT + '\psSupport\Help.en.html'
 
         helpFileUri = JAVA_IO.File(helpFilePath).toURI()
         self.helpFilePath = unicode(helpFileUri, ENCODING)

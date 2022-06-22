@@ -19,7 +19,7 @@ _base_Translation = []
 def getBundleForLocale():
     """Gets the bundle for the current locale if it exists, otherwise english."""
 
-    psLocale = PatternScriptEntities.psLocale() + '.json'
+    psLocale = 'Bundle.' + PatternScriptEntities.psLocale() + '.json'
     bundleDir = PatternScriptEntities.PLUGIN_ROOT + '\\psBundle\\'
     fileList = PatternScriptEntities.JAVA_IO.File(bundleDir).list()
 
@@ -47,55 +47,54 @@ def getHelpPageForLocale():
 
     helpBundleFile = PatternScriptEntities.genericReadReport(bundleFileLocation)
 
+def makeBundle():
 
-def createBundleForLocale():
-    """Creates a new plugin bundle for JMRI's locale setting."""
-
+    bundleLocale = PatternScriptEntities.psLocale()[:2]
     bundleDir = PatternScriptEntities.PLUGIN_ROOT + '\\psBundle\\'
 
-    bundleSource = bundleDir + 'templateBundle.txt'
-    bundleTarget = bundleDir + PatternScriptEntities.psLocale()[:2] + '.json'
+    templateName = 'templateBundle.txt'
+    bundleSource = bundleDir + templateName
+
+    targetName = templateName.replace('.txt', '.' + bundleLocale + '.json')
+    targetName = targetName.replace('template', '')
+    bundleTarget = bundleDir + targetName
 
     fileToTranslate = getBundleTemplate(bundleSource)
-    translateBundle(bundleTarget, fileToTranslate)
+    baseTranslation = translateItems(fileToTranslate)
+    translation = PatternScriptEntities.dumpJson(baseTranslation)
+    PatternScriptEntities.genericWriteReport(bundleTarget, translation)
+
+    _psLog.info('Bundle created: ' + targetName)
+    print('Bundle created: ' + targetName)
+        # time.sleep(10)
 
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
     return
-
-def createBundleForHelpPage():
-    """Creates a new help page bundle for JMRI's locale setting."""
-
-    bundleDir = PatternScriptEntities.PLUGIN_ROOT + '\\psBundle\\'
-
-    bundleSource = bundleDir + 'templateHelpPage.txt'
-    bundleTarget = bundleDir + 'help.' + PatternScriptEntities.psLocale()[:2] + '.json'
-
-    fileToTranslate = getBundleTemplate(bundleSource)
-    translateBundle(bundleTarget, fileToTranslate)
-
-    makeHelpPageForLocale()
-
-    print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
 def makeHelpPageForLocale():
     """Makes the help page for the current locale."""
 
     helpDir = PatternScriptEntities.PLUGIN_ROOT + '\\psBundle\\'
 
-    helpSource = helpDir + 'templatePsHelp.html.txt'
-    helpBase = PatternScriptEntities.genericReadReport(helpSource)
+    helpPageTemplatePath = helpDir + 'templateHelp.html.txt'
+    baseHelpPage = PatternScriptEntities.genericReadReport(helpPageTemplatePath)
+    baseHelpPage = unicode(baseHelpPage, PatternScriptEntities.ENCODING)
 
-    translationMatrixSource = helpDir + 'help.' + PatternScriptEntities.psLocale() + '.json'
-    helpMatrix = PatternScriptEntities.genericReadReport(translationMatrixSource)
-    helpMatrix = PatternScriptEntities.loadJson(helpMatrix)
+    translationMatrixPath = helpDir + 'Bundle.' + PatternScriptEntities.psLocale() + '.json'
+    baseTranslationMatrix = PatternScriptEntities.genericReadReport(translationMatrixPath)
+    translationMatrix = PatternScriptEntities.loadJson(baseTranslationMatrix)
 
-    for hKey, hValue in helpMatrix.items():
+    for hKey, hValue in translationMatrix.items():
 
-        helpBase = helpBase.replace(unicode(hKey, PatternScriptEntities.ENCODING), unicode(hValue, PatternScriptEntities.ENCODING))
+        hKey = unicode(hKey, PatternScriptEntities.ENCODING)
+        hValue = unicode(hValue, PatternScriptEntities.ENCODING)
+        # baseHelpPage = baseHelpPage.decode("utf-8").replace(hKey, hValue).encode("utf-8")
+        # baseHelpPage = baseHelpPage.encode("utf-8")
+        baseHelpPage = baseHelpPage.replace(hKey, hValue)
 
-    helpTarget = PatternScriptEntities.PLUGIN_ROOT + '\\psSupport\\' + 'psHelp.' + PatternScriptEntities.psLocale() + '.html'
-    PatternScriptEntities.genericWriteReport(helpTarget, helpBase)
+    helpPagePath = PatternScriptEntities.PLUGIN_ROOT + '\\psSupport\\' + 'Help.' + PatternScriptEntities.psLocale() + '.html'
+    PatternScriptEntities.genericWriteReport(helpPagePath, baseHelpPage)
 
     return
 
@@ -115,21 +114,25 @@ def translateBundle(bundleTarget, fileToTranslate):
 
     return
 
+
+
 def translateItems(file):
     """Based on https://gist.github.com/snim2/561630
-    https://stackoverflow.com/questions/10115126/python-requests-close-http-connection#15511852
     """
 
     translationDict = {'version' : SCRIPT_REV}
     translator = useDeepL()
 
+    i = 0
     for item in file:
-
         url = translator.getTheUrl(item)
-
         bundleItem = MakeBundleItem()
         bundleItem.passInUrl(url, item)
         bundleItem.start()
+        i += 1
+        if i == 10:
+            i = 0
+            time.sleep(.7)
 
     timeOut = time.time() + 30
     while True: # Homebrew version of await
@@ -142,11 +145,51 @@ def translateItems(file):
             print('Translation Completed')
             break
 
+
     for item in _base_Translation:
         translatedLine = translator.parseResult(item)
         translationDict[translatedLine[0]] = translatedLine[1]
 
     return translationDict
+
+
+
+
+# def translateItems(file):
+#     """Based on https://gist.github.com/snim2/561630
+#     """
+#
+#     translationDict = {'version' : SCRIPT_REV}
+#     translator = useDeepL()
+#
+#
+#     for item in file:
+#         url = translator.getTheUrl(item)
+#
+#         bundleItem = MakeBundleItem()
+#         bundleItem.passInUrl(url, item)
+#         bundleItem.start()
+#         time.sleep(.1)
+#
+#
+#
+#     timeOut = time.time() + 30
+#     while True: # Homebrew version of await
+#         if time.time() > timeOut:
+#             _psLog.warning('Connection Timed Out')
+#             print('Connection Timed Out')
+#             break
+#         if len(_base_Translation) == len(file):
+#             _psLog.info('Translation Completed')
+#             print('Translation Completed')
+#             break
+#
+#
+#     for item in _base_Translation:
+#         translatedLine = translator.parseResult(item)
+#         translationDict[translatedLine[0]] = translatedLine[1]
+#
+#     return translationDict
 
 
 class useDeepL:
@@ -204,7 +247,7 @@ class MakeBundleItem(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton)
         translation = {}
         response = None
 
-        for i in range(4):
+        for i in range(3):
             try:
                 response = urlopen(self.url)
                 translation = PatternScriptEntities.loadJson(response.read())
@@ -213,9 +256,41 @@ class MakeBundleItem(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton)
                 _psLog.warning('Not translated: ' + self.item)
             if response:
                 break
+            time.sleep(.05)
 
         translation['source'] = self.item
         translation['error'] = self.item
         _base_Translation.append(translation)
 
         return False
+
+
+    # def createBundleForLocale():
+    #     """Creates a new plugin bundle for JMRI's locale setting."""
+    #
+    #     bundleDir = PatternScriptEntities.PLUGIN_ROOT + '\\psBundle\\'
+    #
+    #     bundleSource = bundleDir + 'templateBundle.txt'
+    #     bundleTarget = bundleDir + PatternScriptEntities.psLocale()[:2] + '.json'
+    #
+    #     fileToTranslate = getBundleTemplate(bundleSource)
+    #     translateBundle(bundleTarget, fileToTranslate)
+    #
+    #     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+    #
+    #     return
+
+    # def createBundleForHelpPage():
+    #     """Creates a new help page bundle for JMRI's locale setting."""
+    #
+    #     bundleDir = PatternScriptEntities.PLUGIN_ROOT + '\\psBundle\\'
+    #
+    #     bundleSource = bundleDir + 'templateHelpPage.txt'
+    #     bundleTarget = bundleDir + 'help.' + PatternScriptEntities.psLocale()[:2] + '.json'
+    #
+    #     fileToTranslate = getBundleTemplate(bundleSource)
+    #     translateBundle(bundleTarget, fileToTranslate)
+    #
+    #     makeHelpPageForLocale()
+    #
+    #     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

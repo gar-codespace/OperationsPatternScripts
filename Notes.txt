@@ -4,6 +4,7 @@ Todo:
   How to use locale modifier, IE en-GB
   Harden up Bundle against web errors
   How to translate the web help page
+  Move TrainPlayer Include into an editable set
 
 Comments:
   Schedule does not prevent setting a car to a track

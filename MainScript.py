@@ -381,14 +381,14 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         self.patternScriptsButton.actionPerformed = self.patternScriptsButtonRestartAction
         self.buildThePlugin()
 
+        self.psLog.debug(MOUSE_CLICKED)
+
         return
 
     def patternScriptsButtonRestartAction(self, MOUSE_CLICKED):
 
+    #Shutdown Items
         PatternScriptEntities.deleteConfigFile()
-        PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale()
-        PatternScriptEntities.validateStubFile().isStubFile()
-        self.patternScriptsButton.setText(PatternScriptEntities.BUNDLE['Restart with default settings'])
 
         self.removeTrainsTableListener()
         self.removeBuiltTrainListener()
@@ -396,9 +396,16 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         self.closePsWindow()
         self.logger.stopLogger('PS')
 
+    #Startup Items
+        PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale()
+        PatternScriptEntities.validateStubFile().isStubFile()
+        Bundle.makeHelpPageForLocale()
+        self.patternScriptsButton.setText(PatternScriptEntities.BUNDLE['Restart with default settings'])
+
         self.logger.startLogger('PS')
         self.buildThePlugin()
 
+        self.psLog.debug(MOUSE_CLICKED)
         self.psLog.info('Pattern Scripts plugin restarted')
 
         return
@@ -504,8 +511,13 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(TRANSLATE_PLUGIN_EVENT)
 
-        Bundle.createBundleForHelpPage()
-        Bundle.createBundleForLocale()
+        # Bundle.createBundleForHelpPage()
+        # Bundle.createBundleForLocale()
+
+
+
+        # Bundle.makeBundle()
+        Bundle.makeHelpPageForLocale()
 
         return
 
