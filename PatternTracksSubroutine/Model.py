@@ -188,7 +188,7 @@ def onScButtonPress():
         setCarsForm = makeReport(locationDict, 'SC')
         newFrame = ControllerSetCarsForm.CreatePatternReportGui(setCarsForm)
         newWindow = newFrame.makeFrame()
-        newWindow.setTitle(PatternScriptEntities.BUNDLE['Set Cars Form for track'] + ' ' + trackName)
+        newWindow.setTitle(PatternScriptEntities.BUNDLE['Set Cars Form for track:'] + ' ' + trackName)
         newWindow.setName('setCarsWindow')
         newWindow.setLocation(windowOffset, 180)
         newWindow.pack()

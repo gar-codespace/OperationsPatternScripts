@@ -126,7 +126,7 @@ def makeSetCarsFormHeader(setCarsFormData):
     headerYTLabel.setAlignmentX(PatternScriptEntities.JAVA_AWT.Component.CENTER_ALIGNMENT)
     trackName = setCarsFormData['locations'][0]['tracks'][0]['trackName'] # There's only one track
     locationName = setCarsFormData['locations'][0]['locationName'] # There's only one location
-    headerYTLabel.setText(PatternScriptEntities.BUNDLE['Set Cars Form for track'] \
+    headerYTLabel.setText(PatternScriptEntities.BUNDLE['Set Cars Form for track:'] \
                 + ' ' + trackName + ' ' + PatternScriptEntities.BUNDLE['at'] + ' ' + locationName)
 
     headerYTBox = makeSwingBox(100, configFile['PH'])

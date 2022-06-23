@@ -1,127 +1,56 @@
 Action
-Add button to Panel Pro frame, plugin is not displayed but still enabled
-Additionally, cars can be moved from track to track within a location, and optionally, if a car is moved onto a spur, the schedule for that spur can be applied.
-All Locations (written by this plugin)
-All the JSON files are written to the jsonManifests folder. They follow the illustrated format:
-Alpha value
-Any of these colors can be changed
 Apply Schedule
-Apply Schedule flag (set by user)
 at
-Attribute Width
-Available in v3
 Available:
-Blue value
 Cars at
-Color Definations
-Color Pallett
-Control Panel
-Default panel height
-Default panel width
-Demonstration at a yard
-Demonstration at industry
-Destination designator
-Destination Track designator
 Disable TrainPlayer
 Do Not Apply Schedule
-Do not edit these
-Each JMRI profile gets its own configuration file, which is named PatternConfig.json.
 Edit Config File
 Enable TrainPlayer
 Eqpt. Length:
-Final Destination designator
-Final destination Track designator
 GitHub Web Page
-Green value
-Guard rails of sorts have been put up around the values marked in green, but even so this plugin is not able to catch every type of mistake.
 Help
-Help Page - Pattern Scripts plugin for JMRI
 Hold
-How to add this plugin to JMRI
-How to modify this plugin
-How to set up this plugin
-If that happens, press the 'Restart from PatternConfig Backup" button and the plugin will use the last good PatternConfig.json file as a new starting off point.
 Ignore track length
-Ignore Track Length flag (set by user)
-In other cases, if a mistake is made editing the PatternConfig.json file, the plugin will replace it with the default file, and the user will have to start over.
-In some cases the plugin might crash.
-Include this subroutine in the Control Panel
-Introduction
-It is found in the operations folder, and is used to provide custom settings for each profile and record user inputs.
-Key
 List of rolling stock not updated:
 List of tracks not found:
 Location:
 Locomotives at
-May be expanded in v3
-No color can be specified with ""
 No FD track
 No final destination
-Not Implemented
 On Train
 Operations Folder
-Organization
-Pattern Height
-Pattern Location (written by this plugin)
-Pattern Report for Track Window
 Pattern Scripts
-Pattern Scripts Subroutine
-Pattern Tracks
 Pattern Tracks Subroutine
-Pattern Width
-Pattern-Tracks (written by this plugin)
-Plugin Layout
-Red value
-Report Modifiers
 Report Totals for Cars:
 Restart with default settings
-Revision control
-Row Multiplier
 Schedule for
 Schedule:
-Script Includes
-Set Cars Form for track
+Set Cars Form for track:
 Set Cars to Track
 Set to
 Set to Track
 Single
-Sort Cars
-Sort Locomotives
 Space Available
-Support for my TrainPlayer suite of scripts is also included. The use of this plugin is documented in the following list of videos.
 Switch List
 Switch List for Selected Tracks
 Switch List for Track
-The description of each element is in blue
-The file is created by this plugin and in the case of TrainPlayer manifest exports the JSON is created by modifying the JMRI generated manifest JSON.
-The following chart shows the code structure of this plugin.
-The pattern reports and TrainPlayer exports all start with the creation of a JSON file.
 There are no yard tracks for this location
-These videio are recorded in the english language.
-This program is a plugin for JMRI Operations Pro. With it, the user can generate pattern reports for tracks at a single location.
 Tools
 Total Cars:
 Track Length:
 Track List:
-Track Pattern and Switch List JSON format
 Track Pattern Report
 Track Totals for Cars:
 Track:
 Tracks at
 TrainPlayer cars not found in JMRI roster:
-TrainPlayer Include flag (set by user)
 TrainPlayer Support Subroutine
 Translate Plugin
 Update Inventory
 Update Inventory Error Report
-Use this plugin with TrainPlayer
-User editable keys are described in green
-Vague Description
-Video Documentation
 View Log File
 Window Help...
 Work Event List for TrainPlayer
 Work Location:
-Worst case, simply delete the Pattern Config.json file and the plugin will create a new one.
 Yard tracks only
-Yard Tracks Only flag (set by user)

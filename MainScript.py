@@ -399,7 +399,7 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
     #Startup Items
         PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale()
         PatternScriptEntities.validateStubFile().isStubFile()
-        Bundle.makeHelpPageForLocale()
+        Bundle.makeHelpPage()
         self.patternScriptsButton.setText(PatternScriptEntities.BUNDLE['Restart with default settings'])
 
         self.logger.startLogger('PS')
@@ -511,13 +511,12 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(TRANSLATE_PLUGIN_EVENT)
 
-        # Bundle.createBundleForHelpPage()
+        # Bundle.ForHelpPage().make()
+        Bundle.ForPlugin().make()
+        # Bundle.makeHelpPage()
+
         # Bundle.createBundleForLocale()
-
-
-
         # Bundle.makeBundle()
-        Bundle.makeHelpPageForLocale()
 
         return
 
