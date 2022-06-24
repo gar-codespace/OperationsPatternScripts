@@ -139,7 +139,7 @@ class Translator:
                 i = 0
                 time.sleep(.7)
 
-        timeOut = time.time() + 10
+        timeOut = time.time() + 20
         while True: # Homebrew version of await
             if time.time() > timeOut:
                 _psLog.warning('Connection Timed Out')
@@ -148,6 +148,7 @@ class Translator:
             if len(self.scratchFile) == len(self.bundleFile):
                 print('Translation Completed')
                 break
+            time.sleep(.1)
 
     def makeDictionary(self):
 
@@ -165,19 +166,6 @@ class MakeBundleItem(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton)
 
     def init(self):
 
-
-        return
-
-    def passInName(self, name):
-
-        self.scratchFile = name
-
-        return
-
-    def passInUrl(self, url, item):
-
-        self.url = url
-        self.item = item
 
         return
 
