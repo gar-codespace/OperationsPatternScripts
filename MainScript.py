@@ -515,8 +515,8 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
 
         # Bundle.makeBundleForPlugin()
-        # Bundle.makeBundleForHelpPage()
-        Bundle.makeHelpPage()
+        Bundle.makeBundleForHelpPage()
+        # Bundle.makeHelpPage()
 
 
 

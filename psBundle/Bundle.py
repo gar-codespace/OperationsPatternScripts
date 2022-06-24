@@ -50,6 +50,8 @@ def getHelpPageForLocale():
 
 def makeBundleForPlugin():
 
+    startTime = time.time()
+
     bundleSource = BUNDLE_DIR + 'templateBundle.txt'
     bundleTarget = BUNDLE_DIR + 'bundle.' + PatternScriptEntities.psLocale()[:2] + '.json'
     scratchFile = PLUGIN
@@ -58,9 +60,14 @@ def makeBundleForPlugin():
     translation = baseTranslator(bundleFile, scratchFile)
     PatternScriptEntities.genericWriteReport(bundleTarget, translation)
 
+    runTime = time.time() - startTime
+    _psLog.info('Plugin translation time: ' + str(round(runTime, 2)))
+
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
 def makeBundleForHelpPage():
+
+    startTime = time.time()
 
     bundleSource = BUNDLE_DIR + 'templateHelp.txt'
     bundleTarget = BUNDLE_DIR + 'help.' + PatternScriptEntities.psLocale()[:2] + '.json'
@@ -69,6 +76,9 @@ def makeBundleForHelpPage():
 
     translation = baseTranslator(bundleFile, scratchFile)
     PatternScriptEntities.genericWriteReport(bundleTarget, translation)
+
+    runTime = time.time() - startTime
+    _psLog.info('Help page translation time: ' + str(round(runTime, 2)))
 
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -92,7 +102,9 @@ def getBundleTemplate(file):
 
 
 class Translator:
-    """Move useDeepL to the config file"""
+    """Choice of translators from patternConfig,
+    chosen translator is in Translators.py
+    """
 
     def __init__(self, bundleFile, scratchFile):
 
@@ -119,9 +131,8 @@ class Translator:
         i = 0
         for item in self.bundleFile:
             bundleItem = MakeBundleItem()
-            bundleItem.passInName(self.scratchFile)
             url = self.translationService.getTheUrl(item)
-            bundleItem.passInUrl(url, item)
+            bundleItem.passInAttributes(self.scratchFile, url, item)
             bundleItem.start()
             i += 1
             if i == 10:
@@ -135,7 +146,6 @@ class Translator:
                 print('Connection Timed Out')
                 break
             if len(self.scratchFile) == len(self.bundleFile):
-                _psLog.info('Translation Completed')
                 print('Translation Completed')
                 break
 
@@ -171,6 +181,14 @@ class MakeBundleItem(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton)
 
         return
 
+    def passInAttributes(self, scratchFile, url, item):
+
+        self.scratchFile = scratchFile
+        self.url = url
+        self.item = item
+
+        return
+
     def handle(self):
         """Harden this against errors"""
 
@@ -191,7 +209,7 @@ class MakeBundleItem(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton)
 
         translation['source'] = self.item
         translation['error'] = self.item
-        # print(translation)
+
         self.scratchFile.append(translation)
 
         return False
