@@ -56,6 +56,11 @@
     "alertColor": "RASH"
   },
   "CP" : {
+    "TS" : {
+      "UD" : "useDeepL",
+      "UX" : "Some Other Translation Service"
+    },
+    "TC" : "UD",
     "AP" : true,
     "SE" : "utf-8",
     "SI" : {
@@ -66,7 +71,7 @@
     "PW" : 1500,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20220601
+    "RV" : 20220602
   },
   "RM" : {
     "DS" : "*No Dest.",

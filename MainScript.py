@@ -25,6 +25,8 @@ from TrainPlayerSubroutine import BuiltTrainExport
 SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
 SCRIPT_REV = 20220101
 
+Bundle.BUNDLE_DIR = PLUGIN_ROOT + '\\psBundle\\'
+
 PatternScriptEntities.JMRI = jmri
 PatternScriptEntities.JAVA_AWT = java.awt
 PatternScriptEntities.JAVX_SWING = javax.swing
@@ -511,12 +513,12 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(TRANSLATE_PLUGIN_EVENT)
 
-        # Bundle.ForHelpPage().make()
-        Bundle.ForPlugin().make()
-        # Bundle.makeHelpPage()
 
-        # Bundle.createBundleForLocale()
-        # Bundle.makeBundle()
+        # Bundle.makeBundleForPlugin()
+        # Bundle.makeBundleForHelpPage()
+        Bundle.makeHelpPage()
+
+
 
         return
 
