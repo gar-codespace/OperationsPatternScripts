@@ -5,6 +5,7 @@
 
 from urllib2 import urlopen
 import time
+import sys
 
 from psEntities import PatternScriptEntities
 from psBundle import Translators
@@ -16,19 +17,19 @@ _psLog = PatternScriptEntities.LOGGING.getLogger('PS.B.Bundle')
 
 BUNDLE_DIR = PatternScriptEntities.PLUGIN_ROOT + '\\psBundle\\'
 
-PLUGIN = []
-HELP_PAGE = []
+PLUGIN = [] # Scratch file for translation
+HELP = []
 
 def getBundleForLocale():
     """Gets the bundle for the current locale if it exists, otherwise english."""
 
-    psLocale = 'bundle.' + PatternScriptEntities.psLocale() + '.json'
+    psLocale = 'plugin.' + PatternScriptEntities.psLocale() + '.json'
     fileList = PatternScriptEntities.JAVA_IO.File(BUNDLE_DIR).list()
 
     if psLocale in fileList:
         bundleFileLocation = BUNDLE_DIR + psLocale
     else:
-        bundleFileLocation = BUNDLE_DIR + 'bundle.en.json'
+        bundleFileLocation = BUNDLE_DIR + 'plugin.en.json'
 
     bundleFile = PatternScriptEntities.genericReadReport(bundleFileLocation)
     bundleFile = PatternScriptEntities.loadJson(bundleFile)
@@ -48,39 +49,41 @@ def getHelpPageForLocale():
 
     helpBundleFile = PatternScriptEntities.genericReadReport(bundleFileLocation)
 
-def makeBundleForPlugin():
+def makeBundles():
+    """Makes a translation bundle for each of the items in readConfigFile('CP')['BT']"""
 
-    startTime = time.time()
+    bundleTargets = PatternScriptEntities.readConfigFile('CP')['BT']
 
-    bundleSource = BUNDLE_DIR + 'templateBundle.txt'
-    bundleTarget = BUNDLE_DIR + 'bundle.' + PatternScriptEntities.psLocale()[:2] + '.json'
-    scratchFile = PLUGIN
-    bundleFile = getBundleTemplate(bundleSource)
+    for item in bundleTargets:
 
-    translation = baseTranslator(bundleFile, scratchFile)
-    PatternScriptEntities.genericWriteReport(bundleTarget, translation)
+        startTime = time.time()
 
-    runTime = time.time() - startTime
-    _psLog.info('Plugin translation time: ' + str(round(runTime, 2)))
+        itemSource =  BUNDLE_DIR + 'template' + item + '.txt'
+        itemTarget =  BUNDLE_DIR + item.lower() + '.' + PatternScriptEntities.psLocale()[:2] + '.json'
+        itemScratch = getattr(sys.modules[__name__], item.upper()) # PEP 3130
+        bundleFile = getBundleTemplate(itemSource)
 
-    print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+        if not PatternScriptEntities.JAVA_IO.File(itemTarget).isFile():
+            translation = baseTranslator(bundleFile, itemScratch)
+            PatternScriptEntities.genericWriteReport(itemTarget, translation)
 
-def makeBundleForHelpPage():
+            runTime = time.time() - startTime
+            _psLog.info(item + ' translation time: ' + str(round(runTime, 2)))
 
-    startTime = time.time()
-
-    bundleSource = BUNDLE_DIR + 'templateHelp.txt'
-    bundleTarget = BUNDLE_DIR + 'help.' + PatternScriptEntities.psLocale()[:2] + '.json'
-    scratchFile = HELP_PAGE
-    bundleFile = getBundleTemplate(bundleSource)
-
-    translation = baseTranslator(bundleFile, scratchFile)
-    PatternScriptEntities.genericWriteReport(bundleTarget, translation)
-
-    runTime = time.time() - startTime
-    _psLog.info('Help page translation time: ' + str(round(runTime, 2)))
+        else:
+            _psLog.info(item + ' already exists')
 
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+    return
+
+def getBundleTemplate(file):
+
+    baseTemplate = PatternScriptEntities.genericReadReport(file)
+
+    bundleTemplate = baseTemplate.splitlines()
+
+    return bundleTemplate
 
 def baseTranslator(bundleFile, scratchFile):
 
@@ -92,19 +95,9 @@ def baseTranslator(bundleFile, scratchFile):
 
     return translation
 
-def getBundleTemplate(file):
-
-    baseTemplate = PatternScriptEntities.genericReadReport(file)
-
-    bundleTemplate = baseTemplate.splitlines()
-
-    return bundleTemplate
-
 
 class Translator:
-    """Choice of translators from patternConfig,
-    chosen translator is in Translators.py
-    """
+    """Choice of translators from PatternScriptEntities.readConfigFile('CP')['TS']['TC']"""
 
     def __init__(self, bundleFile, scratchFile):
 
@@ -223,3 +216,37 @@ def makeHelpPage():
     PatternScriptEntities.genericWriteReport(helpPagePath, baseHelpPage)
 
     return
+
+# def makeBundleForPlugin():
+#
+#     startTime = time.time()
+#
+#     bundleSource = BUNDLE_DIR + 'templatePlugin.txt'
+#     bundleTarget = BUNDLE_DIR + 'bundle.' + PatternScriptEntities.psLocale()[:2] + '.json'
+#     scratchFile = PLUGIN
+#     bundleFile = getBundleTemplate(bundleSource)
+#
+#     translation = baseTranslator(bundleFile, scratchFile)
+#     PatternScriptEntities.genericWriteReport(bundleTarget, translation)
+#
+#     runTime = time.time() - startTime
+#     _psLog.info('Plugin translation time: ' + str(round(runTime, 2)))
+#
+#     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+# def makeBundleForHelpPage():
+#
+#     startTime = time.time()
+#
+#     bundleSource = BUNDLE_DIR + 'templateHelp.txt'
+#     bundleTarget = BUNDLE_DIR + 'help.' + PatternScriptEntities.psLocale()[:2] + '.json'
+#     scratchFile = HELP
+#     bundleFile = getBundleTemplate(bundleSource)
+#
+#     translation = baseTranslator(bundleFile, scratchFile)
+#     PatternScriptEntities.genericWriteReport(bundleTarget, translation)
+#
+#     runTime = time.time() - startTime
+#     _psLog.info('Help page translation time: ' + str(round(runTime, 2)))
+#
+#     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

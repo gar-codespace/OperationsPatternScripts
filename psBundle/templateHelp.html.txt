@@ -133,6 +133,7 @@
       "UX" : "Some Other Translation Service"
     },
     "TC" : "UD", <font color="blue">Translation Choice</font>
+    "BT" : ["Plugin", "Help"], <font color="blue">Bundle Targets, base name for each bundle</font>
     "AP" : true, <font color="blue">Add button to Panel Pro frame, plugin is not displayed but still enabled</font>
     "SE" : "utf-8", <font color="blue">May be expanded in v3</font>
     "SI" : { <font color="blue">Script Includes</font>

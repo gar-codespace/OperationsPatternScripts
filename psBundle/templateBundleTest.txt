@@ -1,4 +1,0 @@
-Translate Plugin
-Pattern Tracks Subroutine
-Pattern Scripts
-Restart Pattern Scripts

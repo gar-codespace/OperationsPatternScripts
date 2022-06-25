@@ -6,6 +6,7 @@
 >Attribute Width
 >Available in v3
 >Blue value
+>Bundle Targets, base name for each bundle
 >Color Definitions
 >Color Palett
 >Control Panel
@@ -32,7 +33,6 @@
 >Key
 >May be expanded in v3
 >No color can be specified with ""
->Not Implemented
 >Not Implemented
 >Organization
 >Pattern Height
