@@ -39,6 +39,7 @@ Tested Items:
     CSV pattern and list written OK
     Locos in report follow jmri.jmrit.operations.setup.Setup.getDropEngineMessageFormat OK
     Cars in report follow jmri.jmrit.operations.setup.Setup.getLocalCarMessageFormat OK
+    Reports ignore Tab,Tab2, Tab3 OK
 
   Actions
     Set Cars to 'Hold' works OK
@@ -136,7 +137,9 @@ Bundle Constants Used
   PICKUP_COMMENT = Bundle.getMessage("PickUp_Msg");
   HAZARDOUS = Bundle.getMessage("Hazardous");
   BLANK = " "; // blank has be a character or a space
+  BOX = " [ ] "; // NOI18N
+
+  The tabs are ignored by this plugin
   TAB = Bundle.getMessage("Tab"); // used to tab out in tabular mode
   TAB2 = Bundle.getMessage("Tab2");
   TAB3 = Bundle.getMessage("Tab3");
-  BOX = " [ ] "; // NOI18N

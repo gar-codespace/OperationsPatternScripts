@@ -202,6 +202,8 @@ class MakeSetCarsEqptRows():
             combinedInputLine.add(inputBox)
 
             for item in PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat():
+                if 'Tab' in item:
+                    continue
                 label = PatternScriptEntities.JAVX_SWING.JLabel(loco[item])
                 box = makeSwingBox(self.reportWidth[item] \
                         * self.panelWidth, self.panelHeight \
@@ -234,6 +236,8 @@ class MakeSetCarsEqptRows():
             combinedInputLine.add(inputBox)
 
             for item in PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
+                if 'Tab' in item:
+                    continue
                 label = PatternScriptEntities.JAVX_SWING.JLabel(car[item])
                 box = makeSwingBox(self.reportWidth[item] \
                         * self.panelWidth, self.panelHeight \

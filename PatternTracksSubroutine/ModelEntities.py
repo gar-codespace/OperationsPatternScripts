@@ -149,7 +149,7 @@ def getDetailsForLocoAsDict(locoObject):
         locoDetailDict[PatternScriptEntities.J_BUNDLE.DESTINATION] = dest
     else:
         locoDetailDict[PatternScriptEntities.J_BUNDLE.DESTINATION] = standin['DS']
-        
+
     locoDetailDict[PatternScriptEntities.J_BUNDLE.COMMENT] = locoObject.getComment()
 
 # Not part of JMRI engine attributes
@@ -270,6 +270,9 @@ def getDetailsForCarAsDict(carObject, kernelTally):
     carDetailDict[PatternScriptEntities.J_BUNDLE.DROP_COMMENT] = trackId.getCommentSetout()
     carDetailDict[PatternScriptEntities.J_BUNDLE.PICKUP_COMMENT] = trackId.getCommentPickup()
     carDetailDict[PatternScriptEntities.J_BUNDLE.RWE] = carObject.getReturnWhenEmptyDestinationName()
+    carDetailDict[PatternScriptEntities.J_BUNDLE.TAB] = None
+    carDetailDict[PatternScriptEntities.J_BUNDLE.TAB2] = None
+    carDetailDict[PatternScriptEntities.J_BUNDLE.TAB3] = None
 
 # Not part of JMRI car attributes
     lineKey = PatternScriptEntities.BUNDLE['On Train']

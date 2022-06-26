@@ -202,6 +202,9 @@ def loopThroughRs(type, rsAttribs):
 
     for item in messageFormat:
 
+        if 'Tab' in item:
+            continue
+
         itemWidth = reportWidth[item]
         switchListRow += PatternScriptEntities.formatText(rsAttribs[item], itemWidth)
 
