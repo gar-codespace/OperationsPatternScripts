@@ -33,23 +33,23 @@
 
 <body>
 
-<h1>Page d'aide - plugin Pattern Scripts pour JMRI</h1>
+<h1>Page d'aide - Plugin Pattern Scripts pour JMRI</h1>
 <h2>Introduction</h2>
-<p>Ce programme est un plugin pour JMRI Operations Pro. Avec lui, l'utilisateur peut générer des rapports de motifs pour les voies d'un même emplacement. En outre, les wagons peuvent être déplacés d'une voie à l'autre au sein d'un emplacement et, en option, si un wagon est déplacé sur un embranchement, l'horaire de cet embranchement peut être appliqué. Le support de ma suite de scripts TrainPlayer est également inclus. L'utilisation de ce plugin est documentée dans la liste de vidéos suivante.</p>
+<p>Ce programme est un plugin pour JMRI Operations Pro. Avec lui, l'utilisateur peut générer des rapports de modèle pour les voies d'un seul emplacement. En outre, les wagons peuvent être déplacés d'une voie à l'autre dans un emplacement, et en option, si un wagon est déplacé sur un embranchement, le programme pour cet embranchement peut être appliqué. Le support pour ma suite de scripts TrainPlayer est également inclus. L'utilisation de ce plugin est documentée dans la liste suivante de vidéos.</p>
 <h2>Documentation vidéo</h2>
-</p> Ces vidéos sont enregistrées en langue anglaise.</p>
+<p>Ces vidéos sont enregistrées en langue anglaise.</p>
 <p>Comment ajouter ce plugin à JMRI</p>
-<p><A HREF="https://youtu.be/GjPtXk3oKmc">Comment configurer ce plugin</A></p><p>
-<p><A HREF="https://youtu.be/IdXvxyo-E3Y">Démonstration dans un chantier</A></p><p>
-<p><A HREF="https://youtu.be/2Tv6sUMDD_Y">Démonstration à l'industrie</A></p>.
+<p><A HREF="https://youtu.be/GjPtXk3oKmc">Comment configurer ce plugin</A></p>
+<p><A HREF="https://youtu.be/IdXvxyo-E3Y">Démonstration dans un chantier</A></p>
+<p><A HREF="https://youtu.be/2Tv6sUMDD_Y">Démonstration à l'industrie</A></p>
 <p>Comment modifier ce plugin</p>
-<p>Utiliser ce plugin avec TrainPlayer</p>
+<p>Use this plugin with TrainPlayer</p>
 
 <h2>Organisation</h2>
 <p>Le tableau suivant montre la structure du code de ce plugin.</P>
 <img src="FlowChart1.png" alt="<Flow Chart Image>">
 
-<h2>Mise en page du plugin</h2>
+<h2>Plugin Layout</h2>
 <p>OperationsPatternScripts.MainScript.View.makePatternScriptsWindow()</p>
 <img src="PluginLayout1.png" alt="<Plugin Layout Image>">
 
@@ -57,29 +57,29 @@
 <p>OperationsPatternScripts.PatternTracksSubroutine.Controller.makeSubroutinePanel()</p>
 <img src="PatternScriptsSubroutine1.png" alt="<Pattern Scripts Window Image>">
 
-<h2>Rapport sur les modèles pour la fenêtre de suivi</h2>
+<h2>Rapport sur les modèles de la fenêtre de suivi</h2>
 <p>OperationsPatternScripts.ControllerSetCarsForm.CreatePatternReportGui.makeFrame()</p>
 <img src="PatternReportForTrackWindow1.png" alt="<Pattern Report for Track Window Image>">
 
-<h2>Modèle de piste et liste d'aiguillage en format JSON</h2>
-</p> <p>Les rapports de modèle et les exportations TrainPlayer commencent tous par la création d'un fichier JSON. Le fichier est créé par ce plugin et dans le cas des exportations du manifeste TrainPlayer, le JSON est créé en modifiant le JSON du manifeste généré par JMRI. Tous les fichiers JSON sont écrits dans le dossier jsonManifests. Ils suivent le format illustré:</p> <p>
+<h2>Track Pattern et Switch List en format JSON</h2>
+<p>Les rapports de modèle et les exportations TrainPlayer commencent tous par la création d'un fichier JSON. Le fichier est créé par ce plugin et dans le cas des exportations du manifeste TrainPlayer, le JSON est créé en modifiant le JSON du manifeste généré par JMRI. Tous les fichiers JSON sont écrits dans le dossier jsonManifests et suivent le format illustré :</p>
 <img src="ReportFileFormat1.png" alt="<JSON format for reports>">
 
-<h2>Clé – PatternConfig.json</h2>
-</p> <p>Chaque profil JMRI obtient son propre fichier de configuration, qui s'appelle PatternConfig.json. Il se trouve dans le dossier des opérations, et est utilisé pour fournir des paramètres personnalisés pour chaque profil et enregistrer les entrées des utilisateurs.
-<br><font color="blue">La description de chaque élément est en bleu</font>.
-<br><font color="green">Les touches modifiables par l'utilisateur sont décrites en vert</font>.
-<br>Des garde-fous en quelque sorte ont été mis en place autour des valeurs marquées en vert, mais malgré cela, ce plugin n'est pas en mesure d'attraper tous les types d'erreurs. Dans certains cas, le plugin peut planter. Si cela se produit, appuyez sur le bouton " Restart from PatternConfig Backup " et le plugin utilisera le dernier bon fichier PatternConfig.json comme nouveau point de départ. Dans d'autres cas, si une erreur est commise en modifiant le fichier PatternConfig.json, le plugin le remplacera par le fichier par défaut, et l'utilisateur devra recommencer.
-<br>Dans le pire des cas, il suffit de supprimer le fichier Pattern Config.json et le plugin en créera un nouveau.</p>.
+<h2>Key – PatternConfig.json</h2>
+<p>Chaque profil JMRI dispose de son propre fichier de configuration, appelé PatternConfig.json, qui se trouve dans le dossier des opérations et qui est utilisé pour fournir des paramètres personnalisés pour chaque profil et enregistrer les entrées de l'utilisateur.
+<br><font color="blue">La description de chaque élément est en bleu</font>
+<br><font color="green">Les touches modifiables par l'utilisateur sont décrites en vert.</font>
+<br>Des garde-fous ont été mis en place autour des valeurs marquées en vert, mais même ainsi, ce plugin n'est pas capable d'attraper tous les types d'erreurs. Dans certains cas, le plugin peut planter. Si cela se produit, appuyez sur le bouton "Restart from PatternConfig Backup" et le plugin utilisera le dernier bon fichier PatternConfig.json comme nouveau point de départ. Dans d'autres cas, si une erreur est faite en modifiant le fichier PatternConfig.json, le plugin le remplacera par le fichier par défaut, et l'utilisateur devra recommencer.
+<br>Worst case, simply delete the Pattern Config.json file and the plugin will create a new one.</p>
 
-<h3><font color="green">Définitions des couleurs</font></h3>.
+<h3><font color="green">Définitions des couleurs</font></h3>
 <pre>
   "CD": {
-    "CP": { <font color="blue"Palette de couleurs</font>>.
-      "<font color="green">BLANCH</font>": { <font color="blue">Certaines de ces couleurs peuvent être modifiées</font>.
+    "CP": { <font color="blue">Palette de couleurs</font>
+      "<font color="green">BLANCH</font>": { <font color="blue">Chacune de ces couleurs peut être modifiée</font>
         "A": <font color="green">255</font>, <font color="blue">Valeur alpha</font>
         "B": <font color="green">225</font>, <font color="blue">Valeur bleue</font>
-        "D": <font color="green">Light grey</font>, <font color="blue">Vague Description</font>
+        "D": <font color="green">Light grey</font>, <font color="blue">Vague description</font>
         "G": <font color="green">225</font>, <font color="blue">Valeur verte</font>
         "R": <font color="green">225</font> <font color="blue">Valeur rouge</font>
       },
@@ -119,66 +119,66 @@
         "R": 240
       }
     },
-    "locoColor": <font color="green">"FADED"</font>, <font color="blue">Aucune couleur ne peut être spécifiée avec ""</font>.
+    "locoColor": <font color="green">"FADED"</font>, <font color="blue">Aucune couleur ne peut être spécifiée avec "".</font>
     "carColor": <font color="green">"DUST"</font>,
     "alertColor": <font color="green">"PETAL"</font>
   },
 </pre>
-<h3><font color="blue">Panneau de configuration</font></h3>.
+<h3><font color="blue">Panneau de configuration</font></h3>
 <pre>
-  <font color="blue">Ne modifiez pas ces éléments</font>.
+  <font color="blue">Ne pas modifier ces éléments</font>
   "CP" : {
-    "TS" : { <font color="blue">Translation Services</font>
+    "TS" : { <font color="blue">Services de traduction</font>
       "UD" : "useDeepL",
       "UX" : "Some Other Translation Service"
     },
     "TC" : "UD", <font color="blue">Translation Choice</font>
-    "BT" : ["Plugin", "Help"], <font color="blue">Bundle Targets, base name for each bundle</font>
-    "AP" : true, <font color="blue">Ajouter un bouton au cadre de Panel Pro, le plugin n'est pas affiché mais toujours activé</font>.
+    "BT" : ["Plugin", "Help"], <font color="blue">Bundle Targets, nom de base pour chaque bundle</font>
+    "AP" : true, <font color="blue">Ajouter un bouton au cadre de Panel Pro, le plugin n'est pas affiché mais toujours activé</font>
     "SE" : "utf-8", <font color="blue">Peut être étendu dans la v3</font>
     "SI" : { <font color="blue">Le script comprend</font>
-      "PatternTracksSubroutine" : true, <font color="blue">Inclure ce sous-programme dans le Panneau de configuration</font>>.
-      "TrainPlayerSubroutine" : false <font color="blue">Disponible en v3</font>
+      "PatternTracksSubroutine" : true, <font color="blue">Inclure cette sous-routine dans le panneau de contrôle</font>
+      "TrainPlayerSubroutine" : false <font color="blue">Disponible dans la v3</font>
     },
-    "PH" : 220, <font color="blue">Hauteur par défaut du panneau</font>
-    "PW" : 1500, <font color="blue">La largeur par défaut du panneau</font>
-    "PX" : 0, <font color="blue">Not Implemented</font>
-    "PY" : 0, <font color="blue">Not Implemented</font>
+    "PH" : 220, <font color="blue">Hauteur du panneau par défaut</font>
+    "PW" : 1500, <font color="blue">Largeur par défaut du panneau</font>
+    "PX" : 0, <font color="blue">Non mis en œuvre</font>
+    "PY" : 0, <font color="blue">Non mis en œuvre</font>
     "RV" : 20220205 <font color="blue">Contrôle de la révision</font>
   },
 </pre>
-<h3><font color="blue">Pattern Tracks</font></h3>.
+<h3><font color="blue">Pattern Tracks</font></h3>
 <pre>
-  <font color="blue">Ne modifiez pas ces éléments</font>.
+  <font color="blue">Ne pas modifier ces éléments</font>
   "PT" : {
     "AL" : [ <font color="blue">Tous les emplacements (écrits par ce plugin)</font>
     ],
     "PL" : "", <font color="blue">Pattern Location (écrit par ce plugin)</font>
     "PT" : { <font color="blue">Pattern-Tracks (écrit par ce plugin)</font>
     },
-    "PA" : false, <font color="blue">Le drapeau "Yard Tracks Only" (défini par l'utilisateur) </font>.
-    "PI" : false, <font color="blue">Ignorer le drapeau de longueur de piste (défini par l'utilisateur) </font>
-    "AS" : true, <font color="blue">Appliquer le drapeau du calendrier (défini par l'utilisateur)</font>
-    "TI" : false, <font color="blue">TrainPlayer Include flag (défini par l'utilisateur)</font>
+    "PA" : false, <font color="blue">Drapeau "Yard Tracks Only" (défini par l'utilisateur)</font>
+    "PI" : false, <font color="blue">Ignorer l'indicateur de longueur de piste (défini par l'utilisateur)</font>
+    "AS" : true, <font color="blue">Appliquer l'indicateur de planification (défini par l'utilisateur)</font>
+    "TI" : false, <font color="blue">TrainPlayer Drapeau d'inclusion (défini par l'utilisateur)</font>
     "PW" : 260, <font color="blue">Largeur du motif</font>
     "PH" : 16, <font color="blue">Hauteur du motif</font>
-    "RM": 8, <font color="blue"Multiplicateur de rangs</font>>.
+    "RM": 8, <font color="blue">Multiplicateur de rangs</font>
 </pre>
-<h3><font color="green">Modificateurs de rapport</font></h3>.
+<h3><font color="green">Modificateurs de rapport</font></h3>
 <pre>
   "RM" : {
-    "DS" : "<font color="green">*No Waybill</font>", <font color="blue">Désignation de la destination</font>.
-    "DT" : "<font color="green">*Not Consigned</font>", <font color="blue">Désignation de la voie de destination</font>.
-    "FD" : "<font color="green">*Via Staging</font>", <font color="blue">Indicateur de destination finale</font>.
-    "FT" : "<font color="green">*Any Line</font>", <font color="blue">Désignation de la piste de destination finale</font>.
-    "SL": [ <font color="blue">Tri des locomotives</font>
+    "DS" : "<font color="green">*No Waybill</font>", <font color="blue">Désignation de la destination</font>
+    "DT" : "<font color="green">*Not Consigned</font>", <font color="blue">Désignation de la voie de destination</font>
+    "FD" : "<font color="green">*Via Staging</font>", <font color="blue">Indicateur de destination finale</font>
+    "FT" : "<font color="green">*Any Line</font>", <font color="blue">Destination finale Indicateur de piste</font>
+    "SL": [ <font color="blue">Trier les locomotives</font>
       "<font color="green">Model</font>"
     ],
     "SC": [ <font color="blue">Trier les voitures</font>
       "<font color="green">Load Type</font>",
       "<font color="green">FD&Track</font>"
     ],
-    "AW": { <font color="blue"Largeur de l'attribut</font>>.
+    "AW": { <font color="blue">La largeur de l'attribut</font>
       "Input": <font color="green">6</font>,
       "Model": <font color="green">5</font>,
       "Road" : <font color="green">5</font>,

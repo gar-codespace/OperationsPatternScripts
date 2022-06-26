@@ -18,7 +18,7 @@ _psLog = PatternScriptEntities.LOGGING.getLogger('PS.B.Bundle')
 BUNDLE_DIR = PatternScriptEntities.PLUGIN_ROOT + '\\psBundle\\'
 
 PLUGIN = [] # Scratch file for translation
-HELP = []
+HELP = [] # Scratch file for translation
 
 def getBundleForLocale():
     """Gets the bundle for the current locale if it exists, otherwise english."""
@@ -37,7 +37,7 @@ def getBundleForLocale():
     return bundleFile
 
 def getHelpPageForLocale():
-    """Gets the help page for the current locale, otherwise english."""
+    """Gets the help page for the current locale if it exists, otherwise english."""
 
     psLocale = PatternScriptEntities.psLocale() + '.json'
     fileList = PatternScriptEntities.JAVA_IO.File(BUNDLE_DIR).list()
@@ -50,7 +50,7 @@ def getHelpPageForLocale():
     helpBundleFile = PatternScriptEntities.genericReadReport(bundleFileLocation)
 
 def makeBundles():
-    """Makes a translation bundle for each of the items in readConfigFile('CP')['BT']"""
+    """Makes a translated bundle for each of the items in readConfigFile('CP')['BT']"""
 
     bundleTargets = PatternScriptEntities.readConfigFile('CP')['BT']
 
@@ -60,7 +60,7 @@ def makeBundles():
 
         itemSource =  BUNDLE_DIR + 'template' + item + '.txt'
         itemTarget =  BUNDLE_DIR + item.lower() + '.' + PatternScriptEntities.psLocale()[:2] + '.json'
-        itemScratch = getattr(sys.modules[__name__], item.upper()) # PEP 3130
+        itemScratch = getattr(sys.modules[__name__], item.upper())
         bundleFile = getBundleTemplate(itemSource)
 
         if not PatternScriptEntities.JAVA_IO.File(itemTarget).isFile():
@@ -121,6 +121,7 @@ class Translator:
     def translateItems(self):
         """Based on https://gist.github.com/snim2/561630"""
 
+    # Meter the items to be translated
         i = 0
         for item in self.bundleFile:
             bundleItem = MakeBundleItem()
@@ -132,8 +133,9 @@ class Translator:
                 i = 0
                 time.sleep(.7)
 
+    # Homebrew version of await
         timeOut = time.time() + 20
-        while True: # Homebrew version of await
+        while True:
             if time.time() > timeOut:
                 _psLog.warning('Connection Timed Out')
                 print('Connection Timed Out')
@@ -144,8 +146,6 @@ class Translator:
             time.sleep(.1)
 
     def makeDictionary(self):
-
-        self.translationDict = {}
 
         for item in self.scratchFile:
             translatedLine = self.translationService.parseResult(item)
@@ -216,37 +216,3 @@ def makeHelpPage():
     PatternScriptEntities.genericWriteReport(helpPagePath, baseHelpPage)
 
     return
-
-# def makeBundleForPlugin():
-#
-#     startTime = time.time()
-#
-#     bundleSource = BUNDLE_DIR + 'templatePlugin.txt'
-#     bundleTarget = BUNDLE_DIR + 'bundle.' + PatternScriptEntities.psLocale()[:2] + '.json'
-#     scratchFile = PLUGIN
-#     bundleFile = getBundleTemplate(bundleSource)
-#
-#     translation = baseTranslator(bundleFile, scratchFile)
-#     PatternScriptEntities.genericWriteReport(bundleTarget, translation)
-#
-#     runTime = time.time() - startTime
-#     _psLog.info('Plugin translation time: ' + str(round(runTime, 2)))
-#
-#     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-
-# def makeBundleForHelpPage():
-#
-#     startTime = time.time()
-#
-#     bundleSource = BUNDLE_DIR + 'templateHelp.txt'
-#     bundleTarget = BUNDLE_DIR + 'help.' + PatternScriptEntities.psLocale()[:2] + '.json'
-#     scratchFile = HELP
-#     bundleFile = getBundleTemplate(bundleSource)
-#
-#     translation = baseTranslator(bundleFile, scratchFile)
-#     PatternScriptEntities.genericWriteReport(bundleTarget, translation)
-#
-#     runTime = time.time() - startTime
-#     _psLog.info('Help page translation time: ' + str(round(runTime, 2)))
-#
-#     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
