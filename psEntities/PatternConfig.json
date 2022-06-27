@@ -66,7 +66,7 @@
     "SE" : "utf-8",
     "SI" : {
       "PatternTracksSubroutine" : true,
-      "TrainPlayerSubroutine" : true
+      "TrainPlayerSubroutine" : false
     },
     "PH" : 220,
     "PW" : 1500,

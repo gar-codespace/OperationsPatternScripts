@@ -71,7 +71,7 @@ class BuiltTrainListener(java.beans.PropertyChangeListener):
 
 class PatternScriptsWindowListener(PatternScriptEntities.JAVA_AWT.event.WindowListener):
     """Listener to respond to the plugin window operations.
-    A bit verbose because of intended expansion in v3.
+    May be expanded in v3.
     """
 
     def __init__(self):
@@ -89,9 +89,19 @@ class PatternScriptsWindowListener(PatternScriptEntities.JAVA_AWT.event.WindowLi
 
         return
 
+    def getPsButton(self):
+        """Gets the Pattern Scripts button on the PanelPro frame"""
+
+        buttonSpaceComponents = Apps.buttonSpace().getComponents()
+        for component in buttonSpaceComponents:
+            if component.getName() == 'psButton':
+                return component
+
     def windowClosed(self, WINDOW_CLOSED):
 
         self.closeSetCarsWindows()
+        button = self.getPsButton()
+        button.setEnabled(True)
         WINDOW_CLOSED.getSource().dispose()
 
         return
@@ -102,11 +112,16 @@ class PatternScriptsWindowListener(PatternScriptEntities.JAVA_AWT.event.WindowLi
 
         return
 
+    def windowOpened(self, WINDOW_OPENED):
+
+        button = self.getPsButton()
+        button.setEnabled(False)
+
+        return
+
     def windowIconified(self, WINDOW_ICONIFIED):
         return
     def windowDeiconified(self, WINDOW_DEICONIFIED):
-        return
-    def windowOpened(self, WINDOW_OPENED):
         return
     def windowActivated(self, WINDOW_ACTIVATED):
         return
@@ -177,12 +192,14 @@ class View:
 
     def makePsButton(self):
 
-        psButton = PatternScriptEntities.JAVX_SWING.JButton(name='psButton')
+        psButton = PatternScriptEntities.JAVX_SWING.JButton()
         psButton.setText(PatternScriptEntities.BUNDLE['Pattern Scripts'])
+        psButton.setName('psButton')
 
         return psButton
 
     def makePluginPanel(self):
+        """Dealers choice, jPanel or Box"""
 
         # pluginPanel = PatternScriptEntities.JAVX_SWING.JPanel()
         pluginPanel = PatternScriptEntities.JAVX_SWING.Box(PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS)
@@ -207,6 +224,7 @@ class View:
         asMenuItem = self.makeMenuItem(self.setAsDropDownText())
         tpMenuItem = self.makeMenuItem(self.setTiDropDownText())
         ptMenuItem = self.makeMenuItem(self.setPtDropDownText())
+        rsMenuItem = self.makeMenuItem(self.setRsDropDownText())
         helpMenuItem = self.makeMenuItem(self.setHmDropDownText())
         gitHubMenuItem = self.makeMenuItem(self.setGhDropDownText())
         opsFolderMenuItem = self.makeMenuItem(self.setOfDropDownText())
@@ -221,6 +239,7 @@ class View:
         toolsMenu.add(tpMenuItem)
         toolsMenu.add(editConfigMenuItem)
         toolsMenu.add(ptMenuItem)
+        toolsMenu.add(rsMenuItem)
 
         helpMenu = PatternScriptEntities.JAVX_SWING.JMenu(PatternScriptEntities.BUNDLE['Help'])
         helpMenu.add(helpMenuItem)
@@ -234,13 +253,13 @@ class View:
         psMenuBar.add(PatternScriptEntities.JMRI.util.WindowMenu(uniqueWindow))
         psMenuBar.add(helpMenu)
 
+        configPanel = PatternScriptEntities.readConfigFile('CP')
         uniqueWindow.setName('patternScriptsWindow')
         uniqueWindow.setTitle(PatternScriptEntities.BUNDLE['Pattern Scripts'])
         uniqueWindow.addWindowListener(PatternScriptsWindowListener())
         uniqueWindow.setJMenuBar(psMenuBar)
         uniqueWindow.add(self.controlPanel)
         uniqueWindow.pack()
-        configPanel = PatternScriptEntities.readConfigFile('CP')
         uniqueWindow.setSize(configPanel['PW'], configPanel['PH'])
         uniqueWindow.setLocation(configPanel['PX'], configPanel['PY'])
         uniqueWindow.setVisible(True)
@@ -285,6 +304,13 @@ class View:
         menuText = PatternScriptEntities.BUNDLE['Translate Plugin']
 
         return menuText, 'ptItemSelected'
+
+    def setRsDropDownText(self):
+        """itemMethod - Set the drop down text for the Restart From Default item"""
+
+        menuText = PatternScriptEntities.BUNDLE['Restart From Default']
+
+        return menuText, 'rsItemSelected'
 
     def setHmDropDownText(self):
         """itemMethod - Set the drop down text for the Log menu item"""
@@ -379,40 +405,14 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
     def patternScriptsButtonAction(self, MOUSE_CLICKED):
 
-        self.patternScriptsButton.setText(PatternScriptEntities.BUNDLE['Restart with default settings'])
-        self.patternScriptsButton.actionPerformed = self.patternScriptsButtonRestartAction
         self.buildThePlugin()
 
         self.psLog.debug(MOUSE_CLICKED)
-
-        return
-
-    def patternScriptsButtonRestartAction(self, MOUSE_CLICKED):
-
-    #Shutdown Items
-        PatternScriptEntities.deleteConfigFile()
-
-        self.removeTrainsTableListener()
-        self.removeBuiltTrainListener()
-
-        self.closePsWindow()
-        self.logger.stopLogger('PS')
-
-    #Startup Items
-        PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale()
-        PatternScriptEntities.validateStubFile().isStubFile()
-        Bundle.makeHelpPage()
-        self.patternScriptsButton.setText(PatternScriptEntities.BUNDLE['Restart with default settings'])
-
-        self.logger.startLogger('PS')
-        self.buildThePlugin()
-
-        self.psLog.debug(MOUSE_CLICKED)
-        self.psLog.info('Pattern Scripts plugin restarted')
 
         return
 
     def closePsWindow(self):
+        """Invoked by Restart From Defaults pulldown"""
 
         for frameName in PatternScriptEntities.JMRI.util.JmriJFrame.getFrameList():
             frame = PatternScriptEntities.JMRI.util.JmriJFrame.getFrame(frameName)
@@ -513,12 +513,35 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(TRANSLATE_PLUGIN_EVENT)
 
-
-
         Bundle.makeBundles()
         Bundle.makeHelpPage()
 
+        return
 
+    def rsItemSelected(self, RESTART_PLUGIN_EVENT):
+        """menu item-Tools/Restart Plugin"""
+
+        self.psLog.debug(RESTART_PLUGIN_EVENT)
+
+    #Shutdown Items
+        PatternScriptEntities.deleteConfigFile()
+
+        self.removeTrainsTableListener()
+        self.removeBuiltTrainListener()
+
+        self.closePsWindow()
+        self.logger.stopLogger('PS')
+
+    #Startup Items
+        PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale()
+        PatternScriptEntities.validateStubFile().isStubFile()
+        Bundle.makeHelpPage()
+        # self.patternScriptsButton.setText(PatternScriptEntities.BUNDLE['Restart with default settings'])
+
+        self.logger.startLogger('PS')
+        self.buildThePlugin()
+
+        self.psLog.info('Pattern Scripts plugin restarted')
 
         return
 

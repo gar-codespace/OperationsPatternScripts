@@ -151,7 +151,9 @@ if __name__ == "__builtin__":
     from psEntities import PatternScriptEntities
     from TrainPlayerSubroutine import Model
     from psBundle import Bundle
-    #
+
+    Bundle.BUNDLE_DIR = PLUGIN_ROOT + '\\psBundle\\'
+    
     PatternScriptEntities.PLUGIN_ROOT = PLUGIN_ROOT
     PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale()
     PatternScriptEntities.ENCODING = 'utf-8'
