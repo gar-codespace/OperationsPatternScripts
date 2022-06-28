@@ -513,8 +513,9 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(TRANSLATE_PLUGIN_EVENT)
 
-        Bundle.makeBundles()
-        Bundle.makeHelpPage()
+        if Bundle.validateKeyFile():
+            Bundle.makeBundles()
+            Bundle.makeHelpPage()
 
         return
 

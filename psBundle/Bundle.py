@@ -49,6 +49,17 @@ def getHelpPageForLocale():
 
     helpBundleFile = PatternScriptEntities.genericReadReport(bundleFileLocation)
 
+def validateKeyFile():
+    """Checks that the keys.py file exists"""
+
+    itemTarget =  BUNDLE_DIR + 'Keys.py'
+    if PatternScriptEntities.JAVA_IO.File(itemTarget).isFile():
+        return True
+    else:
+        _psLog.warning('Authentication key file not found')
+        print('Authentication key file not found')
+        return False
+
 def makeBundles():
     """Makes a translated bundle for each of the items in readConfigFile('CP')['BT']"""
 
