@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<title>Pattern Scripts Help</title>
+<meta charset="utf-8">
+<meta name="AUTHOR" content="Greg Ritacco">
+<meta name="PROJECT" content="Pattern scripts for JMRI">
+<meta name="VERSION" content="2.0.0">
+<style>
+  html * {
+    font-family: verdana;
+  }
+  h1 {
+    margin-left: 10px;
+  }
+  h2 {
+    margin-left: 20px;
+  }
+  h3 {
+    margin-left: 30px;
+  }
+  p {
+    margin-left: 30px;
+  }
+  img {
+    margin-left: 30px;
+  }
+  pre {
+    margin-left: 30px;
+  }
+</style>
+</head>
+
+<body>
+
+<h1>Helppagina - Pattern Scripts plugin voor JMRI</h1>
+<h2>Inleiding</h2>
+<p>Dit programma is een plugin voor JMRI Operations Pro. Hiermee kan de gebruiker patroonrapporten genereren voor sporen op een enkele locatie. Bovendien kunnen wagens binnen een locatie van spoor naar spoor worden verplaatst, en optioneel, als een wagen naar een zijspoor wordt verplaatst, kan het schema voor dat zijspoor worden toegepast. Ondersteuning voor mijn TrainPlayer suite van scripts is ook inbegrepen. Het gebruik van deze plugin is gedocumenteerd in de volgende lijst van video's.</p>
+<h2>Video Documentatie</h2>
+<p>Deze video's zijn opgenomen in de Engelse taal.</p>
+<p>Hoe voeg ik deze plugin toe aan JMRI</p>
+<p><A HREF="https://youtu.be/GjPtXk3oKmc">Hoe deze plugin in te stellen</A></p>
+<p><A HREF="https://youtu.be/IdXvxyo-E3Y">Demonstratie op een werf</A></p>
+<p><A HREF="https://youtu.be/2Tv6sUMDD_Y">Demonstratie bij industrie</A></p>
+<p>Hoe deze plugin te wijzigen</p>
+<p>Gebruik deze plugin met TrainPlayer</p>
+
+<h2>Organisatie</h2>
+<p>De volgende grafiek toont de code structuur van deze plugin.</P>
+<img src="FlowChart1.png" alt="<Flow Chart Image>">
+
+<h2>Plugin Layout</h2>
+<p>OperationsPatternScripts.MainScript.View.makePatternScriptsWindow()</p>
+<img src="PluginLayout1.png" alt="<Plugin Layout Image>">
+
+<h2>Patroon Scripts Subroutine</h2>
+<p>OperationsPatternScripts.PatternTracksSubroutine.Controller.makeSubroutinePanel()</p>
+<img src="PatternScriptsSubroutine1.png" alt="<Pattern Scripts Window Image>">
+
+<h2>Patroonrapport voor Spoorvenster</h2>
+<p>OperationsPatternScripts.ControllerSetCarsForm.CreatePatternReportGui.makeFrame()</p>
+<img src="PatternReportForTrackWindow1.png" alt="<Pattern Report for Track Window Image>">
+
+<h2>Track Pattern en Switch Lijst JSON formaat</h2>
+<p>De patroon rapporten en TrainPlayer exports beginnen allemaal met de creatie van een JSON bestand. Het bestand wordt gecreëerd door deze plugin en in het geval van TrainPlayer manifest exports wordt de JSON gecreëerd door de JMRI gegenereerde manifest JSON aan te passen. Alle JSON bestanden worden weggeschreven naar de jsonManifests map. Ze volgen het geïllustreerde formaat:</p>
+<img src="ReportFileFormat1.png" alt="<JSON format for reports>">
+
+<h2>Sleutel – PatternConfig.json</h2>
+<p>Elk JMRI profiel krijgt zijn eigen configuratiebestand, dat PatternConfig.json heet. Het bevindt zich in de operations map, en wordt gebruikt om aangepaste instellingen te geven voor elk profiel en om gebruikersinputs vast te leggen.
+<br><font color="blue">De beschrijving van elk element is in blauw</font>
+<br><font color="green">De door de gebruiker bewerkbare toetsen zijn beschreven in groen</font>
+<br>Er zijn beschermingsrails aangebracht rond de groen gemarkeerde waarden, maar zelfs dan nog is deze plugin niet in staat om elk type fout op te vangen. In sommige gevallen kan de plugin crashen. Als dat gebeurt, druk dan op de 'Restart from PatternConfig Backup' knop en de plugin zal het laatste goede PatternConfig.json bestand gebruiken als een nieuw startpunt. In andere gevallen, als er een fout wordt gemaakt bij het bewerken van het PatternConfig.json bestand, zal de plugin het vervangen door het standaard bestand, en zal de gebruiker opnieuw moeten beginnen.
+<br>In het slechtste geval, verwijder gewoon het Pattern Config.json bestand en de plugin zal een nieuwe aanmaken.</p>
+
+<h3><font color="green">Kleurdefinities</font></h3>
+<pre>
+  "CD": {
+    "CP": { <font color="blue">Kleuren palet</font>
+      "<font color="green">BLANCH</font>": { <font color="blue">Elke van deze kleuren kan veranderd worden</font>
+        "A": <font color="green">255</font>, <font color="blue">Alpha waarde</font>
+        "B": <font color="green">225</font>, <font color="blue">Blauwe waarde</font>
+        "D": <font color="green">Light grey</font>, <font color="blue">Vage beschrijving</font>
+        "G": <font color="green">225</font>, <font color="blue">Groene waarde</font>
+        "R": <font color="green">225</font> <font color="blue">Rode waarde</font>
+      },
+      "DUST": {
+        "A": 255,
+        "B": 218,
+        "D": "Light tan",
+        "G": 242,
+        "R": 252
+      },
+      "FADED": {
+        "A": 255,
+        "B": 245,
+        "D": "Light purple",
+        "G": 225,
+        "R": 237
+      },
+      "LICHEN": {
+        "A": 255,
+        "B": 244,
+        "D": "Light green",
+        "G": 255,
+        "R": 236
+      },
+      "PALE": {
+        "A": 255,
+        "B": 250,
+        "D": "Light blue",
+        "G": 243,
+        "R": 237
+      },
+      "PETAL": {
+        "A": 255,
+        "B": 224,
+        "D": "Light red",
+        "G": 208,
+        "R": 240
+      }
+    },
+    "locoColor": <font color="green">"FADED"</font>, <font color="blue">Er kan geen kleur worden opgegeven met ""</font>
+    "carColor": <font color="green">"DUST"</font>,
+    "alertColor": <font color="green">"PETAL"</font>
+  },
+</pre>
+<h3><font color="blue">Configuratiescherm</font></h3>
+<pre>
+  <font color="blue">Bewerk deze niet</font>
+  "CP" : {
+    "TS" : { <font color="blue">Vertaaldiensten</font>
+      "UD" : "useDeepL",
+      "UX" : "Some Other Translation Service"
+    },
+    "TC" : "UD", <font color="blue">Vertaling Keuze</font>
+    "BT" : ["Plugin", "Help"], <font color="blue">Bundel Doelen, basisnaam voor elke bundel</font>
+    "AP" : true, <font color="blue">Knop toevoegen aan Panel Pro frame, plugin wordt niet weergegeven maar is wel ingeschakeld</font>
+    "SE" : "utf-8", <font color="blue">Mag worden uitgebreid in v3</font>
+    "SI" : { <font color="blue">Script omvat</font>
+      "PatternTracksSubroutine" : true, <font color="blue">Inclusief deze subroutine in het configuratiescherm</font>
+      "TrainPlayerSubroutine" : false <font color="blue">Beschikbaar in v3</font>
+    },
+    "PH" : 220, <font color="blue">Standaard paneelhoogte</font>
+    "PW" : 1500, <font color="blue">Standaard paneel breedte</font>
+    "PX" : 0, <font color="blue">Niet geïmplementeerd</font>
+    "PY" : 0, <font color="blue">Niet geïmplementeerd</font>
+    "RV" : 20220205 <font color="blue">Revisie controle</font>
+  },
+</pre>
+<h3><font color="blue">Patroon Sporen</font></h3>
+<pre>
+  <font color="blue">Bewerk deze niet</font>
+  "PT" : {
+    "AL" : [ <font color="blue">Alle Locaties (geschreven door deze plugin)</font>
+    ],
+    "PL" : "", <font color="blue">Patroon locatie (geschreven door deze plugin)</font>
+    "PT" : { <font color="blue">Pattern-Tracks (geschreven door deze plugin)</font>
+    },
+    "PA" : false, <font color="blue">Yard Tracks Only vlag (ingesteld door gebruiker, geschreven door deze plugin)</font>
+    "PI" : false, <font color="blue">Langspoor vlag negeren (ingesteld door gebruiker, geschreven door deze plugin)</font>
+    "AS" : true, <font color="blue">Schema vlag toepassen (ingesteld door gebruiker, geschreven door deze plugin)</font>
+    "TI" : false, <font color="blue">TrainPlayer Include vlag (ingesteld door gebruiker, geschreven door deze plugin)</font>
+    "PW" : 260, <font color="blue">Patroon breedte</font>
+    "PH" : 16, <font color="blue">Patroon Hoogte</font>
+    "RM": 8, <font color="blue">Rij vermenigvuldiger</font>
+</pre>
+<h3><font color="green">Report Modifiers</font></h3>
+<pre>
+  "RM" : {
+    "DS" : "<font color="green">*No Waybill</font>", <font color="blue">Destination designator</font>
+    "DT" : "<font color="green">*Not Consigned</font>", <font color="blue">Bestemming Spooraanduiding</font>
+    "FD" : "<font color="green">*Via Staging</font>", <font color="blue">Definitieve Bestemmingsaanduiding</font>
+    "FT" : "<font color="green">*Any Line</font>", <font color="blue">Eindbestemming Spooraanduiding</font>
+    "SL": [ <font color="blue">Sorteer Locomotieven</font>
+      "<font color="green">Model</font>"
+    ],
+    "SC": [ <font color="blue">Sorteer auto's</font>
+      "<font color="green">Load Type</font>",
+      "<font color="green">FD&Track</font>"
+    ],
+    "AW": { <font color="blue">Attribuut Breedte</font>
+      "Input": <font color="green">6</font>,
+      "Model": <font color="green">5</font>,
+      "Road" : <font color="green">5</font>,
+      "Number" : <font color="green">7</font>,
+      "Type" : <font color="green">6</font>,
+      "Length" : <font color="green">7</font>,
+      "Weight" : <font color="green">7</font>,
+      "Load" : <font color="green">6</font>,
+      "Load Type" : <font color="green">5</font>,
+      "Loco Type" : <font color="green">18</font>,
+      "Owner" : <font color="green">20</font>,
+      "Consist" : <font color="green">8</font>,
+      "Hazardous" : <font color="green">10</font>,
+      "Color" : <font color="green">6</font>,
+      "Kernel" : <font color="green">7</font>,
+      "Kernel Size" : <font color="green">12</font>,
+      "Owner" : <font color="green">6</font>,
+      "Track" : <font color="green">6</font>,
+      "Location" : <font color="green">9</font>,
+      "Destination" : <font color="green">15</font>,
+      "Dest&Track" : <font color="green">30</font>,
+      "Final Dest" : <font color="green">11</font>,
+      "FD&Track" : <font color="green">21</font>,
+      "Comment" : <font color="green">15</font>,
+      "SetOut Msg" : <font color="green">12</font>,
+      "PickUp Msg" : <font color="green">12</font>,
+      "RWE" : <font color="green">10</font>,
+      " " : 0
+    }
+  },
+</pre>
+<h3>TrainPlayer (Implemented in v3)</h3>
+
+</body>
+
+</html>
