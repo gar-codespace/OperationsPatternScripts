@@ -442,9 +442,8 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
     def addTrainPlayerListeners(self):
 
-        if PatternScriptEntities.readConfigFile('PT')['TI']:
-            self.addTrainsTableListener()
-            self.addBuiltTrainListener()
+        self.addTrainsTableListener()
+        self.addBuiltTrainListener()
 
         return
 
@@ -627,7 +626,8 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         self.model.validatePatternConfig()
         PatternScriptEntities.validateFileDestinationDirestories()
         PatternScriptEntities.validateStubFile().isStubFile()
-        self.addTrainPlayerListeners()
+        if PatternScriptEntities.readConfigFile('PT')['TI']:
+            self.addTrainPlayerListeners()
         if PatternScriptEntities.readConfigFile()['CP']['AP']:
             self.addPatternScriptsButton()
 
