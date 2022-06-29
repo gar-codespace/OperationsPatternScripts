@@ -187,6 +187,7 @@ class View:
 
         self.controlPanel = scrollPanel
         self.psPluginMenuItems = []
+        self.isKeyFile = Bundle.validateKeyFile()
 
         return
 
@@ -224,6 +225,8 @@ class View:
         asMenuItem = self.makeMenuItem(self.setAsDropDownText())
         tpMenuItem = self.makeMenuItem(self.setTiDropDownText())
         ptMenuItem = self.makeMenuItem(self.setPtDropDownText())
+        if not self.isKeyFile:
+            ptMenuItem.setEnabled(False)
         rsMenuItem = self.makeMenuItem(self.setRsDropDownText())
         helpMenuItem = self.makeMenuItem(self.setHmDropDownText())
         gitHubMenuItem = self.makeMenuItem(self.setGhDropDownText())
@@ -512,9 +515,8 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(TRANSLATE_PLUGIN_EVENT)
 
-        if Bundle.validateKeyFile():
-            Bundle.makeBundles()
-            Bundle.makeHelpPage()
+        Bundle.makeBundles()
+        Bundle.makeHelpPage()
 
         return
 
