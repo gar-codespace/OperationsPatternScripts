@@ -41,14 +41,15 @@ def setRsToTrack(setCarsForm, textBoxEntry):
 
     for loco in setCarsForm['locations'][0]['tracks'][0]['locos']:
         if not unicode(userInputList[i], PatternScriptEntities.ENCODING) in allTracksAtLoc:
-                # Catches invalid track typed into box, skips empty entries
+    # Catches invalid track typed into box, skips empty entries
             i += 1
             continue
         if userInputList[i] == fromTrack:
             i += 1
             continue
         locoObject =  PatternScriptEntities.EM.getByRoadAndNumber(loco['Road'], loco['Number'])
-        try: # Catches on the fly edit of name or road
+    # Catches on the fly edit of name or road
+        try:
             setResult = setRs(locoObject, userInputList[i])
         except AttributeError:
             i += 1
@@ -67,7 +68,8 @@ def setRsToTrack(setCarsForm, textBoxEntry):
             i += 1
             continue
         carObject =  PatternScriptEntities.CM.getByRoadAndNumber(car['Road'], car['Number'])
-        try: # Catches on the fly edit of name or road
+    # Catches on the fly edit of name or road
+        try:
             setResult = setRs(carObject, userInputList[i])
         except AttributeError:
             i += 1

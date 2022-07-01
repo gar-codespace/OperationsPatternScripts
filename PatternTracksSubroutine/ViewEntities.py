@@ -54,7 +54,6 @@ class TrackPatternPanel:
         """Any track type and ignore length flags"""
 
         flagInputBox = PatternScriptEntities.JAVX_SWING.Box(PatternScriptEntities.JAVX_SWING.BoxLayout.X_AXIS) # make a box for the label and input box
-        # flagInputBox.setPreferredSize(PatternScriptEntities.JAVA_AWT.Dimension(self.configFile['PW'], self.configFile['PH']))
         flagInputBox.add(self.yardTracksOnly)
         flagInputBox.add(self.ignoreTrackLength)
 
@@ -144,7 +143,6 @@ def makeTextReportHeader(textWorkEventList):
 
 def makeTextReportLocations(textWorkEventList, trackTotals):
 
-    # reportWidth = PatternScriptEntities.readConfigFile('PT')['RW']
     reportWidth = PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX
     locoItems = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
     carItems = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()

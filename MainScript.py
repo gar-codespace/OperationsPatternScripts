@@ -5,11 +5,11 @@
 import jmri
 import java.awt
 import javax.swing
-from sys import path as sysPath
-
-from java.beans import PropertyChangeListener
-from apps import Apps, FileLocationPane
 import time
+
+from sys import path as sysPath
+from java.beans import PropertyChangeListener
+from apps import Apps
 
 SCRIPT_DIR = 'OperationsPatternScripts'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b1'
@@ -30,6 +30,7 @@ Bundle.BUNDLE_DIR = PLUGIN_ROOT + '\\psBundle\\'
 PatternScriptEntities.JMRI = jmri
 PatternScriptEntities.JAVA_AWT = java.awt
 PatternScriptEntities.JAVX_SWING = javax.swing
+PatternScriptEntities.TIME = time
 
 PatternScriptEntities.PLUGIN_ROOT = PLUGIN_ROOT
 PatternScriptEntities.ENCODING = PatternScriptEntities.readConfigFile('CP')['SE']
@@ -50,7 +51,7 @@ class TrainsTableListener(PatternScriptEntities.JAVX_SWING.event.TableModelListe
         trainList = PatternScriptEntities.TM.getTrainsByIdList()
         for train in trainList:
             train.removePropertyChangeListener(self.builtTrainListener)
-            # Does not throw error if there is no listener to remove :)
+    # Does not throw error if there is no listener to remove :)
             train.addPropertyChangeListener(self.builtTrainListener)
 
         return
@@ -408,9 +409,9 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
     def patternScriptsButtonAction(self, MOUSE_CLICKED):
 
-        self.buildThePlugin()
-
         self.psLog.debug(MOUSE_CLICKED)
+
+        self.buildThePlugin()
 
         return
 
@@ -452,7 +453,7 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
     def addMenuItemListeners(self):
         """Use the pull down item names as the attribute to set the
-        listener: asItemSelected, tpItemSelected, logItemSelected, helpItemSelected
+        listener: asItemSelected, tpItemSelected, logItemSelected, helpItemSelected, Etc.
         """
 
         for menuItem in self.menuItemList:
@@ -538,7 +539,6 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale()
         PatternScriptEntities.validateStubFile().isStubFile()
         Bundle.makeHelpPage()
-        # self.patternScriptsButton.setText(PatternScriptEntities.BUNDLE['Restart with default settings'])
 
         self.logger.startLogger('PS')
         self.buildThePlugin()
@@ -621,7 +621,7 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
     def handle(self):
 
-        yTimeNow = time.time()
+        startTime = PatternScriptEntities.TIME.time()
         self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.Controller')
         self.logger.initialLogMessage(self.psLog)
 
@@ -634,7 +634,8 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
             self.addPatternScriptsButton()
 
         self.psLog.info('Current Pattern Scripts directory: ' + PLUGIN_ROOT)
-        self.psLog.info('Main script run time (sec): ' + ('%s' % (time.time() - yTimeNow))[:6])
+        runTime = PatternScriptEntities.TIME.time() - startTime
+        self.psLog.info('Main script run time (sec): ' + str(round(runTime, 4)))
         print('Current Pattern Scripts directory: ' + PLUGIN_ROOT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

@@ -2,8 +2,8 @@
 Todo:
   How to publish DeepL
   How to use locale modifier, IE en-GB
-  Harden up Bundle against web errors
-  Move TrainPlayer Include into an editable set
+  Harden up Bundle against web errors, untranslated items
+  Maybe use java io to make all paths for better OS compatibility
 
 Comments:
   Schedule does not prevent setting a car to a track
@@ -23,6 +23,8 @@ Tested Items:
     Plugin restarts OK
     On defective config file, plugin replaces the defective file with the master copy OK
     Plugin switches language OK
+    All SI items set to false works OK.
+    SI set to TP only works OK
 
   Reports
     Ignore Track Length works with yard tracks

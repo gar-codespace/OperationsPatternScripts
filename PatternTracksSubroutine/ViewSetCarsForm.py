@@ -215,7 +215,6 @@ class MakeSetCarsEqptRows():
 
             listOfLocoRows.append(combinedInputLine)
 
-        # PatternScriptEntities.backupConfigFile()
         return listOfLocoRows
 
     def makeSetCarsCarRows(self):
@@ -247,7 +246,6 @@ class MakeSetCarsEqptRows():
             combinedInputLine.add(PatternScriptEntities.JAVX_SWING.Box.createHorizontalGlue())
             listOfCarRows.append(combinedInputLine)
 
-        # PatternScriptEntities.backupConfigFile()
         return listOfCarRows
 
     def textBoxEntryList(self):

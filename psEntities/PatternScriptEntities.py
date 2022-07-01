@@ -12,7 +12,6 @@ import time
 from json import loads as jsonLoads, dumps as jsonDumps
 from codecs import open as codecsOpen
 from os import system as osSystem
-# from apps import Apps
 
 PLUGIN_ROOT = ''
 PROFILE_PATH = JMRI.util.FileUtil.getProfilePath()
@@ -152,23 +151,6 @@ class validateStubFile:
         self.writeStubFile()
 
         return
-
-# def checkForMultiplePsButtons():
-#     """Work in progress, implement in v3."""
-#
-#     buttonSpaceComponents = Apps.buttonSpace().getComponents()
-#
-#     psList = []
-#     for component in buttonSpaceComponents:
-#         if component.getName() == 'psButton':
-#             psList.append(component)
-#
-#     if len(psList) > 1:
-#         print('yes')
-#         buttonSpaceComponents.remove(psList[1])
-#
-#     Apps.buttonSpace().revalidate()
-#     return
 
 def psLocale():
 
@@ -344,6 +326,7 @@ def backupConfigFile():
     return
 
 def restoreConfigFile():
+    """Depricate in v3"""
 
     copyFrom = JAVA_IO.File(JMRI.util.FileUtil.getProfilePath() + 'operations\PatternConfig.json.bak')
     copyTo = JAVA_IO.File(PROFILE_PATH + 'operations\\PatternConfig.json')
@@ -487,24 +470,25 @@ def getAlertColor():
 
     return color
 
-""" Items from Config File that may be put back:"""
+"""
+Items from Config File that may be put back:
 
+"EM": {
+"1": "Mac Classic ",
+"2": "open -a TextEdit ",
+"4": "start notepad.exe ",
+"5": "nano ",
+"6": "OS2 ",
+"7": "kwrite "
+},
 
-    #   "EM": {
-    #     "1": "Mac Classic ",
-    #     "2": "open -a TextEdit ",
-    #     "4": "start notepad.exe ",
-    #     "5": "nano ",
-    #     "6": "OS2 ",
-    #     "7": "kwrite "
-    #   },
-    #
-    #
-    # "LI": {
-    #   "0" : "Editing these is not recommended",
-    #   "9": "- CRITICAL -",
-    #   "7": "- ERROR -",
-    #   "5": "- WARNING -",
-    #   "3": "- INFO -",
-    #   "1": "- DEBUG -"
-    # },
+"LI": {
+  "0" : "Editing these is not recommended",
+  "9": "- CRITICAL -",
+  "7": "- ERROR -",
+  "5": "- WARNING -",
+  "3": "- INFO -",
+  "1": "- DEBUG -"
+},
+
+"""

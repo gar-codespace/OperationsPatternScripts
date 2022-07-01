@@ -165,8 +165,6 @@ def getDetailsForLocoAsDict(locoObject):
     locoDetailDict[u'PUSO'] = u'SL'
     locoDetailDict[u' '] = u' ' # Catches KeyError - empty box added to getDropEngineMessageFormat
 
-    # PatternScriptEntities.backupConfigFile()
-
     return locoDetailDict
 
 def sortCarList(carList):
@@ -287,7 +285,6 @@ def getDetailsForCarAsDict(carObject, kernelTally):
     carDetailDict[u'PUSO'] = u'SC'
     carDetailDict[u' '] = u' ' # Catches KeyError - empty box added to getLocalSwitchListMessageFormat
 
-    # PatternScriptEntities.backupConfigFile()
     return carDetailDict
 
 def makeGenericHeader():

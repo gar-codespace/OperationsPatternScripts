@@ -4,9 +4,6 @@ Callable from the pattern scripts subroutine or stand alone.
 
 import jmri
 
-import time
-from sys import path as sysPath
-
 SCRIPT_NAME ='OperationsPatternScripts.TrainPlayerSubroutine.BuiltTrainExport'
 SCRIPT_REV = 20220101
 
@@ -111,7 +108,7 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
 
         self.standAloneLogging.startLogging()
 
-        timeNow = time.time()
+        startTime = time.time()
 
         if PatternScriptEntities.CheckTpDestination().directoryExists():
 
@@ -132,19 +129,25 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
 
             self.tpLog.info('Export JMRI manifest to TrainPlyer: ' + self.train.getName())
         else:
-            self.tpLog.warning('TrainPlayer Reports directory not found, manifest export did not complete')
+            self.tpLog.warning('TrainPlayer Reports directory not found')
+            self.tpLog.warning('TrainPlayer manifest export did not complete')
 
 
         self.tpLog.info('Export to TrainPlayer script location: ' + PLUGIN_ROOT)
-        self.tpLog.info('Manifest export (sec): ' + ('%s' % (time.time() - timeNow))[:6])
+        runTime = time.time() - startTime
+        self.tpLog.info('Manifest export (sec): ' + str(round(runTime, 4)))
         print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
-        print('Manifest export (sec): ' + ('%s' % (time.time() - timeNow))[:6])
+        print('Manifest export (sec): ' + str(round(runTime, 4)))
 
         self.standAloneLogging.stopLogging()
 
         return False
 
 if __name__ == "__builtin__":
+
+    import jmri
+    import time
+    from sys import path as sysPath
 
     PLUGIN_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
     sysPath.append(PLUGIN_ROOT)
@@ -153,7 +156,7 @@ if __name__ == "__builtin__":
     from psBundle import Bundle
 
     Bundle.BUNDLE_DIR = PLUGIN_ROOT + '\\psBundle\\'
-    
+
     PatternScriptEntities.PLUGIN_ROOT = PLUGIN_ROOT
     PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale()
     PatternScriptEntities.ENCODING = 'utf-8'

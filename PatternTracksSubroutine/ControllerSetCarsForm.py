@@ -114,9 +114,10 @@ class CreatePatternReportGui:
         if not self.quickCheck():
             return
 
+    # Replaces [Hold] with a track name
         locationDict = ModelSetCarsForm.makeLocationDict( \
                 self.setCarsForm, self.buttonDict['textBoxEntry'] \
-                ) # Replaces [Hold] with a track name
+                )
 
         modifiedReport = Model.makeReport(locationDict, 'SC')
 

@@ -4,7 +4,6 @@
 """Choose or create a language translation bundle for the current locale"""
 
 from urllib2 import urlopen
-import time
 import sys
 
 from psEntities import PatternScriptEntities
@@ -67,7 +66,7 @@ def makeBundles():
 
     for item in bundleTargets:
 
-        startTime = time.time()
+        startTime = PatternScriptEntities.TIME.time()
 
         itemSource =  BUNDLE_DIR + 'template' + item + '.txt'
         itemTarget =  BUNDLE_DIR + item.lower() + '.' + PatternScriptEntities.psLocale()[:2] + '.json'
@@ -78,7 +77,7 @@ def makeBundles():
             translation = baseTranslator(bundleFile, itemScratch)
             PatternScriptEntities.genericWriteReport(itemTarget, translation)
 
-            runTime = time.time() - startTime
+            runTime = PatternScriptEntities.TIME.time() - startTime
             _psLog.info(item + ' translation time: ' + str(round(runTime, 2)))
 
         else:
@@ -142,19 +141,19 @@ class Translator:
             i += 1
             if i == 10:
                 i = 0
-                time.sleep(.7)
+                PatternScriptEntities.TIME.sleep(.7)
 
     # Homebrew version of await
-        timeOut = time.time() + 20
+        timeOut = PatternScriptEntities.TIME.time() + 20
         while True:
-            if time.time() > timeOut:
+            if PatternScriptEntities.TIME.time() > timeOut:
                 _psLog.warning('Connection Timed Out')
                 print('Connection Timed Out')
                 break
             if len(self.scratchFile) == len(self.bundleFile):
                 print('Translation Completed')
                 break
-            time.sleep(.1)
+            PatternScriptEntities.TIME.sleep(.1)
 
     def makeDictionary(self):
 
@@ -197,7 +196,7 @@ class MakeBundleItem(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton)
                 _psLog.warning('Not translated: ' + self.item)
             if response:
                 break
-            time.sleep(.05)
+            PatternScriptEntities.TIME.sleep(.05)
 
         translation['source'] = self.item
         translation['error'] = self.item
