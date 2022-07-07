@@ -55,6 +55,8 @@
   "Work Location:": "Lieu de travail :",
   "Yard tracks only": "Voies de triage uniquement",
   "at": "\u00e0 l'adresse",
-  "Restart From Default" : "Restart From Default",
+  "Restart From Default" : "Redémarrer à partir de la valeur par défaut",
+  "Make Work" : "Faire du travail",
+  "Report Work" : "Rapport de travail",
   "version": 20220101
 }

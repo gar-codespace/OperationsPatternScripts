@@ -89,8 +89,8 @@ def makeSetCarsForTrackForm(setCarsFormData):
         buttonDict['scheduleButton'] = scheduleButton
         setCarsForm.add(PatternScriptEntities.JAVX_SWING.JSeparator())
 
-    setCarsFooter = MakeSetCarsFooter()
-    buttonDict['footerButtons'] = setCarsFooter.getComponents()
+    setCarsFooter, footerButtons = MakeSetCarsFooter()
+    buttonDict['footerButtons'] = footerButtons
     setCarsForm.add(setCarsFooter)
 
     return setCarsForm, buttonDict
@@ -276,28 +276,58 @@ def makeSetCarsScheduleRow(setCarsFormData):
     return schedulePanel, scheduleList
 
 def MakeSetCarsFooter():
+    """Makes 2 panels, Make Work and Report Work, and adds buttons to the panels"""
 
     _psLog.debug('MakeSetCarsFooter')
 
-    combinedFooter = PatternScriptEntities.JAVX_SWING.JPanel()
-    combinedFooter.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder(
-        PatternScriptEntities.BUNDLE['Action']
+    makeWorkPanel = PatternScriptEntities.JAVX_SWING.JPanel()
+    makeWorkPanel.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder(
+        unicode(PatternScriptEntities.BUNDLE['Make Work'], PatternScriptEntities.ENCODING)
         )
 
-    printButton = PatternScriptEntities.JAVX_SWING.JButton(unicode(
-        PatternScriptEntities.BUNDLE['Switch List'], PatternScriptEntities.ENCODING)
+    printButton = PatternScriptEntities.JAVX_SWING.JButton(
+        unicode(PatternScriptEntities.BUNDLE['Switch List'], PatternScriptEntities.ENCODING)
         )
-    combinedFooter.add(printButton)
+
+    trainPlayerButton = PatternScriptEntities.JAVX_SWING.JButton(
+        unicode(u'TrainPlayer', PatternScriptEntities.ENCODING)
+        )
+    if not PatternScriptEntities.readConfigFile('PT')['TI']:
+        trainPlayerButton.setVisible(False)
+
+    makeWorkPanel.add(PatternScriptEntities.JAVX_SWING.Box.createRigidArea(
+        PatternScriptEntities.JAVA_AWT.Dimension(20,0))
+        )
+    makeWorkPanel.add(printButton)
+    makeWorkPanel.add(trainPlayerButton)
+    makeWorkPanel.add(PatternScriptEntities.JAVX_SWING.Box.createRigidArea(
+        PatternScriptEntities.JAVA_AWT.Dimension(20,0))
+        )
+
+    reportWorkPanel = PatternScriptEntities.JAVX_SWING.JPanel()
+    reportWorkPanel.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder(
+        unicode(PatternScriptEntities.BUNDLE['Report Work'], PatternScriptEntities.ENCODING)
+        )
 
     setButton = PatternScriptEntities.JAVX_SWING.JButton(
         unicode(PatternScriptEntities.BUNDLE['Set Cars to Track'], PatternScriptEntities.ENCODING)
         )
-    combinedFooter.add(setButton)
 
-    if PatternScriptEntities.readConfigFile('PT')['TI']:
-        trainPlayerButton = PatternScriptEntities.JAVX_SWING.JButton(
-            unicode(u'TrainPlayer', PatternScriptEntities.ENCODING)
-            )
-        combinedFooter.add(trainPlayerButton)
+    reportWorkPanel.add(PatternScriptEntities.JAVX_SWING.Box.createRigidArea(
+        PatternScriptEntities.JAVA_AWT.Dimension(20,0))
+        )
+    reportWorkPanel.add(setButton)
+    reportWorkPanel.add(PatternScriptEntities.JAVX_SWING.Box.createRigidArea(
+        PatternScriptEntities.JAVA_AWT.Dimension(20,0))
+        )
 
-    return combinedFooter
+    combinedFooter = PatternScriptEntities.JAVX_SWING.JPanel()
+    combinedFooter.add(makeWorkPanel)
+    combinedFooter.add(reportWorkPanel)
+
+    footerButtons = []
+    footerButtons.append(printButton)
+    footerButtons.append(setButton)
+    footerButtons.append(trainPlayerButton)
+
+    return combinedFooter, footerButtons

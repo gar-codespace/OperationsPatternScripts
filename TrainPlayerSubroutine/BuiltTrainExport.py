@@ -3,6 +3,7 @@ Callable from the pattern scripts subroutine or stand alone.
 """
 
 import jmri
+import time
 
 SCRIPT_NAME ='OperationsPatternScripts.TrainPlayerSubroutine.BuiltTrainExport'
 SCRIPT_REV = 20220101
@@ -146,7 +147,6 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
 if __name__ == "__builtin__":
 
     import jmri
-    import time
     from sys import path as sysPath
 
     PLUGIN_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
