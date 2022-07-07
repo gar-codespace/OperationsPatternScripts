@@ -289,9 +289,7 @@ def MakeSetCarsFooter():
         unicode(PatternScriptEntities.BUNDLE['Switch List'], PatternScriptEntities.ENCODING)
         )
 
-    trainPlayerButton = PatternScriptEntities.JAVX_SWING.JButton(
-        unicode(u'TrainPlayer', PatternScriptEntities.ENCODING)
-        )
+    trainPlayerButton = PatternScriptEntities.JAVX_SWING.JButton(u'TrainPlayer©')
     if not PatternScriptEntities.readConfigFile('PT')['TI']:
         trainPlayerButton.setVisible(False)
 

@@ -195,7 +195,7 @@ class View:
     def makePsButton(self):
 
         psButton = PatternScriptEntities.JAVX_SWING.JButton()
-        psButton.setText(PatternScriptEntities.BUNDLE['Pattern Scripts'])
+        psButton.setText(PatternScriptEntities.BUNDLE[u'Pattern Scripts'])
         psButton.setName('psButton')
 
         return psButton
@@ -235,7 +235,7 @@ class View:
         logMenuItem = self.makeMenuItem(self.setLmDropDownText())
         editConfigMenuItem = self.makeMenuItem(self.setEcDropDownText())
 
-        toolsMenu = PatternScriptEntities.JAVX_SWING.JMenu(PatternScriptEntities.BUNDLE['Tools'])
+        toolsMenu = PatternScriptEntities.JAVX_SWING.JMenu(PatternScriptEntities.BUNDLE[u'Tools'])
         toolsMenu.add(PatternScriptEntities.JMRI.jmrit.operations.setup.OptionAction())
         toolsMenu.add(PatternScriptEntities.JMRI.jmrit.operations.setup.PrintOptionAction())
         toolsMenu.add(PatternScriptEntities.JMRI.jmrit.operations.setup.BuildReportOptionAction())
@@ -245,7 +245,7 @@ class View:
         toolsMenu.add(ptMenuItem)
         toolsMenu.add(rsMenuItem)
 
-        helpMenu = PatternScriptEntities.JAVX_SWING.JMenu(PatternScriptEntities.BUNDLE['Help'])
+        helpMenu = PatternScriptEntities.JAVX_SWING.JMenu(PatternScriptEntities.BUNDLE[u'Help'])
         helpMenu.add(helpMenuItem)
         helpMenu.add(gitHubMenuItem)
         helpMenu.add(opsFolderMenuItem)
@@ -259,7 +259,7 @@ class View:
 
         configPanel = PatternScriptEntities.readConfigFile('CP')
         uniqueWindow.setName('patternScriptsWindow')
-        uniqueWindow.setTitle(PatternScriptEntities.BUNDLE['Pattern Scripts'])
+        uniqueWindow.setTitle(PatternScriptEntities.BUNDLE[u'Pattern Scripts'])
         uniqueWindow.addWindowListener(PatternScriptsWindowListener())
         uniqueWindow.setJMenuBar(psMenuBar)
         uniqueWindow.add(self.controlPanel)
@@ -285,9 +285,9 @@ class View:
 
         patternConfig = PatternScriptEntities.readConfigFile('PT')
         if patternConfig['AS']:
-            menuText = PatternScriptEntities.BUNDLE['Do Not Apply Schedule']
+            menuText = PatternScriptEntities.BUNDLE[u'Do Not Apply Schedule']
         else:
-            menuText = PatternScriptEntities.BUNDLE['Apply Schedule']
+            menuText = PatternScriptEntities.BUNDLE[u'Apply Schedule']
 
         return menuText, 'asItemSelected'
 
@@ -296,58 +296,58 @@ class View:
 
         patternConfig = PatternScriptEntities.readConfigFile('PT')
         if patternConfig['TI']:
-            menuText = PatternScriptEntities.BUNDLE['Disable TrainPlayer']
+            menuText = PatternScriptEntities.BUNDLE[u'Disable TrainPlayer©']
         else:
-            menuText = PatternScriptEntities.BUNDLE['Enable TrainPlayer']
+            menuText = PatternScriptEntities.BUNDLE[u'Enable TrainPlayer©']
 
         return menuText, 'tpItemSelected'
 
     def setPtDropDownText(self):
         """itemMethod - Set the drop down text for the Translate Plugin item"""
 
-        menuText = PatternScriptEntities.BUNDLE['Translate Plugin']
+        menuText = PatternScriptEntities.BUNDLE[u'Translate Plugin']
 
         return menuText, 'ptItemSelected'
 
     def setRsDropDownText(self):
         """itemMethod - Set the drop down text for the Restart From Default item"""
 
-        menuText = PatternScriptEntities.BUNDLE['Restart From Default']
+        menuText = PatternScriptEntities.BUNDLE[u'Restart From Default']
 
         return menuText, 'rsItemSelected'
 
     def setHmDropDownText(self):
         """itemMethod - Set the drop down text for the Log menu item"""
 
-        menuText = PatternScriptEntities.BUNDLE['Window Help...']
+        menuText = PatternScriptEntities.BUNDLE[u'Window Help...']
 
         return menuText, 'helpItemSelected'
 
     def setLmDropDownText(self):
         """itemMethod - Set the drop down text for the Log menu item"""
 
-        menuText = PatternScriptEntities.BUNDLE['View Log File']
+        menuText = PatternScriptEntities.BUNDLE[u'View Log File']
 
         return menuText, 'logItemSelected'
 
     def setGhDropDownText(self):
         """itemMethod - Set the drop down text for the gitHub page item"""
 
-        menuText = PatternScriptEntities.BUNDLE['GitHub Web Page']
+        menuText = PatternScriptEntities.BUNDLE[u'GitHub Web Page']
 
         return menuText, 'ghItemSelected'
 
     def setEcDropDownText(self):
         """itemMethod - Set the drop down text for the edit config file item"""
 
-        menuText = PatternScriptEntities.BUNDLE['Edit Config File']
+        menuText = PatternScriptEntities.BUNDLE[u'Edit Config File']
 
         return menuText, 'ecItemSelected'
 
     def setOfDropDownText(self):
         """itemMethod - Set the drop down text for the edit config file item"""
 
-        menuText = PatternScriptEntities.BUNDLE['Operations Folder']
+        menuText = PatternScriptEntities.BUNDLE[u'Operations Folder']
 
         return menuText, 'ofItemSelected'
 
@@ -469,12 +469,12 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         if patternConfig['PT']['AS']:
             patternConfig['PT'].update({'AS': False})
-            AS_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE["Apply Schedule"])
+            AS_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE[u'Apply Schedule'])
             self.psLog.info('Apply Schedule turned off')
             print('Apply Schedule turned off')
         else:
             patternConfig['PT'].update({'AS': True})
-            AS_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE["Do Not Apply Schedule"])
+            AS_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE[u'Do Not Apply Schedule'])
             self.psLog.info('Apply Schedule turned on')
             print('Apply Schedule turned on')
 
@@ -490,7 +490,7 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         if patternConfig['PT']['TI']: # If enabled, turn it off
             patternConfig['PT'].update({'TI': False})
-            TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE["Enable TrainPlayer"])
+            TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE[u'Enable TrainPlayer©'])
 
             self.trainsTableModel.removeTableModelListener(self.trainsTableListener)
             self.removeBuiltTrainListener()
@@ -499,7 +499,7 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
             print('TrainPlayer support deactivated')
         else:
             patternConfig['PT'].update({'TI': True})
-            TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE["Disable TrainPlayer"])
+            TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE[u'Disable TrainPlayer©'])
 
             self.trainsTableModel.addTableModelListener(self.trainsTableListener)
             self.addBuiltTrainListener()

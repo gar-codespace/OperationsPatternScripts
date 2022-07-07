@@ -81,7 +81,7 @@ class TrackPatternTranslationToTp:
         self.psLog.debug('PatternTracksExport.appendSwitchList')
 
         headerNames = PatternScriptEntities.readConfigFile('PT')
-        reportTitle = PatternScriptEntities.BUNDLE['Work Event List for TrainPlayer']
+        reportTitle = PatternScriptEntities.BUNDLE[u'Work Event List for TrainPlayer©']
         jsonFile = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + reportTitle + '.json'
         jsonSwitchList = PatternScriptEntities.genericReadReport(jsonFile)
         tpSwitchList =  PatternScriptEntities.loadJson(jsonSwitchList)
@@ -302,7 +302,7 @@ class UpdateInventory:
         self.errorReport += '\n\n' + PatternScriptEntities.BUNDLE['List of tracks not found:']
         self.errorReport += '\n' + self.locationNotFound
 
-        self.errorReport += '\n\n' + PatternScriptEntities.BUNDLE['TrainPlayer cars not found in JMRI roster:']
+        self.errorReport += '\n\n' + PatternScriptEntities.BUNDLE[u'TrainPlayer© cars not found in JMRI roster:']
         self.errorReport += '\n' + '\n'.join(sorted(self.carsNotFound[1:-1])) # [0] is the header
 
         return self.errorReport

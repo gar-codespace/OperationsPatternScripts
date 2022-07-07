@@ -23,9 +23,10 @@ class ManageGui:
         """Make the frame that all the TrainPlayer controls are added to"""
 
         subroutineFrame = PatternScriptEntities.JAVX_SWING.JPanel() # the track pattern panel
-        subroutineFrame.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder( \
-                PatternScriptEntities.BUNDLE['TrainPlayer Support Subroutine'] \
-                )
+        encodedKey = unicode('TrainPlayer© Support Subroutine', PatternScriptEntities.ENCODING)
+        subroutineFrame.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder(
+            PatternScriptEntities.BUNDLE[u'TrainPlayer© Support Subroutine']
+            )
 
         return subroutineFrame
 

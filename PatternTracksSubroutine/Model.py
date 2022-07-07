@@ -149,7 +149,7 @@ def makeReport(locationDict, reportType):
         reportTitle = PatternScriptEntities.BUNDLE['Switch List for Track']
 
     if reportType == 'TP':
-        reportTitle = PatternScriptEntities.BUNDLE['Work Event List for TrainPlayer']
+        reportTitle = PatternScriptEntities.BUNDLE[u'Work Event List for TrainPlayer©']
 
     modifiedReport = ModelEntities.makeGenericHeader()
     modifiedReport.update({'trainDescription' : reportTitle})
