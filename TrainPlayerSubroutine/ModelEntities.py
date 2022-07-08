@@ -7,7 +7,7 @@ SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.ModelEntities'
 SCRIPT_REV = 20220101
 
 def parseJmriLocations(location):
-    """called from JmriTranslationToTpt"""
+    """called from JmriTranslationToTp"""
 
     tpLocation = {}
     tpLocation['locationName'] = location['userName']

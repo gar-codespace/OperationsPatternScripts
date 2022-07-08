@@ -199,15 +199,20 @@ class ProcessWorkEventList:
 
         ID = rS[PatternScriptEntities.SB.handleGetMessage('Road')] + rS[PatternScriptEntities.SB.handleGetMessage('Number')]
 
-        rsLine  = [rS[u'PUSO'] + ',' \
-                + ID + ',' \
-                + rS[PatternScriptEntities.SB.handleGetMessage('Road')] + ',' \
-                + rS[PatternScriptEntities.SB.handleGetMessage('Number')] + ',' \
-                + rS[PatternScriptEntities.SB.handleGetMessage('Load')] + ',' \
-                + rS[PatternScriptEntities.SB.handleGetMessage('Track')] + ',' \
-                + rS[u'Set to'] + ',' \
-                + FDandT + ',' \
-                + trackComment
+    # Pickup Cars are tagged with their final destination, all others tagged with destination
+        if rS[u'PUSO'] == 'PC':
+            rsSetTo = FDandT
+        else:
+            rsSetTo = rS[u'Set to']
+
+        rsLine  = [
+                  rS[u'PUSO'] + ','
+                + ID + ','
+                + rS[PatternScriptEntities.SB.handleGetMessage('Road')] + ','
+                + rS[PatternScriptEntities.SB.handleGetMessage('Number')] + ','
+                + rS[PatternScriptEntities.SB.handleGetMessage('Load')] + ','
+                + rS[PatternScriptEntities.SB.handleGetMessage('Track')] + ','
+                + rsSetTo
                 ]
 
         return rsLine

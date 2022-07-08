@@ -8,8 +8,8 @@ import time
 SCRIPT_NAME ='OperationsPatternScripts.TrainPlayerSubroutine.BuiltTrainExport'
 SCRIPT_REV = 20220101
 
-# SCRIPT_DIR = 'OperationsPatternScripts'
-SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b1'
+SCRIPT_DIR = 'OperationsPatternScripts'
+# SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b1'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b2'
 
 class StandAloneLogging():
