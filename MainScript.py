@@ -11,8 +11,8 @@ from sys import path as sysPath
 from java.beans import PropertyChangeListener
 from apps import Apps
 
-SCRIPT_DIR = 'OperationsPatternScripts'
-# SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b1'
+# SCRIPT_DIR = 'OperationsPatternScripts'
+SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b1'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b2'
 
 PLUGIN_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR

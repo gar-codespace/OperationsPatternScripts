@@ -4,7 +4,6 @@
 """Choose or create a language translation bundle for the current locale"""
 
 from urllib2 import urlopen
-from urllib import urlencode
 import sys
 
 from psEntities import PatternScriptEntities

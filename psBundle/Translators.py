@@ -6,7 +6,7 @@
 from urllib import urlencode
 
 from psEntities import PatternScriptEntities
-from psBundle import Keys
+# from psBundle import Keys
 
 class useDeepL:
     """Specifics for using DeepL"""
