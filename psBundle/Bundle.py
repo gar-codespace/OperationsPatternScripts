@@ -4,6 +4,7 @@
 """Choose or create a language translation bundle for the current locale"""
 
 from urllib2 import urlopen
+from urllib import urlencode
 import sys
 
 from psEntities import PatternScriptEntities
@@ -112,7 +113,7 @@ class Translator:
     def __init__(self, bundleFile, scratchFile):
 
         self.bundleFile = bundleFile
-        self.translationDict = {'version' : SCRIPT_REV}
+        self.translationDict = {u'version' : SCRIPT_REV}
         self.tempResult = []
         self.scratchFile = scratchFile
 
@@ -134,8 +135,9 @@ class Translator:
     # Meter the items to be translated
         i = 0
         for item in self.bundleFile:
+            encodedItem = unicode(item, PatternScriptEntities.ENCODING)
             bundleItem = MakeBundleItem()
-            url = self.translationService.getTheUrl(item)
+            url = self.translationService.getTheUrl(encodedItem)
             bundleItem.passInAttributes(self.scratchFile, url, item)
             bundleItem.start()
             i += 1

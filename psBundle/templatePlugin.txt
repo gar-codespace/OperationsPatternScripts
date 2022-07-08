@@ -47,13 +47,13 @@ Track Pattern Report
 Track Totals for Cars:
 Track:
 Tracks at
-TrainPlayer cars not found in JMRI roster:
-TrainPlayer Support Subroutine
+TrainPlayer© cars not found in JMRI roster:
+TrainPlayer© Support Subroutine
 Translate Plugin
 Update Inventory
 Update Inventory Error Report
 View Log File
 Window Help...
-Work Event List for TrainPlayer
+Work Event List for TrainPlayer©
 Work Location:
 Yard tracks only

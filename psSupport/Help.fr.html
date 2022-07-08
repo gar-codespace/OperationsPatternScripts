@@ -43,7 +43,7 @@
 <p><A HREF="https://youtu.be/IdXvxyo-E3Y">Démonstration dans un chantier</A></p>
 <p><A HREF="https://youtu.be/2Tv6sUMDD_Y">Démonstration à l'industrie</A></p>
 <p>Comment modifier ce plugin</p>
-<p>Use this plugin with TrainPlayer©</p>
+<p>Utiliser ce plugin avec TrainPlayer©</p>
 
 <h2>Organisation</h2>
 <p>Le tableau suivant montre la structure du code de ce plugin.</P>
@@ -70,7 +70,7 @@
 <br><font color="blue">La description de chaque élément est en bleu</font>
 <br><font color="green">Les touches modifiables par l'utilisateur sont décrites en vert.</font>
 <br>Des garde-fous ont été mis en place autour des valeurs marquées en vert, mais même ainsi, ce plugin n'est pas capable d'attraper tous les types d'erreurs. Dans certains cas, le plugin peut planter. Si cela se produit, appuyez sur le bouton "Restart from PatternConfig Backup" et le plugin utilisera le dernier bon fichier PatternConfig.json comme nouveau point de départ. Dans d'autres cas, si une erreur est faite en modifiant le fichier PatternConfig.json, le plugin le remplacera par le fichier par défaut, et l'utilisateur devra recommencer.
-<br>Worst case, simply delete the Pattern Config.json file and the plugin will create a new one.</p>
+<br>Dans le pire des cas, il suffit de supprimer le fichier Pattern Config.json et le plugin en créera un nouveau.</p>
 
 <h3><font color="green">Définitions des couleurs</font></h3>
 <pre>
@@ -156,10 +156,10 @@
     "PL" : "", <font color="blue">Pattern Location (écrit par ce plugin)</font>
     "PT" : { <font color="blue">Pattern-Tracks (écrit par ce plugin)</font>
     },
-    "PA" : false, <font color="blue">Drapeau "Yard Tracks Only" (défini par l'utilisateur)</font>
-    "PI" : false, <font color="blue">Ignorer l'indicateur de longueur de piste (défini par l'utilisateur)</font>
-    "AS" : true, <font color="blue">Appliquer l'indicateur de planification (défini par l'utilisateur)</font>
-    "TI" : false, <font color="blue">TrainPlayer© Drapeau d'inclusion (défini par l'utilisateur)</font>
+    "PA" : false, <font color="blue">drapeau "Yard Tracks Only" (défini par l'utilisateur, écrit par ce plugin)</font>
+    "PI" : false, <font color="blue">Ignorer l'indicateur Track Length (défini par l'utilisateur, écrit par ce plugin)</font>
+    "AS" : true, <font color="blue">Appliquer le drapeau Schedule (défini par l'utilisateur, écrit par ce plugin)</font>
+    "TI" : false, <font color="blue">TrainPlayer Include flag (set by user, written by this plugin)</font>
     "PW" : 260, <font color="blue">Largeur du motif</font>
     "PH" : 16, <font color="blue">Hauteur du motif</font>
     "RM": 8, <font color="blue">Multiplicateur de rangs</font>

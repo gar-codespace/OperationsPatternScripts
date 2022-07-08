@@ -55,5 +55,8 @@
   "Work Location:": "Work Location:",
   "Yard tracks only": "Yard tracks only",
   "at": "at",
+  "Restart From Default" : "Restart From Default",
+  "Make Work" : "Make Work",
+  "Report Work" : "Report Work",
   "version": 20220101
 }
