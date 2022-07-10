@@ -47,7 +47,7 @@ def parseRollingStockAsDict(rS):
     rsDict = {}
 
 
-    PatternScriptEntities.SB.handleGetMessage('Road')
+    # PatternScriptEntities.SB.handleGetMessage('Road')
     rsDict[PatternScriptEntities.SB.handleGetMessage('Road')] = unicode(rS[u'road'], PatternScriptEntities.ENCODING)
     rsDict[PatternScriptEntities.SB.handleGetMessage('Number')] = rS[u'number']
 
@@ -61,10 +61,19 @@ def parseRollingStockAsDict(rS):
     except:
         rsDict[PatternScriptEntities.SB.handleGetMessage('Type')] = rS[u'carType']
 
+
+
     try:
         rsDict[PatternScriptEntities.SB.handleGetMessage('Load')] = rS['load']
     except:
         rsDict[PatternScriptEntities.SB.handleGetMessage('Load')] = 'O'
+
+    LT = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarLoads()
+    print(rS[u'carType'], rS['load'], LT.getNames(rS['carType']))
+    # try:
+    #     # rsDict[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = LT.getLoadType(rS[u'carType'], 'Empty')
+    # except:
+    #     rsDict[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = 'O'
 
     rsDict[PatternScriptEntities.SB.handleGetMessage('Length')] = rS[u'length']
     rsDict[PatternScriptEntities.SB.handleGetMessage('Weight')] = rS[u'weightTons']
