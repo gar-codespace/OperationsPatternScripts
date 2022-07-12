@@ -1,5 +1,6 @@
 
 Todo:
+  remove getSetToLocationAndTrack, part of TP export
   How to publish DeepL
   How to use locale modifier, IE en-GB
   Harden up Bundle against web errors, untranslated items

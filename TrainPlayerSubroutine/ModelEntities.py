@@ -6,7 +6,25 @@ from psEntities import PatternScriptEntities
 SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.ModelEntities'
 SCRIPT_REV = 20220101
 
-def parseJmriLocations(location):
+def getLoadTypeRubric(xmlFile, target):
+
+    loadTypeXml = PatternScriptEntities.xmlWrangler('OperationsCarRoster')
+
+    loadList = loadTypeXml.getXml('./loads/load')
+    if not loadList:
+        return False
+
+    loadTypeRubric = {}
+    for item in loadList:
+        for load in item:
+            tempKey = item.attrib.get('type') + load.attrib.get('name')
+            tempValue = load.attrib.get('loadType')
+            loadTypeRubric[tempKey] = tempValue
+
+    return loadTypeRubric
+
+
+def parseJmriLocations(location, loadTypeRubric):
     """called from JmriTranslationToTp"""
 
     tpLocation = {}
@@ -18,18 +36,30 @@ def parseJmriLocations(location):
     for loco in location[u'engines'][u'add']:
         line = parseRollingStockAsDict(loco)
         line['PUSO'] = 'PL'
+        line[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = 'O'
         locoList.append(line)
     for loco in location[u'engines'][u'remove']:
         line = parseRollingStockAsDict(loco)
         line['PUSO'] = 'SL'
+        line[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = 'O'
         locoList.append(line)
     for car in location['cars']['add']:
         line = parseRollingStockAsDict(car)
         line['PUSO'] = 'PC'
+        tempKey = car['carType'] + car['load']
+        try:
+            line[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = loadTypeRubric[tempKey]
+        except:
+            line[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = 'U'
         carList.append(line)
     for car in location['cars']['remove']:
         line = parseRollingStockAsDict(car)
         line['PUSO'] = 'SC'
+        tempKey = car['carType'] + car['load']
+        try:
+            line[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = loadTypeRubric[tempKey]
+        except:
+            line[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = 'U'
         carList.append(line)
 
     locationTrack = {}
@@ -46,8 +76,6 @@ def parseRollingStockAsDict(rS):
 
     rsDict = {}
 
-
-    # PatternScriptEntities.SB.handleGetMessage('Road')
     rsDict[PatternScriptEntities.SB.handleGetMessage('Road')] = unicode(rS[u'road'], PatternScriptEntities.ENCODING)
     rsDict[PatternScriptEntities.SB.handleGetMessage('Number')] = rS[u'number']
 
@@ -61,19 +89,10 @@ def parseRollingStockAsDict(rS):
     except:
         rsDict[PatternScriptEntities.SB.handleGetMessage('Type')] = rS[u'carType']
 
-
-
     try:
         rsDict[PatternScriptEntities.SB.handleGetMessage('Load')] = rS['load']
     except:
         rsDict[PatternScriptEntities.SB.handleGetMessage('Load')] = 'O'
-
-    LT = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarLoads()
-    print(rS[u'carType'], rS['load'], LT.getNames(rS['carType']))
-    # try:
-    #     # rsDict[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = LT.getLoadType(rS[u'carType'], 'Empty')
-    # except:
-    #     rsDict[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = 'O'
 
     rsDict[PatternScriptEntities.SB.handleGetMessage('Length')] = rS[u'length']
     rsDict[PatternScriptEntities.SB.handleGetMessage('Weight')] = rS[u'weightTons']

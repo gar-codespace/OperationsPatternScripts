@@ -122,7 +122,6 @@ class JmriTranslationToTp:
 
         jmriDateAsEpoch = PatternScriptEntities.convertJmriDateToEpoch(completeJmriManifest[u'date'])
         completeJmriManifest['date'] = PatternScriptEntities.timeStamp(jmriDateAsEpoch)
-        # completeJmriManifest['date'] = completeJmriManifest['date']
         completeJmriManifest['trainDescription'] = completeJmriManifest['description']
         completeJmriManifest['trainName'] = completeJmriManifest['userName']
         completeJmriManifest['trainComment'] = completeJmriManifest['comment']
@@ -137,8 +136,10 @@ class JmriTranslationToTp:
         self.psLog.debug('Model.translateManifestBody')
 
         locationList = []
+        loadTypeRubric = ModelEntities.getLoadTypeRubric('OperationsCarRoster', './loads/load')
+
         for location in completeJmriManifest[u'locations']:
-            tpLocation = ModelEntities.parseJmriLocations(location)
+            tpLocation = ModelEntities.parseJmriLocations(location, loadTypeRubric)
             locationList.append(tpLocation)
 
         return locationList
@@ -192,24 +193,30 @@ class ProcessWorkEventList:
 
     def makeLine(self, rS):
 
-        trackComment = self.locationHash[rS[u'Set to']]
-
-        FDandT = rS[PatternScriptEntities.SB.handleGetMessage('FD&Track')]
-        FDandT = FDandT.replace(', ', ';')
+        # trackComment = self.locationHash[rS[u'Set to']]
 
         ID = rS[PatternScriptEntities.SB.handleGetMessage('Road')] + rS[PatternScriptEntities.SB.handleGetMessage('Number')]
-
+    # Process FD&T
+        FDandT = rS[PatternScriptEntities.SB.handleGetMessage('FD&Track')]
+        FDandT = FDandT.replace(', ', ';')
     # Pickup Cars are tagged with their final destination, all others tagged with destination
         if rS[u'PUSO'] == 'PC':
             rsSetTo = FDandT
         else:
             rsSetTo = rS[u'Set to']
+    # Process load Type into a single character string
+        loadType = rS[PatternScriptEntities.SB.handleGetMessage('Load_Type')]
+        if rS[PatternScriptEntities.SB.handleGetMessage('Load_Type')] == 'Empty':
+            loadType = 'E'
+        if rS[PatternScriptEntities.SB.handleGetMessage('Load_Type')] == 'Load':
+            loadType = 'L'
 
         rsLine  = [
                   rS[u'PUSO'] + ','
                 + ID + ','
                 + rS[PatternScriptEntities.SB.handleGetMessage('Road')] + ','
                 + rS[PatternScriptEntities.SB.handleGetMessage('Number')] + ','
+                + loadType + ','
                 + rS[PatternScriptEntities.SB.handleGetMessage('Load')] + ','
                 + rS[PatternScriptEntities.SB.handleGetMessage('Track')] + ','
                 + rsSetTo

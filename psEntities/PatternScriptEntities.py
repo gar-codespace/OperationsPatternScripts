@@ -12,6 +12,7 @@ import time
 from json import loads as jsonLoads, dumps as jsonDumps
 from codecs import open as codecsOpen
 from os import system as osSystem
+import xml.etree.ElementTree as ET
 
 PLUGIN_ROOT = ''
 PROFILE_PATH = JMRI.util.FileUtil.getProfilePath()
@@ -33,6 +34,7 @@ SM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.schedules.S
 PM = JMRI.InstanceManager.getDefault(JMRI.util.gui.GuiLafPreferencesManager)
 
 _psLog = LOGGING.getLogger('PS.PE.PatternScriptEntities')
+
 
 class Logger:
 
@@ -69,6 +71,7 @@ class Logger:
 
         return
 
+
 class CheckTpDestination:
     """Verify or create a TrainPlayer destination directory"""
 
@@ -89,6 +92,7 @@ class CheckTpDestination:
             print('TrainPlayer Reports destination directory not found')
 
         return tpDrrectoryFlag
+
 
 class validateStubFile:
     """Copy of the JMRI Java version of createStubFile"""
@@ -151,6 +155,31 @@ class validateStubFile:
         self.writeStubFile()
 
         return
+
+
+class xmlWrangler:
+    """Generic queries on any operations xml file"""
+
+    def __init__(self, xmlFile):
+
+        self.xmlFile = xmlFile
+
+        return
+
+    def getXml(self, target):
+
+        filePath = PROFILE_PATH + '\\operations\\' + self.xmlFile + '.xml'
+        if not JAVA_IO.File(filePath).isFile():
+            return False
+
+        with codecsOpen(filePath, 'r', encoding=ENCODING) as textWorkFile:
+            tree = ET.parse(textWorkFile)
+
+            root = tree.getroot()
+            subSection = root.findall(target)
+
+            return subSection
+
 
 def psLocale():
 
