@@ -216,6 +216,7 @@ class ProcessWorkEventList:
                 + ID + ','
                 + rS[PatternScriptEntities.SB.handleGetMessage('Road')] + ','
                 + rS[PatternScriptEntities.SB.handleGetMessage('Number')] + ','
+                + rS[PatternScriptEntities.SB.handleGetMessage('Type')] + ','
                 + loadType + ','
                 + rS[PatternScriptEntities.SB.handleGetMessage('Load')] + ','
                 + rS[PatternScriptEntities.SB.handleGetMessage('Track')] + ','

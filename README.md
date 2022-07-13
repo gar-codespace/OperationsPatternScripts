@@ -38,9 +38,9 @@ The following are YouTube videos covering the use of this plugin:
 How to add this plugin to JMRI  
 [How to use this plugin](https://youtu.be/GjPtXk3oKmc)  
 [Plugin demonstration at a yard](https://youtu.be/IdXvxyo-E3Y)  
-[Plugin demonstration at industry](https://youtu.be/2Tv6sUMDD_Y)  
-How to modify this plugin  
-Using TrainPlayer with JMRI  
+[Plugin demonstration at industry](https://youtu.be/2Tv6sUMDD_Y)
+[How to modify this plugin](https://youtu.be/DK6O9AQmqXo)
+[Using TrainPlayer with JMRI](https://youtu.be/rlUfoSesnQo)
 
 Disclaimer:
 There are many people on YouTube who are good at making demo videos. I am not one of them.  
