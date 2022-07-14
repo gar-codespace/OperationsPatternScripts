@@ -40,7 +40,7 @@ How to add this plugin to JMRI
 [Plugin demonstration at a yard](https://youtu.be/IdXvxyo-E3Y)  
 [Plugin demonstration at industry](https://youtu.be/2Tv6sUMDD_Y)  
 [How to modify this plugin](https://youtu.be/DK6O9AQmqXo)  
-[Using TrainPlayer with JMRI](https://youtu.be/rlUfoSesnQo)  
+[Use this plugin with TrainPlayer©](https://youtu.be/rlUfoSesnQo)  
 
 Disclaimer:
 There are many people on YouTube who are good at making demo videos. I am not one of them.  
