@@ -271,6 +271,7 @@ class UpdateInventory:
         self.locationNotFound = ''
 
         tpInventory = ModelEntities.getTpInventory()
+        tpInventory.pop(0)
         self.tpInventoryList = ModelEntities.makeTpInventoryList(tpInventory)
 
         return
@@ -288,7 +289,7 @@ class UpdateInventory:
 
         for carLabel, trackLabel in self.tpInventoryList:
 
-            rs = PatternScriptEntities.getRollingStock(carLabel)
+            rs = PatternScriptEntities.getRollingStockById(carLabel)
             if not rs:
                 self.carsNotFound.append(carLabel)
                 continue
@@ -304,6 +305,17 @@ class UpdateInventory:
                 self.setCarsError += '\n' + rs.getId()  + ' - ' + setResult
 
         print(SCRIPT_NAME + '.UpdateInventory ' + str(SCRIPT_REV))
+
+        return
+
+    def updateExisting(self):
+
+        for lineItem in self.tpInventoryList:
+
+            if lineItem[2].startswith('E'):
+                engine = ModelEntities.updateEngine(lineItem)
+            else:
+                car = ModelEntities.updateCar(lineItem)
 
         return
 
