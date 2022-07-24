@@ -120,100 +120,64 @@ def getTpInventory():
     tpInventoryPath = PatternScriptEntities.JMRI.util.FileUtil.getHomePath() \
         + "AppData\Roaming\TrainPlayer\Reports\TrainPlayer Export - Inventory.txt"
 
-    try: # Catch TrainPlayer not installed
+    if PatternScriptEntities.JAVA_IO.File(tpInventoryPath).isFile():
         tpInventory = PatternScriptEntities.genericReadReport(tpInventoryPath).split('\n')
+        return tpInventory
+    else:
+        return
 
-    except IOError:
-        tpInventory = ''
+def getTpLocations():
 
-    return tpInventory
+    tpLocationPath = PatternScriptEntities.JMRI.util.FileUtil.getHomePath() \
+        + "AppData\Roaming\TrainPlayer\Reports\TrainPlayer Export - Locations.txt"
 
-def makeTpInventoryList(tpInventory):
-    '''Returns (CarId,TrackLabel)'''
+    if PatternScriptEntities.JAVA_IO.File(tpLocationPath).isFile():
+        tpLocations = PatternScriptEntities.genericReadReport(tpLocationPath).split('\n')
+        return tpLocations
+    else:
+        return
 
-    tpInventoryList = []
+def addNewRs(rsAttribs):
+    """rsAttribs format: RoadNumber, AAR, Location, Track, Loaded, Kernel, Type
+    Note: TrainPlayer AAR is used as JMRI type name
+    Note: TrainPlayer Type is used as JMRI engine model
+    """
 
-    for item in tpInventory:
-        lineItem = []
-        carAttribs = item.split(':')
+    roadName, roadNumber = parseCarId(rsAttribs[0])
 
-        carRoad, carNumber = parseCarId(carAttribs[0])
-        lineItem.append(carRoad)
-        lineItem.append(carNumber)
+    if rsAttribs[1].startswith('E') and rsAttribs[1] != 'ET':
+        PatternScriptEntities.EM.newRS(roadName, roadNumber)
+        rs = PatternScriptEntities.EM.getByRoadAndNumber(roadName, roadNumber)
+        rs.setModel(rsAttribs[6])
 
-        lineItem.append(carAttribs[1]) # AAR
+    else:
+        PatternScriptEntities.CM.newRS(roadName, roadNumber)
+        rs = PatternScriptEntities.CM.getByRoadAndNumber(roadName, roadNumber)
 
-        locationTrack = carAttribs[2].split(';')
-        lineItem.append(locationTrack[0]) # Location
-        lineItem.append(locationTrack[1]) # Track
+    rs.setTypeName(rsAttribs[1])
+    rs.setLength("40")
+    rs.setColor("Color")
+    if rsAttribs[1] == '1':
+        rs.setLoad('L')
 
-        lineItem.append(carAttribs[3]) # Loaded
-        lineItem.append(carAttribs[4]) # Kernel
-
-        tpInventoryList.append(lineItem)
-
-    return tpInventoryList
+    return
 
 def parseCarId(carId):
 
-    carRoad = ''
-    carNumber = ''
+    rsRoad = ''
+    rsNumber = ''
 
     for character in carId:
         if character.isdigit():
-            carNumber += character
+            rsNumber += character
         else:
-            carRoad += character
+            rsRoad += character
 
-    return carRoad, carNumber
+    return rsRoad, rsNumber
 
-def updateEngine(lineItem):
+def getSetToLocationAndTrack(location, track):
 
-    engine = PatternScriptEntities.EM.newRS(lineItem[0], lineItem[1])
-    location = PatternScriptEntities.LM.getLocationByName(lineItem[3])
-    track = location.getTrackByName(lineItem[4], None)
-    engine.setLocation(location, track)
+    locationObj = PatternScriptEntities.LM.getLocationByName(location)
+    trackObj = locationObj.getTrackByName(track, None)
 
-    return
-
-def updateCar(lineItem):
-
-    car = PatternScriptEntities.CM.newRS(lineItem[0], lineItem[1])
-    location = PatternScriptEntities.LM.getLocationByName(lineItem[3])
-    track = location.getTrackByName(lineItem[4], None)
-    car.setLocation(location, track)
-    print('Rolling Stock ', car.getRoadName(), ' set to: ' , location, track)
-
-    return
-
-
-
-# def makeJmriLocationHash():
-#     '''Format: {TrackComment : (LocationName, TrackName)}'''
-#
-#     allLocations = PatternScriptEntities.getAllLocations()
-#     locationHash = {}
-#
-#     for location in allLocations:
-#         locationObject = PatternScriptEntities.LM.getLocationByName(location)
-#         allTracks = locationObject.getTracksList()
-#         for track in allTracks:
-#             locationHash[track.getComment()] = (locationObject.getName(),track.getName())
-#
-#     return locationHash
-
-def getSetToLocationAndTrack(jmriHashResult):
-    '''jmriHashResult is a tuple (location, track) returned by looking up
-    TrainPlayer track comment from makeJmriLocationHash
-    '''
-
-    try:
-        locationTrack = jmriHashResult[0]
-        jmriLocation = PatternScriptEntities.LM.getLocationByName(jmriHashResult[0])
-        jmriTrack = jmriLocation.getTrackByName(jmriHashResult[1], None)
-    except KeyError:
-        return
-    except AttributeError:
-        return
-
-    return jmriLocation, jmriTrack
+    return locationObj, trackObj

@@ -4,6 +4,13 @@
 from psEntities import PatternScriptEntities
 from TrainPlayerSubroutine import ModelEntities
 
+from java import io as JAVA_IO
+from codecs import open as codecsOpen
+import xml.etree.ElementTree as ET
+import xml.dom.minidom as MD
+from os import linesep as osLinesep
+import xml.dom
+
 SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.Model'
 SCRIPT_REV = 20220101
 
@@ -238,6 +245,129 @@ class ProcessWorkEventList:
 
         return
 
+
+class UpdateOperationsConfig:
+
+    def __init__(self):
+
+        self.tpInventory = []
+        self.tpLocations = []
+        self.allTpAar = []
+        self.allTpRoads = []
+        self.allJmriRoads = []
+
+        return
+
+    def checkList(self):
+
+        try:
+            self.tpInventory = ModelEntities.getTpInventory()
+            self.tpInventory.pop(0) # Remove the header
+        except:
+            pass
+
+        try:
+            self.tpLocations = ModelEntities.getTpLocations()
+            self.tpLocations.pop(0) # Remove the header
+        except:
+            pass
+
+    def getAllTpAar(self):
+
+        for lineItem in self.tpInventory:
+            splitItem = lineItem.split(';')
+            self.allTpAar.append(splitItem[1])
+
+        self.allTpAar = list(set(self.allTpAar))
+
+        return
+
+    def getAllTpRoads(self):
+
+        for lineItem in self.tpInventory:
+            splitItem = lineItem.split(';')
+            road, number = ModelEntities.parseCarId(splitItem[0])
+            self.allTpRoads.append(road)
+
+        self.allTpRoads = list(set(self.allTpRoads))
+
+        return
+
+    def getRoadsFromXml(self):
+
+        roadsElement = PatternScriptEntities.xmlWrangler('OperationsCarRoster')
+        roads = roadsElement.getXml('./roads/road')
+        print(len(roads))
+        for item in roads:
+            self.allJmriRoads.append(item.attrib)
+
+        print(self.allJmriRoads)
+
+        return
+
+    def test(self):
+
+        filePath = PatternScriptEntities.PROFILE_PATH + '\\operations\\OperationsCarRoster.xml'
+        if not JAVA_IO.File(filePath).isFile():
+            return False
+
+        with codecsOpen(filePath, 'r', encoding=PatternScriptEntities.ENCODING) as textWorkFile:
+            tree = MD.parse(textWorkFile)
+
+        root = tree.documentElement
+        nRoads = root.getElementsByTagName('roads')[0]
+        nRoad = nRoads.getElementsByTagName('road')
+
+
+
+        i = 1
+        while i < len(nRoad):
+            if len(nRoad) == 0:
+                break
+            delNode = nRoads.getElementsByTagName('road')[0]
+            nRoads.removeChild(delNode)
+            delNode.unlink()
+            i += 1
+        #
+        #
+        #
+        # for aar in self.allTpAar:
+        #     newRoad = tree.createElement('road')
+        #     newRoad.setAttribute('name', aar)
+        #     nRoads.appendChild(newRoad)
+
+
+        # newAttr = '!DOCTYPE operations-config SYSTEM "/xml/DTD/operations-cars.dtd"'
+        # newElement = tree.createElement(newAttr)
+        # tree.appendChild(newElement)
+
+
+
+
+        xml_str = tree.toprettyxml(indent ="   ")
+        xml_str = osLinesep.join([s for s in xml_str.splitlines() if s.strip()])
+        with codecsOpen(filePath, 'wb', encoding=PatternScriptEntities.ENCODING) as textWorkFile:
+            textWorkFile.write(xml_str)
+
+
+
+        return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class WriteWorkEventListToTp:
 
     def __init__(self, workEventList):
@@ -261,7 +391,78 @@ class WriteWorkEventListToTp:
 
         return
 
-class UpdateInventory:
+class ReconsileLocations:
+
+    def __init__(self):
+
+        self.tpInventory = []
+        self.tpLocations = []
+        self.mergedTpLocations = []
+
+        return
+
+    def checkList(self):
+
+        try:
+            self.tpInventory = ModelEntities.getTpInventory()
+            self.tpInventory.pop(0) # Remove the header
+        except:
+            pass
+
+        try:
+            self.tpLocations = ModelEntities.getTpLocations()
+            self.tpLocations.pop(0) # Remove the header
+        except:
+            pass
+
+    def mergeTpLists(self):
+        """mergedTpLocations format: ID, Locale, Track, Type, Spaces, AAR """
+
+        for lineItem in self.tpLocations:
+            splitLine = lineItem.split(';')
+            aarList = self.getAar(splitLine[1], splitLine[2])
+            for aar in aarList:
+                newLine = [splitLine[0], splitLine[1], splitLine[2], splitLine[3], splitLine[4], aar]
+                self.mergedTpLocations.append(newLine)
+
+        return
+
+    def updateLocationAndTrack(self):
+        """Implement later:
+            use index for renaming location and track
+            update track type
+            update track length
+            """
+
+        for lineItem in self.mergedTpLocations:
+
+            try:
+                # location, track = ModelEntities.getSetToLocationAndTrack(lineItem[1], lineItem[2])
+                location = PatternScriptEntities.LM.getLocationByName(lineItem[1])
+                location.addTypeName(lineItem[5])
+                location.store()
+                # track.addTypeName(lineItem[5])
+                # print(location.getName(), track.getName(), lineItem[5])
+                # Update track length
+                # Update track type
+            except:
+                # Add new location and/or track
+                print('Not found: ', lineItem[1], lineItem[2])
+
+        return
+
+    def getAar(self, location, track):
+        """get a de-duplicated list of aar for each location;track"""
+
+        aarList = []
+        for lineItem in self.tpInventory:
+            splitLine = lineItem.split(';')
+            if location == splitLine[2] and track == splitLine[3]:
+                aarList.append(splitLine[1])
+
+        return list(set(aarList))
+
+class ReconsileInventory:
 
     def __init__(self):
 
@@ -270,52 +471,115 @@ class UpdateInventory:
         self.carsNotFound = [] # A list so it can be sorted
         self.locationNotFound = ''
 
-        tpInventory = ModelEntities.getTpInventory()
-        tpInventory.pop(0)
-        self.tpInventoryList = ModelEntities.makeTpInventoryList(tpInventory)
+        self.jmriInventory  = []
+        self.tpInventory = []
+
+        self.jmriInventoryId = []
+        self.tpInventoryId = []
+
+        self.jmriOrphans = []
+        self.tpOrphans = []
+
 
         return
 
     def checkList(self):
 
-        if self.tpInventoryList:
+        self.tpInventory = ModelEntities.getTpInventory()
+        if self.tpInventory:
+            self.tpInventory.pop(0) # Remove the header
             return True
         else:
             return False
 
-    def update(self):
+    def getJmriRs(self):
 
-        jmriLocationHash = ModelEntities.makeJmriLocationHash()
-
-        for carLabel, trackLabel in self.tpInventoryList:
-
-            rs = PatternScriptEntities.getRollingStockById(carLabel)
-            if not rs:
-                self.carsNotFound.append(carLabel)
-                continue
-
-            try:
-                setToLoc, setToTrack = ModelEntities.getSetToLocationAndTrack(jmriLocationHash[trackLabel])
-            except KeyError:
-                self.locationNotFound += '\n' + trackLabel + ' - not a JMRI track track comment'
-                continue
-
-            setResult = rs.setLocation(setToLoc, setToTrack)
-            if setResult != 'okay':
-                self.setCarsError += '\n' + rs.getId()  + ' - ' + setResult
-
-        print(SCRIPT_NAME + '.UpdateInventory ' + str(SCRIPT_REV))
+        cars = PatternScriptEntities.CM.getByLocationList()
+        locos = PatternScriptEntities.EM.getByLocationList()
+        self.jmriInventory = cars + locos
 
         return
 
-    def updateExisting(self):
+    def makeIdLists(self):
 
-        for lineItem in self.tpInventoryList:
+        for item in self.jmriInventory:
+            self.jmriInventoryId.append(item.getId())
+
+        for item in self.tpInventory:
+            self.tpInventoryId.append(item.split(';')[0])
+
+        return
+
+    def getTpOrphans(self):
+
+        for id in self.tpInventoryId:
+            if id not in self.jmriInventoryId:
+                self.tpOrphans.append(id)
+
+        return
+
+    def getJmriOrphans(self):
+
+        for id in self.jmriInventoryId:
+            if id not in self.tpInventoryId:
+                self.jmriOrphans.append(id)
+
+        return
+
+    def deleteJmriOrphans(self):
+
+        for rs in self.jmriOrphans:
+            try:
+                loco = PatternScriptEntities.EM.getById(rs)
+                PatternScriptEntities.EM.deregister(loco)
+            except:
+                pass
+
+        for rs in self.jmriOrphans:
+            try:
+                car = PatternScriptEntities.CM.getById(rs)
+                PatternScriptEntities.CM.deregister(car)
+            except:
+                pass
+
+        return
+
+    def addTpOrphans(self):
+
+        for orphan in self.tpOrphans:
+            rsLine = self.findRsAttibs(orphan)
+            rsAttribs = rsLine.split(';')
+            ModelEntities.addNewRs(rsAttribs)
+
+        return
+
+    def findRsAttibs(self, orphan):
+
+        for item in self.tpInventory:
+            if orphan in item:
+                return item
+
+        return
+
+    def updateLocations(self):
+        """lineItem format: RoadNumber, AAR, Location, Track, Loaded, Kernel, Type"""
+
+        for lineItem in self.tpInventory:
+
+            parsedLine = lineItem.split(';')
 
             if lineItem[2].startswith('E'):
-                engine = ModelEntities.updateEngine(lineItem)
+                rs = PatternScriptEntities.EM.getById(parsedLine[0])
             else:
-                car = ModelEntities.updateCar(lineItem)
+                rs = PatternScriptEntities.CM.getById(parsedLine[0])
+
+            location, track = ModelEntities.getSetToLocationAndTrack(parsedLine[2], parsedLine[3])
+
+            try:
+                rs.setLocation(location, track)
+                # print('Rolling Stock ', car.getRoadName(), ' set to: ' , location, track)
+            except:
+                print('Not found ', location.getName(), track.getName())
 
         return
 

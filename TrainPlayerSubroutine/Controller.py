@@ -43,28 +43,32 @@ class StartUp:
         '''Maybe get them by name?'''
 
         self.widgets[0].actionPerformed = self.inventoryUpdator
-        self.widgets[1].actionPerformed = self.bButtonAction
+        self.widgets[1].actionPerformed = self.locationUpdator
 
         return
 
     def inventoryUpdator(self, EVENT):
         '''Updates JMRI rolling stock locations based on TrainPlayer inventory export'''
 
-        updatedInventory = Model.UpdateInventory()
-        if not updatedInventory.checkList():
+        reconsiledInventory = Model.ReconsileInventory()
+        if not reconsiledInventory.checkList():
             self.psLog.info('No TrainPlayer inventory list to update')
             return
 
-        updatedInventory.updateExisting()
-        # errorReport = updatedInventory.getErrorReport()
-        # errorReportPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\Update Inventory.txt'
-        # PatternScriptEntities.genericWriteReport(errorReportPath, errorReport)
-        #
-        # fileToOpen = PatternScriptEntities.JAVA_IO.File(errorReportPath)
-        # if fileToOpen.isFile():
-        #     PatternScriptEntities.genericDisplayReport(fileToOpen)
-        # else:
-        #     self.psLog.warning('Not found: ' + workEventPath)
+        reconsiledInventory.getJmriRs()
+        reconsiledInventory.makeIdLists()
+
+        reconsiledInventory.getJmriOrphans()
+        reconsiledInventory.deleteJmriOrphans()
+
+        reconsiledInventory.getTpOrphans()
+        reconsiledInventory.addTpOrphans()
+
+        reconsiledInventory.updateLocations()
+
+
+
+
 
         self.psLog.info('Updated Rolling stock locations from TrainPlayer')
 
@@ -72,9 +76,24 @@ class StartUp:
 
         return
 
-    def bButtonAction(self, EVENT):
-        '''Whatever this button ends up doing'''
+    def locationUpdator(self, EVENT):
+        '''Updates JMRI locations, tracks, and their parameters'''
 
-        print('This button is not implemented')
+        updatedOperationsConfig = Model.UpdateOperationsConfig()
+        updatedOperationsConfig.checkList()
+        updatedOperationsConfig.getAllTpAar()
+        updatedOperationsConfig.getAllTpRoads()
+        updatedOperationsConfig.test()
+        # updatedOperationsConfig.getRoadsFromXml()
+
+
+
+
+        # reconciledLocations = Model.ReconsileLocations()
+        #
+        # reconciledLocations.checkList()
+        # reconciledLocations.mergeTpLists()
+        # reconciledLocations.updateLocationAndTrack()
+
 
         return
