@@ -4,12 +4,11 @@
 from psEntities import PatternScriptEntities
 from TrainPlayerSubroutine import ModelEntities
 
-from java import io as JAVA_IO
 from codecs import open as codecsOpen
-import xml.etree.ElementTree as ET
 import xml.dom.minidom as MD
 from os import linesep as osLinesep
-import xml.dom
+from xml.dom.minidom import parseString
+from xml.dom.minidom import DOMImplementation
 
 SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.Model'
 SCRIPT_REV = 20220101
@@ -256,6 +255,9 @@ class UpdateOperationsConfig:
         self.allTpRoads = []
         self.allJmriRoads = []
 
+        self.xmlComment = SCRIPT_NAME + ' - ' + PatternScriptEntities.timeStamp()
+        self.docAttr = u'<!DOCTYPE operations-config SYSTEM "/xml/DTD/operations-cars.dtd">'
+
         return
 
     def checkList(self):
@@ -308,64 +310,45 @@ class UpdateOperationsConfig:
     def test(self):
 
         filePath = PatternScriptEntities.PROFILE_PATH + '\\operations\\OperationsCarRoster.xml'
-        if not JAVA_IO.File(filePath).isFile():
+        if not PatternScriptEntities.JAVA_IO.File(filePath).isFile():
             return False
 
         with codecsOpen(filePath, 'r', encoding=PatternScriptEntities.ENCODING) as textWorkFile:
             tree = MD.parse(textWorkFile)
 
         root = tree.documentElement
+
         nRoads = root.getElementsByTagName('roads')[0]
-        nRoad = nRoads.getElementsByTagName('road')
 
+        for item in nRoads.childNodes:
+            if item.nodeType == item.COMMENT_NODE:
+                nRoads.removeChild(item)
+            if item.nodeType == item.ELEMENT_NODE:
+                nRoads.removeChild(item)
 
+        xComment = tree.createComment(self.xmlComment)
+        nRoads.appendChild(xComment)
 
-        i = 1
-        while i < len(nRoad):
-            if len(nRoad) == 0:
-                break
-            delNode = nRoads.getElementsByTagName('road')[0]
-            nRoads.removeChild(delNode)
-            delNode.unlink()
-            i += 1
-        #
-        #
-        #
-        # for aar in self.allTpAar:
-        #     newRoad = tree.createElement('road')
-        #     newRoad.setAttribute('name', aar)
-        #     nRoads.appendChild(newRoad)
+        for road in self.allTpRoads:
+            newRoad = tree.createElement('road')
+            newRoad.setAttribute('name', road)
+            nRoads.appendChild(newRoad)
 
+        xmlString = tree.toprettyxml(indent ="\t")
+        # https://stackoverflow.com/questions/1140958/whats-a-quick-one-liner-to-remove-empty-lines-from-a-python-string
+        xmlString = [s for s in xmlString.splitlines() if s.strip()]
+        # Put the DOCTYPE back in
+        xmlString.insert(2, self.docAttr)
+        xmlString = osLinesep.join(xmlString)
 
-        # newAttr = '!DOCTYPE operations-config SYSTEM "/xml/DTD/operations-cars.dtd"'
-        # newElement = tree.createElement(newAttr)
-        # tree.appendChild(newElement)
+        # xmlString = osLinesep.join([s for s in xmlString.splitlines() if s.strip()])
 
-
-
-
-        xml_str = tree.toprettyxml(indent ="   ")
-        xml_str = osLinesep.join([s for s in xml_str.splitlines() if s.strip()])
         with codecsOpen(filePath, 'wb', encoding=PatternScriptEntities.ENCODING) as textWorkFile:
-            textWorkFile.write(xml_str)
+            textWorkFile.write(xmlString)
 
-
-
+        PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarManagerXml.save()
+        
         return
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 class WriteWorkEventListToTp:

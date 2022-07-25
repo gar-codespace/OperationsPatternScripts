@@ -30,6 +30,9 @@ LM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.LocationMan
 TM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.trains.TrainManager)
 EM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.engines.EngineManager)
 CM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.cars.CarManager)
+
+CMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.cars.CarManagerXml)
+
 SM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.schedules.ScheduleManager)
 PM = JMRI.InstanceManager.getDefault(JMRI.util.gui.GuiLafPreferencesManager)
 
