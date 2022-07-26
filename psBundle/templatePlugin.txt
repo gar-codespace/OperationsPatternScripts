@@ -34,7 +34,6 @@ Set Cars to Track
 Set to
 Set to Track
 Single
-Space Available
 Switch List
 Switch List for Selected Tracks
 Switch List for Track
@@ -51,6 +50,7 @@ TrainPlayer© cars not found in JMRI roster:
 TrainPlayer© Support Subroutine
 Translate Plugin
 Update Inventory
+Update Locations
 Update Inventory Error Report
 View Log File
 Window Help...

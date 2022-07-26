@@ -19,7 +19,7 @@ class TrainPlayerPanel:
         self.uiButton.setName('uiButton')
 
         self.saButton = PatternScriptEntities.JAVX_SWING.JButton()
-        self.saButton.setText(PatternScriptEntities.BUNDLE['Space Available'])
+        self.saButton.setText(PatternScriptEntities.BUNDLE['Update Locations'])
         self.saButton.setName('saButton')
 
         self.controlWidgets = []
@@ -30,15 +30,15 @@ class TrainPlayerPanel:
 
         tpPanel = PatternScriptEntities.JAVX_SWING.JPanel()
 
-        tpPanel.add(self.uiButton)
-        tpPanel.add(PatternScriptEntities.JAVX_SWING.Box.createRigidArea(PatternScriptEntities.JAVA_AWT.Dimension(20,0)))
         tpPanel.add(self.saButton)
+        tpPanel.add(PatternScriptEntities.JAVX_SWING.Box.createRigidArea(PatternScriptEntities.JAVA_AWT.Dimension(20,0)))
+        tpPanel.add(self.uiButton)
 
         return tpPanel
 
     def getPanelWidgets(self):
 
-        self.controlWidgets.append(self.uiButton)
         self.controlWidgets.append(self.saButton)
+        self.controlWidgets.append(self.uiButton)
 
         return self.controlWidgets

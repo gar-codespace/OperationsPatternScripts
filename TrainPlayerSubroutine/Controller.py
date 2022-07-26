@@ -7,6 +7,8 @@ from psEntities import PatternScriptEntities
 from TrainPlayerSubroutine import Model
 from TrainPlayerSubroutine import View
 
+from apps import Apps
+
 SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.Controller'
 SCRIPT_REV = 20220101
 
@@ -42,8 +44,8 @@ class StartUp:
     def activateWidgets(self):
         '''Maybe get them by name?'''
 
-        self.widgets[0].actionPerformed = self.inventoryUpdator
-        self.widgets[1].actionPerformed = self.locationUpdator
+        self.widgets[0].actionPerformed = self.locationUpdator
+        self.widgets[1].actionPerformed = self.inventoryUpdator
 
         return
 
@@ -66,10 +68,6 @@ class StartUp:
 
         reconsiledInventory.updateLocations()
 
-
-
-
-
         self.psLog.info('Updated Rolling stock locations from TrainPlayer')
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
@@ -79,21 +77,24 @@ class StartUp:
     def locationUpdator(self, EVENT):
         '''Updates JMRI locations, tracks, and their parameters'''
 
-        updatedOperationsConfig = Model.UpdateOperationsConfig()
-        updatedOperationsConfig.checkList()
-        updatedOperationsConfig.getAllTpAar()
-        updatedOperationsConfig.getAllTpRoads()
-        updatedOperationsConfig.test()
-        # updatedOperationsConfig.getRoadsFromXml()
+        Model.updateRoadsAndTypes()
 
 
 
 
-        # reconciledLocations = Model.ReconsileLocations()
+        # x = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarRoads()
+        # Apps.revalidate(x)
         #
-        # reconciledLocations.checkList()
-        # reconciledLocations.mergeTpLists()
-        # reconciledLocations.updateLocationAndTrack()
+        # x.updateComboBox()
+        # print(dir(x))
+        # x = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarEditFrame()
+        # Apps.revalidate(x.roadComboBox)
+        # x.roadComboBox
+        # print(dir(x.roadComboBox))
 
+
+
+
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return

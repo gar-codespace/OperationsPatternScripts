@@ -4,14 +4,97 @@
 from psEntities import PatternScriptEntities
 from TrainPlayerSubroutine import ModelEntities
 
-from codecs import open as codecsOpen
 import xml.dom.minidom as MD
 from os import linesep as osLinesep
-from xml.dom.minidom import parseString
-from xml.dom.minidom import DOMImplementation
 
 SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.Model'
 SCRIPT_REV = 20220101
+
+
+def updateRoadsAndTypes():
+
+    xmlHack = HackXml('OperationsCarRoster')
+    tree = xmlHack.getXmlTree()
+
+    updatedOperationsCarRoster = UpdateOperationsCarRoster()
+    updatedOperationsCarRoster.checkList()
+
+    allTpRoads = updatedOperationsCarRoster.getAllTpRoads()
+    xmlHack.updateXmlElement('roads', allTpRoads)
+
+    allTpAar = updatedOperationsCarRoster.getAllTpAar()
+    xmlHack.updateXmlElement('types', allTpAar)
+
+    xmlHack.patchUpDom()
+    xmlHack.saveUpdatedXml()
+
+    return
+
+
+class HackXml:
+
+    def __init__(self, xmlFileName):
+
+        self.filePath = PatternScriptEntities.PROFILE_PATH + '\\operations\\' + xmlFileName + '.xml'
+        self.tree = MD.parseString("<junk/>")
+        self.xmlComment = SCRIPT_NAME + ' - ' + PatternScriptEntities.timeStamp()
+        self.docAttr = u'<!DOCTYPE operations-config SYSTEM "/xml/DTD/operations-cars.dtd">'
+        self.xmlString = ''
+
+        return
+
+    def getXmlTree(self):
+
+        if not PatternScriptEntities.JAVA_IO.File(self.filePath).isFile():
+            return False
+
+        with PatternScriptEntities.codecsOpen(self.filePath, 'r', encoding=PatternScriptEntities.ENCODING) as textWorkFile:
+            self.tree = MD.parse(textWorkFile)
+
+        return
+
+    def updateXmlElement(self, elementName, newList):
+        """Pretty much taylored specifically for roads and types"""
+
+        root = self.tree.documentElement
+
+        topElement = root.getElementsByTagName(elementName)[0]
+        for item in topElement.childNodes:
+            if item.nodeType == item.COMMENT_NODE:
+                topElement.removeChild(item)
+            if item.nodeType == item.ELEMENT_NODE:
+                topElement.removeChild(item)
+                eName = item.tagName
+
+        xComment = self.tree.createComment(self.xmlComment)
+        topElement.appendChild(xComment)
+
+        for item in newList:
+            newElement = self.tree.createElement(eName)
+            newElement.setAttribute('name', item)
+            topElement.appendChild(newElement)
+
+        return
+
+    def patchUpDom(self):
+        """Work around DOM's limitations"""
+
+        self.xmlString = self.tree.toprettyxml(indent ="\t")
+    # https://stackoverflow.com/questions/1140958/whats-a-quick-one-liner-to-remove-empty-lines-from-a-python-string
+        self.xmlString = [s for s in self.xmlString.splitlines() if s.strip()]
+    # Put the DOCTYPE back in
+        self.xmlString.insert(2, self.docAttr)
+        self.xmlString = osLinesep.join(self.xmlString)
+
+        return
+
+    def saveUpdatedXml(self):
+
+        with PatternScriptEntities.codecsOpen(self.filePath, 'wb', encoding=PatternScriptEntities.ENCODING) as textWorkFile:
+            textWorkFile.write(self.xmlString)
+
+        return
+
 
 class ExportJmriLocations:
     """Writes a list of location names and comments for the whole profile"""
@@ -35,6 +118,7 @@ class ExportJmriLocations:
                 locationHash[locationName + u';' + trackName] = trackComment
 
         return locationHash
+
 
 class TrackPatternTranslationToTp:
     """Translate Track Patterns from OperationsPatternScripts for TrainPlayer O2O script compatability"""
@@ -150,6 +234,7 @@ class JmriTranslationToTp:
 
         return locationList
 
+
 class ProcessWorkEventList:
     """Process the translated work event lists to a CSV list formatted for the TrainPlayer o2o scripts"""
 
@@ -245,7 +330,7 @@ class ProcessWorkEventList:
         return
 
 
-class UpdateOperationsConfig:
+class UpdateOperationsCarRoster:
 
     def __init__(self):
 
@@ -255,8 +340,7 @@ class UpdateOperationsConfig:
         self.allTpRoads = []
         self.allJmriRoads = []
 
-        self.xmlComment = SCRIPT_NAME + ' - ' + PatternScriptEntities.timeStamp()
-        self.docAttr = u'<!DOCTYPE operations-config SYSTEM "/xml/DTD/operations-cars.dtd">'
+
 
         return
 
@@ -274,16 +358,6 @@ class UpdateOperationsConfig:
         except:
             pass
 
-    def getAllTpAar(self):
-
-        for lineItem in self.tpInventory:
-            splitItem = lineItem.split(';')
-            self.allTpAar.append(splitItem[1])
-
-        self.allTpAar = list(set(self.allTpAar))
-
-        return
-
     def getAllTpRoads(self):
 
         for lineItem in self.tpInventory:
@@ -293,62 +367,17 @@ class UpdateOperationsConfig:
 
         self.allTpRoads = list(set(self.allTpRoads))
 
-        return
+        return self.allTpRoads
 
-    def getRoadsFromXml(self):
+    def getAllTpAar(self):
 
-        roadsElement = PatternScriptEntities.xmlWrangler('OperationsCarRoster')
-        roads = roadsElement.getXml('./roads/road')
-        print(len(roads))
-        for item in roads:
-            self.allJmriRoads.append(item.attrib)
+        for lineItem in self.tpInventory:
+            splitItem = lineItem.split(';')
+            self.allTpAar.append(splitItem[1])
 
-        print(self.allJmriRoads)
+        self.allTpAar = list(set(self.allTpAar))
 
-        return
-
-    def test(self):
-
-        filePath = PatternScriptEntities.PROFILE_PATH + '\\operations\\OperationsCarRoster.xml'
-        if not PatternScriptEntities.JAVA_IO.File(filePath).isFile():
-            return False
-
-        with codecsOpen(filePath, 'r', encoding=PatternScriptEntities.ENCODING) as textWorkFile:
-            tree = MD.parse(textWorkFile)
-
-        root = tree.documentElement
-
-        nRoads = root.getElementsByTagName('roads')[0]
-
-        for item in nRoads.childNodes:
-            if item.nodeType == item.COMMENT_NODE:
-                nRoads.removeChild(item)
-            if item.nodeType == item.ELEMENT_NODE:
-                nRoads.removeChild(item)
-
-        xComment = tree.createComment(self.xmlComment)
-        nRoads.appendChild(xComment)
-
-        for road in self.allTpRoads:
-            newRoad = tree.createElement('road')
-            newRoad.setAttribute('name', road)
-            nRoads.appendChild(newRoad)
-
-        xmlString = tree.toprettyxml(indent ="\t")
-        # https://stackoverflow.com/questions/1140958/whats-a-quick-one-liner-to-remove-empty-lines-from-a-python-string
-        xmlString = [s for s in xmlString.splitlines() if s.strip()]
-        # Put the DOCTYPE back in
-        xmlString.insert(2, self.docAttr)
-        xmlString = osLinesep.join(xmlString)
-
-        # xmlString = osLinesep.join([s for s in xmlString.splitlines() if s.strip()])
-
-        with codecsOpen(filePath, 'wb', encoding=PatternScriptEntities.ENCODING) as textWorkFile:
-            textWorkFile.write(xmlString)
-
-        PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarManagerXml.save()
-        
-        return
+        return self.allTpAar
 
 
 class WriteWorkEventListToTp:
