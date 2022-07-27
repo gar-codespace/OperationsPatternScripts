@@ -126,16 +126,18 @@ def getTpInventory():
     else:
         return
 
-def getTpLocations():
+def getTpExport(fileName):
+    """Generic file getter"""
 
-    tpLocationPath = PatternScriptEntities.JMRI.util.FileUtil.getHomePath() \
-        + "AppData\Roaming\TrainPlayer\Reports\TrainPlayer Export - Locations.txt"
+    fullPath = "AppData\\Roaming\\TrainPlayer\\Reports\\" + fileName
+    tpExportPath = PatternScriptEntities.JMRI.util.FileUtil.getHomePath() + fullPath
 
-    if PatternScriptEntities.JAVA_IO.File(tpLocationPath).isFile():
-        tpLocations = PatternScriptEntities.genericReadReport(tpLocationPath).split('\n')
-        return tpLocations
+    if PatternScriptEntities.JAVA_IO.File(tpExportPath).isFile():
+        tpExport = PatternScriptEntities.genericReadReport(tpExportPath).split('\n')
+        return tpExport
     else:
         return
+    return
 
 def addNewRs(rsAttribs):
     """rsAttribs format: RoadNumber, AAR, Location, Track, Loaded, Kernel, Type

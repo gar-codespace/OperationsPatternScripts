@@ -49,35 +49,14 @@ class StartUp:
 
         return
 
-    def inventoryUpdator(self, EVENT):
-        '''Updates JMRI rolling stock locations based on TrainPlayer inventory export'''
-
-        reconsiledInventory = Model.ReconsileInventory()
-        if not reconsiledInventory.checkList():
-            self.psLog.info('No TrainPlayer inventory list to update')
-            return
-
-        reconsiledInventory.getJmriRs()
-        reconsiledInventory.makeIdLists()
-
-        reconsiledInventory.getJmriOrphans()
-        reconsiledInventory.deleteJmriOrphans()
-
-        reconsiledInventory.getTpOrphans()
-        reconsiledInventory.addTpOrphans()
-
-        reconsiledInventory.updateLocations()
-
-        self.psLog.info('Updated Rolling stock locations from TrainPlayer')
-
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-
-        return
-
     def locationUpdator(self, EVENT):
         '''Updates JMRI locations, tracks, and their parameters'''
 
         Model.updateRoadsAndTypes()
+        # Reload OperationsCarRoster.xml
+        Model.updateLocations()
+
+
 
 
 
@@ -94,6 +73,33 @@ class StartUp:
 
 
 
+
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+        return
+
+    def inventoryUpdator(self, EVENT):
+        '''Updates JMRI rolling stock locations based on TrainPlayer inventory export'''
+
+        Model.updateInventory()
+
+        # reconsiledInventory = Model.ReconsileInventory()
+        # if not reconsiledInventory.checkList():
+        #     self.psLog.info('No TrainPlayer inventory list to update')
+        #     return
+        #
+        # reconsiledInventory.getJmriRs()
+        # reconsiledInventory.makeIdLists()
+        #
+        # reconsiledInventory.getJmriOrphans()
+        # reconsiledInventory.deleteJmriOrphans()
+        #
+        # reconsiledInventory.getTpOrphans()
+        # reconsiledInventory.addTpOrphans()
+        #
+        # reconsiledInventory.updateLocations()
+        #
+        # self.psLog.info('Updated Rolling stock locations from TrainPlayer')
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

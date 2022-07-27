@@ -10,8 +10,14 @@ from os import linesep as osLinesep
 SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.Model'
 SCRIPT_REV = 20220101
 
+######################################################################################################################
+# Location reconciliation
+######################################################################################################################
 
 def updateRoadsAndTypes():
+    """Mini Controller to update the OperationsCarRoster.xml
+        roads and types elements
+        """
 
     xmlHack = HackXml('OperationsCarRoster')
     tree = xmlHack.getXmlTree()
@@ -32,6 +38,7 @@ def updateRoadsAndTypes():
 
 
 class HackXml:
+    """Pretty much tuned specifically for roads and types"""
 
     def __init__(self, xmlFileName):
 
@@ -54,7 +61,9 @@ class HackXml:
         return
 
     def updateXmlElement(self, elementName, newList):
-        """Pretty much taylored specifically for roads and types"""
+        """Replaces elementName nodes with new nodes from the supplied list
+            Also adds a comment
+            """
 
         root = self.tree.documentElement
 
@@ -95,33 +104,358 @@ class HackXml:
 
         return
 
+def updateLocations():
+    """Mini Controller that synchronizes the JMRI locations data to TrainPlayer's
+        AO Locale data.
+        """
 
-class ExportJmriLocations:
-    """Writes a list of location names and comments for the whole profile"""
+    reconsiledLocations = ReconsileLocations()
+    reconsiledLocations.checkList()
+    reconsiledLocations.makeTpLocationList()
+    reconsiledLocations.makeTpIndustryList()
+    reconsiledLocations.dovetailTpLists()
+
+    # Do more stuff here
+
+    return
+
+class ReconsileLocations:
 
     def __init__(self):
 
-        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.ExportJmriLocations')
+        self.tpLocationsFile = 'TrainPlayer Export - Locations.txt'
+        self.tpIndustriesFile = 'TrainPlayer Export - Industries.txt'
+
+        self.tpLocations = []
+        self.tpLocationList = []
+
+        self.tpIndustries = []
+        self.tpIndustryList = []
+
+        self.dovetailedTpList = []
 
         return
 
-    def makeLocationHash(self):
+    def checkList(self):
 
-        locationHash = {}
+        try:
+            self.tpLocations = ModelEntities.getTpExport(self.tpLocationsFile)
+            self.tpLocations.pop(0) # Remove the header
+        except:
+            print('Not found: ' + self.tpLocationsFile)
+            pass
 
-        for location in PatternScriptEntities.LM.getLocationsByIdList():
-            locationName = unicode(location.getName(), PatternScriptEntities.ENCODING)
-            tracks = location.getTracksList()
-            for track in tracks:
-                trackName = unicode(track.getName(), PatternScriptEntities.ENCODING)
-                trackComment = unicode(track.getComment(), PatternScriptEntities.ENCODING)
-                locationHash[locationName + u';' + trackName] = trackComment
+        try:
+            self.tpIndustries = ModelEntities.getTpExport(self.tpIndustriesFile)
+            self.tpIndustries.pop(0) # Remove the header
+        except:
+            print('Not found: ' + self.tpIndustriesFile)
+            pass
 
-        return locationHash
+        return
+
+    def makeTpLocationList(self):
+        """Using TP nomenclature-
+            tpLocationList format: ID, JMRI Location Name, JMRI Track Name, Type, Spaces
+            """
+
+        for lineItem in self.tpLocations:
+            self.tpLocationList.append(lineItem.split(';'))
+
+        return
+
+    def makeTpIndustryList(self):
+        """Using TP nomenclature-
+            tpIndustryList format: ID, JMRI Location Name, JMRI Track Name, Industry, AAR, S/R, Load, Staging, ViaIn
+            """
+
+        for lineItem in self.tpIndustries:
+            self.tpIndustryList.append(lineItem.split(';'))
+
+        return
+
+    def dovetailTpLists(self):
+        """Using TP nomenclature-
+            dovetailedTpList format: ID, JMRI Location Name, JMRI Track Name, Type, Spaces, AAR, S/R, Load, Staging, ViaIn
+            """
+
+        for lineItem in self.tpLocationList:
+            loc = lineItem[1]
+            trk = lineItem[2]
+            industryItems = self.getIndustryItems(loc, trk)
+            if len(industryItems) == 0:
+                industryItems = [[u'', u'', u'', u'']]
+            for item in industryItems:
+                self.dovetailedTpList.append(lineItem + item)
+
+        return
+
+    def getIndustryItems(self, location, track):
+        """Using TP nomenclature-
+            Returns: AAR, S/R, Load, Staging, ViaIn
+            If TP industries are not being used, tpIndustryList is empty
+            industryItems is a list of lists
+            """
+
+        industryItems = []
+        for lineItem in self.tpIndustryList:
+            if lineItem[1] == location and lineItem[2] == track:
+                lineItem.pop(0) # Remove ID
+                lineItem.pop(0) # Remove Locale
+                lineItem.pop(0) # Remove Track
+                lineItem.pop(0) # Remove Industry
+                industryItems.append(lineItem)
+
+        return industryItems
+
+
+######################################################################################################################
+# Reconsile rolling stock inventory
+######################################################################################################################
+
+
+def updateInventory():
+    """Mini Controller that synchronizes the JMRI car data to TrainPlayer's
+        AO Car data.
+        """
+    xmlHack = HackXml('OperationsCarRoster')
+    tree = xmlHack.getXmlTree()
+
+    reconsiledInventory = ReconsileInventory()
+    reconsiledInventory.checkList()
+    reconsiledInventory.splitTpList()
+
+
+
+    # reconsiledInventory.getJmriOrphans()
+
+
+    return
+
+class ReconsileInventory:
+
+    def __init__(self):
+
+        # self.errorReport = PatternScriptEntities.BUNDLE['Update Inventory Error Report']
+        # self.setCarsError = ''
+        # self.carsNotFound = [] # A list so it can be sorted
+        # self.locationNotFound = ''
+
+        self.tpInventoryFile = 'TrainPlayer Export - Inventory.txt'
+        # self.jmriInventory  = []
+        self.tpInventory = []
+        self.tpCars = []
+        self.tpLocos = []
+
+        self.jmriCars = PatternScriptEntities.CM.getByLocationList()
+        self.jmriLocos = PatternScriptEntities.EM.getByLocationList()
+
+        self.jmriOrphans = []
+        self.tpOrphans = []
+
+
+
+
+
+        self.jmriInventoryId = []
+        self.tpInventoryId = []
+
+
+        return
+
+    def checkList(self):
+
+        try:
+            self.tpInventory = ModelEntities.getTpExport(self.tpInventoryFile)
+            self.tpInventory.pop(0) # Remove the header
+        except:
+            print('Not found: ' + self.tpInventoryFile)
+            pass
+
+        return
+
+    def splitTpList(self):
+        """Using TP nomenclature-
+            tpLocationList format: Car, Type, AAR, JMRI Location, JMRI Track, Load, Kernel
+            """
+
+        for item in self.tpInventory:
+            if item[0].startswith('E'):
+                self.tpLocos.append(item)
+            else:
+                self.tpCars.append(item)
+
+        return
+
+    def getJmriOrphans(self):
+
+        for item in self.jmriCars:
+            if not item.getId() in self.tpCars:
+                self.jmriOrphans.append(item.getId())
+                print(item.getId())
+
+        for item in self.jmriLocos:
+            if not item.getId() in self.tpCars:
+                self.jmriOrphans.append(item.getId())
+                print(item.getId())
+
+        return
+
+
+
+
+
+
+
+
+    def makeIdLists(self):
+
+        for item in self.jmriInventory:
+            self.jmriInventoryId.append(item.getId())
+
+        # for item in self.tpInventory:
+        #     self.tpInventoryId.append(item.split(';')[0])
+
+        return
+
+    def getTpOrphans(self):
+
+        for id in self.tpInventoryId:
+            if id not in self.jmriInventoryId:
+                self.tpOrphans.append(id)
+
+        return
+
+
+
+    def deleteJmriOrphans(self):
+
+        for rs in self.jmriOrphans:
+            try:
+                loco = PatternScriptEntities.EM.getById(rs)
+                PatternScriptEntities.EM.deregister(loco)
+            except:
+                pass
+
+        for rs in self.jmriOrphans:
+            try:
+                car = PatternScriptEntities.CM.getById(rs)
+                PatternScriptEntities.CM.deregister(car)
+            except:
+                pass
+
+        return
+
+    def addTpOrphans(self):
+
+        for orphan in self.tpOrphans:
+            rsLine = self.findRsAttibs(orphan)
+            rsAttribs = rsLine.split(';')
+            ModelEntities.addNewRs(rsAttribs)
+
+        return
+
+    def findRsAttibs(self, orphan):
+
+        for item in self.tpInventory:
+            if orphan in item:
+                return item
+
+        return
+
+    def updateLocations(self):
+        """lineItem format: RoadNumber, AAR, Location, Track, Loaded, Kernel, Type"""
+
+        for lineItem in self.tpInventory:
+
+            parsedLine = lineItem.split(';')
+
+            if lineItem[2].startswith('E'):
+                rs = PatternScriptEntities.EM.getById(parsedLine[0])
+            else:
+                rs = PatternScriptEntities.CM.getById(parsedLine[0])
+
+            location, track = ModelEntities.getSetToLocationAndTrack(parsedLine[2], parsedLine[3])
+
+            try:
+                rs.setLocation(location, track)
+                # print('Rolling Stock ', car.getRoadName(), ' set to: ' , location, track)
+            except:
+                print('Not found ', location.getName(), track.getName())
+
+        return
+
+    def getErrorReport(self):
+
+        self.errorReport += '\n\n' + PatternScriptEntities.BUNDLE['List of rolling stock not updated:']
+        self.errorReport += '\n' + self.setCarsError
+
+        self.errorReport += '\n\n' + PatternScriptEntities.BUNDLE['List of tracks not found:']
+        self.errorReport += '\n' + self.locationNotFound
+
+        self.errorReport += '\n\n' + PatternScriptEntities.BUNDLE[u'TrainPlayer© cars not found in JMRI roster:']
+        self.errorReport += '\n' + '\n'.join(sorted(self.carsNotFound[1:-1])) # [0] is the header
+
+        return self.errorReport
+
+
+class UpdateOperationsCarRoster:
+
+    def __init__(self):
+
+        self.tpInventory = []
+        self.tpLocations = []
+        self.allTpAar = []
+        self.allTpRoads = []
+        self.allJmriRoads = []
+
+        return
+
+    def checkList(self):
+
+        try:
+            self.tpInventory = ModelEntities.getTpInventory()
+            self.tpInventory.pop(0) # Remove the header
+        except:
+            pass
+
+        try:
+            self.tpLocations = ModelEntities.getTpLocations()
+            self.tpLocations.pop(0) # Remove the header
+        except:
+            pass
+
+    def getAllTpRoads(self):
+
+        for lineItem in self.tpInventory:
+            splitItem = lineItem.split(';')
+            road, number = ModelEntities.parseCarId(splitItem[0])
+            self.allTpRoads.append(road)
+
+        self.allTpRoads = list(set(self.allTpRoads))
+
+        return self.allTpRoads
+
+    def getAllTpAar(self):
+
+        for lineItem in self.tpInventory:
+            splitItem = lineItem.split(';')
+            self.allTpAar.append(splitItem[2])
+
+        self.allTpAar = list(set(self.allTpAar))
+
+        return self.allTpAar
+
+
+######################################################################################################################
+# o2o work event list classes
+######################################################################################################################
 
 
 class TrackPatternTranslationToTp:
-    """Translate Track Patterns from OperationsPatternScripts for TrainPlayer O2O script compatability"""
+    """TrainPlayer Manifest-
+        Translate Track Patterns from OperationsPatternScripts for TrainPlayer O2O script compatability
+        """
 
     def __init__(self):
 
@@ -184,8 +518,11 @@ class TrackPatternTranslationToTp:
 
         return tpSwitchList
 
+
 class JmriTranslationToTp:
-    """Translate manifests from JMRI for TrainPlayer o2o script compatability"""
+    """TrainPlayer Manifest-
+        Translate manifests from JMRI for TrainPlayer o2o script compatability
+        """
 
     def __init__(self):
 
@@ -236,12 +573,15 @@ class JmriTranslationToTp:
 
 
 class ProcessWorkEventList:
-    """Process the translated work event lists to a CSV list formatted for the TrainPlayer o2o scripts"""
+    """TrainPlayer Manifest-
+        Process the translated work event lists to a CSV list formatted for the
+        TrainPlayer o2o scripts
+        """
 
     def __init__(self):
 
         self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.ProcessWorkEventList')
-        self.locationHash = ExportJmriLocations().makeLocationHash()
+        # self.locationHash = ExportJmriLocations().makeLocationHash()
 
         return
 
@@ -330,57 +670,10 @@ class ProcessWorkEventList:
         return
 
 
-class UpdateOperationsCarRoster:
-
-    def __init__(self):
-
-        self.tpInventory = []
-        self.tpLocations = []
-        self.allTpAar = []
-        self.allTpRoads = []
-        self.allJmriRoads = []
-
-
-
-        return
-
-    def checkList(self):
-
-        try:
-            self.tpInventory = ModelEntities.getTpInventory()
-            self.tpInventory.pop(0) # Remove the header
-        except:
-            pass
-
-        try:
-            self.tpLocations = ModelEntities.getTpLocations()
-            self.tpLocations.pop(0) # Remove the header
-        except:
-            pass
-
-    def getAllTpRoads(self):
-
-        for lineItem in self.tpInventory:
-            splitItem = lineItem.split(';')
-            road, number = ModelEntities.parseCarId(splitItem[0])
-            self.allTpRoads.append(road)
-
-        self.allTpRoads = list(set(self.allTpRoads))
-
-        return self.allTpRoads
-
-    def getAllTpAar(self):
-
-        for lineItem in self.tpInventory:
-            splitItem = lineItem.split(';')
-            self.allTpAar.append(splitItem[1])
-
-        self.allTpAar = list(set(self.allTpAar))
-
-        return self.allTpAar
-
-
 class WriteWorkEventListToTp:
+    """TrainPlayer Manifest-
+        Writes the o2o work events list
+        """
 
     def __init__(self, workEventList):
 
@@ -403,207 +696,28 @@ class WriteWorkEventListToTp:
 
         return
 
-class ReconsileLocations:
 
-    def __init__(self):
-
-        self.tpInventory = []
-        self.tpLocations = []
-        self.mergedTpLocations = []
-
-        return
-
-    def checkList(self):
-
-        try:
-            self.tpInventory = ModelEntities.getTpInventory()
-            self.tpInventory.pop(0) # Remove the header
-        except:
-            pass
-
-        try:
-            self.tpLocations = ModelEntities.getTpLocations()
-            self.tpLocations.pop(0) # Remove the header
-        except:
-            pass
-
-    def mergeTpLists(self):
-        """mergedTpLocations format: ID, Locale, Track, Type, Spaces, AAR """
-
-        for lineItem in self.tpLocations:
-            splitLine = lineItem.split(';')
-            aarList = self.getAar(splitLine[1], splitLine[2])
-            for aar in aarList:
-                newLine = [splitLine[0], splitLine[1], splitLine[2], splitLine[3], splitLine[4], aar]
-                self.mergedTpLocations.append(newLine)
-
-        return
-
-    def updateLocationAndTrack(self):
-        """Implement later:
-            use index for renaming location and track
-            update track type
-            update track length
-            """
-
-        for lineItem in self.mergedTpLocations:
-
-            try:
-                # location, track = ModelEntities.getSetToLocationAndTrack(lineItem[1], lineItem[2])
-                location = PatternScriptEntities.LM.getLocationByName(lineItem[1])
-                location.addTypeName(lineItem[5])
-                location.store()
-                # track.addTypeName(lineItem[5])
-                # print(location.getName(), track.getName(), lineItem[5])
-                # Update track length
-                # Update track type
-            except:
-                # Add new location and/or track
-                print('Not found: ', lineItem[1], lineItem[2])
-
-        return
-
-    def getAar(self, location, track):
-        """get a de-duplicated list of aar for each location;track"""
-
-        aarList = []
-        for lineItem in self.tpInventory:
-            splitLine = lineItem.split(';')
-            if location == splitLine[2] and track == splitLine[3]:
-                aarList.append(splitLine[1])
-
-        return list(set(aarList))
-
-class ReconsileInventory:
-
-    def __init__(self):
-
-        self.errorReport = PatternScriptEntities.BUNDLE['Update Inventory Error Report']
-        self.setCarsError = ''
-        self.carsNotFound = [] # A list so it can be sorted
-        self.locationNotFound = ''
-
-        self.jmriInventory  = []
-        self.tpInventory = []
-
-        self.jmriInventoryId = []
-        self.tpInventoryId = []
-
-        self.jmriOrphans = []
-        self.tpOrphans = []
-
-
-        return
-
-    def checkList(self):
-
-        self.tpInventory = ModelEntities.getTpInventory()
-        if self.tpInventory:
-            self.tpInventory.pop(0) # Remove the header
-            return True
-        else:
-            return False
-
-    def getJmriRs(self):
-
-        cars = PatternScriptEntities.CM.getByLocationList()
-        locos = PatternScriptEntities.EM.getByLocationList()
-        self.jmriInventory = cars + locos
-
-        return
-
-    def makeIdLists(self):
-
-        for item in self.jmriInventory:
-            self.jmriInventoryId.append(item.getId())
-
-        for item in self.tpInventory:
-            self.tpInventoryId.append(item.split(';')[0])
-
-        return
-
-    def getTpOrphans(self):
-
-        for id in self.tpInventoryId:
-            if id not in self.jmriInventoryId:
-                self.tpOrphans.append(id)
-
-        return
-
-    def getJmriOrphans(self):
-
-        for id in self.jmriInventoryId:
-            if id not in self.tpInventoryId:
-                self.jmriOrphans.append(id)
-
-        return
-
-    def deleteJmriOrphans(self):
-
-        for rs in self.jmriOrphans:
-            try:
-                loco = PatternScriptEntities.EM.getById(rs)
-                PatternScriptEntities.EM.deregister(loco)
-            except:
-                pass
-
-        for rs in self.jmriOrphans:
-            try:
-                car = PatternScriptEntities.CM.getById(rs)
-                PatternScriptEntities.CM.deregister(car)
-            except:
-                pass
-
-        return
-
-    def addTpOrphans(self):
-
-        for orphan in self.tpOrphans:
-            rsLine = self.findRsAttibs(orphan)
-            rsAttribs = rsLine.split(';')
-            ModelEntities.addNewRs(rsAttribs)
-
-        return
-
-    def findRsAttibs(self, orphan):
-
-        for item in self.tpInventory:
-            if orphan in item:
-                return item
-
-        return
-
-    def updateLocations(self):
-        """lineItem format: RoadNumber, AAR, Location, Track, Loaded, Kernel, Type"""
-
-        for lineItem in self.tpInventory:
-
-            parsedLine = lineItem.split(';')
-
-            if lineItem[2].startswith('E'):
-                rs = PatternScriptEntities.EM.getById(parsedLine[0])
-            else:
-                rs = PatternScriptEntities.CM.getById(parsedLine[0])
-
-            location, track = ModelEntities.getSetToLocationAndTrack(parsedLine[2], parsedLine[3])
-
-            try:
-                rs.setLocation(location, track)
-                # print('Rolling Stock ', car.getRoadName(), ' set to: ' , location, track)
-            except:
-                print('Not found ', location.getName(), track.getName())
-
-        return
-
-    def getErrorReport(self):
-
-        self.errorReport += '\n\n' + PatternScriptEntities.BUNDLE['List of rolling stock not updated:']
-        self.errorReport += '\n' + self.setCarsError
-
-        self.errorReport += '\n\n' + PatternScriptEntities.BUNDLE['List of tracks not found:']
-        self.errorReport += '\n' + self.locationNotFound
-
-        self.errorReport += '\n\n' + PatternScriptEntities.BUNDLE[u'TrainPlayer© cars not found in JMRI roster:']
-        self.errorReport += '\n' + '\n'.join(sorted(self.carsNotFound[1:-1])) # [0] is the header
-
-        return self.errorReport
+# class ExportJmriLocations:
+#     """TrainPlayer Manifest-Support class
+#         Returns a list of location names and comments for the whole profile
+#         """
+#
+#     def __init__(self):
+#
+#         self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.ExportJmriLocations')
+#
+#         return
+#
+#     def makeLocationHash(self):
+#
+#         locationHash = {}
+#
+#         for location in PatternScriptEntities.LM.getLocationsByIdList():
+#             locationName = unicode(location.getName(), PatternScriptEntities.ENCODING)
+#             tracks = location.getTracksList()
+#             for track in tracks:
+#                 trackName = unicode(track.getName(), PatternScriptEntities.ENCODING)
+#                 trackComment = unicode(track.getComment(), PatternScriptEntities.ENCODING)
+#                 locationHash[locationName + u';' + trackName] = trackComment
+#
+#         return locationHash
