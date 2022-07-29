@@ -19,20 +19,32 @@ def updateRoadsAndTypes():
         roads and types elements
         """
 
-    xmlHack = HackXml('OperationsCarRoster')
-    tree = xmlHack.getXmlTree()
+    carHack = HackXml('OperationsCarRoster')
+    carHack.getXmlTree()
+
+    locoHack = HackXml('OperationsEngineRoster')
+    locoHack.getXmlTree()
 
     updatedOperationsCarRoster = UpdateOperationsCarRoster()
     updatedOperationsCarRoster.checkList()
 
-    allTpRoads = updatedOperationsCarRoster.getAllTpRoads()
-    xmlHack.updateXmlElement('roads', allTpRoads)
+    allTpItems = updatedOperationsCarRoster.getAllTpRoads()
+    carHack.updateXmlElement('roads', allTpItems)
 
-    allTpAar = updatedOperationsCarRoster.getAllTpAar()
-    xmlHack.updateXmlElement('types', allTpAar)
+    allTpItems = updatedOperationsCarRoster.getAllTpCarAar()
+    carHack.updateXmlElement('types', allTpItems)
 
-    xmlHack.patchUpDom()
-    xmlHack.saveUpdatedXml()
+    allTpItems = updatedOperationsCarRoster.getAllTpLocoTypes()
+    locoHack.updateXmlElement('types', allTpItems)
+
+    allTpItems = updatedOperationsCarRoster.getAllTpLocoModels()
+    locoHack.updateXmlElement('models', allTpItems)
+
+    carHack.patchUpDom(u'<!DOCTYPE operations-config SYSTEM "/xml/DTD/operations-cars.dtd">')
+    carHack.saveUpdatedXml()
+
+    locoHack.patchUpDom(u'<!DOCTYPE operations-config SYSTEM "/xml/DTD/operations-engines.dtd">')
+    locoHack.saveUpdatedXml()
 
     return
 
@@ -45,7 +57,7 @@ class HackXml:
         self.filePath = PatternScriptEntities.PROFILE_PATH + '\\operations\\' + xmlFileName + '.xml'
         self.tree = MD.parseString("<junk/>")
         self.xmlComment = SCRIPT_NAME + ' - ' + PatternScriptEntities.timeStamp()
-        self.docAttr = u'<!DOCTYPE operations-config SYSTEM "/xml/DTD/operations-cars.dtd">'
+        # self.docAttr = u'<!DOCTYPE operations-config SYSTEM "/xml/DTD/operations-cars.dtd">'
         self.xmlString = ''
 
         return
@@ -85,14 +97,14 @@ class HackXml:
 
         return
 
-    def patchUpDom(self):
+    def patchUpDom(self, xmlPatch):
         """Work around DOM's limitations"""
 
         self.xmlString = self.tree.toprettyxml(indent ="\t")
     # https://stackoverflow.com/questions/1140958/whats-a-quick-one-liner-to-remove-empty-lines-from-a-python-string
         self.xmlString = [s for s in self.xmlString.splitlines() if s.strip()]
     # Put the DOCTYPE back in
-        self.xmlString.insert(2, self.docAttr)
+        self.xmlString.insert(2, xmlPatch)
         self.xmlString = osLinesep.join(self.xmlString)
 
         return
@@ -406,6 +418,8 @@ class UpdateOperationsCarRoster:
         self.tpInventory = []
         self.tpLocations = []
         self.allTpAar = []
+        self.allTpCarAar = []
+        self.allTpLocoAar = []
         self.allTpRoads = []
         self.allJmriRoads = []
 
@@ -436,15 +450,34 @@ class UpdateOperationsCarRoster:
 
         return self.allTpRoads
 
-    def getAllTpAar(self):
+    def getAllTpCarAar(self):
 
         for lineItem in self.tpInventory:
             splitItem = lineItem.split(';')
-            self.allTpAar.append(splitItem[2])
+            if splitItem[2].startswith('E'):
+                continue
+            else:
+                self.allTpCarAar.append(splitItem[2])
 
-        self.allTpAar = list(set(self.allTpAar))
+        return list(set(self.allTpCarAar))
 
-        return self.allTpAar
+    def getAllTpLocoTypes(self):
+
+        for lineItem in self.tpInventory:
+            splitItem = lineItem.split(';')
+            if splitItem[2].startswith('E'):
+                self.allTpLocoAar.append(splitItem[2])
+
+        return list(set(self.allTpLocoAar))
+
+    def getAllTpLocoModels(self):
+
+        for lineItem in self.tpInventory:
+            splitItem = lineItem.split(';')
+            if splitItem[2].startswith('E'):
+                self.allTpLocoAar.append(splitItem[1])
+
+        return list(set(self.allTpLocoAar))
 
 
 ######################################################################################################################
