@@ -415,6 +415,7 @@ class UpdateOperationsCarRoster:
 
     def __init__(self):
 
+        self.tpInventoryFile = 'TrainPlayer Export - Inventory.txt'
         self.tpInventory = []
         self.tpLocations = []
         self.allTpAar = []
@@ -428,7 +429,8 @@ class UpdateOperationsCarRoster:
     def checkList(self):
 
         try:
-            self.tpInventory = ModelEntities.getTpInventory()
+            # self.tpInventory = ModelEntities.getTpInventory()
+            self.tpInventory = ModelEntities.getTpExport(self.tpInventoryFile)
             self.tpInventory.pop(0) # Remove the header
         except:
             pass

@@ -115,16 +115,16 @@ def parseRollingStockAsDict(rS):
     rsDict[PatternScriptEntities.SB.handleGetMessage('FD&Track')] = jFinalDestination + u';' + jFinalTrack
     return rsDict
 
-def getTpInventory():
-
-    tpInventoryPath = PatternScriptEntities.JMRI.util.FileUtil.getHomePath() \
-        + "AppData\Roaming\TrainPlayer\Reports\TrainPlayer Export - Inventory.txt"
-
-    if PatternScriptEntities.JAVA_IO.File(tpInventoryPath).isFile():
-        tpInventory = PatternScriptEntities.genericReadReport(tpInventoryPath).split('\n')
-        return tpInventory
-    else:
-        return
+# def getTpInventory():
+#
+#     tpInventoryPath = PatternScriptEntities.JMRI.util.FileUtil.getHomePath() \
+#         + "AppData\Roaming\TrainPlayer\Reports\TrainPlayer Export - Inventory.txt"
+#
+#     if PatternScriptEntities.JAVA_IO.File(tpInventoryPath).isFile():
+#         tpInventory = PatternScriptEntities.genericReadReport(tpInventoryPath).split('\n')
+#         return tpInventory
+#     else:
+#         return
 
 def getTpExport(fileName):
     """Generic file getter"""

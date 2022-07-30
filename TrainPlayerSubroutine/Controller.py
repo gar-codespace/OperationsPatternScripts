@@ -54,22 +54,8 @@ class StartUp:
 
         Model.updateRoadsAndTypes()
         # Reload OperationsCarRoster.xml
-        Model.updateLocations()
+        # Reload OperationsEngineRoster.xml
 
-
-
-
-
-
-        # x = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarRoads()
-        # Apps.revalidate(x)
-        #
-        # x.updateComboBox()
-        # print(dir(x))
-        # x = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarEditFrame()
-        # Apps.revalidate(x.roadComboBox)
-        # x.roadComboBox
-        # print(dir(x.roadComboBox))
 
 
 
@@ -81,25 +67,13 @@ class StartUp:
     def inventoryUpdator(self, EVENT):
         '''Updates JMRI rolling stock locations based on TrainPlayer inventory export'''
 
+        Model.updateRoadsAndTypes()
+        # Reload OperationsCarRoster.xml
+        # Reload OperationsEngineRoster.xml
+
         Model.updateInventory()
 
-        # reconsiledInventory = Model.ReconsileInventory()
-        # if not reconsiledInventory.checkList():
-        #     self.psLog.info('No TrainPlayer inventory list to update')
-        #     return
-        #
-        # reconsiledInventory.getJmriRs()
-        # reconsiledInventory.makeIdLists()
-        #
-        # reconsiledInventory.getJmriOrphans()
-        # reconsiledInventory.deleteJmriOrphans()
-        #
-        # reconsiledInventory.getTpOrphans()
-        # reconsiledInventory.addTpOrphans()
-        #
-        # reconsiledInventory.updateLocations()
-        #
-        # self.psLog.info('Updated Rolling stock locations from TrainPlayer')
+
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
