@@ -429,6 +429,7 @@ class UpdateOperationsCarRoster:
     def checkList(self):
 
         try:
+            
             # self.tpInventory = ModelEntities.getTpInventory()
             self.tpInventory = ModelEntities.getTpExport(self.tpInventoryFile)
             self.tpInventory.pop(0) # Remove the header
