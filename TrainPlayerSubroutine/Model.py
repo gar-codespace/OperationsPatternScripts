@@ -238,6 +238,13 @@ def updateInventory():
     reconsiledInventory.splitTpList()
 
 
+    reconsiledInventory.changeJmriAttr()
+    PatternScriptEntities.JMRI.jmrit.operations.rollingstock.engines.EngineManagerXml.save()
+    PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarManagerXml.save()
+
+
+
+
 
     # reconsiledInventory.getJmriOrphans()
 
@@ -256,18 +263,14 @@ class ReconsileInventory:
         self.tpInventoryFile = 'TrainPlayer Export - Inventory.txt'
         # self.jmriInventory  = []
         self.tpInventory = []
-        self.tpCars = []
-        self.tpLocos = []
+        self.tpCars = {}
+        self.tpLocos = {}
 
         self.jmriCars = PatternScriptEntities.CM.getByLocationList()
         self.jmriLocos = PatternScriptEntities.EM.getByLocationList()
 
         self.jmriOrphans = []
         self.tpOrphans = []
-
-
-
-
 
         self.jmriInventoryId = []
         self.tpInventoryId = []
@@ -288,16 +291,19 @@ class ReconsileInventory:
 
     def splitTpList(self):
         """Using TP nomenclature-
-            tpLocationList format: Car, Type, AAR, JMRI Location, JMRI Track, Load, Kernel
+            self.tpInventory string format: Car;Type;AAR;JMRI Location;JMRI Track;Load;Kernel
+            self.tpCars dictionary format: {Car : [Type, AAR, JMRI Location, JMRI Track, Load, Kernel]}
             """
 
         for item in self.tpInventory:
+            line = item.split(';')
             if item[0].startswith('E'):
-                self.tpLocos.append(item)
+                self.tpLocos[line[0]] = line[1:-1]
             else:
-                self.tpCars.append(item)
+                self.tpCars[line[0]] = line[1:-1]
 
         return
+
 
     def getJmriOrphans(self):
 
@@ -313,8 +319,27 @@ class ReconsileInventory:
 
         return
 
+    def changeJmriAttr(self):
 
+        print(self.tpLocos)
 
+        for item in self.jmriLocos:
+
+            loco = item.getRoadName() + item.getNumber()
+            try:
+                # print(item.getModel())
+                # 12 character string limit
+                modelX = unicode(self.tpLocos[loco][0][0:11], PatternScriptEntities.ENCODING)
+                # modelX = self.tpLocos[loco][0][0:11]
+                print(modelX)
+                item.setModel(modelX)
+                # print(item.getModel())
+            except:
+                print(loco + ' not found in TrainPlayer list')
+
+        PatternScriptEntities.JMRI.jmrit.operations.rollingstock.engines.EngineManagerXml.save()
+
+        return
 
 
 
@@ -429,7 +454,7 @@ class UpdateOperationsCarRoster:
     def checkList(self):
 
         try:
-            
+
             # self.tpInventory = ModelEntities.getTpInventory()
             self.tpInventory = ModelEntities.getTpExport(self.tpInventoryFile)
             self.tpInventory.pop(0) # Remove the header
@@ -465,20 +490,28 @@ class UpdateOperationsCarRoster:
         return list(set(self.allTpCarAar))
 
     def getAllTpLocoTypes(self):
+        """Don't include tenders"""
 
         for lineItem in self.tpInventory:
             splitItem = lineItem.split(';')
+            if splitItem[2].startswith('ET'):
+                continue
             if splitItem[2].startswith('E'):
                 self.allTpLocoAar.append(splitItem[2])
 
         return list(set(self.allTpLocoAar))
 
     def getAllTpLocoModels(self):
+        """JMRI Loco models limited to 12 characters
+            Don't include tenders
+            """
 
         for lineItem in self.tpInventory:
             splitItem = lineItem.split(';')
+            if splitItem[2].startswith('ET'):
+                continue
             if splitItem[2].startswith('E'):
-                self.allTpLocoAar.append(splitItem[1])
+                self.allTpLocoAar.append(splitItem[1][0:11])
 
         return list(set(self.allTpLocoAar))
 

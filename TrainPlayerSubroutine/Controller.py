@@ -67,9 +67,14 @@ class StartUp:
     def inventoryUpdator(self, EVENT):
         '''Updates JMRI rolling stock locations based on TrainPlayer inventory export'''
 
-        Model.updateRoadsAndTypes()
+        # Model.updateRoadsAndTypes()
+
+
+
         # Reload OperationsCarRoster.xml
         # Reload OperationsEngineRoster.xml
+
+
 
         Model.updateInventory()
 
