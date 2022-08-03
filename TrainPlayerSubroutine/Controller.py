@@ -4,10 +4,11 @@
 """The TrainPlayer Subroutine will be implemented in V3, this is just the framework"""
 
 from psEntities import PatternScriptEntities
-from TrainPlayerSubroutine import Model
+from TrainPlayerSubroutine import ModelWorkEvents
+from TrainPlayerSubroutine import ModelImport
 from TrainPlayerSubroutine import View
 
-from apps import Apps
+# from apps import Apps
 
 SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.Controller'
 SCRIPT_REV = 20220101
@@ -52,7 +53,7 @@ class StartUp:
     def locationUpdator(self, EVENT):
         '''Updates JMRI locations, tracks, and their parameters'''
 
-        Model.updateRoadsAndTypes()
+        ModelWorkEvents.updateRoadsAndTypes()
         # Reload OperationsCarRoster.xml
         # Reload OperationsEngineRoster.xml
 
@@ -67,7 +68,7 @@ class StartUp:
     def inventoryUpdator(self, EVENT):
         '''Updates JMRI rolling stock locations based on TrainPlayer inventory export'''
 
-        # Model.updateRoadsAndTypes()
+        # ModelWorkEvents.updateRoadsAndTypes()
 
 
 
@@ -76,7 +77,7 @@ class StartUp:
 
 
 
-        Model.updateInventory()
+        ModelWorkEvents.updateInventory()
 
 
 

@@ -113,20 +113,20 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
 
         if PatternScriptEntities.CheckTpDestination().directoryExists():
 
-            self.tpLog.debug('Model.JmriTranslationToTp')
-            jmriManifestTranslator = Model.JmriTranslationToTp()
+            self.tpLog.debug('ModelWorkEvents.JmriTranslationToTp')
+            jmriManifestTranslator = ModelWorkEvents.JmriTranslationToTp()
             builtTrainAsDict = jmriManifestTranslator.getTrainAsDict(self.train)
             translatedManifest = jmriManifestTranslator.translateManifestHeader(builtTrainAsDict)
             translatedManifest['locations'] = jmriManifestTranslator.translateManifestBody(builtTrainAsDict)
 
-            self.tpLog.debug('Model.ProcessWorkEventList')
-            processedManifest = Model.ProcessWorkEventList()
+            self.tpLog.debug('ModelWorkEvents.ProcessWorkEventList')
+            processedManifest = ModelWorkEvents.ProcessWorkEventList()
             processedManifest.writeTpWorkEventListAsJson(translatedManifest)
             tpManifestHeader = processedManifest.makeTpHeader(translatedManifest)
             tpManifestLocations = processedManifest.makeTpLocations(translatedManifest)
 
-            self.tpLog.debug('Model.WriteWorkEventListToTp')
-            Model.WriteWorkEventListToTp(tpManifestHeader + tpManifestLocations).asCsv()
+            self.tpLog.debug('ModelWorkEvents.WriteWorkEventListToTp')
+            ModelWorkEvents.WriteWorkEventListToTp(tpManifestHeader + tpManifestLocations).asCsv()
 
             self.tpLog.info('Export JMRI manifest to TrainPlyer: ' + self.train.getName())
         else:
@@ -152,7 +152,7 @@ if __name__ == "__builtin__":
     PLUGIN_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
     sysPath.append(PLUGIN_ROOT)
     from psEntities import PatternScriptEntities
-    from TrainPlayerSubroutine import Model
+    from TrainPlayerSubroutine import ModelWorkEvents
     from psBundle import Bundle
 
     Bundle.BUNDLE_DIR = PLUGIN_ROOT + '\\psBundle\\'
@@ -171,4 +171,4 @@ else:
 
     PLUGIN_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
     from psEntities import PatternScriptEntities
-    from TrainPlayerSubroutine import Model
+    from TrainPlayerSubroutine import ModelWorkEvents
