@@ -45,41 +45,43 @@ class StartUp:
     def activateWidgets(self):
         '''Maybe get them by name?'''
 
-        self.widgets[0].actionPerformed = self.locationUpdator
-        self.widgets[1].actionPerformed = self.inventoryUpdator
+        self.widgets[0].actionPerformed = self.railroadImporter
+        self.widgets[1].actionPerformed = self.railroadCreator
+        self.widgets[2].actionPerformed = self.railroadUpdater
 
         return
 
-    def locationUpdator(self, EVENT):
-        '''Updates JMRI locations, tracks, and their parameters'''
+    def railroadImporter(self, EVENT):
+        '''Writes a json file from the 3 TrainPlayer export files'''
 
-        ModelWorkEvents.updateRoadsAndTypes()
-        # Reload OperationsCarRoster.xml
-        # Reload OperationsEngineRoster.xml
-
-
-
+        trainPlayerImport = ModelImport.TrainPlayerImporter()
+        trainPlayerImport.checkFiles()
+        trainPlayerImport.makeRrHeader()
+        trainPlayerImport.makeRrLocations()
 
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 
-    def inventoryUpdator(self, EVENT):
-        '''Updates JMRI rolling stock locations based on TrainPlayer inventory export'''
+    def railroadCreator(self, EVENT):
+        '''Creates a new JMRI railroad from the json file'''
+
+        print('Bosco')
 
         # ModelWorkEvents.updateRoadsAndTypes()
-
-
-
         # Reload OperationsCarRoster.xml
         # Reload OperationsEngineRoster.xml
+        # ModelWorkEvents.updateInventory()
 
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
+        return
 
-        ModelWorkEvents.updateInventory()
+    def railroadUpdater(self, EVENT):
+        '''Updates JMRI railroad from the json file'''
 
-
+        print('Bingo')
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

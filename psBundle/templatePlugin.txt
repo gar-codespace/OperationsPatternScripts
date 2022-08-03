@@ -49,8 +49,9 @@ Tracks at
 TrainPlayer© cars not found in JMRI roster:
 TrainPlayer© Support Subroutine
 Translate Plugin
-Update Inventory
-Update Locations
+Import Railroad
+New Railroad
+Update Railroad
 Update Inventory Error Report
 View Log File
 Window Help...

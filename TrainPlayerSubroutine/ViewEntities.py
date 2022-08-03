@@ -14,13 +14,17 @@ class TrainPlayerPanel:
 
         self.configFile = PatternScriptEntities.readConfigFile('TP')
 
-        self.uiButton = PatternScriptEntities.JAVX_SWING.JButton()
-        self.uiButton.setText(PatternScriptEntities.BUNDLE['Update Inventory'])
-        self.uiButton.setName('uiButton')
+        self.irButton = PatternScriptEntities.JAVX_SWING.JButton()
+        self.irButton.setText(PatternScriptEntities.BUNDLE['Import Railroad'])
+        self.irButton.setName('irButton')
 
-        self.saButton = PatternScriptEntities.JAVX_SWING.JButton()
-        self.saButton.setText(PatternScriptEntities.BUNDLE['Update Locations'])
-        self.saButton.setName('saButton')
+        self.nrButton = PatternScriptEntities.JAVX_SWING.JButton()
+        self.nrButton.setText(PatternScriptEntities.BUNDLE['New Railroad'])
+        self.nrButton.setName('nrButton')
+
+        self.urButton = PatternScriptEntities.JAVX_SWING.JButton()
+        self.urButton.setText(PatternScriptEntities.BUNDLE['Update Railroad'])
+        self.urButton.setName('urButton')
 
         self.controlWidgets = []
 
@@ -30,15 +34,18 @@ class TrainPlayerPanel:
 
         tpPanel = PatternScriptEntities.JAVX_SWING.JPanel()
 
-        tpPanel.add(self.saButton)
+        tpPanel.add(self.irButton)
         tpPanel.add(PatternScriptEntities.JAVX_SWING.Box.createRigidArea(PatternScriptEntities.JAVA_AWT.Dimension(20,0)))
-        tpPanel.add(self.uiButton)
+        tpPanel.add(self.nrButton)
+        tpPanel.add(PatternScriptEntities.JAVX_SWING.Box.createRigidArea(PatternScriptEntities.JAVA_AWT.Dimension(20,0)))
+        tpPanel.add(self.urButton)
 
         return tpPanel
 
     def getPanelWidgets(self):
 
-        self.controlWidgets.append(self.saButton)
-        self.controlWidgets.append(self.uiButton)
+        self.controlWidgets.append(self.irButton)
+        self.controlWidgets.append(self.nrButton)
+        self.controlWidgets.append(self.urButton)
 
         return self.controlWidgets
