@@ -13,20 +13,17 @@ class TrainPlayerImporter:
 
         self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.ModelImport')
 
-        self.tpLocationsFile = 'TrainPlayer Export - Locations.txt'
-        self.tpIndustriesFile = 'TrainPlayer Export - Industries.txt'
-        self.tpInventoryFile = 'TrainPlayer Export - Inventory.txt'
+        self.tpLocationsFile = 'TrainPlayer Report - Locations.txt'
+        self.tpIndustriesFile = 'TrainPlayer Report - Industries.txt'
+        self.tpInventoryFile = 'TrainPlayer Report - Inventory.txt'
 
         self.tpLocations = []
         self.tpIndustries = []
         self.tpInventory = []
         self.okCounter = 0
 
-        self.rrFile = 'tpRailroad.json'
+        self.rrFile = PatternScriptEntities.PROFILE_PATH + 'operations\\tpRailroadData.json'
         self.rr = {}
-        self.rrLocations = {}
-        self.rrIndustries = {}
-        self.rrInventory = {}
 
         return
 
@@ -59,32 +56,29 @@ class TrainPlayerImporter:
         return
 
     def makeRrHeader(self):
-        """Add the date"""
 
         self.rr[u'railroadName'] = self.tpLocations.pop(0)
         self.rr[u'railroadDescription'] = self.tpLocations.pop(0)
-        self.rr[u'date'] = u'date'
+        self.rr[u'date'] = PatternScriptEntities.timeStamp()
 
         return
 
 
     def makeRrLocations(self):
-        """self.tpLocations format: TP ID; JMRI Location Name; JMRI Track Name; TP Label, TP Type; TP Spaces"""
+        """self.tpLocations format: TP ID; JMRI Location Name; JMRI Track Name; TP Label; TP Type; TP Spaces"""
 
         locationList = [u'Undefined']
+        rrLocations = {}
 
-        self.tpLocations.pop(0)
-        self.tpLocations.pop(0)
-        self.tpLocations.pop(0)
+        self.tpLocations.pop(0) # Remove descriptions
 
         for lineItem in self.tpLocations:
             splitLine = lineItem.split(';')
             locationList.append(splitLine[1])
-            self.rrLocations[splitLine[0]] = {u'location': splitLine[1], u'track': splitLine[2], u'type': self.getTrackType(splitLine[4]), u'capacity': splitLine[5]}
+            rrLocations[splitLine[0]] = {u'location': splitLine[1], u'track': splitLine[2], u'type': self.getTrackType(splitLine[4]), u'capacity': splitLine[5]}
 
         self.rr['locations'] = list(set(locationList))
-        self.rr['locales'] = self.rrLocations
-        print(self.rr)
+        self.rr['locales'] = rrLocations
 
         return
 
@@ -93,3 +87,123 @@ class TrainPlayerImporter:
         rubric = {'industry': u'spur', u'interchange': 'interchange', u'staging': 'staging', u'class yard': 'yard'}
 
         return rubric[tpType]
+
+    def getAllTpRoads(self):
+
+        roadList = []
+
+        self.tpInventory.pop(0) # Remove descriptions
+
+        for lineItem in self.tpInventory:
+            splitItem = lineItem.split(';')
+            road, number = ModelEntities.parseCarId(splitItem[0])
+            roadList.append(road)
+
+        self.rr['roads'] = list(set(roadList))
+
+        return
+
+    def getAllTpIndustry(self):
+        """Using TP nomenclature-
+            tpIndustryList format: ID, JMRI Location Name, JMRI Track Name, Industry, AAR, S/R, Load, Staging, ViaIn
+            """
+
+        allItems = []
+        lineDict = {}
+
+        self.tpIndustries.pop(0) # Remove descriptions
+
+        for lineItem in self.tpIndustries:
+            splitLine = lineItem.split(';')
+            lineDict[splitLine[0]] = {u'location': splitLine[1], u'track': splitLine[2], u'label': splitLine[3], u'type': splitLine[4], u's/r': splitLine[5], u'load': splitLine[6], u'staging': splitLine[7], u'viain': splitLine[8]}
+            # allItems.append(lineItem.split(';'))
+
+        self.rr['industries'] = lineDict
+
+        return
+
+    def getAllTpCarAar(self):
+
+        allItems = []
+
+        for lineItem in self.tpInventory:
+            splitItem = lineItem.split(';')
+            if splitItem[2].startswith('E'):
+                continue
+            else:
+                allItems.append(splitItem[2])
+
+        self.rr['carAAR'] = list(set(allItems))
+
+        return
+
+    def getAllTpCarKernels(self):
+
+        allItems = []
+
+        for lineItem in self.tpInventory:
+            splitItem = lineItem.split(';')
+            if splitItem[2].startswith('E'):
+                continue
+            else:
+                allItems.append(splitItem[6])
+
+        self.rr['carKernel'] = list(set(allItems))
+
+        return
+
+    def getAllTpLocoTypes(self):
+        """Don't include tenders"""
+
+        allItems = []
+
+        for lineItem in self.tpInventory:
+            splitItem = lineItem.split(';')
+            if splitItem[2].startswith('ET'):
+                continue
+            if splitItem[2].startswith('E'):
+                allItems.append(splitItem[2])
+
+        self.rr['locoTypes'] = list(set(allItems))
+
+        return
+
+    def getAllTpLocoModels(self):
+        """character length fromOperations.xml\<max_len_string_attibute length="10" />
+            Don't include tenders
+            """
+
+        allItems = []
+
+        for lineItem in self.tpInventory:
+            splitItem = lineItem.split(';')
+            if splitItem[2].startswith('ET'):
+                continue
+            if splitItem[2].startswith('E'):
+                allItems.append(splitItem[1])
+
+        self.rr['locoModels'] = list(set(allItems))
+
+        return
+
+    def getAllTpLocoConsists(self):
+
+        allItems = []
+
+        for lineItem in self.tpInventory:
+            splitItem = lineItem.split(';')
+            if splitItem[2].startswith('ET'):
+                continue
+            if splitItem[2].startswith('E'):
+                allItems.append(splitItem[6])
+
+        self.rr['locoConsists'] = list(set(allItems))
+
+        return
+
+    def writeTPLayoutData(self):
+
+        formattedRrFile = PatternScriptEntities.dumpJson(self.rr)
+        PatternScriptEntities.genericWriteReport(self.rrFile, formattedRrFile)
+
+        return

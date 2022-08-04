@@ -58,7 +58,19 @@ class StartUp:
         trainPlayerImport.checkFiles()
         trainPlayerImport.makeRrHeader()
         trainPlayerImport.makeRrLocations()
+        trainPlayerImport.getAllTpRoads()
+        trainPlayerImport.getAllTpIndustry()
 
+        trainPlayerImport.getAllTpCarAar()
+        trainPlayerImport.getAllTpCarKernels()
+
+        trainPlayerImport.getAllTpLocoTypes()
+        trainPlayerImport.getAllTpLocoModels()
+        trainPlayerImport.getAllTpLocoConsists()
+
+        trainPlayerImport.writeTPLayoutData()
+
+        # PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.setComment(u'Railroad Comment')
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
