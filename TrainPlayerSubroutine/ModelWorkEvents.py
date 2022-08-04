@@ -236,7 +236,7 @@ class WriteWorkEventListToTp:
         self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.WriteWorkEventListToTp')
 
         self.jmriManifestPath = PatternScriptEntities.JMRI.util.FileUtil.getHomePath() \
-                + "AppData\Roaming\TrainPlayer\Reports\JMRI Export - Work Events.csv"
+                + "AppData\Roaming\TrainPlayer\Reports\JMRI Report - Work Events.csv"
         self.workEventList = workEventList
 
         return

@@ -5,7 +5,7 @@
 
 from psEntities import PatternScriptEntities
 from PatternTracksSubroutine import ModelEntities
-from TrainPlayerSubroutine import Model as tpModel
+from TrainPlayerSubroutine import ModelWorkEvents
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ModelSetCarsForm'
 SCRIPT_REV = 20220101
@@ -146,16 +146,16 @@ def exportSetCarsFormToTp(setCarsForm, textBoxEntry):
 
     if PatternScriptEntities.CheckTpDestination().directoryExists():
 
-        tpSwitchList = tpModel.TrackPatternTranslationToTp()
+        tpSwitchList = ModelWorkEvents.TrackPatternTranslationToTp()
         modifiedSwitchList = tpSwitchList.modifySwitchList(setCarsForm, textBoxEntry)
         appendedTpSwitchList = tpSwitchList.appendSwitchList(modifiedSwitchList)
 
-        tpWorkEventProcessor = tpModel.ProcessWorkEventList()
+        tpWorkEventProcessor = ModelWorkEvents.ProcessWorkEventList()
         tpWorkEventProcessor.writeTpWorkEventListAsJson(appendedTpSwitchList)
         tpSwitchListHeader = tpWorkEventProcessor.makeTpHeader(appendedTpSwitchList)
         tpSwitchListLocations = tpWorkEventProcessor.makeTpLocations(appendedTpSwitchList)
 
-        tpModel.WriteWorkEventListToTp(tpSwitchListHeader + tpSwitchListLocations).asCsv()
+        ModelWorkEvents.WriteWorkEventListToTp(tpSwitchListHeader + tpSwitchListLocations).asCsv()
 
     return
 
