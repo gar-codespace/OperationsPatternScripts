@@ -219,8 +219,11 @@ def updateLocations():
     _psLog.debug('Model.updateLocations')
     newConfigFile = PatternScriptEntities.readConfigFile()
     subConfigfile = newConfigFile['PT']
-    allLocations  = PatternScriptEntities.getAllLocations()
-    if not (subConfigfile['AL']): # when this sub is used for the first tims
+    allLocations = PatternScriptEntities.getAllLocations()
+    if not allLocations:
+        _psLog.warning('There are no locations for this profile')
+        return
+    if not (subConfigfile['AL']): # when this sub is used for the first time
         subConfigfile.update({'PL': allLocations[0]})
         subConfigfile.update({'PT': ModelEntities.makeInitialTrackList(allLocations[0])})
     subConfigfile.update({'AL': allLocations})

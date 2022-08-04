@@ -354,6 +354,9 @@ class View:
 class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
     def init(self):
+        """validateFileDestinationDirestories is first to create buildstatus dir so logging works on a new profile"""
+
+        PatternScriptEntities.validateFileDestinationDirestories()
 
         logPath = PatternScriptEntities.PROFILE_PATH  + 'operations\\buildstatus\\PatternScriptsLog.txt'
         self.logger = PatternScriptEntities.Logger(logPath)
@@ -621,12 +624,13 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
     def handle(self):
 
+        # PatternScriptEntities.validateFileDestinationDirestories()
+
         startTime = PatternScriptEntities.TIME.time()
         self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.Controller')
         self.logger.initialLogMessage(self.psLog)
 
         self.model.validatePatternConfig()
-        PatternScriptEntities.validateFileDestinationDirestories()
         PatternScriptEntities.validateStubFile().isStubFile()
         if PatternScriptEntities.readConfigFile('PT')['TI']:
             self.addTrainPlayerListeners()

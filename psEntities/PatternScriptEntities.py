@@ -306,17 +306,19 @@ def dumpJson(switchList):
     return jsonSwitchList
 
 def validateFileDestinationDirestories():
-    """Checks that the folders this plugin writes to exist"""
+    """Checks that the folders this plugin writes to exist
+    buildstatus is first so logging will work on a new layout
+    """
 
     destDirPath = JMRI.util.FileUtil.getProfilePath() + 'operations\\'
-    listOfDirectories = ['csvManifests', 'csvSwitchLists', 'jsonManifests', 'switchLists', 'patternReports']
+    listOfDirectories = ['buildstatus', 'csvManifests', 'csvSwitchLists', 'jsonManifests', 'switchLists', 'patternReports']
     x = 0
     for directory in listOfDirectories:
         testDirectory = destDirPath + directory + '\\'
         if JAVA_IO.File(testDirectory).isDirectory():
             x += 1
         else:
-            JAVA_IO.File(testDirectory).mkdir()
+            JAVA_IO.File(testDirectory).mkdirs()
             _psLog.warning(directory + ' created at ' + destDirPath)
 
     if x == len(listOfDirectories):
