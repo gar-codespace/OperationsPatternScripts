@@ -28,6 +28,7 @@ class TrainPlayerImporter:
         return
 
     def checkFiles(self):
+        """Needs to do more if the files don't check"""
 
         try:
             self.tpLocations = ModelEntities.getTpExport(self.tpLocationsFile)
@@ -64,7 +65,7 @@ class TrainPlayerImporter:
         return
 
 
-    def makeRrLocations(self):
+    def getRrLocations(self):
         """self.tpLocations format: TP ID; JMRI Location Name; JMRI Track Name; TP Label; TP Type; TP Spaces"""
 
         locationList = [u'Undefined']

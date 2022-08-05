@@ -6,6 +6,7 @@
 from psEntities import PatternScriptEntities
 from TrainPlayerSubroutine import ModelWorkEvents
 from TrainPlayerSubroutine import ModelImport
+from TrainPlayerSubroutine import ModelCreate
 from TrainPlayerSubroutine import View
 
 # from apps import Apps
@@ -52,12 +53,12 @@ class StartUp:
         return
 
     def railroadImporter(self, EVENT):
-        '''Writes a json file from the 3 TrainPlayer export files'''
+        '''Writes a json file from the 3 TrainPlayer report files'''
 
         trainPlayerImport = ModelImport.TrainPlayerImporter()
         trainPlayerImport.checkFiles()
         trainPlayerImport.makeRrHeader()
-        trainPlayerImport.makeRrLocations()
+        trainPlayerImport.getRrLocations()
         trainPlayerImport.getAllTpRoads()
         trainPlayerImport.getAllTpIndustry()
 
@@ -70,7 +71,6 @@ class StartUp:
 
         trainPlayerImport.writeTPLayoutData()
 
-        # PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.setComment(u'Railroad Comment')
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -79,12 +79,14 @@ class StartUp:
     def railroadCreator(self, EVENT):
         '''Creates a new JMRI railroad from the json file'''
 
-        print('Bosco')
+        newJmriRailroad = ModelCreate.NewJmriRailroad()
+        newJmriRailroad.initializeXml()
+        newJmriRailroad.setupOperations()
+        newJmriRailroad.addRoads()
 
-        # ModelWorkEvents.updateRoadsAndTypes()
-        # Reload OperationsCarRoster.xml
-        # Reload OperationsEngineRoster.xml
-        # ModelWorkEvents.updateInventory()
+
+
+        newJmriRailroad.writeXml()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
