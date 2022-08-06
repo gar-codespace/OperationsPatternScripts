@@ -81,12 +81,12 @@ class StartUp:
 
         newJmriRailroad = ModelCreate.NewJmriRailroad()
         newJmriRailroad.initializeXml()
-        newJmriRailroad.setupOperations()
-        newJmriRailroad.addRoads()
-
-
-
         newJmriRailroad.writeXml()
+
+        newJmriRailroad.setupOperations()
+        newJmriRailroad.updateRoads()
+
+        # newJmriRailroad.writeXml()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

@@ -469,6 +469,9 @@ def writeConfigFile(configFile):
 
 def writeNewConfigFile():
 
+    pcDirectory = PROFILE_PATH + 'operations\\'
+    JAVA_IO.File(pcDirectory).mkdir()
+
     defaultConfigFilePath = PLUGIN_ROOT + '\psEntities\PatternConfig.json'
     copyFrom = JAVA_IO.File(defaultConfigFilePath)
     copyTo = JAVA_IO.File(PROFILE_PATH + 'operations\\PatternConfig.json')

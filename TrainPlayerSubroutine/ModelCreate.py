@@ -4,6 +4,9 @@
 from psEntities import PatternScriptEntities
 from TrainPlayerSubroutine import ModelEntities
 
+import org.w3c.dom
+import javax.xml.parsers
+
 SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.ModelCreate'
 SCRIPT_REV = 20220101
 
@@ -54,35 +57,19 @@ class NewJmriRailroad:
 
         PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.setRailroadName(self.TpRailroad['railroadName'])
         PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.setComment(self.TpRailroad['railroadDescription'])
+        PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.setMainMenuEnabled(True)
 
         return
 
-    def addRoads(self):
+    def updateRoads(self):
 
         tpRoads = self.TpRailroad['roads']
 
-        x = PatternScriptEntities.PROFILE_PATH + 'operations\\OperationsCarRoster.xml'
-        y = PatternScriptEntities.JAVA_IO.File(x)
-        root = self.car.rootFromFile(y)
+        workFilePath = PatternScriptEntities.PROFILE_PATH + 'operations\\OperationsCarRoster.xml'
+        textWorkFile = PatternScriptEntities.JAVA_IO.File(workFilePath)
+
+        tree = javax.xml.parsers.DocumentBuilder.parse(textWorkFile)
 
 
-        topElement = root.getChild('roads')
-        topElement.addContent('testing')
-
-
-
-        print(topElement.getContentSize())
-        z = topElement.getChildren()
-        for _ in range(len(z)):
-            topElement.removeChild('road')
-            print('l')
-
-
-
-        # carHack = PatternScriptEntities.HackXml('OperationsCarRoster')
-        # carHack.getXmlTree()
-        # carHack.updateXmlElement('roads', tpRoads)
-        # carHack.patchUpDom(u'<!DOCTYPE operations-config SYSTEM "/xml/DTD/operations-cars.dtd">')
-        # carHack.saveUpdatedXml()
 
         return
