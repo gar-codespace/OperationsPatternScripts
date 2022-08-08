@@ -2,13 +2,14 @@
 # © 2021, 2022 Greg Ritacco
 
 from psEntities import PatternScriptEntities
+from TrainPlayerSubroutine import ModelXml
 
 SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.ModelEntities'
 SCRIPT_REV = 20220101
 
 def getLoadTypeRubric(xmlFile, target):
 
-    loadTypeXml = PatternScriptEntities.xmlWrangler('OperationsCarRoster')
+    loadTypeXml = ModelXml.WrangleXml('OperationsCarRoster')
 
     loadList = loadTypeXml.getXml('./loads/load')
     if not loadList:
@@ -114,17 +115,6 @@ def parseRollingStockAsDict(rS):
     # rsDict[u'FD Track'] = jFinalTrack
     rsDict[PatternScriptEntities.SB.handleGetMessage('FD&Track')] = jFinalDestination + u';' + jFinalTrack
     return rsDict
-
-# def getTpInventory():
-#
-#     tpInventoryPath = PatternScriptEntities.JMRI.util.FileUtil.getHomePath() \
-#         + "AppData\Roaming\TrainPlayer\Reports\TrainPlayer Export - Inventory.txt"
-#
-#     if PatternScriptEntities.JAVA_IO.File(tpInventoryPath).isFile():
-#         tpInventory = PatternScriptEntities.genericReadReport(tpInventoryPath).split('\n')
-#         return tpInventory
-#     else:
-#         return
 
 def getTpExport(fileName):
     """Generic file getter"""

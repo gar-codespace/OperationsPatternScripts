@@ -11,10 +11,10 @@ from HTMLParser import HTMLParser as HTML_PARSER
 import time
 from json import loads as jsonLoads, dumps as jsonDumps
 from codecs import open as codecsOpen
-from os import system as osSystem
-import xml.etree.ElementTree as ET
-import xml.dom.minidom as MD
-from os import linesep as osLinesep
+# from os import system as osSystem
+# import xml.etree.ElementTree as ET
+# import xml.dom.minidom as MD
+# from os import linesep as osLinesep
 
 PLUGIN_ROOT = ''
 PROFILE_PATH = JMRI.util.FileUtil.getProfilePath()
@@ -155,98 +155,6 @@ class validateStubFile:
         self.makehelpFilePath()
         self.updateStubTemplate()
         self.writeStubFile()
-
-        return
-
-
-class xmlWrangler:
-    """Generic queries on any operations xml file"""
-
-    def __init__(self, xmlFile):
-
-        self.xmlFile = xmlFile
-
-        return
-
-    def getXml(self, target):
-
-        filePath = PROFILE_PATH + '\\operations\\' + self.xmlFile + '.xml'
-        if not JAVA_IO.File(filePath).isFile():
-            return False
-
-        with codecsOpen(filePath, 'r', encoding=ENCODING) as textWorkFile:
-            tree = ET.parse(textWorkFile)
-
-            root = tree.getroot()
-            subSection = root.findall(target)
-
-            return subSection
-
-
-class HackXml:
-    """  """
-
-    def __init__(self, xmlFileName):
-
-        self.filePath = PROFILE_PATH + '\\operations\\' + xmlFileName + '.xml'
-        self.tree = MD.parseString("<junk/>")
-        self.xmlComment = SCRIPT_NAME + ' - ' + timeStamp()
-        # self.docAttr = u'<!DOCTYPE operations-config SYSTEM "/xml/DTD/operations-cars.dtd">'
-        self.xmlString = ''
-
-        return
-
-    def getXmlTree(self):
-
-        if not JAVA_IO.File(self.filePath).isFile():
-            return False
-
-        with codecsOpen(self.filePath, 'r', encoding=ENCODING) as textWorkFile:
-            self.tree = MD.parse(textWorkFile)
-
-        return
-
-    def updateXmlElement(self, elementName, newList):
-        """Replaces elementName nodes with new nodes from the supplied list
-            Also adds a comment
-            """
-
-        root = self.tree.documentElement
-
-        topElement = root.getElementsByTagName(elementName)[0]
-        for item in topElement.childNodes:
-            if item.nodeType == item.COMMENT_NODE:
-                topElement.removeChild(item)
-            if item.nodeType == item.ELEMENT_NODE:
-                topElement.removeChild(item)
-                eName = item.tagName
-
-        xComment = self.tree.createComment(self.xmlComment)
-        topElement.appendChild(xComment)
-
-        for item in newList:
-            newElement = self.tree.createElement(eName)
-            newElement.setAttribute('name', item)
-            topElement.appendChild(newElement)
-
-        return
-
-    def patchUpDom(self, xmlPatch):
-        """Work around DOM's limitations"""
-
-        self.xmlString = self.tree.toprettyxml(indent ="\t")
-    # https://stackoverflow.com/questions/1140958/whats-a-quick-one-liner-to-remove-empty-lines-from-a-python-string
-        self.xmlString = [s for s in self.xmlString.splitlines() if s.strip()]
-    # Put the DOCTYPE back in
-        self.xmlString.insert(2, xmlPatch)
-        self.xmlString = osLinesep.join(self.xmlString)
-
-        return
-
-    def saveUpdatedXml(self):
-
-        with codecsOpen(self.filePath, 'wb', encoding=ENCODING) as textWorkFile:
-            textWorkFile.write(self.xmlString)
 
         return
 

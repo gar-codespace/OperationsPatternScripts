@@ -84,7 +84,7 @@ class StartUp:
         newJmriRailroad.writeXml()
 
         newJmriRailroad.setupOperations()
-        newJmriRailroad.updateRoads()
+        newJmriRailroad.updateRsRosters()
 
         # newJmriRailroad.writeXml()
 
