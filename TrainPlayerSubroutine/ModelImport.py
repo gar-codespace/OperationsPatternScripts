@@ -58,6 +58,7 @@ class TrainPlayerImporter:
 
     def makeRrHeader(self):
 
+        self.rr[u'trainplayerDate'] = self.tpLocations.pop(0)
         self.rr[u'railroadName'] = self.tpLocations.pop(0)
         self.rr[u'railroadDescription'] = self.tpLocations.pop(0)
         self.rr[u'date'] = PatternScriptEntities.timeStamp()
@@ -71,12 +72,13 @@ class TrainPlayerImporter:
         locationList = [u'Undefined']
         rrLocations = {}
 
-        self.tpLocations.pop(0) # Remove descriptions
+        self.tpLocations.pop(0) # Remove date
+        self.tpLocations.pop(0) # Remove key
 
         for lineItem in self.tpLocations:
             splitLine = lineItem.split(';')
             locationList.append(splitLine[1])
-            rrLocations[splitLine[0]] = {u'location': splitLine[1], u'track': splitLine[2], u'type': self.getTrackType(splitLine[4]), u'capacity': splitLine[5]}
+            rrLocations[splitLine[1]] = {u'ID': splitLine[0], u'track': splitLine[2], u'type': self.getTrackType(splitLine[4]), u'capacity': splitLine[5]}
 
         self.rr['locations'] = list(set(locationList))
         self.rr['locales'] = rrLocations
@@ -93,7 +95,8 @@ class TrainPlayerImporter:
 
         roadList = []
 
-        self.tpInventory.pop(0) # Remove descriptions
+        self.tpInventory.pop(0) # Remove date
+        self.tpInventory.pop(0) # Remove key
 
         for lineItem in self.tpInventory:
             splitItem = lineItem.split(';')
@@ -112,7 +115,8 @@ class TrainPlayerImporter:
         allItems = []
         lineDict = {}
 
-        self.tpIndustries.pop(0) # Remove descriptions
+        self.tpIndustries.pop(0) # Remove date
+        self.tpIndustries.pop(0) # Remove key
 
         for lineItem in self.tpIndustries:
             splitLine = lineItem.split(';')

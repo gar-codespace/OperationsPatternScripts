@@ -10,6 +10,11 @@ import xml.etree.ElementTree as ET
 import xml.dom.minidom as MD
 from os import linesep as osLinesep
 
+# import org.w3c.dom
+# import javax.xml.parsers
+# import javax.xml.parsers.DocumentBuilder
+# import javax.xml.parsers.DocumentBuilderFactory
+
 
 SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.ModelXml'
 SCRIPT_REV = 20220101
@@ -67,6 +72,7 @@ class HackXml:
             """
 
         root = self.tree.documentElement
+        eName = 'name'
 
         topElement = root.getElementsByTagName(elementName)[0]
         for item in topElement.childNodes:

@@ -80,13 +80,14 @@ class StartUp:
         '''Creates a new JMRI railroad from the json file'''
 
         newJmriRailroad = ModelCreate.NewJmriRailroad()
-        newJmriRailroad.initializeXml()
-        newJmriRailroad.writeXml()
+        newJmriRailroad.addNewXml()
+        # newJmriRailroad.initializeXml()
+        # newJmriRailroad.writeXml()
 
         newJmriRailroad.setupOperations()
         newJmriRailroad.updateRsRosters()
 
-        # newJmriRailroad.writeXml()
+
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

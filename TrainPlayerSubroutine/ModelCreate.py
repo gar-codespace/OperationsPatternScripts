@@ -1,14 +1,11 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
+"""From tpRailroadData.json, a new rr is created and the xml files are seeded"""
+
 from psEntities import PatternScriptEntities
 from TrainPlayerSubroutine import ModelEntities
 from TrainPlayerSubroutine import ModelXml
-
-# import org.w3c.dom
-# import javax.xml.parsers
-# import javax.xml.parsers.DocumentBuilder
-# import javax.xml.parsers.DocumentBuilderFactory
 
 SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.ModelCreate'
 SCRIPT_REV = 20220101
@@ -18,43 +15,58 @@ class NewJmriRailroad:
 
     def __init__(self):
 
-        self.ops = PatternScriptEntities.JMRI.jmrit.operations.setup.OperationsSetupXml()
-        self.location =  PatternScriptEntities.JMRI.jmrit.operations.locations.LocationManagerXml()
-        self.car = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarManagerXml()
-        self.loco =  PatternScriptEntities.JMRI.jmrit.operations.rollingstock.engines.EngineManagerXml()
-        self.train = PatternScriptEntities.JMRI.jmrit.operations.trains.TrainManagerXml()
+        self.Operations = PatternScriptEntities.JMRI.jmrit.operations.setup.OperationsSetupXml()
+        self.OperationsCarRoster = PatternScriptEntities.CMX
+        self.OperationsEngineRoster =  PatternScriptEntities.EMX
+        self.OperationsLocationRoster =  PatternScriptEntities.LMX
 
         rrFile = PatternScriptEntities.PROFILE_PATH + 'operations\\tpRailroadData.json'
         TpRailroad = PatternScriptEntities.genericReadReport(rrFile)
         self.TpRailroad = PatternScriptEntities.loadJson(TpRailroad)
 
+        # self.train = PatternScriptEntities.JMRI.jmrit.operations.trains.TrainManagerXml()
+        # self.OperationsCarRoster = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarManagerXml()
+        # self.OperationsEngineRoster =  PatternScriptEntities.JMRI.jmrit.operations.rollingstock.engines.EngineManagerXml()
+        # self.OperationsLocationRoster =  PatternScriptEntities.JMRI.jmrit.operations.locations.LocationManagerXml()
         return
 
-    def deleteXml(self):
+    def addNewXml(self):
+        """Creates the 4 xml files if they are not already built.
+            Routes is not built since there is no TP equivalent.
+            Trains is not built since JMRI trains is the point of this plugin.
+            """
 
-        return
+        pathPrefix = PatternScriptEntities.PROFILE_PATH + 'operations\\'
+        xmlList = ['Operations', 'OperationsCarRoster', 'OperationsEngineRoster', 'OperationsLocationRoster']
+        for file in xmlList:
+            filePath = pathPrefix + file + '.xml'
+            if PatternScriptEntities.JAVA_IO.File(filePath).isFile():
+                continue
 
-    def initializeXml(self):
-        """Creates the 5 xml files. Routes is not built since there is no TP equivalent"""
-
-        self.ops.initialize()
-        self.location.initialize()
-        self.car.initialize()
-        self.loco.initialize()
-        self.train.initialize()
+            getattr(self, file).initialize()
+            getattr(self, file).writeOperationsFile()\
+            # getattr(self, file).setDirty(True)
 
         return
 
     def writeXml(self):
 
-        self.ops.writeOperationsFile()
-        self.location.writeOperationsFile()
-        self.car.writeOperationsFile()
-        self.loco.writeOperationsFile()
-        self.train.writeOperationsFile()
+        self.Operations.writeOperationsFile()
+        self.OperationsLocationRoster.writeOperationsFile()
+        self.OperationsCarRoster.writeOperationsFile()
+        self.OperationsEngineRoster.writeOperationsFile()
 
         return
 
+    def initializeXml(self):
+        """  """
+
+        self.Operations.initialize()
+        self.OperationsLocationRoster.initialize()
+        self.OperationsCarRoster.initialize()
+        self.OperationsEngineRoster.initialize()
+
+        return
 
     def setupOperations(self):
 
@@ -69,34 +81,38 @@ class NewJmriRailroad:
             and the OperationsEngineRoster.xml ??? elements
             """
 
-        updatedOperationsCarRoster = MakeAllTpRosters()
-        updatedOperationsCarRoster.checkList()
-
+        allTpRosters = MakeAllTpRosters()
+        allTpRosters.checkFile()
+    # Update car roster
         carHack = ModelXml.HackXml('OperationsCarRoster')
         carHack.getXmlTree()
 
-        allTpItems = updatedOperationsCarRoster.getAllTpRoads()
+        allTpItems = allTpRosters.getAllTpRoads()
         carHack.updateXmlElement('roads', allTpItems)
 
-        allTpItems = updatedOperationsCarRoster.getAllTpCarAar()
+        allTpItems = allTpRosters.getAllTpCarAar()
         carHack.updateXmlElement('types', allTpItems)
 
-
-        allTpItems = updatedOperationsCarRoster.getAllTpLoads()
+        allTpItems = allTpRosters.getAllTpLoads()
         carHack.updateXmlLoads('loads', allTpItems)
 
+        allTpItems = allTpRosters.getAllTpKernels()
+        carHack.updateXmlElement('newKernels', allTpItems)
 
         carHack.patchUpDom(u'<!DOCTYPE operations-config SYSTEM "/xml/DTD/operations-cars.dtd">')
         carHack.saveUpdatedXml()
-
+    # Update loco roster
         locoHack = ModelXml.HackXml('OperationsEngineRoster')
         locoHack.getXmlTree()
 
-        allTpItems = updatedOperationsCarRoster.getAllTpLocoTypes()
+        allTpItems = allTpRosters.getAllTpLocoModels()
+        locoHack.updateXmlElement('models', allTpItems)
+
+        allTpItems = allTpRosters.getAllTpLocoTypes()
         locoHack.updateXmlElement('types', allTpItems)
 
-        allTpItems = updatedOperationsCarRoster.getAllTpLocoModels()
-        locoHack.updateXmlElement('models', allTpItems)
+        allTpItems = allTpRosters.getAllTpLocoConsists()
+        locoHack.updateXmlElement('newConsists', allTpItems)
 
         locoHack.patchUpDom(u'<!DOCTYPE operations-config SYSTEM "/xml/DTD/operations-engines.dtd">')
         locoHack.saveUpdatedXml()
@@ -108,84 +124,54 @@ class MakeAllTpRosters:
 
     def __init__(self):
 
-        self.tpInventoryFile = 'TrainPlayer Report - Inventory.txt'
-        self.tpLocationsFile = 'TrainPlayer Report - Locations.txt'
-        self.tpLoadsFile = 'TrainPlayer Report - Industries.txt'
-        self.tpInventory = []
-        self.tpLocations = []
-        self.tpLoads = []
+        self.tpRailroadData = {}
+        self.reportPath = PatternScriptEntities.PROFILE_PATH + 'operations\\tpRailroadData.json'
 
-        self.allTpAar = []
-        self.allTpCarAar = []
-        self.allTpLocoAar = []
         self.allTpRoads = []
+
+        self.allTpCarAar = []
         self.allTpLoads = []
+        self.allTpCarKernels = []
+
+        self.allTpLocoAar = []
+        self.allTpLocoModels = []
+        self.allLocoConsists = []
 
         self.allJmriRoads = []
 
         return
 
-    def checkList(self):
+    def checkFile(self):
+        """Fill out the else statement"""
 
-        try:
-            self.tpInventory = ModelEntities.getTpExport(self.tpInventoryFile)
-            self.tpInventory.pop(0) # Remove timestamp
-            self.tpInventory.pop(0) # Remove the key
-        except:
+        if PatternScriptEntities.JAVA_IO.File(self.reportPath).isFile():
+            tpRailroadData = PatternScriptEntities.genericReadReport(self.reportPath)
+            self.tpRailroadData = PatternScriptEntities.loadJson(tpRailroadData)
+        else:
             pass
 
-        try:
-            self.tpLocations = ModelEntities.getTpExport(self.tpLocationsFile)
-            self.tpLocations.pop(0) # Remove timestamp
-            self.tpLocations.pop(0) # Remove the railroad name
-            self.tpLocations.pop(0) # Remove the railroad description
-            self.tpLocations.pop(0) # Remove the key
-        except:
-            pass
-
-        try:
-            self.tpLoads = ModelEntities.getTpExport(self.tpLoadsFile)
-            self.tpLoads.pop(0) # Remove timestamp
-            self.tpLoads.pop(0) # Remove the key
-        except:
-            pass
+        return
 
     def getAllTpRoads(self):
 
-        for lineItem in self.tpInventory:
-            splitItem = lineItem.split(';')
-            road, number = ModelEntities.parseCarId(splitItem[0])
-            self.allTpRoads.append(road)
-
-        self.allTpRoads = list(set(self.allTpRoads))
+        self.allTpRoads = self.tpRailroadData['roads']
 
         return self.allTpRoads
 
     def getAllTpCarAar(self):
 
-        for lineItem in self.tpInventory:
-            splitItem = lineItem.split(';')
-            if splitItem[2].startswith('E'):
-                continue
-            else:
-                self.allTpCarAar.append(splitItem[2])
+        self.allTpCarAar = self.tpRailroadData['carAAR']
 
-        return list(set(self.allTpCarAar))
+        return self.allTpCarAar
 
     def getAllTpLoads(self):
-
-        loadFlag = self.tpLoads.pop(0)
-
+    # Make a list of tuples(aar,load)
         tpLoadScratch = []
-        for lineItem in self.tpLoads:
-            splitItem = lineItem.split(';')
-            if splitItem[2].startswith('E'):
-                continue
-            else:
-                tpLoadScratch.append((splitItem[4], splitItem[6]))
+        for item, data in self.tpRailroadData['industries'].items():
+            tpLoadScratch.append((data['type'], data['load'])) # Tuple(aar, load)
 
-        carAarList = list(set(self.allTpCarAar))
-        for aar in carAarList:
+    # Make a list of dictionaries {aar: [loads for that aar]}
+        for aar in self.allTpCarAar:
             tempList = [u'Load']
             for xAar, xLoad in tpLoadScratch:
                 if aar == xAar:
@@ -194,28 +180,33 @@ class MakeAllTpRosters:
 
         return self.allTpLoads
 
-    def getAllTpLocoTypes(self):
-        """Don't include tenders"""
+    def getAllTpKernels(self):
 
-        for lineItem in self.tpInventory:
-            splitItem = lineItem.split(';')
-            if splitItem[2].startswith('ET'):
-                continue
-            if splitItem[2].startswith('E'):
-                self.allTpLocoAar.append(splitItem[2])
+        self.allTpCarKernels = self.tpRailroadData['carKernel']
 
-        return list(set(self.allTpLocoAar))
+        return self.allTpCarKernels
 
     def getAllTpLocoModels(self):
         """JMRI Loco models limited to 12 characters
             Don't include tenders
+            Read this value from JMRI
             """
 
-        for lineItem in self.tpInventory:
-            splitItem = lineItem.split(';')
-            if splitItem[2].startswith('ET'):
-                continue
-            if splitItem[2].startswith('E'):
-                self.allTpLocoAar.append(splitItem[1][0:11])
+        for item in self.tpRailroadData['locoModels']:
+            self.allTpLocoModels.append(item[0:11])
 
-        return list(set(self.allTpLocoAar))
+        return self.allTpLocoModels
+
+    def getAllTpLocoTypes(self):
+        """Don't include tenders"""
+
+        self.allTpLocoAar = self.tpRailroadData['locoTypes']
+
+        return self.allTpLocoAar
+
+    def getAllTpLocoConsists(self):
+        """Don't include tenders"""
+
+        self.allLocoConsists = self.tpRailroadData['locoConsists']
+
+        return self.allLocoConsists
