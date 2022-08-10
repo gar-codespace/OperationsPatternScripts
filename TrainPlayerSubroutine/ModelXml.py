@@ -51,7 +51,7 @@ class HackXml:
 
         self.filePath = PatternScriptEntities.PROFILE_PATH + '\\operations\\' + xmlFileName + '.xml'
         self.tree = MD.parseString("<junk/>")
-        self.xmlComment = SCRIPT_NAME + ' - ' + PatternScriptEntities.timeStamp()
+        self.xmlComment = SCRIPT_NAME + ' - ' + str(SCRIPT_REV) + ' - ' + PatternScriptEntities.timeStamp()
         self.xmlString = ''
 
         return

@@ -182,7 +182,10 @@ class MakeAllTpRosters:
 
     def getAllTpKernels(self):
 
-        self.allTpCarKernels = self.tpRailroadData['carKernel']
+        for kernel in self.tpRailroadData['carKernel']:
+            PatternScriptEntities.KM.newKernel(kernel)
+
+        # self.allTpCarKernels = self.tpRailroadData['carKernel']
 
         return self.allTpCarKernels
 
