@@ -8,6 +8,7 @@ SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.ModelImport'
 SCRIPT_REV = 20220101
 
 class TrainPlayerImporter:
+    """Use the TP inventory, locations and industries text files to generate the tpRailroadData.json file"""
 
     def __init__(self):
 
@@ -67,7 +68,9 @@ class TrainPlayerImporter:
 
 
     def getRrLocations(self):
-        """self.tpLocations format: TP ID; JMRI Location Name; JMRI Track Name; TP Label; TP Type; TP Spaces"""
+        """self.tpLocations format: TP ID; JMRI Location Name; JMRI Track Name; TP Label; TP Type; TP Spaces.
+        Makes a list of just the locations.
+        """
 
         locationList = [u'Undefined']
         rrLocations = {}
@@ -78,16 +81,39 @@ class TrainPlayerImporter:
         for lineItem in self.tpLocations:
             splitLine = lineItem.split(';')
             locationList.append(splitLine[1])
-            rrLocations[splitLine[1]] = {u'ID': splitLine[0], u'track': splitLine[2], u'type': self.getTrackType(splitLine[4]), u'capacity': splitLine[5]}
 
         self.rr['locations'] = list(set(locationList))
-        self.rr['locales'] = rrLocations
+
+        return
+
+    def getRrLocales(self):
+        """self.tpLocations format: TP ID; JMRI Location Name; JMRI Track Name; TP Label; TP Type; TP Spaces.
+        Makes a list of tuples of the locales and their data.
+        locale format: (location, {ID, Capacity, Type, Track})
+        """
+
+        localeList = []
+        seed = ('Undefined', {u'ID': '00', u'track': '~', u'type': 'Spur', u'capacity': '100'})
+        localeList.append(seed)
+
+        self.tpLocations.pop(0) # Remove date
+        self.tpLocations.pop(0) # Remove key
+
+        for lineItem in self.tpLocations:
+            splitLine = lineItem.split(';')
+            # locale = {}
+            # locale[splitLine[1]] = {u'ID': splitLine[0], u'track': splitLine[2], u'type': self.getTrackType(splitLine[4]), u'capacity': splitLine[5]}
+            x = (splitLine[1], {u'ID': splitLine[0], u'track': splitLine[2], u'type': self.getTrackType(splitLine[4]), u'capacity': splitLine[5]})
+            localeList.append(x)
+
+        self.rr['locales'] = localeList
 
         return
 
     def getTrackType(self, tpType):
+        """Convert TP track types into JMRI track types."""
 
-        rubric = {'industry': u'spur', u'interchange': 'interchange', u'staging': 'staging', u'class yard': 'yard'}
+        rubric = {'industry': u'Spur', u'interchange': 'Interchange', u'staging': 'Staging', u'class yard': 'Yard'}
 
         return rubric[tpType]
 

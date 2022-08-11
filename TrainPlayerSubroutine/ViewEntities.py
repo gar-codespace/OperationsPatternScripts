@@ -23,7 +23,7 @@ class TrainPlayerPanel:
         self.nrButton.setName('nrButton')
 
         self.urButton = PatternScriptEntities.JAVX_SWING.JButton()
-        self.urButton.setText(PatternScriptEntities.BUNDLE['Update Railroad'])
+        self.urButton.setText(PatternScriptEntities.BUNDLE['Update Locations'])
         self.urButton.setName('urButton')
 
         self.controlWidgets = []

@@ -51,7 +51,7 @@ TrainPlayer© Support Subroutine
 Translate Plugin
 Import Railroad
 New Railroad
-Update Railroad
+Update Locations
 Update Inventory Error Report
 View Log File
 Window Help...

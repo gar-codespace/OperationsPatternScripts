@@ -59,6 +59,7 @@ class StartUp:
         trainPlayerImport.checkFiles()
         trainPlayerImport.makeRrHeader()
         trainPlayerImport.getRrLocations()
+        trainPlayerImport.getRrLocales()
         trainPlayerImport.getAllTpRoads()
         trainPlayerImport.getAllTpIndustry()
 
@@ -81,13 +82,9 @@ class StartUp:
 
         newJmriRailroad = ModelCreate.NewJmriRailroad()
         newJmriRailroad.addNewXml()
-        # newJmriRailroad.initializeXml()
-        # newJmriRailroad.writeXml()
 
         newJmriRailroad.setupOperations()
         newJmriRailroad.updateRsRosters()
-
-
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -96,7 +93,10 @@ class StartUp:
     def railroadUpdater(self, EVENT):
         '''Updates JMRI railroad from the json file'''
 
-        print('Bingo')
+        updatedLocations = ModelCreate.UpdateLocations()
+        updatedLocations.checkFile()
+        updatedLocations.updateLocations()
+        updatedLocations.updateTracks()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

@@ -12,18 +12,19 @@ SCRIPT_REV = 20220101
 
 
 class NewJmriRailroad:
+    """Use the data in tpRailroadData.json to update the car and engine xml files"""
 
     def __init__(self):
-
-        self.Operations = PatternScriptEntities.JMRI.jmrit.operations.setup.OperationsSetupXml()
-        self.OperationsCarRoster = PatternScriptEntities.CMX
-        self.OperationsEngineRoster =  PatternScriptEntities.EMX
-        self.OperationsLocationRoster =  PatternScriptEntities.LMX
 
         rrFile = PatternScriptEntities.PROFILE_PATH + 'operations\\tpRailroadData.json'
         TpRailroad = PatternScriptEntities.genericReadReport(rrFile)
         self.TpRailroad = PatternScriptEntities.loadJson(TpRailroad)
 
+        self.Operations = PatternScriptEntities.JMRI.jmrit.operations.setup.OperationsSetupXml()
+        self.OperationsCarRoster = PatternScriptEntities.CMX
+        self.OperationsEngineRoster =  PatternScriptEntities.EMX
+
+        # self.OperationsLocationRoster =  PatternScriptEntities.LMX
         # self.train = PatternScriptEntities.JMRI.jmrit.operations.trains.TrainManagerXml()
         # self.OperationsCarRoster = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarManagerXml()
         # self.OperationsEngineRoster =  PatternScriptEntities.JMRI.jmrit.operations.rollingstock.engines.EngineManagerXml()
@@ -33,71 +34,56 @@ class NewJmriRailroad:
     def addNewXml(self):
         """Creates the 4 xml files if they are not already built.
             Routes is not built since there is no TP equivalent.
-            Trains is not built since JMRI trains is the point of this plugin.
+            Trains is not built since JMRI trains is the point of this subroutine.
             """
 
         pathPrefix = PatternScriptEntities.PROFILE_PATH + 'operations\\'
-        xmlList = ['Operations', 'OperationsCarRoster', 'OperationsEngineRoster', 'OperationsLocationRoster']
+        xmlList = ['Operations', 'OperationsCarRoster', 'OperationsEngineRoster']
         for file in xmlList:
             filePath = pathPrefix + file + '.xml'
             if PatternScriptEntities.JAVA_IO.File(filePath).isFile():
                 continue
 
             getattr(self, file).initialize()
-            getattr(self, file).writeOperationsFile()\
+            getattr(self, file).writeOperationsFile()
             # getattr(self, file).setDirty(True)
 
         return
 
-    def writeXml(self):
-
-        self.Operations.writeOperationsFile()
-        self.OperationsLocationRoster.writeOperationsFile()
-        self.OperationsCarRoster.writeOperationsFile()
-        self.OperationsEngineRoster.writeOperationsFile()
-
-        return
-
-    def initializeXml(self):
-        """  """
-
-        self.Operations.initialize()
-        self.OperationsLocationRoster.initialize()
-        self.OperationsCarRoster.initialize()
-        self.OperationsEngineRoster.initialize()
-
-        return
-
     def setupOperations(self):
+        """Make tweeks to Operations.xml here"""
 
         PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.setRailroadName(self.TpRailroad['railroadName'])
         PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.setComment(self.TpRailroad['railroadDescription'])
         PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.setMainMenuEnabled(True)
 
+        PatternScriptEntities.JMRI.jmrit.operations.setup.OperationsSetupXml.save()
+        # Reload the Panal Pro window to display updates
+
         return
 
     def updateRsRosters(self):
         """Mini Controller to update the OperationsCarRoster.xml roads and types elements
-            and the OperationsEngineRoster.xml ??? elements
+            and the OperationsEngineRoster.xml models and types elements
             """
 
-        allTpRosters = MakeAllTpRosters()
-        allTpRosters.checkFile()
+        allRsRosters = updateRsRosters()
+        allRsRosters.checkFile()
     # Update car roster
         carHack = ModelXml.HackXml('OperationsCarRoster')
         carHack.getXmlTree()
 
-        allTpItems = allTpRosters.getAllTpRoads()
+        allTpItems = allRsRosters.getAllTpRoads()
         carHack.updateXmlElement('roads', allTpItems)
 
-        allTpItems = allTpRosters.getAllTpCarAar()
+        allTpItems = allRsRosters.getAllTpCarAar()
         carHack.updateXmlElement('types', allTpItems)
 
-        allTpItems = allTpRosters.getAllTpLoads()
+        allTpItems = allRsRosters.getAllTpLoads()
         carHack.updateXmlLoads('loads', allTpItems)
 
-        allTpItems = allTpRosters.getAllTpKernels()
-        carHack.updateXmlElement('newKernels', allTpItems)
+        # allTpItems = allRsRosters.getAllTpKernels()
+        # carHack.updateXmlElement('newKernels', allTpItems)
 
         carHack.patchUpDom(u'<!DOCTYPE operations-config SYSTEM "/xml/DTD/operations-cars.dtd">')
         carHack.saveUpdatedXml()
@@ -105,13 +91,13 @@ class NewJmriRailroad:
         locoHack = ModelXml.HackXml('OperationsEngineRoster')
         locoHack.getXmlTree()
 
-        allTpItems = allTpRosters.getAllTpLocoModels()
+        allTpItems = allRsRosters.getAllTpLocoModels()
         locoHack.updateXmlElement('models', allTpItems)
 
-        allTpItems = allTpRosters.getAllTpLocoTypes()
+        allTpItems = allRsRosters.getAllTpLocoTypes()
         locoHack.updateXmlElement('types', allTpItems)
 
-        allTpItems = allTpRosters.getAllTpLocoConsists()
+        allTpItems = allRsRosters.getAllTpLocoConsists()
         locoHack.updateXmlElement('newConsists', allTpItems)
 
         locoHack.patchUpDom(u'<!DOCTYPE operations-config SYSTEM "/xml/DTD/operations-engines.dtd">')
@@ -119,8 +105,27 @@ class NewJmriRailroad:
 
         return
 
+    # def writeXml(self):
+    #
+    #     self.Operations.writeOperationsFile()
+    #     self.OperationsLocationRoster.writeOperationsFile()
+    #     self.OperationsCarRoster.writeOperationsFile()
+    #     self.OperationsEngineRoster.writeOperationsFile()
+    #
+    #     return
+    #
+    # def initializeXml(self):
+    #     """  """
+    #
+    #     self.Operations.initialize()
+    #     self.OperationsLocationRoster.initialize()
+    #     self.OperationsCarRoster.initialize()
+    #     self.OperationsEngineRoster.initialize()
+    #
+    #     return
 
-class MakeAllTpRosters:
+
+class updateRsRosters:
 
     def __init__(self):
 
@@ -201,15 +206,58 @@ class MakeAllTpRosters:
         return self.allTpLocoModels
 
     def getAllTpLocoTypes(self):
-        """Don't include tenders"""
+        """Don't include steam loco tenders"""
 
         self.allTpLocoAar = self.tpRailroadData['locoTypes']
 
         return self.allTpLocoAar
 
     def getAllTpLocoConsists(self):
-        """Don't include tenders"""
+        """Don't include steam loco tenders"""
 
         self.allLocoConsists = self.tpRailroadData['locoConsists']
 
         return self.allLocoConsists
+
+
+class UpdateLocations:
+
+    def __init__(self):
+
+        self.tpRailroadData = {}
+        self.reportPath = PatternScriptEntities.PROFILE_PATH + 'operations\\tpRailroadData.json'
+
+        return
+
+    def checkFile(self):
+        """Fill out the else statement"""
+
+        if PatternScriptEntities.JAVA_IO.File(self.reportPath).isFile():
+            tpRailroadData = PatternScriptEntities.genericReadReport(self.reportPath)
+            self.tpRailroadData = PatternScriptEntities.loadJson(tpRailroadData)
+        else:
+            pass
+
+        return
+
+    def updateLocations(self):
+
+        for location in self.tpRailroadData['locations']:
+            newLocation = PatternScriptEntities.LM.newLocation(location)
+
+        PatternScriptEntities.LMX.save()
+
+        return
+
+    def updateTracks(self):
+
+        for item in self.tpRailroadData['locales']:
+            loc = PatternScriptEntities.LM.getLocationByName(item[0])
+            xTrack = loc.addTrack(item[1]['track'], item[1]['type'])
+            xTrack.setComment(item[1]['ID'])
+            trackLength = int(item[1]['capacity']) * 40
+            xTrack.setLength(trackLength)
+
+        PatternScriptEntities.LMX.save()
+        
+        return
