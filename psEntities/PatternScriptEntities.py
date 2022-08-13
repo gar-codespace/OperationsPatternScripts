@@ -11,10 +11,6 @@ from HTMLParser import HTMLParser as HTML_PARSER
 import time
 from json import loads as jsonLoads, dumps as jsonDumps
 from codecs import open as codecsOpen
-# from os import system as osSystem
-# import xml.etree.ElementTree as ET
-# import xml.dom.minidom as MD
-# from os import linesep as osLinesep
 
 PLUGIN_ROOT = ''
 PROFILE_PATH = JMRI.util.FileUtil.getProfilePath()
@@ -36,10 +32,10 @@ SM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.schedules.S
 PM = JMRI.InstanceManager.getDefault(JMRI.util.gui.GuiLafPreferencesManager)
 KM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.cars.KernelManager)
 
+OMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.setup.OperationsSetupXml)
 CMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.cars.CarManagerXml)
 EMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.engines.EngineManagerXml)
 LMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.LocationManagerXml)
-
 
 _psLog = LOGGING.getLogger('PS.PE.PatternScriptEntities')
 

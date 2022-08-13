@@ -1,14 +1,39 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
+"""Use the TP inventory, locations and industries text files to generate the tpRailroadData.json file"""
+
 from psEntities import PatternScriptEntities
 from TrainPlayerSubroutine import ModelEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.ModelImport'
 SCRIPT_REV = 20220101
 
+def importTpRailroad():
+    '''Mini controller to write the tpRailroadData.json file from the 3 TrainPlayer report files'''
+
+    trainPlayerImport = TrainPlayerImporter()
+
+    trainPlayerImport.getTpReportFiles()
+    trainPlayerImport.processFileHeaders()
+    trainPlayerImport.getRrLocations()
+    trainPlayerImport.getRrLocales()
+    trainPlayerImport.getAllTpRoads()
+    trainPlayerImport.getAllTpIndustry()
+
+    trainPlayerImport.getAllTpCarAar()
+    trainPlayerImport.getAllTpCarLoads()
+    trainPlayerImport.getAllTpCarKernels()
+
+    trainPlayerImport.getAllTpLocoTypes()
+    trainPlayerImport.getAllTpLocoModels()
+    trainPlayerImport.getAllTpLocoConsists()
+
+    trainPlayerImport.writeTPLayoutData()
+
+    return
+
 class TrainPlayerImporter:
-    """Use the TP inventory, locations and industries text files to generate the tpRailroadData.json file"""
 
     def __init__(self):
 
@@ -28,7 +53,7 @@ class TrainPlayerImporter:
 
         return
 
-    def checkFiles(self):
+    def getTpReportFiles(self):
         """Needs to do more if the files don't check"""
 
         try:
@@ -57,12 +82,20 @@ class TrainPlayerImporter:
 
         return
 
-    def makeRrHeader(self):
+    def processFileHeaders(self):
+        """Process the header info from the TP report files"""
 
         self.rr[u'trainplayerDate'] = self.tpLocations.pop(0)
         self.rr[u'railroadName'] = self.tpLocations.pop(0)
         self.rr[u'railroadDescription'] = self.tpLocations.pop(0)
         self.rr[u'date'] = PatternScriptEntities.timeStamp()
+        self.tpLocations.pop(0) # Remove key
+
+        self.tpIndustries.pop(0) # Remove date
+        self.tpIndustries.pop(0) # Remove key
+
+        self.tpInventory.pop(0) # Remove date
+        self.tpInventory.pop(0) # Remove key
 
         return
 
@@ -74,9 +107,6 @@ class TrainPlayerImporter:
 
         locationList = [u'Undefined']
         rrLocations = {}
-
-        self.tpLocations.pop(0) # Remove date
-        self.tpLocations.pop(0) # Remove key
 
         for lineItem in self.tpLocations:
             splitLine = lineItem.split(';')
@@ -93,11 +123,10 @@ class TrainPlayerImporter:
         """
 
         localeList = []
-        seed = ('Undefined', {u'ID': '00', u'track': '~', u'type': 'Spur', u'capacity': '100'})
+        seed = ('Undefined', {u'ID': '00', u'track': '~', u'type': 'Yard', u'capacity': '100'})
         localeList.append(seed)
 
-        self.tpLocations.pop(0) # Remove date
-        self.tpLocations.pop(0) # Remove key
+
 
         for lineItem in self.tpLocations:
             splitLine = lineItem.split(';')
@@ -117,13 +146,27 @@ class TrainPlayerImporter:
 
         return rubric[tpType]
 
+    def getAllTpIndustry(self):
+        """self.tpIndustryList format: ID, JMRI Location Name, JMRI Track Name, Industry, AAR, S/R, Load, Staging, ViaIn
+            Makes a list of tuples of the industries and their data.
+            industry format: (JMRI Location Name, {ID, JMRI Track Name, Industry, AAR, S/R, Load, Staging, ViaIn})
+            """
+
+        industryList = []
+        for lineItem in self.tpIndustries:
+            splitLine = lineItem.split(';')
+            # lineDict[splitLine[0]] = {u'location': splitLine[1], u'track': splitLine[2], u'label': splitLine[3], u'type': splitLine[4], u's/r': splitLine[5], u'load': splitLine[6], u'staging': splitLine[7], u'viain': splitLine[8]}
+            # allItems.append(lineItem.split(';'))
+            x = (splitLine[1], {u'ID': splitLine[0], u'track': splitLine[2], u'label': splitLine[3], u'type': splitLine[4], u's/r': splitLine[5], u'load': splitLine[6], u'staging': splitLine[7], u'viain': splitLine[8]})
+            industryList.append(x)
+
+        self.rr['industries'] = industryList
+
+        return
+
     def getAllTpRoads(self):
 
         roadList = []
-
-        self.tpInventory.pop(0) # Remove date
-        self.tpInventory.pop(0) # Remove key
-
         for lineItem in self.tpInventory:
             splitItem = lineItem.split(';')
             road, number = ModelEntities.parseCarId(splitItem[0])
@@ -133,30 +176,9 @@ class TrainPlayerImporter:
 
         return
 
-    def getAllTpIndustry(self):
-        """Using TP nomenclature-
-            tpIndustryList format: ID, JMRI Location Name, JMRI Track Name, Industry, AAR, S/R, Load, Staging, ViaIn
-            """
-
-        allItems = []
-        lineDict = {}
-
-        self.tpIndustries.pop(0) # Remove date
-        self.tpIndustries.pop(0) # Remove key
-
-        for lineItem in self.tpIndustries:
-            splitLine = lineItem.split(';')
-            lineDict[splitLine[0]] = {u'location': splitLine[1], u'track': splitLine[2], u'label': splitLine[3], u'type': splitLine[4], u's/r': splitLine[5], u'load': splitLine[6], u'staging': splitLine[7], u'viain': splitLine[8]}
-            # allItems.append(lineItem.split(';'))
-
-        self.rr['industries'] = lineDict
-
-        return
-
     def getAllTpCarAar(self):
 
         allItems = []
-
         for lineItem in self.tpInventory:
             splitItem = lineItem.split(';')
             if splitItem[2].startswith('E'):
@@ -165,6 +187,25 @@ class TrainPlayerImporter:
                 allItems.append(splitItem[2])
 
         self.rr['carAAR'] = list(set(allItems))
+
+        return
+
+    def getAllTpCarLoads(self):
+
+        carLoads = {}
+        xList = []
+        for lineItem in self.tpIndustries:
+            splitLine = lineItem.split(';')
+            xList.append((splitLine[4], splitLine[6]))
+
+        for aar in self.rr['carAAR']:
+            loadList = []
+            for item in xList:
+                if item[0] == aar:
+                    loadList.append(item[1])
+            carLoads[aar] = list(set(loadList))
+
+        self.rr['carLoads'] = carLoads
 
         return
 
@@ -201,6 +242,7 @@ class TrainPlayerImporter:
 
     def getAllTpLocoModels(self):
         """character length fromOperations.xml\<max_len_string_attibute length="10" />
+            List of tuples: (JMRI model, JMRI type)
             Don't include tenders
             """
 
@@ -211,7 +253,7 @@ class TrainPlayerImporter:
             if splitItem[2].startswith('ET'):
                 continue
             if splitItem[2].startswith('E'):
-                allItems.append(splitItem[1])
+                allItems.append((splitItem[1][0:11], splitItem[2]))
 
         self.rr['locoModels'] = list(set(allItems))
 

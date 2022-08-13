@@ -6,7 +6,7 @@
 from psEntities import PatternScriptEntities
 from TrainPlayerSubroutine import ModelWorkEvents
 from TrainPlayerSubroutine import ModelImport
-from TrainPlayerSubroutine import ModelCreate
+from TrainPlayerSubroutine import ModelAttributes
 from TrainPlayerSubroutine import View
 
 # from apps import Apps
@@ -46,57 +46,32 @@ class StartUp:
     def activateWidgets(self):
         '''Maybe get them by name?'''
 
-        self.widgets[0].actionPerformed = self.railroadImporter
-        self.widgets[1].actionPerformed = self.railroadCreator
-        self.widgets[2].actionPerformed = self.railroadUpdater
+        self.widgets[0].actionPerformed = self.importTpRailroad
+        self.widgets[1].actionPerformed = self.updateRailroadAttributes
+        self.widgets[2].actionPerformed = self.updateRollingStockRosters
 
         return
 
-    def railroadImporter(self, EVENT):
-        '''Writes a json file from the 3 TrainPlayer report files'''
+    def importTpRailroad(self, EVENT):
+        '''Writes a tpRailroadData.json file from the 3 TrainPlayer report files'''
 
-        trainPlayerImport = ModelImport.TrainPlayerImporter()
-        trainPlayerImport.checkFiles()
-        trainPlayerImport.makeRrHeader()
-        trainPlayerImport.getRrLocations()
-        trainPlayerImport.getRrLocales()
-        trainPlayerImport.getAllTpRoads()
-        trainPlayerImport.getAllTpIndustry()
-
-        trainPlayerImport.getAllTpCarAar()
-        trainPlayerImport.getAllTpCarKernels()
-
-        trainPlayerImport.getAllTpLocoTypes()
-        trainPlayerImport.getAllTpLocoModels()
-        trainPlayerImport.getAllTpLocoConsists()
-
-        trainPlayerImport.writeTPLayoutData()
-
+        ModelImport.importTpRailroad()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 
-    def railroadCreator(self, EVENT):
-        '''Creates a new JMRI railroad from the json file'''
+    def updateRailroadAttributes(self, EVENT):
+        '''Creates a new JMRI railroad from the tpRailroadData.json file'''
 
-        newJmriRailroad = ModelCreate.NewJmriRailroad()
-        newJmriRailroad.addNewXml()
-
-        newJmriRailroad.setupOperations()
-        newJmriRailroad.updateRsRosters()
+        ModelAttributes.updateRailroadAttributes()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 
-    def railroadUpdater(self, EVENT):
+    def updateRollingStockRosters(self, EVENT):
         '''Updates JMRI railroad from the json file'''
-
-        updatedLocations = ModelCreate.UpdateLocations()
-        updatedLocations.checkFile()
-        updatedLocations.updateLocations()
-        updatedLocations.updateTracks()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

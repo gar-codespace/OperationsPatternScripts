@@ -15,15 +15,15 @@ class TrainPlayerPanel:
         self.configFile = PatternScriptEntities.readConfigFile('TP')
 
         self.irButton = PatternScriptEntities.JAVX_SWING.JButton()
-        self.irButton.setText(PatternScriptEntities.BUNDLE['Import Railroad'])
+        self.irButton.setText(PatternScriptEntities.BUNDLE[u'Import TrainPlayer© Railroad'])
         self.irButton.setName('irButton')
 
         self.nrButton = PatternScriptEntities.JAVX_SWING.JButton()
-        self.nrButton.setText(PatternScriptEntities.BUNDLE['New Railroad'])
+        self.nrButton.setText(PatternScriptEntities.BUNDLE[u'Update Railroad Attributes'])
         self.nrButton.setName('nrButton')
 
         self.urButton = PatternScriptEntities.JAVX_SWING.JButton()
-        self.urButton.setText(PatternScriptEntities.BUNDLE['Update Locations'])
+        self.urButton.setText(PatternScriptEntities.BUNDLE[u'Update Rolling Stock'])
         self.urButton.setName('urButton')
 
         self.controlWidgets = []
