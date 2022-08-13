@@ -5,38 +5,10 @@
 
 from psEntities import PatternScriptEntities
 
-SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.ModelCreate'
+SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.ModelAttributes'
 SCRIPT_REV = 20220101
 
-def updateRailroadAttributes():
-    """Mini Controller to update the OperationsCarRoster.xml roads and types elements
-        and the OperationsEngineRoster.xml models and types elements
-        """
-
-    newJmriRailroad = NewJmriRailroad()
-
-    newJmriRailroad.addNewXml()
-    newJmriRailroad.updateOperations()
-
-    allRsRosters = UpdateRsAttributes()
-
-    allRsRosters.updateRoads()
-    allRsRosters.updateCarAar()
-    allRsRosters.updateCarLoads()
-    allRsRosters.updateCarKernels()
-
-    allRsRosters.updateLocoModels()
-    allRsRosters.updateLocoTypes()
-    allRsRosters.updateLocoConsist()
-
-    updatedLocations = UpdateLocations()
-
-    updatedLocations.updateLocations()
-    updatedLocations.updateTracks()
-    updatedLocations.deselectSpurTypes()
-    updatedLocations.refineSpurTypes()
-
-    return
+_psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.ModelAttributes')
 
 def getTpRailroadData():
     """Add error handling"""
@@ -46,7 +18,9 @@ def getTpRailroadData():
 
     try:
         PatternScriptEntities.JAVA_IO.File(reportPath).isFile()
+        _psLog.info('tpRailroadData.json OK')
     except:
+        _psLog.warning('tpRailroadData.json not found')
         return
 
     tpRailroadData = PatternScriptEntities.genericReadReport(reportPath)
@@ -59,9 +33,7 @@ class NewJmriRailroad:
 
     def __init__(self):
 
-        rrFile = PatternScriptEntities.PROFILE_PATH + 'operations\\tpRailroadData.json'
-        TpRailroad = PatternScriptEntities.genericReadReport(rrFile)
-        self.TpRailroad = PatternScriptEntities.loadJson(TpRailroad)
+        self.TpRailroad = getTpRailroadData()
 
         self.Operations = PatternScriptEntities.OMX
         self.OperationsCarRoster = PatternScriptEntities.CMX
@@ -74,6 +46,7 @@ class NewJmriRailroad:
         """ Routes is not built since there is no TP equivalent.
             Trains is not built since JMRI trains is the point of this subroutine.
             """
+        _psLog.debug('addNewXml')
 
         pathPrefix = PatternScriptEntities.PROFILE_PATH + 'operations\\'
         xmlList = ['Operations', 'OperationsCarRoster', 'OperationsEngineRoster', 'OperationsLocationRoster']
@@ -90,13 +63,18 @@ class NewJmriRailroad:
     def updateOperations(self):
         """Make tweeks to Operations.xml here"""
 
+        _psLog.debug('updateOperations')
+
         OSU = PatternScriptEntities.JMRI.jmrit.operations.setup
         OSU.Setup.setRailroadName(self.TpRailroad['railroadName'])
         OSU.Setup.setComment(self.TpRailroad['railroadDescription'])
+        # Move the below items to the config file
         OSU.Setup.setMainMenuEnabled(True)
+        OSU.Setup.setCloseWindowOnSaveEnabled(True)
 
         OSU.OperationsSetupXml.save()
         # Reload the Panal Pro window to display updates
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 
@@ -113,6 +91,8 @@ class UpdateRsAttributes:
     def updateRoads(self):
         """Replace defailt JMRI road names with the road names from the tpRailroadData.json file"""
 
+        _psLog.debug('updateRoads')
+
         TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarRoads)
         nameList = TCM.getNames()
         for xName in nameList:
@@ -127,6 +107,8 @@ class UpdateRsAttributes:
     def updateCarAar(self):
         """Replace defailt JMRI road names with the road names from the tpRailroadData.json file"""
 
+        _psLog.debug('updateCarAar')
+
         TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarTypes)
         nameList = TCM.getNames()
         for xName in nameList:
@@ -140,6 +122,8 @@ class UpdateRsAttributes:
 
     def updateCarLoads(self):
         """Add the loads and load types for each car type (TP AAR) in tpRailroadData.json"""
+
+        _psLog.debug('updateCarLoads')
 
         TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarLoads)
 
@@ -160,6 +144,8 @@ class UpdateRsAttributes:
     def updateCarKernels(self):
         """Updates the car roster kernels with those from tpRailroadData.json"""
 
+        _psLog.debug('updateCarKernels')
+
         TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.KernelManager)
         nameList = TCM.getNameList()
         for xName in nameList:
@@ -173,6 +159,8 @@ class UpdateRsAttributes:
 
     def updateLocoModels(self):
         """Replace defailt JMRI engine models with the model names from the tpRailroadData.json file"""
+
+        _psLog.debug('updateLocoModels')
 
         TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.rollingstock.engines.EngineModels)
         nameList = TCM.getNames()
@@ -191,6 +179,8 @@ class UpdateRsAttributes:
     def updateLocoTypes(self):
         """Replace defailt JMRI engine types with the type names from the tpRailroadData.json file"""
 
+        _psLog.debug('updateLocoTypes')
+
         TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.rollingstock.engines.EngineTypes)
         nameList = TCM.getNames()
         for xName in nameList:
@@ -204,6 +194,8 @@ class UpdateRsAttributes:
 
     def updateLocoConsist(self):
         """Replace defailt JMRI consist names with the consist names from the tpRailroadData.json file"""
+
+        _psLog.debug('updateLocoConsist')
 
         TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.rollingstock.engines.ConsistManager)
         nameList = TCM.getNameList()
@@ -227,6 +219,8 @@ class UpdateLocations:
 
     def updateLocations(self):
 
+        _psLog.debug('updateLocations')
+
         for location in self.tpRailroadData['locations']:
             newLocation = PatternScriptEntities.LM.newLocation(location)
 
@@ -235,6 +229,8 @@ class UpdateLocations:
         return
 
     def updateTracks(self):
+
+        _psLog.debug('updateTracks')
 
         for item in self.tpRailroadData['locales']:
             loc = PatternScriptEntities.LM.getLocationByName(item[0])
@@ -250,16 +246,20 @@ class UpdateLocations:
     def deselectSpurTypes(self):
         """Deselect all types for spur tracks"""
 
+        _psLog.debug('deselectSpurTypes')
+
         for item in self.tpRailroadData['locales']:
             if item[1]['type'] == 'Spur':
                 loc = PatternScriptEntities.LM.getLocationByName(item[0])
                 track = loc.getTrackByName(item[1]['track'], None)
-                for item in loc.getTypeNames():
-                    track.deleteTypeName(item)
+                for typeName in loc.getTypeNames():
+                    track.deleteTypeName(typeName)
 
 
     def refineSpurTypes(self):
         """Select specific car types for the spur, as defined in TP"""
+
+        _psLog.debug('refineSpurTypes')
 
         for item in self.tpRailroadData['industries']:
             track = PatternScriptEntities.LM.getLocationByName(item[0]).getTrackByName(item[1]['track'], None)

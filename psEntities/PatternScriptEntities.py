@@ -31,6 +31,7 @@ CM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.cars.Car
 SM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.schedules.ScheduleManager)
 PM = JMRI.InstanceManager.getDefault(JMRI.util.gui.GuiLafPreferencesManager)
 KM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.cars.KernelManager)
+ZM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.engines.ConsistManager)
 
 OMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.setup.OperationsSetupXml)
 CMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.cars.CarManagerXml)

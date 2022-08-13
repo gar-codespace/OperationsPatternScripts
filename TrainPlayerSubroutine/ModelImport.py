@@ -9,35 +9,11 @@ from TrainPlayerSubroutine import ModelEntities
 SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.ModelImport'
 SCRIPT_REV = 20220101
 
-def importTpRailroad():
-    '''Mini controller to write the tpRailroadData.json file from the 3 TrainPlayer report files'''
-
-    trainPlayerImport = TrainPlayerImporter()
-
-    trainPlayerImport.getTpReportFiles()
-    trainPlayerImport.processFileHeaders()
-    trainPlayerImport.getRrLocations()
-    trainPlayerImport.getRrLocales()
-    trainPlayerImport.getAllTpRoads()
-    trainPlayerImport.getAllTpIndustry()
-
-    trainPlayerImport.getAllTpCarAar()
-    trainPlayerImport.getAllTpCarLoads()
-    trainPlayerImport.getAllTpCarKernels()
-
-    trainPlayerImport.getAllTpLocoTypes()
-    trainPlayerImport.getAllTpLocoModels()
-    trainPlayerImport.getAllTpLocoConsists()
-
-    trainPlayerImport.writeTPLayoutData()
-
-    return
+_psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.ModelImport')
 
 class TrainPlayerImporter:
 
     def __init__(self):
-
-        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.ModelImport')
 
         self.tpLocationsFile = 'TrainPlayer Report - Locations.txt'
         self.tpIndustriesFile = 'TrainPlayer Report - Industries.txt'
@@ -58,32 +34,34 @@ class TrainPlayerImporter:
 
         try:
             self.tpLocations = ModelEntities.getTpExport(self.tpLocationsFile)
-            self.psLog.info('TrainPlayer Locations file OK')
+            _psLog.info('TrainPlayer Locations file OK')
             self.okCounter += 1
         except:
-            self.psLog.warning('TrainPlayer Locations file not found')
+            _psLog.warning('TrainPlayer Locations file not found')
             print('Not found: ' + self.tpLocationsFile)
 
         try:
             self.tpIndustries = ModelEntities.getTpExport(self.tpIndustriesFile)
-            self.psLog.info('TrainPlayer Industries file OK')
+            _psLog.info('TrainPlayer Industries file OK')
             self.okCounter += 1
         except:
-            self.psLog.warning('TrainPlayer Locations file not found')
+            _psLog.warning('TrainPlayer Locations file not found')
             print('Not found: ' + self.tpIndustriesFile)
 
         try:
             self.tpInventory = ModelEntities.getTpExport(self.tpInventoryFile)
-            self.psLog.info('TrainPlayer Inventory file OK')
+            _psLog.info('TrainPlayer Inventory file OK')
             self.okCounter += 1
         except:
-            self.psLog.warning('TrainPlayer Inventory file not found')
+            _psLog.warning('TrainPlayer Inventory file not found')
             print('Not found: ' + self.tpInventoryFile)
 
         return
 
     def processFileHeaders(self):
         """Process the header info from the TP report files"""
+
+        _psLog.debug('processFileHeaders')
 
         self.rr[u'trainplayerDate'] = self.tpLocations.pop(0)
         self.rr[u'railroadName'] = self.tpLocations.pop(0)
@@ -102,8 +80,9 @@ class TrainPlayerImporter:
 
     def getRrLocations(self):
         """self.tpLocations format: TP ID; JMRI Location Name; JMRI Track Name; TP Label; TP Type; TP Spaces.
-        Makes a list of just the locations.
-        """
+            Makes a list of just the locations.
+            """
+        _psLog.debug('getRrLocations')
 
         locationList = [u'Undefined']
         rrLocations = {}
@@ -118,9 +97,10 @@ class TrainPlayerImporter:
 
     def getRrLocales(self):
         """self.tpLocations format: TP ID; JMRI Location Name; JMRI Track Name; TP Label; TP Type; TP Spaces.
-        Makes a list of tuples of the locales and their data.
-        locale format: (location, {ID, Capacity, Type, Track})
-        """
+            Makes a list of tuples of the locales and their data.
+            locale format: (location, {ID, Capacity, Type, Track})
+            """
+        _psLog.debug('getRrLocales')
 
         localeList = []
         seed = ('Undefined', {u'ID': '00', u'track': '~', u'type': 'Yard', u'capacity': '100'})
@@ -130,8 +110,6 @@ class TrainPlayerImporter:
 
         for lineItem in self.tpLocations:
             splitLine = lineItem.split(';')
-            # locale = {}
-            # locale[splitLine[1]] = {u'ID': splitLine[0], u'track': splitLine[2], u'type': self.getTrackType(splitLine[4]), u'capacity': splitLine[5]}
             x = (splitLine[1], {u'ID': splitLine[0], u'track': splitLine[2], u'type': self.getTrackType(splitLine[4]), u'capacity': splitLine[5]})
             localeList.append(x)
 
@@ -152,11 +130,11 @@ class TrainPlayerImporter:
             industry format: (JMRI Location Name, {ID, JMRI Track Name, Industry, AAR, S/R, Load, Staging, ViaIn})
             """
 
+        _psLog.debug('getAllTpIndustry')
+
         industryList = []
         for lineItem in self.tpIndustries:
             splitLine = lineItem.split(';')
-            # lineDict[splitLine[0]] = {u'location': splitLine[1], u'track': splitLine[2], u'label': splitLine[3], u'type': splitLine[4], u's/r': splitLine[5], u'load': splitLine[6], u'staging': splitLine[7], u'viain': splitLine[8]}
-            # allItems.append(lineItem.split(';'))
             x = (splitLine[1], {u'ID': splitLine[0], u'track': splitLine[2], u'label': splitLine[3], u'type': splitLine[4], u's/r': splitLine[5], u'load': splitLine[6], u'staging': splitLine[7], u'viain': splitLine[8]})
             industryList.append(x)
 
@@ -165,6 +143,8 @@ class TrainPlayerImporter:
         return
 
     def getAllTpRoads(self):
+
+        _psLog.debug('getAllTpRoads')
 
         roadList = []
         for lineItem in self.tpInventory:
@@ -177,6 +157,8 @@ class TrainPlayerImporter:
         return
 
     def getAllTpCarAar(self):
+
+        _psLog.debug('getAllTpCarAar')
 
         allItems = []
         for lineItem in self.tpInventory:
@@ -191,6 +173,8 @@ class TrainPlayerImporter:
         return
 
     def getAllTpCarLoads(self):
+
+        _psLog.debug('getAllTpCarLoads')
 
         carLoads = {}
         xList = []
@@ -211,6 +195,8 @@ class TrainPlayerImporter:
 
     def getAllTpCarKernels(self):
 
+        _psLog.debug('getAllTpCarKernels')
+
         allItems = []
 
         for lineItem in self.tpInventory:
@@ -227,8 +213,9 @@ class TrainPlayerImporter:
     def getAllTpLocoTypes(self):
         """Don't include tenders"""
 
-        allItems = []
+        _psLog.debug('getAllTpLocoTypes')
 
+        allItems = []
         for lineItem in self.tpInventory:
             splitItem = lineItem.split(';')
             if splitItem[2].startswith('ET'):
@@ -245,6 +232,7 @@ class TrainPlayerImporter:
             List of tuples: (JMRI model, JMRI type)
             Don't include tenders
             """
+        _psLog.debug('getAllTpLocoModels')
 
         allItems = []
 
@@ -261,8 +249,9 @@ class TrainPlayerImporter:
 
     def getAllTpLocoConsists(self):
 
-        allItems = []
+        _psLog.debug('getAllTpLocoConsists')
 
+        allItems = []
         for lineItem in self.tpInventory:
             splitItem = lineItem.split(';')
             if splitItem[2].startswith('ET'):
@@ -275,6 +264,8 @@ class TrainPlayerImporter:
         return
 
     def writeTPLayoutData(self):
+
+        _psLog.debug('writeTPLayoutData')
 
         formattedRrFile = PatternScriptEntities.dumpJson(self.rr)
         PatternScriptEntities.genericWriteReport(self.rrFile, formattedRrFile)

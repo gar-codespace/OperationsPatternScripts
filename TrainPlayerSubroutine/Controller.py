@@ -4,12 +4,10 @@
 """The TrainPlayer Subroutine will be implemented in V3, this is just the framework"""
 
 from psEntities import PatternScriptEntities
-from TrainPlayerSubroutine import ModelWorkEvents
 from TrainPlayerSubroutine import ModelImport
 from TrainPlayerSubroutine import ModelAttributes
+from TrainPlayerSubroutine import ModelRollingStock
 from TrainPlayerSubroutine import View
-
-# from apps import Apps
 
 SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.Controller'
 SCRIPT_REV = 20220101
@@ -55,7 +53,24 @@ class StartUp:
     def importTpRailroad(self, EVENT):
         '''Writes a tpRailroadData.json file from the 3 TrainPlayer report files'''
 
-        ModelImport.importTpRailroad()
+        trainPlayerImport = ModelImport.TrainPlayerImporter()
+
+        trainPlayerImport.getTpReportFiles()
+        trainPlayerImport.processFileHeaders()
+        trainPlayerImport.getRrLocations()
+        trainPlayerImport.getRrLocales()
+        trainPlayerImport.getAllTpRoads()
+        trainPlayerImport.getAllTpIndustry()
+
+        trainPlayerImport.getAllTpCarAar()
+        trainPlayerImport.getAllTpCarLoads()
+        trainPlayerImport.getAllTpCarKernels()
+
+        trainPlayerImport.getAllTpLocoTypes()
+        trainPlayerImport.getAllTpLocoModels()
+        trainPlayerImport.getAllTpLocoConsists()
+
+        trainPlayerImport.writeTPLayoutData()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -64,7 +79,28 @@ class StartUp:
     def updateRailroadAttributes(self, EVENT):
         '''Creates a new JMRI railroad from the tpRailroadData.json file'''
 
-        ModelAttributes.updateRailroadAttributes()
+        newJmriRailroad = ModelAttributes.NewJmriRailroad()
+
+        newJmriRailroad.addNewXml()
+        newJmriRailroad.updateOperations()
+
+        allRsRosters = ModelAttributes.UpdateRsAttributes()
+
+        allRsRosters.updateRoads()
+        allRsRosters.updateCarAar()
+        allRsRosters.updateCarLoads()
+        allRsRosters.updateCarKernels()
+
+        allRsRosters.updateLocoModels()
+        allRsRosters.updateLocoTypes()
+        allRsRosters.updateLocoConsist()
+
+        updatedLocations = ModelAttributes.UpdateLocations()
+
+        updatedLocations.updateLocations()
+        updatedLocations.updateTracks()
+        updatedLocations.deselectSpurTypes()
+        updatedLocations.refineSpurTypes()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -72,6 +108,12 @@ class StartUp:
 
     def updateRollingStockRosters(self, EVENT):
         '''Updates JMRI railroad from the json file'''
+
+        updatedInventory = ModelRollingStock.UpdateInventory()
+        updatedInventory.getTpInventory()
+        updatedInventory.splitTpList()
+        updatedInventory.deregisterJmriOrphans()
+        updatedInventory.updateRollingStock()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
