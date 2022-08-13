@@ -12,8 +12,6 @@ GitHub Web Page
 Help
 Hold
 Ignore track length
-List of rolling stock not updated:
-List of tracks not found:
 Location:
 Locomotives at
 Make Work
@@ -46,7 +44,6 @@ Track Pattern Report
 Track Totals for Cars:
 Track:
 Tracks at
-TrainPlayer© cars not found in JMRI roster:
 TrainPlayer© Support Subroutine
 Translate Plugin
 Import TrainPlayer© Railroad
