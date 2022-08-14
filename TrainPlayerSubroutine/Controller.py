@@ -5,8 +5,8 @@
 
 from psEntities import PatternScriptEntities
 from TrainPlayerSubroutine import ModelImport
-from TrainPlayerSubroutine import ModelAttributes
-from TrainPlayerSubroutine import ModelRollingStock
+from TrainPlayerSubroutine import ModelNew
+
 from TrainPlayerSubroutine import View
 
 SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.Controller'
@@ -45,7 +45,7 @@ class StartUp:
         '''Maybe get them by name?'''
 
         self.widgets[0].actionPerformed = self.importTpRailroad
-        self.widgets[1].actionPerformed = self.updateRailroadAttributes
+        self.widgets[1].actionPerformed = self.newJmriRailroad
         self.widgets[2].actionPerformed = self.updateRollingStockRosters
 
         return
@@ -76,31 +76,32 @@ class StartUp:
 
         return
 
-    def updateRailroadAttributes(self, EVENT):
+    def newJmriRailroad(self, EVENT):
         '''Creates a new JMRI railroad from the tpRailroadData.json file'''
 
-        newJmriRailroad = ModelAttributes.NewJmriRailroad()
+        ModelNew.newJmriRailroad()
+        # newJmriRailroad = ModelNew.NewJmriRailroad()
+        #
+        # newJmriRailroad.addNewXml()
+        # newJmriRailroad.updateOperations()
 
-        newJmriRailroad.addNewXml()
-        newJmriRailroad.updateOperations()
-
-        allRsRosters = ModelAttributes.UpdateRsAttributes()
-
-        allRsRosters.updateRoads()
-        allRsRosters.updateCarAar()
-        allRsRosters.updateCarLoads()
-        allRsRosters.updateCarKernels()
-
-        allRsRosters.updateLocoModels()
-        allRsRosters.updateLocoTypes()
-        allRsRosters.updateLocoConsist()
-
-        updatedLocations = ModelAttributes.UpdateLocations()
-
-        updatedLocations.updateLocations()
-        updatedLocations.updateTracks()
-        updatedLocations.deselectSpurTypes()
-        updatedLocations.refineSpurTypes()
+        # allRsRosters = ModelNew.UpdateRsAttributes()
+        #
+        # allRsRosters.updateRoads()
+        # allRsRosters.updateCarAar()
+        # allRsRosters.updateCarLoads()
+        # allRsRosters.updateCarKernels()
+        #
+        # allRsRosters.updateLocoModels()
+        # allRsRosters.updateLocoTypes()
+        # allRsRosters.updateLocoConsist()
+        #
+        # updatedLocations = ModelAttributes.UpdateLocations()
+        #
+        # updatedLocations.updateLocations()
+        # updatedLocations.updateTracks()
+        # # updatedLocations.deselectSpurTypes()
+        # # updatedLocations.refineSpurTypes()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

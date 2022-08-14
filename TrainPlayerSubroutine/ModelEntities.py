@@ -169,7 +169,10 @@ def parseCarId(carId):
 
 def getSetToLocationAndTrack(location, track):
 
-    locationObj = PatternScriptEntities.LM.getLocationByName(location)
-    trackObj = locationObj.getTrackByName(track, None)
-
-    return locationObj, trackObj
+    try:
+        locationObj = PatternScriptEntities.LM.getLocationByName(location)
+        trackObj = locationObj.getTrackByName(track, None)
+        return locationObj, trackObj
+    except:
+        print('Not found: ', location, track)
+        return None, None

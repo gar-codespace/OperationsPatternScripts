@@ -86,16 +86,30 @@ class UpdateInventory:
 
         _psLog.debug('updateRollingStock')
 
+         # Move to config file
+        pCars = ['B','BE','BH','BM','BMR','BMT','BP','BR','BX','CA','CS','D','DA','DB','DC','DL','DO','DP','DPA','MA','MB','MR','P','PA','PAS','PB','PBC','PBO','PC','PL','PO','PS','PSA']
+
         for id, attribs in self.tpCars.items():
             rsRoad, rsNumber = ModelEntities.parseCarId(id)
             updatedCar = PatternScriptEntities.CM.newRS(rsRoad, rsNumber)
-            location, track = ModelEntities.getSetToLocationAndTrack(attribs['location'], attribs['track'])
-            updatedCar.setLocation(location, track, True)
+            xLocation, xTrack = ModelEntities.getSetToLocationAndTrack(attribs['location'], attribs['track'])
+            if not xLocation:
+                continue
+            updatedCar.setLocation(xLocation, xTrack, True)
             updatedCar.setTypeName(attribs['aar'])
+            if attribs['aar'].startswith('N'):
+                updatedCar.setCaboose(True)
+            if attribs['aar'] in pCars:
+                updatedCar.setPassenger(True)
             updatedCar.setLength('40')
             updatedCar.setWeight('2')
             updatedCar.setColor('Red')
             updatedCar.setLoadName(attribs['load'])
+            try:
+                if xTrack.getTrackTypeName() == 'staging':
+                    updatedCar.setLoadName('E')
+            except:
+                print('Not found', xTrack, updatedCar.getId())
             updatedCar.setKernel(PatternScriptEntities.KM.getKernelByName(attribs['kernel']))
 
         for id, attribs in self.tpLocos.items():

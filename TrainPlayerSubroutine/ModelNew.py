@@ -4,6 +4,7 @@
 """From tpRailroadData.json, a new rr is created and the xml files are seeded"""
 
 from psEntities import PatternScriptEntities
+from TrainPlayerSubroutine import ModelRollingStock
 
 SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.ModelAttributes'
 SCRIPT_REV = 20220101
@@ -27,6 +28,62 @@ def getTpRailroadData():
     tpRailroadData = PatternScriptEntities.loadJson(tpRailroadData)
 
     return tpRailroadData
+
+def deleteOperationsXml():
+    """Move the list to the config file
+        For now keep the trains and routes xml
+        """
+
+    opsFileList = ['Operations', 'OperationsCarRoster', 'OperationsEngineRoster', 'OperationsLocationRoster']
+    reportPath = PatternScriptEntities.PROFILE_PATH + 'operations\\'
+
+    for file in opsFileList:
+        xmlName =  PatternScriptEntities.PROFILE_PATH + 'operations\\' + file + '.xml'
+        bakName =  PatternScriptEntities.PROFILE_PATH + 'operations\\' + file + '.xml.bak'
+        try:
+            PatternScriptEntities.JAVA_IO.File(xmlName).delete()
+        except:
+            print('Not found: ', xmlName)
+        try:
+            PatternScriptEntities.JAVA_IO.File(bakName).delete()
+        except:
+            print('Not found: ', bakName)
+
+    return
+
+def newJmriRailroad():
+    """Mini controller to make a new JMRI railroad form the .json and TP Inventory.txt files"""
+
+    deleteOperationsXml()
+
+    newJmriRailroad = NewJmriRailroad()
+    newJmriRailroad.addNewXml()
+    newJmriRailroad.updateOperations()
+
+    allRsRosters = NewRsAttributes()
+    allRsRosters.newRoads()
+    allRsRosters.newCarAar()
+    allRsRosters.newCarLoads()
+    allRsRosters.newCarKernels()
+
+    allRsRosters.newLocoModels()
+    allRsRosters.newLocoTypes()
+    allRsRosters.newLocoConsist()
+
+    newLocations = NewLocationsTracks()
+    newLocations.newLocations()
+    newLocations.newTracks()
+    # newLocations.deselectSpurTypes()
+    # newLocations.refineSpurTypes()
+
+    newInventory = ModelRollingStock.UpdateInventory()
+    newInventory.getTpInventory()
+    newInventory.splitTpList()
+    # newInventory.deregisterJmriOrphans()
+    newInventory.updateRollingStock()
+
+    return
+
 
 class NewJmriRailroad:
     """Adds the operations xml files if needed and updates Operatios.xml"""
@@ -79,7 +136,7 @@ class NewJmriRailroad:
         return
 
 
-class UpdateRsAttributes:
+class NewRsAttributes:
     """TCM - Temporary Context Manager"""
 
     def __init__(self):
@@ -88,10 +145,10 @@ class UpdateRsAttributes:
 
         return
 
-    def updateRoads(self):
+    def newRoads(self):
         """Replace defailt JMRI road names with the road names from the tpRailroadData.json file"""
 
-        _psLog.debug('updateRoads')
+        _psLog.debug('newRoads')
 
         TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarRoads)
         nameList = TCM.getNames()
@@ -104,10 +161,10 @@ class UpdateRsAttributes:
 
         return
 
-    def updateCarAar(self):
+    def newCarAar(self):
         """Replace defailt JMRI road names with the road names from the tpRailroadData.json file"""
 
-        _psLog.debug('updateCarAar')
+        _psLog.debug('newCarAar')
 
         TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarTypes)
         nameList = TCM.getNames()
@@ -120,10 +177,10 @@ class UpdateRsAttributes:
 
         return
 
-    def updateCarLoads(self):
+    def newCarLoads(self):
         """Add the loads and load types for each car type (TP AAR) in tpRailroadData.json"""
 
-        _psLog.debug('updateCarLoads')
+        _psLog.debug('newCarLoads')
 
         TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarLoads)
 
@@ -141,10 +198,10 @@ class UpdateRsAttributes:
 
         return
 
-    def updateCarKernels(self):
+    def newCarKernels(self):
         """Updates the car roster kernels with those from tpRailroadData.json"""
 
-        _psLog.debug('updateCarKernels')
+        _psLog.debug('newCarKernels')
 
         TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.KernelManager)
         nameList = TCM.getNameList()
@@ -157,10 +214,10 @@ class UpdateRsAttributes:
 
         return
 
-    def updateLocoModels(self):
+    def newLocoModels(self):
         """Replace defailt JMRI engine models with the model names from the tpRailroadData.json file"""
 
-        _psLog.debug('updateLocoModels')
+        _psLog.debug('newLocoModels')
 
         TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.rollingstock.engines.EngineModels)
         nameList = TCM.getNames()
@@ -176,10 +233,10 @@ class UpdateRsAttributes:
 
         return
 
-    def updateLocoTypes(self):
+    def newLocoTypes(self):
         """Replace defailt JMRI engine types with the type names from the tpRailroadData.json file"""
 
-        _psLog.debug('updateLocoTypes')
+        _psLog.debug('newLocoTypes')
 
         TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.rollingstock.engines.EngineTypes)
         nameList = TCM.getNames()
@@ -192,10 +249,10 @@ class UpdateRsAttributes:
             TCM.addName(xName)
         return
 
-    def updateLocoConsist(self):
+    def newLocoConsist(self):
         """Replace defailt JMRI consist names with the consist names from the tpRailroadData.json file"""
 
-        _psLog.debug('updateLocoConsist')
+        _psLog.debug('newLocoConsist')
 
         TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.rollingstock.engines.ConsistManager)
         nameList = TCM.getNameList()
@@ -209,7 +266,7 @@ class UpdateRsAttributes:
         return
 
 
-class UpdateLocations:
+class NewLocationsTracks:
 
     def __init__(self):
 
@@ -217,9 +274,9 @@ class UpdateLocations:
 
         return
 
-    def updateLocations(self):
+    def newLocations(self):
 
-        _psLog.debug('updateLocations')
+        _psLog.debug('newLocations')
 
         for location in self.tpRailroadData['locations']:
             newLocation = PatternScriptEntities.LM.newLocation(location)
@@ -228,9 +285,9 @@ class UpdateLocations:
 
         return
 
-    def updateTracks(self):
+    def newTracks(self):
 
-        _psLog.debug('updateTracks')
+        _psLog.debug('newTracks')
 
         for item in self.tpRailroadData['locales']:
             loc = PatternScriptEntities.LM.getLocationByName(item[0])

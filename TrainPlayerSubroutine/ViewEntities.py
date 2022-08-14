@@ -19,7 +19,7 @@ class TrainPlayerPanel:
         self.irButton.setName('irButton')
 
         self.nrButton = PatternScriptEntities.JAVX_SWING.JButton()
-        self.nrButton.setText(PatternScriptEntities.BUNDLE[u'Update Railroad Attributes'])
+        self.nrButton.setText(PatternScriptEntities.BUNDLE[u'New JMRI Railroad'])
         self.nrButton.setName('nrButton')
 
         self.urButton = PatternScriptEntities.JAVX_SWING.JButton()

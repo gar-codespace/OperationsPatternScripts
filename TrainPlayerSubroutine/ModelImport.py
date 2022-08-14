@@ -84,7 +84,7 @@ class TrainPlayerImporter:
             """
         _psLog.debug('getRrLocations')
 
-        locationList = [u'Undefined']
+        locationList = [u'Unknown']
         rrLocations = {}
 
         for lineItem in self.tpLocations:
@@ -103,7 +103,7 @@ class TrainPlayerImporter:
         _psLog.debug('getRrLocales')
 
         localeList = []
-        seed = ('Undefined', {u'ID': '00', u'track': '~', u'type': 'Yard', u'capacity': '100'})
+        seed = ('Unknown', {u'ID': '00', u'track': '~', u'type': 'Yard', u'capacity': '100'})
         localeList.append(seed)
 
 

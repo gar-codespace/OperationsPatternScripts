@@ -16,6 +16,7 @@ Location:
 Locomotives at
 Make Work
 No FD track
+New JMRI Railroad
 No final destination
 On Train
 Operations Folder
@@ -47,7 +48,6 @@ Tracks at
 TrainPlayer© Support Subroutine
 Translate Plugin
 Import TrainPlayer© Railroad
-Update Railroad Attributes
 Update Rolling Stock
 Update Inventory Error Report
 View Log File

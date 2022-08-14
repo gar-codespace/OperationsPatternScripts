@@ -170,6 +170,8 @@ def psLocale():
 def formatText(item, length):
     """Truncate each item to its defined length in PatternConfig.json and add a space at the end"""
 
+    if isinstance(item, bool): # Hazardous is a boolean
+        item = 'HazMat'
     if len(item) < length:
         xItem = item.ljust(length)
     else:
