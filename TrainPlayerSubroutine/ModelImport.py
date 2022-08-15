@@ -77,7 +77,6 @@ class TrainPlayerImporter:
 
         return
 
-
     def getRrLocations(self):
         """self.tpLocations format: TP ID; JMRI Location Name; JMRI Track Name; TP Label; TP Type; TP Spaces.
             Makes a list of just the locations.
@@ -106,8 +105,6 @@ class TrainPlayerImporter:
         seed = ('Unknown', {u'ID': '00', u'track': '~', u'type': 'Yard', u'capacity': '100'})
         localeList.append(seed)
 
-
-
         for lineItem in self.tpLocations:
             splitLine = lineItem.split(';')
             x = (splitLine[1], {u'ID': splitLine[0], u'track': splitLine[2], u'type': self.getTrackType(splitLine[4]), u'capacity': splitLine[5]})
@@ -120,9 +117,9 @@ class TrainPlayerImporter:
     def getTrackType(self, tpType):
         """Convert TP track types into JMRI track types."""
 
-        rubric = {'industry': u'Spur', u'interchange': 'Interchange', u'staging': 'Staging', u'class yard': 'Yard'}
+        typeRubric = PatternScriptEntities.readConfigFile('TP')['TR']
 
-        return rubric[tpType]
+        return typeRubric[tpType]
 
     def getAllTpIndustry(self):
         """self.tpIndustryList format: ID, JMRI Location Name, JMRI Track Name, Industry, AAR, S/R, Load, Staging, ViaIn

@@ -9,6 +9,7 @@ Edit Config File
 Enable TrainPlayer©
 Eqpt. Length:
 GitHub Web Page
+Hazardous
 Help
 Hold
 Ignore track length

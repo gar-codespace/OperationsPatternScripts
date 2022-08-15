@@ -11,10 +11,11 @@ SCRIPT_REV = 20220101
 
 _psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.ModelAttributes')
 
+
 def getTpRailroadData():
     """Add error handling"""
 
-    tpRailroadData = {}
+    tpRailroad = []
     reportPath = PatternScriptEntities.PROFILE_PATH + 'operations\\tpRailroadData.json'
 
     try:
@@ -24,41 +25,19 @@ def getTpRailroadData():
         _psLog.warning('tpRailroadData.json not found')
         return
 
-    tpRailroadData = PatternScriptEntities.genericReadReport(reportPath)
-    tpRailroadData = PatternScriptEntities.loadJson(tpRailroadData)
+    report = PatternScriptEntities.genericReadReport(reportPath)
+    tpRailroad = PatternScriptEntities.loadJson(report)
 
-    return tpRailroadData
-
-def deleteOperationsXml():
-    """Move the list to the config file
-        For now keep the trains and routes xml
-        """
-
-    opsFileList = ['Operations', 'OperationsCarRoster', 'OperationsEngineRoster', 'OperationsLocationRoster']
-    reportPath = PatternScriptEntities.PROFILE_PATH + 'operations\\'
-
-    for file in opsFileList:
-        xmlName =  PatternScriptEntities.PROFILE_PATH + 'operations\\' + file + '.xml'
-        bakName =  PatternScriptEntities.PROFILE_PATH + 'operations\\' + file + '.xml.bak'
-        try:
-            PatternScriptEntities.JAVA_IO.File(xmlName).delete()
-        except:
-            print('Not found: ', xmlName)
-        try:
-            PatternScriptEntities.JAVA_IO.File(bakName).delete()
-        except:
-            print('Not found: ', bakName)
-
-    return
+    return tpRailroad
 
 def newJmriRailroad():
-    """Mini controller to make a new JMRI railroad form the .json and TP Inventory.txt files"""
+    """Mini controller to make a new JMRI railroad from the .json and TP Inventory.txt files"""
 
-    deleteOperationsXml()
-
-    newJmriRailroad = NewJmriRailroad()
-    newJmriRailroad.addNewXml()
-    newJmriRailroad.updateOperations()
+    jmriRailroad = SetupXML()
+    jmriRailroad.deleteAllXml()
+    jmriRailroad.addOperationsXml()
+    jmriRailroad.addCoreXml()
+    jmriRailroad.updateOperations()
 
     allRsRosters = NewRsAttributes()
     allRsRosters.newRoads()
@@ -76,17 +55,26 @@ def newJmriRailroad():
     # newLocations.deselectSpurTypes()
     # newLocations.refineSpurTypes()
 
-    newInventory = ModelRollingStock.UpdateInventory()
+    newInventory = ModelRollingStock.Inventory()
     newInventory.getTpInventory()
     newInventory.splitTpList()
     # newInventory.deregisterJmriOrphans()
-    newInventory.updateRollingStock()
+    newInventory.newCars()
+    newInventory.newLocos()
 
     return
 
+def updateJmriRailroad():
+    """Minni controller updates OperationsCarRoster, OperationsEngineRoster, OperationsLocationRoster only"""
 
-class NewJmriRailroad:
-    """Adds the operations xml files if needed and updates Operatios.xml"""
+
+    jmriRailroad = SetupXML()
+    jmriRailroad.deleteCoreXml()
+    jmriRailroad.addCoreXml()
+
+    return
+
+class SetupXML:
 
     def __init__(self):
 
@@ -99,18 +87,46 @@ class NewJmriRailroad:
 
         return
 
-    def addNewXml(self):
-        """ Routes is not built since there is no TP equivalent.
+    def deleteAllXml(self):
+
+        reportPath = PatternScriptEntities.PROFILE_PATH + 'operations\\'
+        opsFileList = PatternScriptEntities.JAVA_IO.File(reportPath).listFiles()
+        for file in opsFileList:
+            if file.toString().endswith('.xml') or file.toString().endswith('.bak'):
+                file.delete()
+
+        return
+
+    def deleteCoreXml(self):
+
+        coreFileList = PatternScriptEntities.readConfigFile('TP')['CFL']
+        reportPath = PatternScriptEntities.PROFILE_PATH + 'operations\\'
+
+        for file in coreFileList:
+            xmlName =  reportPath + file + '.xml'
+            bakName =  reportPath + file + '.xml.bak'
+            PatternScriptEntities.JAVA_IO.File(xmlName).delete()
+            PatternScriptEntities.JAVA_IO.File(bakName).delete()
+
+        return
+
+    def addOperationsXml(self):
+
+        self.Operations.initialize()
+        self.Operations.writeOperationsFile()
+
+        return
+
+    def addCoreXml(self):
+        """Routes is not built since there is no TP equivalent.
             Trains is not built since JMRI trains is the point of this subroutine.
             """
-        _psLog.debug('addNewXml')
+        _psLog.debug('addCoreXml')
 
         pathPrefix = PatternScriptEntities.PROFILE_PATH + 'operations\\'
-        xmlList = ['Operations', 'OperationsCarRoster', 'OperationsEngineRoster', 'OperationsLocationRoster']
-        for file in xmlList:
+        coreFileList = PatternScriptEntities.readConfigFile('TP')['CFL']
+        for file in coreFileList:
             filePath = pathPrefix + file + '.xml'
-            if PatternScriptEntities.JAVA_IO.File(filePath).isFile():
-                continue
 
             getattr(self, file).initialize()
             getattr(self, file).writeOperationsFile()

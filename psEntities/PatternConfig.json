@@ -66,7 +66,7 @@
     "SE" : "utf-8",
     "SI" : {
       "PatternTracksSubroutine" : true,
-      "TrainPlayerSubroutine" : false
+      "TrainPlayerSubroutine" : true
     },
     "PH" : 220,
     "PW" : 1500,
@@ -129,6 +129,51 @@
     "RM": 8
   },
   "TP" : {
-    "xyz" : 123
+    "PC": [
+      "B",
+      "BE",
+      "BH",
+      "BM",
+      "BMR",
+      "BMT",
+      "BP",
+      "BR",
+      "BX",
+      "CA",
+      "CS",
+      "D",
+      "DA",
+      "DB",
+      "DC",
+      "DL",
+      "DO",
+      "DP",
+      "DPA",
+      "MA",
+      "MB",
+      "MR",
+      "P",
+      "PA",
+      "PAS",
+      "PB",
+      "PBC",
+      "PBO",
+      "PC",
+      "PL",
+      "PO",
+      "PS",
+      "PSA"
+    ],
+    "CFL" : [
+      "OperationsCarRoster",
+      "OperationsEngineRoster",
+      "OperationsLocationRoster"
+    ],
+    "TR" : {
+      "industry": "Spur",
+      "interchange": "Interchange",
+      "staging": "Staging",
+      "class yard": "Yard"
+    }
   }
 }

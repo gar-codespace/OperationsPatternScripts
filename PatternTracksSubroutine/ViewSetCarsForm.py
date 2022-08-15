@@ -237,7 +237,11 @@ class MakeSetCarsEqptRows():
             for item in PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
                 if 'Tab' in item:
                     continue
-                label = PatternScriptEntities.JAVX_SWING.JLabel(car[item])
+                try:
+                    label = PatternScriptEntities.JAVX_SWING.JLabel(car[item])
+                except:
+                    # The hazardous field is a boolean so work around it
+                    label = PatternScriptEntities.JAVX_SWING.JLabel(PatternScriptEntities.BUNDLE['Hazardous'])
                 box = makeSwingBox(self.reportWidth[item] \
                         * self.panelWidth, self.panelHeight \
                         )

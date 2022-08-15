@@ -46,7 +46,7 @@ class StartUp:
 
         self.widgets[0].actionPerformed = self.importTpRailroad
         self.widgets[1].actionPerformed = self.newJmriRailroad
-        self.widgets[2].actionPerformed = self.updateRollingStockRosters
+        self.widgets[2].actionPerformed = self.updateJmriRailroad
 
         return
 
@@ -80,41 +80,15 @@ class StartUp:
         '''Creates a new JMRI railroad from the tpRailroadData.json file'''
 
         ModelNew.newJmriRailroad()
-        # newJmriRailroad = ModelNew.NewJmriRailroad()
-        #
-        # newJmriRailroad.addNewXml()
-        # newJmriRailroad.updateOperations()
-
-        # allRsRosters = ModelNew.UpdateRsAttributes()
-        #
-        # allRsRosters.updateRoads()
-        # allRsRosters.updateCarAar()
-        # allRsRosters.updateCarLoads()
-        # allRsRosters.updateCarKernels()
-        #
-        # allRsRosters.updateLocoModels()
-        # allRsRosters.updateLocoTypes()
-        # allRsRosters.updateLocoConsist()
-        #
-        # updatedLocations = ModelAttributes.UpdateLocations()
-        #
-        # updatedLocations.updateLocations()
-        # updatedLocations.updateTracks()
-        # # updatedLocations.deselectSpurTypes()
-        # # updatedLocations.refineSpurTypes()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 
-    def updateRollingStockRosters(self, EVENT):
+    def updateJmriRailroad(self, EVENT):
         '''Updates JMRI railroad from the json file'''
 
-        updatedInventory = ModelRollingStock.UpdateInventory()
-        updatedInventory.getTpInventory()
-        updatedInventory.splitTpList()
-        updatedInventory.deregisterJmriOrphans()
-        updatedInventory.updateRollingStock()
+        ModelNew.updateJmriRailroad()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
