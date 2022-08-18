@@ -102,12 +102,12 @@ class TrainPlayerImporter:
         _psLog.debug('getRrLocales')
 
         localeList = []
-        seed = ('Unknown', {u'ID': '00', u'track': '~', u'type': 'Yard', u'capacity': '100'})
+        seed = ('Unknown', {u'ID': '00', u'track': '~', u'label': '~', u'type': 'Yard', u'capacity': '100'})
         localeList.append(seed)
 
         for lineItem in self.tpLocations:
             splitLine = lineItem.split(';')
-            x = (splitLine[1], {u'ID': splitLine[0], u'track': splitLine[2], u'type': self.getTrackType(splitLine[4]), u'capacity': splitLine[5]})
+            x = (splitLine[1], {u'ID': splitLine[0], u'track': splitLine[2], u'label': splitLine[3], u'type': self.getTrackType(splitLine[4]), u'capacity': splitLine[5]})
             localeList.append(x)
 
         self.rr['locales'] = localeList
@@ -124,18 +124,28 @@ class TrainPlayerImporter:
     def getAllTpIndustry(self):
         """self.tpIndustryList format: ID, JMRI Location Name, JMRI Track Name, Industry, AAR, S/R, Load, Staging, ViaIn
             Makes a list of tuples of the industries and their data.
-            industry format: (JMRI Location Name, {ID, JMRI Track Name, Industry, AAR, S/R, Load, Staging, ViaIn})
+            industry format: [JMRI Location Name, {ID, JMRI Track Name, Industry, AAR, schedule(label, aar, receive, ship), Staging, ViaIn}]
             """
 
         _psLog.debug('getAllTpIndustry')
 
-        industryList = []
+        industryDict = {}
+        receive = ''
+        ship = ''
         for lineItem in self.tpIndustries:
             splitLine = lineItem.split(';')
-            x = (splitLine[1], {u'ID': splitLine[0], u'track': splitLine[2], u'label': splitLine[3], u'type': splitLine[4], u's/r': splitLine[5], u'load': splitLine[6], u'staging': splitLine[7], u'viain': splitLine[8]})
-            industryList.append(x)
+            if splitLine[5] == 'S':
+                receive = 'Empty'
+                ship = splitLine[6]
+            else:
+                receive = splitLine[6]
+                ship = 'Empty'
+            schedule = (splitLine[3], splitLine[4], receive, ship)
+            # x = (splitLine[1], {u'ID': splitLine[0], u'track': splitLine[2], u'label': splitLine[3], u'type': splitLine[4], u'schedule': schedule, u'staging': splitLine[7], u'viain': splitLine[8]})
+            # industryDict.append(x)
+            industryDict[splitLine[0]] = {u'location': splitLine[1], u'track': splitLine[2], u'label': splitLine[3], u'type': splitLine[4], u'schedule': schedule, u'staging': splitLine[7], u'viain': splitLine[8]}
 
-        self.rr['industries'] = industryList
+        self.rr['industries'] = industryDict
 
         return
 

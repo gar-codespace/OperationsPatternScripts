@@ -51,14 +51,14 @@ def newJmriRailroad():
 
     newLocations = NewLocationsTracks()
     newLocations.newLocations()
+    newLocations.newSchedules()
     newLocations.newTracks()
-    # newLocations.deselectSpurTypes()
-    # newLocations.refineSpurTypes()
+    newLocations.deselectSpurTypes()
+    newLocations.refineSpurTypes()
 
     newInventory = ModelRollingStock.Inventory()
     newInventory.getTpInventory()
     newInventory.splitTpList()
-    # newInventory.deregisterJmriOrphans()
     newInventory.newCars()
     newInventory.newLocos()
 
@@ -71,6 +71,7 @@ def updateJmriRailroad():
     jmriRailroad = SetupXML()
     jmriRailroad.deleteCoreXml()
     jmriRailroad.addCoreXml()
+    # newInventory.deregisterJmriOrphans()
 
     return
 
@@ -95,6 +96,10 @@ class SetupXML:
             if file.toString().endswith('.xml') or file.toString().endswith('.bak'):
                 file.delete()
 
+        PatternScriptEntities.LM.dispose()
+        PatternScriptEntities.CM.dispose()
+        PatternScriptEntities.EM.dispose()
+
         return
 
     def deleteCoreXml(self):
@@ -108,11 +113,14 @@ class SetupXML:
             PatternScriptEntities.JAVA_IO.File(xmlName).delete()
             PatternScriptEntities.JAVA_IO.File(bakName).delete()
 
+        PatternScriptEntities.LM.dispose()
+        PatternScriptEntities.CM.dispose()
+        PatternScriptEntities.EM.dispose()
         return
 
     def addOperationsXml(self):
 
-        self.Operations.initialize()
+        # self.Operations.initialize()
         self.Operations.writeOperationsFile()
 
         return
@@ -128,7 +136,7 @@ class SetupXML:
         for file in coreFileList:
             filePath = pathPrefix + file + '.xml'
 
-            getattr(self, file).initialize()
+            # getattr(self, file).initialize()
             getattr(self, file).writeOperationsFile()
 
         return
@@ -145,7 +153,7 @@ class SetupXML:
         OSU.Setup.setMainMenuEnabled(True)
         OSU.Setup.setCloseWindowOnSaveEnabled(True)
 
-        OSU.OperationsSetupXml.save()
+        # OSU.OperationsSetupXml.save()
         # Reload the Panal Pro window to display updates
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -167,6 +175,7 @@ class NewRsAttributes:
         _psLog.debug('newRoads')
 
         TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarRoads)
+        # TCM.dispose()
         nameList = TCM.getNames()
         for xName in nameList:
             xName = unicode(xName, PatternScriptEntities.ENCODING)
@@ -178,11 +187,12 @@ class NewRsAttributes:
         return
 
     def newCarAar(self):
-        """Replace defailt JMRI road names with the road names from the tpRailroadData.json file"""
+        """Replace defailt JMRI type names with the aar names from the tpRailroadData.json file"""
 
         _psLog.debug('newCarAar')
 
         TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarTypes)
+        TCM.dispose()
         nameList = TCM.getNames()
         for xName in nameList:
             xName = unicode(xName, PatternScriptEntities.ENCODING)
@@ -199,7 +209,6 @@ class NewRsAttributes:
         _psLog.debug('newCarLoads')
 
         TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarLoads)
-
         carLoads = self.tpRailroadData['carLoads']
         for aar in self.tpRailroadData['carAAR']:
             aar = unicode(aar, PatternScriptEntities.ENCODING)
@@ -261,8 +270,8 @@ class NewRsAttributes:
             TCM.deleteName(xName)
         for xName in self.tpRailroadData['locoTypes']:
             xName = unicode(xName, PatternScriptEntities.ENCODING)
-
             TCM.addName(xName)
+            
         return
 
     def newLocoConsist(self):
@@ -301,19 +310,41 @@ class NewLocationsTracks:
 
         return
 
+    def newSchedules(self):
+        """Creates new schedules from tpRailroadData.json [industries]
+            The schedule name is the TP track label
+            """
+
+        _psLog.debug('newSchedules')
+
+        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.locations.schedules.ScheduleManager)
+        TCM.dispose()
+        for id, industry in self.tpRailroadData['industries'].items():
+            scheduleLineItem = industry['schedule']
+            schedule = TCM.newSchedule(scheduleLineItem[0])
+            scheduleItem = schedule.addItem(scheduleLineItem[1])
+            scheduleItem.setReceiveLoadName(scheduleLineItem[2])
+            scheduleItem.setShipLoadName(scheduleLineItem[3])
+
+        # PatternScriptEntities.LMX.save()
+        return
+
     def newTracks(self):
 
         _psLog.debug('newTracks')
 
+        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.locations.schedules.ScheduleManager)
+        # TCM.dispose()
         for item in self.tpRailroadData['locales']:
             loc = PatternScriptEntities.LM.getLocationByName(item[0])
             xTrack = loc.addTrack(item[1]['track'], item[1]['type'])
             xTrack.setComment(item[1]['ID'])
             trackLength = int(item[1]['capacity']) * 40
             xTrack.setLength(trackLength)
+            if item[1]['type'] == 'Spur':
+                xTrack.setSchedule(TCM.getScheduleByName(item[1]['label']))
 
-        PatternScriptEntities.LMX.save()
-
+        # PatternScriptEntities.LMX.save()
         return
 
     def deselectSpurTypes(self):
@@ -328,15 +359,15 @@ class NewLocationsTracks:
                 for typeName in loc.getTypeNames():
                     track.deleteTypeName(typeName)
 
+        return
 
     def refineSpurTypes(self):
         """Select specific car types for the spur, as defined in TP"""
 
         _psLog.debug('refineSpurTypes')
 
-        for item in self.tpRailroadData['industries']:
-            track = PatternScriptEntities.LM.getLocationByName(item[0]).getTrackByName(item[1]['track'], None)
-            track.addTypeName(item[1]['type'])
-
+        for id, attribs in self.tpRailroadData['industries'].items():
+            track = PatternScriptEntities.LM.getLocationByName(attribs['location']).getTrackByName(attribs['track'], None)
+            track.addTypeName(attribs['type'])
 
         return
