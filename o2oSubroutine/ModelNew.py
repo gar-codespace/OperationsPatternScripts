@@ -4,9 +4,9 @@
 """From tpRailroadData.json, a new rr is created and the xml files are seeded"""
 
 from psEntities import PatternScriptEntities
-from TrainPlayerSubroutine import ModelRollingStock
+from o2oSubroutine import ModelRollingStock
 
-SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.ModelAttributes'
+SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelAttributes'
 SCRIPT_REV = 20220101
 
 _psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.ModelAttributes')
@@ -271,7 +271,7 @@ class NewRsAttributes:
         for xName in self.tpRailroadData['locoTypes']:
             xName = unicode(xName, PatternScriptEntities.ENCODING)
             TCM.addName(xName)
-            
+
         return
 
     def newLocoConsist(self):

@@ -20,7 +20,7 @@ PLUGIN_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
 sysPath.append(PLUGIN_ROOT)
 from psEntities import PatternScriptEntities
 from psBundle import Bundle
-from TrainPlayerSubroutine import BuiltTrainExport
+from o2oSubroutine import BuiltTrainExport
 
 SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
 SCRIPT_REV = 20220101
@@ -167,16 +167,18 @@ class Model:
         return pluginPanel
 
     def makeSubroutineList(self):
+        """ *.items() sorts the list, this oddball way does not sort the list"""
 
         subroutineList = []
         controlPanelConfig = PatternScriptEntities.readConfigFile('CP')
-        for subroutineIncludes, isIncluded in controlPanelConfig['SI'].items():
-            if (isIncluded):
-                xModule = __import__(subroutineIncludes, fromlist=['Controller'])
-                startUp = xModule.Controller.StartUp()
-                subroutineFrame = startUp.makeSubroutineFrame()
-                subroutineList.append(subroutineFrame)
-                self.psLog.info(subroutineIncludes + ' subroutine added to control panel')
+        for item in controlPanelConfig['SI']:
+            for subroutine, include in item.items(): # The list is sorted, but there is only 1 item
+                if include:
+                    xModule = __import__(subroutine, fromlist=['Controller'])
+                    startUp = xModule.Controller.StartUp()
+                    subroutineFrame = startUp.makeSubroutineFrame()
+                    subroutineList.append(subroutineFrame)
+                    self.psLog.info(subroutine + ' subroutine added to control panel')
 
         return subroutineList
 

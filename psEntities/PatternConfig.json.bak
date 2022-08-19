@@ -64,14 +64,10 @@
     "BT" : ["Plugin", "Help"],
     "AP" : true,
     "SE" : "utf-8",
-    "SI": [
-      {
-        "PatternTracksSubroutine": true
-      },
-      {
-        "o2oSubroutine": true
-      }
-    ],
+    "SI" : {
+      "PatternTracksSubroutine" : true,
+      "o2oSubroutine" : true
+    },
     "PH" : 220,
     "PW" : 1500,
     "PX" : 0,

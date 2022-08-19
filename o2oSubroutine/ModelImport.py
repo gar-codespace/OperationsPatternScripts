@@ -4,9 +4,9 @@
 """Use the TP inventory, locations and industries text files to generate the tpRailroadData.json file"""
 
 from psEntities import PatternScriptEntities
-from TrainPlayerSubroutine import ModelEntities
+from o2oSubroutine import ModelEntities
 
-SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.ModelImport'
+SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelImport'
 SCRIPT_REV = 20220101
 
 _psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.ModelImport')

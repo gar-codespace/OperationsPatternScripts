@@ -4,12 +4,11 @@
 """The TrainPlayer Subroutine will be implemented in V3, this is just the framework"""
 
 from psEntities import PatternScriptEntities
-from TrainPlayerSubroutine import ModelImport
-from TrainPlayerSubroutine import ModelNew
+from o2oSubroutine import ModelImport
+from o2oSubroutine import ModelNew
+from o2oSubroutine import View
 
-from TrainPlayerSubroutine import View
-
-SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.Controller'
+SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.Controller'
 SCRIPT_REV = 20220101
 
 class StartUp:

@@ -2,14 +2,40 @@
 # © 2021, 2022 Greg Ritacco
 
 from psEntities import PatternScriptEntities
-from TrainPlayerSubroutine import ModelXml
+# from o2oSubroutine import ModelXml
+import xml.etree.ElementTree as ET
 
-SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.ModelEntities'
+SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelEntities'
 SCRIPT_REV = 20220101
+
+
+class WrangleXml:
+    """Generic queries on any operations xml file"""
+
+    def __init__(self, xmlFile):
+
+        self.xmlFile = xmlFile
+
+        return
+
+    def getXml(self, target):
+
+        filePath = PatternScriptEntities.PROFILE_PATH + '\\operations\\' + self.xmlFile + '.xml'
+        if not PatternScriptEntities.JAVA_IO.File(filePath).isFile():
+            return False
+
+        with PatternScriptEntities.codecsOpen(filePath, 'r', encoding=PatternScriptEntities.ENCODING) as textWorkFile:
+            tree = ET.parse(textWorkFile)
+
+            root = tree.getroot()
+            subSection = root.findall(target)
+
+            return subSection
+
 
 def getLoadTypeRubric(xmlFile, target):
 
-    loadTypeXml = ModelXml.WrangleXml('OperationsCarRoster')
+    loadTypeXml = WrangleXml('OperationsCarRoster')
 
     loadList = loadTypeXml.getXml('./loads/load')
     if not loadList:
@@ -22,6 +48,7 @@ def getLoadTypeRubric(xmlFile, target):
             tempValue = load.attrib.get('loadType')
             loadTypeRubric[tempKey] = tempValue
 
+    print(loadTypeRubric)
     return loadTypeRubric
 
 

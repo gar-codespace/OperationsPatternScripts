@@ -5,7 +5,7 @@
 
 from psEntities import PatternScriptEntities
 from PatternTracksSubroutine import ModelEntities
-from TrainPlayerSubroutine import ModelWorkEvents
+from o2oSubroutine import ModelWorkEvents
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ModelSetCarsForm'
 SCRIPT_REV = 20220101

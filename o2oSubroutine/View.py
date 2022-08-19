@@ -4,7 +4,7 @@
 """Implemented in v3"""
 
 from psEntities import PatternScriptEntities
-from TrainPlayerSubroutine import ViewEntities
+from o2oSubroutine import ViewEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.TrianPlayerSubroutine.View'
 SCRIPT_REV = 20220101
@@ -23,9 +23,9 @@ class ManageGui:
         """Make the frame that all the TrainPlayer controls are added to"""
 
         subroutineFrame = PatternScriptEntities.JAVX_SWING.JPanel() # the track pattern panel
-        encodedKey = unicode('TrainPlayer© Support Subroutine', PatternScriptEntities.ENCODING)
+        encodedKey = unicode('o2o Subroutine', PatternScriptEntities.ENCODING)
         subroutineFrame.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder(
-            PatternScriptEntities.BUNDLE[u'TrainPlayer© Support Subroutine']
+            PatternScriptEntities.BUNDLE[u'o2o Subroutine']
             )
 
         return subroutineFrame

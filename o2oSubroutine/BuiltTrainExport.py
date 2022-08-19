@@ -5,7 +5,7 @@ Callable from the pattern scripts subroutine or stand alone.
 import jmri
 import time
 
-SCRIPT_NAME ='OperationsPatternScripts.TrainPlayerSubroutine.BuiltTrainExport'
+SCRIPT_NAME ='OperationsPatternScripts.o2oSubroutine.BuiltTrainExport'
 SCRIPT_REV = 20220101
 
 SCRIPT_DIR = 'OperationsPatternScripts'
@@ -87,7 +87,7 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
 
     def init(self):
 
-        self.SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.BuiltTrainExport.ManifestForTrainPlayer'
+        self.SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.BuiltTrainExport.ManifestForTrainPlayer'
         self.SCRIPT_REV = 20220101
 
         self.standAloneLogging = StandAloneLogging()
@@ -152,7 +152,7 @@ if __name__ == "__builtin__":
     PLUGIN_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
     sysPath.append(PLUGIN_ROOT)
     from psEntities import PatternScriptEntities
-    from TrainPlayerSubroutine import ModelWorkEvents
+    from o2oSubroutine import ModelWorkEvents
     from psBundle import Bundle
 
     Bundle.BUNDLE_DIR = PLUGIN_ROOT + '\\psBundle\\'
@@ -171,4 +171,4 @@ else:
 
     PLUGIN_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
     from psEntities import PatternScriptEntities
-    from TrainPlayerSubroutine import ModelWorkEvents
+    from o2oSubroutine import ModelWorkEvents

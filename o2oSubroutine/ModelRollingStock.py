@@ -2,9 +2,9 @@
 # © 2021, 2022 Greg Ritacco
 
 from psEntities import PatternScriptEntities
-from TrainPlayerSubroutine import ModelEntities
+from o2oSubroutine import ModelEntities
 
-SCRIPT_NAME = 'OperationsPatternScripts.TrainPlayerSubroutine.ModelRollingStock'
+SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelRollingStock'
 SCRIPT_REV = 20220101
 
 _psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.ModelRollingStock')
