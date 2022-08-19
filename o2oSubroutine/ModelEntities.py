@@ -10,7 +10,7 @@ SCRIPT_REV = 20220101
 
 
 class WrangleXml:
-    """Generic queries on any operations xml file"""
+    """Get rid of this"""
 
     def __init__(self, xmlFile):
 
@@ -34,6 +34,7 @@ class WrangleXml:
 
 
 def getLoadTypeRubric(xmlFile, target):
+    """Get rid of this"""
 
     loadTypeXml = WrangleXml('OperationsCarRoster')
 

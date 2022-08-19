@@ -102,12 +102,12 @@ class TrainPlayerImporter:
         _psLog.debug('getRrLocales')
 
         localeList = []
-        seed = ('Unknown', {u'ID': '00', u'track': '~', u'label': '~', u'type': 'Yard', u'capacity': '100'})
+        seed = ('00', {u'location': 'Unknown', u'track': '~', u'label': '~', u'type': 'Yard', u'capacity': '100'})
         localeList.append(seed)
 
         for lineItem in self.tpLocations:
             splitLine = lineItem.split(';')
-            x = (splitLine[1], {u'ID': splitLine[0], u'track': splitLine[2], u'label': splitLine[3], u'type': self.getTrackType(splitLine[4]), u'capacity': splitLine[5]})
+            x = (splitLine[0], {u'location': splitLine[1], u'track': splitLine[2], u'label': splitLine[3], u'type': self.getTrackType(splitLine[4]), u'capacity': splitLine[5]})
             localeList.append(x)
 
         self.rr['locales'] = localeList

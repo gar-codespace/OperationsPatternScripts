@@ -12,8 +12,8 @@
 >Control Panel
 >Default panel height
 >Default panel width
->Demonstration at a yard</A>
->Demonstration at industry</A>
+>Track Pattern Subroutine - Demonstration at a yard</A>
+>Track Pattern Subroutine - Demonstration at industry</A>
 >Destination designator
 >Destination Track designator
 >Do not edit these
@@ -48,6 +48,7 @@
 >Revision control
 >Row Multiplier
 >Script Includes
+>Selecting subroutines
 >Sort Cars
 >Sort Locomotives
 >The description of each element is in blue
@@ -59,9 +60,12 @@
 >TrainPlayer Include flag (set by user, written by this plugin)
 >Translation Choice
 >Translation Services
->Use this plugin with TrainPlayer©
+>o2o, the ops to ops subroutine for TrainPlayer©
 >User editable keys are described in green
 >Vague Description
 >Video Documentation
 >Worst case, simply delete the Pattern Config.json file and the plugin will create a new one.
 >Yard Tracks Only flag (set by user, written by this plugin)
+>o2o Subroutine
+>The ops to ops (o2o) subroutine is a group of utilities that are designed to allow JMRI Operations Pro to be the operations engine for TrainPlayer©. The idea is expand the capability of TrainPlayer©'s Advanced Ops feature to include the operational flexibility of Operations Pro, while also eleminating the tedium of keeping two databases synchronised.
+>The Pattern Scripts plugin for JMRI is a suite of subroutines for JMRI Operations Pro.  The use of this plugin is documented in the following list of videos.

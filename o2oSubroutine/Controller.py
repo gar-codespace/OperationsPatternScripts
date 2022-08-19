@@ -45,7 +45,7 @@ class StartUp:
 
         self.widgets[0].actionPerformed = self.importTpRailroad
         self.widgets[1].actionPerformed = self.newJmriRailroad
-        self.widgets[2].actionPerformed = self.updateJmriRailroad
+        self.widgets[2].actionPerformed = self.updateRollingStock
 
         return
 
@@ -84,10 +84,10 @@ class StartUp:
 
         return
 
-    def updateJmriRailroad(self, EVENT):
+    def updateRollingStock(self, EVENT):
         '''Updates JMRI railroad from the json file'''
 
-        ModelNew.updateJmriRailroad()
+        ModelNew.updateRollingStock()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

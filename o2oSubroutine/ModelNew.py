@@ -31,7 +31,8 @@ def getTpRailroadData():
     return tpRailroad
 
 def newJmriRailroad():
-    """Mini controller to make a new JMRI railroad from the .json and TP Inventory.txt files"""
+    """Mini controller to make a new JMRI railroad from the tpRailroadData.json and TP Inventory.txt files
+        Add code to close appropriate windows"""
 
     jmriRailroad = SetupXML()
     jmriRailroad.deleteAllXml()
@@ -64,13 +65,13 @@ def newJmriRailroad():
 
     return
 
-def updateJmriRailroad():
-    """Minni controller updates OperationsCarRoster, OperationsEngineRoster, OperationsLocationRoster only"""
+def updateRollingStock():
+    """ """
 
 
-    jmriRailroad = SetupXML()
-    jmriRailroad.deleteCoreXml()
-    jmriRailroad.addCoreXml()
+    # jmriRailroad = SetupXML()
+    # jmriRailroad.deleteCoreXml()
+    # jmriRailroad.addCoreXml()
     # newInventory.deregisterJmriOrphans()
 
     return
@@ -336,10 +337,10 @@ class NewLocationsTracks:
         TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.locations.schedules.ScheduleManager)
         # TCM.dispose()
         for item in self.tpRailroadData['locales']:
-            loc = PatternScriptEntities.LM.getLocationByName(item[0])
+            loc = PatternScriptEntities.LM.getLocationByName(item[1]['location'])
             xTrack = loc.addTrack(item[1]['track'], item[1]['type'])
-            xTrack.setComment(item[1]['ID'])
-            trackLength = int(item[1]['capacity']) * 40
+            xTrack.setComment(item[0])
+            trackLength = int(item[1]['capacity']) * 44
             xTrack.setLength(trackLength)
             if item[1]['type'] == 'Spur':
                 xTrack.setSchedule(TCM.getScheduleByName(item[1]['label']))
@@ -354,7 +355,7 @@ class NewLocationsTracks:
 
         for item in self.tpRailroadData['locales']:
             if item[1]['type'] == 'Spur':
-                loc = PatternScriptEntities.LM.getLocationByName(item[0])
+                loc = PatternScriptEntities.LM.getLocationByName(item[1]['location'])
                 track = loc.getTrackByName(item[1]['track'], None)
                 for typeName in loc.getTypeNames():
                     track.deleteTypeName(typeName)

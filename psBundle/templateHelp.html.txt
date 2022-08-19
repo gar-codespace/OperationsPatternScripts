@@ -14,9 +14,12 @@
     margin-left: 10px;
   }
   h2 {
-    margin-left: 20px;
+    margin-left: 10px;
   }
   h3 {
+    margin-left: 20px;
+  }
+  h4 {
     margin-left: 30px;
   }
   p {
@@ -34,45 +37,50 @@
 <body>
 
 <h1>Help Page - Pattern Scripts plugin for JMRI</h1>
-<h2>Introduction</h2>
-<p>This program is a plugin for JMRI Operations Pro. With it, the user can generate pattern reports for tracks at a single location. Additionally, cars can be moved from track to track within a location, and optionally, if a car is moved onto a spur, the schedule for that spur can be applied. Support for my TrainPlayer© suite of scripts is also included. The use of this plugin is documented in the following list of videos.</p>
-<h2>Video Documentation</h2>
+<p>The Pattern Scripts plugin for JMRI is a suite of subroutines for JMRI Operations Pro.  The use of this plugin is documented in the following list of videos.</p>
+<h3>Video Documentation</h3>
 <p>These videos are recorded in the English language.</p>
 <p>How to add this plugin to JMRI</p>
 <p><A HREF="https://youtu.be/GjPtXk3oKmc">How to set up this plugin</A></p>
-<p><A HREF="https://youtu.be/IdXvxyo-E3Y">Demonstration at a yard</A></p>
-<p><A HREF="https://youtu.be/2Tv6sUMDD_Y">Demonstration at industry</A></p>
 <p><A HREF="https://youtu.be/DK6O9AQmqXo">How to modify this plugin</A></p>
-<p><A HREF="https://youtu.be/rlUfoSesnQo">Use this plugin with TrainPlayer©</A></p>
+<p>Selecting subroutines</p>
+<p><A HREF="https://youtu.be/IdXvxyo-E3Y">Track Pattern Subroutine - Demonstration at a yard</A></p>
+<p><A HREF="https://youtu.be/2Tv6sUMDD_Y">Track Pattern Subroutine - Demonstration at industry</A></p>
+<p><A HREF="https://youtu.be/rlUfoSesnQo">o2o, the ops to ops subroutine for TrainPlayer©</A></p>
+<h2>Track Pattern Subroutine</h2>
+<h3>Introduction</h3>
+<p>The Track Pattern subroutine can generate pattern reports for tracks at a single location.
+  Additionally, cars can be moved from track to track within a location,
+  and optionally, if a car is moved onto a spur, the schedule for that spur can be applied.</p>
 
-<h2>Organization</h2>
+<h3>Organization</h3>
 <p>The following chart shows the code structure of this plugin.</P>
 <img src="FlowChart1.png" alt="<Flow Chart Image>">
 
-<h2>Plugin Layout</h2>
+<h3>Plugin Layout</h3>
 <p>OperationsPatternScripts.MainScript.View.makePatternScriptsWindow()</p>
 <img src="PluginLayout1.png" alt="<Plugin Layout Image>">
 
-<h2>Pattern Scripts Subroutine</h2>
+<h3>Pattern Scripts Subroutine</h3>
 <p>OperationsPatternScripts.PatternTracksSubroutine.Controller.makeSubroutinePanel()</p>
 <img src="PatternScriptsSubroutine1.png" alt="<Pattern Scripts Window Image>">
 
-<h2>Pattern Report for Track Window</h2>
+<h3>Pattern Report for Track Window</h3>
 <p>OperationsPatternScripts.ControllerSetCarsForm.CreatePatternReportGui.makeFrame()</p>
 <img src="PatternReportForTrackWindow1.png" alt="<Pattern Report for Track Window Image>">
 
-<h2>Track Pattern and Switch List JSON format</h2>
+<h3>Track Pattern and Switch List JSON format</h3>
 <p>The pattern reports and TrainPlayer© exports all start with the creation of a JSON file. The file is created by this plugin and in the case of TrainPlayer© manifest exports the JSON is created by modifying the JMRI generated manifest JSON. All the JSON files are written to the jsonManifests folder. They follow the illustrated format:</p>
 <img src="ReportFileFormat1.png" alt="<JSON format for reports>">
 
-<h2>Key – PatternConfig.json</h2>
+<h3>Key – PatternConfig.json</h3>
 <p>Each JMRI profile gets its own configuration file, which is named PatternConfig.json. It is found in the operations folder, and is used to provide custom settings for each profile and record user inputs.
 <br><font color="blue">The description of each element is in blue</font>
 <br><font color="green">User editable keys are described in green</font>
 <br>Guard rails of sorts have been put up around the values marked in green, but even so this plugin is not able to catch every type of mistake. In some cases the plugin might crash. If that happens, press the 'Restart from PatternConfig Backup" button and the plugin will use the last good PatternConfig.json file as a new starting off point. In other cases, if a mistake is made editing the PatternConfig.json file, the plugin will replace it with the default file, and the user will have to start over.
 <br>Worst case, simply delete the Pattern Config.json file and the plugin will create a new one.</p>
 
-<h3><font color="green">Color Definitions</font></h3>
+<h4><font color="green">Color Definitions</font></h4>
 <pre>
   "CD": {
     "CP": { <font color="blue">Color Palett</font>
@@ -124,7 +132,7 @@
     "alertColor": <font color="green">"PETAL"</font>
   },
 </pre>
-<h3><font color="blue">Control Panel</font></h3>
+<h4><font color="blue">Control Panel</font></h4>
 <pre>
   <font color="blue">Do not edit these</font>
   "CP" : {
@@ -147,7 +155,7 @@
     "RV" : 20220205 <font color="blue">Revision control</font>
   },
 </pre>
-<h3><font color="blue">Pattern Tracks</font></h3>
+<h4><font color="blue">Pattern Tracks</font></h4>
 <pre>
   <font color="blue">Do not edit these</font>
   "PT" : {
@@ -164,7 +172,7 @@
     "PH" : 16, <font color="blue">Pattern Height</font>
     "RM": 8, <font color="blue">Row Multiplier</font>
 </pre>
-<h3><font color="green">Report Modifiers</font></h3>
+<h4><font color="green">Report Modifiers</font></h4>
 <pre>
   "RM" : {
     "DS" : "<font color="green">*No Waybill</font>", <font color="blue">Destination designator</font>
@@ -210,7 +218,12 @@
     }
   },
 </pre>
-<h3>TrainPlayer© (Implemented in v3)</h3>
+<h2>o2o Subroutine</h2>
+<h3>Introduction</h3>
+<p>The ops to ops (o2o) subroutine is a group of utilities that are designed to allow JMRI Operations Pro to be the operations engine for TrainPlayer©.
+  The idea is expand the capability of TrainPlayer©'s Advanced Ops feature to include the operational flexibility of Operations Pro,
+  while also eleminating the tedium of keeping two databases synchronised.</p>
+
 
 </body>
 

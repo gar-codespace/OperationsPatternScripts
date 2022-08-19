@@ -3,10 +3,10 @@ Apply Schedule
 at
 Available:
 Cars at
-Disable TrainPlayer©
+Disable o2o
 Do Not Apply Schedule
 Edit Config File
-Enable TrainPlayer©
+Enable o2o
 Eqpt. Length:
 GitHub Web Page
 Hazardous
@@ -49,7 +49,7 @@ Tracks at
 o2o Subroutine
 Translate Plugin
 Import TrainPlayer© Railroad
-Update JMRI Railroad
+Update Rolling Stock
 Update Inventory Error Report
 View Log File
 Window Help...

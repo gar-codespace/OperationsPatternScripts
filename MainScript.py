@@ -38,7 +38,7 @@ PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale()
 
 
 class TrainsTableListener(PatternScriptEntities.JAVX_SWING.event.TableModelListener):
-    """Catches user add or remove train while TrainPlayer support is enabled"""
+    """Catches user add or remove train while o2o/TrainPlayer support is enabled"""
 
     def __init__(self, builtTrainListener):
 
@@ -57,7 +57,7 @@ class TrainsTableListener(PatternScriptEntities.JAVX_SWING.event.TableModelListe
         return
 
 class BuiltTrainListener(java.beans.PropertyChangeListener):
-    """Starts TrainPlayer manifest export on trainBuilt"""
+    """Starts o2o/TrainPlayer manifest export on trainBuilt"""
 
     def propertyChange(self, TRAIN_BUILT):
 
@@ -294,13 +294,13 @@ class View:
         return menuText, 'asItemSelected'
 
     def setTiDropDownText(self):
-        """itemMethod - Set the drop down text per the TrainPlayer Include flag"""
+        """itemMethod - Set the drop down text per the o2o/TrainPlayer Include flag"""
 
         patternConfig = PatternScriptEntities.readConfigFile('PT')
         if patternConfig['TI']:
-            menuText = PatternScriptEntities.BUNDLE[u'Disable TrainPlayer©']
+            menuText = PatternScriptEntities.BUNDLE[u'Disable o2o']
         else:
-            menuText = PatternScriptEntities.BUNDLE[u'Enable TrainPlayer©']
+            menuText = PatternScriptEntities.BUNDLE[u'Enable o2o']
 
         return menuText, 'tpItemSelected'
 
@@ -488,29 +488,29 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         return
 
     def tpItemSelected(self, TP_ACTIVATE_EVENT):
-        """menu item-Tools/Enable Trainplayer"""
+        """menu item-Tools/Enable o2o"""
 
         self.psLog.debug(TP_ACTIVATE_EVENT)
         patternConfig = PatternScriptEntities.readConfigFile()
 
         if patternConfig['PT']['TI']: # If enabled, turn it off
             patternConfig['PT'].update({'TI': False})
-            TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE[u'Enable TrainPlayer©'])
+            TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE[u'Enable o2o'])
 
             self.trainsTableModel.removeTableModelListener(self.trainsTableListener)
             self.removeBuiltTrainListener()
 
-            self.psLog.info('TrainPlayer support deactivated')
-            print('TrainPlayer support deactivated')
+            self.psLog.info('o2o/TrainPlayer support deactivated')
+            print('o2o/TrainPlayer support deactivated')
         else:
             patternConfig['PT'].update({'TI': True})
-            TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE[u'Disable TrainPlayer©'])
+            TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE[u'Disable o2o'])
 
             self.trainsTableModel.addTableModelListener(self.trainsTableListener)
             self.addBuiltTrainListener()
 
-            self.psLog.info('TrainPlayer support activated')
-            print('TrainPlayer support activated')
+            self.psLog.info('o2o/TrainPlayer support activated')
+            print('o2o/TrainPlayer support activated')
 
         PatternScriptEntities.writeConfigFile(patternConfig)
 
