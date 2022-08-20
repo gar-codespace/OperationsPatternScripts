@@ -302,9 +302,9 @@ class View:
 
         patternConfig = PatternScriptEntities.readConfigFile('CP')
         if patternConfig['SI'][0]['PatternTracksSubroutine']:
-            menuText = PatternScriptEntities.BUNDLE[u'Disable Pattern Tracks subroutine']
+            menuText = PatternScriptEntities.BUNDLE[u'Disable Track Pattern subroutine']
         else:
-            menuText = PatternScriptEntities.BUNDLE[u'Enable Pattern Tracks subroutine']
+            menuText = PatternScriptEntities.BUNDLE[u'Enable Track Pattern subroutine']
 
         return menuText, 'tpItemSelected'
 
@@ -510,16 +510,16 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         if patternConfig['CP']['SI'][0]['PatternTracksSubroutine']: # If enabled, turn it off
             patternConfig['CP']['SI'][0].update({'PatternTracksSubroutine': False})
-            TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE[u'Enable Pattern Tracks subroutine'])
+            TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE[u'Enable Track Pattern subroutine'])
 
-            self.psLog.info('Pattern Tracks support deactivated')
-            print('Pattern Tracks support deactivated')
+            self.psLog.info('Track Pattern support deactivated')
+            print('Track Pattern support deactivated')
         else:
             patternConfig['CP']['SI'][0].update({'PatternTracksSubroutine': True})
-            TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE[u'Disable Pattern Tracks subroutine'])
+            TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE[u'Disable Track Pattern subroutine'])
 
-            self.psLog.info('Pattern Tracks support activated')
-            print('Pattern Tracks support activated')
+            self.psLog.info('Track Pattern support activated')
+            print('Track Pattern support activated')
 
         PatternScriptEntities.writeConfigFile(patternConfig)
         self.closePsWindow()

@@ -3,12 +3,15 @@ Apply Schedule
 at
 Available:
 Cars at
-Disable o2o
+Disable o2o subroutine
+Disable Track Pattern subroutine
 Do Not Apply Schedule
 Edit Config File
-Enable o2o
+Enable o2o subroutine
+Enable Track Pattern subroutine
 Eqpt. Length:
 GitHub Web Page
+Hazardous
 Help
 Hold
 Ignore track length
@@ -21,7 +24,7 @@ No final destination
 On Train
 Operations Folder
 Pattern Scripts
-Pattern Tracks Subroutine
+Track Pattern Subroutine
 Report Totals for Cars:
 Report Work
 Restart From Default

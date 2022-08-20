@@ -16,19 +16,19 @@ class ManageGui:
         return
 
     def makeSubroutineFrame(self):
-        """Make the frame that all the pattern tracks controls are added to"""
+        """Make the frame that all the Track Pattern controls are added to"""
 
-        subroutineFrame = PatternScriptEntities.JAVX_SWING.JPanel() # the pattern tracks panel
+        subroutineFrame = PatternScriptEntities.JAVX_SWING.JPanel() # the Track Pattern panel
         subroutineFrame.setLayout(PatternScriptEntities.JAVX_SWING.BoxLayout(
                 subroutineFrame, PatternScriptEntities.JAVX_SWING.BoxLayout.Y_AXIS))
         subroutineFrame.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder( \
-                PatternScriptEntities.BUNDLE['Pattern Tracks Subroutine'] \
+                PatternScriptEntities.BUNDLE['Track Pattern Subroutine'] \
                 )
 
         return subroutineFrame
 
     def makeSubroutinePanel(self):
-        """Make the pattern tracks controls"""
+        """Make the Track Pattern controls"""
 
         self.psLog.debug('View.makeSubroutinePanel')
 
