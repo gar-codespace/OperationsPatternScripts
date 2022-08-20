@@ -188,6 +188,8 @@ class View:
 
         self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.View')
 
+        self.cpSettings = PatternScriptEntities.readConfigFile('CP')
+
         self.controlPanel = scrollPanel
         self.psPluginMenuItems = []
         self.isKeyFile = Bundle.validateKeyFile()
@@ -226,7 +228,8 @@ class View:
         uniqueWindow = PatternScriptEntities.JMRI.util.JmriJFrame()
 
         asMenuItem = self.makeMenuItem(self.setAsDropDownText())
-        tpMenuItem = self.makeMenuItem(self.setTiDropDownText())
+        tpMenuItem = self.makeMenuItem(self.setTpDropDownText())
+        o2oMenuItem = self.makeMenuItem(self.setOoDropDownText())
         ptMenuItem = self.makeMenuItem(self.setPtDropDownText())
         if not self.isKeyFile:
             ptMenuItem.setEnabled(False)
@@ -243,6 +246,7 @@ class View:
         toolsMenu.add(PatternScriptEntities.JMRI.jmrit.operations.setup.BuildReportOptionAction())
         toolsMenu.add(asMenuItem)
         toolsMenu.add(tpMenuItem)
+        toolsMenu.add(o2oMenuItem)
         toolsMenu.add(editConfigMenuItem)
         toolsMenu.add(ptMenuItem)
         toolsMenu.add(rsMenuItem)
@@ -293,16 +297,27 @@ class View:
 
         return menuText, 'asItemSelected'
 
-    def setTiDropDownText(self):
-        """itemMethod - Set the drop down text per the o2o/TrainPlayer Include flag"""
+    def setTpDropDownText(self):
+        """itemMethod - Set the drop down text per the config file PatternTracksSubroutine Include flag"""
 
-        patternConfig = PatternScriptEntities.readConfigFile('PT')
-        if patternConfig['TI']:
-            menuText = PatternScriptEntities.BUNDLE[u'Disable o2o']
+        patternConfig = PatternScriptEntities.readConfigFile('CP')
+        if patternConfig['SI'][0]['PatternTracksSubroutine']:
+            menuText = PatternScriptEntities.BUNDLE[u'Disable Pattern Tracks subroutine']
         else:
-            menuText = PatternScriptEntities.BUNDLE[u'Enable o2o']
+            menuText = PatternScriptEntities.BUNDLE[u'Enable Pattern Tracks subroutine']
 
         return menuText, 'tpItemSelected'
+
+    def setOoDropDownText(self):
+        """itemMethod - Set the drop down text per the config file o2oSubroutine Include flag"""
+
+        patternConfig = PatternScriptEntities.readConfigFile('CP')
+        if patternConfig['SI'][1]['o2oSubroutine']:
+            menuText = PatternScriptEntities.BUNDLE[u'Disable o2o subroutine']
+        else:
+            menuText = PatternScriptEntities.BUNDLE[u'Enable o2o subroutine']
+
+        return menuText, 'ooItemSelected'
 
     def setPtDropDownText(self):
         """itemMethod - Set the drop down text for the Translate Plugin item"""
@@ -458,7 +473,7 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
     def addMenuItemListeners(self):
         """Use the pull down item names as the attribute to set the
-        listener: asItemSelected, tpItemSelected, logItemSelected, helpItemSelected, Etc.
+        listener: asItemSelected, tpItemSelected, ooItemSelected, logItemSelected, helpItemSelected, Etc.
         """
 
         for menuItem in self.menuItemList:
@@ -488,14 +503,39 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         return
 
     def tpItemSelected(self, TP_ACTIVATE_EVENT):
-        """menu item-Tools/Enable o2o"""
+        """menu item-Tools/Enable Track Pattern subroutine"""
 
         self.psLog.debug(TP_ACTIVATE_EVENT)
         patternConfig = PatternScriptEntities.readConfigFile()
 
-        if patternConfig['PT']['TI']: # If enabled, turn it off
-            patternConfig['PT'].update({'TI': False})
-            TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE[u'Enable o2o'])
+        if patternConfig['CP']['SI'][0]['PatternTracksSubroutine']: # If enabled, turn it off
+            patternConfig['CP']['SI'][0].update({'PatternTracksSubroutine': False})
+            TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE[u'Enable Pattern Tracks subroutine'])
+
+            self.psLog.info('Pattern Tracks support deactivated')
+            print('Pattern Tracks support deactivated')
+        else:
+            patternConfig['CP']['SI'][0].update({'PatternTracksSubroutine': True})
+            TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE[u'Disable Pattern Tracks subroutine'])
+
+            self.psLog.info('Pattern Tracks support activated')
+            print('Pattern Tracks support activated')
+
+        PatternScriptEntities.writeConfigFile(patternConfig)
+        self.closePsWindow()
+        self.buildThePlugin()
+
+        return
+
+    def ooItemSelected(self, TP_ACTIVATE_EVENT):
+        """menu item-Tools/Enable o2o subroutine"""
+
+        self.psLog.debug(TP_ACTIVATE_EVENT)
+        patternConfig = PatternScriptEntities.readConfigFile()
+
+        if patternConfig['CP']['SI'][1]['o2oSubroutine']: # If enabled, turn it off
+            patternConfig['CP']['SI'][1].update({'o2oSubroutine': False})
+            TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE[u'Enable o2o subroutine'])
 
             self.trainsTableModel.removeTableModelListener(self.trainsTableListener)
             self.removeBuiltTrainListener()
@@ -503,8 +543,8 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
             self.psLog.info('o2o/TrainPlayer support deactivated')
             print('o2o/TrainPlayer support deactivated')
         else:
-            patternConfig['PT'].update({'TI': True})
-            TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE[u'Disable o2o'])
+            patternConfig['CP']['SI'][1].update({'o2oSubroutine': True})
+            TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE[u'Disable o2o subroutine'])
 
             self.trainsTableModel.addTableModelListener(self.trainsTableListener)
             self.addBuiltTrainListener()
@@ -513,6 +553,8 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
             print('o2o/TrainPlayer support activated')
 
         PatternScriptEntities.writeConfigFile(patternConfig)
+        self.closePsWindow()
+        self.buildThePlugin()
 
         return
 
@@ -634,7 +676,8 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.model.validatePatternConfig()
         PatternScriptEntities.validateStubFile().isStubFile()
-        if PatternScriptEntities.readConfigFile('PT')['TI']:
+        # if PatternScriptEntities.readConfigFile('PT')['TI']:
+        if PatternScriptEntities.readConfigFile()['CP']['SI'][1]['o2oSubroutine']:
             self.addTrainPlayerListeners()
         if PatternScriptEntities.readConfigFile()['CP']['AP']:
             self.addPatternScriptsButton()

@@ -76,7 +76,7 @@
     "PW" : 1500,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20220802
+    "RV" : 20220803
   },
   "RM" : {
     "DS" : "*No Dest.",
@@ -125,8 +125,7 @@
     "PT" : {
     },
     "PA" : false,
-    "PI" : false,
-    "TI" : false,
+    "PI" : true,
     "AS" : true,
     "PW" : 260,
     "PH" : 16,

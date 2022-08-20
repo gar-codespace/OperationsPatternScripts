@@ -294,7 +294,7 @@ def MakeSetCarsFooter():
         )
 
     trainPlayerButton = PatternScriptEntities.JAVX_SWING.JButton(u'TrainPlayer©')
-    if not PatternScriptEntities.readConfigFile('PT')['TI']:
+    if not PatternScriptEntities.readConfigFile()['CP']['SI'][1]['o2oSubroutine']:
         trainPlayerButton.setVisible(False)
 
     makeWorkPanel.add(PatternScriptEntities.JAVX_SWING.Box.createRigidArea(

@@ -141,7 +141,7 @@ class StartUp:
 
         Model.onScButtonPress()
 
-        if PatternScriptEntities.readConfigFile('PT')['TI']: # TrainPlayer Include
+        if PatternScriptEntities.readConfigFile()['CP']['SI'][1]['o2oSubroutine']: # TrainPlayer Include
             Model.resetTrainPlayerSwitchlist()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
