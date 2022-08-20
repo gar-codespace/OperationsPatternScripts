@@ -76,7 +76,7 @@
     "PW" : 1500,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20220801
+    "RV" : 20220802
   },
   "RM" : {
     "DS" : "*No Dest.",
@@ -173,6 +173,8 @@
       "OperationsEngineRoster",
       "OperationsLocationRoster"
     ],
+    "SME" : true,
+    "CWS" : true,
     "TR" : {
       "industry": "Spur",
       "interchange": "Interchange",

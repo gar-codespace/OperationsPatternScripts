@@ -119,10 +119,9 @@ class JmriTranslationToTp:
         self.psLog.debug('Model.translateManifestBody')
 
         locationList = []
-        loadTypeRubric = ModelEntities.getLoadTypeRubric('OperationsCarRoster', './loads/load')
 
         for location in completeJmriManifest[u'locations']:
-            tpLocation = ModelEntities.parseJmriLocations(location, loadTypeRubric)
+            tpLocation = ModelEntities.parseJmriLocations(location)
             locationList.append(tpLocation)
 
         return locationList

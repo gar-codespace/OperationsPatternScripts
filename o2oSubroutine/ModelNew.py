@@ -80,6 +80,8 @@ class SetupXML:
 
     def __init__(self):
 
+        self.tpConfig =  PatternScriptEntities.readConfigFile('TP')
+
         self.TpRailroad = getTpRailroadData()
 
         self.Operations = PatternScriptEntities.OMX
@@ -121,14 +123,13 @@ class SetupXML:
 
     def addOperationsXml(self):
 
-        # self.Operations.initialize()
         self.Operations.writeOperationsFile()
 
         return
 
     def addCoreXml(self):
-        """Routes is not built since there is no TP equivalent.
-            Trains is not built since JMRI trains is the point of this subroutine.
+        """The routes xml is not built since there is no TP equivalent.
+            The trains xml is not built since JMRI trains is the reason for this subroutine.
             """
         _psLog.debug('addCoreXml')
 
@@ -137,7 +138,6 @@ class SetupXML:
         for file in coreFileList:
             filePath = pathPrefix + file + '.xml'
 
-            # getattr(self, file).initialize()
             getattr(self, file).writeOperationsFile()
 
         return
@@ -150,12 +150,11 @@ class SetupXML:
         OSU = PatternScriptEntities.JMRI.jmrit.operations.setup
         OSU.Setup.setRailroadName(self.TpRailroad['railroadName'])
         OSU.Setup.setComment(self.TpRailroad['railroadDescription'])
-        # Move the below items to the config file
-        OSU.Setup.setMainMenuEnabled(True)
-        OSU.Setup.setCloseWindowOnSaveEnabled(True)
 
-        # OSU.OperationsSetupXml.save()
-        # Reload the Panal Pro window to display updates
+        OSU.Setup.setMainMenuEnabled(self.tpConfig['SME'])
+        OSU.Setup.setCloseWindowOnSaveEnabled(self.tpConfig['CWS'])
+
+    # Reload the Panal Pro window to display updates
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
@@ -175,7 +174,8 @@ class NewRsAttributes:
 
         _psLog.debug('newRoads')
 
-        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarRoads)
+        tc = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarRoads
+        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
         # TCM.dispose()
         nameList = TCM.getNames()
         for xName in nameList:
@@ -192,7 +192,8 @@ class NewRsAttributes:
 
         _psLog.debug('newCarAar')
 
-        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarTypes)
+        tc = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarTypes
+        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
         TCM.dispose()
         nameList = TCM.getNames()
         for xName in nameList:
@@ -209,7 +210,8 @@ class NewRsAttributes:
 
         _psLog.debug('newCarLoads')
 
-        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarLoads)
+        tc = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarLoads
+        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
         carLoads = self.tpRailroadData['carLoads']
         for aar in self.tpRailroadData['carAAR']:
             aar = unicode(aar, PatternScriptEntities.ENCODING)
@@ -218,6 +220,7 @@ class NewRsAttributes:
             TCM.addName(aar, 'Load')
             TCM.setLoadType(aar, 'Empty', 'empty')
             TCM.setLoadType(aar, 'Load', 'load')
+        # TP has only Empty as the empty type
             for load in carLoads[aar]:
                 TCM.addName(aar, load)
                 TCM.setLoadType(aar, load, 'load')
@@ -229,7 +232,8 @@ class NewRsAttributes:
 
         _psLog.debug('newCarKernels')
 
-        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.KernelManager)
+        tc = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.KernelManager
+        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
         nameList = TCM.getNameList()
         for xName in nameList:
             xName = unicode(xName, PatternScriptEntities.ENCODING)
@@ -245,7 +249,8 @@ class NewRsAttributes:
 
         _psLog.debug('newLocoModels')
 
-        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.rollingstock.engines.EngineModels)
+        tc = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.engines.EngineModels
+        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
         nameList = TCM.getNames()
         for xName in nameList:
             xName = unicode(xName, PatternScriptEntities.ENCODING)
@@ -264,7 +269,8 @@ class NewRsAttributes:
 
         _psLog.debug('newLocoTypes')
 
-        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.rollingstock.engines.EngineTypes)
+        tc = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.engines.EngineTypes
+        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
         nameList = TCM.getNames()
         for xName in nameList:
             xName = unicode(xName, PatternScriptEntities.ENCODING)
@@ -280,7 +286,8 @@ class NewRsAttributes:
 
         _psLog.debug('newLocoConsist')
 
-        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.rollingstock.engines.ConsistManager)
+        tc = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.engines.ConsistManager
+        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
         nameList = TCM.getNameList()
         for xName in nameList:
             xName = unicode(xName, PatternScriptEntities.ENCODING)

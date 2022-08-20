@@ -2,66 +2,21 @@
 # © 2021, 2022 Greg Ritacco
 
 from psEntities import PatternScriptEntities
-# from o2oSubroutine import ModelXml
-import xml.etree.ElementTree as ET
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelEntities'
 SCRIPT_REV = 20220101
 
-
-class WrangleXml:
-    """Get rid of this"""
-
-    def __init__(self, xmlFile):
-
-        self.xmlFile = xmlFile
-
-        return
-
-    def getXml(self, target):
-
-        filePath = PatternScriptEntities.PROFILE_PATH + '\\operations\\' + self.xmlFile + '.xml'
-        if not PatternScriptEntities.JAVA_IO.File(filePath).isFile():
-            return False
-
-        with PatternScriptEntities.codecsOpen(filePath, 'r', encoding=PatternScriptEntities.ENCODING) as textWorkFile:
-            tree = ET.parse(textWorkFile)
-
-            root = tree.getroot()
-            subSection = root.findall(target)
-
-            return subSection
-
-
-def getLoadTypeRubric(xmlFile, target):
-    """Get rid of this"""
-
-    loadTypeXml = WrangleXml('OperationsCarRoster')
-
-    loadList = loadTypeXml.getXml('./loads/load')
-    if not loadList:
-        return False
-
-    loadTypeRubric = {}
-    for item in loadList:
-        for load in item:
-            tempKey = item.attrib.get('type') + load.attrib.get('name')
-            tempValue = load.attrib.get('loadType')
-            loadTypeRubric[tempKey] = tempValue
-
-    print(loadTypeRubric)
-    return loadTypeRubric
-
-
-def parseJmriLocations(location, loadTypeRubric):
+def parseJmriLocations(location):
     """called from JmriTranslationToTp"""
+# Temporary Context Manager
+    tc = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarLoads
+    TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
 
     tpLocation = {}
     tpLocation['locationName'] = location['userName']
     tpLocation['tracks'] = []
 
     locoList = []
-    carList = []
     for loco in location[u'engines'][u'add']:
         line = parseRollingStockAsDict(loco)
         line['PUSO'] = 'PL'
@@ -72,21 +27,23 @@ def parseJmriLocations(location, loadTypeRubric):
         line['PUSO'] = 'SL'
         line[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = 'O'
         locoList.append(line)
+
+    carList = []
     for car in location['cars']['add']:
         line = parseRollingStockAsDict(car)
         line['PUSO'] = 'PC'
-        tempKey = car['carType'] + car['load']
+        loadType = TCM.getLoadType(car['carType'], car['load'])
         try:
-            line[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = loadTypeRubric[tempKey]
+            line[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = loadType
         except:
             line[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = 'U'
         carList.append(line)
     for car in location['cars']['remove']:
         line = parseRollingStockAsDict(car)
         line['PUSO'] = 'SC'
-        tempKey = car['carType'] + car['load']
+        loadType = TCM.getLoadType(car['carType'], car['load'])
         try:
-            line[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = loadTypeRubric[tempKey]
+            line[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = loadType
         except:
             line[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = 'U'
         carList.append(line)
