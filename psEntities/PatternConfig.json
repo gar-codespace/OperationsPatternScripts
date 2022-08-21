@@ -76,7 +76,7 @@
     "PW" : 1500,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20220803
+    "RV" : 20220805
   },
   "RM" : {
     "DS" : "*No Dest.",
@@ -131,7 +131,7 @@
     "PH" : 16,
     "RM": 8
   },
-  "TP" : {
+  "o2o" : {
     "PC": [
       "B",
       "BE",
@@ -167,13 +167,37 @@
       "PS",
       "PSA"
     ],
+    "CC" : [
+      "N",
+      "NM",
+      "NE"
+    ],
     "CFL" : [
       "OperationsCarRoster",
       "OperationsEngineRoster",
       "OperationsLocationRoster"
     ],
+    "SM" : {
+      "Z" : 1,
+      "N" : 2,
+      "TT" : 3,
+      "HOn3" : 4,
+      "OO" : 5,
+      "HO" : 6,
+      "Sn3" : 7,
+      "S" : 8,
+      "On3" : 9,
+      "O" : 10,
+      "G" : 11
+    },
     "SME" : true,
     "CWS" : true,
+    "SBA" : true,
+    "SIA" : true,
+    "SCT" : "ARR Codes",
+    "SCL" : true,
+    "RCL" : true,
+    "LEE" : true,
     "TR" : {
       "industry": "Spur",
       "interchange": "Interchange",

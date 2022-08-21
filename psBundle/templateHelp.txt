@@ -32,7 +32,10 @@ In other cases, if a mistake is made editing the PatternConfig.json file, the pl
 >Ignore Track Length flag (set by user, written by this plugin)
 >Include this subroutine in the Control Panel
 >Introduction
+>JMRI Model Railroad scale.
 >Key
+>List of TrainPlayer caboose car codes.
+>List of TrainPlayer car codes for passenger cars.
 >Default encoding
 >No color can be specified with ""
 >Not Implemented

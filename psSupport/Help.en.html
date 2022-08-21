@@ -232,8 +232,83 @@ In other cases, if a mistake is made editing the PatternConfig.json file, the pl
 <p>The ops to ops (o2o) subroutine is a group of utilities that are designed to be the glue that allows JMRI Operations Pro to be the operations engine for TrainPlayer©.
 The idea is to expand the capability of TrainPlayer©'s Advanced Ops feature to include the operational flexibility of Operations Pro,
 while also eleminating the tedium of keeping two databases synchronised.</p>
+<h4><font color="green">o2o Subroutine Settings</font></h4>
+<pre>
+  "o2o" : {
+    "PC": [  <font color="blue">List of TrainPlayer car codes for passenger cars.</font>
+      "B",
+      "BE",
+      "BH",
+      "BM",
+      "BMR",
+      "BMT",
+      "BP",
+      "BR",
+      "BX",
+      "CA",
+      "CS",
+      "D",
+      "DA",
+      "DB",
+      "DC",
+      "DL",
+      "DO",
+      "DP",
+      "DPA",
+      "MA",
+      "MB",
+      "MR",
+      "P",
+      "PA",
+      "PAS",
+      "PB",
+      "PBC",
+      "PBO",
+      "PC",
+      "PL",
+      "PO",
+      "PS",
+      "PSA"
+    ],
+    "CC" : [  <font color="blue">List of TrainPlayer caboose car codes.</font>
+      "N",
+      "NM",
+      "NE"
+    ],
+    "CFL" : [  <font color="blue">Core File List</font>
+      "OperationsCarRoster",
+      "OperationsEngineRoster",
+      "OperationsLocationRoster"
+    ],
+    "SM" : {  <font color="blue">Scale Matrix </font>JMRI Model Railroad scale.
+      "Z" : 1,
+      "N" : 2,
+      "TT" : 3,
+      "HOn3" : 4,
+      "OO" : 5,
+      "HO" : 6,
+      "Sn3" : 7,
+      "S" : 8,
+      "On3" : 9,
+      "O" : 10,
+      "G" : 11
+    },
+    "SME" : <font color="green">true</font>,  setMainMenuEnabled
+    "CWS" : <font color="green">true</font>,  setCloseWindowOnSaveEnabled
+    "SBA" : <font color="green">true</font>,  setBuildAggressive
+    "SIA" : <font color="green">true</font>,  setStagingTrackImmediatelyAvail
+    "SCT" : <font color="green">"ARR Codes"</font>,  setCarTypes
+    "SCL" : <font color="green">true</font>,  setAddCustomLoadsAnySpurEnabled
+    "RCL" : <font color="green">true</font>,  setRemoveCustomLoadsEnabled
+    "LEE" : <font color="green">true</font>,  setLoadEmptyEnabled
+    "TR" : {  <font color="blue">Type Rubric</font> Align TrainPlayer to JMRI track types.
+      "industry": "Spur",
+      "interchange": "Interchange",
+      "staging": "Staging",
+      "class yard": "Yard"
+    }
 
-
+</pre>
 </body>
 
 </html>

@@ -12,7 +12,7 @@ class TrainPlayerPanel:
 
     def __init__(self):
 
-        self.configFile = PatternScriptEntities.readConfigFile('TP')
+        self.configFile = PatternScriptEntities.readConfigFile('o2o')
 
         self.irButton = PatternScriptEntities.JAVX_SWING.JButton()
         self.irButton.setText(PatternScriptEntities.BUNDLE[u'Import TrainPlayer© Railroad'])

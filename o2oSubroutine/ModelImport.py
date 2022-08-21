@@ -117,7 +117,7 @@ class TrainPlayerImporter:
     def getTrackType(self, tpType):
         """Convert TP track types into JMRI track types."""
 
-        typeRubric = PatternScriptEntities.readConfigFile('TP')['TR']
+        typeRubric = PatternScriptEntities.readConfigFile('o2o')['TR']
 
         return typeRubric[tpType]
 

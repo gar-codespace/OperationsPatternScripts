@@ -16,7 +16,7 @@ class Inventory:
 
     def __init__(self):
 
-        self.configFile = PatternScriptEntities.readConfigFile('TP')
+        self.configFile = PatternScriptEntities.readConfigFile('o2o')
 
         self.tpInventoryFile = 'TrainPlayer Report - Inventory.txt'
         self.tpInventory = []

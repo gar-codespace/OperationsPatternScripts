@@ -38,7 +38,7 @@ def newJmriRailroad():
     jmriRailroad.deleteAllXml()
     jmriRailroad.addOperationsXml()
     jmriRailroad.addCoreXml()
-    jmriRailroad.updateOperations()
+    jmriRailroad.tweakOperationsXml()
 
     allRsRosters = NewRsAttributes()
     allRsRosters.newRoads()
@@ -80,7 +80,7 @@ class SetupXML:
 
     def __init__(self):
 
-        self.tpConfig =  PatternScriptEntities.readConfigFile('TP')
+        self.tpConfig =  PatternScriptEntities.readConfigFile('o2o')
 
         self.TpRailroad = getTpRailroadData()
 
@@ -107,7 +107,7 @@ class SetupXML:
 
     def deleteCoreXml(self):
 
-        coreFileList = PatternScriptEntities.readConfigFile('TP')['CFL']
+        coreFileList = PatternScriptEntities.readConfigFile('o2o')['CFL']
         reportPath = PatternScriptEntities.PROFILE_PATH + 'operations\\'
 
         for file in coreFileList:
@@ -134,7 +134,7 @@ class SetupXML:
         _psLog.debug('addCoreXml')
 
         pathPrefix = PatternScriptEntities.PROFILE_PATH + 'operations\\'
-        coreFileList = PatternScriptEntities.readConfigFile('TP')['CFL']
+        coreFileList = PatternScriptEntities.readConfigFile('o2o')['CFL']
         for file in coreFileList:
             filePath = pathPrefix + file + '.xml'
 
@@ -142,10 +142,10 @@ class SetupXML:
 
         return
 
-    def updateOperations(self):
+    def tweakOperationsXml(self):
         """Make tweeks to Operations.xml here"""
 
-        _psLog.debug('updateOperations')
+        _psLog.debug('tweakOperationsXml')
 
         OSU = PatternScriptEntities.JMRI.jmrit.operations.setup
         OSU.Setup.setRailroadName(self.TpRailroad['railroadName'])
@@ -153,6 +153,9 @@ class SetupXML:
 
         OSU.Setup.setMainMenuEnabled(self.tpConfig['SME'])
         OSU.Setup.setCloseWindowOnSaveEnabled(self.tpConfig['CWS'])
+        OSU.Setup.setBuildAggressive(self.tpConfig['SBA'])
+        OSU.Setup.setStagingTrackImmediatelyAvail(self.tpConfig['SIA'])
+        OSU.Setup.setCarTypes(self.tpConfig['SCT'])
 
     # Reload the Panal Pro window to display updates
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
@@ -304,6 +307,16 @@ class NewLocationsTracks:
     def __init__(self):
 
         self.tpRailroadData = getTpRailroadData()
+        self.tpConfig =  PatternScriptEntities.readConfigFile('o2o')
+
+        return
+
+    def tweakStagingTracks(self, track):
+        """Tweak default settings for staging Tracks here"""
+
+        track.setAddCustomLoadsAnySpurEnabled(self.tpConfig['SCL'])
+        track.setRemoveCustomLoadsEnabled(self.tpConfig['RCL'])
+        track.setLoadEmptyEnabled(self.tpConfig['LEE'])
 
         return
 
@@ -325,7 +338,8 @@ class NewLocationsTracks:
 
         _psLog.debug('newSchedules')
 
-        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.locations.schedules.ScheduleManager)
+        tc = PatternScriptEntities.JMRI.jmrit.operations.locations.schedules.ScheduleManager
+        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
         TCM.dispose()
         for id, industry in self.tpRailroadData['industries'].items():
             scheduleLineItem = industry['schedule']
@@ -341,7 +355,8 @@ class NewLocationsTracks:
 
         _psLog.debug('newTracks')
 
-        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(PatternScriptEntities.JMRI.jmrit.operations.locations.schedules.ScheduleManager)
+        tc = PatternScriptEntities.JMRI.jmrit.operations.locations.schedules.ScheduleManager
+        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
         # TCM.dispose()
         for item in self.tpRailroadData['locales']:
             loc = PatternScriptEntities.LM.getLocationByName(item[1]['location'])
@@ -351,6 +366,8 @@ class NewLocationsTracks:
             xTrack.setLength(trackLength)
             if item[1]['type'] == 'Spur':
                 xTrack.setSchedule(TCM.getScheduleByName(item[1]['label']))
+            if item[1]['type'] == 'Staging':
+                self.tweakStagingTracks(xTrack)
 
         # PatternScriptEntities.LMX.save()
         return

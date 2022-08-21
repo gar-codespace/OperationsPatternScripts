@@ -15,7 +15,7 @@ class ManageGui:
     def __init__(self):
 
         self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.TrainPlayer.View')
-        self.configFile = PatternScriptEntities.readConfigFile('TP')
+        self.configFile = PatternScriptEntities.readConfigFile('o2o')
 
         return
 
