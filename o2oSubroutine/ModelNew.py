@@ -12,24 +12,6 @@ SCRIPT_REV = 20220101
 _psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.ModelAttributes')
 
 
-def getTpRailroadData():
-    """Add error handling"""
-
-    tpRailroad = []
-    reportPath = PatternScriptEntities.PROFILE_PATH + 'operations\\tpRailroadData.json'
-
-    try:
-        PatternScriptEntities.JAVA_IO.File(reportPath).isFile()
-        _psLog.info('tpRailroadData.json OK')
-    except:
-        _psLog.warning('tpRailroadData.json not found')
-        return
-
-    report = PatternScriptEntities.genericReadReport(reportPath)
-    tpRailroad = PatternScriptEntities.loadJson(report)
-
-    return tpRailroad
-
 def newJmriRailroad():
     """Mini controller to make a new JMRI railroad from the tpRailroadData.json and TP Inventory.txt files
         Add code to close appropriate windows"""
@@ -50,14 +32,15 @@ def newJmriRailroad():
     allRsRosters.newLocoTypes()
     allRsRosters.newLocoConsist()
 
-    newLocations = NewLocationsTracks()
+    newLocations = NewLocationsAndTracks()
     newLocations.newLocations()
     newLocations.newSchedules()
     newLocations.newTracks()
     newLocations.deselectSpurTypes()
     newLocations.refineSpurTypes()
 
-    newInventory = ModelRollingStock.Inventory()
+    # newInventory = ModelRollingStock.Inventory()
+    newInventory = NewInventory()
     newInventory.getTpInventory()
     newInventory.splitTpList()
     newInventory.newCars()
@@ -65,16 +48,24 @@ def newJmriRailroad():
 
     return
 
-def updateRollingStock():
-    """ """
+def getTpRailroadData():
+    """Add error handling"""
 
+    tpRailroad = []
+    reportPath = PatternScriptEntities.PROFILE_PATH + 'operations\\tpRailroadData.json'
 
-    # jmriRailroad = SetupXML()
-    # jmriRailroad.deleteCoreXml()
-    # jmriRailroad.addCoreXml()
-    # newInventory.deregisterJmriOrphans()
+    try:
+        PatternScriptEntities.JAVA_IO.File(reportPath).isFile()
+        _psLog.info('tpRailroadData.json OK')
+    except:
+        _psLog.warning('tpRailroadData.json not found')
+        return
 
-    return
+    report = PatternScriptEntities.genericReadReport(reportPath)
+    tpRailroad = PatternScriptEntities.loadJson(report)
+
+    return tpRailroad
+
 
 class SetupXML:
 
@@ -302,7 +293,7 @@ class NewRsAttributes:
         return
 
 
-class NewLocationsTracks:
+class NewLocationsAndTracks:
 
     def __init__(self):
 
@@ -394,5 +385,176 @@ class NewLocationsTracks:
         for id, attribs in self.tpRailroadData['industries'].items():
             track = PatternScriptEntities.LM.getLocationByName(attribs['location']).getTrackByName(attribs['track'], None)
             track.addTypeName(attribs['type'])
+
+        return
+
+class NewInventory:
+    """Updates the JMRI RS inventory.
+        Deletes JMRI RS not in TP Inventory.txt
+        """
+
+    def __init__(self):
+
+        self.configFile = PatternScriptEntities.readConfigFile('o2o')
+
+        self.tpInventoryFile = 'TrainPlayer Report - Inventory.txt'
+        self.tpInventory = []
+        self.tpCars = {}
+        self.tpLocos = {}
+
+        self.jmriCars = PatternScriptEntities.CM.getList()
+        self.jmriLocos = PatternScriptEntities.EM.getList()
+
+        return
+
+    def getTpInventory(self):
+
+        try:
+            self.tpInventory = ModelEntities.getTpExport(self.tpInventoryFile)
+            self.tpInventory.pop(0) # Remove the date
+            self.tpInventory.pop(0) # Remove the key
+            _psLog.info('TrainPlayer Inventory file OK')
+        except:
+            _psLog.warning('Not found: ' + self.tpInventoryFile)
+            pass
+
+        return
+
+    def splitTpList(self):
+        """self.tpInventory string format:
+            TP Car ; TP Type ; TP AAR; JMRI Location; JMRI Track; TP Load; TP Kernel
+            TP Loco; TP Model; TP AAR; JMRI Location; JMRI Track; TP Load; TP Consist
+
+            self.tpCars  dictionary format: {JMRI ID :  {type: TP Collection, aar: TP AAR, location: JMRI Location, track: JMRI Track, load: TP Load, kernel: TP Kernel}}
+            self.tpLocos dictionary format: {JMRI ID :  [Model, AAR, JMRI Location, JMRI Track, 'unloadable', Consist]}
+            """
+
+        _psLog.debug('TsplitTpList')
+
+        for item in self.tpInventory:
+            line = item.split(';')
+            if line[2].startswith('ET'):
+                continue
+            if line[2].startswith('E'):
+                self.tpLocos[line[0]] = {'model': line[1], 'aar': line[2], 'location': line[3], 'track': line[4], 'load': line[5], 'consist': line[6]}
+            else:
+                self.tpCars[line[0]] = {'type': line[1], 'aar': line[2], 'location': line[3], 'track': line[4], 'load': line[5], 'kernel': line[6]}
+
+        return
+
+    def deregisterJmriOrphans(self):
+
+        _psLog.debug('deregisterJmriOrphans')
+
+        for rs in self.jmriCars:
+            try:
+                self.tpCars[rs.getId()]
+            except:
+                print('orphan', rs.getId())
+                PatternScriptEntities.CM.deregister(rs)
+
+        for rs in self.jmriLocos:
+            try:
+                self.tpLocos[rs.getId()]
+            except:
+                print('orphan', rs.getId())
+                PatternScriptEntities.EM.deregister(rs)
+
+        return
+
+    def newCars(self):
+        """'kernel': u'', 'type': u'box x23 prr', 'aar': u'XM', 'load': u'Empty', 'location': u'City', 'track': u'701'}"""
+
+        _psLog.debug('newCars')
+
+        for id, attribs in self.tpCars.items():
+            rsRoad, rsNumber = ModelEntities.parseCarId(id)
+            updatedCar = PatternScriptEntities.CM.newRS(rsRoad, rsNumber)
+            xLocation, xTrack = ModelEntities.getSetToLocationAndTrack(attribs['location'], attribs['track'])
+            if not xLocation:
+                _psLog.warning(id + 'not set at: ' + attribs['location'], attribs['track'])
+                continue
+            updatedCar.setLocation(xLocation, xTrack, True)
+            updatedCar.setTypeName(attribs['aar'])
+            if attribs['aar'].startswith('N'):
+                updatedCar.setCaboose(True)
+            if attribs['aar'] in self.configFile['PC']:
+                updatedCar.setPassenger(True)
+            updatedCar.setLength('40')
+            updatedCar.setWeight('2')
+            updatedCar.setColor('Red')
+            updatedCar.setLoadName(attribs['load'])
+            try:
+                if xTrack.getTrackTypeName() == 'staging':
+                    updatedCar.setLoadName('E')
+            except:
+                print('Not found', xTrack, updatedCar.getId())
+            updatedCar.setKernel(PatternScriptEntities.KM.getKernelByName(attribs['kernel']))
+
+        return
+
+    def newLocos(self):
+
+        _psLog.debug('newLocos')
+
+        for id, attribs in self.tpLocos.items():
+            rsRoad, rsNumber = ModelEntities.parseCarId(id)
+            updatedLoco = PatternScriptEntities.EM.newRS(rsRoad, rsNumber)
+            location, track = ModelEntities.getSetToLocationAndTrack(attribs['location'], attribs['track'])
+            if not location:
+                _psLog.warning(id + 'not set at: ' + attribs['location'], attribs['track'])
+                continue
+            updatedLoco.setLocation(location, track, True)
+            updatedLoco.setLength('40')
+            updatedLoco.setModel(attribs['model'][0:11])
+            # Setting the model will automatically set the type
+            updatedLoco.setWeight('2')
+            updatedLoco.setColor('Black')
+            updatedLoco.setConsist(PatternScriptEntities.ZM.getConsistByName(attribs['consist']))
+
+        return
+
+    def updateCars(self):
+        """'kernel': u'', 'type': u'box x23 prr', 'aar': u'XM', 'load': u'Empty', 'location': u'City', 'track': u'701'}"""
+
+        _psLog.debug('newCars')
+
+        for id, attribs in self.tpCars.items():
+            rsRoad, rsNumber = ModelEntities.parseCarId(id)
+            updatedCar = PatternScriptEntities.CM.newRS(rsRoad, rsNumber)
+            xLocation, xTrack = ModelEntities.getSetToLocationAndTrack(attribs['location'], attribs['track'])
+            if not xLocation:
+                continue
+            updatedCar.setLocation(xLocation, xTrack, True)
+            updatedCar.setTypeName(attribs['aar'])
+            if attribs['aar'].startswith('N'):
+                updatedCar.setCaboose(True)
+            if attribs['aar'] in self.configFile['PC']:
+                updatedCar.setPassenger(True)
+            updatedCar.setLength('40')
+            updatedCar.setWeight('2')
+            updatedCar.setColor('Red')
+            updatedCar.setLoadName(attribs['load'])
+            try:
+                if xTrack.getTrackTypeName() == 'staging':
+                    updatedCar.setLoadName('E')
+            except:
+                print('Not found', xTrack, updatedCar.getId())
+            updatedCar.setKernel(PatternScriptEntities.KM.getKernelByName(attribs['kernel']))
+
+        return
+
+    def updateLocos(self):
+        for id, attribs in self.tpLocos.items():
+            rsRoad, rsNumber = ModelEntities.parseCarId(id)
+            updatedLoco = PatternScriptEntities.EM.newRS(rsRoad, rsNumber)
+            location, track = ModelEntities.getSetToLocationAndTrack(attribs['location'], attribs['track'])
+            updatedLoco.setLocation(location, track, True)
+            updatedLoco.setLength('40')
+            updatedLoco.setModel(attribs['model'][0:11])
+            # Setting the model will automatically set the type
+            updatedLoco.setWeight('2')
+            updatedLoco.setColor('Black')
+            updatedLoco.setConsist(PatternScriptEntities.ZM.getConsistByName(attribs['consist']))
 
         return

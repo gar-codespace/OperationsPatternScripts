@@ -11,6 +11,31 @@ SCRIPT_REV = 20220101
 
 _psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.ModelImport')
 
+def importTpRailroad():
+    """Mini controller generates the tpRailroadData.json file"""
+
+    trainPlayerImport = TrainPlayerImporter()
+
+    trainPlayerImport.getTpReportFiles()
+    trainPlayerImport.processFileHeaders()
+    trainPlayerImport.getRrLocations()
+    trainPlayerImport.getRrLocales()
+    trainPlayerImport.getAllTpRoads()
+    trainPlayerImport.getAllTpIndustry()
+
+    trainPlayerImport.getAllTpCarAar()
+    trainPlayerImport.getAllTpCarLoads()
+    trainPlayerImport.getAllTpCarKernels()
+
+    trainPlayerImport.getAllTpLocoTypes()
+    trainPlayerImport.getAllTpLocoModels()
+    trainPlayerImport.getAllTpLocoConsists()
+
+    trainPlayerImport.writeTPLayoutData()
+
+    return
+
+
 class TrainPlayerImporter:
 
     def __init__(self):

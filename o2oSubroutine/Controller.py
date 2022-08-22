@@ -52,24 +52,7 @@ class StartUp:
     def importTpRailroad(self, EVENT):
         '''Writes a tpRailroadData.json file from the 3 TrainPlayer report files'''
 
-        trainPlayerImport = ModelImport.TrainPlayerImporter()
-
-        trainPlayerImport.getTpReportFiles()
-        trainPlayerImport.processFileHeaders()
-        trainPlayerImport.getRrLocations()
-        trainPlayerImport.getRrLocales()
-        trainPlayerImport.getAllTpRoads()
-        trainPlayerImport.getAllTpIndustry()
-
-        trainPlayerImport.getAllTpCarAar()
-        trainPlayerImport.getAllTpCarLoads()
-        trainPlayerImport.getAllTpCarKernels()
-
-        trainPlayerImport.getAllTpLocoTypes()
-        trainPlayerImport.getAllTpLocoModels()
-        trainPlayerImport.getAllTpLocoConsists()
-
-        trainPlayerImport.writeTPLayoutData()
+        ModelImport.importTpRailroad()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
