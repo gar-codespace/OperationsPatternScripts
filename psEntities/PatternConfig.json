@@ -76,7 +76,7 @@
     "PW" : 1500,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20220805
+    "RV" : 20220801
   },
   "RM" : {
     "DS" : "*No Dest.",
@@ -173,9 +173,9 @@
       "NE"
     ],
     "CFL" : [
-      "OperationsCarRoster",
-      "OperationsEngineRoster",
-      "OperationsLocationRoster"
+      "CMX",
+      "EMX",
+      "LMX"
     ],
     "SM" : {
       "Z" : 1,
@@ -194,10 +194,20 @@
     "CWS" : true,
     "SBA" : true,
     "SIA" : true,
-    "SCT" : "ARR Codes",
     "SCL" : true,
     "RCL" : true,
     "LEE" : true,
+    "SME" : true,
+    "TNB" : false,
+    "SCT" : "ARR Codes",
+    "TRL" : "TrainPlayer Report - Locations.txt",
+    "TRI" : "TrainPlayer Report - Industries.txt",
+    "TRR" : "TrainPlayer Report - Rolling Stock.txt",
+    "PUC" : ["Road", "Number", "Type", "Load", "FD&Track"],
+    "SOC" : ["Road", "Number", "Type", "Load", "Location", "Track"],
+    "MC" : ["Road", "Number", "Type", "Load", "Location", "Track"],
+    "PUL" : ["Road", "Number", "Model", "Consist", "Location", "Track"],
+    "SOL" : ["Road", "Number", "Model", "Consist", "Location", "Track"],
     "TR" : {
       "industry": "Spur",
       "interchange": "Interchange",

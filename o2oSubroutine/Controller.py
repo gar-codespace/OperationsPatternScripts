@@ -6,6 +6,7 @@
 from psEntities import PatternScriptEntities
 from o2oSubroutine import ModelImport
 from o2oSubroutine import ModelNew
+from o2oSubroutine import ModelUpdate
 from o2oSubroutine import View
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.Controller'
@@ -70,7 +71,7 @@ class StartUp:
     def updateRollingStock(self, EVENT):
         '''Updates JMRI railroad from the json file'''
 
-        ModelNew.updateRollingStock()
+        ModelUpdate.updateRollingStock()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

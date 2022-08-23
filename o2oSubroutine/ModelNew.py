@@ -4,12 +4,12 @@
 """From tpRailroadData.json, a new rr is created and the xml files are seeded"""
 
 from psEntities import PatternScriptEntities
-from o2oSubroutine import ModelRollingStock
+from o2oSubroutine import ModelEntities
 
-SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelAttributes'
+SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelNew'
 SCRIPT_REV = 20220101
 
-_psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.ModelAttributes')
+_psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.ModelNew')
 
 
 def newJmriRailroad():
@@ -21,6 +21,7 @@ def newJmriRailroad():
     jmriRailroad.addOperationsXml()
     jmriRailroad.addCoreXml()
     jmriRailroad.tweakOperationsXml()
+    PatternScriptEntities.OMX.save()
 
     allRsRosters = NewRsAttributes()
     allRsRosters.newRoads()
@@ -38,13 +39,15 @@ def newJmriRailroad():
     newLocations.newTracks()
     newLocations.deselectSpurTypes()
     newLocations.refineSpurTypes()
+    PatternScriptEntities.LMX.save()
 
-    # newInventory = ModelRollingStock.Inventory()
-    newInventory = NewInventory()
+    newInventory = NewRollingStock()
     newInventory.getTpInventory()
     newInventory.splitTpList()
     newInventory.newCars()
     newInventory.newLocos()
+    PatternScriptEntities.CMX.save()
+    PatternScriptEntities.EMX.save()
 
     return
 
@@ -71,14 +74,9 @@ class SetupXML:
 
     def __init__(self):
 
-        self.tpConfig =  PatternScriptEntities.readConfigFile('o2o')
+        self.o2oConfig =  PatternScriptEntities.readConfigFile('o2o')
 
         self.TpRailroad = getTpRailroadData()
-
-        self.Operations = PatternScriptEntities.OMX
-        self.OperationsCarRoster = PatternScriptEntities.CMX
-        self.OperationsEngineRoster = PatternScriptEntities.EMX
-        self.OperationsLocationRoster = PatternScriptEntities.LMX
 
         return
 
@@ -114,7 +112,7 @@ class SetupXML:
 
     def addOperationsXml(self):
 
-        self.Operations.writeOperationsFile()
+        PatternScriptEntities.OMX.writeOperationsFile()
 
         return
 
@@ -124,17 +122,17 @@ class SetupXML:
             """
         _psLog.debug('addCoreXml')
 
-        pathPrefix = PatternScriptEntities.PROFILE_PATH + 'operations\\'
         coreFileList = PatternScriptEntities.readConfigFile('o2o')['CFL']
-        for file in coreFileList:
-            filePath = pathPrefix + file + '.xml'
 
-            getattr(self, file).writeOperationsFile()
+        for file in coreFileList:
+            getattr(PatternScriptEntities, file).writeOperationsFile()
 
         return
 
     def tweakOperationsXml(self):
-        """Make tweeks to Operations.xml here"""
+        """Make tweeks to Operations.xml here
+            Some of these are just favorites of mine
+            """
 
         _psLog.debug('tweakOperationsXml')
 
@@ -142,13 +140,20 @@ class SetupXML:
         OSU.Setup.setRailroadName(self.TpRailroad['railroadName'])
         OSU.Setup.setComment(self.TpRailroad['railroadDescription'])
 
-        OSU.Setup.setMainMenuEnabled(self.tpConfig['SME'])
-        OSU.Setup.setCloseWindowOnSaveEnabled(self.tpConfig['CWS'])
-        OSU.Setup.setBuildAggressive(self.tpConfig['SBA'])
-        OSU.Setup.setStagingTrackImmediatelyAvail(self.tpConfig['SIA'])
-        OSU.Setup.setCarTypes(self.tpConfig['SCT'])
+        OSU.Setup.setMainMenuEnabled(self.o2oConfig['SME'])
+        OSU.Setup.setCloseWindowOnSaveEnabled(self.o2oConfig['CWS'])
+        OSU.Setup.setBuildAggressive(self.o2oConfig['SBA'])
+        OSU.Setup.setStagingTrackImmediatelyAvail(self.o2oConfig['SIA'])
+        OSU.Setup.setCarTypes(self.o2oConfig['SCT'])
+        OSU.Setup.setStagingTryNormalBuildEnabled(self.o2oConfig['TNB'])
+        OSU.Setup.setManifestEditorEnabled(self.o2oConfig['SME'])
 
-    # Reload the Panal Pro window to display updates
+        OSU.Setup.setPickupManifestMessageFormat(self.o2oConfig['PUC'])
+        OSU.Setup.setDropManifestMessageFormat(self.o2oConfig['SOC'])
+        OSU.Setup.setLocalManifestMessageFormat(self.o2oConfig['MC'])
+        OSU.Setup.setPickupEngineMessageFormat(self.o2oConfig['PUL'])
+        OSU.Setup.setDropEngineMessageFormat(self.o2oConfig['SOL'])
+
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
@@ -214,7 +219,7 @@ class NewRsAttributes:
             TCM.addName(aar, 'Load')
             TCM.setLoadType(aar, 'Empty', 'empty')
             TCM.setLoadType(aar, 'Load', 'load')
-        # TP has only Empty as the empty type
+        # Empty is the only TP empty type
             for load in carLoads[aar]:
                 TCM.addName(aar, load)
                 TCM.setLoadType(aar, load, 'load')
@@ -298,16 +303,16 @@ class NewLocationsAndTracks:
     def __init__(self):
 
         self.tpRailroadData = getTpRailroadData()
-        self.tpConfig =  PatternScriptEntities.readConfigFile('o2o')
+        self.o2oConfig =  PatternScriptEntities.readConfigFile('o2o')
 
         return
 
     def tweakStagingTracks(self, track):
         """Tweak default settings for staging Tracks here"""
 
-        track.setAddCustomLoadsAnySpurEnabled(self.tpConfig['SCL'])
-        track.setRemoveCustomLoadsEnabled(self.tpConfig['RCL'])
-        track.setLoadEmptyEnabled(self.tpConfig['LEE'])
+        track.setAddCustomLoadsAnySpurEnabled(self.o2oConfig['SCL'])
+        track.setRemoveCustomLoadsEnabled(self.o2oConfig['RCL'])
+        track.setLoadEmptyEnabled(self.o2oConfig['LEE'])
 
         return
 
@@ -317,8 +322,6 @@ class NewLocationsAndTracks:
 
         for location in self.tpRailroadData['locations']:
             newLocation = PatternScriptEntities.LM.newLocation(location)
-
-        PatternScriptEntities.LMX.save()
 
         return
 
@@ -339,7 +342,6 @@ class NewLocationsAndTracks:
             scheduleItem.setReceiveLoadName(scheduleLineItem[2])
             scheduleItem.setShipLoadName(scheduleLineItem[3])
 
-        # PatternScriptEntities.LMX.save()
         return
 
     def newTracks(self):
@@ -360,7 +362,6 @@ class NewLocationsAndTracks:
             if item[1]['type'] == 'Staging':
                 self.tweakStagingTracks(xTrack)
 
-        # PatternScriptEntities.LMX.save()
         return
 
     def deselectSpurTypes(self):
@@ -388,16 +389,16 @@ class NewLocationsAndTracks:
 
         return
 
-class NewInventory:
+class NewRollingStock:
     """Updates the JMRI RS inventory.
         Deletes JMRI RS not in TP Inventory.txt
         """
 
     def __init__(self):
 
-        self.configFile = PatternScriptEntities.readConfigFile('o2o')
+        self.o2oConfig = PatternScriptEntities.readConfigFile('o2o')
 
-        self.tpInventoryFile = 'TrainPlayer Report - Inventory.txt'
+        self.tpRollingStockFile = self.o2oConfig['TRR']
         self.tpInventory = []
         self.tpCars = {}
         self.tpLocos = {}
@@ -410,12 +411,12 @@ class NewInventory:
     def getTpInventory(self):
 
         try:
-            self.tpInventory = ModelEntities.getTpExport(self.tpInventoryFile)
+            self.tpInventory = ModelEntities.getTpExport(self.tpRollingStockFile)
             self.tpInventory.pop(0) # Remove the date
             self.tpInventory.pop(0) # Remove the key
             _psLog.info('TrainPlayer Inventory file OK')
         except:
-            _psLog.warning('Not found: ' + self.tpInventoryFile)
+            _psLog.warning('Not found: ' + self.tpRollingStockFile)
             pass
 
         return
@@ -442,26 +443,6 @@ class NewInventory:
 
         return
 
-    def deregisterJmriOrphans(self):
-
-        _psLog.debug('deregisterJmriOrphans')
-
-        for rs in self.jmriCars:
-            try:
-                self.tpCars[rs.getId()]
-            except:
-                print('orphan', rs.getId())
-                PatternScriptEntities.CM.deregister(rs)
-
-        for rs in self.jmriLocos:
-            try:
-                self.tpLocos[rs.getId()]
-            except:
-                print('orphan', rs.getId())
-                PatternScriptEntities.EM.deregister(rs)
-
-        return
-
     def newCars(self):
         """'kernel': u'', 'type': u'box x23 prr', 'aar': u'XM', 'load': u'Empty', 'location': u'City', 'track': u'701'}"""
 
@@ -478,7 +459,7 @@ class NewInventory:
             updatedCar.setTypeName(attribs['aar'])
             if attribs['aar'].startswith('N'):
                 updatedCar.setCaboose(True)
-            if attribs['aar'] in self.configFile['PC']:
+            if attribs['aar'] in self.o2oConfig['PC']:
                 updatedCar.setPassenger(True)
             updatedCar.setLength('40')
             updatedCar.setWeight('2')
@@ -507,52 +488,7 @@ class NewInventory:
             updatedLoco.setLocation(location, track, True)
             updatedLoco.setLength('40')
             updatedLoco.setModel(attribs['model'][0:11])
-            # Setting the model will automatically set the type
-            updatedLoco.setWeight('2')
-            updatedLoco.setColor('Black')
-            updatedLoco.setConsist(PatternScriptEntities.ZM.getConsistByName(attribs['consist']))
-
-        return
-
-    def updateCars(self):
-        """'kernel': u'', 'type': u'box x23 prr', 'aar': u'XM', 'load': u'Empty', 'location': u'City', 'track': u'701'}"""
-
-        _psLog.debug('newCars')
-
-        for id, attribs in self.tpCars.items():
-            rsRoad, rsNumber = ModelEntities.parseCarId(id)
-            updatedCar = PatternScriptEntities.CM.newRS(rsRoad, rsNumber)
-            xLocation, xTrack = ModelEntities.getSetToLocationAndTrack(attribs['location'], attribs['track'])
-            if not xLocation:
-                continue
-            updatedCar.setLocation(xLocation, xTrack, True)
-            updatedCar.setTypeName(attribs['aar'])
-            if attribs['aar'].startswith('N'):
-                updatedCar.setCaboose(True)
-            if attribs['aar'] in self.configFile['PC']:
-                updatedCar.setPassenger(True)
-            updatedCar.setLength('40')
-            updatedCar.setWeight('2')
-            updatedCar.setColor('Red')
-            updatedCar.setLoadName(attribs['load'])
-            try:
-                if xTrack.getTrackTypeName() == 'staging':
-                    updatedCar.setLoadName('E')
-            except:
-                print('Not found', xTrack, updatedCar.getId())
-            updatedCar.setKernel(PatternScriptEntities.KM.getKernelByName(attribs['kernel']))
-
-        return
-
-    def updateLocos(self):
-        for id, attribs in self.tpLocos.items():
-            rsRoad, rsNumber = ModelEntities.parseCarId(id)
-            updatedLoco = PatternScriptEntities.EM.newRS(rsRoad, rsNumber)
-            location, track = ModelEntities.getSetToLocationAndTrack(attribs['location'], attribs['track'])
-            updatedLoco.setLocation(location, track, True)
-            updatedLoco.setLength('40')
-            updatedLoco.setModel(attribs['model'][0:11])
-            # Setting the model will automatically set the type
+        # Setting the model will automatically set the type
             updatedLoco.setWeight('2')
             updatedLoco.setColor('Black')
             updatedLoco.setConsist(PatternScriptEntities.ZM.getConsistByName(attribs['consist']))

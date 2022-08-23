@@ -40,9 +40,11 @@ class TrainPlayerImporter:
 
     def __init__(self):
 
-        self.tpLocationsFile = 'TrainPlayer Report - Locations.txt'
-        self.tpIndustriesFile = 'TrainPlayer Report - Industries.txt'
-        self.tpInventoryFile = 'TrainPlayer Report - Inventory.txt'
+        o2oConfig =  PatternScriptEntities.readConfigFile('o2o')
+
+        self.tpLocationsFile = o2oConfig['TRL']
+        self.tpIndustriesFile = o2oConfig['TRI']
+        self.tpRollingStockFile = o2oConfig['TRR']
 
         self.tpLocations = []
         self.tpIndustries = []
@@ -74,12 +76,12 @@ class TrainPlayerImporter:
             print('Not found: ' + self.tpIndustriesFile)
 
         try:
-            self.tpInventory = ModelEntities.getTpExport(self.tpInventoryFile)
+            self.tpInventory = ModelEntities.getTpExport(self.tpRollingStockFile)
             _psLog.info('TrainPlayer Inventory file OK')
             self.okCounter += 1
         except:
             _psLog.warning('TrainPlayer Inventory file not found')
-            print('Not found: ' + self.tpInventoryFile)
+            print('Not found: ' + self.tpRollingStockFile)
 
         return
 
