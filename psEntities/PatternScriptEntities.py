@@ -24,13 +24,14 @@ SB = JMRI.jmrit.operations.setup.Bundle()
 SCRIPT_NAME = 'OperationsPatternScripts.psEntities.PatternScriptEntities'
 SCRIPT_REV = 20220101
 
-LM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.LocationManager)
-TM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.trains.TrainManager)
-EM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.engines.EngineManager)
-CM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.cars.CarManager)
-SM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.schedules.ScheduleManager)
+OM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.OperationsManager)
 PM = JMRI.InstanceManager.getDefault(JMRI.util.gui.GuiLafPreferencesManager)
+TM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.trains.TrainManager)
+LM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.LocationManager)
+CM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.cars.CarManager)
 KM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.cars.KernelManager)
+SM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.schedules.ScheduleManager)
+EM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.engines.EngineManager)
 ZM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.engines.ConsistManager)
 
 OMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.setup.OperationsSetupXml)
@@ -220,6 +221,16 @@ def getAllLocations():
         locationList.append(unicode(item.getName(), ENCODING))
 
     return locationList
+
+def getAllTracks():
+    """All tracks for all locations"""
+
+    trackList = []
+    for location in getAllLocations():
+
+        trackList += LM.getLocationByName(location).getTracksByNameList(None)
+
+    return trackList
 
 def timeStamp(epochTime=0):
     """Valid Time, get local time adjusted for time zone and dst"""

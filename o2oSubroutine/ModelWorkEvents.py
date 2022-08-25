@@ -136,7 +136,10 @@ class ProcessWorkEventList:
     def __init__(self):
 
         self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.ProcessWorkEventList')
-        # self.locationHash = ExportJmriLocations().makeLocationHash()
+
+        rsFile = PatternScriptEntities.PROFILE_PATH + 'operations\\tpRollingStockData.json'
+        tpRollingStockData = PatternScriptEntities.genericReadReport(rsFile)
+        self.tpRollingStockData =  PatternScriptEntities.loadJson(tpRollingStockData)
 
         return
 
@@ -178,10 +181,11 @@ class ProcessWorkEventList:
         return tpLocations + '\n'
 
     def makeLine(self, rS):
-
-        # trackComment = self.locationHash[rS[u'Set to']]
+        """This makes a rolling stock line for the TP o2o file
+        Identify the rolling stock by its TP car_ID"""
 
         ID = rS[PatternScriptEntities.SB.handleGetMessage('Road')] + rS[PatternScriptEntities.SB.handleGetMessage('Number')]
+        tpID = self.tpRollingStockData[ID]
     # Process FD&T
         FDandT = rS[PatternScriptEntities.SB.handleGetMessage('FD&Track')]
         FDandT = FDandT.replace(', ', ';')
@@ -199,7 +203,7 @@ class ProcessWorkEventList:
 
         rsLine  = [
                   rS[u'PUSO'] + ','
-                + ID + ','
+                + tpID + ','
                 + rS[PatternScriptEntities.SB.handleGetMessage('Road')] + ','
                 + rS[PatternScriptEntities.SB.handleGetMessage('Number')] + ','
                 + rS[PatternScriptEntities.SB.handleGetMessage('Type')] + ','
@@ -215,8 +219,8 @@ class ProcessWorkEventList:
 
         self.psLog.debug('Model.writeTpWorkEventListAsJson')
 
-        reportTitle = appendedTpSwitchList['trainDescription']
-        jsonReoprtPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + reportTitle + '.json'
+        reportTitle = appendedTpSwitchList['trainName']
+        jsonReoprtPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\' + reportTitle + '.json'
         jsonReport = PatternScriptEntities.dumpJson(appendedTpSwitchList)
         PatternScriptEntities.genericWriteReport(jsonReoprtPath, jsonReport)
 
@@ -250,29 +254,3 @@ class WriteWorkEventListToTp:
         print(SCRIPT_NAME + '.WriteWorkEventListToTp ' + str(SCRIPT_REV))
 
         return
-
-
-# class ExportJmriLocations:
-#     """TrainPlayer Manifest-Support class
-#         Returns a list of location names and comments for the whole profile
-#         """
-#
-#     def __init__(self):
-#
-#         self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.ExportJmriLocations')
-#
-#         return
-#
-#     def makeLocationHash(self):
-#
-#         locationHash = {}
-#
-#         for location in PatternScriptEntities.LM.getLocationsByIdList():
-#             locationName = unicode(location.getName(), PatternScriptEntities.ENCODING)
-#             tracks = location.getTracksList()
-#             for track in tracks:
-#                 trackName = unicode(track.getName(), PatternScriptEntities.ENCODING)
-#                 trackComment = unicode(track.getComment(), PatternScriptEntities.ENCODING)
-#                 locationHash[locationName + u';' + trackName] = trackComment
-#
-#         return locationHash

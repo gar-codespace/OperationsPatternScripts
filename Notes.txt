@@ -6,6 +6,11 @@ Todo:
   Harden up Bundle against web errors, untranslated items
   Maybe use java io to make all paths for better OS compatibility
 
+  TP import creates the wrong track length
+  TP import not bullet proof
+  Should import button be part of new and update?
+  Which windows need to be closed when creating a new railroad?
+
 Comments:
   Schedule does not prevent setting a car to a track
 

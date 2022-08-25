@@ -140,12 +140,15 @@ def addNewRs(rsAttribs):
     return
 
 def parseCarId(carId):
+    """Splits a TP car id into a JMRI road name and number"""
 
     rsRoad = ''
     rsNumber = ''
 
     for character in carId:
-        if character.isdigit():
+        if character.isspace() or character == '-':
+            continue
+        if character.isdecimal():
             rsNumber += character
         else:
             rsRoad += character

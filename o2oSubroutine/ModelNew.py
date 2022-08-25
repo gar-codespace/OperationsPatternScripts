@@ -13,41 +13,48 @@ _psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.ModelNew')
 
 
 def newJmriRailroad():
-    """Mini controller to make a new JMRI railroad from the tpRailroadData.json and TP Inventory.txt files
-        Add code to close appropriate windows"""
+    """Mini controller to make a new JMRI railroad from the tpRailroadData.json and TP Inventory.txt files"""
 
+    closeAllEditWindows()
     jmriRailroad = SetupXML()
-    jmriRailroad.deleteAllXml()
-    jmriRailroad.addOperationsXml()
-    jmriRailroad.addCoreXml()
+    PatternScriptEntities.OM.initialize()
     jmriRailroad.tweakOperationsXml()
     PatternScriptEntities.OMX.save()
 
     allRsRosters = NewRsAttributes()
+    PatternScriptEntities.CM.initialize()
     allRsRosters.newRoads()
     allRsRosters.newCarAar()
     allRsRosters.newCarLoads()
     allRsRosters.newCarKernels()
 
+    PatternScriptEntities.EM.initialize()
     allRsRosters.newLocoModels()
     allRsRosters.newLocoTypes()
     allRsRosters.newLocoConsist()
 
     newLocations = NewLocationsAndTracks()
+    PatternScriptEntities.LM.initialize()
+    PatternScriptEntities.LM.dispose()
     newLocations.newLocations()
     newLocations.newSchedules()
     newLocations.newTracks()
-    newLocations.deselectSpurTypes()
-    newLocations.refineSpurTypes()
-    PatternScriptEntities.LMX.save()
+    newLocations.deselectCarTypesForSpurs()
 
     newInventory = NewRollingStock()
     newInventory.getTpInventory()
     newInventory.splitTpList()
+    newInventory.makeTpRollingStockData()
+    PatternScriptEntities.CM.dispose()
+    PatternScriptEntities.EM.dispose()
     newInventory.newCars()
     newInventory.newLocos()
     PatternScriptEntities.CMX.save()
     PatternScriptEntities.EMX.save()
+
+    newLocations.setNonSpurTrackLength()
+    newLocations.refineSpurTypes()
+    PatternScriptEntities.LMX.save()
 
     return
 
@@ -69,63 +76,26 @@ def getTpRailroadData():
 
     return tpRailroad
 
+def closeAllEditWindows():
+    """Close all the 'Edit' windows when the New button is pressed
+        Lazy work around, figure this our for real later
+        """
+
+    for frameName in PatternScriptEntities.JMRI.util.JmriJFrame.getFrameList():
+        frame = PatternScriptEntities.JMRI.util.JmriJFrame.getFrame(frameName)
+        if frame.getTitle().startswith('Edit'):
+            frame.setVisible(False)
+            frame.dispose()
+
+    return
+
 
 class SetupXML:
 
     def __init__(self):
 
         self.o2oConfig =  PatternScriptEntities.readConfigFile('o2o')
-
         self.TpRailroad = getTpRailroadData()
-
-        return
-
-    def deleteAllXml(self):
-
-        reportPath = PatternScriptEntities.PROFILE_PATH + 'operations\\'
-        opsFileList = PatternScriptEntities.JAVA_IO.File(reportPath).listFiles()
-        for file in opsFileList:
-            if file.toString().endswith('.xml') or file.toString().endswith('.bak'):
-                file.delete()
-
-        PatternScriptEntities.LM.dispose()
-        PatternScriptEntities.CM.dispose()
-        PatternScriptEntities.EM.dispose()
-
-        return
-
-    def deleteCoreXml(self):
-
-        coreFileList = PatternScriptEntities.readConfigFile('o2o')['CFL']
-        reportPath = PatternScriptEntities.PROFILE_PATH + 'operations\\'
-
-        for file in coreFileList:
-            xmlName =  reportPath + file + '.xml'
-            bakName =  reportPath + file + '.xml.bak'
-            PatternScriptEntities.JAVA_IO.File(xmlName).delete()
-            PatternScriptEntities.JAVA_IO.File(bakName).delete()
-
-        PatternScriptEntities.LM.dispose()
-        PatternScriptEntities.CM.dispose()
-        PatternScriptEntities.EM.dispose()
-        return
-
-    def addOperationsXml(self):
-
-        PatternScriptEntities.OMX.writeOperationsFile()
-
-        return
-
-    def addCoreXml(self):
-        """The routes xml is not built since there is no TP equivalent.
-            The trains xml is not built since JMRI trains is the reason for this subroutine.
-            """
-        _psLog.debug('addCoreXml')
-
-        coreFileList = PatternScriptEntities.readConfigFile('o2o')['CFL']
-
-        for file in coreFileList:
-            getattr(PatternScriptEntities, file).writeOperationsFile()
 
         return
 
@@ -231,15 +201,15 @@ class NewRsAttributes:
 
         _psLog.debug('newCarKernels')
 
-        tc = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.KernelManager
-        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
-        nameList = TCM.getNameList()
+        # tc = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.KernelManager
+        # TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
+        nameList = PatternScriptEntities.KM.getNameList()
         for xName in nameList:
             xName = unicode(xName, PatternScriptEntities.ENCODING)
-            TCM.deleteKernel(xName)
+            PatternScriptEntities.KM.deleteKernel(xName)
         for xName in self.tpRailroadData['carKernel']:
             xName = unicode(xName, PatternScriptEntities.ENCODING)
-            TCM.newKernel(xName)
+            PatternScriptEntities.KM.newKernel(xName)
 
         return
 
@@ -285,15 +255,15 @@ class NewRsAttributes:
 
         _psLog.debug('newLocoConsist')
 
-        tc = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.engines.ConsistManager
-        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
-        nameList = TCM.getNameList()
+        # tc = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.engines.ConsistManager
+        # TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
+        nameList = PatternScriptEntities.ZM.getNameList()
         for xName in nameList:
             xName = unicode(xName, PatternScriptEntities.ENCODING)
-            TCM.deleteConsist(xName)
+            PatternScriptEntities.ZM.deleteConsist(xName)
         for xName in self.tpRailroadData['locoConsists']:
             xName = unicode(xName, PatternScriptEntities.ENCODING)
-            TCM.newConsist(xName)
+            PatternScriptEntities.ZM.newConsist(xName)
 
         return
 
@@ -345,6 +315,7 @@ class NewLocationsAndTracks:
         return
 
     def newTracks(self):
+        """Set spur length to spaces from TP"""
 
         _psLog.debug('newTracks')
 
@@ -364,10 +335,10 @@ class NewLocationsAndTracks:
 
         return
 
-    def deselectSpurTypes(self):
+    def deselectCarTypesForSpurs(self):
         """Deselect all types for spur tracks"""
 
-        _psLog.debug('deselectSpurTypes')
+        _psLog.debug('deselectCarTypesForSpurs')
 
         for item in self.tpRailroadData['locales']:
             if item[1]['type'] == 'Spur':
@@ -375,6 +346,25 @@ class NewLocationsAndTracks:
                 track = loc.getTrackByName(item[1]['track'], None)
                 for typeName in loc.getTypeNames():
                     track.deleteTypeName(typeName)
+
+        return
+
+    def setNonSpurTrackLength(self):
+        """All non spur tracks length set to number of cars occupying track.
+            Move default multiplier to the config file
+            """
+
+        _psLog.debug('setNonSpurTrackLength')
+
+        trackList = PatternScriptEntities.getAllTracks()
+        for track in trackList:
+            if track.getTrackType() == 'Spur':
+                continue
+            rsTotal = track.getNumberCars() + track.getNumberEngines()
+            if rsTotal == 0:
+                rsTotal = 1
+            newTrackLength = rsTotal * 44
+            track.setLength(newTrackLength)
 
         return
 
@@ -442,6 +432,24 @@ class NewRollingStock:
                 self.tpCars[line[0]] = {'type': line[1], 'aar': line[2], 'location': line[3], 'track': line[4], 'load': line[5], 'kernel': line[6]}
 
         return
+
+    def makeTpRollingStockData(self):
+        """Makes a json LUT: TP road + TP Number : TP ID"""
+
+        _psLog.debug('makeTpRollingStockData')
+
+        rsData = {}
+        for item in self.tpInventory:
+            line = item.split(';')
+            name, number = ModelEntities.parseCarId(line[0])
+            rsData[name + number] = line[7]
+
+        formattedRsFile = PatternScriptEntities.dumpJson(rsData)
+        rsFile = PatternScriptEntities.PROFILE_PATH + 'operations\\tpRollingStockData.json'
+        PatternScriptEntities.genericWriteReport(rsFile, formattedRsFile)
+
+        return
+
 
     def newCars(self):
         """'kernel': u'', 'type': u'box x23 prr', 'aar': u'XM', 'load': u'Empty', 'location': u'City', 'track': u'701'}"""

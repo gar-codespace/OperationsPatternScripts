@@ -12,45 +12,22 @@ _psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.ModelUpdate')
 
 def updateRollingStock():
     """Mini controller to update the rolling stock inventory.
-        Nothing fancy, the old ones are written over"""
+        Nothing fancy, the old car and engine listts are written over"""
 
-    updateXML = UpdateXML()
-    updateXML.deleteRsXml()
-
+    ModelNew.closeAllEditWindows()
+# Process the TP data
     newInventory = ModelNew.NewRollingStock()
     newInventory.getTpInventory()
     newInventory.splitTpList()
+    newInventory.makeTpRollingStockData()
+# Remove the cars and engines from memory
+    PatternScriptEntities.CM.dispose()
+    PatternScriptEntities.EM.dispose()
+# Create new car and engine lists in memory
     newInventory.newCars()
     newInventory.newLocos()
+# Write the new lists to the xml files, not changing the rest of the xml
     PatternScriptEntities.CMX.save()
     PatternScriptEntities.EMX.save()
-    
+
     return
-
-
-class UpdateXML:
-
-    def __init__(self):
-
-        self.o2oConfig =  PatternScriptEntities.readConfigFile('o2o')
-
-        self.TpRailroad = ModelNew.getTpRailroadData()
-
-        self.OperationsCarRoster = PatternScriptEntities.CMX
-        self.OperationsEngineRoster = PatternScriptEntities.EMX
-        self.OperationsLocationRoster = PatternScriptEntities.LMX
-
-        return
-
-    def deleteRsXml(self):
-
-        reportPath = PatternScriptEntities.PROFILE_PATH + 'operations\\'
-        opsFileList = PatternScriptEntities.JAVA_IO.File(reportPath).listFiles()
-        for file in opsFileList:
-            if file.toString().startswith('OperationsCarRoster') or file.toString().startswith('OperationsEngineRoster'):
-                file.delete()
-
-        PatternScriptEntities.CM.dispose()
-        PatternScriptEntities.EM.dispose()
-
-        return
