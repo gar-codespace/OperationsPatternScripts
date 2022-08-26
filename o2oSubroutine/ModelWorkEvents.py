@@ -160,9 +160,7 @@ class ProcessWorkEventList:
         return header
 
     def makeTpLocations(self, appendedTpSwitchList):
-        """The jason manifest is encoded in HTML Entity,
-        csv writer does not encode utf-8
-        """
+        """        """
 
         self.psLog.debug('Model.makeTpLocations')
 
@@ -178,7 +176,7 @@ class ProcessWorkEventList:
                     tpLocations += ",".join(self.makeLine(car)) + '\n'
             i += 1
 
-        return tpLocations + '\n'
+        return tpLocations + 'EOF\n'
 
     def makeLine(self, rS):
         """This makes a rolling stock line for the TP o2o file
