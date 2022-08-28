@@ -176,10 +176,10 @@ class ProcessWorkEventList:
                     tpLocations += ",".join(self.makeLine(car)) + '\n'
             i += 1
 
-        return tpLocations + 'EOF\n'
+        return tpLocations
 
     def makeLine(self, rS):
-        """This makes a rolling stock line for the TP o2o file
+        """This makes a rolling stock line for the TP o2o file.
         Identify the rolling stock by its TP car_ID"""
 
         ID = rS[PatternScriptEntities.SB.handleGetMessage('Road')] + rS[PatternScriptEntities.SB.handleGetMessage('Number')]

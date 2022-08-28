@@ -83,22 +83,21 @@ def parseRollingStockAsDict(rS):
     rsDict[PatternScriptEntities.SB.handleGetMessage('Length')] = rS[u'length']
     rsDict[PatternScriptEntities.SB.handleGetMessage('Weight')] = rS[u'weightTons']
     rsDict[PatternScriptEntities.SB.handleGetMessage('Track')] = unicode(rS[u'location'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
-    rsDict[u'Set to'] = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.ENCODING) \
-        + u';' + unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
+    jDestination = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.ENCODING)
+    jTrack = unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
+    rsDict[u'Set to'] = jDestination + u';' + jTrack
 
     try:
         jFinalDestination = unicode(rS[u'finalDestination'][u'userName'], PatternScriptEntities.ENCODING)
-    except:
-        jFinalDestination = PatternScriptEntities.BUNDLE['No final destination']
-
-    try:
         jFinalTrack = unicode(rS[u'finalDestination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
     except:
-        jFinalTrack = PatternScriptEntities.BUNDLE['No FD track']
+        # If there is no final destination, use destination
+        jFinalDestination = jDestination
+        jFinalTrack = jTrack
 
     rsDict[PatternScriptEntities.SB.handleGetMessage('Final_Dest')] = jFinalDestination
-    # rsDict[u'FD Track'] = jFinalTrack
     rsDict[PatternScriptEntities.SB.handleGetMessage('FD&Track')] = jFinalDestination + u';' + jFinalTrack
+    
     return rsDict
 
 def getTpExport(fileName):

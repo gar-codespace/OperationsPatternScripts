@@ -190,6 +190,17 @@
       "O" : 10,
       "G" : 11
     },
+    "RA" : [
+      "PUSO",
+      "Road",
+      "Number",
+      "Model",
+      "Load_Type",
+      "Load",
+      "Location",
+      "Dest&Track",
+      "FD&Track"
+    ],
     "SME" : true,
     "CWS" : true,
     "SBA" : true,
