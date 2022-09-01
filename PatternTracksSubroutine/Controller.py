@@ -2,8 +2,9 @@
 # © 2021, 2022 Greg Ritacco
 
 from psEntities import PatternScriptEntities
-from PatternTracksSubroutine import Model
 from PatternTracksSubroutine import View
+from PatternTracksSubroutine import Model
+from o2oSubroutine import ModelWorkEvents
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.Controller'
 SCRIPT_REV = 20220101
@@ -95,9 +96,6 @@ class StartUp:
         self.psLog.debug('Controller.patternButton')
 
         Model.updateConfigFile(self.widgets)
-
-        PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX = PatternScriptEntities.makeReportItemWidthMatrix()
-
         if not Model.verifySelectedTracks():
             self.psLog.warning('Track not found, re-select the location')
             return
@@ -106,28 +104,18 @@ class StartUp:
             self.psLog.warning('No tracks were selected for the pattern button')
             return
 
-        locationDict = Model.makeLocationDict()
-        modifiedReport = Model.makeReport(locationDict, 'PR')
+        PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX = PatternScriptEntities.makeReportItemWidthMatrix()
 
-        workEventName, textListForPrint = Model.makeWorkEventList(modifiedReport, trackTotals=True)
-        workEventPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\' + workEventName + '.txt'
-        PatternScriptEntities.genericWriteReport(workEventPath, textListForPrint)
-
-        fileToOpen = PatternScriptEntities.JAVA_IO.File(workEventPath)
-        if fileToOpen.isFile():
-            PatternScriptEntities.genericDisplayReport(fileToOpen)
-        else:
-            self.psLog.warning('Not found: ' + workEventPath)
-
-        if PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
-            Model.writeCsvSwitchList(modifiedReport)
-
+        Model.patternButton()
+        
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 
     def setCarsButton(self, EVENT):
-        """Opens a "Pattern Report for Track X" window for each checked track"""
+        """Opens a "Pattern Report for Track X" window for each checked track
+            Resets the o2o switchlist with a new header
+            """
 
         self.psLog.debug('Controller.setCarsButton')
 
@@ -140,9 +128,10 @@ class StartUp:
             return
 
         Model.onScButtonPress()
-
-        if PatternScriptEntities.readConfigFile()['CP']['SI'][1]['o2oSubroutine']: # TrainPlayer Include
-            Model.resetTrainPlayerSwitchlist()
+    # Reset the o2o switchlist
+        o2o = ModelWorkEvents.ResetWorkEvents()
+        o2o.makePsWorkEventsHeader()
+        o2o.writeWorkEvents()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

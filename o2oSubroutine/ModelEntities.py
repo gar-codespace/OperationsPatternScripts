@@ -6,99 +6,39 @@ from psEntities import PatternScriptEntities
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelEntities'
 SCRIPT_REV = 20220101
 
-def parseJmriLocations(location):
-    """called from JmriTranslationToTp"""
-# Temporary Context Manager
+def writeWorkEvents(psWorkEvents):
+    """Writes the o2o work events file"""
+
+    reportName = PatternScriptEntities.readConfigFile('o2o')['RN']
+    jsonFileName = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + reportName + '.json'
+    jsonFile = PatternScriptEntities.dumpJson(psWorkEvents)
+    PatternScriptEntities.genericWriteReport(jsonFileName, jsonFile)
+
+    return
+
+def getWorkEvents():
+    """Gets the o2o work events file"""
+
+    reportName = PatternScriptEntities.readConfigFile('o2o')['RN']
+    jsonFileName = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + reportName + '.json'
+    workEventList = PatternScriptEntities.genericReadReport(jsonFileName)
+    jsonFile = PatternScriptEntities.loadJson(workEventList)
+
+    return jsonFile
+
+def getLoadType(type, load):
+
     tc = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarLoads
     TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
 
-    tpLocation = {}
-    tpLocation['locationName'] = location['userName']
-    tpLocation['tracks'] = []
+    lt = 'O'
+    loadType = TCM.getLoadType(type, load)
+    if loadType == 'empty':
+        lt = 'E'
+    if loadType == 'load':
+        lt = 'L'
 
-    locoList = []
-    for loco in location[u'engines'][u'add']:
-        line = parseRollingStockAsDict(loco)
-        line['PUSO'] = 'PL'
-        line[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = 'O'
-        locoList.append(line)
-    for loco in location[u'engines'][u'remove']:
-        line = parseRollingStockAsDict(loco)
-        line['PUSO'] = 'SL'
-        line[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = 'O'
-        locoList.append(line)
-
-    carList = []
-    for car in location['cars']['add']:
-        line = parseRollingStockAsDict(car)
-        line['PUSO'] = 'PC'
-        loadType = TCM.getLoadType(car['carType'], car['load'])
-        try:
-            line[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = loadType
-        except:
-            line[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = 'U'
-        carList.append(line)
-    for car in location['cars']['remove']:
-        line = parseRollingStockAsDict(car)
-        line['PUSO'] = 'SC'
-        loadType = TCM.getLoadType(car['carType'], car['load'])
-        try:
-            line[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = loadType
-        except:
-            line[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = 'U'
-        carList.append(line)
-
-    locationTrack = {}
-    locationTrack['locos'] = locoList
-    locationTrack['cars'] = carList
-    locationTrack['trackName'] = 'Track Name'
-    locationTrack['length'] = 0
-
-    tpLocation['tracks'].append(locationTrack)
-
-    return tpLocation
-
-def parseRollingStockAsDict(rS):
-
-    rsDict = {}
-
-    rsDict[PatternScriptEntities.SB.handleGetMessage('Road')] = unicode(rS[u'road'], PatternScriptEntities.ENCODING)
-    rsDict[PatternScriptEntities.SB.handleGetMessage('Number')] = rS[u'number']
-
-    try:
-        rsDict[PatternScriptEntities.SB.handleGetMessage('Model')] = rS[u'model']
-    except KeyError:
-        rsDict[PatternScriptEntities.SB.handleGetMessage('Model')] = 'N/A'
-
-    try:
-        rsDict[PatternScriptEntities.SB.handleGetMessage('Type')] = rS[u'carType'] + "-" + rS[u'carSubType']
-    except:
-        rsDict[PatternScriptEntities.SB.handleGetMessage('Type')] = rS[u'carType']
-
-    try:
-        rsDict[PatternScriptEntities.SB.handleGetMessage('Load')] = rS['load']
-    except:
-        rsDict[PatternScriptEntities.SB.handleGetMessage('Load')] = 'O'
-
-    rsDict[PatternScriptEntities.SB.handleGetMessage('Length')] = rS[u'length']
-    rsDict[PatternScriptEntities.SB.handleGetMessage('Weight')] = rS[u'weightTons']
-    rsDict[PatternScriptEntities.SB.handleGetMessage('Track')] = unicode(rS[u'location'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
-    jDestination = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.ENCODING)
-    jTrack = unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
-    rsDict[u'Set to'] = jDestination + u';' + jTrack
-
-    try:
-        jFinalDestination = unicode(rS[u'finalDestination'][u'userName'], PatternScriptEntities.ENCODING)
-        jFinalTrack = unicode(rS[u'finalDestination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
-    except:
-        # If there is no final destination, use destination
-        jFinalDestination = jDestination
-        jFinalTrack = jTrack
-
-    rsDict[PatternScriptEntities.SB.handleGetMessage('Final_Dest')] = jFinalDestination
-    rsDict[PatternScriptEntities.SB.handleGetMessage('FD&Track')] = jFinalDestination + u';' + jFinalTrack
-    
-    return rsDict
+    return lt
 
 def getTpExport(fileName):
     """Generic file getter"""
@@ -163,3 +103,100 @@ def getSetToLocationAndTrack(location, track):
     except:
         print('Not found: ', location, track)
         return None, None
+
+
+#
+#
+# def parseJmriLocations(location):
+#     """called from JmriTranslationToTp"""
+# # Temporary Context Manager
+#     tc = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarLoads
+#     TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
+#
+#     tpLocation = {}
+#     tpLocation['locationName'] = location['userName']
+#     tpLocation['tracks'] = []
+#
+#     locoList = []
+#     for loco in location[u'engines'][u'add']:
+#         line = parseRollingStockAsDict(loco)
+#         line['PUSO'] = 'PL'
+#         line[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = 'O'
+#         locoList.append(line)
+#     for loco in location[u'engines'][u'remove']:
+#         line = parseRollingStockAsDict(loco)
+#         line['PUSO'] = 'SL'
+#         line[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = 'O'
+#         locoList.append(line)
+#
+#     carList = []
+#     for car in location['cars']['add']:
+#         line = parseRollingStockAsDict(car)
+#         line['PUSO'] = 'PC'
+#         loadType = TCM.getLoadType(car['carType'], car['load'])
+#         try:
+#             line[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = loadType
+#         except:
+#             line[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = 'U'
+#         carList.append(line)
+#     for car in location['cars']['remove']:
+#         line = parseRollingStockAsDict(car)
+#         line['PUSO'] = 'SC'
+#         loadType = TCM.getLoadType(car['carType'], car['load'])
+#         try:
+#             line[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = loadType
+#         except:
+#             line[PatternScriptEntities.SB.handleGetMessage('Load_Type')] = 'U'
+#         carList.append(line)
+#
+#     locationTrack = {}
+#     locationTrack['locos'] = locoList
+#     locationTrack['cars'] = carList
+#     locationTrack['trackName'] = 'Track Name'
+#     locationTrack['length'] = 0
+#
+#     tpLocation['tracks'].append(locationTrack)
+#
+#     return tpLocation
+#
+# def parseRollingStockAsDict(rS):
+#
+#     rsDict = {}
+#
+#     rsDict[PatternScriptEntities.SB.handleGetMessage('Road')] = unicode(rS[u'road'], PatternScriptEntities.ENCODING)
+#     rsDict[PatternScriptEntities.SB.handleGetMessage('Number')] = rS[u'number']
+#
+#     try:
+#         rsDict[PatternScriptEntities.SB.handleGetMessage('Model')] = rS[u'model']
+#     except KeyError:
+#         rsDict[PatternScriptEntities.SB.handleGetMessage('Model')] = 'N/A'
+#
+#     try:
+#         rsDict[PatternScriptEntities.SB.handleGetMessage('Type')] = rS[u'carType'] + "-" + rS[u'carSubType']
+#     except:
+#         rsDict[PatternScriptEntities.SB.handleGetMessage('Type')] = rS[u'carType']
+#
+#     try:
+#         rsDict[PatternScriptEntities.SB.handleGetMessage('Load')] = rS['load']
+#     except:
+#         rsDict[PatternScriptEntities.SB.handleGetMessage('Load')] = 'O'
+#
+#     rsDict[PatternScriptEntities.SB.handleGetMessage('Length')] = rS[u'length']
+#     rsDict[PatternScriptEntities.SB.handleGetMessage('Weight')] = rS[u'weightTons']
+#     rsDict[PatternScriptEntities.SB.handleGetMessage('Track')] = unicode(rS[u'location'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
+#     jDestination = unicode(rS[u'destination'][u'userName'], PatternScriptEntities.ENCODING)
+#     jTrack = unicode(rS[u'destination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
+#     rsDict[u'Set to'] = jDestination + u';' + jTrack
+#
+#     try:
+#         jFinalDestination = unicode(rS[u'finalDestination'][u'userName'], PatternScriptEntities.ENCODING)
+#         jFinalTrack = unicode(rS[u'finalDestination'][u'track'][u'userName'], PatternScriptEntities.ENCODING)
+#     except:
+#         # If there is no final destination, use destination
+#         jFinalDestination = jDestination
+#         jFinalTrack = jTrack
+#
+#     rsDict[PatternScriptEntities.SB.handleGetMessage('Final_Dest')] = jFinalDestination
+#     rsDict[PatternScriptEntities.SB.handleGetMessage('FD&Track')] = jFinalDestination + u';' + jFinalTrack
+#
+#     return rsDict

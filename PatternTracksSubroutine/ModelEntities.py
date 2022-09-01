@@ -102,12 +102,12 @@ def getRsOnTrains():
     return listOfAssignedRs
 
 def getLocoListForTrack(track):
-    """Creates a generic locomotive list for a track, used to make the JSON file"""
+    """Creates a generic locomotive list for a track, used to make the **** WHICH JSON??****  JSON file"""
 
     location = PatternScriptEntities.readConfigFile('PT')['PL']
     locoList = getLocoObjects(location, track)
 
-    return [getDetailsForLocoAsDict(loco) for loco in locoList]
+    return [getDetailsForLoco(loco) for loco in locoList]
 
 def getLocoObjects(location, track):
 
@@ -116,54 +116,35 @@ def getLocoObjects(location, track):
 
     return [loco for loco in allLocos if loco.getLocationName() == location and loco.getTrackName() == track]
 
-def getDetailsForLocoAsDict(locoObject):
-    """backupConfigFile() is a bit of user edit protection
-    Mimics jmri.jmrit.operations.setup.Setup.getEngineAttributes()
-    Dealers choice, either:
-        PatternScriptEntities.J_BUNDLE.ROAD
-        or
-        PatternScriptEntities.SB.handleGetMessage('Road')
-    """
-    standin = PatternScriptEntities.readConfigFile('RM')
+def getDetailsForLoco(locoObject):
+    """Mimics jmri.jmrit.operations.setup.Setup.getEngineAttributes()"""
 
-    listOfAssignedRs = getRsOnTrains()
     locoDetailDict = {}
 
-    locoDetailDict[PatternScriptEntities.J_BUNDLE.ROAD] = locoObject.getRoadName()
-    locoDetailDict[PatternScriptEntities.J_BUNDLE.NUMBER] = locoObject.getNumber()
-    locoDetailDict[PatternScriptEntities.J_BUNDLE.TYPE] = locoObject.getTypeName()
-    locoDetailDict[PatternScriptEntities.J_BUNDLE.MODEL] = locoObject.getModel()
-    locoDetailDict[PatternScriptEntities.J_BUNDLE.LENGTH] = locoObject.getLength()
-    locoDetailDict[PatternScriptEntities.J_BUNDLE.WEIGHT] = locoObject.getWeightTons()
-
+    locoDetailDict['Road'] = locoObject.getRoadName()
+    locoDetailDict['Number'] = locoObject.getNumber()
+    locoDetailDict['Type'] = locoObject.getTypeName()
+    locoDetailDict['Model'] = locoObject.getModel()
+    locoDetailDict['Length'] = locoObject.getLength()
+    locoDetailDict['Weight'] = locoObject.getWeightTons()
+    locoDetailDict['Color'] = locoObject.getColor()
+    locoDetailDict['Owner'] = str(locoObject.getOwner())
+    locoDetailDict['Comment'] = locoObject.getComment()
+    locoDetailDict['Location'] = locoObject.getLocationName()
+    locoDetailDict['Track'] = locoObject.getTrackName()
+    locoDetailDict['Destination'] = locoObject.getDestinationName()
+    # locoDetailDict['Dest Track'] = locoObject.getDestinationTrackName()
+# Modifications used by this plugin
     try:
-        locoDetailDict[PatternScriptEntities.J_BUNDLE.CONSIST] = locoObject.getConsist().getName()
+        locoDetailDict['Consist'] = locoObject.getConsist().getName()
     except:
-        locoDetailDict[PatternScriptEntities.J_BUNDLE.CONSIST] = PatternScriptEntities.BUNDLE['Single']
-
-    locoDetailDict[PatternScriptEntities.J_BUNDLE.OWNER] = str(locoObject.getOwner())
-    locoDetailDict[PatternScriptEntities.J_BUNDLE.TRACK] = locoObject.getTrackName()
-    locoDetailDict[PatternScriptEntities.J_BUNDLE.LOCATION] = locoObject.getLocation().getName()
-    dest = locoObject.getDestinationName()
-    if dest:
-        locoDetailDict[PatternScriptEntities.J_BUNDLE.DESTINATION] = dest
-    else:
-        locoDetailDict[PatternScriptEntities.J_BUNDLE.DESTINATION] = standin['DS']
-
-    locoDetailDict[PatternScriptEntities.J_BUNDLE.COMMENT] = locoObject.getComment()
-
-# Not part of JMRI engine attributes
-    locoDetailDict[PatternScriptEntities.J_BUNDLE.LOAD] = u'O'
-    locoDetailDict[PatternScriptEntities.J_BUNDLE.FINAL_DEST_TRACK] = PatternScriptEntities.readConfigFile('RM')['DS']
-
-    if locoObject in listOfAssignedRs: # Flag to mark if RS is on a built train
-        locoDetailDict[PatternScriptEntities.BUNDLE['On Train']] = True
-    else:
-        locoDetailDict[PatternScriptEntities.BUNDLE['On Train']] = False
-
-    locoDetailDict[PatternScriptEntities.BUNDLE['Set to']] = '[  ] '
-    locoDetailDict[u'PUSO'] = u'SL'
+        locoDetailDict['Consist'] = PatternScriptEntities.BUNDLE['Single']
+    locoDetailDict['Set_To'] = u'[  ] '
+    locoDetailDict[u'PUSO'] = u'XX'
     locoDetailDict[u' '] = u' ' # Catches KeyError - empty box added to getDropEngineMessageFormat
+    locoDetailDict['On_Train'] = False
+    if locoObject in getRsOnTrains(): # Flag to mark if RS is on a built train
+        locoDetailDict['On_Train'] = True
 
     return locoDetailDict
 
@@ -188,7 +169,7 @@ def getCarListForTrack(track):
     carList = getCarObjects(location, track)
     kernelTally = getKernelTally()
 
-    carDetails = [getDetailsForCarAsDict(car, kernelTally) for car in carList]
+    carDetails = [getDetailsForCar(car, kernelTally) for car in carList]
 
     return carDetails
 
@@ -198,7 +179,10 @@ def getCarObjects(location, track):
 
     return [car for car in allCars if car.getLocationName() == location and car.getTrackName() == track]
 
-def getKernelTally():
+def getKernelTally(kernelName=None):
+
+    if not kernelName:
+        return '0'
 
     tally = []
     for car in PatternScriptEntities.CM.getByIdList():
@@ -208,87 +192,168 @@ def getKernelTally():
 
     kernelTally = PatternScriptEntities.occuranceTally(tally)
 
-    return kernelTally
+    return str(kernelTally)
 
-def getDetailsForCarAsDict(carObject, kernelTally):
-    """Bad user edits are not caught, user starts over.
-    Mimics jmri.jmrit.operations.setup.Setup.getCarAttributes()
-    Dealers choice, either:
-        PatternScriptEntities.J_BUNDLE.ROAD
-        or
-        PatternScriptEntities.SB.handleGetMessage('Road')
-    """
+def getDetailsForCar(carObject, kernelTally):
+    """Mimics jmri.jmrit.operations.setup.Setup.getCarAttributes()"""
 
-    standin = PatternScriptEntities.readConfigFile('RM')
-
-    listOfAssignedRs = getRsOnTrains()
     carDetailDict = {}
-
-    carDetailDict[PatternScriptEntities.J_BUNDLE.ROAD] = carObject.getRoadName()
-    carDetailDict[PatternScriptEntities.J_BUNDLE.NUMBER] = carObject.getNumber()
-    carDetailDict[PatternScriptEntities.J_BUNDLE.TYPE] = carObject.getTypeName()
-    carDetailDict[PatternScriptEntities.J_BUNDLE.LENGTH] = carObject.getLength()
-    carDetailDict[PatternScriptEntities.J_BUNDLE.WEIGHT] = carObject.getWeightTons()
-    if carObject.isCaboose() or carObject.isPassenger():
-        carDetailDict[PatternScriptEntities.J_BUNDLE.LOAD] = u'O'
-    else:
-        carDetailDict[PatternScriptEntities.J_BUNDLE.LOAD] = carObject.getLoadName()
-    carDetailDict[PatternScriptEntities.J_BUNDLE.LOAD_TYPE] = carObject.getLoadType()
-    carDetailDict[PatternScriptEntities.J_BUNDLE.HAZARDOUS] = carObject.isHazardous()
-    carDetailDict[PatternScriptEntities.J_BUNDLE.COLOR] = carObject.getColor()
-    carDetailDict[PatternScriptEntities.J_BUNDLE.KERNEL] = carObject.getKernelName()
-
-    carDetailDict[PatternScriptEntities.J_BUNDLE.KERNEL_SIZE] = '0'
-    if carObject.getKernelName():
-        carDetailDict[PatternScriptEntities.J_BUNDLE.KERNEL_SIZE] = str(kernelTally[carObject.getKernelName()])
-
-    carDetailDict[PatternScriptEntities.J_BUNDLE.OWNER] = str(carObject.getOwner())
-    carDetailDict[PatternScriptEntities.J_BUNDLE.TRACK] = carObject.getTrackName()
-    carDetailDict[PatternScriptEntities.J_BUNDLE.LOCATION] = carObject.getLocationName()
-
-    if not (carObject.getDestinationName()):
-        carDetailDict[PatternScriptEntities.J_BUNDLE.DESTINATION] = standin['DS']
-        carDetailDict[PatternScriptEntities.J_BUNDLE.DEST_TRACK] = standin['DS'] + ',' + standin['DT']
-    else:
-        carDetailDict[PatternScriptEntities.J_BUNDLE.DESTINATION] = carObject.getDestinationName()
-        carDetailDict[PatternScriptEntities.J_BUNDLE.DEST_TRACK] = carObject.getDestinationName() \
-                                     + ', ' + carObject.getDestinationTrackName()
-
-    if not (carObject.getFinalDestinationName()):
-        carDetailDict[PatternScriptEntities.J_BUNDLE.FINAL_DEST] = standin['FD']
-        carDetailDict[PatternScriptEntities.J_BUNDLE.FINAL_DEST_TRACK] = standin['FD'] + ',' + standin['FT']
-    else:
-        carDetailDict[PatternScriptEntities.J_BUNDLE.FINAL_DEST] = carObject.getFinalDestinationName()
-        carDetailDict[PatternScriptEntities.J_BUNDLE.FINAL_DEST_TRACK] = carObject.getFinalDestinationName() \
-                                   + ', ' + carObject.getFinalDestinationTrackName()
-
-    carDetailDict[PatternScriptEntities.J_BUNDLE.COMMENT] = carObject.getComment()
-
     trackId = PatternScriptEntities.LM.getLocationByName(carObject.getLocationName()).getTrackById(carObject.getTrackId())
-    carDetailDict[PatternScriptEntities.J_BUNDLE.DROP_COMMENT] = trackId.getCommentSetout()
-    carDetailDict[PatternScriptEntities.J_BUNDLE.PICKUP_COMMENT] = trackId.getCommentPickup()
-    carDetailDict[PatternScriptEntities.J_BUNDLE.RWE] = carObject.getReturnWhenEmptyDestinationName()
-    carDetailDict[PatternScriptEntities.J_BUNDLE.TAB] = None
-    carDetailDict[PatternScriptEntities.J_BUNDLE.TAB2] = None
-    carDetailDict[PatternScriptEntities.J_BUNDLE.TAB3] = None
 
-# Not part of JMRI car attributes
-    lineKey = PatternScriptEntities.BUNDLE['On Train']
-    if carObject in listOfAssignedRs: # Flag to mark if RS is on a built train
-        carDetailDict[lineKey] = True
-    else:
-        carDetailDict[lineKey] = False
+    carDetailDict['Road'] = carObject.getRoadName()
+    carDetailDict['Number'] = carObject.getNumber()
+    carDetailDict['Type'] = carObject.getTypeName()
+    carDetailDict['Length'] = carObject.getLength()
+    carDetailDict['Weight'] = carObject.getWeightTons()
+    carDetailDict['Load_Type'] = carObject.getLoadType()
+    carDetailDict['Load'] = carObject.getLoadName()
+    carDetailDict['Hazardous'] = carObject.isHazardous()
+    carDetailDict['Color'] = carObject.getColor()
+    carDetailDict['Kernel'] = carObject.getKernelName()
+    carDetailDict['Kernel_Size'] = getKernelTally(carObject.getKernelName())
+    carDetailDict['Owner'] = str(carObject.getOwner())
+    carDetailDict['Track'] = carObject.getTrackName()
+    carDetailDict['Location'] = carObject.getLocationName()
+    carDetailDict['Comment'] = carObject.getComment()
+    carDetailDict['Destination'] = carObject.getDestinationName()
+    carDetailDict['Dest&Track'] = carObject.getDestinationTrackName()
+    carDetailDict['Final_Dest'] = carObject.getFinalDestinationName()
+    carDetailDict['FD&Track'] = carObject.getFinalDestinationTrackName()
+    carDetailDict['Drop_Comment'] = trackId.getCommentSetout()
+    carDetailDict['Pickup_Comment'] = trackId.getCommentPickup()
+    carDetailDict['RWE'] = carObject.getReturnWhenEmptyDestinationName()
+    carDetailDict['RWL'] = carObject.getReturnWhenLoadedDestinationName()
+# Modifications used by this plugin
+    if carObject.isCaboose() or carObject.isPassenger():
+        carDetailDict['Load_Type'] = u'O' # Occupied
 
-    lineKey = PatternScriptEntities.BUNDLE['Set to']
-    carDetailDict[lineKey] = '[  ] '
+    carDetailDict['On_Train'] = False
+    if carObject in getRsOnTrains(): # Flag to mark if RS is on a built train
+        carDetailDict['On_Train'] = True
 
-    carDetailDict[u'PUSO'] = u'SC'
+    # carDetailDict[PatternScriptEntities.BUNDLE['Set to']] = '[  ] '
+    carDetailDict['Set_To'] = u'[  ] '
+    carDetailDict[u'PUSO'] = u'XX'
     carDetailDict[u' '] = u' ' # Catches KeyError - empty box added to getLocalSwitchListMessageFormat
 
     return carDetailDict
 
+def makeTextReportHeader(textWorkEventList):
+    """Makes the header for generic text reports"""
+
+    headerNames = PatternScriptEntities.readConfigFile('PT')
+
+    textReportHeader    = textWorkEventList['railroad'] + '\n' \
+                        + textWorkEventList['trainName'] + '\n' \
+                        + textWorkEventList['date'] + '\n\n' \
+                        + PatternScriptEntities.BUNDLE['Work Location:'] + ' ' + headerNames['PL'] + '\n\n'
+
+    return textReportHeader
+
+def makeTextReportLocations(textWorkEventList, trackTotals):
+
+    reportWidth = PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX
+    locoItems = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
+    carItems = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
+
+    reportSwitchList = ''
+    reportTally = [] # running total for all tracks
+    for track in textWorkEventList['locations'][0]['tracks']:
+        lengthOfLocos = 0
+        lengthOfCars = 0
+        trackTally = []
+        trackName = track['trackName']
+        trackLength = track['length']
+        reportSwitchList += PatternScriptEntities.BUNDLE['Track:'] + ' ' + trackName + '\n'
+        switchListRow = ''
+
+        for loco in track['locos']:
+            lengthOfLocos += int(loco['Length']) + 4
+            loco = addStandIns(loco)
+            reportSwitchList += loco['Set_To'] + loopThroughRs('loco', loco) + '\n'
+
+        for car in track['cars']:
+            lengthOfCars += int(car['Length']) + 4
+            car = addStandIns(car)
+            reportSwitchList += car['Set_To'] + loopThroughRs('car', car) + '\n'
+            trackTally.append(car['Final_Dest'])
+            reportTally.append(car['Final_Dest'])
+
+        if trackTotals:
+            totalLength = lengthOfLocos + lengthOfCars
+            reportSwitchList += PatternScriptEntities.BUNDLE['Total Cars:'] + ' ' \
+                + str(len(track['cars'])) + ' ' + PatternScriptEntities.BUNDLE['Track Length:']  + ' ' \
+                + str(trackLength) +  ' ' + PatternScriptEntities.BUNDLE['Eqpt. Length:']  + ' ' \
+                + str(totalLength) + ' ' +  PatternScriptEntities.BUNDLE['Available:']  + ' '  \
+                + str(trackLength - totalLength) \
+                + '\n\n'
+            reportSwitchList += PatternScriptEntities.BUNDLE['Track Totals for Cars:'] + '\n'
+            for track, count in sorted(PatternScriptEntities.occuranceTally(trackTally).items()):
+                reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
+        reportSwitchList += '\n'
+
+    if trackTotals:
+        reportSwitchList += '\n' + PatternScriptEntities.BUNDLE['Report Totals for Cars:'] + '\n'
+        for track, count in sorted(PatternScriptEntities.occuranceTally(reportTally).items()):
+            reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
+
+    return reportSwitchList
+
+def addStandIns(rs):
+    """Make adjustments to the display version of textWorkEventList"""
+
+    try:
+        lt = rs['Load_Type']
+        if lt == 'Load':
+            lt = 'L'
+        if lt == 'Empty':
+            lt = 'E'
+        rs.update({'Load_Type': lt})
+    except:
+        pass
+
+    reportModifiers = PatternScriptEntities.readConfigFile('RM')
+
+    try:
+        if rs['Final_Dest'] == '':
+            rs.update({'Final_Dest': reportModifiers['FD']})
+            rs.update({'FD&Track': reportModifiers['FD']})
+    except:
+        pass
+
+    if rs['Destination'] == '':
+        rs.update({'Destination': reportModifiers['DS']})
+        rs.update({'Dest&Track': reportModifiers['DS']})
+
+
+    return rs
+
+
+def loopThroughRs(type, rsAttribs):
+    """Creates a line containing the attrs in get * MessageFormat"""
+
+    reportWidth = PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX
+    switchListRow = ''
+    rosetta = PatternScriptEntities.translateMessageFormat()
+
+    if type == 'loco':
+        messageFormat = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
+    if type == 'car':
+        messageFormat = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
+
+    for lookup in messageFormat:
+        item = rosetta[lookup]
+
+        if 'Tab' in item:
+            continue
+
+        itemWidth = reportWidth[item]
+        switchListRow += PatternScriptEntities.formatText(rsAttribs[item], itemWidth)
+
+    return switchListRow
+
 def makeGenericHeader():
-    """A generic header info for any switch list, used to make the JSON file"""
+    """A generic header info for any switch list, used to make the ??????????????? JSON file"""
 
     listHeader = {}
     listHeader['railroad'] = unicode(PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getRailroadName(), PatternScriptEntities.ENCODING)
@@ -301,7 +366,7 @@ def makeGenericHeader():
     return listHeader
 
 def writeWorkEventListAsJson(switchList):
-    """The generic switch list is written as a json"""
+    """The generic switch list is written as a ???????????? json"""
 
     switchListName = switchList['trainDescription']
     switchListPath = PatternScriptEntities.PROFILE_PATH \

@@ -12,7 +12,9 @@ SCRIPT_REV = 20220101
 
 _psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.ModelSetCarsForm')
 
+
 def testValidityOfForm(setCarsForm, textBoxEntry):
+    """Checks that both submitted forms are the same length"""
 
     _psLog.debug('ModelSetCarsForm.testValidityOfForm')
 
@@ -25,139 +27,143 @@ def testValidityOfForm(setCarsForm, textBoxEntry):
         _psLog.critical('mismatched input list and car roster lengths')
         return False
 
-def setRsToTrack(setCarsForm, textBoxEntry):
+def mergeForms(setCarsForm, textBoxEntry):
+    """Merge the values in textBoxEntry into the ['Set to'] field of setCarsForm.
+        This preps the setCarsForm for the o2o sub.
+        Adds a bit of reformatting too.
+        """
 
-    _psLog.debug('ModelSetCarsForm.setRsToTrack')
+    _psLog.debug('ModelSetCarsForm.mergeForms')
 
     userInputList = []
     for userInput in textBoxEntry:
         userInputList.append(unicode(userInput.getText(), PatternScriptEntities.ENCODING))
 
-    i = 0
-    setCount = 0
-
     allTracksAtLoc = ModelEntities.getTracksByLocation(None)
     fromTrack = unicode(setCarsForm['locations'][0]['tracks'][0]['trackName'], PatternScriptEntities.ENCODING)
+    locationName = setCarsForm['locations'][0]['locationName']
 
-    for loco in setCarsForm['locations'][0]['tracks'][0]['locos']:
-        if not unicode(userInputList[i], PatternScriptEntities.ENCODING) in allTracksAtLoc:
-    # Catches invalid track typed into box, skips empty entries
-            i += 1
-            continue
-        if userInputList[i] == fromTrack:
-            i += 1
-            continue
+    i = 0
+    locos = setCarsForm['locations'][0]['tracks'][0]['locos']
+    for loco in locos:
+        userInput = unicode(userInputList[i], PatternScriptEntities.ENCODING)
+        loco['Set to'] = fromTrack
+        if userInput in allTracksAtLoc:
+            loco['Set to'] = userInputList[i]
+        i += 1
+
+    cars = setCarsForm['locations'][0]['tracks'][0]['cars']
+    for car in cars:
+        userInput = unicode(userInputList[i], PatternScriptEntities.ENCODING)
+        car['Set to'] = fromTrack
+        if userInput in allTracksAtLoc:
+            car['Set to'] = userInputList[i]
+        i += 1
+
+    setCarsForm['locations'] = {'locationName': locationName, 'cars': cars, 'locos': locos}
+
+    return setCarsForm
+
+def setRsToTrack(mergedForm):
+    """When the set cars to track button of any set cars form is pressed"""
+
+    _psLog.debug('ModelSetCarsForm.setRsToTrack')
+
+    setCount = 0
+
+    for loco in mergedForm['locations']['locos']:
         locoObject =  PatternScriptEntities.EM.getByRoadAndNumber(loco['Road'], loco['Number'])
-    # Catches on the fly edit of name or road
-        try:
-            setResult = setRs(locoObject, userInputList[i])
-        except AttributeError:
-            i += 1
-            continue
+        updatedRs = UpdateRollingStock(locoObject, loco['Set to'])
+        setResult = updatedRs.setRollingStock()
         if setResult == 'okay':
             setCount += 1
-        i += 1
+    # PatternScriptEntities.EMX.save()
 
-    PatternScriptEntities.JMRI.jmrit.operations.rollingstock.engines.EngineManagerXml.save()
-
-    for car in setCarsForm['locations'][0]['tracks'][0]['cars']:
-        if not unicode(userInputList[i], PatternScriptEntities.ENCODING) in allTracksAtLoc:
-            i += 1
-            continue
-        if userInputList[i] == fromTrack:
-            i += 1
-            continue
+    for car in mergedForm['locations']['cars']:
         carObject =  PatternScriptEntities.CM.getByRoadAndNumber(car['Road'], car['Number'])
-    # Catches on the fly edit of name or road
-        try:
-            setResult = setRs(carObject, userInputList[i])
-        except AttributeError:
-            i += 1
-            continue
+        updatedRs = UpdateRollingStock(carObject, car['Set to'])
+        setResult = updatedRs.setRollingStock()
         if setResult == 'okay':
+            updatedRs.rsUpdate()
+            updatedRs.scheduleUpdate()
             setCount += 1
-        i += 1
+    # PatternScriptEntities.CMX.save()
 
-    PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarManagerXml.save()
-
-    _psLog.info('Rolling stock count: ' + str(setCount) + ', processed from track: ' + fromTrack)
+    _psLog.info('Rolling stock count: ' + str(setCount) + ', processed.')
 
     return
 
-def setRs(rollingStock, userInputListItem):
+class UpdateRollingStock:
+    """Called from setRsToTrack"""
 
-    location = PatternScriptEntities.readConfigFile('PT')['PL']
-    locationObject = PatternScriptEntities.LM.getLocationByName(unicode(location, PatternScriptEntities.ENCODING))
-    toTrackObject = locationObject.getTrackByName(unicode(userInputListItem, PatternScriptEntities.ENCODING), None)
+    def __init__(self, rollingStock, track):
 
-    ignoreTrackLength = PatternScriptEntities.readConfigFile('PT')['PI']
-    if ignoreTrackLength:
-        trackLength = toTrackObject.getLength()
-        toTrackObject.setLength(9999)
-        setResult = rollingStock.setLocation(locationObject, toTrackObject)
-        toTrackObject.setLength(trackLength)
-    else:
-        setResult = rollingStock.setLocation(locationObject, toTrackObject)
+        self.rollingStock = rollingStock
 
-    if toTrackObject.getTrackType() == 'Spur' and setResult == 'okay':
-        rollingStock.updateLoad()
-        rollingStock.setMoves(rollingStock.getMoves() + 1)
-        deleteFd(rollingStock)
-    if PatternScriptEntities.readConfigFile('PT')['AS'] and setResult == 'okay':
-        applySchedule(toTrackObject, rollingStock)
+        location = PatternScriptEntities.readConfigFile('PT')['PL']
+        self.toLocation = PatternScriptEntities.LM.getLocationByName(unicode(location, PatternScriptEntities.ENCODING))
+        self.toTrack = self.toLocation.getTrackByName(unicode(track, PatternScriptEntities.ENCODING), None)
 
-    return setResult
+        return
 
-def deleteFd(carObject):
+    def setRollingStock(self):
+        """Sets rolling stock to the chosen track.
+            Subject to track type and load. Track length may be overidden.
+            """
+        ignoreTrackLength = PatternScriptEntities.readConfigFile('PT')['PI']
+        if ignoreTrackLength:
+            setResult = self.rollingStock.setLocation(self.toLocation, self.toTrack, True)
+        else:
+            setResult = self.rollingStock.setLocation(self.toLocation, self.toTrack)
 
-    carObject.setFinalDestinationTrack(None)
-    carObject.setFinalDestination(None)
+        return setResult
 
-    return
+    def rsUpdate(self):
 
-def applySchedule(toTrackObject, carObject):
-    """If the to-track is a spur, try to set the load/empty requirement for the track"""
+        if self.toTrack.getTrackType() == 'Spur':
+            self.rollingStock.setMoves(self.rollingStock.getMoves() + 1)
 
-    location = PatternScriptEntities.readConfigFile('PT')['PL']
-    schedule = getSchedule(location, toTrackObject.getName())
-    if schedule:
-        carType = carObject.getTypeName()
-        carObject.setLoadName(schedule.getItemByType(carType).getShipLoadName())
-        carObject.setDestination(schedule.getItemByType(carType).getDestination(), schedule.getItemByType(carType).getDestinationTrack(), True) # force set dest
-        schedule.getItemByType(carType).setHits(schedule.getItemByType(carType).getHits() + 1)
+        self.rollingStock.setFinalDestinationTrack(None)
+        self.rollingStock.setFinalDestination(None)
 
-    return
+        return
 
-def getSchedule(locationString, trackString):
-    """Returns a schedule if there is one"""
+    def scheduleUpdate(self):
+        """If the to-track is a spur, try to set the load/empty requirement for the track
+            Honors apply schedule flag.
+            Toggles default L/E for spurs.
+            """
 
-    track = PatternScriptEntities.LM.getLocationByName(locationString).getTrackByName(trackString, 'Spur')
+        schedule = PatternScriptEntities.SM.getScheduleByName(self.toTrack.getScheduleName())
+        if schedule and PatternScriptEntities.readConfigFile('PT')['AS']:
+            carType = self.rollingStock.getTypeName()
+            self.rollingStock.setLoadName(schedule.getItemByType(carType).getShipLoadName())
+            self.rollingStock.setDestination(schedule.getItemByType(carType).getDestination(), schedule.getItemByType(carType).getDestinationTrack(), True) # force set dest
+            schedule.getItemByType(carType).setHits(schedule.getItemByType(carType).getHits() + 1)
+        else:
+            if self.toTrack.getTrackType() == 'Spur':
+                self.rollingStock.updateLoad() # Toggles default load
 
-    if track:
-        schedule = PatternScriptEntities.SM.getScheduleByName(track.getScheduleName())
+        return
 
-        return schedule
-
-    return
-
-def exportSetCarsFormToTp(setCarsForm, textBoxEntry):
-
-    _psLog.debug('ModelSetCarsForm.exportSetCarsFormToTp')
-
-    if PatternScriptEntities.CheckTpDestination().directoryExists():
-
-        tpSwitchList = ModelWorkEvents.TrackPatternTranslationToTp()
-        modifiedSwitchList = tpSwitchList.modifySwitchList(setCarsForm, textBoxEntry)
-        appendedTpSwitchList = tpSwitchList.appendSwitchList(modifiedSwitchList)
-
-        tpWorkEventProcessor = ModelWorkEvents.ProcessWorkEventList()
-        tpWorkEventProcessor.writeTpWorkEventListAsJson(appendedTpSwitchList)
-        tpSwitchListHeader = tpWorkEventProcessor.makeTpHeader(appendedTpSwitchList)
-        tpSwitchListLocations = tpWorkEventProcessor.makeTpLocations(appendedTpSwitchList)
-
-        ModelWorkEvents.WriteWorkEventListToTp(tpSwitchListHeader + tpSwitchListLocations).asCsv()
-
-    return
+# def exportSetCarsFormToTp(setCarsForm, textBoxEntry):
+#
+#     _psLog.debug('ModelSetCarsForm.exportSetCarsFormToTp')
+#
+#     if PatternScriptEntities.CheckTpDestination().directoryExists():
+#
+#         tpSwitchList = ModelWorkEvents.TrackPatternTranslationToTp()
+#         modifiedSwitchList = tpSwitchList.modifySwitchList(setCarsForm, textBoxEntry)
+#         appendedTpSwitchList = tpSwitchList.appendSwitchList(modifiedSwitchList)
+#
+#         tpWorkEventProcessor = ModelWorkEvents.ProcessWorkEventList()
+#         tpWorkEventProcessor.writeTpWorkEventListAsJson(appendedTpSwitchList)
+#         tpSwitchListHeader = tpWorkEventProcessor.makeTpHeader(appendedTpSwitchList)
+#         tpSwitchListLocations = tpWorkEventProcessor.makeTpLocations(appendedTpSwitchList)
+#
+#         ModelWorkEvents.WriteWorkEventListToTp(tpSwitchListHeader + tpSwitchListLocations).asCsv()
+#
+#     return
 
 def makeLocationDict(setCarsForm, textBoxEntry):
     """Replaces car['Set to'] = [ ] with either [Hold] or ['some other valid track']"""

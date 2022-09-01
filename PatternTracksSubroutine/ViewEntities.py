@@ -123,87 +123,140 @@ class TrackPatternPanel:
 
         return tpPanel
 
-def makeTextListForPrint(textWorkEventList, trackTotals=False):
+# def makeTextListForPrint(textWorkEventList, trackTotals=False):
+#
+#     reportHeader = makeTextReportHeader(textWorkEventList)
+#     reportLocations = makeTextReportLocations(textWorkEventList, trackTotals)
+#
+#     return reportHeader + reportLocations
 
-    reportHeader = makeTextReportHeader(textWorkEventList)
-    reportLocations = makeTextReportLocations(textWorkEventList, trackTotals)
+# def makeTextReportHeader(textWorkEventList):
+#
+#     headerNames = PatternScriptEntities.readConfigFile('PT')
+#
+#     textReportHeader    = textWorkEventList['railroad'] + '\n' \
+#                         + textWorkEventList['trainName'] + '\n' \
+#                         + textWorkEventList['date'] + '\n\n' \
+#                         + PatternScriptEntities.BUNDLE['Work Location:'] + ' ' + headerNames['PL'] + '\n\n'
+#
+#     return textReportHeader
 
-    return reportHeader + reportLocations
+# def makeTextReportLocations(textWorkEventList, trackTotals):
+#
+#     reportWidth = PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX
+#     locoItems = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
+#     carItems = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
+#
+#     reportSwitchList = ''
+#     reportTally = [] # running total for all tracks
+#     for track in textWorkEventList['locations'][0]['tracks']:
+#         lengthOfLocos = 0
+#         lengthOfCars = 0
+#         trackTally = []
+#         trackName = track['trackName']
+#         trackLength = track['length']
+#         reportSwitchList += PatternScriptEntities.BUNDLE['Track:'] + ' ' + trackName + '\n'
+#         switchListRow = ''
+#
+#         for loco in track['locos']:
+#             # lengthOfLocos += int(loco[PatternScriptEntities.SB.handleGetMessage('Length')]) + 4
+#             # reportSwitchList += loco[PatternScriptEntities.BUNDLE['Set to']] + loopThroughRs('loco', loco) + '\n'
+#             lengthOfLocos += int(loco['Length']) + 4
+#             reportSwitchList += loco['Set to'] + loopThroughRs('loco', loco) + '\n'
+#
+#         for car in track['cars']:
+#             lengthOfCars += int(car['Length']) + 4
+#             reportSwitchList += car['Set to'] + loopThroughRs('car', car) + '\n'
+#             trackTally.append(car['Final Dest'])
+#             reportTally.append(car['Final Dest'])
+#
+#
+#             # lengthOfCars += int(car[PatternScriptEntities.SB.handleGetMessage('Length')]) + 4
+#             # reportSwitchList += car[PatternScriptEntities.BUNDLE['Set to']] + loopThroughRs('car', car) + '\n'
+#             # trackTally.append(car[PatternScriptEntities.SB.handleGetMessage('Final_Dest')])
+#             # reportTally.append(car[PatternScriptEntities.SB.handleGetMessage('Final_Dest')])
+#
+#         if trackTotals:
+#             totalLength = lengthOfLocos + lengthOfCars
+#             reportSwitchList += PatternScriptEntities.BUNDLE['Total Cars:'] + ' ' \
+#                 + str(len(track['cars'])) + ' ' + PatternScriptEntities.BUNDLE['Track Length:']  + ' ' \
+#                 + str(trackLength) +  ' ' + PatternScriptEntities.BUNDLE['Eqpt. Length:']  + ' ' \
+#                 + str(totalLength) + ' ' +  PatternScriptEntities.BUNDLE['Available:']  + ' '  \
+#                 + str(trackLength - totalLength) \
+#                 + '\n\n'
+#             reportSwitchList += PatternScriptEntities.BUNDLE['Track Totals for Cars:'] + '\n'
+#             for track, count in sorted(PatternScriptEntities.occuranceTally(trackTally).items()):
+#                 reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
+#         reportSwitchList += '\n'
+#
+#     if trackTotals:
+#         reportSwitchList += '\n' + PatternScriptEntities.BUNDLE['Report Totals for Cars:'] + '\n'
+#         for track, count in sorted(PatternScriptEntities.occuranceTally(reportTally).items()):
+#             reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
+#
+#     return reportSwitchList
+#
+# def loopThroughRs(type, rsAttribs):
+#
+#     reportWidth = PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX
+#     switchListRow = ''
+#     rosetta = translateMessageFormat()
+#
+#     if type == 'loco':
+#         messageFormat = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
+#     if type == 'car':
+#         messageFormat = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
+#
+#     for lookup in messageFormat:
+#         item = rosetta[lookup]
+#
+#         if 'Tab' in item:
+#             continue
+#
+#         itemWidth = reportWidth[item]
+#         switchListRow += PatternScriptEntities.formatText(rsAttribs[item], itemWidth)
+#
+#     return switchListRow
 
-def makeTextReportHeader(textWorkEventList):
-
-    headerNames = PatternScriptEntities.readConfigFile('PT')
-
-    textReportHeader    = textWorkEventList['railroad'] + '\n' \
-                        + textWorkEventList['trainName'] + '\n' \
-                        + textWorkEventList['date'] + '\n\n' \
-                        + PatternScriptEntities.BUNDLE['Work Location:'] + ' ' + headerNames['PL'] + '\n\n'
-
-    return textReportHeader
-
-def makeTextReportLocations(textWorkEventList, trackTotals):
-
-    reportWidth = PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX
-    locoItems = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
-    carItems = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
-
-    reportSwitchList = ''
-    reportTally = [] # running total for all tracks
-    for track in textWorkEventList['locations'][0]['tracks']:
-        lengthOfLocos = 0
-        lengthOfCars = 0
-        trackTally = []
-        trackName = track['trackName']
-        trackLength = track['length']
-        reportSwitchList += PatternScriptEntities.BUNDLE['Track:'] + ' ' + trackName + '\n'
-        switchListRow = ''
-
-        for loco in track['locos']:
-            lengthOfLocos += int(loco[PatternScriptEntities.SB.handleGetMessage('Length')]) + 4
-            reportSwitchList += loco[PatternScriptEntities.BUNDLE['Set to']] + loopThroughRs('loco', loco) + '\n'
-
-        for car in track['cars']:
-            lengthOfCars += int(car[PatternScriptEntities.SB.handleGetMessage('Length')]) + 4
-            reportSwitchList += car[PatternScriptEntities.BUNDLE['Set to']] + loopThroughRs('car', car) + '\n'
-            trackTally.append(car[PatternScriptEntities.SB.handleGetMessage('Final_Dest')])
-            reportTally.append(car[PatternScriptEntities.SB.handleGetMessage('Final_Dest')])
-
-        if trackTotals:
-            totalLength = lengthOfLocos + lengthOfCars
-            reportSwitchList += PatternScriptEntities.BUNDLE['Total Cars:'] + ' ' \
-                + str(len(track['cars'])) + ' ' + PatternScriptEntities.BUNDLE['Track Length:']  + ' ' \
-                + str(trackLength) +  ' ' + PatternScriptEntities.BUNDLE['Eqpt. Length:']  + ' ' \
-                + str(totalLength) + ' ' +  PatternScriptEntities.BUNDLE['Available:']  + ' '  \
-                + str(trackLength - totalLength) \
-                + '\n\n'
-            reportSwitchList += PatternScriptEntities.BUNDLE['Track Totals for Cars:'] + '\n'
-            for track, count in sorted(PatternScriptEntities.occuranceTally(trackTally).items()):
-                reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
-        reportSwitchList += '\n'
-
-    if trackTotals:
-        reportSwitchList += '\n' + PatternScriptEntities.BUNDLE['Report Totals for Cars:'] + '\n'
-        for track, count in sorted(PatternScriptEntities.occuranceTally(reportTally).items()):
-            reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
-
-    return reportSwitchList
-
-def loopThroughRs(type, rsAttribs):
-
-    reportWidth = PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX
-    switchListRow = ''
-
-    if type == 'loco':
-        messageFormat = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
-    if type == 'car':
-        messageFormat = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
-
-    for item in messageFormat:
-
-        if 'Tab' in item:
-            continue
-
-        itemWidth = reportWidth[item]
-        switchListRow += PatternScriptEntities.formatText(rsAttribs[item], itemWidth)
-
-    return switchListRow
+# def translateMessageFormat():
+#     """The messageFormat is in the locale's language, it has to be hashed to the plugin fields."""
+#
+#     rosetta = {}
+# #Common
+#     rosetta[PatternScriptEntities.J_BUNDLE.ROAD] = 'Road'
+#     rosetta[PatternScriptEntities.J_BUNDLE.NUMBER] = 'Number'
+#     rosetta[PatternScriptEntities.J_BUNDLE.TYPE] = 'Type'
+#     rosetta[PatternScriptEntities.J_BUNDLE.LENGTH] = 'Length'
+#     rosetta[PatternScriptEntities.J_BUNDLE.WEIGHT] = 'Weight'
+#     rosetta[PatternScriptEntities.J_BUNDLE.COLOR] = 'Color'
+#     rosetta[PatternScriptEntities.J_BUNDLE.OWNER] = 'Owner'
+#     rosetta[PatternScriptEntities.J_BUNDLE.TRACK] = 'Track'
+#     rosetta[PatternScriptEntities.J_BUNDLE.LOCATION] = 'Location'
+#     rosetta[PatternScriptEntities.J_BUNDLE.COMMENT] = 'Comment'
+#     rosetta[PatternScriptEntities.J_BUNDLE.DESTINATION] = 'Destination'
+#     rosetta[PatternScriptEntities.J_BUNDLE.DEST_TRACK] = 'Dest&Track'
+#     rosetta[PatternScriptEntities.J_BUNDLE.TAB] = 'Tab'
+#     rosetta[PatternScriptEntities.J_BUNDLE.TAB2] = 'Tab2'
+#     rosetta[PatternScriptEntities.J_BUNDLE.TAB3] = 'Tab3'
+# # Cars
+#     rosetta[PatternScriptEntities.J_BUNDLE.LOAD] = 'Load'
+#     rosetta[PatternScriptEntities.J_BUNDLE.LOAD_TYPE] = 'Load_Type'
+#     rosetta[PatternScriptEntities.J_BUNDLE.HAZARDOUS] = 'Hazardous'
+#     rosetta[PatternScriptEntities.J_BUNDLE.KERNEL] = 'Kernel'
+#     rosetta[PatternScriptEntities.J_BUNDLE.KERNEL_SIZE] = 'Kernel_Size'
+#     rosetta[PatternScriptEntities.J_BUNDLE.FINAL_DEST] = 'Final_Dest'
+#     rosetta[PatternScriptEntities.J_BUNDLE.FINAL_DEST_TRACK] = 'FD&Track'
+#     rosetta[PatternScriptEntities.J_BUNDLE.DROP_COMMENT] = 'SetOut_Msg'
+#     rosetta[PatternScriptEntities.J_BUNDLE.PICKUP_COMMENT] = 'PickUp_Msg'
+#     rosetta[PatternScriptEntities.J_BUNDLE.RWE] = 'RWE'
+#     # rosetta[PatternScriptEntities.J_BUNDLE.RWL] = 'RWL'
+# # Locos
+#     rosetta[PatternScriptEntities.J_BUNDLE.MODEL] = 'Model'
+#     rosetta[PatternScriptEntities.J_BUNDLE.CONSIST] = 'Consist'
+# # Unique to this plugin
+#     rosetta['On Train'] = 'On Train'
+#     rosetta['Set to'] = 'Set to'
+#     rosetta['PUSO'] = 'PUSO'
+#     rosetta[' '] = ' '
+#
+#     return rosetta

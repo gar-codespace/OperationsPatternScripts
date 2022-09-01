@@ -6,6 +6,7 @@
 from psEntities import PatternScriptEntities
 from PatternTracksSubroutine import Model
 from PatternTracksSubroutine import ModelSetCarsForm
+from o2oSubroutine import ModelWorkEvents
 from PatternTracksSubroutine import ViewSetCarsForm
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ControllerSetCarsForm'
@@ -111,6 +112,8 @@ class CreatePatternReportGui:
         active 'Set Cars Form for Track X' window
         """
 
+        self.psLog.info(MOUSE_CLICKED)
+
         if not self.quickCheck():
             return
 
@@ -140,13 +143,16 @@ class CreatePatternReportGui:
 
     def setButton(self, MOUSE_CLICKED):
         """Event that moves cars to the tracks entered in the text box of
-        the 'Set Cars Form for Track X' form
-        """
+            the 'Set Cars Form for Track X' form
+            """
+
+        self.psLog.info(MOUSE_CLICKED)
 
         if not self.quickCheck():
             return
 
-        ModelSetCarsForm.setRsToTrack(self.setCarsForm, self.buttonDict['textBoxEntry'])
+        mergedForm = ModelSetCarsForm.mergeForms(self.setCarsForm, self.buttonDict['textBoxEntry'])
+        ModelSetCarsForm.setRsToTrack(mergedForm)
 
         setCarsWindow = MOUSE_CLICKED.getSource().getTopLevelAncestor()
         setCarsWindow.setVisible(False)
@@ -157,14 +163,30 @@ class CreatePatternReportGui:
         return
 
     def trainPlayerButton(self, MOUSE_CLICKED):
-        """Accumulate switch lists into one TrainPlayer switch list"""
+        """Accumulate switch lists into the o2o-Work-Events switch list
+            List is reset when set cars button on Track Pattern Sub is pressed
+            """
+
+        self.psLog.info(MOUSE_CLICKED)
 
         if not self.quickCheck():
             return
 
         MOUSE_CLICKED.getSource().setBackground(PatternScriptEntities.JAVA_AWT.Color.GREEN)
 
-        ModelSetCarsForm.exportSetCarsFormToTp(self.setCarsForm, self.buttonDict['textBoxEntry'])
+        mergedForm = ModelSetCarsForm.mergeForms(self.setCarsForm, self.buttonDict['textBoxEntry'])
+
+        o2o = ModelWorkEvents.ConvertPtMergedForm(mergedForm)
+        o2o.thinTheHerd()
+        o2o.getWorkEvents()
+        o2o.appendRs()
+        o2o.writePtWorkEvents()
+
+        o2o = ModelWorkEvents.o2oWorkEvents()
+        o2o.getWorkEvents()
+        o2o.o2oHeader()
+        o2o.o2oLocations()
+        o2o.saveList()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

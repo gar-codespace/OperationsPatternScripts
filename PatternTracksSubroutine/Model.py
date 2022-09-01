@@ -3,13 +3,47 @@
 
 from psEntities import PatternScriptEntities
 from PatternTracksSubroutine import ModelEntities
-from PatternTracksSubroutine import ViewEntities
+# from PatternTracksSubroutine import ViewEntities
 from PatternTracksSubroutine import ControllerSetCarsForm
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.Model'
 SCRIPT_REV = 20220101
 
 _psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.Model')
+
+
+def patternButton():
+    """Mini controller when pattern button is pressed"""
+
+    locationDict = makeLocationDict()
+    modifiedReport = makeReport(locationDict, 'PR')
+    workEventName = ModelEntities.writeWorkEventListAsJson(modifiedReport)
+    workEvents = ModelEntities.readJsonWorkEventList(workEventName)
+    reportHeader = ModelEntities.makeTextReportHeader(workEvents)
+    reportLocations = ModelEntities.makeTextReportLocations(workEvents, trackTotals=True)
+
+    workEventPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\' + workEventName + '.txt'
+    PatternScriptEntities.genericWriteReport(workEventPath, reportHeader + reportLocations)
+
+
+    # if PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
+    #     Model.writeCsvSwitchList(modifiedReport)
+
+
+
+    return
+
+# def makeWorkEventList(patternListForJson, trackTotals):
+#
+#     _psLog.debug('Model.makeWorkEventList')
+#
+#     workEventName = ModelEntities.writeWorkEventListAsJson(patternListForJson)
+#     textWorkEventList = ModelEntities.readJsonWorkEventList(workEventName)
+#
+#     textListForPrint = ViewEntities.makeTextListForPrint(textWorkEventList, trackTotals)
+#
+#     return workEventName, textListForPrint
+
 
 def updatePatternLocation(selectedItem=None):
     """Catches user edits of locations"""
@@ -120,7 +154,7 @@ def verifySelectedTracks():
     return validStatus
 
 def makeLocationDict(trackList=None):
-    """Returns the details for the tracks sent in formatted for the json file """
+    """  """
 
     _psLog.debug('Model.makeLocationDict')
 
@@ -159,16 +193,7 @@ def makeReport(locationDict, reportType):
 
     return modifiedReport
 
-def makeWorkEventList(patternListForJson, trackTotals):
 
-    _psLog.debug('Model.makeWorkEventList')
-
-    workEventName = ModelEntities.writeWorkEventListAsJson(patternListForJson)
-    textWorkEventList = ModelEntities.readJsonWorkEventList(workEventName)
-
-    textListForPrint = ViewEntities.makeTextListForPrint(textWorkEventList, trackTotals)
-
-    return workEventName, textListForPrint
 
 def onScButtonPress():
     """"Set Cars" button opens a window for each selected track"""
@@ -201,7 +226,7 @@ def onScButtonPress():
     return
 
 def resetTrainPlayerSwitchlist():
-    """Overwrites the existing file with the header info for the next switch list"""
+    """Not used"""
 
     _psLog.debug('Model.resetTrainPlayerSwitchlist')
 

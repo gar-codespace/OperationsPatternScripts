@@ -181,19 +181,17 @@ def formatText(item, length):
     return xItem + u' '
 
 def makeReportItemWidthMatrix():
-    """The report widths for each of the rolling stock attributes is defined in the config file.
-    The keys for the width values are translated into whatever language the current profile is using.
-    """
+    """The attribute widths (AW) for each of the rolling stock attributes is defined in the report matrix (RM) of the config file."""
 
-    reportItemMatrix = {}
+    reportMatrix = {}
+    attributeWidths = readConfigFile('RM')['AW']
 
-    reportWidths = readConfigFile('RM')['AW']
-    for rItem in reportWidths:
-        reportItemMatrix[SB.handleGetMessage(rItem)] = reportWidths[rItem]
+    for aKey, aValue in attributeWidths.items():
+        reportMatrix[aKey] = aValue
 
-    reportItemMatrix[' '] = 1 # catches empty box added to Manifest Print Options
+    # reportItemMatrix[' '] = 1 # catches empty box added to Manifest Print Options
 
-    return reportItemMatrix
+    return reportMatrix
 
 def occuranceTally(listOfOccurances):
     """Tally the occurances of a word in a list and return a dictionary
@@ -486,6 +484,51 @@ def getAlertColor():
         _psLog.warning('Alert color definition not found in PatternConfig.json')
 
     return color
+
+def translateMessageFormat():
+    """The messageFormat is in the locale's language, it has to be hashed to the plugin fields.
+        Dealers choice, J_BUNDLE.ROAD or SB.handleGetMessage('Road')
+        """
+
+    rosetta = {}
+#Common
+    rosetta[J_BUNDLE.ROAD] = 'Road'
+    rosetta[J_BUNDLE.NUMBER] = 'Number'
+    rosetta[J_BUNDLE.TYPE] = 'Type'
+    rosetta[J_BUNDLE.LENGTH] = 'Length'
+    rosetta[J_BUNDLE.WEIGHT] = 'Weight'
+    rosetta[J_BUNDLE.COLOR] = 'Color'
+    rosetta[J_BUNDLE.OWNER] = 'Owner'
+    rosetta[J_BUNDLE.TRACK] = 'Track'
+    rosetta[J_BUNDLE.LOCATION] = 'Location'
+    rosetta[J_BUNDLE.COMMENT] = 'Comment'
+    rosetta[J_BUNDLE.DESTINATION] = 'Destination'
+    rosetta[J_BUNDLE.DEST_TRACK] = 'Dest&Track'
+    rosetta[J_BUNDLE.TAB] = 'Tab'
+    rosetta[J_BUNDLE.TAB2] = 'Tab2'
+    rosetta[J_BUNDLE.TAB3] = 'Tab3'
+# Cars
+    rosetta[J_BUNDLE.LOAD] = 'Load'
+    rosetta[J_BUNDLE.LOAD_TYPE] = 'Load_Type'
+    rosetta[J_BUNDLE.HAZARDOUS] = 'Hazardous'
+    rosetta[J_BUNDLE.KERNEL] = 'Kernel'
+    rosetta[J_BUNDLE.KERNEL_SIZE] = 'Kernel_Size'
+    rosetta[J_BUNDLE.FINAL_DEST] = 'Final_Dest'
+    rosetta[J_BUNDLE.FINAL_DEST_TRACK] = 'FD&Track'
+    rosetta[J_BUNDLE.DROP_COMMENT] = 'Drop_Comment'
+    rosetta[J_BUNDLE.PICKUP_COMMENT] = 'Pickup_Comment'
+    rosetta[J_BUNDLE.RWE] = 'RWE'
+    # rosetta[J_BUNDLE.RWL] = 'RWL'
+# Locos
+    rosetta[J_BUNDLE.MODEL] = 'Model'
+    rosetta[J_BUNDLE.CONSIST] = 'Consist'
+# Unique to this plugin
+    rosetta['On_Train'] = 'On Train'
+    rosetta['Set_To'] = 'Set to'
+    rosetta['PUSO'] = 'PUSO'
+    rosetta[' '] = ' '
+
+    return rosetta
 
 """
 Items from Config File that may be put back:

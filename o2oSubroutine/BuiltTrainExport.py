@@ -113,20 +113,20 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
 
         if PatternScriptEntities.CheckTpDestination().directoryExists():
 
-            self.tpLog.debug('ModelWorkEvents.JmriTranslationToTp')
-            jmriManifestTranslator = ModelWorkEvents.JmriTranslationToTp()
-            builtTrainAsDict = jmriManifestTranslator.getTrainAsDict(self.train)
-            translatedManifest = jmriManifestTranslator.translateManifestHeader(builtTrainAsDict)
-            translatedManifest['locations'] = jmriManifestTranslator.translateManifestBody(builtTrainAsDict)
+            self.tpLog.debug('ModelWorkEvents.ConvertJmriManifest')
 
-            self.tpLog.debug('ModelWorkEvents.ProcessWorkEventList')
-            processedManifest = ModelWorkEvents.ProcessWorkEventList()
-            processedManifest.writeTpWorkEventListAsJson(translatedManifest)
-            tpManifestHeader = processedManifest.makeTpHeader(translatedManifest)
-            tpManifestLocations = processedManifest.makeTpLocations(translatedManifest)
+            o2o = ModelWorkEvents.ConvertJmriManifest(self.train)
+            o2o.getJmriManifest()
+            o2o.convertHeader()
+            o2o.convertBody()
+            o2oWorkEvents = o2o.geto2oWorkEvents()
+            ModelEntities.writeWorkEvents(o2oWorkEvents)
 
-            self.tpLog.debug('ModelWorkEvents.WriteWorkEventListToTp')
-            ModelWorkEvents.WriteWorkEventListToTp(tpManifestHeader + tpManifestLocations).asCsv()
+            o2o = ModelWorkEvents.o2oWorkEvents()
+            o2o.getWorkEvents()
+            o2o.o2oHeader()
+            o2o.o2oLocations()
+            o2o.saveList()
 
             self.tpLog.info('Export JMRI manifest to TrainPlyer: ' + self.train.getName())
         else:
@@ -153,6 +153,7 @@ if __name__ == "__builtin__":
     sysPath.append(PLUGIN_ROOT)
     from psEntities import PatternScriptEntities
     from o2oSubroutine import ModelWorkEvents
+    from o2oSubroutine import ModelEntities
     from psBundle import Bundle
 
     Bundle.BUNDLE_DIR = PLUGIN_ROOT + '\\psBundle\\'
@@ -172,3 +173,4 @@ else:
     PLUGIN_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
     from psEntities import PatternScriptEntities
     from o2oSubroutine import ModelWorkEvents
+    from o2oSubroutine import ModelEntities

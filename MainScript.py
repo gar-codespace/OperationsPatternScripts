@@ -61,8 +61,7 @@ class BuiltTrainListener(java.beans.PropertyChangeListener):
 
     def propertyChange(self, TRAIN_BUILT):
 
-        if TRAIN_BUILT.propertyName == 'TrainBuilt' and TRAIN_BUILT.newValue \
-                and PatternScriptEntities.CheckTpDestination().directoryExists():
+        if TRAIN_BUILT.propertyName == 'TrainBuilt' and TRAIN_BUILT.newValue:
 
             tpManifest = BuiltTrainExport.ManifestForTrainPlayer()
             tpManifest.passInTrain(TRAIN_BUILT.getSource())

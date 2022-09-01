@@ -76,10 +76,10 @@
     "PW" : 1500,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20220801
+    "RV" : 20220804
   },
   "RM" : {
-    "DS" : "*No Dest.",
+    "DS" : "*Not Consigned",
     "DT" : "*Not Consigned",
     "FD" : "*Via Staging",
     "FT" : "*Any Line",
@@ -113,9 +113,14 @@
       "Final_Dest" : 11,
       "FD&Track" : 23,
       "Comment" : 15,
-      "SetOut_Msg" : 12,
-      "PickUp_Msg" : 12,
-      "RWE" : 10
+      "Drop_Comment" : 12,
+      "Pickup_Comment" : 12,
+      "RWE" : 10,
+      "RWL" : 10,
+      "On Train" : 0,
+      "PUSO" : 6,
+      "Set to" : 6,
+      " " : 1
     }
   },
   "PT" : {
@@ -132,6 +137,7 @@
     "RM": 8
   },
   "o2o" : {
+    "RN": "o2o-Work-Events",
     "PC": [
       "B",
       "BE",
