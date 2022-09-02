@@ -162,6 +162,16 @@ class validateStubFile:
 
         return
 
+def readJsonWorkEventList(workEventName):
+    """Called by patternButton"""
+
+    reportPath = PROFILE_PATH + 'operations\\jsonManifests\\' + workEventName + '.json'
+
+    jsonEventList = genericReadReport(reportPath)
+
+    textWorkEventList = loadJson(jsonEventList)
+
+    return textWorkEventList
 
 def psLocale():
 
@@ -230,6 +240,12 @@ def getAllTracks():
 
     return trackList
 
+def getSelectedTracks():
+
+    patternTracks = readConfigFile('PT')['PT']
+
+    return [track for track, include in sorted(patternTracks.items()) if include]
+
 def timeStamp(epochTime=0):
     """Valid Time, get local time adjusted for time zone and dst"""
 
@@ -278,7 +294,7 @@ def genericDisplayReport(genericReportPath):
     """Dealer's choice, the JMRI or Java version"""
 
     # JMRI.util.HelpUtil.openWindowsFile(genericReportPath)
-    JAVA_AWT.Desktop.getDesktop().edit(genericReportPath)
+    JAVA_AWT.Desktop.getDesktop().edit(JAVA_IO.File(genericReportPath))
 
     return
 
@@ -413,7 +429,7 @@ def makePatternLog():
 
     outputPatternLog = ''
     buildReportLevel = JMRI.jmrit.operations.setup.Setup.getBuildReportLevel()
-    # loggingIndex = readConfigFile('LI')
+# loggingIndex = readConfigFile('LI')
     loggingIndex = logIndex()
     logLevel = loggingIndex[buildReportLevel]
 
@@ -432,7 +448,7 @@ def makePatternLog():
         if (loggingIndex['1'] in thisLine and int(buildReportLevel) > 4): # debug
             outputPatternLog += thisLine + '\n'
 
-    return 'PatternScriptsLog_temp', outputPatternLog
+    return outputPatternLog
 
 def logIndex():
     """Moved here but may be put back into configFile"""

@@ -64,7 +64,7 @@ class StartUp:
 
         self.widgets[0].addActionListener(LocationComboBox(self.subroutineFrame))
         self.widgets[1].actionPerformed = self.yardTrackOnlyCheckBox
-        self.widgets[4].actionPerformed = self.patternButton
+        self.widgets[4].actionPerformed = self.trackPatternButton
         self.widgets[5].actionPerformed = self.setCarsButton
 
         return
@@ -90,24 +90,28 @@ class StartUp:
 
         return
 
-    def patternButton(self, EVENT):
+    def trackPatternButton(self, EVENT):
         """Makes a pattern tracks report based on the config file (PR)"""
 
-        self.psLog.debug('Controller.patternButton')
+        self.psLog.debug('Controller.trackPatternButton')
 
         Model.updateConfigFile(self.widgets)
         if not Model.verifySelectedTracks():
             self.psLog.warning('Track not found, re-select the location')
             return
 
-        if not Model.getSelectedTracks():
+        if not PatternScriptEntities.getSelectedTracks():
             self.psLog.warning('No tracks were selected for the pattern button')
             return
 
         PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX = PatternScriptEntities.makeReportItemWidthMatrix()
 
-        Model.patternButton()
-        
+        Model.trackPatternButton()
+        View.trackPatternButton()
+
+        if PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
+            Model.writeTrackPatternCsv()
+
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
@@ -127,7 +131,7 @@ class StartUp:
             self.psLog.warning('Track not found, re-select the location')
             return
 
-        Model.onScButtonPress()
+        View.setCarsButton()
     # Reset the o2o switchlist
         o2o = ModelWorkEvents.ResetWorkEvents()
         o2o.makePsWorkEventsHeader()

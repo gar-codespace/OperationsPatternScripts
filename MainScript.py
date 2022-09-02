@@ -612,15 +612,11 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(OPEN_LOG_EVENT)
 
-        logFileName, patternLog = PatternScriptEntities.makePatternLog()
-        logFilePath = PatternScriptEntities.PROFILE_PATH + 'operations\\buildstatus\\' + logFileName + '.txt'
+        patternLog = PatternScriptEntities.makePatternLog()
+        logFilePath = PatternScriptEntities.PROFILE_PATH + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
         PatternScriptEntities.genericWriteReport(logFilePath, patternLog)
 
-        fileToOpen = PatternScriptEntities.JAVA_IO.File(logFilePath)
-        if fileToOpen.isFile():
-            PatternScriptEntities.genericDisplayReport(fileToOpen)
-        else:
-            self.psLog.warning('Not found: ' + logFilePath)
+        PatternScriptEntities.genericDisplayReport(logFilePath)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
