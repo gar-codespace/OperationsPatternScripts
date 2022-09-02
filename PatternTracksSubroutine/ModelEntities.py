@@ -79,7 +79,7 @@ def sortLocoList(locoList):
     sortLocos = PatternScriptEntities.readConfigFile('RM')['SL']
     for sortKey in sortLocos:
         try:
-            translatedkey = PatternScriptEntities.SB.handleGetMessage(sortKey)
+            translatedkey = (sortKey)
             locoList.sort(key=lambda row: row[translatedkey])
         except:
             pass
@@ -133,14 +133,13 @@ def getDetailsForLoco(locoObject):
     locoDetailDict['Location'] = locoObject.getLocationName()
     locoDetailDict['Track'] = locoObject.getTrackName()
     locoDetailDict['Destination'] = locoObject.getDestinationName()
-    # locoDetailDict['Dest Track'] = locoObject.getDestinationTrackName()
 # Modifications used by this plugin
     try:
         locoDetailDict['Consist'] = locoObject.getConsist().getName()
     except:
         locoDetailDict['Consist'] = PatternScriptEntities.BUNDLE['Single']
     locoDetailDict['Set_To'] = u'[  ] '
-    locoDetailDict[u'PUSO'] = u'XX'
+    locoDetailDict[u'PUSO'] = u' '
     locoDetailDict[u' '] = u' ' # Catches KeyError - empty box added to getDropEngineMessageFormat
     locoDetailDict['On_Train'] = False
     if locoObject in getRsOnTrains(): # Flag to mark if RS is on a built train
@@ -155,7 +154,7 @@ def sortCarList(carList):
     sortCars = PatternScriptEntities.readConfigFile('RM')['SC']
     for sortKey in sortCars:
         try:
-            translatedkey = PatternScriptEntities.SB.handleGetMessage(sortKey)
+            translatedkey = (sortKey)
             carList.sort(key=lambda row: row[translatedkey])
         except:
             pass
@@ -231,129 +230,14 @@ def getDetailsForCar(carObject, kernelTally):
     if carObject in getRsOnTrains(): # Flag to mark if RS is on a built train
         carDetailDict['On_Train'] = True
 
-    # carDetailDict[PatternScriptEntities.BUNDLE['Set to']] = '[  ] '
     carDetailDict['Set_To'] = u'[  ] '
-    carDetailDict[u'PUSO'] = u'XX'
+    carDetailDict[u'PUSO'] = u' '
     carDetailDict[u' '] = u' ' # Catches KeyError - empty box added to getLocalSwitchListMessageFormat
 
     return carDetailDict
 
-def makeTextReportHeader(textWorkEventList):
-    """Makes the header for generic text reports"""
-
-    headerNames = PatternScriptEntities.readConfigFile('PT')
-
-    textReportHeader    = textWorkEventList['railroad'] + '\n' \
-                        + textWorkEventList['trainName'] + '\n' \
-                        + textWorkEventList['date'] + '\n\n' \
-                        + PatternScriptEntities.BUNDLE['Work Location:'] + ' ' + headerNames['PL'] + '\n\n'
-
-    return textReportHeader
-
-def makeTextReportLocations(textWorkEventList, trackTotals):
-
-    reportWidth = PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX
-    locoItems = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
-    carItems = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
-
-    reportSwitchList = ''
-    reportTally = [] # running total for all tracks
-    for track in textWorkEventList['locations'][0]['tracks']:
-        lengthOfLocos = 0
-        lengthOfCars = 0
-        trackTally = []
-        trackName = track['trackName']
-        trackLength = track['length']
-        reportSwitchList += PatternScriptEntities.BUNDLE['Track:'] + ' ' + trackName + '\n'
-        switchListRow = ''
-
-        for loco in track['locos']:
-            lengthOfLocos += int(loco['Length']) + 4
-            loco = addStandIns(loco)
-            reportSwitchList += loco['Set_To'] + loopThroughRs('loco', loco) + '\n'
-
-        for car in track['cars']:
-            lengthOfCars += int(car['Length']) + 4
-            car = addStandIns(car)
-            reportSwitchList += car['Set_To'] + loopThroughRs('car', car) + '\n'
-            trackTally.append(car['Final_Dest'])
-            reportTally.append(car['Final_Dest'])
-
-        if trackTotals:
-            totalLength = lengthOfLocos + lengthOfCars
-            reportSwitchList += PatternScriptEntities.BUNDLE['Total Cars:'] + ' ' \
-                + str(len(track['cars'])) + ' ' + PatternScriptEntities.BUNDLE['Track Length:']  + ' ' \
-                + str(trackLength) +  ' ' + PatternScriptEntities.BUNDLE['Eqpt. Length:']  + ' ' \
-                + str(totalLength) + ' ' +  PatternScriptEntities.BUNDLE['Available:']  + ' '  \
-                + str(trackLength - totalLength) \
-                + '\n\n'
-            reportSwitchList += PatternScriptEntities.BUNDLE['Track Totals for Cars:'] + '\n'
-            for track, count in sorted(PatternScriptEntities.occuranceTally(trackTally).items()):
-                reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
-        reportSwitchList += '\n'
-
-    if trackTotals:
-        reportSwitchList += '\n' + PatternScriptEntities.BUNDLE['Report Totals for Cars:'] + '\n'
-        for track, count in sorted(PatternScriptEntities.occuranceTally(reportTally).items()):
-            reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
-
-    return reportSwitchList
-
-def addStandIns(rs):
-    """Make adjustments to the display version of textWorkEventList"""
-
-    try:
-        lt = rs['Load_Type']
-        if lt == 'Load':
-            lt = 'L'
-        if lt == 'Empty':
-            lt = 'E'
-        rs.update({'Load_Type': lt})
-    except:
-        pass
-
-    reportModifiers = PatternScriptEntities.readConfigFile('RM')
-
-    try:
-        if rs['Final_Dest'] == '':
-            rs.update({'Final_Dest': reportModifiers['FD']})
-            rs.update({'FD&Track': reportModifiers['FD']})
-    except:
-        pass
-
-    if rs['Destination'] == '':
-        rs.update({'Destination': reportModifiers['DS']})
-        rs.update({'Dest&Track': reportModifiers['DS']})
-
-
-    return rs
-
-
-def loopThroughRs(type, rsAttribs):
-    """Creates a line containing the attrs in get * MessageFormat"""
-
-    reportWidth = PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX
-    switchListRow = ''
-    rosetta = PatternScriptEntities.translateMessageFormat()
-
-    if type == 'loco':
-        messageFormat = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
-    if type == 'car':
-        messageFormat = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
-
-    for lookup in messageFormat:
-        item = rosetta[lookup]
-
-        if 'Tab' in item:
-            continue
-
-        itemWidth = reportWidth[item]
-        switchListRow += PatternScriptEntities.formatText(rsAttribs[item], itemWidth)
-
-    return switchListRow
-
 def makeGenericHeader():
-    """A generic header info for any switch list, used to make the ??????????????? JSON file"""
+    """Called by: Model.makeReport"""
 
     listHeader = {}
     listHeader['railroad'] = unicode(PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getRailroadName(), PatternScriptEntities.ENCODING)
@@ -366,7 +250,9 @@ def makeGenericHeader():
     return listHeader
 
 def writeWorkEventListAsJson(switchList):
-    """The generic switch list is written as a ???????????? json"""
+    """The generic switch list is written as a ???????????? json
+        redo this, thats a wierd way to pick a name
+        """
 
     switchListName = switchList['trainDescription']
     switchListPath = PatternScriptEntities.PROFILE_PATH \
@@ -376,16 +262,7 @@ def writeWorkEventListAsJson(switchList):
     PatternScriptEntities.genericWriteReport(switchListPath, switchListReport)
     return switchListName
 
-def readJsonWorkEventList(workEventName):
 
-    reportPath = PatternScriptEntities.PROFILE_PATH \
-                 + 'operations\\jsonManifests\\' + workEventName + '.json'
-
-    jsonEventList = PatternScriptEntities.genericReadReport(reportPath)
-
-    textWorkEventList = PatternScriptEntities.loadJson(jsonEventList)
-
-    return textWorkEventList
 
 def makeInitialTrackList(location):
 
@@ -395,61 +272,61 @@ def makeInitialTrackList(location):
 
     return trackDict
 
-def makeCsvSwitchlist(trackPattern):
+def makeWorkEventsCsv(workEvents):
     """CSV writer does not support utf-8"""
 
-    csvSwitchList = u'Operator,Description,Parameters\n' \
-                    u'RT,Report Type,' + trackPattern['trainDescription'] + '\n' \
-                    u'RN,Railroad Name,' + trackPattern['railroad'] + '\n' \
-                    u'LN,Location Name,' + trackPattern['locations'][0]['locationName'] + '\n' \
+    workEventsCsv = u'Operator,Description,Parameters\n' \
+                    u'RT,Report Type,' + workEvents['trainDescription'] + '\n' \
+                    u'RN,Railroad Name,' + workEvents['railroad'] + '\n' \
+                    u'LN,Location Name,' + workEvents['locations'][0]['locationName'] + '\n' \
                     u'PRNTR,Printer Name,\n' \
-                    u'YPC,Yard Pattern Comment,' + trackPattern['trainComment'] + '\n' \
-                    u'VT,Valid,' + trackPattern['date'] + '\n'
-    for track in trackPattern['locations'][0]['tracks']: # There is only one location
-        csvSwitchList += u'TN,Track name,' + unicode(track['trackName'], PatternScriptEntities.ENCODING) + '\n'
+                    u'YPC,Yard Pattern Comment,' + workEvents['trainComment'] + '\n' \
+                    u'VT,Valid,' + workEvents['date'] + '\n'
+    for track in workEvents['locations'][0]['tracks']: # There is only one location
+        workEventsCsv += u'TN,Track name,' + unicode(track['trackName'], PatternScriptEntities.ENCODING) + '\n'
+        workEventsCsv += u'Set_To,PUSO,Road,Number,Type,Model,Length,Weight,Consist,Owner,Track,Location,Destination,Comment\n'
         for loco in track['locos']:
-            csvSwitchList +=  loco[PatternScriptEntities.BUNDLE['Set to']] + ',' \
+            workEventsCsv +=  loco['Set_To'] + ',' \
                             + loco['PUSO'] + ',' \
-                            + loco[PatternScriptEntities.SB.handleGetMessage('Road')] + ',' \
-                            + loco[PatternScriptEntities.SB.handleGetMessage('Number')] + ',' \
-                            + loco[PatternScriptEntities.SB.handleGetMessage('Type')] + ',' \
-                            + loco[PatternScriptEntities.SB.handleGetMessage('Model')] + ',' \
-                            + loco[PatternScriptEntities.SB.handleGetMessage('Length')] + ',' \
-                            + loco[PatternScriptEntities.SB.handleGetMessage('Weight')] + ',' \
-                            + loco[PatternScriptEntities.SB.handleGetMessage('Consist')] + ',' \
-                            + loco[PatternScriptEntities.SB.handleGetMessage('Owner')] + ',' \
-                            + loco[PatternScriptEntities.SB.handleGetMessage('Track')] + ',' \
-                            + loco[PatternScriptEntities.SB.handleGetMessage('Location')] + ',' \
-                            + loco[PatternScriptEntities.SB.handleGetMessage('Destination')] + ',' \
-                            + loco[PatternScriptEntities.SB.handleGetMessage('Comment')] + ',' \
-                            + loco[PatternScriptEntities.SB.handleGetMessage('Load')] + ',' \
-                            + loco[PatternScriptEntities.SB.handleGetMessage('FD&Track')] + ',' \
+                            + loco['Road'] + ',' \
+                            + loco['Number'] + ',' \
+                            + loco['Type'] + ',' \
+                            + loco['Model'] + ',' \
+                            + loco['Length'] + ',' \
+                            + loco['Weight'] + ',' \
+                            + loco['Consist'] + ',' \
+                            + loco['Owner'] + ',' \
+                            + loco['Track'] + ',' \
+                            + loco['Location'] + ',' \
+                            + loco['Destination'] + ',' \
+                            + loco['Comment'] + ',' \
                             + '\n'
+        workEventsCsv += u'Set_To,PUSO,Road,Number,Type,Length,Weight,Load,Load_Type,Hazardous,Color,Kernel,Kernel_Size,Owner,Track,Location,Destination,Dest&Track,Final_Dest,FD&Track,Comment,Drop_Comment,Pickup_Comment,RWE\n'
         for car in track['cars']:
-            csvSwitchList +=  car[PatternScriptEntities.BUNDLE['Set to']] + ',' \
+            workEventsCsv +=  car['Set_To'] + ',' \
                             + car['PUSO'] + ',' \
-                            + car[PatternScriptEntities.SB.handleGetMessage('Road')] + ',' \
-                            + car[PatternScriptEntities.SB.handleGetMessage('Number')] + ',' \
-                            + car[PatternScriptEntities.SB.handleGetMessage('Type')] + ',' \
-                            + car[PatternScriptEntities.SB.handleGetMessage('Length')] + ',' \
-                            + car[PatternScriptEntities.SB.handleGetMessage('Weight')] + ',' \
-                            + car[PatternScriptEntities.SB.handleGetMessage('Load')] + ',' \
-                            + car[PatternScriptEntities.SB.handleGetMessage('Track')] + ',' \
-                            + car[PatternScriptEntities.SB.handleGetMessage('FD&Track')] + ',' \
-                            + car[PatternScriptEntities.SB.handleGetMessage('Load_Type')] + ',' \
-                            + str(car[PatternScriptEntities.SB.handleGetMessage('Hazardous')]) + ',' \
-                            + car[PatternScriptEntities.SB.handleGetMessage('Color')] + ',' \
-                            + car[PatternScriptEntities.SB.handleGetMessage('Kernel')] + ',' \
-                            + car[PatternScriptEntities.SB.handleGetMessage('Kernel_Size')] + ',' \
-                            + car[PatternScriptEntities.SB.handleGetMessage('Owner')] + ',' \
-                            + car[PatternScriptEntities.SB.handleGetMessage('Location')] + ',' \
-                            + car[PatternScriptEntities.SB.handleGetMessage('Destination')] + ',' \
-                            + car[PatternScriptEntities.SB.handleGetMessage('Dest&Track')] + ',' \
-                            + car[PatternScriptEntities.SB.handleGetMessage('Final_Dest')] + ',' \
-                            + car[PatternScriptEntities.SB.handleGetMessage('Comment')] + ',' \
-                            + car[PatternScriptEntities.SB.handleGetMessage('SetOut_Msg')] + ',' \
-                            + car[PatternScriptEntities.SB.handleGetMessage('PickUp_Msg')] + ',' \
-                            + car[PatternScriptEntities.SB.handleGetMessage('RWE')] \
+                            + car['Road'] + ',' \
+                            + car['Number'] + ',' \
+                            + car['Type'] + ',' \
+                            + car['Length'] + ',' \
+                            + car['Weight'] + ',' \
+                            + car['Load'] + ',' \
+                            + car['Load_Type'] + ',' \
+                            + str(car['Hazardous']) + ',' \
+                            + car['Color'] + ',' \
+                            + car['Kernel'] + ',' \
+                            + car['Kernel_Size'] + ',' \
+                            + car['Owner'] + ',' \
+                            + car['Track'] + ',' \
+                            + car['Location'] + ',' \
+                            + car['Destination'] + ',' \
+                            + car['Dest&Track'] + ',' \
+                            + car['Final_Dest'] + ',' \
+                            + car['FD&Track'] + ',' \
+                            + car['Comment'] + ',' \
+                            + car['Drop_Comment'] + ',' \
+                            + car['Pickup_Comment'] + ',' \
+                            + car['RWE'] \
                             + '\n'
 
-    return trackPattern['trainDescription'], csvSwitchList
+    return workEventsCsv

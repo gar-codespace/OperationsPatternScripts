@@ -31,14 +31,14 @@ class TextBoxEntryListener(PatternScriptEntities.JAVA_AWT.event.MouseAdapter):
 
         return
 
-class CreatePatternReportGui:
+class CreateSetCarsFormGui:
     """Creates an instance of each 'Set Cars Form for Track X' window,
     [0] is used to avoid for-loops since there is only 1 location and track
     """
 
     def __init__(self, setCarsForm):
 
-        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.CreatePatternReportGui')
+        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.CreateSetCarsFormGui')
 
         self.setCarsForm = setCarsForm
         self.locationName = setCarsForm['locations'][0]['locationName']

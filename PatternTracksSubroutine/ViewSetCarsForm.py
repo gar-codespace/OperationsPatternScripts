@@ -193,7 +193,7 @@ class MakeSetCarsEqptRows():
         for loco in locos:
             combinedInputLine = PatternScriptEntities.JAVX_SWING.JPanel()
             combinedInputLine.setBackground(self.locoColor)
-            if loco[PatternScriptEntities.BUNDLE['On Train']]:
+            if loco['On_Train']:
                 combinedInputLine.setBackground(self.alertColor)
             inputText = PatternScriptEntities.JAVX_SWING.JTextField(5)
             self.textBoxEntry.append(inputText)
@@ -226,7 +226,7 @@ class MakeSetCarsEqptRows():
         for car in cars:
             combinedInputLine = PatternScriptEntities.JAVX_SWING.JPanel()
             combinedInputLine.setBackground(self.carColor)
-            if car[PatternScriptEntities.BUNDLE['On Train']]:
+            if car['On_Train']:
                 combinedInputLine.setBackground(self.alertColor)
             inputText = PatternScriptEntities.JAVX_SWING.JTextField(5)
             self.textBoxEntry.append(inputText)
