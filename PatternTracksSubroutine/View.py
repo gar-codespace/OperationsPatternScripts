@@ -3,6 +3,7 @@
 
 from PatternTracksSubroutine import Model
 from psEntities import PatternScriptEntities
+from PatternTracksSubroutine import ModelEntities
 from PatternTracksSubroutine import ViewEntities
 from PatternTracksSubroutine import ControllerSetCarsForm
 
@@ -78,18 +79,16 @@ def setCarsButton():
     locationName = PatternScriptEntities.readConfigFile('PT')['PL']
     windowOffset = 200
     for i, trackName in enumerate(selectedTracks, start=1):
-        locationDict = Model.makeLocationDict([trackName]) # makeLocationDict takes a track list
-        setCarsForm = Model.makeReport(locationDict, 'SC')
-        print(setCarsForm)
-
-
+        locationDict = ModelEntities.makeLocationDict([trackName]) # makeLocationDict takes a track list
+        setCarsForm = ModelEntities.makeReport(locationDict, 'SC')
+        
         newFrame = ControllerSetCarsForm.CreateSetCarsFormGui(setCarsForm)
-        # newWindow = newFrame.makeFrame()
-        # newWindow.setTitle(PatternScriptEntities.BUNDLE['Set Cars Form for track:'] + ' ' + trackName)
-        # newWindow.setName('setCarsWindow')
-        # newWindow.setLocation(windowOffset, 180)
-        # newWindow.pack()
-        # newWindow.setVisible(True)
+        newWindow = newFrame.makeFrame()
+        newWindow.setTitle(PatternScriptEntities.BUNDLE['Set Cars Form for track:'] + ' ' + trackName)
+        newWindow.setName('setCarsWindow')
+        newWindow.setLocation(windowOffset, 180)
+        newWindow.pack()
+        newWindow.setVisible(True)
 
         _psLog.info(u'Set Cars Window created for track ' + trackName)
         windowOffset += 50

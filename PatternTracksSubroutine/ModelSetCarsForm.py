@@ -12,6 +12,15 @@ SCRIPT_REV = 20220101
 
 _psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.ModelSetCarsForm')
 
+def switchListButton():
+    """Mini controller when the Track Pattern Report button is pressed
+        Creates the Track Pattern data"""
+
+    locationDict = ModelEntities.makeLocationDict()
+    modifiedReport = ModelEntities.makeReport(locationDict, 'SC')
+    workEventName = ModelEntities.writeWorkEventListAsJson(modifiedReport)
+
+    return
 
 def testValidityOfForm(setCarsForm, textBoxEntry):
     """Checks that both submitted forms are the same length"""

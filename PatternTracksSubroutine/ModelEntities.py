@@ -6,6 +6,48 @@ from psEntities import PatternScriptEntities
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ModelEntities'
 SCRIPT_REV = 20220101
 
+
+
+def makeLocationDict(trackList=None):
+    """Called by: Model.trackPatternButton, View.setCarsButton"""
+
+    # _psLog.debug('Model.makeLocationDict')
+
+    if not trackList:
+        trackList = PatternScriptEntities.getSelectedTracks()
+
+    detailsForTrack = []
+    patternLocation = PatternScriptEntities.readConfigFile('PT')['PL']
+    for trackName in trackList:
+        detailsForTrack.append(getGenericTrackDetails(patternLocation, trackName))
+
+    locationDict = {}
+    locationDict['locationName'] = patternLocation
+    locationDict['tracks'] = detailsForTrack
+
+    return locationDict
+
+def makeReport(locationDict, reportType):
+
+    # _psLog.debug('Model.makeReport')
+
+    if reportType == 'PR':
+        reportTitle = PatternScriptEntities.BUNDLE['Track Pattern Report']
+
+    if reportType == 'SC':
+        reportTitle = PatternScriptEntities.BUNDLE['Switch List for Track']
+
+    if reportType == 'TP':
+        reportTitle = PatternScriptEntities.BUNDLE[u'Work Event List for TrainPlayer©']
+
+    modifiedReport = makeGenericHeader()
+    modifiedReport.update({'trainDescription' : reportTitle})
+    modifiedReport.update({'trainName' : reportTitle})
+    modifiedReport['locations'] = [locationDict]
+    # put in as a list to maintain compatability with JSON File Format/JMRI manifest export.
+
+    return modifiedReport
+
 def testSelectedItem(selectedItem):
     """Catches user edit of locations"""
 

@@ -11,6 +11,35 @@ SCRIPT_REV = 20220101
 
 _psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.ViewSetCarsForm')
 
+def switchListButton():
+    """Mini controller when the Track Pattern Report button is pressed
+        Formats and displays the Track Pattern Report
+        """
+
+    # _psLog.debug('View.trackPatternButton')
+
+    workEventName = PatternScriptEntities.BUNDLE['Switch List for Track']
+# Apply formatting to data
+    workEvents = PatternScriptEntities.readJsonWorkEventList(workEventName)
+    reportHeader = ViewEntities.makeTextReportHeader(workEvents)
+    reportLocations = ViewEntities.makeTextReportLocations(workEvents, trackTotals=False)
+# Save formatted data
+    workEventPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\' + workEventName + '.txt'
+    PatternScriptEntities.genericWriteReport(workEventPath, reportHeader + reportLocations)
+
+
+
+
+
+
+
+# Display formatted data
+    PatternScriptEntities.genericDisplayReport(workEventPath)
+
+    return
+
+
+
 def setCarsForTrackWindow(setCarsForTrackForm):
 
     setCarsWindow = PatternScriptEntities.JMRI.util.JmriJFrame()

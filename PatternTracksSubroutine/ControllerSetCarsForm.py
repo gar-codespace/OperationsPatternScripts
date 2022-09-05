@@ -69,7 +69,7 @@ class CreateSetCarsFormGui:
         except IndexError:
             pass
 
-        self.buttonDict['footerButtons'][0].actionPerformed = self.printButton
+        self.buttonDict['footerButtons'][0].actionPerformed = self.switchListButton
         self.buttonDict['footerButtons'][1].actionPerformed = self.setButton
         try:
             self.buttonDict['footerButtons'][2].actionPerformed = self.trainPlayerButton
@@ -107,37 +107,50 @@ class CreateSetCarsFormGui:
 
         return
 
-    def printButton(self, MOUSE_CLICKED):
-        """Makes a Set Cars (SC) switch list for the
-        active 'Set Cars Form for Track X' window
-        """
+    def switchListButton(self, MOUSE_CLICKED):
+        """Makes a Set Cars (SC) switch list for the active 'Set Cars Form for Track X' window"""
 
         self.psLog.info(MOUSE_CLICKED)
 
         if not self.quickCheck():
             return
 
-    # Replaces [Hold] with a track name
-        locationDict = ModelSetCarsForm.makeLocationDict( \
-                self.setCarsForm, self.buttonDict['textBoxEntry'] \
-                )
+        PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX = PatternScriptEntities.makeReportItemWidthMatrix()
 
-        modifiedReport = Model.makeReport(locationDict, 'SC')
+        ModelSetCarsForm.switchListButton()
+        ViewSetCarsForm.switchListButton()
 
-        workEventName, textListForPrint = Model.makeWorkEventList(modifiedReport, trackTotals=False)
-        workEventPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\' + workEventName + '.txt'
-        PatternScriptEntities.genericWriteReport(workEventPath, textListForPrint)
-
-        fileToOpen = PatternScriptEntities.JAVA_IO.File(workEventPath)
-        if fileToOpen.isFile():
-            PatternScriptEntities.genericDisplayReport(fileToOpen)
-        else:
-            self.psLog.warning('Not found: ' + workEventPath)
-
-        if PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
-            Model.writeCsvSwitchList(modifiedReport)
+        # if PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
+        #     Model.writeTrackPatternCsv()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+
+
+
+
+
+
+
+
+    # # Replaces [Hold] with a track name
+    #     locationDict = ModelSetCarsForm.makeLocationDict( \
+    #             self.setCarsForm, self.buttonDict['textBoxEntry'] \
+    #             )
+    #
+    #     modifiedReport = Model.makeReport(locationDict, 'SC')
+    #
+    #     workEventName, textListForPrint = Model.makeWorkEventList(modifiedReport, trackTotals=False)
+    #     workEventPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\' + workEventName + '.txt'
+    #     PatternScriptEntities.genericWriteReport(workEventPath, textListForPrint)
+    #
+    #     fileToOpen = PatternScriptEntities.JAVA_IO.File(workEventPath)
+    #     if fileToOpen.isFile():
+    #         PatternScriptEntities.genericDisplayReport(fileToOpen)
+    #     else:
+    #         self.psLog.warning('Not found: ' + workEventPath)
+    #
+
 
         return
 

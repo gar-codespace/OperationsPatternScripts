@@ -16,8 +16,8 @@ def trackPatternButton():
     """Mini controller when the Track Pattern Report button is pressed
         Creates the Track Pattern data"""
 
-    locationDict = makeLocationDict()
-    modifiedReport = makeReport(locationDict, 'PR')
+    locationDict = ModelEntities.makeLocationDict()
+    modifiedReport = ModelEntities.makeReport(locationDict, 'PR')
     workEventName = ModelEntities.writeWorkEventListAsJson(modifiedReport)
 
     return
@@ -130,45 +130,45 @@ def verifySelectedTracks():
 
     return validStatus
 
-def makeLocationDict(trackList=None):
-    """Called by: Model.trackPatternButton, View.setCarsButton"""
+# def makeLocationDict(trackList=None):
+#     """Called by: Model.trackPatternButton, View.setCarsButton"""
+#
+#     _psLog.debug('Model.makeLocationDict')
+#
+#     if not trackList:
+#         trackList = PatternScriptEntities.getSelectedTracks()
+#
+#     detailsForTrack = []
+#     patternLocation = PatternScriptEntities.readConfigFile('PT')['PL']
+#     for trackName in trackList:
+#         detailsForTrack.append(ModelEntities.getGenericTrackDetails(patternLocation, trackName))
+#
+#     locationDict = {}
+#     locationDict['locationName'] = patternLocation
+#     locationDict['tracks'] = detailsForTrack
+#
+#     return locationDict
 
-    _psLog.debug('Model.makeLocationDict')
-
-    if not trackList:
-        trackList = PatternScriptEntities.getSelectedTracks()
-
-    detailsForTrack = []
-    patternLocation = PatternScriptEntities.readConfigFile('PT')['PL']
-    for trackName in trackList:
-        detailsForTrack.append(ModelEntities.getGenericTrackDetails(patternLocation, trackName))
-
-    locationDict = {}
-    locationDict['locationName'] = patternLocation
-    locationDict['tracks'] = detailsForTrack
-
-    return locationDict
-
-def makeReport(locationDict, reportType):
-
-    _psLog.debug('Model.makeReport')
-
-    if reportType == 'PR':
-        reportTitle = PatternScriptEntities.BUNDLE['Track Pattern Report']
-
-    if reportType == 'SC':
-        reportTitle = PatternScriptEntities.BUNDLE['Switch List for Track']
-
-    if reportType == 'TP':
-        reportTitle = PatternScriptEntities.BUNDLE[u'Work Event List for TrainPlayer©']
-
-    modifiedReport = ModelEntities.makeGenericHeader()
-    modifiedReport.update({'trainDescription' : reportTitle})
-    modifiedReport.update({'trainName' : reportTitle})
-    modifiedReport['locations'] = [locationDict]
-    # put in as a list to maintain compatability with JSON File Format/JMRI manifest export.
-
-    return modifiedReport
+# def makeReport(locationDict, reportType):
+#
+#     _psLog.debug('Model.makeReport')
+#
+#     if reportType == 'PR':
+#         reportTitle = PatternScriptEntities.BUNDLE['Track Pattern Report']
+#
+#     if reportType == 'SC':
+#         reportTitle = PatternScriptEntities.BUNDLE['Switch List for Track']
+#
+#     if reportType == 'TP':
+#         reportTitle = PatternScriptEntities.BUNDLE[u'Work Event List for TrainPlayer©']
+#
+#     modifiedReport = ModelEntities.makeGenericHeader()
+#     modifiedReport.update({'trainDescription' : reportTitle})
+#     modifiedReport.update({'trainName' : reportTitle})
+#     modifiedReport['locations'] = [locationDict]
+#     # put in as a list to maintain compatability with JSON File Format/JMRI manifest export.
+#
+#     return modifiedReport
 
 def resetTrainPlayerSwitchlist():
     """Not used"""
