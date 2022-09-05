@@ -11,7 +11,7 @@ class TrackPatternPanel:
 
     def __init__(self):
 
-        self.configFile = PatternScriptEntities.readConfigFile('PT')
+        self.configFile = PatternScriptEntities.readConfigFile('PT') 
         self.yardTracksOnly = PatternScriptEntities.JAVX_SWING.JCheckBox()
         self.yardTracksOnly.setText(PatternScriptEntities.BUNDLE['Yard tracks only'] + ' ')
         self.yardTracksOnly.setSelected(self.configFile['PA'])
