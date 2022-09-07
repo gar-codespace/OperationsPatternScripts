@@ -81,7 +81,7 @@ def setCarsButton():
     for i, trackName in enumerate(selectedTracks, start=1):
         locationDict = ModelEntities.makeLocationDict([trackName]) # makeLocationDict takes a track list
         setCarsForm = ModelEntities.makeReport(locationDict, 'SC')
-        
+
         newFrame = ControllerSetCarsForm.CreateSetCarsFormGui(setCarsForm)
         newWindow = newFrame.makeFrame()
         newWindow.setTitle(PatternScriptEntities.BUNDLE['Set Cars Form for track:'] + ' ' + trackName)

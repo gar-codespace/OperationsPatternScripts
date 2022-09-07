@@ -13,10 +13,10 @@ _psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.ViewSetCarsForm')
 
 def switchListButton():
     """Mini controller when the Track Pattern Report button is pressed
-        Formats and displays the Track Pattern Report
+        Formats and displays the Switch List for Track report
         """
 
-    # _psLog.debug('View.trackPatternButton')
+    _psLog.debug('View.trackPatternButton')
 
     workEventName = PatternScriptEntities.BUNDLE['Switch List for Track']
 # Apply formatting to data

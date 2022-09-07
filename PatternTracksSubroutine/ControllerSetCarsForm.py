@@ -6,8 +6,8 @@
 from psEntities import PatternScriptEntities
 from PatternTracksSubroutine import Model
 from PatternTracksSubroutine import ModelSetCarsForm
-from o2oSubroutine import ModelWorkEvents
 from PatternTracksSubroutine import ViewSetCarsForm
+from o2oSubroutine import ModelWorkEvents
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ControllerSetCarsForm'
 SCRIPT_REV = 20220101
@@ -117,11 +117,13 @@ class CreateSetCarsFormGui:
 
         PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX = PatternScriptEntities.makeReportItemWidthMatrix()
 
-        ModelSetCarsForm.switchListButton()
+    # Replaces [Hold] with a track name
+        ModelSetCarsForm.switchListButton(self.setCarsForm, self.buttonDict['textBoxEntry'])
         ViewSetCarsForm.switchListButton()
 
         # if PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
-        #     Model.writeTrackPatternCsv()
+        #     workEventName = PatternScriptEntities.BUNDLE['Switch List for Track']
+        #     Model.writeTrackPatternCsv(workEventName)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -133,22 +135,19 @@ class CreateSetCarsFormGui:
 
 
 
-    # # Replaces [Hold] with a track name
-    #     locationDict = ModelSetCarsForm.makeLocationDict( \
-    #             self.setCarsForm, self.buttonDict['textBoxEntry'] \
-    #             )
-    #
-    #     modifiedReport = Model.makeReport(locationDict, 'SC')
-    #
-    #     workEventName, textListForPrint = Model.makeWorkEventList(modifiedReport, trackTotals=False)
-    #     workEventPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\' + workEventName + '.txt'
-    #     PatternScriptEntities.genericWriteReport(workEventPath, textListForPrint)
-    #
-    #     fileToOpen = PatternScriptEntities.JAVA_IO.File(workEventPath)
-    #     if fileToOpen.isFile():
-    #         PatternScriptEntities.genericDisplayReport(fileToOpen)
-    #     else:
-    #         self.psLog.warning('Not found: ' + workEventPath)
+
+
+        # modifiedReport = Model.makeReport(locationDict, 'SC')
+        #
+        # workEventName, textListForPrint = Model.makeWorkEventList(modifiedReport, trackTotals=False)
+        # workEventPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\' + workEventName + '.txt'
+        # PatternScriptEntities.genericWriteReport(workEventPath, textListForPrint)
+        #
+        # fileToOpen = PatternScriptEntities.JAVA_IO.File(workEventPath)
+        # if fileToOpen.isFile():
+        #     PatternScriptEntities.genericDisplayReport(fileToOpen)
+        # else:
+        #     self.psLog.warning('Not found: ' + workEventPath)
     #
 
 

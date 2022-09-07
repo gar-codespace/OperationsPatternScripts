@@ -202,12 +202,11 @@ def updateLocations():
 
     return newConfigFile
 
-def writeTrackPatternCsv():
+def writeTrackPatternCsv(workEventName):
     """Track Pattern Report json is written as a CSV file"""
 
     _psLog.debug('Model.writeTrackPatternCsv')
 #  Get json data
-    workEventName = PatternScriptEntities.BUNDLE['Track Pattern Report']
     workEvents = PatternScriptEntities.readJsonWorkEventList(workEventName)
 # Process json data into CSV
     csvReport = ModelEntities.makeWorkEventsCsv(workEvents)

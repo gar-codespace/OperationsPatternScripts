@@ -12,13 +12,14 @@ SCRIPT_REV = 20220101
 
 _psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.ModelSetCarsForm')
 
-def switchListButton():
+def switchListButton(setCarsForm, textBoxEntry):
     """Mini controller when the Track Pattern Report button is pressed
-        Creates the Track Pattern data"""
+        Formats and displays the Switch List for Track report
+        """
 
-    locationDict = ModelEntities.makeLocationDict()
-    modifiedReport = ModelEntities.makeReport(locationDict, 'SC')
-    workEventName = ModelEntities.writeWorkEventListAsJson(modifiedReport)
+    # mergedForm = mergeForms(setCarsForm, textBoxEntry)
+    mergedForm = makeLocationDict(setCarsForm, textBoxEntry)
+    workEventName = ModelEntities.writeWorkEventListAsJson(mergedForm)
 
     return
 
@@ -219,8 +220,10 @@ def makeLocationDict(setCarsForm, textBoxEntry):
     trackDetails['locos'] = locoList
     trackDetails['cars'] = carList
 
-    locationDict = {}
-    locationDict['locationName'] = location
-    locationDict['tracks'] = [trackDetails]
+    setCarsForm['locations'] = {'locationName': location, 'cars': carList, 'locos': locoList, 'length': 1}
 
-    return locationDict
+    # locationDict = {}
+    # locationDict['locationName'] = location
+    # locationDict['tracks'] = [trackDetails]
+
+    return setCarsForm

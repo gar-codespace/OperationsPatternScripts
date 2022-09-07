@@ -16,6 +16,8 @@ class LocationComboBox(PatternScriptEntities.JAVA_AWT.event.ActionListener):
 
         self.subroutineFrame = subroutineFrame
 
+        return
+
     def actionPerformed(self, EVENT):
 
         Model.updatePatternLocation(EVENT.getSource().getSelectedItem())
@@ -110,7 +112,8 @@ class StartUp:
         View.trackPatternButton()
 
         if PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
-            Model.writeTrackPatternCsv()
+            workEventName = PatternScriptEntities.BUNDLE['Track Pattern Report']
+            Model.writeTrackPatternCsv(workEventName)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
