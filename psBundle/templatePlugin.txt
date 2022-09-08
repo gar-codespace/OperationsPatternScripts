@@ -31,8 +31,10 @@ Restart From Default
 Restart with default settings
 Schedule for
 Schedule:
-Set Cars Form for track:
-Set Cars to Track
+*Set Cars Form for track:
+Set Rolling Stock for track:
+*Set Cars to Track
+Set Rolling Stock to Track
 Set to
 Set to Track
 Single

@@ -65,10 +65,10 @@ def trackPatternButton():
 
     return
 
-def setCarsButton():
+def setRsButton():
     """"Set Cars to Track button opens a window for each selected track"""
 
-    _psLog.debug('setCarsButton')
+    _psLog.debug('setRsButton')
 
     selectedTracks = PatternScriptEntities.getSelectedTracks()
     if not selectedTracks:
@@ -84,14 +84,14 @@ def setCarsButton():
 
         newFrame = ControllerSetCarsForm.CreateSetCarsFormGui(setCarsForm)
         newWindow = newFrame.makeFrame()
-        newWindow.setTitle(PatternScriptEntities.BUNDLE['Set Cars Form for track:'] + ' ' + trackName)
+        newWindow.setTitle(PatternScriptEntities.BUNDLE['Set Rolling Stock for track:'] + ' ' + trackName)
         newWindow.setName('setCarsWindow')
         newWindow.setLocation(windowOffset, 180)
         newWindow.pack()
         newWindow.setVisible(True)
 
-        _psLog.info(u'Set Cars Window created for track ' + trackName)
+        _psLog.info(u'Set Rolling Stock Window created for track ' + trackName)
         windowOffset += 50
-    _psLog.info(str(i) + ' Set Cars windows for ' + locationName + ' created')
+    _psLog.info(str(i) + ' Set Rolling Stock windows for ' + locationName + ' created')
 
     return

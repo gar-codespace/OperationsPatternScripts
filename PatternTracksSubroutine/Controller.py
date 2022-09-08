@@ -67,7 +67,7 @@ class StartUp:
         self.widgets[0].addActionListener(LocationComboBox(self.subroutineFrame))
         self.widgets[1].actionPerformed = self.yardTrackOnlyCheckBox
         self.widgets[4].actionPerformed = self.trackPatternButton
-        self.widgets[5].actionPerformed = self.setCarsButton
+        self.widgets[5].actionPerformed = self.setRsButton
 
         return
 
@@ -119,12 +119,12 @@ class StartUp:
 
         return
 
-    def setCarsButton(self, EVENT):
+    def setRsButton(self, EVENT):
         """Opens a "Pattern Report for Track X" window for each checked track
             Resets the o2o switchlist with a new header
             """
 
-        self.psLog.debug('Controller.setCarsButton')
+        self.psLog.debug('Controller.setRsButton')
 
         Model.updateConfigFile(self.widgets)
 
@@ -134,7 +134,7 @@ class StartUp:
             self.psLog.warning('Track not found, re-select the location')
             return
 
-        View.setCarsButton()
+        View.setRsButton()
     # Reset the o2o switchlist
         o2o = ModelWorkEvents.ResetWorkEvents()
         o2o.makePsWorkEventsHeader()

@@ -360,7 +360,7 @@ def MakeSetCarsFooter():
         )
 
     setButton = PatternScriptEntities.JAVX_SWING.JButton(
-        unicode(PatternScriptEntities.BUNDLE['Set Cars to Track'], PatternScriptEntities.ENCODING)
+        unicode(PatternScriptEntities.BUNDLE['Set Rolling Stock to Track'], PatternScriptEntities.ENCODING)
         )
 
     reportWorkPanel.add(PatternScriptEntities.JAVX_SWING.Box.createRigidArea(

@@ -29,7 +29,7 @@ class TrackPatternPanel:
         self.ypButton.setName('ypButton')
 
         self.scButton = PatternScriptEntities.JAVX_SWING.JButton()
-        self.scButton.setText(PatternScriptEntities.BUNDLE['Set Cars to Track'])
+        self.scButton.setText(PatternScriptEntities.BUNDLE['Set Rolling Stock to Track'])
         self.scButton.setName('scButton')
 
         self.trackCheckBoxes = []
