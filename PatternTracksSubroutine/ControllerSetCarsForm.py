@@ -96,7 +96,7 @@ class CreateSetCarsFormGui:
         return
 
     def scheduleButton(self, MOUSE_CLICKED):
-        """The named schedule button if displayed on any 'Set Cars Form for Track X' window"""
+        """The named schedule button if displayed for the active 'Set Cars Form for Track X' window"""
 
         scheduleName = MOUSE_CLICKED.getSource().getText()
         schedule = PatternScriptEntities.SM.getScheduleByName(scheduleName)
@@ -117,41 +117,20 @@ class CreateSetCarsFormGui:
 
         PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX = PatternScriptEntities.makeReportItemWidthMatrix()
 
-    # Replaces [Hold] with a track name
         ModelSetCarsForm.switchListButton(self.setCarsForm, self.buttonDict['textBoxEntry'])
         ViewSetCarsForm.switchListButton()
 
-        # if PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
-        #     workEventName = PatternScriptEntities.BUNDLE['Switch List for Track']
-        #     Model.writeTrackPatternCsv(workEventName)
+        if PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
+            workEventName = PatternScriptEntities.BUNDLE['Switch List for Track']
+            Model.writeTrackPatternCsv(workEventName)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
-
-
-
-
-
-
-
-
-
-
-        # modifiedReport = Model.makeReport(locationDict, 'SC')
-        #
-        # workEventName, textListForPrint = Model.makeWorkEventList(modifiedReport, trackTotals=False)
-        # workEventPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\' + workEventName + '.txt'
-        # PatternScriptEntities.genericWriteReport(workEventPath, textListForPrint)
-        #
-        # fileToOpen = PatternScriptEntities.JAVA_IO.File(workEventPath)
-        # if fileToOpen.isFile():
-        #     PatternScriptEntities.genericDisplayReport(fileToOpen)
-        # else:
-        #     self.psLog.warning('Not found: ' + workEventPath)
-    #
-
-
         return
+
+
+
+
 
     def setButton(self, MOUSE_CLICKED):
         """Event that moves cars to the tracks entered in the text box of
@@ -174,6 +153,12 @@ class CreateSetCarsFormGui:
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
+
+
+
+
+
+
 
     def trainPlayerButton(self, MOUSE_CLICKED):
         """Accumulate switch lists into the o2o-Work-Events switch list

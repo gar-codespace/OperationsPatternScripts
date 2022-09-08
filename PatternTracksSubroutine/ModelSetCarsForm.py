@@ -19,11 +19,73 @@ def switchListButton(setCarsForm, textBoxEntry):
         ControllerSetCarsForm.CreateSetCarsFormGui.switchListButton
         """
 
-    # mergedForm = mergeForms(setCarsForm, textBoxEntry)
-    mergedForm = makeLocationDict(setCarsForm, textBoxEntry)
+    userInputList = makeUserInputList(textBoxEntry)
+    mergedForm = mergeForms(setCarsForm, userInputList)
     workEventName = ModelEntities.writeWorkEventListAsJson(mergedForm)
 
     return
+
+def makeUserInputList(textBoxEntry):
+    """Used by:
+        switchListButton
+        """
+
+    userInputList = []
+    for userInput in textBoxEntry:
+        userInputList.append(unicode(userInput.getText(), PatternScriptEntities.ENCODING))
+
+    return userInputList
+
+def mergeForms(setCarsForm, userInputList):
+    """Merge the values in textBoxEntry into the ['Set to'] field of setCarsForm.
+        This preps the setCarsForm for the o2o sub.
+        Used by:
+        switchListButton
+        """
+
+    _psLog.debug('ModelSetCarsForm.mergeForms')
+
+    longestTrackString = findLongestTrackString()
+    allTracksAtLoc = ModelEntities.getTracksByLocation(None)
+
+    i = 0
+    locos = setCarsForm['locations'][0]['tracks'][0]['locos']
+    for loco in locos:
+        setTrack = PatternScriptEntities.BUNDLE['Hold']
+        setTrack = PatternScriptEntities.formatText('[' + setTrack + ']', longestTrackString + 1)
+        loco.update({'Set_To': setTrack})
+
+        userInput = unicode(userInputList[i], PatternScriptEntities.ENCODING)
+        if userInput in allTracksAtLoc:
+            setTrack = PatternScriptEntities.formatText('[' + userInput + ']', longestTrackString + 1)
+            loco.update({'Set_To': setTrack})
+        i += 1
+
+    cars = setCarsForm['locations'][0]['tracks'][0]['cars']
+    for car in cars:
+        setTrack = PatternScriptEntities.BUNDLE['Hold']
+        setTrack = PatternScriptEntities.formatText('[' + setTrack + ']', longestTrackString + 1)
+        car.update({'Set_To': setTrack})
+
+        userInput = unicode(userInputList[i], PatternScriptEntities.ENCODING)
+        if userInput in allTracksAtLoc:
+            setTrack = PatternScriptEntities.formatText('[' + userInput + ']', longestTrackString + 1)
+            car.update({'Set_To': setTrack})
+        i += 1
+
+    return setCarsForm
+
+def findLongestTrackString():
+    """Used by:
+        mergeForms
+        """
+
+    longestTrackString = 6 # 6 is the length of [Hold]
+    for track in PatternScriptEntities.readConfigFile('PT')['PT']: # Pattern Tracks
+        if len(track) > longestTrackString:
+            longestTrackString = len(track)
+
+    return longestTrackString
 
 def testValidityOfForm(setCarsForm, textBoxEntry):
     """Checks that both submitted forms are the same length
@@ -41,45 +103,6 @@ def testValidityOfForm(setCarsForm, textBoxEntry):
     else:
         _psLog.critical('mismatched input list and car roster lengths')
         return False
-
-def mergeForms(setCarsForm, textBoxEntry):
-    """Merge the values in textBoxEntry into the ['Set to'] field of setCarsForm.
-        This preps the setCarsForm for the o2o sub.
-        Adds a bit of reformatting too.
-        Used by:
-
-        """
-
-    _psLog.debug('ModelSetCarsForm.mergeForms')
-
-    userInputList = []
-    for userInput in textBoxEntry:
-        userInputList.append(unicode(userInput.getText(), PatternScriptEntities.ENCODING))
-
-    allTracksAtLoc = ModelEntities.getTracksByLocation(None)
-    fromTrack = unicode(setCarsForm['locations'][0]['tracks'][0]['trackName'], PatternScriptEntities.ENCODING)
-    locationName = setCarsForm['locations'][0]['locationName']
-
-    i = 0
-    locos = setCarsForm['locations'][0]['tracks'][0]['locos']
-    for loco in locos:
-        userInput = unicode(userInputList[i], PatternScriptEntities.ENCODING)
-        loco['Set to'] = fromTrack
-        if userInput in allTracksAtLoc:
-            loco['Set to'] = userInputList[i]
-        i += 1
-
-    cars = setCarsForm['locations'][0]['tracks'][0]['cars']
-    for car in cars:
-        userInput = unicode(userInputList[i], PatternScriptEntities.ENCODING)
-        car['Set to'] = fromTrack
-        if userInput in allTracksAtLoc:
-            car['Set to'] = userInputList[i]
-        i += 1
-
-    setCarsForm['locations'] = {'locationName': locationName, 'cars': cars, 'locos': locos}
-
-    return setCarsForm
 
 def setRsToTrack(mergedForm):
     """When the set cars to track button of any set cars form is pressed"""
@@ -111,7 +134,9 @@ def setRsToTrack(mergedForm):
     return
 
 class UpdateRollingStock:
-    """Called from setRsToTrack"""
+    """Used by:
+        setRsToTrack
+        """
 
     def __init__(self, rollingStock, track):
 
@@ -147,8 +172,7 @@ class UpdateRollingStock:
 
     def scheduleUpdate(self):
         """If the to-track is a spur, try to set the load/empty requirement for the track
-            Honors apply schedule flag.
-            Toggles default L/E for spurs.
+            Honors apply schedule flag. Toggles default L/E for spurs.
             """
 
         schedule = PatternScriptEntities.SM.getScheduleByName(self.toTrack.getScheduleName())
@@ -162,6 +186,67 @@ class UpdateRollingStock:
                 self.rollingStock.updateLoad() # Toggles default load
 
         return
+
+
+
+
+
+
+
+# def makeLocationDict(setCarsForm, textBoxEntry):
+#     """Replaces car['Set to'] = [ ] with either [Hold] or ['some other valid track']"""
+#
+#     _psLog.debug('ModelSetCarsForm.makeLocationDict')
+#
+#     trackName = setCarsForm['locations'][0]['tracks'][0]['trackName']
+#     location = setCarsForm['locations'][0]['locationName']
+#     allTracksAtLoc = ModelEntities.getTracksByLocation(None)
+#
+#     userInputList = []
+#     for userInput in textBoxEntry:
+#         userInputList.append(unicode(userInput.getText(), PatternScriptEntities.ENCODING))
+#
+#     longestTrackString = 6 # 6 is the length of [Hold]
+#     for track in PatternScriptEntities.readConfigFile('PT')['PT']: # Pattern Tracks
+#         if len(track) > longestTrackString:
+#             longestTrackString = len(track)
+#
+#     i = 0
+#     locoList = []
+#     for loco in setCarsForm['locations'][0]['tracks'][0]['locos']:
+#         setTrack = PatternScriptEntities.BUNDLE['Hold']
+#         userInput = unicode(userInputList[i], PatternScriptEntities.ENCODING)
+#         if userInput in allTracksAtLoc and userInput != trackName:
+#             setTrack = userInput
+#         loco[PatternScriptEntities.BUNDLE['Set to']] = PatternScriptEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
+#         locoList.append(loco)
+#         i += 1
+#
+#     carList = []
+    # for car in setCarsForm['locations'][0]['tracks'][0]['cars']:
+    #     setTrack = PatternScriptEntities.BUNDLE['Hold']
+    #     userInput = unicode(userInputList[i], PatternScriptEntities.ENCODING)
+    #     if userInput in allTracksAtLoc and userInput != trackName:
+    #         setTrack = userInput
+    #     car[PatternScriptEntities.BUNDLE['Set to']] = PatternScriptEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
+    #     carList.append(car)
+    #     i += 1
+#
+#     trackDetails = {}
+#     trackDetails['trackName'] = trackName
+#     trackDetails['length'] = 1
+#     trackDetails['locos'] = locoList
+#     trackDetails['cars'] = carList
+#
+#     setCarsForm['locations'] = {'locationName': location, 'cars': carList, 'locos': locoList, 'length': 1}
+#
+#     # locationDict = {}
+#     # locationDict['locationName'] = location
+#     # locationDict['tracks'] = [trackDetails]
+#
+#     return setCarsForm
+
+
 
 # def exportSetCarsFormToTp(setCarsForm, textBoxEntry):
 #
@@ -181,56 +266,3 @@ class UpdateRollingStock:
 #         ModelWorkEvents.WriteWorkEventListToTp(tpSwitchListHeader + tpSwitchListLocations).asCsv()
 #
 #     return
-
-def makeLocationDict(setCarsForm, textBoxEntry):
-    """Replaces car['Set to'] = [ ] with either [Hold] or ['some other valid track']"""
-
-    _psLog.debug('ModelSetCarsForm.makeLocationDict')
-
-    trackName = setCarsForm['locations'][0]['tracks'][0]['trackName']
-    location = setCarsForm['locations'][0]['locationName']
-    allTracksAtLoc = ModelEntities.getTracksByLocation(None)
-
-    userInputList = []
-    for userInput in textBoxEntry:
-        userInputList.append(unicode(userInput.getText(), PatternScriptEntities.ENCODING))
-
-    longestTrackString = 6 # 6 is the length of [Hold]
-    for track in PatternScriptEntities.readConfigFile('PT')['PT']: # Pattern Tracks
-        if len(track) > longestTrackString:
-            longestTrackString = len(track)
-
-    i = 0
-    locoList = []
-    for loco in setCarsForm['locations'][0]['tracks'][0]['locos']:
-        setTrack = PatternScriptEntities.BUNDLE['Hold']
-        userInput = unicode(userInputList[i], PatternScriptEntities.ENCODING)
-        if userInput in allTracksAtLoc and userInput != trackName:
-            setTrack = userInput
-        loco[PatternScriptEntities.BUNDLE['Set to']] = PatternScriptEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
-        locoList.append(loco)
-        i += 1
-
-    carList = []
-    for car in setCarsForm['locations'][0]['tracks'][0]['cars']:
-        setTrack = PatternScriptEntities.BUNDLE['Hold']
-        userInput = unicode(userInputList[i], PatternScriptEntities.ENCODING)
-        if userInput in allTracksAtLoc and userInput != trackName:
-            setTrack = userInput
-        car[PatternScriptEntities.BUNDLE['Set to']] = PatternScriptEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
-        carList.append(car)
-        i += 1
-
-    trackDetails = {}
-    trackDetails['trackName'] = trackName
-    trackDetails['length'] = 1
-    trackDetails['locos'] = locoList
-    trackDetails['cars'] = carList
-
-    setCarsForm['locations'] = {'locationName': location, 'cars': carList, 'locos': locoList, 'length': 1}
-
-    # locationDict = {}
-    # locationDict['locationName'] = location
-    # locationDict['tracks'] = [trackDetails]
-
-    return setCarsForm
