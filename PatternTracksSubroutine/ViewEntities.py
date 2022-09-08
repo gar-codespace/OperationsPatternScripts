@@ -7,7 +7,9 @@ SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ViewEntities'
 SCRIPT_REV = 20220101
 
 class TrackPatternPanel:
-    """Makes the pattern tracks subroutine panel"""
+    """Makes the pattern tracks subroutine panel
+        Used by:
+        View.ManageGui.makeSubroutinePanel"""
 
     def __init__(self):
 
@@ -124,7 +126,11 @@ class TrackPatternPanel:
         return tpPanel
 
 def makeTextReportHeader(textWorkEventList):
-    """Makes the header for generic text reports"""
+    """Makes the header for generic text reports
+        Used by:
+        View.ManageGui.trackPatternButton'
+        ViewSetCarsForm.switchListButton
+        """
 
     headerNames = PatternScriptEntities.readConfigFile('PT')
 
@@ -136,6 +142,11 @@ def makeTextReportHeader(textWorkEventList):
     return textReportHeader
 
 def makeTextReportLocations(textWorkEventList, trackTotals):
+    """Makes the body for generic text reports
+        Used by:
+        View.ManageGui.trackPatternButton'
+        ViewSetCarsForm.switchListButton
+        """
 
     reportWidth = PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX
     locoItems = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
@@ -185,7 +196,10 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
     return reportSwitchList
 
 def addStandIns(rs):
-    """Make adjustments to the display version of textWorkEventList"""
+    """Make adjustments to the display version of textWorkEventList
+        Used by:
+        makeTextReportLocations
+        """
 
     try:
         lt = rs['Load_Type']
@@ -213,7 +227,10 @@ def addStandIns(rs):
     return rs
 
 def loopThroughRs(type, rsAttribs):
-    """Creates a line containing the attrs in get * MessageFormat"""
+    """Creates a line containing the attrs in get * MessageFormat
+        Used by:
+        makeTextReportLocations
+        """
 
     reportWidth = PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX
     switchListRow = ''

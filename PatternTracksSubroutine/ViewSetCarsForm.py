@@ -125,7 +125,12 @@ def makeSetCarsForTrackForm(setCarsFormData):
     return setCarsForm, buttonDict
 
 def makeSwingBox(xWidth, yHeight):
-    """Makes a swing box to the desired size"""
+    """Makes a swing box to the desired size
+        Used by:
+        makeSetCarsFormHeader
+        makeSetCarsCarRows
+        makeSetCarsLocoRows
+        """
 
     xName = PatternScriptEntities.JAVX_SWING.Box(PatternScriptEntities.JAVX_SWING.BoxLayout.X_AXIS)
     xName.setPreferredSize(PatternScriptEntities.JAVA_AWT.Dimension(width=xWidth, height=yHeight))
@@ -133,7 +138,10 @@ def makeSwingBox(xWidth, yHeight):
     return xName
 
 def makeSetCarsFormHeader(setCarsFormData):
-    """Creates the 'Set Cars Form for Track X' forms header"""
+    """Creates the 'Set Cars Form for Track X' forms header
+        Used by:
+        makeSetCarsForTrackForm
+        """
 
     _psLog.debug('makeSetCarsFormHeader')
 
@@ -173,6 +181,9 @@ def makeSetCarsFormHeader(setCarsFormData):
     return combinedHeader
 
 def makeSetCarsTrackButtons():
+    """Used by:
+        makeSetCarsForTrackForm
+        """
 
     location =  PatternScriptEntities.readConfigFile('PT')['PL']
     allTracksAtLoc =  PatternScriptEntities.LM.getLocationByName(location).getTracksByNameList(None)
@@ -191,6 +202,9 @@ def makeSetCarsTrackButtons():
     return buttonPanel, buttonList
 
 class MakeSetCarsEqptRows():
+    """Used by:
+        makeSetCarsForTrackForm
+        """
 
     _psLog.debug('MakeSetCarsEqptRows')
 
@@ -286,7 +300,10 @@ class MakeSetCarsEqptRows():
         return self.textBoxEntry
 
 def makeSetCarsScheduleRow(setCarsFormData):
-    """Using [0] to avoid for loop since there is only 1 location and track"""
+    """Using [0] to avoid for loop since there is only 1 location and track
+        Used By:
+        makeSetCarsForTrackForm
+        """
 
     _psLog.debug('makeSetCarsScheduleRow')
 
@@ -309,7 +326,10 @@ def makeSetCarsScheduleRow(setCarsFormData):
     return schedulePanel, scheduleList
 
 def MakeSetCarsFooter():
-    """Makes 2 panels, Make Work and Report Work, and adds buttons to the panels"""
+    """Makes 2 panels, Make Work and Report Work, and adds buttons to the panels
+        Used By:
+        makeSetCarsForTrackForm
+        """
 
     _psLog.debug('MakeSetCarsFooter')
 

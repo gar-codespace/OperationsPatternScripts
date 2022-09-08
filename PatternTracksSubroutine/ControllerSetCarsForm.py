@@ -163,7 +163,8 @@ class CreateSetCarsFormGui:
         if not self.quickCheck():
             return
 
-        mergedForm = ModelSetCarsForm.mergeForms(self.setCarsForm, self.buttonDict['textBoxEntry'])
+        # mergedForm = ModelSetCarsForm.mergeForms(self.setCarsForm, self.buttonDict['textBoxEntry'])
+        mergedForm = ModelSetCarsForm.makeLocationDict(self.setCarsForm, self.buttonDict['textBoxEntry'])
         ModelSetCarsForm.setRsToTrack(mergedForm)
 
         setCarsWindow = MOUSE_CLICKED.getSource().getTopLevelAncestor()

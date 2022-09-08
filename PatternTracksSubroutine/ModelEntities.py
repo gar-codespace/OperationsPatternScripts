@@ -6,12 +6,11 @@ from psEntities import PatternScriptEntities
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ModelEntities'
 SCRIPT_REV = 20220101
 
-
-
 def makeLocationDict(trackList=None):
-    """Called by: Model.trackPatternButton, View.setCarsButton"""
-
-    # _psLog.debug('Model.makeLocationDict')
+    """Used by:
+        Model.trackPatternButton
+        View.setCarsButton
+        """
 
     if not trackList:
         trackList = PatternScriptEntities.getSelectedTracks()
@@ -28,8 +27,10 @@ def makeLocationDict(trackList=None):
     return locationDict
 
 def makeReport(locationDict, reportType):
-
-    # _psLog.debug('Model.makeReport')
+    """The name is too generic
+        Used by:
+        Model.trackPatternButton
+        """
 
     if reportType == 'PR':
         reportTitle = PatternScriptEntities.BUNDLE['Track Pattern Report']
@@ -49,7 +50,10 @@ def makeReport(locationDict, reportType):
     return modifiedReport
 
 def testSelectedItem(selectedItem):
-    """Catches user edit of locations"""
+    """Catches user edit of locations
+        Used by:
+        Model.updatePatternLocation
+        """
 
     allLocations = PatternScriptEntities.getAllLocations() #List of strings
     if selectedItem in allLocations:
@@ -58,7 +62,10 @@ def testSelectedItem(selectedItem):
         return allLocations[0]
 
 def getAllTracksForLocation(location):
-    """Sets all tracks to false"""
+    """Sets all tracks to false
+        Used by:
+        Model.updatePatternLocation
+        """
 
     jmriTrackList = PatternScriptEntities.LM.getLocationByName(location).getTracksByNameList(None)
     trackDict = {}
@@ -67,22 +74,11 @@ def getAllTracksForLocation(location):
 
     return trackDict
 
-def initializeConfigFile():
-    """initialize or reinitialize the pattern tracks part of the config file
-    on first use, reset, or edit of a location name
-    """
-
-    newConfigFile = PatternScriptEntities.readConfigFile()
-    subConfigfile = newConfigFile['PT']
-    allLocations  = getAllLocations()
-    subConfigfile.update({'AL': allLocations})
-    subConfigfile.update({'PL': allLocations[0]})
-    subConfigfile.update({'PT': makeInitialTrackList(allLocations[0])})
-    newConfigFile.update({'PT': subConfigfile})
-
-    return newConfigFile
-
 def getTracksByLocation(trackType):
+    """Used by:
+        Model.verifySelectedTracks
+        Model.makeTrackList
+        """
 
     patternLocation = PatternScriptEntities.readConfigFile('PT')['PL']
     allTracksList = []
@@ -94,7 +90,10 @@ def getTracksByLocation(trackType):
         return allTracksList
 
 def updateTrackCheckBoxes(trackCheckBoxes):
-    """Returns a dictionary of track names and their check box status"""
+    """Returns a dictionary of track names and their check box status
+        Used by:
+        Model.updateConfigFile
+        """
 
     dict = {}
     for item in trackCheckBoxes:
@@ -103,7 +102,10 @@ def updateTrackCheckBoxes(trackCheckBoxes):
     return dict
 
 def getGenericTrackDetails(locationName, trackName):
-    """The loco and car lists are sorted at this level, used to make the JSON file"""
+    """The loco and car lists are sorted at this level, used to make the Track Pattern Report.json file
+        Used by:
+        makeLocationDict
+        """
 
     genericTrackDetails = {}
     genericTrackDetails['trackName'] = trackName
@@ -115,8 +117,10 @@ def getGenericTrackDetails(locationName, trackName):
 
 def sortLocoList(locoList):
     """Try/Except protects against bad edit of config file
-    Sort order of PatternScriptEntities.readConfigFile('RM')['SL'] is top down
-    """
+        Sort order of PatternScriptEntities.readConfigFile('RM')['SL'] is top down
+        Used by:
+        getGenericTrackDetails
+        """
 
     sortLocos = PatternScriptEntities.readConfigFile('RM')['SL']
     for sortKey in sortLocos:
@@ -129,7 +133,11 @@ def sortLocoList(locoList):
     return locoList
 
 def getRsOnTrains():
-    """Make a list of all rolling stock that are on built trains"""
+    """Make a list of all rolling stock that are on built trains
+        Used by:
+        getDetailsForLoco
+        getDetailsForCar
+        """
 
     builtTrainList = []
     for train in PatternScriptEntities.TM.getTrainsByStatusList():
@@ -144,7 +152,10 @@ def getRsOnTrains():
     return listOfAssignedRs
 
 def getLocoListForTrack(track):
-    """Creates a generic locomotive list for a track, used to make the **** WHICH JSON??****  JSON file"""
+    """Creates a generic locomotive list for a track
+        Used by:
+        getGenericTrackDetails
+        """
 
     location = PatternScriptEntities.readConfigFile('PT')['PL']
     locoList = getLocoObjects(location, track)
@@ -152,6 +163,9 @@ def getLocoListForTrack(track):
     return [getDetailsForLoco(loco) for loco in locoList]
 
 def getLocoObjects(location, track):
+    """Used by:
+        getLocoListForTrack
+        """
 
     locoList = []
     allLocos = PatternScriptEntities.EM.getByModelList()
@@ -159,7 +173,10 @@ def getLocoObjects(location, track):
     return [loco for loco in allLocos if loco.getLocationName() == location and loco.getTrackName() == track]
 
 def getDetailsForLoco(locoObject):
-    """Mimics jmri.jmrit.operations.setup.Setup.getEngineAttributes()"""
+    """Mimics jmri.jmrit.operations.setup.Setup.getEngineAttributes()
+        Used by:
+        getLocoListForTrack
+        """
 
     locoDetailDict = {}
 
@@ -191,7 +208,10 @@ def getDetailsForLoco(locoObject):
 
 def sortCarList(carList):
     """Try/Except protects against bad edit of config file
-    Sort order of PatternScriptEntities.readConfigFile('RM')['SC'] is top down"""
+        Sort order of PatternScriptEntities.readConfigFile('RM')['SC'] is top down
+        Used by:
+        getGenericTrackDetails
+        """
 
     sortCars = PatternScriptEntities.readConfigFile('RM')['SC']
     for sortKey in sortCars:
@@ -204,7 +224,10 @@ def sortCarList(carList):
     return carList
 
 def getCarListForTrack(track):
-    """A list of car attributes as a dictionary"""
+    """A list of car attributes as a dictionary
+        Used by:
+        getGenericTrackDetails
+        """
 
     location = PatternScriptEntities.readConfigFile('PT')['PL']
     carList = getCarObjects(location, track)
@@ -215,12 +238,19 @@ def getCarListForTrack(track):
     return carDetails
 
 def getCarObjects(location, track):
+    """Used by:
+        getCarListForTrack
+        """
 
     allCars = PatternScriptEntities.CM.getByIdList()
 
     return [car for car in allCars if car.getLocationName() == location and car.getTrackName() == track]
 
 def getKernelTally(kernelName=None):
+    """Used by:
+        getCarListForTrack
+        getDetailsForCar
+        """
 
     if not kernelName:
         return '0'
@@ -236,7 +266,10 @@ def getKernelTally(kernelName=None):
     return str(kernelTally)
 
 def getDetailsForCar(carObject, kernelTally):
-    """Mimics jmri.jmrit.operations.setup.Setup.getCarAttributes()"""
+    """Mimics jmri.jmrit.operations.setup.Setup.getCarAttributes()
+        Used by:
+        getCarListForTrack
+        """
 
     carDetailDict = {}
     trackId = PatternScriptEntities.LM.getLocationByName(carObject.getLocationName()).getTrackById(carObject.getTrackId())
@@ -279,7 +312,9 @@ def getDetailsForCar(carObject, kernelTally):
     return carDetailDict
 
 def makeGenericHeader():
-    """Called by: Model.makeReport"""
+    """Used by:
+        Model.makeReport
+        """
 
     listHeader = {}
     listHeader['railroad'] = unicode(PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getRailroadName(), PatternScriptEntities.ENCODING)
@@ -294,6 +329,8 @@ def makeGenericHeader():
 def writeWorkEventListAsJson(switchList):
     """The generic switch list is written as a ???????????? json
         redo this, thats a wierd way to pick a name
+        Used By:
+        Model.trackPatternButton
         """
 
     switchListName = switchList['trainDescription']
@@ -307,6 +344,9 @@ def writeWorkEventListAsJson(switchList):
 
 
 def makeInitialTrackList(location):
+    """Used by:
+        updateLocations
+        """
 
     trackDict = {}
     for track in PatternScriptEntities.LM.getLocationByName(location).getTracksByNameList(None):
@@ -315,7 +355,10 @@ def makeInitialTrackList(location):
     return trackDict
 
 def makeWorkEventsCsv(workEvents):
-    """CSV writer does not support utf-8"""
+    """CSV writer does not support utf-8
+        Used by:
+        Model.writeTrackPatternCsv
+        """
 
     workEventsCsv = u'Operator,Description,Parameters\n' \
                     u'RT,Report Type,' + workEvents['trainDescription'] + '\n' \
@@ -372,3 +415,21 @@ def makeWorkEventsCsv(workEvents):
                             + '\n'
 
     return workEventsCsv
+
+
+
+# def initializeConfigFile():
+#     """initialize or reinitialize the pattern tracks part of the config file
+#         on first use, reset, or edit of a location name
+#         Used by:
+#         """
+#
+#     newConfigFile = PatternScriptEntities.readConfigFile()
+#     subConfigfile = newConfigFile['PT']
+#     allLocations  = getAllLocations()
+#     subConfigfile.update({'AL': allLocations})
+#     subConfigfile.update({'PL': allLocations[0]})
+#     subConfigfile.update({'PT': makeInitialTrackList(allLocations[0])})
+#     newConfigFile.update({'PT': subConfigfile})
+#
+#     return newConfigFile

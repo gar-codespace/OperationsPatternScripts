@@ -638,10 +638,8 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         self.psLog.debug(OPEN_EC_EVENT)
 
         configPath = PatternScriptEntities.PROFILE_PATH + 'operations\\PatternConfig.json'
-        fileToOpen = PatternScriptEntities.JAVA_IO.File(configPath)
-        if fileToOpen.isFile():
-            apps.SystemConsole.getConsole().setVisible(True)
-            PatternScriptEntities.genericDisplayReport(fileToOpen)
+        if PatternScriptEntities.JAVA_IO.File(configPath).isFile():
+            PatternScriptEntities.genericDisplayReport(configPath)
         else:
             self.psLog.warning('Not found: ' + configPath)
 

@@ -15,6 +15,8 @@ _psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.ModelSetCarsForm')
 def switchListButton(setCarsForm, textBoxEntry):
     """Mini controller when the Track Pattern Report button is pressed
         Formats and displays the Switch List for Track report
+        Used by:
+        ControllerSetCarsForm.CreateSetCarsFormGui.switchListButton
         """
 
     # mergedForm = mergeForms(setCarsForm, textBoxEntry)
@@ -24,7 +26,10 @@ def switchListButton(setCarsForm, textBoxEntry):
     return
 
 def testValidityOfForm(setCarsForm, textBoxEntry):
-    """Checks that both submitted forms are the same length"""
+    """Checks that both submitted forms are the same length
+        Used by:
+        ControllerSetCarsForm.CreateSetCarsFormGui.quickCheck
+        """
 
     _psLog.debug('ModelSetCarsForm.testValidityOfForm')
 
@@ -41,6 +46,8 @@ def mergeForms(setCarsForm, textBoxEntry):
     """Merge the values in textBoxEntry into the ['Set to'] field of setCarsForm.
         This preps the setCarsForm for the o2o sub.
         Adds a bit of reformatting too.
+        Used by:
+
         """
 
     _psLog.debug('ModelSetCarsForm.mergeForms')
