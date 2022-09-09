@@ -148,7 +148,6 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
         ViewSetCarsForm.switchListButton
         """
 
-    reportWidth = PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX
     locoItems = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
     carItems = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
 

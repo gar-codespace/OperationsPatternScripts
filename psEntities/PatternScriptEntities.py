@@ -18,6 +18,7 @@ ENCODING = ''
 BUNDLE = {}
 J_BUNDLE = JMRI.jmrit.operations.setup.Setup()
 REPORT_ITEM_WIDTH_MATRIX = {}
+TRACK_NAME_CLICKED_ON = ''
 
 SB = JMRI.jmrit.operations.setup.Bundle()
 
@@ -514,7 +515,7 @@ def parseSetTo(setTo):
     y = x[1].split(']')
 
     return y[0]
-    
+
 def translateMessageFormat():
     """The messageFormat is in the locale's language, it has to be hashed to the plugin fields.
         Dealers choice, J_BUNDLE.ROAD or SB.handleGetMessage('Road')

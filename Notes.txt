@@ -1,19 +1,8 @@
 
 Todo:
-  New JMRI Railroad not saveing the new xml
-  Display load type as L E or O in reports
-  Move _trackNameClickedOn to PatternScriptEntities
-  Test with really long spur names
-  remove getSetToLocationAndTrack, part of TP export
-  How to publish DeepL
-  How to use locale modifier, IE en-GB
-  Harden up Bundle against web errors, untranslated items
   Maybe use java io to make all paths for better OS compatibility
-
-  TP import creates the wrong track length
   TP import not bullet proof
-  Should import button be part of new and update?
-  Which windows need to be closed when creating a new railroad?
+  How to publish DeepL
 
 Comments:
   Schedule does not prevent setting a car to a track
@@ -37,7 +26,11 @@ Tested Items:
     SI set to TP only works OK
 
   Reports
-    Ignore Track Length works with yard tracks
+    Test with really long location and spur names OK
+    Display load type as L E or O in reports OK
+    Kernel Size is displaying in reports OK
+    [Hold] changed to ['Current Track Name'] for reports
+    Ignore Track Length works with yard tracks OK
     formatText formats ascii OK
     formatText() works with utf-8 OK
     Create JSON header OK
@@ -54,7 +47,7 @@ Tested Items:
     Reports ignore Tab,Tab2, Tab3 OK
 
   Actions
-    Set Cars to 'Hold' works OK
+    _trackNameClickedOn moved to PatternScriptEntities.TRACK_NAME_CLICKED_ON
     Caboose and passenger move OK
     Caboose and Passenger car types are loaded as O for Occupied OK
     When setting to a spur the reserved column for the spur shows an entry, as it should when setting a destination
@@ -75,8 +68,10 @@ Tested Items:
     Bundle creates new plugin and help page translations OK
     DYI version of concurrency seems to work OK.
 
-  TrainPlayer
+  o2o
     Add a listener to monitor if a new train is created or deleted, builtTrain listeners updated accordingly
+    New JMRI Railroad saveing the new xml OK
+    TP import creates the track length OK
     Adding script to run on train built for TP export is not needed, but still can be done.
     TrainPlayer subroutine sketched in, to be expanded
     TrainPlayer integration harden with train built listeners
@@ -102,6 +97,9 @@ Catches Items:
   Catches user edit train while TP export is enabled
 
 Version 3 ideas:
+  Harden up Bundle against web errors, untranslated items
+  How to use locale modifier, IE en-GB
+  Should import button be part of new and update?
   Implement TrainPlayer Support subroutine.
   Implement mergeConfigFiles()
   Enhance and harden BUNDLE

@@ -236,14 +236,10 @@ def getCarObjects(location, track):
 
     return [car for car in allCars if car.getLocationName() == location and car.getTrackName() == track]
 
-def getKernelTally(kernelName=None):
+def getKernelTally():
     """Used by:
         getCarListForTrack
-        getDetailsForCar
         """
-
-    if not kernelName:
-        return '0'
 
     tally = []
     for car in PatternScriptEntities.CM.getByIdList():
@@ -253,7 +249,7 @@ def getKernelTally(kernelName=None):
 
     kernelTally = PatternScriptEntities.occuranceTally(tally)
 
-    return str(kernelTally)
+    return kernelTally
 
 def getDetailsForCar(carObject, kernelTally):
     """Mimics jmri.jmrit.operations.setup.Setup.getCarAttributes()
@@ -263,18 +259,23 @@ def getDetailsForCar(carObject, kernelTally):
 
     carDetailDict = {}
     trackId = PatternScriptEntities.LM.getLocationByName(carObject.getLocationName()).getTrackById(carObject.getTrackId())
+    try:
+        kernelSize = kernelTally[carObject.getKernelName()]
+    except:
+        kernelSize = 0
+    shortLoadType = getShortLoadType(carObject)
 
     carDetailDict['Road'] = carObject.getRoadName()
     carDetailDict['Number'] = carObject.getNumber()
     carDetailDict['Type'] = carObject.getTypeName()
     carDetailDict['Length'] = carObject.getLength()
     carDetailDict['Weight'] = carObject.getWeightTons()
-    carDetailDict['Load Type'] = carObject.getLoadType()
+    carDetailDict['Load Type'] = shortLoadType
     carDetailDict['Load'] = carObject.getLoadName()
     carDetailDict['Hazardous'] = carObject.isHazardous()
     carDetailDict['Color'] = carObject.getColor()
     carDetailDict['Kernel'] = carObject.getKernelName()
-    carDetailDict['Kernel Size'] = getKernelTally(carObject.getKernelName())
+    carDetailDict['Kernel Size'] = str(kernelSize)
     carDetailDict['Owner'] = str(carObject.getOwner())
     carDetailDict['Track'] = carObject.getTrackName()
     carDetailDict['Location'] = carObject.getLocationName()
@@ -288,8 +289,7 @@ def getDetailsForCar(carObject, kernelTally):
     carDetailDict['RWE'] = carObject.getReturnWhenEmptyDestinationName()
     carDetailDict['RWL'] = carObject.getReturnWhenLoadedDestinationName()
 # Modifications used by this plugin
-    if carObject.isCaboose() or carObject.isPassenger():
-        carDetailDict['Load_Type'] = u'O' # Occupied
+
 
     carDetailDict['On_Train'] = False
     if carObject in getRsOnTrains(): # Flag to mark if RS is on a built train
@@ -300,6 +300,21 @@ def getDetailsForCar(carObject, kernelTally):
     carDetailDict[u' '] = u' ' # Catches KeyError - empty box added to getLocalSwitchListMessageFormat
 
     return carDetailDict
+
+def getShortLoadType(car):
+    """Used by:
+        getDetailsForCar
+        """
+
+    lt = 'U'
+    if car.getLoadType() == 'empty':
+        lt = 'E'
+    if car.getLoadType() == 'load':
+        lt = 'L'
+    if car.isCaboose() or car.isPassenger():
+        lt = 'O'
+
+    return lt
 
 def makeGenericHeader():
     """Used by:

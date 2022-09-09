@@ -12,8 +12,6 @@ from o2oSubroutine import ModelWorkEvents
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ControllerSetCarsForm'
 SCRIPT_REV = 20220101
 
-_trackNameClickedOn = None
-
 class TextBoxEntryListener(PatternScriptEntities.JAVA_AWT.event.MouseAdapter):
     """When any of the 'Set Cars Form for Track X' text inpou boxes is clicked on"""
 
@@ -24,8 +22,8 @@ class TextBoxEntryListener(PatternScriptEntities.JAVA_AWT.event.MouseAdapter):
 
     def mouseClicked(self, MOUSE_CLICKED):
 
-        if _trackNameClickedOn:
-            MOUSE_CLICKED.getSource().setText(_trackNameClickedOn)
+        if PatternScriptEntities.TRACK_NAME_CLICKED_ON:
+            MOUSE_CLICKED.getSource().setText(PatternScriptEntities.TRACK_NAME_CLICKED_ON)
         else:
             self.psLog.warning('No track was selected')
 
@@ -90,8 +88,8 @@ class CreateSetCarsFormGui:
     def trackRowButton(self, MOUSE_CLICKED):
         """Any button of the 'Set Cars Form for Track X' - row of track buttons"""
 
-        _trackNameClickedOn = unicode(MOUSE_CLICKED.getSource().getText(), PatternScriptEntities.ENCODING)
-        global _trackNameClickedOn
+        PatternScriptEntities.TRACK_NAME_CLICKED_ON = unicode(MOUSE_CLICKED.getSource().getText(), PatternScriptEntities.ENCODING)
+        # global _trackNameClickedOn
 
         return
 

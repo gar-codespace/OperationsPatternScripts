@@ -52,24 +52,25 @@ def merge(setCarsForm, userInputList):
     locos = setCarsForm['locations'][0]['tracks'][0]['locos']
     for loco in locos:
         setTrack = setCarsForm['locations'][0]['tracks'][0]['trackName']
-        setTrack = PatternScriptEntities.formatText('[' + setTrack + ']', longestTrackString + 1)
+    # +2 so that the [ and ] are part of the format
+        setTrack = PatternScriptEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
         loco.update({'Set_To': setTrack})
 
         userInput = unicode(userInputList[i], PatternScriptEntities.ENCODING)
         if userInput in allTracksAtLoc:
-            setTrack = PatternScriptEntities.formatText('[' + userInput + ']', longestTrackString + 1)
+            setTrack = PatternScriptEntities.formatText('[' + userInput + ']', longestTrackString + 2)
             loco.update({'Set_To': setTrack})
         i += 1
 
     cars = setCarsForm['locations'][0]['tracks'][0]['cars']
     for car in cars:
         setTrack = setCarsForm['locations'][0]['tracks'][0]['trackName']
-        setTrack = PatternScriptEntities.formatText('[' + setTrack + ']', longestTrackString + 1)
+        setTrack = PatternScriptEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
         car.update({'Set_To': setTrack})
 
         userInput = unicode(userInputList[i], PatternScriptEntities.ENCODING)
         if userInput in allTracksAtLoc:
-            setTrack = PatternScriptEntities.formatText('[' + userInput + ']', longestTrackString + 1)
+            setTrack = PatternScriptEntities.formatText('[' + userInput + ']', longestTrackString + 2)
             car.update({'Set_To': setTrack})
         i += 1
 
