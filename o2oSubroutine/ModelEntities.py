@@ -106,5 +106,5 @@ def getSetToLocationAndTrack(locationName, trackName):
         track = location.getTrackByName(trackName, None)
         return location, track
     except:
-        print('Not found: ', location, track)
+        print('Not found: ', locationName, trackName)
         return None, None

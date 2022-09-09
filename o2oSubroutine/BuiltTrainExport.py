@@ -111,7 +111,7 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
 
         startTime = time.time()
 
-        if PatternScriptEntities.CheckTpDestination().directoryExists():
+        if PatternScriptEntities.tpDirectoryExists():
 
             self.tpLog.debug('ModelWorkEvents.ConvertJmriManifest')
 

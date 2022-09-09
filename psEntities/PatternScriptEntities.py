@@ -79,27 +79,6 @@ class Logger:
         return
 
 
-class CheckTpDestination:
-    """Verify or create a TrainPlayer destination directory"""
-
-    def __init__(self):
-
-        self.psLog = LOGGING.getLogger('PS.PE.PatternScriptEntities.CheckTpDestination')
-
-        return
-
-    def directoryExists(self):
-
-        tpDirectory = JMRI.util.FileUtil.getHomePath() + 'AppData\\Roaming\\TrainPlayer\\Reports\\'
-        if JAVA_IO.File(tpDirectory).isDirectory():
-            self.psLog.info('TrainPlayer destination directory OK')
-        else:
-            self.psLog.warning('TrainPlayer Reports destination directory not found')
-            print('TrainPlayer Reports destination directory not found')
-
-        return tpDrrectoryFlag
-
-
 class validateStubFile:
     """Copy of the JMRI Java version of createStubFile"""
 
@@ -160,6 +139,20 @@ class validateStubFile:
         self.updateStubTemplate()
         self.writeStubFile()
 
+        return
+
+
+def tpDirectoryExists():
+
+    psLog = LOGGING.getLogger('PS.PE.PatternScriptEntities.tpDirectoryExists')
+
+    tpDirectory = JMRI.util.FileUtil.getHomePath() + 'AppData\\Roaming\\TrainPlayer\\Reports\\'
+    if JAVA_IO.File(tpDirectory).isDirectory():
+        psLog.info('TrainPlayer destination directory OK')
+        return True
+    else:
+        psLog.warning('TrainPlayer Reports destination directory not found')
+        print('TrainPlayer Reports destination directory not found')
         return
 
 def readJsonWorkEventList(workEventName):

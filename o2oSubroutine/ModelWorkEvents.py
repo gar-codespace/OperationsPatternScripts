@@ -185,7 +185,8 @@ class ConvertJmriManifest:
                 parsedRS['PUSO'] = u'SL'
                 locos.append(parsedRS)
 
-            self.o2oWorkEvents['locations'].append({'locationName': location['userName'], 'cars': cars, 'locos': locos})
+            # self.o2oWorkEvents['locations'].append({'locationName': location['userName'], 'cars': cars, 'locos': locos})
+            self.o2oWorkEvents['locations'].append({'locationName': location['userName'], 'tracks': [{'trackName': 'xyz', 'cars': cars, 'locos': locos}]})
 
         return
 
@@ -207,7 +208,7 @@ class ConvertJmriManifest:
         parsedRS['Location'] = rs['location']['userName']
         parsedRS['Track'] = rs['location']['track']['userName']
         parsedRS['Destination'] = rs['destination']['userName']
-        parsedRS['Set to'] = rs['destination']['track']['userName']
+        parsedRS['Set_To'] = '[' + rs['destination']['track']['userName'] + ']'
 
         return parsedRS
 
@@ -259,16 +260,21 @@ class o2oWorkEvents:
         return
 
     def o2oLocations(self):
+        """This has to work for both JMRI and o2o generated lists"""
 
         self.psLog.debug('o2oLocations')
 
-        self.o2oList += u'WE,1,' + self.workEvents['locations'][0]['locationName'] + '\n'
+        counter = 1
 
-        tracks = self.workEvents['locations'][0]['tracks'][0]
-        for car in tracks['cars']:
-            self.o2oList += self.makeLine(car) + '\n'
-        for loco in tracks['locos']:
-            self.o2oList += self.makeLine(loco) + '\n'
+        for location in self.workEvents['locations']:
+            self.o2oList += u'WE,' + str(counter) + ',' + location['locationName'] + '\n'
+            for track in location['tracks']:
+                for car in track['cars']:
+                    self.o2oList += self.makeLine(car) + '\n'
+                for loco in track['locos']:
+                    self.o2oList += self.makeLine(loco) + '\n'
+
+            counter += 1
 
         return
 
@@ -285,7 +291,7 @@ class o2oWorkEvents:
             load = rs['Load']
         except:
             load = rs['Model']
-            
+
         pu = rs['Location'] + ';' + rs['Track']
 
         setTo = PatternScriptEntities.parseSetTo(rs['Set_To'])
@@ -297,7 +303,7 @@ class o2oWorkEvents:
 
         self.psLog.debug('saveList')
 
-        if PatternScriptEntities.CheckTpDestination().directoryExists():
+        if PatternScriptEntities.tpDirectoryExists():
             PatternScriptEntities.genericWriteReport(self.o2oWorkEventPath, self.o2oList)
 
         print(SCRIPT_NAME + '.o2oWorkEvents ' + str(SCRIPT_REV))
