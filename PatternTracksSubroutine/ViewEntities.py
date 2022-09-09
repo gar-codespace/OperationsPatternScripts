@@ -172,8 +172,8 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
             lengthOfCars += int(car['Length']) + 4
             car = addStandIns(car)
             reportSwitchList += car['Set_To'] + loopThroughRs('car', car) + '\n'
-            trackTally.append(car['Final_Dest'])
-            reportTally.append(car['Final_Dest'])
+            trackTally.append(car['Final Dest'])
+            reportTally.append(car['Final Dest'])
 
         if trackTotals:
             totalLength = lengthOfLocos + lengthOfCars

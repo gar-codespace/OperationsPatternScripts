@@ -9,7 +9,7 @@ SCRIPT_REV = 20220101
 def makeLocationDict(trackList=None):
     """Used by:
         Model.trackPatternButton
-        View.setCarsButton
+        View.setRsButton
         """
 
     if not trackList:
@@ -30,6 +30,7 @@ def makeReport(locationDict, reportType):
     """The name is too generic
         Used by:
         Model.trackPatternButton
+        View.setRsButton
         """
 
     if reportType == 'PR':
@@ -44,8 +45,8 @@ def makeReport(locationDict, reportType):
     modifiedReport = makeGenericHeader()
     modifiedReport.update({'trainDescription' : reportTitle})
     modifiedReport.update({'trainName' : reportTitle})
+# put in as a list to maintain compatability with JSON File Format/JMRI manifest export.
     modifiedReport['locations'] = [locationDict]
-    # put in as a list to maintain compatability with JSON File Format/JMRI manifest export.
 
     return modifiedReport
 
@@ -279,22 +280,22 @@ def getDetailsForCar(carObject, kernelTally):
     carDetailDict['Type'] = carObject.getTypeName()
     carDetailDict['Length'] = carObject.getLength()
     carDetailDict['Weight'] = carObject.getWeightTons()
-    carDetailDict['Load_Type'] = carObject.getLoadType()
+    carDetailDict['Load Type'] = carObject.getLoadType()
     carDetailDict['Load'] = carObject.getLoadName()
     carDetailDict['Hazardous'] = carObject.isHazardous()
     carDetailDict['Color'] = carObject.getColor()
     carDetailDict['Kernel'] = carObject.getKernelName()
-    carDetailDict['Kernel_Size'] = getKernelTally(carObject.getKernelName())
+    carDetailDict['Kernel Size'] = getKernelTally(carObject.getKernelName())
     carDetailDict['Owner'] = str(carObject.getOwner())
     carDetailDict['Track'] = carObject.getTrackName()
     carDetailDict['Location'] = carObject.getLocationName()
     carDetailDict['Comment'] = carObject.getComment()
     carDetailDict['Destination'] = carObject.getDestinationName()
     carDetailDict['Dest&Track'] = carObject.getDestinationTrackName()
-    carDetailDict['Final_Dest'] = carObject.getFinalDestinationName()
+    carDetailDict['Final Dest'] = carObject.getFinalDestinationName()
     carDetailDict['FD&Track'] = carObject.getFinalDestinationTrackName()
-    carDetailDict['Drop_Comment'] = trackId.getCommentSetout()
-    carDetailDict['Pickup_Comment'] = trackId.getCommentPickup()
+    carDetailDict['SetOut Msg'] = trackId.getCommentSetout()
+    carDetailDict['PickUp Msg'] = trackId.getCommentPickup()
     carDetailDict['RWE'] = carObject.getReturnWhenEmptyDestinationName()
     carDetailDict['RWL'] = carObject.getReturnWhenLoadedDestinationName()
 # Modifications used by this plugin
@@ -326,22 +327,19 @@ def makeGenericHeader():
 
     return listHeader
 
-def writeWorkEventListAsJson(switchList):
-    """The generic switch list is written as a ???????????? json
-        redo this, thats a wierd way to pick a name
+def writeWorkEventListAsJson(workEvent, workEventName):
+    """Any generic switch list is written as a json file.
         Used By:
         Model.trackPatternButton
+        ModelSetCarsForm.mergeForms
         """
 
-    switchListName = switchList['trainDescription']
-    switchListPath = PatternScriptEntities.PROFILE_PATH \
-               + 'operations\\jsonManifests\\' + switchListName + '.json'
-    switchListReport = PatternScriptEntities.dumpJson(switchList)
+    workEventPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + workEventName + '.json'
+    workEventReport = PatternScriptEntities.dumpJson(workEvent)
 
-    PatternScriptEntities.genericWriteReport(switchListPath, switchListReport)
-    return switchListName
+    PatternScriptEntities.genericWriteReport(workEventPath, workEventReport)
 
-
+    return
 
 def makeInitialTrackList(location):
     """Used by:
@@ -396,40 +394,22 @@ def makeWorkEventsCsv(workEvents):
                             + car['Length'] + ',' \
                             + car['Weight'] + ',' \
                             + car['Load'] + ',' \
-                            + car['Load_Type'] + ',' \
+                            + car['Load Type'] + ',' \
                             + str(car['Hazardous']) + ',' \
                             + car['Color'] + ',' \
                             + car['Kernel'] + ',' \
-                            + car['Kernel_Size'] + ',' \
+                            + car['Kernel Size'] + ',' \
                             + car['Owner'] + ',' \
                             + car['Track'] + ',' \
                             + car['Location'] + ',' \
                             + car['Destination'] + ',' \
                             + car['Dest&Track'] + ',' \
-                            + car['Final_Dest'] + ',' \
+                            + car['Final Dest'] + ',' \
                             + car['FD&Track'] + ',' \
                             + car['Comment'] + ',' \
-                            + car['Drop_Comment'] + ',' \
-                            + car['Pickup_Comment'] + ',' \
+                            + car['SetOut Msg'] + ',' \
+                            + car['PickUp Msg'] + ',' \
                             + car['RWE'] \
                             + '\n'
 
     return workEventsCsv
-
-
-
-# def initializeConfigFile():
-#     """initialize or reinitialize the pattern tracks part of the config file
-#         on first use, reset, or edit of a location name
-#         Used by:
-#         """
-#
-#     newConfigFile = PatternScriptEntities.readConfigFile()
-#     subConfigfile = newConfigFile['PT']
-#     allLocations  = getAllLocations()
-#     subConfigfile.update({'AL': allLocations})
-#     subConfigfile.update({'PL': allLocations[0]})
-#     subConfigfile.update({'PT': makeInitialTrackList(allLocations[0])})
-#     newConfigFile.update({'PT': subConfigfile})
-#
-#     return newConfigFile

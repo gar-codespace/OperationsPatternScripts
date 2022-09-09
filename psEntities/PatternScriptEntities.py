@@ -163,7 +163,11 @@ class validateStubFile:
         return
 
 def readJsonWorkEventList(workEventName):
-    """Called by patternButton"""
+    """Used by:
+        patternButton???
+        Model.writeTrackPatternCsv
+        ModelSetCarsForm.setRsToTrack
+        """
 
     reportPath = PROFILE_PATH + 'operations\\jsonManifests\\' + workEventName + '.json'
 
@@ -525,14 +529,14 @@ def translateMessageFormat():
     rosetta[J_BUNDLE.TAB3] = 'Tab3'
 # Cars
     rosetta[J_BUNDLE.LOAD] = 'Load'
-    rosetta[J_BUNDLE.LOAD_TYPE] = 'Load_Type'
+    rosetta[J_BUNDLE.LOAD_TYPE] = 'Load Type'
     rosetta[J_BUNDLE.HAZARDOUS] = 'Hazardous'
     rosetta[J_BUNDLE.KERNEL] = 'Kernel'
-    rosetta[J_BUNDLE.KERNEL_SIZE] = 'Kernel_Size'
-    rosetta[J_BUNDLE.FINAL_DEST] = 'Final_Dest'
+    rosetta[J_BUNDLE.KERNEL_SIZE] = 'Kernel Size'
+    rosetta[J_BUNDLE.FINAL_DEST] = 'Final Dest'
     rosetta[J_BUNDLE.FINAL_DEST_TRACK] = 'FD&Track'
-    rosetta[J_BUNDLE.DROP_COMMENT] = 'Drop_Comment'
-    rosetta[J_BUNDLE.PICKUP_COMMENT] = 'Pickup_Comment'
+    rosetta[J_BUNDLE.DROP_COMMENT] = 'SetOut Msg'
+    rosetta[J_BUNDLE.PICKUP_COMMENT] = 'PickUp Msg'
     rosetta[J_BUNDLE.RWE] = 'RWE'
     # rosetta[J_BUNDLE.RWL] = 'RWL'
 # Locos

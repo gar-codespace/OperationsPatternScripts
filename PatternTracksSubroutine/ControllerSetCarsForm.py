@@ -70,7 +70,7 @@ class CreateSetCarsFormGui:
             pass
 
         self.buttonDict['footerButtons'][0].actionPerformed = self.switchListButton
-        self.buttonDict['footerButtons'][1].actionPerformed = self.setButton
+        self.buttonDict['footerButtons'][1].actionPerformed = self.setRsButton
         try:
             self.buttonDict['footerButtons'][2].actionPerformed = self.trainPlayerButton
         except IndexError:
@@ -108,7 +108,7 @@ class CreateSetCarsFormGui:
         return
 
     def switchListButton(self, MOUSE_CLICKED):
-        """Makes a Set Cars (SC) switch list for the active 'Set Cars Form for Track X' window"""
+        """Makes a Set Cars (SC) switch list for the active 'Set Rolling Stock for Track X' window"""
 
         self.psLog.info(MOUSE_CLICKED)
 
@@ -117,7 +117,8 @@ class CreateSetCarsFormGui:
 
         PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX = PatternScriptEntities.makeReportItemWidthMatrix()
 
-        ModelSetCarsForm.switchListButton(self.setCarsForm, self.buttonDict['textBoxEntry'])
+        ModelSetCarsForm.mergeForms(self.setCarsForm, self.buttonDict['textBoxEntry'])
+
         ViewSetCarsForm.switchListButton()
 
         if PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
@@ -128,11 +129,7 @@ class CreateSetCarsFormGui:
 
         return
 
-
-
-
-
-    def setButton(self, MOUSE_CLICKED):
+    def setRsButton(self, MOUSE_CLICKED):
         """Event that moves cars to the tracks entered in the text box of
             the 'Set Cars Form for Track X' form
             """
@@ -142,9 +139,8 @@ class CreateSetCarsFormGui:
         if not self.quickCheck():
             return
 
-        # mergedForm = ModelSetCarsForm.mergeForms(self.setCarsForm, self.buttonDict['textBoxEntry'])
-        mergedForm = ModelSetCarsForm.makeLocationDict(self.setCarsForm, self.buttonDict['textBoxEntry'])
-        ModelSetCarsForm.setRsToTrack(mergedForm)
+        ModelSetCarsForm.mergeForms(self.setCarsForm, self.buttonDict['textBoxEntry'])
+        ModelSetCarsForm.setRsToTrack()
 
         setCarsWindow = MOUSE_CLICKED.getSource().getTopLevelAncestor()
         setCarsWindow.setVisible(False)

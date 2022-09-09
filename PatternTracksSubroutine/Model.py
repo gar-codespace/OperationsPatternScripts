@@ -16,9 +16,13 @@ def trackPatternButton():
         Controller.StartUp.trackPatternButton
         """
 
+    reportTitle = PatternScriptEntities.BUNDLE['Track Pattern Report']
     locationDict = ModelEntities.makeLocationDict()
     modifiedReport = ModelEntities.makeReport(locationDict, 'PR')
-    workEventName = ModelEntities.writeWorkEventListAsJson(modifiedReport)
+
+
+
+    workEventName = ModelEntities.writeWorkEventListAsJson(modifiedReport, reportTitle)
 
     return
 

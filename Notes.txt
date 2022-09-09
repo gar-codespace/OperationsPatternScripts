@@ -1,6 +1,8 @@
 
 Todo:
   New JMRI Railroad not saveing the new xml
+  Display load type as L E or O in reports
+  Test with really long spur names
   remove getSetToLocationAndTrack, part of TP export
   How to publish DeepL
   How to use locale modifier, IE en-GB
