@@ -579,14 +579,14 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         self.removeBuiltTrainListener()
 
         self.closePsWindow()
-        self.logger.stopLogger('PS')
+        # self.logger.stopLogger('PS')
 
     #Startup Items
         PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale()
         PatternScriptEntities.validateStubFile().isStubFile()
         Bundle.makeHelpPage()
 
-        self.logger.startLogger('PS')
+        # self.logger.startLogger('PS')
         self.buildThePlugin()
 
         self.psLog.info('Pattern Scripts plugin restarted')
@@ -598,7 +598,7 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(OPEN_HELP_EVENT)
 
-        stubPath = PatternScriptEntities.JMRI.util.FileUtil.getPreferencesPath() + 'jmrihelp/psStub.html'
+        stubPath = PatternScriptEntities.JMRI.util.FileUtil.getPreferencesPath() + 'jmrihelp\\psStub.html'
         stubUri = PatternScriptEntities.JAVA_IO.File(stubPath).toURI()
         if PatternScriptEntities.JAVA_IO.File(stubUri).isFile():
             PatternScriptEntities.JAVA_AWT.Desktop.getDesktop().browse(stubUri)
@@ -661,15 +661,12 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
     def handle(self):
 
-        # PatternScriptEntities.validateFileDestinationDirestories()
-
         startTime = PatternScriptEntities.TIME.time()
         self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.Controller')
         self.logger.initialLogMessage(self.psLog)
 
         self.model.validatePatternConfig()
         PatternScriptEntities.validateStubFile().isStubFile()
-        # if PatternScriptEntities.readConfigFile('PT')['TI']:
         if PatternScriptEntities.readConfigFile()['CP']['SI'][1]['o2oSubroutine']:
             self.addTrainPlayerListeners()
         if PatternScriptEntities.readConfigFile()['CP']['AP']:

@@ -289,15 +289,12 @@ def getDetailsForCar(carObject, kernelTally):
     carDetailDict['RWE'] = carObject.getReturnWhenEmptyDestinationName()
     carDetailDict['RWL'] = carObject.getReturnWhenLoadedDestinationName()
 # Modifications used by this plugin
-
-
-    carDetailDict['On_Train'] = False
-    if carObject in getRsOnTrains(): # Flag to mark if RS is on a built train
-        carDetailDict['On_Train'] = True
-
     carDetailDict['Set_To'] = u'[  ] '
     carDetailDict[u'PUSO'] = u' '
     carDetailDict[u' '] = u' ' # Catches KeyError - empty box added to getLocalSwitchListMessageFormat
+    carDetailDict['On_Train'] = False
+    if carObject in getRsOnTrains(): # Flag to mark if RS is on a built train
+        carDetailDict['On_Train'] = True
 
     return carDetailDict
 

@@ -91,8 +91,7 @@ class CheckTpDestination:
     def directoryExists(self):
 
         tpDirectory = JMRI.util.FileUtil.getHomePath() + 'AppData\\Roaming\\TrainPlayer\\Reports\\'
-        tpDrrectoryFlag = JAVA_IO.File(tpDirectory).isDirectory()
-        if tpDrrectoryFlag:
+        if JAVA_IO.File(tpDirectory).isDirectory():
             self.psLog.info('TrainPlayer destination directory OK')
         else:
             self.psLog.warning('TrainPlayer Reports destination directory not found')
@@ -179,6 +178,7 @@ def readJsonWorkEventList(workEventName):
     return textWorkEventList
 
 def psLocale():
+    """Dealers choice, both work"""
 
     return PM.getLocale().toString()
     # return unicode(PM.getLocale(), ENCODING)
@@ -203,8 +203,6 @@ def makeReportItemWidthMatrix():
 
     for aKey, aValue in attributeWidths.items():
         reportMatrix[aKey] = aValue
-
-    # reportItemMatrix[' '] = 1 # catches empty box added to Manifest Print Options
 
     return reportMatrix
 
@@ -317,8 +315,8 @@ def dumpJson(switchList):
 
 def validateFileDestinationDirestories():
     """Checks that the folders this plugin writes to exist
-    buildstatus is first so logging will work on a new layout
-    """
+        buildstatus is first so logging will work on a new layout
+        """
 
     destDirPath = JMRI.util.FileUtil.getProfilePath() + 'operations\\'
     listOfDirectories = ['buildstatus', 'csvManifests', 'csvSwitchLists', 'jsonManifests', 'switchLists', 'patternReports']
@@ -388,7 +386,7 @@ def tryConfigFile():
     except ValueError:
         restoreConfigFile()
         configFile = getConfigFile()
-        _psLog.warning('Defective PatternConfig.json found, new file restored from backup')
+        _psLog.warning('Defective PatternConfig.json found, new file written')
     except IOError:
         writeNewConfigFile()
         configFile = getConfigFile()
@@ -434,7 +432,7 @@ def makePatternLog():
 
     outputPatternLog = ''
     buildReportLevel = JMRI.jmrit.operations.setup.Setup.getBuildReportLevel()
-# loggingIndex = readConfigFile('LI')
+
     loggingIndex = logIndex()
     logLevel = loggingIndex[buildReportLevel]
 

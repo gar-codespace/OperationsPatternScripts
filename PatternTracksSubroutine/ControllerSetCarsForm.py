@@ -16,6 +16,7 @@ class TextBoxEntryListener(PatternScriptEntities.JAVA_AWT.event.MouseAdapter):
     """When any of the 'Set Cars Form for Track X' text inpou boxes is clicked on"""
 
     def __init__(self):
+
         self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.TextBoxEntryListener')
 
         return
@@ -31,8 +32,8 @@ class TextBoxEntryListener(PatternScriptEntities.JAVA_AWT.event.MouseAdapter):
 
 class CreateSetCarsFormGui:
     """Creates an instance of each 'Set Cars Form for Track X' window,
-    [0] is used to avoid for-loops since there is only 1 location and track
-    """
+        [0] is used to avoid for-loops since there is only 1 location and track
+        """
 
     def __init__(self, setCarsForm):
 
@@ -89,7 +90,6 @@ class CreateSetCarsFormGui:
         """Any button of the 'Set Cars Form for Track X' - row of track buttons"""
 
         PatternScriptEntities.TRACK_NAME_CLICKED_ON = unicode(MOUSE_CLICKED.getSource().getText(), PatternScriptEntities.ENCODING)
-        # global _trackNameClickedOn
 
         return
 
