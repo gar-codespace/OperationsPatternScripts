@@ -341,15 +341,17 @@ def MakeSetCarsFooter():
         unicode(PatternScriptEntities.BUNDLE['Switch List'], PatternScriptEntities.ENCODING)
         )
 
-    trainPlayerButton = PatternScriptEntities.JAVX_SWING.JButton(u'TrainPlayer©')
+    o2oButton = PatternScriptEntities.JAVX_SWING.JButton(
+        unicode(PatternScriptEntities.BUNDLE['o2o Work Events'], PatternScriptEntities.ENCODING)
+        )
     if not PatternScriptEntities.readConfigFile()['CP']['SI'][1]['o2oSubroutine']:
-        trainPlayerButton.setVisible(False)
+        o2oButton.setVisible(False)
 
     makeWorkPanel.add(PatternScriptEntities.JAVX_SWING.Box.createRigidArea(
         PatternScriptEntities.JAVA_AWT.Dimension(20,0))
         )
     makeWorkPanel.add(printButton)
-    makeWorkPanel.add(trainPlayerButton)
+    makeWorkPanel.add(o2oButton)
     makeWorkPanel.add(PatternScriptEntities.JAVX_SWING.Box.createRigidArea(
         PatternScriptEntities.JAVA_AWT.Dimension(20,0))
         )
@@ -378,6 +380,6 @@ def MakeSetCarsFooter():
     footerButtons = []
     footerButtons.append(printButton)
     footerButtons.append(setButton)
-    footerButtons.append(trainPlayerButton)
+    footerButtons.append(o2oButton)
 
     return combinedFooter, footerButtons

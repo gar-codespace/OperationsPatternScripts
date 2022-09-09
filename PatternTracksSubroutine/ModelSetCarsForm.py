@@ -113,7 +113,7 @@ def moveRollingStock(workEvents):
     locos = workEvents['locations'][0]['tracks'][0]['locos']
     for loco in locos:
         rollingStock = PatternScriptEntities.EM.getByRoadAndNumber(loco['Road'], loco['Number'])
-        setTo = parseSetTo(loco['Set_To'])
+        setTo = PatternScriptEntities.parseSetTo(loco['Set_To'])
         toTrack = toLocation.getTrackByName(setTo, None)
         if ignoreTrackLength:
             setResult = rollingStock.setLocation(toLocation, toTrack, True)
@@ -127,7 +127,7 @@ def moveRollingStock(workEvents):
     cars = workEvents['locations'][0]['tracks'][0]['cars']
     for car in cars:
         rollingStock = PatternScriptEntities.CM.getByRoadAndNumber(car['Road'], car['Number'])
-        setTo = parseSetTo(car['Set_To'])
+        setTo = PatternScriptEntities.parseSetTo(car['Set_To'])
         toTrack = toLocation.getTrackByName(setTo, None)
         if ignoreTrackLength:
             setResult = rollingStock.setLocation(toLocation, toTrack, True)
@@ -145,9 +145,7 @@ def moveRollingStock(workEvents):
     return
 
 def parseSetTo(setTo):
-    """Used by:
-        moveRollingStock
-        """
+    """Moved to PatternScriptEntities """
 
     x = setTo.split('[')
     y = x[1].split(']')

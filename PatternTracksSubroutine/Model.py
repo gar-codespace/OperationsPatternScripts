@@ -16,12 +16,10 @@ def trackPatternButton():
         Controller.StartUp.trackPatternButton
         """
 
-    reportTitle = PatternScriptEntities.BUNDLE['Track Pattern Report']
     locationDict = ModelEntities.makeLocationDict()
-    modifiedReport = ModelEntities.makeReport(locationDict, 'PR')
+    modifiedReport = ModelEntities.makeReport(locationDict)
 
-
-
+    reportTitle = PatternScriptEntities.BUNDLE['Track Pattern Report']
     workEventName = ModelEntities.writeWorkEventListAsJson(modifiedReport, reportTitle)
 
     return
@@ -156,93 +154,3 @@ def writeTrackPatternCsv(workEventName):
     PatternScriptEntities.genericWriteReport(csvPath, csvReport)
 
     return
-
-# def resetTrainPlayerSwitchlist():
-#     """Not used"""
-#
-#     _psLog.debug('Model.resetTrainPlayerSwitchlist')
-#
-#     locationName = PatternScriptEntities.readConfigFile()['PT']['PL']
-#     locationDict = {'locationName':locationName, \
-#                     'tracks':[{'trackName':'Track Name', 'length': 1, 'locos':[], 'cars':[]}]}
-#     setCarsForm = makeReport(locationDict, 'TP')
-#     ModelEntities.writeWorkEventListAsJson(setCarsForm)
-#
-#     return
-
-# def makeNewPatternTracks(location):
-#     """Makes a new list of all tracks for a location
-#         Used by:
-#         """
-#
-#     _psLog.debug('Model.makeNewPatternTracks')
-#     allTracks = ModelEntities.getTracksByLocation(None)
-#     trackDict = {}
-#     for track in allTracks:
-#         trackDict[track] = False
-#     newConfigFile = PatternScriptEntities.readConfigFile()
-#     subConfigfile = newConfigFile['PT']
-#     subConfigfile.update({'PT': trackDict})
-#     newConfigFile.update({'PT': subConfigfile})
-#
-#     return newConfigFile
-
-# def updateCheckBoxStatus(all, ignore):
-#     """Updates the config file with the checked status of Yard Tracks Only
-#         and Ignore Track Length check boxes
-#         """
-#
-#     _psLog.debug('Model.updateCheckBoxStatus')
-#     newConfigFile = PatternScriptEntities.readConfigFile()
-#     subConfigfile = newConfigFile['PT']
-#     subConfigfile.update({'PA': all})
-#     subConfigfile.update({'PI': ignore})
-#     newConfigFile.update({'PT': subConfigfile})
-#
-#     return newConfigFile
-
-# def makeLocationDict(trackList=None):
-#     """Called by: Model.trackPatternButton, View.setCarsButton"""
-#
-#     _psLog.debug('Model.makeLocationDict')
-#
-#     if not trackList:
-#         trackList = PatternScriptEntities.getSelectedTracks()
-#
-#     detailsForTrack = []
-#     patternLocation = PatternScriptEntities.readConfigFile('PT')['PL']
-#     for trackName in trackList:
-#         detailsForTrack.append(ModelEntities.getGenericTrackDetails(patternLocation, trackName))
-#
-#     locationDict = {}
-#     locationDict['locationName'] = patternLocation
-#     locationDict['tracks'] = detailsForTrack
-#
-#     return locationDict
-
-# def makeReport(locationDict, reportType):
-#
-#     _psLog.debug('Model.makeReport')
-#
-#     if reportType == 'PR':
-#         reportTitle = PatternScriptEntities.BUNDLE['Track Pattern Report']
-#
-#     if reportType == 'SC':
-#         reportTitle = PatternScriptEntities.BUNDLE['Switch List for Track']
-#
-#     if reportType == 'TP':
-#         reportTitle = PatternScriptEntities.BUNDLE[u'Work Event List for TrainPlayer©']
-#
-#     modifiedReport = ModelEntities.makeGenericHeader()
-#     modifiedReport.update({'trainDescription' : reportTitle})
-#     modifiedReport.update({'trainName' : reportTitle})
-#     modifiedReport['locations'] = [locationDict]
-#     # put in as a list to maintain compatability with JSON File Format/JMRI manifest export.
-#
-#     return modifiedReport
-
-# def getSelectedTracks():
-#
-#     patternTracks = PatternScriptEntities.readConfigFile('PT')['PT']
-#
-#     return [track for track, include in sorted(patternTracks.items()) if include]

@@ -72,7 +72,7 @@ class CreateSetCarsFormGui:
         self.buttonDict['footerButtons'][0].actionPerformed = self.switchListButton
         self.buttonDict['footerButtons'][1].actionPerformed = self.setRsButton
         try:
-            self.buttonDict['footerButtons'][2].actionPerformed = self.trainPlayerButton
+            self.buttonDict['footerButtons'][2].actionPerformed = self.o2oButton
         except IndexError:
             pass
 
@@ -150,13 +150,7 @@ class CreateSetCarsFormGui:
 
         return
 
-
-
-
-
-
-
-    def trainPlayerButton(self, MOUSE_CLICKED):
+    def o2oButton(self, MOUSE_CLICKED):
         """Accumulate switch lists into the o2o-Work-Events switch list
             List is reset when set cars button on Track Pattern Sub is pressed
             """
@@ -168,13 +162,16 @@ class CreateSetCarsFormGui:
 
         MOUSE_CLICKED.getSource().setBackground(PatternScriptEntities.JAVA_AWT.Color.GREEN)
 
-        mergedForm = ModelSetCarsForm.mergeForms(self.setCarsForm, self.buttonDict['textBoxEntry'])
+        ModelSetCarsForm.mergeForms(self.setCarsForm, self.buttonDict['textBoxEntry'])
+        workEventName = PatternScriptEntities.BUNDLE['Switch List for Track']
+        workEvents = PatternScriptEntities.readJsonWorkEventList(workEventName)
 
-        o2o = ModelWorkEvents.ConvertPtMergedForm(mergedForm)
+        o2o = ModelWorkEvents.ConvertPtMergedForm(workEvents)
         o2o.thinTheHerd()
-        o2o.getWorkEvents()
+        o2o.o2oWorkEvents()
         o2o.appendRs()
-        o2o.writePtWorkEvents()
+        o2o.writeo2oWorkEvents()
+
 
         o2o = ModelWorkEvents.o2oWorkEvents()
         o2o.getWorkEvents()

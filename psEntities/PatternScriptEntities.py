@@ -505,6 +505,16 @@ def getAlertColor():
 
     return color
 
+def parseSetTo(setTo):
+    """Used by:
+        moveRollingStock
+        """
+
+    x = setTo.split('[')
+    y = x[1].split(']')
+
+    return y[0]
+    
 def translateMessageFormat():
     """The messageFormat is in the locale's language, it has to be hashed to the plugin fields.
         Dealers choice, J_BUNDLE.ROAD or SB.handleGetMessage('Road')
@@ -549,26 +559,3 @@ def translateMessageFormat():
     rosetta[' '] = ' '
 
     return rosetta
-
-"""
-Items from Config File that may be put back:
-
-"EM": {
-"1": "Mac Classic ",
-"2": "open -a TextEdit ",
-"4": "start notepad.exe ",
-"5": "nano ",
-"6": "OS2 ",
-"7": "kwrite "
-},
-
-"LI": {
-  "0" : "Editing these is not recommended",
-  "9": "- CRITICAL -",
-  "7": "- ERROR -",
-  "5": "- WARNING -",
-  "3": "- INFO -",
-  "1": "- DEBUG -"
-},
-
-"""

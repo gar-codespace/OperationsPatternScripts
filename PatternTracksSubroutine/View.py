@@ -80,7 +80,7 @@ def setRsButton():
     windowOffset = 200
     for i, trackName in enumerate(selectedTracks, start=1):
         locationDict = ModelEntities.makeLocationDict([trackName]) # makeLocationDict takes a track list
-        setCarsForm = ModelEntities.makeReport(locationDict, 'SC')
+        setCarsForm = ModelEntities.makeReport(locationDict)
 
         newFrame = ControllerSetCarsForm.CreateSetCarsFormGui(setCarsForm)
         newWindow = newFrame.makeFrame()

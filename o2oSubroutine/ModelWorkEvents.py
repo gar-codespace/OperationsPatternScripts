@@ -24,13 +24,14 @@ class ResetWorkEvents:
         self.psLog.debug('makePsWorkEventsHeader')
 
         self.workEvents['railroad'] = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getRailroadName()
-        self.workEvents['trainName'] = 'Place Holder'
-        self.workEvents['trainDescription'] = 'Place Holder'
-        self.workEvents['trainComment'] = 'Place Holder'
+        self.workEvents['trainName'] = 'Placeholder'
+        self.workEvents['trainDescription'] = 'Placeholder'
+        self.workEvents['trainComment'] = 'Placeholder'
         self.workEvents['date'] = PatternScriptEntities.timeStamp()
 
         locationName = PatternScriptEntities.readConfigFile()['PT']['PL']
-        locationDict = {'locationName':locationName, 'cars':[], 'locos': []}
+        trackDict = [{'cars': [], 'locos': []}]
+        locationDict = {'locationName': locationName, 'tracks': trackDict}
         self.workEvents['locations'] = [locationDict]
 
         return
@@ -47,12 +48,12 @@ class ResetWorkEvents:
 class ConvertPtMergedForm:
     """Converts the generic merged form into the o2o format work event json"""
 
-    def __init__(self, mergedForm):
+    def __init__(self, psWorkEvents):
 
         self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.o2o.ConvertPtMergedForm')
 
-        self.workEvents = {}
-        self.mergedForm = mergedForm
+        self.psWorkEvents = psWorkEvents
+        # self.mergedForm = mergedForm
         self.cars = []
         self.locos = []
 
@@ -61,12 +62,12 @@ class ConvertPtMergedForm:
     def thinTheHerd(self):
         """Reduces the elements to those in parsePsWorkEventRs"""
 
-        for car in self.mergedForm['locations']['cars']:
+        for car in self.psWorkEvents['locations'][0]['tracks'][0]['cars']:
             parsedRS = self.parsePsWorkEventRs(car)
             parsedRS['PUSO'] = 'SC'
             self.cars.append(parsedRS)
 
-        for loco in self.mergedForm['locations']['locos']:
+        for loco in self.psWorkEvents['locations'][0]['tracks'][0]['locos']:
             parsedRS = self.parsePsWorkEventRs(loco)
             parsedRS['PUSO'] = 'SL'
             self.locos.append(parsedRS)
@@ -74,7 +75,7 @@ class ConvertPtMergedForm:
         return
 
     def parsePsWorkEventRs(self, rs):
-        """The load field ie either Load or Model.
+        """The load field ie either Load(car) or Model(loco).
             How to combine this with parseRs?
             They do the sae thing.
             """
@@ -92,29 +93,29 @@ class ConvertPtMergedForm:
         parsedRS['Location'] = rs['Location']
         parsedRS['Track'] = rs['Track']
         parsedRS['Destination'] = rs['Destination']
-        parsedRS['Set to'] = rs['Set to']
+        parsedRS['Set_To'] = rs['Set_To']
 
         return parsedRS
 
-    def getWorkEvents(self):
+    def o2oWorkEvents(self):
 
-        self.workEvents = ModelEntities.getWorkEvents()
+        self.o2oWorkEvents = ModelEntities.getWorkEvents()
 
         return
 
     def appendRs(self):
 
-        appendedCars = self.workEvents['locations'][0]['cars'] + self.cars
-        appendedLocos = self.workEvents['locations'][0]['locos'] + self.locos
+        appendedCars = self.o2oWorkEvents['locations'][0]['tracks'][0]['cars'] + self.cars
+        appendedLocos = self.o2oWorkEvents['locations'][0]['tracks'][0]['locos'] + self.locos
 
-        self.workEvents['locations'][0]['cars'] = appendedCars
-        self.workEvents['locations'][0]['locos'] = appendedLocos
+        self.o2oWorkEvents['locations'][0]['tracks'][0]['cars'] = appendedCars
+        self.o2oWorkEvents['locations'][0]['tracks'][0]['locos'] = appendedLocos
 
         return
 
-    def writePtWorkEvents(self):
+    def writeo2oWorkEvents(self):
 
-        ModelEntities.writeWorkEvents(self.workEvents)
+        ModelEntities.writeWorkEvents(self.o2oWorkEvents)
 
         return
 
@@ -216,7 +217,9 @@ class ConvertJmriManifest:
 
 
 class o2oWorkEvents:
-    """This class makes the o2o work event list for TrainPlayer"""
+    """This class makes the o2o work event list for TrainPlayer
+        tpRollingStockData lets the plugin use TP rs IDs
+        """
 
     def __init__(self):
 
@@ -229,9 +232,9 @@ class o2oWorkEvents:
         self.workEvents = {}
         self.o2oList = ''
 
-        reportName = PatternScriptEntities.readConfigFile('o2o')['RN']
+        workEventName = PatternScriptEntities.BUNDLE['o2o Work Events']
         self.o2oWorkEventPath = PatternScriptEntities.JMRI.util.FileUtil.getHomePath() \
-                + 'AppData\Roaming\TrainPlayer\Reports\JMRI Report ' + reportName + '.csv'
+                + 'AppData\Roaming\TrainPlayer\Reports\JMRI Report - o2o Work Events.csv'
 
         return
 
@@ -259,12 +262,13 @@ class o2oWorkEvents:
 
         self.psLog.debug('o2oLocations')
 
-        for i, location in enumerate(self.workEvents['locations'], start=1):
-            self.o2oList += u'WE,' + str(i) + ',' + location['locationName'] + '\n'
-            for car in location['cars']:
-                self.o2oList += self.makeLine(car) + '\n'
-            for loco in location['locos']:
-                self.o2oList += self.makeLine(loco) + '\n'
+        self.o2oList += u'WE,1,' + self.workEvents['locations'][0]['locationName'] + '\n'
+
+        tracks = self.workEvents['locations'][0]['tracks'][0]
+        for car in tracks['cars']:
+            self.o2oList += self.makeLine(car) + '\n'
+        for loco in tracks['locos']:
+            self.o2oList += self.makeLine(loco) + '\n'
 
         return
 
@@ -281,8 +285,11 @@ class o2oWorkEvents:
             load = rs['Load']
         except:
             load = rs['Model']
+            
         pu = rs['Location'] + ';' + rs['Track']
-        so = rs['Destination'] + ';' + rs['Set to']
+
+        setTo = PatternScriptEntities.parseSetTo(rs['Set_To'])
+        so = rs['Location'] + ';' + setTo
 
         return rs['PUSO'] + ',' + tpID + ',' + rs['Road'] + ',' + rs['Number'] + ',' + rs['Type'] + ',' + rs['Load Type'] + ',' + load + ',' + pu + ',' + so
 

@@ -76,7 +76,7 @@
     "PW" : 1500,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20220902
+    "RV" : 20220904
   },
   "RM" : {
     "DS" : "*Not Consigned",
@@ -87,7 +87,7 @@
       "Model"
     ],
     "SC": [
-      "Load_Type",
+      "Load Type",
       "FD&Track"
     ],
     "AW": {

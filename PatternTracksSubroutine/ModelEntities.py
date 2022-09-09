@@ -26,25 +26,14 @@ def makeLocationDict(trackList=None):
 
     return locationDict
 
-def makeReport(locationDict, reportType):
+def makeReport(locationDict):
     """The name is too generic
         Used by:
         Model.trackPatternButton
         View.setRsButton
         """
 
-    if reportType == 'PR':
-        reportTitle = PatternScriptEntities.BUNDLE['Track Pattern Report']
-
-    if reportType == 'SC':
-        reportTitle = PatternScriptEntities.BUNDLE['Switch List for Track']
-
-    if reportType == 'TP':
-        reportTitle = PatternScriptEntities.BUNDLE[u'Work Event List for TrainPlayer©']
-
     modifiedReport = makeGenericHeader()
-    modifiedReport.update({'trainDescription' : reportTitle})
-    modifiedReport.update({'trainName' : reportTitle})
 # put in as a list to maintain compatability with JSON File Format/JMRI manifest export.
     modifiedReport['locations'] = [locationDict]
 

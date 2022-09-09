@@ -9,8 +9,9 @@ SCRIPT_REV = 20220101
 def writeWorkEvents(psWorkEvents):
     """Writes the o2o work events file"""
 
-    reportName = PatternScriptEntities.readConfigFile('o2o')['RN']
-    jsonFileName = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + reportName + '.json'
+    workEventName = PatternScriptEntities.BUNDLE['o2o Work Events']
+
+    jsonFileName = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + workEventName + '.json'
     jsonFile = PatternScriptEntities.dumpJson(psWorkEvents)
     PatternScriptEntities.genericWriteReport(jsonFileName, jsonFile)
 
@@ -19,8 +20,8 @@ def writeWorkEvents(psWorkEvents):
 def getWorkEvents():
     """Gets the o2o work events file"""
 
-    reportName = PatternScriptEntities.readConfigFile('o2o')['RN']
-    jsonFileName = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + reportName + '.json'
+    workEventName = PatternScriptEntities.BUNDLE['o2o Work Events']
+    jsonFileName = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + workEventName + '.json'
     workEventList = PatternScriptEntities.genericReadReport(jsonFileName)
     jsonFile = PatternScriptEntities.loadJson(workEventList)
 
