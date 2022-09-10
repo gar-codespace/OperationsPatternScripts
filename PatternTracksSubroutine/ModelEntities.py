@@ -316,6 +316,7 @@ def getShortLoadType(car):
 def makeGenericHeader():
     """Used by:
         Model.makeReport
+        Controller.StartUp.setRsButton
         """
 
     OSU = PatternScriptEntities.JMRI.jmrit.operations.setup
@@ -328,7 +329,7 @@ def makeGenericHeader():
     listHeader['trainDescription'] = PatternScriptEntities.BUNDLE['Pattern Report for Tracks']
     listHeader['trainComment'] = location.getComment()
     listHeader['date'] = unicode(PatternScriptEntities.timeStamp(), PatternScriptEntities.ENCODING)
-    listHeader['locations'] = []
+    listHeader['locations'] = [{'tracks': [{'cars': [], 'locos': []}]}]
 
     return listHeader
 

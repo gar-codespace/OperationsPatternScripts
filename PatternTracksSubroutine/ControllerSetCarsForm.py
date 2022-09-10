@@ -167,9 +167,8 @@ class CreateSetCarsFormGui:
         o2o = ModelWorkEvents.ConvertPtMergedForm(workEvents)
         o2o.thinTheHerd()
         o2o.o2oWorkEvents()
-        o2o.appendRs()
-        o2o.writeo2oWorkEvents()
-
+        o2o.o2oWorkEventsUpdate()
+        o2o.o2oWorkEventsWriter()
 
         o2o = ModelWorkEvents.o2oWorkEvents()
         o2o.getWorkEvents()

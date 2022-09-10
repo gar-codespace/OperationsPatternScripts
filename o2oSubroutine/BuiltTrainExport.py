@@ -120,7 +120,7 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
             o2o.convertHeader()
             o2o.convertBody()
             o2oWorkEvents = o2o.geto2oWorkEvents()
-            ModelEntities.writeWorkEvents(o2oWorkEvents)
+            PatternScriptEntities.writeWorkEvents(o2oWorkEvents)
 
             o2o = ModelWorkEvents.o2oWorkEvents()
             o2o.getWorkEvents()

@@ -1,6 +1,8 @@
 
 Todo:
   Maybe use java io to make all paths for better OS compatibility
+  ModelWorkEvents.*.makePsWorkEventsHeader and ModelEntities.makeGenericHeader are duplicates
+  ModelWorkEvents.*.parsePsWorkEventRs and   ModelWorkEvents.*.parseRS do the same thing, can they be merged?
   if Final Dest is null, sub in value from config file
   Find names for report placeholders
   Tighten up the except part of try/except

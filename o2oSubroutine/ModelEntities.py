@@ -6,19 +6,12 @@ from psEntities import PatternScriptEntities
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelEntities'
 SCRIPT_REV = 20220101
 
-def writeWorkEvents(psWorkEvents):
-    """Writes the o2o work events file"""
-
-    workEventName = PatternScriptEntities.BUNDLE['o2o Work Events']
-
-    jsonFileName = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + workEventName + '.json'
-    jsonFile = PatternScriptEntities.dumpJson(psWorkEvents)
-    PatternScriptEntities.genericWriteReport(jsonFileName, jsonFile)
-
-    return
-
 def getWorkEvents():
-    """Gets the o2o work events file"""
+    """Gets the o2o work events file
+        Used by:
+        ModelWorkEvents.ConvertPtMergedForm.getWorkEvents
+        ModelWorkEvents.o2oWorkEvents.getWorkEvents
+        """
 
     workEventName = PatternScriptEntities.BUNDLE['o2o Work Events']
     jsonFileName = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + workEventName + '.json'
@@ -28,6 +21,10 @@ def getWorkEvents():
     return jsonFile
 
 def getLoadType(type, load):
+    """Used by:
+        ModelWorkEvents.ConvertPtMergedForm.parsePsWorkEventRs
+        ModelWorkEvents.ConvertJmriManifest.parseRS
+        """
 
     tc = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarLoads
     TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
@@ -42,7 +39,10 @@ def getLoadType(type, load):
     return lt
 
 def getTpExport(fileName):
-    """Generic file getter"""
+    """Generic file getter
+        Used by:
+        ModelImport.TrainPlayerImporter.getTpReportFiles
+        """
 
     fullPath = "AppData\\Roaming\\TrainPlayer\\Reports\\" + fileName
     tpExportPath = PatternScriptEntities.JMRI.util.FileUtil.getHomePath() + fullPath
@@ -54,33 +54,14 @@ def getTpExport(fileName):
         return
     return
 
-def addNewRs(rsAttribs):
-    """rsAttribs format: RoadNumber, AAR, Location, Track, Loaded, Kernel, Type
-    Note: TrainPlayer AAR is used as JMRI type name
-    Note: TrainPlayer Type is used as JMRI engine model
-    """
-
-    roadName, roadNumber = parseCarId(rsAttribs[0])
-
-    if rsAttribs[1].startswith('E') and rsAttribs[1] != 'ET':
-        PatternScriptEntities.EM.newRS(roadName, roadNumber)
-        rs = PatternScriptEntities.EM.getByRoadAndNumber(roadName, roadNumber)
-        rs.setModel(rsAttribs[6])
-
-    else:
-        PatternScriptEntities.CM.newRS(roadName, roadNumber)
-        rs = PatternScriptEntities.CM.getByRoadAndNumber(roadName, roadNumber)
-
-    rs.setTypeName(rsAttribs[1])
-    rs.setLength("40")
-    rs.setColor("Color")
-    if rsAttribs[1] == '1':
-        rs.setLoad('L')
-
-    return
-
 def parseCarId(carId):
-    """Splits a TP car id into a JMRI road name and number"""
+    """Splits a TP car id into a JMRI road name and number
+        Used by:
+        ModelImport.TrainPlayerImporter.getAllTpRoads
+        ModelNew.NewRollingStock.makeTpRollingStockData
+        ModelNew.NewRollingStock.newCars
+        ModelNew.NewRollingStock.newLocos
+        """
 
     rsRoad = ''
     rsNumber = ''
@@ -96,7 +77,7 @@ def parseCarId(carId):
     return rsRoad, rsNumber
 
 def getSetToLocationAndTrack(locationName, trackName):
-    """Called by:
+    """Used by:
         ModelNew.NewRollingStock.newCars
         ModelNew.NewRollingStock.newLocos
         """
@@ -108,3 +89,43 @@ def getSetToLocationAndTrack(locationName, trackName):
     except:
         print('Not found: ', locationName, trackName)
         return None, None
+
+
+
+# def addNewRs(rsAttribs):
+#     """rsAttribs format: RoadNumber, AAR, Location, Track, Loaded, Kernel, Type
+#     Note: TrainPlayer AAR is used as JMRI type name
+#     Note: TrainPlayer Type is used as JMRI engine model
+#     """
+#
+#     roadName, roadNumber = parseCarId(rsAttribs[0])
+#
+#     if rsAttribs[1].startswith('E') and rsAttribs[1] != 'ET':
+#         PatternScriptEntities.EM.newRS(roadName, roadNumber)
+#         rs = PatternScriptEntities.EM.getByRoadAndNumber(roadName, roadNumber)
+#         rs.setModel(rsAttribs[6])
+#
+#     else:
+#         PatternScriptEntities.CM.newRS(roadName, roadNumber)
+#         rs = PatternScriptEntities.CM.getByRoadAndNumber(roadName, roadNumber)
+#
+#     rs.setTypeName(rsAttribs[1])
+#     rs.setLength("40")
+#     rs.setColor("Color")
+#     if rsAttribs[1] == '1':
+#         rs.setLoad('L')
+#
+#     return
+
+
+
+# def writeWorkEvents(psWorkEvents):
+#     """Writes the o2o work events file"""
+#
+#     workEventName = PatternScriptEntities.BUNDLE['o2o Work Events']
+#
+#     jsonFileName = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + workEventName + '.json'
+#     jsonFile = PatternScriptEntities.dumpJson(psWorkEvents)
+#     PatternScriptEntities.genericWriteReport(jsonFileName, jsonFile)
+#
+#     return

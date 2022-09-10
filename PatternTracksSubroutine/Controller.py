@@ -4,6 +4,7 @@
 from psEntities import PatternScriptEntities
 from PatternTracksSubroutine import View
 from PatternTracksSubroutine import Model
+from PatternTracksSubroutine import ModelEntities
 from o2oSubroutine import ModelWorkEvents
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.Controller'
@@ -98,6 +99,7 @@ class StartUp:
         self.psLog.debug('Controller.trackPatternButton')
 
         Model.updateConfigFile(self.widgets)
+
         if not Model.verifySelectedTracks():
             self.psLog.warning('Track not found, re-select the location')
             return
@@ -128,17 +130,23 @@ class StartUp:
 
         Model.updateConfigFile(self.widgets)
 
-        PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX = PatternScriptEntities.makeReportItemWidthMatrix()
-
         if not Model.verifySelectedTracks():
             self.psLog.warning('Track not found, re-select the location')
             return
 
+        PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX = PatternScriptEntities.makeReportItemWidthMatrix()
+
         View.setRsButton()
     # Reset the o2o switchlist
-        o2o = ModelWorkEvents.ResetWorkEvents()
-        o2o.makePsWorkEventsHeader()
-        o2o.writeWorkEvents()
+        newHeader = ModelEntities.makeGenericHeader()
+        PatternScriptEntities.writeWorkEvents(newHeader)
+
+
+
+
+        # o2o = ModelWorkEvents.ResetWorkEvents()
+        # o2o.makePsWorkEventsHeader()
+        # o2o.writeWorkEvents()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

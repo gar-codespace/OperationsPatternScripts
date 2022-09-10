@@ -8,43 +8,6 @@ SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelWorkEvents'
 SCRIPT_REV = 20220101
 
 
-class ResetWorkEvents:
-    """Creates a new work events json when the set cars button is pressed on the pattern scripts sub"""
-
-    def __init__(self):
-
-        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.o2o.ResetWorkEvents')
-
-        self.workEvents = {}
-
-        return
-
-    def makePsWorkEventsHeader(self):
-
-        self.psLog.debug('makePsWorkEventsHeader')
-
-        self.workEvents['railroad'] = PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getRailroadName()
-        self.workEvents['trainName'] = 'Placeholder'
-        self.workEvents['trainDescription'] = 'Placeholder'
-        self.workEvents['trainComment'] = 'Placeholder'
-        self.workEvents['date'] = PatternScriptEntities.timeStamp()
-
-        locationName = PatternScriptEntities.readConfigFile()['PT']['PL']
-        trackDict = [{'cars': [], 'locos': []}]
-        locationDict = {'locationName': locationName, 'tracks': trackDict}
-        self.workEvents['locations'] = [locationDict]
-
-        return
-
-    def writeWorkEvents(self):
-
-        self.psLog.debug('writeWorkEvents')
-
-        ModelEntities.writeWorkEvents(self.workEvents)
-
-        return
-
-
 class ConvertPtMergedForm:
     """Converts the generic merged form into the o2o format work event json"""
 
@@ -78,6 +41,8 @@ class ConvertPtMergedForm:
         """The load field ie either Load(car) or Model(loco).
             How to combine this with parseRs?
             They do the sae thing.
+            Pattern scripts have only one location,
+            so Location and Destination are the same.
             """
 
         parsedRS = {}
@@ -92,7 +57,7 @@ class ConvertPtMergedForm:
             parsedRS['Load'] = rs['Model']
         parsedRS['Location'] = rs['Location']
         parsedRS['Track'] = rs['Track']
-        parsedRS['Destination'] = rs['Destination']
+        parsedRS['Destination'] = rs['Location']
         parsedRS['Set_To'] = rs['Set_To']
 
         return parsedRS
@@ -103,19 +68,20 @@ class ConvertPtMergedForm:
 
         return
 
-    def appendRs(self):
+    def o2oWorkEventsUpdate(self):
 
         appendedCars = self.o2oWorkEvents['locations'][0]['tracks'][0]['cars'] + self.cars
         appendedLocos = self.o2oWorkEvents['locations'][0]['tracks'][0]['locos'] + self.locos
 
+        self.o2oWorkEvents['locations'][0]['locationName'] = PatternScriptEntities.readConfigFile()['PT']['PL']
         self.o2oWorkEvents['locations'][0]['tracks'][0]['cars'] = appendedCars
         self.o2oWorkEvents['locations'][0]['tracks'][0]['locos'] = appendedLocos
 
         return
 
-    def writeo2oWorkEvents(self):
+    def o2oWorkEventsWriter(self):
 
-        ModelEntities.writeWorkEvents(self.o2oWorkEvents)
+        PatternScriptEntities.writeWorkEvents(self.o2oWorkEvents)
 
         return
 
@@ -295,7 +261,7 @@ class o2oWorkEvents:
         pu = rs['Location'] + ';' + rs['Track']
 
         setTo = PatternScriptEntities.parseSetTo(rs['Set_To'])
-        so = rs['Location'] + ';' + setTo
+        so = rs['Destination'] + ';' + setTo
 
         return rs['PUSO'] + ',' + tpID + ',' + rs['Road'] + ',' + rs['Number'] + ',' + rs['Type'] + ',' + rs['Load Type'] + ',' + load + ',' + pu + ',' + so
 
@@ -309,3 +275,45 @@ class o2oWorkEvents:
         print(SCRIPT_NAME + '.o2oWorkEvents ' + str(SCRIPT_REV))
 
         return
+
+
+
+# class ResetWorkEvents:
+#     """Creates a new work events json when the set cars button is pressed on the pattern scripts sub"""
+#
+#     def __init__(self):
+#
+#         self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.o2o.ResetWorkEvents')
+#
+#         self.workEvents = {}
+#
+#         return
+#
+#     def makePsWorkEventsHeader(self):
+#
+#         self.psLog.debug('makePsWorkEventsHeader')
+#
+#         OSU = PatternScriptEntities.JMRI.jmrit.operations.setup
+#         patternLocation = PatternScriptEntities.readConfigFile('PT')['PL']
+#         location = PatternScriptEntities.LM.getLocationByName(patternLocation)
+#
+#         self.workEvents['railroad'] = unicode(OSU.Setup.getRailroadName(), PatternScriptEntities.ENCODING)
+#         self.workEvents['trainName'] = unicode(OSU.Setup.getComment(), PatternScriptEntities.ENCODING)
+#         self.workEvents['trainDescription'] = PatternScriptEntities.BUNDLE['o2o Work Events']
+#         self.workEvents['trainComment'] = location.getComment()
+#         self.workEvents['date'] = PatternScriptEntities.timeStamp()
+#
+        locationName = PatternScriptEntities.readConfigFile()['PT']['PL']
+        trackDict = [{'cars': [], 'locos': []}]
+        locationDict = {'locationName': locationName, 'tracks': trackDict}
+        self.workEvents['locations'] = [locationDict]
+#
+#         return
+#
+#     def writeWorkEvents(self):
+#
+#         self.psLog.debug('writeWorkEvents')
+#
+#         ModelEntities.writeWorkEvents(self.workEvents)
+#
+#         return
