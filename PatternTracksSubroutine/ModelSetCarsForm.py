@@ -45,14 +45,18 @@ def merge(setCarsForm, userInputList):
 
     _psLog.debug('ModelSetCarsForm.mergeForms')
 
+    standins = PatternScriptEntities.readConfigFile('RM')
+
     longestTrackString = findLongestTrackString()
     allTracksAtLoc = ModelEntities.getTracksByLocation(None)
 
     i = 0
     locos = setCarsForm['locations'][0]['tracks'][0]['locos']
     for loco in locos:
+        destStandin, fdStandin = getStandins(loco, standins)
+        loco.update({'Destination': destStandin})
+
         setTrack = setCarsForm['locations'][0]['tracks'][0]['trackName']
-    # +2 so that the [ and ] are part of the format
         setTrack = PatternScriptEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
         loco.update({'Set_To': setTrack})
 
@@ -64,6 +68,10 @@ def merge(setCarsForm, userInputList):
 
     cars = setCarsForm['locations'][0]['tracks'][0]['cars']
     for car in cars:
+        destStandin, fdStandin = getStandins(car, standins)
+        car.update({'Destination': destStandin})
+        car.update({'Final Dest': fdStandin})
+
         setTrack = setCarsForm['locations'][0]['tracks'][0]['trackName']
         setTrack = PatternScriptEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
         car.update({'Set_To': setTrack})
@@ -72,13 +80,32 @@ def merge(setCarsForm, userInputList):
         if userInput in allTracksAtLoc:
             setTrack = PatternScriptEntities.formatText('[' + userInput + ']', longestTrackString + 2)
             car.update({'Set_To': setTrack})
+
         i += 1
 
     return setCarsForm
 
+def getStandins(car, standins):
+    """Used by:
+        merge
+        """
+
+    destStandin = car['Destination']
+    if not car['Destination']:
+        destStandin = standins['DS']
+
+    try: # No FD for locos
+        fdStandin = car['Final Dest']
+        if not car['Final Dest']:
+            fdStandin = standins['FD']
+    except:
+        fdStandin = ''
+
+    return destStandin, fdStandin
+
 def findLongestTrackString():
     """Used by:
-        mergeForms
+        merge
         """
 
     longestTrackString = 6 # 6 is the length of [Hold]
@@ -97,13 +124,16 @@ def setRsToTrack():
 
     _psLog.debug('ModelSetCarsForm.setRsToTrack')
 
-    workEventName = PatternScriptEntities.BUNDLE['Switch List for Track']
-    workEvents = PatternScriptEntities.readJsonWorkEventList(workEventName)
-    moveRollingStock(workEvents)
+    switchListName = PatternScriptEntities.BUNDLE['Switch List for Track']
+    switchListPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + switchListName + '.json'
+    switchList = PatternScriptEntities.genericReadReport(switchListPath)
+    switchList = PatternScriptEntities.loadJson(switchList)
+
+    moveRollingStock(switchList)
 
     return
 
-def moveRollingStock(workEvents):
+def moveRollingStock(switchList):
 
     setCount = 0
 
@@ -111,7 +141,7 @@ def moveRollingStock(workEvents):
     location = PatternScriptEntities.readConfigFile('PT')['PL']
     toLocation = PatternScriptEntities.LM.getLocationByName(unicode(location, PatternScriptEntities.ENCODING))
 
-    locos = workEvents['locations'][0]['tracks'][0]['locos']
+    locos = switchList['locations'][0]['tracks'][0]['locos']
     for loco in locos:
         rollingStock = PatternScriptEntities.EM.getByRoadAndNumber(loco['Road'], loco['Number'])
         setTo = PatternScriptEntities.parseSetTo(loco['Set_To'])
@@ -125,7 +155,7 @@ def moveRollingStock(workEvents):
             setCount += 1
     # PatternScriptEntities.EMX.save()
 
-    cars = workEvents['locations'][0]['tracks'][0]['cars']
+    cars = switchList['locations'][0]['tracks'][0]['cars']
     for car in cars:
         rollingStock = PatternScriptEntities.CM.getByRoadAndNumber(car['Road'], car['Number'])
         setTo = PatternScriptEntities.parseSetTo(car['Set_To'])

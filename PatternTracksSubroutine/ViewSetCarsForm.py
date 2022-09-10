@@ -20,16 +20,19 @@ def switchListButton():
 
     _psLog.debug('View.trackPatternButton')
 
-    workEventName = PatternScriptEntities.BUNDLE['Switch List for Track']
 # Apply formatting to data
-    workEvents = PatternScriptEntities.readJsonWorkEventList(workEventName)
-    reportHeader = ViewEntities.makeTextReportHeader(workEvents)
-    reportLocations = ViewEntities.makeTextReportLocations(workEvents, trackTotals=False)
+    switchListName = PatternScriptEntities.BUNDLE['Switch List for Track']
+    switchListPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + switchListName + '.json'
+    switchList = PatternScriptEntities.genericReadReport(switchListPath)
+    switchList = PatternScriptEntities.loadJson(switchList)
+
+    reportHeader = ViewEntities.makeTextReportHeader(switchList)
+    reportLocations = ViewEntities.makeTextReportLocations(switchList, trackTotals=False)
 # Save formatted data
-    workEventPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\' + workEventName + '.txt'
-    PatternScriptEntities.genericWriteReport(workEventPath, reportHeader + reportLocations)
+    switchListPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\' + switchListName + '.txt'
+    PatternScriptEntities.genericWriteReport(switchListPath, reportHeader + reportLocations)
 # Display formatted data
-    PatternScriptEntities.genericDisplayReport(workEventPath)
+    PatternScriptEntities.genericDisplayReport(switchListPath)
 
     return
 

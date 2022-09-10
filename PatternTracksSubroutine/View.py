@@ -52,16 +52,19 @@ def trackPatternButton():
 
     _psLog.debug('View.trackPatternButton')
 
-    workEventName = PatternScriptEntities.BUNDLE['Track Pattern Report']
+    trackPatternName = PatternScriptEntities.BUNDLE['Track Pattern Report']
 # Apply formatting to data
-    workEvents = PatternScriptEntities.readJsonWorkEventList(workEventName)
-    reportHeader = ViewEntities.makeTextReportHeader(workEvents)
-    reportLocations = ViewEntities.makeTextReportLocations(workEvents, trackTotals=True)
+    trackPatternPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + trackPatternName + '.json'
+    trackPattern = PatternScriptEntities.genericReadReport(trackPatternPath)
+    trackPattern = PatternScriptEntities.loadJson(trackPattern)
+
+    reportHeader = ViewEntities.makeTextReportHeader(trackPattern)
+    reportLocations = ViewEntities.makeTextReportLocations(trackPattern, trackTotals=True)
 # Save formatted data
-    workEventPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\' + workEventName + '.txt'
-    PatternScriptEntities.genericWriteReport(workEventPath, reportHeader + reportLocations)
+    trackPatternPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\' + trackPatternName + '.txt'
+    PatternScriptEntities.genericWriteReport(trackPatternPath, reportHeader + reportLocations)
 # Display formatted data
-    PatternScriptEntities.genericDisplayReport(workEventPath)
+    PatternScriptEntities.genericDisplayReport(trackPatternPath)
 
     return
 
@@ -79,8 +82,8 @@ def setRsButton():
     locationName = PatternScriptEntities.readConfigFile('PT')['PL']
     windowOffset = 200
     for i, trackName in enumerate(selectedTracks, start=1):
-        locationDict = ModelEntities.makeLocationDict([trackName]) # makeLocationDict takes a track list
-        setCarsForm = ModelEntities.makeReport(locationDict)
+        trackPattern = ModelEntities.makeTrackPattern([trackName]) # makeTrackPattern takes a track list
+        setCarsForm = ModelEntities.makeTrackPatternReport(trackPattern)
 
         newFrame = ControllerSetCarsForm.CreateSetCarsFormGui(setCarsForm)
         newWindow = newFrame.makeFrame()

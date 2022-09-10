@@ -6,7 +6,7 @@ from psEntities import PatternScriptEntities
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ModelEntities'
 SCRIPT_REV = 20220101
 
-def makeLocationDict(trackList=None):
+def makeTrackPattern(trackList=None):
     """Used by:
         Model.trackPatternButton
         View.setRsButton
@@ -26,18 +26,17 @@ def makeLocationDict(trackList=None):
 
     return locationDict
 
-def makeReport(locationDict):
-    """The name is too generic
-        Used by:
+def makeTrackPatternReport(trackPattern):
+    """Used by:
         Model.trackPatternButton
         View.setRsButton
         """
 
-    modifiedReport = makeGenericHeader()
+    trackPatternReport = makeGenericHeader()
 # put in as a list to maintain compatability with JSON File Format/JMRI manifest export.
-    modifiedReport['locations'] = [locationDict]
+    trackPatternReport['locations'] = [trackPattern]
 
-    return modifiedReport
+    return trackPatternReport
 
 def testSelectedItem(selectedItem):
     """Catches user edit of locations
@@ -94,7 +93,7 @@ def updateTrackCheckBoxes(trackCheckBoxes):
 def getGenericTrackDetails(locationName, trackName):
     """The loco and car lists are sorted at this level, used to make the Track Pattern Report.json file
         Used by:
-        makeLocationDict
+        makeTrackPattern
         """
 
     genericTrackDetails = {}
@@ -315,7 +314,7 @@ def getShortLoadType(car):
 
 def makeGenericHeader():
     """Used by:
-        Model.makeReport
+        Model.makeTrackPatternReport
         Controller.StartUp.setRsButton
         """
 
@@ -358,24 +357,24 @@ def makeInitialTrackList(location):
 
     return trackDict
 
-def makeWorkEventsCsv(workEvents):
+def makeTrackPatternCsv(trackPattern):
     """CSV writer does not support utf-8
         Used by:
         Model.writeTrackPatternCsv
         """
 
-    workEventsCsv = u'Operator,Description,Parameters\n' \
-                    u'RT,Report Type,' + workEvents['trainDescription'] + '\n' \
-                    u'RN,Railroad Name,' + workEvents['railroad'] + '\n' \
-                    u'LN,Location Name,' + workEvents['locations'][0]['locationName'] + '\n' \
+    trackPatternCsv = u'Operator,Description,Parameters\n' \
+                    u'RT,Report Type,' + trackPattern['trainDescription'] + '\n' \
+                    u'RN,Railroad Name,' + trackPattern['railroad'] + '\n' \
+                    u'LN,Location Name,' + trackPattern['locations'][0]['locationName'] + '\n' \
                     u'PRNTR,Printer Name,\n' \
-                    u'YPC,Yard Pattern Comment,' + workEvents['trainComment'] + '\n' \
-                    u'VT,Valid,' + workEvents['date'] + '\n'
-    for track in workEvents['locations'][0]['tracks']: # There is only one location
-        workEventsCsv += u'TN,Track name,' + unicode(track['trackName'], PatternScriptEntities.ENCODING) + '\n'
-        workEventsCsv += u'Set_To,PUSO,Road,Number,Type,Model,Length,Weight,Consist,Owner,Track,Location,Destination,Comment\n'
+                    u'YPC,Yard Pattern Comment,' + trackPattern['trainComment'] + '\n' \
+                    u'VT,Valid,' + trackPattern['date'] + '\n'
+    for track in trackPattern['locations'][0]['tracks']: # There is only one location
+        trackPatternCsv += u'TN,Track name,' + unicode(track['trackName'], PatternScriptEntities.ENCODING) + '\n'
+        trackPatternCsv += u'Set_To,PUSO,Road,Number,Type,Model,Length,Weight,Consist,Owner,Track,Location,Destination,Comment\n'
         for loco in track['locos']:
-            workEventsCsv +=  loco['Set_To'] + ',' \
+            trackPatternCsv +=  loco['Set_To'] + ',' \
                             + loco['PUSO'] + ',' \
                             + loco['Road'] + ',' \
                             + loco['Number'] + ',' \
@@ -390,9 +389,9 @@ def makeWorkEventsCsv(workEvents):
                             + loco['Destination'] + ',' \
                             + loco['Comment'] + ',' \
                             + '\n'
-        workEventsCsv += u'Set_To,PUSO,Road,Number,Type,Length,Weight,Load,Load_Type,Hazardous,Color,Kernel,Kernel_Size,Owner,Track,Location,Destination,Dest&Track,Final_Dest,FD&Track,Comment,Drop_Comment,Pickup_Comment,RWE\n'
+        trackPatternCsv += u'Set_To,PUSO,Road,Number,Type,Length,Weight,Load,Load_Type,Hazardous,Color,Kernel,Kernel_Size,Owner,Track,Location,Destination,Dest&Track,Final_Dest,FD&Track,Comment,Drop_Comment,Pickup_Comment,RWE\n'
         for car in track['cars']:
-            workEventsCsv +=  car['Set_To'] + ',' \
+            trackPatternCsv +=  car['Set_To'] + ',' \
                             + car['PUSO'] + ',' \
                             + car['Road'] + ',' \
                             + car['Number'] + ',' \
@@ -418,4 +417,4 @@ def makeWorkEventsCsv(workEvents):
                             + car['RWE'] \
                             + '\n'
 
-    return workEventsCsv
+    return trackPatternCsv

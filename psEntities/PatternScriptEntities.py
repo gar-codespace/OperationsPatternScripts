@@ -155,21 +155,6 @@ def tpDirectoryExists():
         print('TrainPlayer Reports destination directory not found')
         return
 
-def readJsonWorkEventList(workEventName):
-    """Used by:
-        patternButton???
-        Model.writeTrackPatternCsv
-        ModelSetCarsForm.setRsToTrack
-        """
-
-    reportPath = PROFILE_PATH + 'operations\\jsonManifests\\' + workEventName + '.json'
-
-    jsonEventList = genericReadReport(reportPath)
-
-    textWorkEventList = loadJson(jsonEventList)
-
-    return textWorkEventList
-
 def writeWorkEvents(psWorkEvents):
     """Writes the o2o work events file"""
 
@@ -562,3 +547,19 @@ def translateMessageFormat():
     rosetta[' '] = ' '
 
     return rosetta
+
+
+# def readJsonWorkEventList(workEventName):
+#     """Used by:
+#         patternButton???
+#         Model.writeTrackPatternCsv
+#         ModelSetCarsForm.setRsToTrack
+#         """
+#
+#     reportPath = PROFILE_PATH + 'operations\\jsonManifests\\' + workEventName + '.json'
+#
+#     jsonEventList = genericReadReport(reportPath)
+#
+#     textWorkEventList = loadJson(jsonEventList)
+#
+#     return textWorkEventList

@@ -141,13 +141,6 @@ class StartUp:
         newHeader = ModelEntities.makeGenericHeader()
         PatternScriptEntities.writeWorkEvents(newHeader)
 
-
-
-
-        # o2o = ModelWorkEvents.ResetWorkEvents()
-        # o2o.makePsWorkEventsHeader()
-        # o2o.writeWorkEvents()
-
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return

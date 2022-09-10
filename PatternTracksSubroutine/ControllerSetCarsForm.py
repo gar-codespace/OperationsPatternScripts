@@ -161,10 +161,13 @@ class CreateSetCarsFormGui:
         MOUSE_CLICKED.getSource().setBackground(PatternScriptEntities.JAVA_AWT.Color.GREEN)
 
         ModelSetCarsForm.mergeForms(self.setCarsForm, self.buttonDict['textBoxEntry'])
-        workEventName = PatternScriptEntities.BUNDLE['Switch List for Track']
-        workEvents = PatternScriptEntities.readJsonWorkEventList(workEventName)
+        
+        switchListName = PatternScriptEntities.BUNDLE['Switch List for Track']
+        switchListPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + switchListName + '.json'
+        switchList = PatternScriptEntities.genericReadReport(switchListPath)
+        switchList = PatternScriptEntities.loadJson(switchList)
 
-        o2o = ModelWorkEvents.ConvertPtMergedForm(workEvents)
+        o2o = ModelWorkEvents.ConvertPtMergedForm(switchList)
         o2o.thinTheHerd()
         o2o.o2oWorkEvents()
         o2o.o2oWorkEventsUpdate()

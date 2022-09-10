@@ -16,11 +16,11 @@ def trackPatternButton():
         Controller.StartUp.trackPatternButton
         """
 
-    locationDict = ModelEntities.makeLocationDict()
-    modifiedReport = ModelEntities.makeReport(locationDict)
+    trackPattern = ModelEntities.makeTrackPattern()
+    trackPatternReport = ModelEntities.makeTrackPatternReport(trackPattern)
 
     reportTitle = PatternScriptEntities.BUNDLE['Track Pattern Report']
-    workEventName = ModelEntities.writeWorkEventListAsJson(modifiedReport, reportTitle)
+    ModelEntities.writeWorkEventListAsJson(trackPatternReport, reportTitle)
 
     return
 
@@ -88,9 +88,11 @@ def updateConfigFile(controls):
     focusOn.update({"PA": controls[1].selected})
     focusOn.update({"PI": controls[2].selected})
     focusOn.update({"PT": ModelEntities.updateTrackCheckBoxes(controls[3])})
+
     newConfigFile = PatternScriptEntities.readConfigFile()
     newConfigFile.update({"PT": focusOn})
     PatternScriptEntities.writeConfigFile(newConfigFile)
+
     _psLog.info('Controls settings for configuration file updated')
 
     return controls
@@ -106,9 +108,11 @@ def verifySelectedTracks():
 
     validStatus = True
     allTracksList = ModelEntities.getTracksByLocation(None)
+
     if not allTracksList:
         _psLog.warning('PatternConfig.JSON corrupted, new file written.')
         return False
+
     patternTracks = PatternScriptEntities.readConfigFile('PT')['PT']
     for track in patternTracks:
         if not track in allTracksList:
@@ -123,22 +127,26 @@ def updateLocations():
         """
 
     _psLog.debug('Model.updateLocations')
+
     newConfigFile = PatternScriptEntities.readConfigFile()
     subConfigfile = newConfigFile['PT']
+
     allLocations = PatternScriptEntities.getAllLocations()
     if not allLocations:
         _psLog.warning('There are no locations for this profile')
         return
+
     if not (subConfigfile['AL']): # when this sub is used for the first time
         subConfigfile.update({'PL': allLocations[0]})
         subConfigfile.update({'PT': ModelEntities.makeInitialTrackList(allLocations[0])})
+
     subConfigfile.update({'AL': allLocations})
     newConfigFile.update({'PT': subConfigfile})
     PatternScriptEntities.writeConfigFile(newConfigFile)
 
     return newConfigFile
 
-def writeTrackPatternCsv(workEventName):
+def writeTrackPatternCsv(trackPatternName):
     """Track Pattern Report json is written as a CSV file
         Used by:
         Controller.StartUp.trackPatternButton
@@ -146,11 +154,13 @@ def writeTrackPatternCsv(workEventName):
 
     _psLog.debug('Model.writeTrackPatternCsv')
 #  Get json data
-    workEvents = PatternScriptEntities.readJsonWorkEventList(workEventName)
+    trackPatternPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + trackPatternName + '.json'
+    trackPattern = PatternScriptEntities.genericReadReport(trackPatternPath)
+    trackPattern = PatternScriptEntities.loadJson(trackPattern)
 # Process json data into CSV
-    csvReport = ModelEntities.makeWorkEventsCsv(workEvents)
+    trackPatternCsv = ModelEntities.makeTrackPatternCsv(trackPattern)
 # Write CSV data
-    csvPath = PatternScriptEntities.PROFILE_PATH + 'operations\\csvSwitchLists\\' + workEventName + '.csv'
-    PatternScriptEntities.genericWriteReport(csvPath, csvReport)
+    csvPath = PatternScriptEntities.PROFILE_PATH + 'operations\\csvSwitchLists\\' + trackPatternName + '.csv'
+    PatternScriptEntities.genericWriteReport(csvPath, trackPatternCsv)
 
     return
