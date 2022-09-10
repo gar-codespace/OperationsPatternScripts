@@ -1,6 +1,7 @@
 
 Todo:
   Maybe use java io to make all paths for better OS compatibility
+  if Final Dest is null, sub in value from config file
   Find names for report placeholders
   Tighten up the except part of try/except
   Tweak default print fields for new railroads

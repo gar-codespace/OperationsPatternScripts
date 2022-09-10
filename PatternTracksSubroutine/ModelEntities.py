@@ -318,11 +318,15 @@ def makeGenericHeader():
         Model.makeReport
         """
 
+    OSU = PatternScriptEntities.JMRI.jmrit.operations.setup
+    patternLocation = PatternScriptEntities.readConfigFile('PT')['PL']
+    location = PatternScriptEntities.LM.getLocationByName(patternLocation)
+
     listHeader = {}
-    listHeader['railroad'] = unicode(PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getRailroadName(), PatternScriptEntities.ENCODING)
-    listHeader['trainName'] = u'Train Name Placeholder'
-    listHeader['trainDescription'] = u'Train Description Placeholder'
-    listHeader['trainComment'] = u'Train Comment Placeholder'
+    listHeader['railroad'] = unicode(OSU.Setup.getRailroadName(), PatternScriptEntities.ENCODING)
+    listHeader['trainName'] = unicode(OSU.Setup.getComment(), PatternScriptEntities.ENCODING)
+    listHeader['trainDescription'] = PatternScriptEntities.BUNDLE['Pattern Report for Tracks']
+    listHeader['trainComment'] = location.getComment()
     listHeader['date'] = unicode(PatternScriptEntities.timeStamp(), PatternScriptEntities.ENCODING)
     listHeader['locations'] = []
 

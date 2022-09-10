@@ -136,6 +136,7 @@ def makeTextReportHeader(textWorkEventList):
 
     textReportHeader    = textWorkEventList['railroad'] + '\n' \
                         + textWorkEventList['trainName'] + '\n' \
+                        + textWorkEventList['trainDescription'] + '\n' \
                         + textWorkEventList['date'] + '\n\n' \
                         + PatternScriptEntities.BUNDLE['Work Location:'] + ' ' + headerNames['PL'] + '\n\n'
 

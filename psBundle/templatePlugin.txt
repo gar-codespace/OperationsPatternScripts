@@ -16,6 +16,7 @@ Help
 Hold
 Ignore track length
 Location:
+Location Comment
 Locomotives at
 Make Work
 No FD track
@@ -24,6 +25,7 @@ No final destination
 o2o Work Events
 On Train
 Operations Folder
+Pattern Report for Tracks
 Pattern Scripts
 Track Pattern Subroutine
 Report Totals for Cars:
