@@ -63,21 +63,6 @@ def getAllTracksForLocation(location):
 
     return trackDict
 
-def getTracksByLocation(trackType):
-    """Used by:
-        Model.verifySelectedTracks
-        Model.makeTrackList
-        """
-
-    patternLocation = PatternScriptEntities.readConfigFile('PT')['PL']
-    allTracksList = []
-    try: # Catch on the fly user edit of config file error
-        for track in PatternScriptEntities.LM.getLocationByName(patternLocation).getTracksByNameList(trackType):
-            allTracksList.append(unicode(track.getName(), PatternScriptEntities.ENCODING))
-        return allTracksList
-    except AttributeError:
-        return allTracksList
-
 def updateTrackCheckBoxes(trackCheckBoxes):
     """Returns a dictionary of track names and their check box status
         Used by:
@@ -316,20 +301,6 @@ def makeGenericHeader():
 
     return listHeader
 
-# def writeWorkEventListAsJson(workEvent, workEventName):
-#     """Any generic switch list is written as a json file.
-#         Used By:
-#         Model.trackPatternButton
-#         ModelSetCarsForm.mergeForms
-#         """
-#
-#     workEventPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + workEventName + '.json'
-#     workEventReport = PatternScriptEntities.dumpJson(workEvent)
-#
-#     PatternScriptEntities.genericWriteReport(workEventPath, workEventReport)
-#
-#     return
-
 def makeInitialTrackList(location):
     """Used by:
         updateLocations
@@ -402,20 +373,3 @@ def makeTrackPatternCsv(trackPattern):
                             + '\n'
 
     return trackPatternCsv
-
-
-
-# def getShortLoadType(car):
-#     """Used by:
-#         getDetailsForCar
-#         """
-#
-#     lt = 'U'
-#     if car.getLoadType() == 'empty':
-#         lt = 'E'
-#     if car.getLoadType() == 'load':
-#         lt = 'L'
-#     if car.isCaboose() or car.isPassenger():
-#         lt = 'O'
-#
-#     return lt

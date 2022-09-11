@@ -49,15 +49,6 @@ def updatePatternLocation(selectedItem=None):
 
     return newLocation
 
-def makeTrackList(location, type):
-    """Returns a list of tracks by type for a location
-        Used by:
-        Controller.StartUp.yardTrackOnlyCheckBox
-        """
-    _psLog.debug('Model.makeTrackList')
-
-    return ModelEntities.getTracksByLocation(type)
-
 def updatePatternTracks(trackList):
     """Creates a new list of tracks and their default include flag
         Used by:
@@ -109,7 +100,7 @@ def verifySelectedTracks():
     _psLog.debug('Model.verifySelectedTracks')
 
     validStatus = True
-    allTracksList = ModelEntities.getTracksByLocation(None)
+    allTracksList = PatternScriptEntities.getTracksByLocation(None)
 
     if not allTracksList:
         _psLog.warning('PatternConfig.JSON corrupted, new file written.')

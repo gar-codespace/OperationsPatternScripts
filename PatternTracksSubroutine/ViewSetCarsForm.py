@@ -11,21 +11,24 @@ SCRIPT_REV = 20220101
 
 _psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.ViewSetCarsForm')
 
-def switchListButton():
-    """Mini controller when the Track Pattern Report button is pressed
-        Formats and displays the Switch List for Track report
+def switchListButton(textBoxEntry):
+    """Mini controller when the Track Pattern Report button is pressed.
+        Formats and displays the Switch List for Track report.
         Used by:
         ControllerSetCarsForm.CreateSetCarsFormGui.switchListButton
         """
 
     _psLog.debug('View.trackPatternButton')
-
-# Apply formatting to data
+# Get the switch list
     switchListName = PatternScriptEntities.BUNDLE['Switch List for Track']
     switchListPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + switchListName + '.json'
     switchList = PatternScriptEntities.genericReadReport(switchListPath)
     switchList = PatternScriptEntities.loadJson(switchList)
-
+# Replace Set To with a track name, reformat for display
+    userInputList = ViewEntities.makeUserInputList(textBoxEntry)
+    switchList = ViewEntities.merge(switchList, userInputList)
+    switchList = ViewEntities.modifyTrackPattern(switchList)
+# Make switch list for print
     reportHeader = ViewEntities.makeTextReportHeader(switchList)
     reportLocations = ViewEntities.makeTextReportLocations(switchList, trackTotals=False)
 # Save formatted data

@@ -75,9 +75,11 @@ class StartUp:
     def yardTrackOnlyCheckBox(self, EVENT):
 
         if (self.widgets[1].selected):
-            trackList = Model.makeTrackList(self.widgets[0].getSelectedItem(), 'Yard')
+            # trackList = Model.makeTrackList(self.widgets[0].getSelectedItem(), 'Yard')
+            trackList = PatternScriptEntities.getTracksByLocation('Yard')
         else:
-            trackList = Model.makeTrackList(self.widgets[0].getSelectedItem(), None)
+            # trackList = Model.makeTrackList(self.widgets[0].getSelectedItem(), None)
+            trackList = PatternScriptEntities.getTracksByLocation(None)
 
         configFile = PatternScriptEntities.readConfigFile()
         trackDict = Model.updatePatternTracks(trackList)
@@ -113,9 +115,9 @@ class StartUp:
         Model.trackPatternButton()
         View.trackPatternButton()
 
-        # if PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
-        #     workEventName = PatternScriptEntities.BUNDLE['Track Pattern Report']
-        #     Model.writeTrackPatternCsv(workEventName)
+        if PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
+            workEventName = PatternScriptEntities.BUNDLE['Track Pattern Report']
+            Model.writeTrackPatternCsv(workEventName)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

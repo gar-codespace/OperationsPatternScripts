@@ -126,21 +126,27 @@ class TrackPatternPanel:
         return tpPanel
 
 def modifyTrackPattern(trackPattern):
-    """Does some reformatting for displayed reports"""
+    """Make adjustments to the way the reports display here.
+        Replaces blank Dest and FD with standins.
+        Replaces load type with short load type.
+        Used by:
+        View.trackPatternButton
+        ViewSetCarsForm.switchListButton
+        """
 
     standins = PatternScriptEntities.readConfigFile('RM')
 
     tracks = trackPattern['locations'][0]['tracks']
     for track in tracks:
         for loco in track['locos']:
-            destStandin, fdStandin = PatternScriptEntities.getStandins(car, standins)
-            car.update({'Destination': destStandin})
+            destStandin, fdStandin = getStandins(loco, standins)
+            loco.update({'Destination': destStandin})
 
         for car in track['cars']:
-            destStandin, fdStandin = PatternScriptEntities.getStandins(car, standins)
+            destStandin, fdStandin = getStandins(car, standins)
             car.update({'Destination': destStandin})
             car.update({'Final Dest': fdStandin})
-            shortLoadType = PatternScriptEntities.getShortLoadType(car)
+            shortLoadType = getShortLoadType(car)
             car.update({'Load Type': shortLoadType})
 
     return trackPattern
@@ -185,12 +191,10 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
 
         for loco in track['locos']:
             lengthOfLocos += int(loco['Length']) + 4
-            loco = addStandIns(loco)
             reportSwitchList += loco['Set_To'] + loopThroughRs('loco', loco) + '\n'
 
         for car in track['cars']:
             lengthOfCars += int(car['Length']) + 4
-            car = addStandIns(car)
             reportSwitchList += car['Set_To'] + loopThroughRs('car', car) + '\n'
             trackTally.append(car['Final Dest'])
             reportTally.append(car['Final Dest'])
@@ -215,36 +219,65 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
 
     return reportSwitchList
 
-def addStandIns(rs):
-    """Make adjustments to the display version of textWorkEventList
-        Used by:
-        makeTextReportLocations
+def makeUserInputList(textBoxEntry):
+    """Used by:
+        ViewSetCarsForm.switchListButton
         """
 
-    try:
-        lt = rs['Load_Type']
-        if lt == 'Load':
-            lt = 'L'
-        if lt == 'Empty':
-            lt = 'E'
-        rs.update({'Load_Type': lt})
-    except:
-        pass
+    userInputList = []
+    for userInput in textBoxEntry:
+        userInputList.append(unicode(userInput.getText(), PatternScriptEntities.ENCODING))
 
-    reportModifiers = PatternScriptEntities.readConfigFile('RM')
+    return userInputList
 
-    try:
-        if rs['Final_Dest'] == '':
-            rs.update({'Final_Dest': reportModifiers['FD']})
-            rs.update({'FD&Track': reportModifiers['FD']})
-    except:
-        pass
+def merge(switchList, userInputList):
+    """Merge the values in textBoxEntry into the ['Set_To'] field of switchList.
+        Used by:
+        ViewSetCarsForm.switchListButton
+        """
 
-    if rs['Destination'] == '':
-        rs.update({'Destination': reportModifiers['DS']})
-        rs.update({'Dest&Track': reportModifiers['DS']})
+    longestTrackString = findLongestTrackString()
+    allTracksAtLoc = PatternScriptEntities.getTracksByLocation(None)
 
-    return rs
+    i = 0
+    locos = switchList['locations'][0]['tracks'][0]['locos']
+    for loco in locos:
+        setTrack = switchList['locations'][0]['tracks'][0]['trackName']
+        setTrack = PatternScriptEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
+        loco.update({'Set_To': setTrack})
+
+        userInput = unicode(userInputList[i], PatternScriptEntities.ENCODING)
+        if userInput in allTracksAtLoc:
+            setTrack = PatternScriptEntities.formatText('[' + userInput + ']', longestTrackString + 2)
+            loco.update({'Set_To': setTrack})
+        i += 1
+
+    cars = switchList['locations'][0]['tracks'][0]['cars']
+    for car in cars:
+        setTrack = switchList['locations'][0]['tracks'][0]['trackName']
+        setTrack = PatternScriptEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
+        car.update({'Set_To': setTrack})
+
+        userInput = unicode(userInputList[i], PatternScriptEntities.ENCODING)
+        if userInput in allTracksAtLoc:
+            setTrack = PatternScriptEntities.formatText('[' + userInput + ']', longestTrackString + 2)
+            car.update({'Set_To': setTrack})
+
+        i += 1
+
+    return switchList
+
+def findLongestTrackString():
+    """Used by:
+        merge
+        """
+
+    longestTrackString = 6 # 6 is the length of [Hold]
+    for track in PatternScriptEntities.readConfigFile('PT')['PT']: # Pattern Tracks
+        if len(track) > longestTrackString:
+            longestTrackString = len(track)
+
+    return longestTrackString
 
 def loopThroughRs(type, rsAttribs):
     """Creates a line containing the attrs in get * MessageFormat
@@ -271,3 +304,39 @@ def loopThroughRs(type, rsAttribs):
         switchListRow += PatternScriptEntities.formatText(rsAttribs[item], itemWidth)
 
     return switchListRow
+
+def getShortLoadType(car):
+    """Replaces empty and load with E, L, or O for occupied
+        Used by:
+        ViewEntities.modifyTrackPattern
+        """
+
+    rs = PatternScriptEntities.CM.getByRoadAndNumber(car['Road'], car['Number'])
+    lt = 'U'
+    if rs.getLoadType() == 'empty':
+        lt = 'E'
+    if rs.getLoadType() == 'load':
+        lt = 'L'
+    if rs.isCaboose() or rs.isPassenger():
+        lt = 'O'
+
+    return lt
+
+def getStandins(car, standins):
+    """Replaces null destination and fd with the standin from the config file
+        Used by:
+        ModelSetCarsForm.merge
+        """
+
+    destStandin = car['Destination']
+    if not car['Destination']:
+        destStandin = standins['DS']
+
+    try: # No FD for locos
+        fdStandin = car['Final Dest']
+        if not car['Final Dest']:
+            fdStandin = standins['FD']
+    except:
+        fdStandin = ''
+
+    return destStandin, fdStandin

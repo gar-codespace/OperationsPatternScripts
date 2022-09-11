@@ -141,41 +141,6 @@ class validateStubFile:
 
         return
 
-def getShortLoadType(car):
-    """Replaces empty and load with E, L, or O for occupied
-        Used by:
-        ModelEntities.getDetailsForCar
-        """
-
-    rs = CM.getByRoadAndNumber(car['Road'], car['Number'])
-    lt = 'U'
-    if rs.getLoadType() == 'empty':
-        lt = 'E'
-    if rs.getLoadType() == 'load':
-        lt = 'L'
-    if rs.isCaboose() or rs.isPassenger():
-        lt = 'O'
-
-    return lt
-
-def getStandins(car, standins):
-    """Replaces null destination and fd with the standin from the config file
-        Used by:
-        ModelSetCarsForm.merge
-        """
-
-    destStandin = car['Destination']
-    if not car['Destination']:
-        destStandin = standins['DS']
-
-    try: # No FD for locos
-        fdStandin = car['Final Dest']
-        if not car['Final Dest']:
-            fdStandin = standins['FD']
-    except:
-        fdStandin = ''
-
-    return destStandin, fdStandin
 
 def tpDirectoryExists():
 
@@ -267,7 +232,23 @@ def getAllTracks():
 
     return trackList
 
+def getTracksByLocation(trackType):
+    """Used by:
+        Model.verifySelectedTracks
+        ViewEntities.merge
+        """
+
+    patternLocation = readConfigFile('PT')['PL']
+    allTracksList = []
+    try: # Catch on the fly user edit of config file error
+        for track in LM.getLocationByName(patternLocation).getTracksByNameList(trackType):
+            allTracksList.append(unicode(track.getName(), ENCODING))
+        return allTracksList
+    except AttributeError:
+        return allTracksList
+
 def getSelectedTracks():
+    """Gets the tracks checked in the Track Pattern Subroutine"""
 
     patternTracks = readConfigFile('PT')['PT']
 
@@ -528,15 +509,15 @@ def getAlertColor():
 
     return color
 
-def parseSetTo(setTo):
-    """Used by:
-        moveRollingStock
-        """
-
-    x = setTo.split('[')
-    y = x[1].split(']')
-
-    return y[0]
+# def parseSetTo(setTo):
+#     """Used by:
+#         moveRollingStock
+#         """
+#
+#     x = setTo.split('[')
+#     y = x[1].split(']')
+#
+#     return y[0]
 
 def translateMessageFormat():
     """The messageFormat is in the locale's language, it has to be hashed to the plugin fields.

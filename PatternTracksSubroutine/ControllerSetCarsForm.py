@@ -115,9 +115,9 @@ class CreateSetCarsFormGui:
 
         PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX = PatternScriptEntities.makeReportItemWidthMatrix()
 
-        ModelSetCarsForm.mergeForms(self.setCarsForm, self.buttonDict['textBoxEntry'])
-
-        ViewSetCarsForm.switchListButton()
+        ModelSetCarsForm.writeToJson(self.setCarsForm)
+    # Modify and disply the set cars form
+        ViewSetCarsForm.switchListButton(self.buttonDict['textBoxEntry'])
 
         if PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
             workEventName = PatternScriptEntities.BUNDLE['Switch List for Track']
@@ -137,8 +137,11 @@ class CreateSetCarsFormGui:
         if not self.quickCheck():
             return
 
-        ModelSetCarsForm.mergeForms(self.setCarsForm, self.buttonDict['textBoxEntry'])
-        ModelSetCarsForm.setRsToTrack()
+        PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX = PatternScriptEntities.makeReportItemWidthMatrix()
+
+        ModelSetCarsForm.writeToJson(self.setCarsForm)
+    # Set the cars to the selected tracks
+        ModelSetCarsForm.setRsButton(self.buttonDict['textBoxEntry'])
 
         setCarsWindow = MOUSE_CLICKED.getSource().getTopLevelAncestor()
         setCarsWindow.setVisible(False)
@@ -161,7 +164,7 @@ class CreateSetCarsFormGui:
         MOUSE_CLICKED.getSource().setBackground(PatternScriptEntities.JAVA_AWT.Color.GREEN)
 
         ModelSetCarsForm.mergeForms(self.setCarsForm, self.buttonDict['textBoxEntry'])
-        
+
         switchListName = PatternScriptEntities.BUNDLE['Switch List for Track']
         switchListPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + switchListName + '.json'
         switchList = PatternScriptEntities.genericReadReport(switchListPath)

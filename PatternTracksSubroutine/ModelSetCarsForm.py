@@ -11,94 +11,23 @@ SCRIPT_REV = 20220101
 
 _psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.ModelSetCarsForm')
 
-def mergeForms(setCarsForm, textBoxEntry):
-    """Mini controller that merges the two inputs.
+def writeToJson(setCarsForm):
+    """Mini controller that writes the set cars form to json.
         Used by:
         ControllerSetCarsForm.CreateSetCarsFormGui.switchListButton
         ControllerSetCarsForm.CreateSetCarsFormGui.setRsButton
         """
 
-    userInputList = makeUserInputList(textBoxEntry)
-    merged = merge(setCarsForm, userInputList)
-    workEventName = PatternScriptEntities.BUNDLE['Switch List for Track']
-    ModelEntities.writeWorkEventListAsJson(merged, workEventName)
+    switchListName = PatternScriptEntities.BUNDLE['Switch List for Track']
+    switchListPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + switchListName + '.json'
+
+    switchListReport = PatternScriptEntities.dumpJson(setCarsForm)
+    PatternScriptEntities.genericWriteReport(switchListPath, switchListReport)
 
     return
 
-def makeUserInputList(textBoxEntry):
-    """Used by:
-        switchListButton
-        """
-
-    userInputList = []
-    for userInput in textBoxEntry:
-        userInputList.append(unicode(userInput.getText(), PatternScriptEntities.ENCODING))
-
-    return userInputList
-
-def merge(setCarsForm, userInputList):
-    """Merge the values in textBoxEntry into the ['Set_To'] field of setCarsForm.
-        This preps the setCarsForm for the o2o sub.
-        Used by:
-        switchListButton
-        """
-
-    _psLog.debug('ModelSetCarsForm.mergeForms')
-
-    standins = PatternScriptEntities.readConfigFile('RM')
-
-    longestTrackString = findLongestTrackString()
-    allTracksAtLoc = ModelEntities.getTracksByLocation(None)
-
-    i = 0
-    locos = setCarsForm['locations'][0]['tracks'][0]['locos']
-    for loco in locos:
-        destStandin, fdStandin = PatternScriptEntities.getStandins(loco, standins)
-        loco.update({'Destination': destStandin})
-
-        setTrack = setCarsForm['locations'][0]['tracks'][0]['trackName']
-        setTrack = PatternScriptEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
-        loco.update({'Set_To': setTrack})
-
-        userInput = unicode(userInputList[i], PatternScriptEntities.ENCODING)
-        if userInput in allTracksAtLoc:
-            setTrack = PatternScriptEntities.formatText('[' + userInput + ']', longestTrackString + 2)
-            loco.update({'Set_To': setTrack})
-        i += 1
-
-    cars = setCarsForm['locations'][0]['tracks'][0]['cars']
-    for car in cars:
-        destStandin, fdStandin = PatternScriptEntities.getStandins(car, standins)
-        car.update({'Destination': destStandin})
-        car.update({'Final Dest': fdStandin})
-
-        setTrack = setCarsForm['locations'][0]['tracks'][0]['trackName']
-        setTrack = PatternScriptEntities.formatText('[' + setTrack + ']', longestTrackString + 2)
-        car.update({'Set_To': setTrack})
-
-        userInput = unicode(userInputList[i], PatternScriptEntities.ENCODING)
-        if userInput in allTracksAtLoc:
-            setTrack = PatternScriptEntities.formatText('[' + userInput + ']', longestTrackString + 2)
-            car.update({'Set_To': setTrack})
-
-        i += 1
-
-    return setCarsForm
-
-def findLongestTrackString():
-    """Used by:
-        merge
-        """
-
-    longestTrackString = 6 # 6 is the length of [Hold]
-    for track in PatternScriptEntities.readConfigFile('PT')['PT']: # Pattern Tracks
-        if len(track) > longestTrackString:
-            longestTrackString = len(track)
-
-    return longestTrackString
-
-def setRsToTrack():
-    """Mini controller that moves the selected RS to a different track.
+def setRsButton(textBoxEntry):
+    """Mini controller that moves the selected RS to the selected track.
         Subject to track length and RS type restrictions.
         Used by:
         ControllerSetCarsForm.CreateSetCarsFormGui.setRsButton
@@ -111,23 +40,35 @@ def setRsToTrack():
     switchList = PatternScriptEntities.genericReadReport(switchListPath)
     switchList = PatternScriptEntities.loadJson(switchList)
 
-    moveRollingStock(switchList)
+    moveRollingStock(switchList, textBoxEntry)
 
     return
 
-def moveRollingStock(switchList):
+def moveRollingStock(switchList, textBoxEntry):
+    """Similar to:
+        ViewEntities.merge
+        """
 
     setCount = 0
+    i = 0
 
     ignoreTrackLength = PatternScriptEntities.readConfigFile('PT')['PI']
+
+    allTracksAtLoc = PatternScriptEntities.getTracksByLocation(None)
+
     location = PatternScriptEntities.readConfigFile('PT')['PL']
     toLocation = PatternScriptEntities.LM.getLocationByName(unicode(location, PatternScriptEntities.ENCODING))
 
     locos = switchList['locations'][0]['tracks'][0]['locos']
     for loco in locos:
+        setTrack = switchList['locations'][0]['tracks'][0]['trackName']
+        userInput = unicode(textBoxEntry[i].getText(), PatternScriptEntities.ENCODING)
+        if userInput in allTracksAtLoc:
+            setTrack = userInput
+
+        toTrack = toLocation.getTrackByName(setTrack, None)
+
         rollingStock = PatternScriptEntities.EM.getByRoadAndNumber(loco['Road'], loco['Number'])
-        setTo = PatternScriptEntities.parseSetTo(loco['Set_To'])
-        toTrack = toLocation.getTrackByName(setTo, None)
         if ignoreTrackLength:
             setResult = rollingStock.setLocation(toLocation, toTrack, True)
         else:
@@ -135,36 +76,44 @@ def moveRollingStock(switchList):
 
         if setResult == 'okay':
             setCount += 1
+        i += 1
     # PatternScriptEntities.EMX.save()
 
     cars = switchList['locations'][0]['tracks'][0]['cars']
     for car in cars:
+        setTrack = switchList['locations'][0]['tracks'][0]['trackName']
+        userInput = unicode(textBoxEntry[i].getText(), PatternScriptEntities.ENCODING)
+        if userInput in allTracksAtLoc:
+            setTrack = userInput
+
+        toTrack = toLocation.getTrackByName(setTrack, None)
+
         rollingStock = PatternScriptEntities.CM.getByRoadAndNumber(car['Road'], car['Number'])
-        setTo = PatternScriptEntities.parseSetTo(car['Set_To'])
-        toTrack = toLocation.getTrackByName(setTo, None)
+        # setResult = rollingStock.setLocation(toLocation, toTrack)
+        setResult = ''
+        x = toTrack.isRollingStockAccepted(rollingStock)
         if ignoreTrackLength:
-            setResult = rollingStock.setLocation(toLocation, toTrack, True)
-        else:
-            setResult = rollingStock.setLocation(toLocation, toTrack)
+            if x == 'okay':
+                setResult = rollingStock.setLocation(toLocation, toTrack, True)
 
         if setResult == 'okay':
             rsUpdate(toTrack, rollingStock)
             scheduleUpdate(toTrack, rollingStock)
             setCount += 1
+        i += 1
     # PatternScriptEntities.CMX.save()
 
     _psLog.info('Rolling stock count: ' + str(setCount) + ', processed.')
 
     return
 
-def parseSetTo(setTo):
-    """Moved to PatternScriptEntities """
-
-    x = setTo.split('[')
-    y = x[1].split(']')
-
-    return y[0]
-
+# def parseSetTo(setTo):
+#     """Moved to PatternScriptEntities """
+#
+#     x = setTo.split('[')
+#     y = x[1].split(']')
+#
+#     return y[0]
 
 def rsUpdate(toTrack, rollingStock):
     """Used by:
@@ -214,22 +163,3 @@ def testValidityOfForm(setCarsForm, textBoxEntry):
     else:
         _psLog.critical('mismatched input list and car roster lengths')
         return False
-
-
-# def getStandins(car, standins):
-#     """Used by:
-#         ModelSetCarsForm.merge
-#         """
-#
-#     destStandin = car['Destination']
-#     if not car['Destination']:
-#         destStandin = standins['DS']
-#
-#     try: # No FD for locos
-#         fdStandin = car['Final Dest']
-#         if not car['Final Dest']:
-#             fdStandin = standins['FD']
-#     except:
-#         fdStandin = ''
-#
-#     return destStandin, fdStandin
