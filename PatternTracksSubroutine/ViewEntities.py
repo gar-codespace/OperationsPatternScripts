@@ -125,6 +125,26 @@ class TrackPatternPanel:
 
         return tpPanel
 
+def modifyTrackPattern(trackPattern):
+    """Does some reformatting for displayed reports"""
+
+    standins = PatternScriptEntities.readConfigFile('RM')
+
+    tracks = trackPattern['locations'][0]['tracks']
+    for track in tracks:
+        for loco in track['locos']:
+            destStandin, fdStandin = PatternScriptEntities.getStandins(car, standins)
+            car.update({'Destination': destStandin})
+
+        for car in track['cars']:
+            destStandin, fdStandin = PatternScriptEntities.getStandins(car, standins)
+            car.update({'Destination': destStandin})
+            car.update({'Final Dest': fdStandin})
+            shortLoadType = PatternScriptEntities.getShortLoadType(car)
+            car.update({'Load Type': shortLoadType})
+
+    return trackPattern
+
 def makeTextReportHeader(textWorkEventList):
     """Makes the header for generic text reports
         Used by:

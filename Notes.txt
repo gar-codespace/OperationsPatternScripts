@@ -1,8 +1,8 @@
 
 Todo:
   Maybe use java io to make all paths for better OS compatibility
-  Rework default settings for manifest print options
-  ModelWorkEvents.*.parsePsWorkEventRs and   ModelWorkEvents.*.parseRS do the same thing, can they be merged?
+  Look for duplication for resetting load type as O, E, L. PatternScriptEntities.getShortLoadType and ???
+  ModelWorkEvents.*.parsePsWorkEventRs and ModelWorkEvents.*.parseRS do the same things in a different way, can they be merged?
   if Final Dest is null, sub in value from config file
   Tighten up the except part of all try/except
   TP import not bullet proof

@@ -16,11 +16,13 @@ def trackPatternButton():
         Controller.StartUp.trackPatternButton
         """
 
+    reportTitle = PatternScriptEntities.BUNDLE['Track Pattern Report']
+    trackPatternPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + reportTitle + '.json'
+
     trackPattern = ModelEntities.makeTrackPattern()
     trackPatternReport = ModelEntities.makeTrackPatternReport(trackPattern)
-
-    reportTitle = PatternScriptEntities.BUNDLE['Track Pattern Report']
-    ModelEntities.writeWorkEventListAsJson(trackPatternReport, reportTitle)
+    trackPatternReport = PatternScriptEntities.dumpJson(trackPatternReport)
+    PatternScriptEntities.genericWriteReport(trackPatternPath, trackPatternReport)
 
     return
 

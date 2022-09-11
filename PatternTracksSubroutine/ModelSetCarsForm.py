@@ -53,7 +53,7 @@ def merge(setCarsForm, userInputList):
     i = 0
     locos = setCarsForm['locations'][0]['tracks'][0]['locos']
     for loco in locos:
-        destStandin, fdStandin = getStandins(loco, standins)
+        destStandin, fdStandin = PatternScriptEntities.getStandins(loco, standins)
         loco.update({'Destination': destStandin})
 
         setTrack = setCarsForm['locations'][0]['tracks'][0]['trackName']
@@ -68,7 +68,7 @@ def merge(setCarsForm, userInputList):
 
     cars = setCarsForm['locations'][0]['tracks'][0]['cars']
     for car in cars:
-        destStandin, fdStandin = getStandins(car, standins)
+        destStandin, fdStandin = PatternScriptEntities.getStandins(car, standins)
         car.update({'Destination': destStandin})
         car.update({'Final Dest': fdStandin})
 
@@ -84,24 +84,6 @@ def merge(setCarsForm, userInputList):
         i += 1
 
     return setCarsForm
-
-def getStandins(car, standins):
-    """Used by:
-        merge
-        """
-
-    destStandin = car['Destination']
-    if not car['Destination']:
-        destStandin = standins['DS']
-
-    try: # No FD for locos
-        fdStandin = car['Final Dest']
-        if not car['Final Dest']:
-            fdStandin = standins['FD']
-    except:
-        fdStandin = ''
-
-    return destStandin, fdStandin
 
 def findLongestTrackString():
     """Used by:
@@ -232,3 +214,22 @@ def testValidityOfForm(setCarsForm, textBoxEntry):
     else:
         _psLog.critical('mismatched input list and car roster lengths')
         return False
+
+
+# def getStandins(car, standins):
+#     """Used by:
+#         ModelSetCarsForm.merge
+#         """
+#
+#     destStandin = car['Destination']
+#     if not car['Destination']:
+#         destStandin = standins['DS']
+#
+#     try: # No FD for locos
+#         fdStandin = car['Final Dest']
+#         if not car['Final Dest']:
+#             fdStandin = standins['FD']
+#     except:
+#         fdStandin = ''
+#
+#     return destStandin, fdStandin

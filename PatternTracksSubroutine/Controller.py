@@ -113,9 +113,9 @@ class StartUp:
         Model.trackPatternButton()
         View.trackPatternButton()
 
-        if PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
-            workEventName = PatternScriptEntities.BUNDLE['Track Pattern Report']
-            Model.writeTrackPatternCsv(workEventName)
+        # if PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
+        #     workEventName = PatternScriptEntities.BUNDLE['Track Pattern Report']
+        #     Model.writeTrackPatternCsv(workEventName)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

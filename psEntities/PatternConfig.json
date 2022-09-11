@@ -76,12 +76,12 @@
     "PW" : 1500,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20220904
+    "RV" : 20220906
   },
   "RM" : {
-    "DS" : "*Not Consigned",
+    "DS" : "No Waybill",
     "DT" : "*Not Consigned",
-    "FD" : "*Via Staging",
+    "FD" : "Any Line",
     "FT" : "*Any Line",
     "SL": [
       "Model"
@@ -98,7 +98,7 @@
       "Length" : 7,
       "Weight" : 7,
       "Load" : 6,
-      "Load Type" : 5,
+      "Load Type" : 1,
       "Owner" : 20,
       "Consist" : 8,
       "Hazardous" : 10,
@@ -220,9 +220,9 @@
     "TRL" : "TrainPlayer Report - Locations.txt",
     "TRI" : "TrainPlayer Report - Industries.txt",
     "TRR" : "TrainPlayer Report - Rolling Stock.txt",
-    "PUC" : ["Road", "Number", "Type", "Load", "Load Type", "FD&Track"],
-    "SOC" : ["Road", "Number", "Type", "Load", "Load Type", "FD&Track"],
-    "MC" : ["Road", "Number", "Type", "Load", "Load Type", "Final Dest"],
+    "PUC" : ["Road", "Number", "Type", "Load Type", "Load", "Destination"],
+    "SOC" : ["Road", "Number", "Type", "Load Type", "Load", "Destination"],
+    "MC" : ["Road", "Number", "Type", "Load Type", "Load", "Final Dest"],
     "PUL" : ["Road", "Number", "Model", "Consist", "Destination"],
     "SOL" : ["Road", "Number", "Model", "Consist", "Destination"],
     "TR" : {

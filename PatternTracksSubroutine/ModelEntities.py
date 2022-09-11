@@ -20,11 +20,11 @@ def makeTrackPattern(trackList=None):
     for trackName in trackList:
         detailsForTrack.append(getGenericTrackDetails(patternLocation, trackName))
 
-    locationDict = {}
-    locationDict['locationName'] = patternLocation
-    locationDict['tracks'] = detailsForTrack
+    trackPattern = {}
+    trackPattern['locationName'] = patternLocation
+    trackPattern['tracks'] = detailsForTrack
 
-    return locationDict
+    return trackPattern
 
 def makeTrackPatternReport(trackPattern):
     """Used by:
@@ -262,14 +262,13 @@ def getDetailsForCar(carObject, kernelTally):
         kernelSize = kernelTally[carObject.getKernelName()]
     except:
         kernelSize = 0
-    shortLoadType = getShortLoadType(carObject)
 
     carDetailDict['Road'] = carObject.getRoadName()
     carDetailDict['Number'] = carObject.getNumber()
     carDetailDict['Type'] = carObject.getTypeName()
     carDetailDict['Length'] = carObject.getLength()
     carDetailDict['Weight'] = carObject.getWeightTons()
-    carDetailDict['Load Type'] = shortLoadType
+    carDetailDict['Load Type'] = carObject.getLoadType()
     carDetailDict['Load'] = carObject.getLoadName()
     carDetailDict['Hazardous'] = carObject.isHazardous()
     carDetailDict['Color'] = carObject.getColor()
@@ -297,21 +296,6 @@ def getDetailsForCar(carObject, kernelTally):
 
     return carDetailDict
 
-def getShortLoadType(car):
-    """Used by:
-        getDetailsForCar
-        """
-
-    lt = 'U'
-    if car.getLoadType() == 'empty':
-        lt = 'E'
-    if car.getLoadType() == 'load':
-        lt = 'L'
-    if car.isCaboose() or car.isPassenger():
-        lt = 'O'
-
-    return lt
-
 def makeGenericHeader():
     """Used by:
         Model.makeTrackPatternReport
@@ -332,19 +316,19 @@ def makeGenericHeader():
 
     return listHeader
 
-def writeWorkEventListAsJson(workEvent, workEventName):
-    """Any generic switch list is written as a json file.
-        Used By:
-        Model.trackPatternButton
-        ModelSetCarsForm.mergeForms
-        """
-
-    workEventPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + workEventName + '.json'
-    workEventReport = PatternScriptEntities.dumpJson(workEvent)
-
-    PatternScriptEntities.genericWriteReport(workEventPath, workEventReport)
-
-    return
+# def writeWorkEventListAsJson(workEvent, workEventName):
+#     """Any generic switch list is written as a json file.
+#         Used By:
+#         Model.trackPatternButton
+#         ModelSetCarsForm.mergeForms
+#         """
+#
+#     workEventPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + workEventName + '.json'
+#     workEventReport = PatternScriptEntities.dumpJson(workEvent)
+#
+#     PatternScriptEntities.genericWriteReport(workEventPath, workEventReport)
+#
+#     return
 
 def makeInitialTrackList(location):
     """Used by:
@@ -418,3 +402,20 @@ def makeTrackPatternCsv(trackPattern):
                             + '\n'
 
     return trackPatternCsv
+
+
+
+# def getShortLoadType(car):
+#     """Used by:
+#         getDetailsForCar
+#         """
+#
+#     lt = 'U'
+#     if car.getLoadType() == 'empty':
+#         lt = 'E'
+#     if car.getLoadType() == 'load':
+#         lt = 'L'
+#     if car.isCaboose() or car.isPassenger():
+#         lt = 'O'
+#
+#     return lt

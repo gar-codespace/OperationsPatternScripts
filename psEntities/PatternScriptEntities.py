@@ -141,6 +141,41 @@ class validateStubFile:
 
         return
 
+def getShortLoadType(car):
+    """Replaces empty and load with E, L, or O for occupied
+        Used by:
+        ModelEntities.getDetailsForCar
+        """
+
+    rs = CM.getByRoadAndNumber(car['Road'], car['Number'])
+    lt = 'U'
+    if rs.getLoadType() == 'empty':
+        lt = 'E'
+    if rs.getLoadType() == 'load':
+        lt = 'L'
+    if rs.isCaboose() or rs.isPassenger():
+        lt = 'O'
+
+    return lt
+
+def getStandins(car, standins):
+    """Replaces null destination and fd with the standin from the config file
+        Used by:
+        ModelSetCarsForm.merge
+        """
+
+    destStandin = car['Destination']
+    if not car['Destination']:
+        destStandin = standins['DS']
+
+    try: # No FD for locos
+        fdStandin = car['Final Dest']
+        if not car['Final Dest']:
+            fdStandin = standins['FD']
+    except:
+        fdStandin = ''
+
+    return destStandin, fdStandin
 
 def tpDirectoryExists():
 

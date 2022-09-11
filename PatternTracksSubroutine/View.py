@@ -46,24 +46,27 @@ class ManageGui:
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
 def trackPatternButton():
-    """Mini controller when the Track Pattern Report button is pressed
-        Formats and displays the Track Pattern Report
+    """Mini controller when the Track Pattern Report button is pressed.
+        Reformats and displays the Track Pattern Report.
+        Used by:
+        Controller.StartUp.trackPatternButton
         """
 
     _psLog.debug('View.trackPatternButton')
 
-    trackPatternName = PatternScriptEntities.BUNDLE['Track Pattern Report']
-# Apply formatting to data
-    trackPatternPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + trackPatternName + '.json'
+# Get the report
+    reportTitle = PatternScriptEntities.BUNDLE['Track Pattern Report']
+    trackPatternPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + reportTitle + '.json'
     trackPattern = PatternScriptEntities.genericReadReport(trackPatternPath)
     trackPattern = PatternScriptEntities.loadJson(trackPattern)
-
+# Modify the report for display
+    trackPattern = ViewEntities.modifyTrackPattern(trackPattern)
     reportHeader = ViewEntities.makeTextReportHeader(trackPattern)
     reportLocations = ViewEntities.makeTextReportLocations(trackPattern, trackTotals=True)
-# Save formatted data
-    trackPatternPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\' + trackPatternName + '.txt'
+# Save the modified report
+    trackPatternPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\' + reportTitle + '.txt'
     PatternScriptEntities.genericWriteReport(trackPatternPath, reportHeader + reportLocations)
-# Display formatted data
+# Display the modified report
     PatternScriptEntities.genericDisplayReport(trackPatternPath)
 
     return
