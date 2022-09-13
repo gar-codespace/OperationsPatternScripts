@@ -163,13 +163,12 @@ class CreateSetCarsFormGui:
 
         MOUSE_CLICKED.getSource().setBackground(PatternScriptEntities.JAVA_AWT.Color.GREEN)
 
-        PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX = PatternScriptEntities.makeReportItemWidthMatrix()
     # Format for display and replace Set_To for the setCarsForm
         ptSetCarsForm = ViewSetCarsForm.o2oButton(self.setCarsForm, self.buttonDict['textBoxEntry'])
-    # Append the ptSwitchList to the o2oSwitchList
+    # Append the ptSetCarsForm to the o2oSwitchList
         ModelSetCarsForm.o2oButton(ptSetCarsForm)
     # Convert the o2o switch list to the format used by o2oSubroutine
-        o2o = ModelWorkEvents.ConvertPtMergedForm()
+        o2o = ModelWorkEvents.o2oSwitchListConversion()
         o2o.o2oSwitchListGetter()
         o2o.thinTheHerd()
         o2oSwitchList = o2o.o2oSwitchListUpdater()
@@ -178,8 +177,6 @@ class CreateSetCarsFormGui:
         o2o.o2oHeader()
         o2o.o2oLocations()
         o2o.saveList()
-
-
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

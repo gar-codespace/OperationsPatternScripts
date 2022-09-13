@@ -8,12 +8,12 @@ SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelWorkEvents'
 SCRIPT_REV = 20220101
 
 
-class ConvertPtMergedForm:
-    """Converts the generic merged form into the o2o format work event json"""
+class o2oSwitchListConversion:
+    """Converts the appended o2o switchlist for use by o2oWorkEvents"""
 
     def __init__(self):
 
-        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.o2o.ConvertPtMergedForm')
+        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.o2o.o2oSwitchListConversion')
 
         self.o2oSwitchList = {}
 
@@ -91,7 +91,7 @@ class ConvertPtMergedForm:
 
 
 class ConvertJmriManifest:
-    """This class converts the JMRI format manifest json into o2o format work event json"""
+    """Converts the JMRI generated manifest for use by o2oWorkEvents"""
 
     def __init__(self, builtTrain):
 
