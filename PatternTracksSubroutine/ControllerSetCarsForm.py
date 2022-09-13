@@ -168,18 +168,18 @@ class CreateSetCarsFormGui:
         ptSetCarsForm = ViewSetCarsForm.o2oButton(self.setCarsForm, self.buttonDict['textBoxEntry'])
     # Append the ptSwitchList to the o2oSwitchList
         ModelSetCarsForm.o2oButton(ptSetCarsForm)
-
+    # Convert the o2o switch list to the format used by o2oSubroutine
         o2o = ModelWorkEvents.ConvertPtMergedForm()
-        # o2o.thinTheHerd()
-        # o2o.o2oWorkEvents()
-        # o2o.o2oWorkEventsUpdate()
-        # o2o.o2oWorkEventsWriter()
-        #
-        # o2o = ModelWorkEvents.o2oWorkEvents()
-        # o2o.getWorkEvents()
-        # o2o.o2oHeader()
-        # o2o.o2oLocations()
-        # o2o.saveList()
+        o2o.o2oSwitchListGetter()
+        o2o.thinTheHerd()
+        o2oSwitchList = o2o.o2oSwitchListUpdater()
+    # Common post processor for o2oButton and BuiltTrainExport.ManifestForTrainPlayer.handle
+        o2o = ModelWorkEvents.o2oWorkEvents(o2oSwitchList)
+        o2o.o2oHeader()
+        o2o.o2oLocations()
+        o2o.saveList()
+
+
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

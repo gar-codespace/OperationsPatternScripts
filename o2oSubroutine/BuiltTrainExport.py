@@ -121,7 +121,7 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
             o2o.convertBody()
             o2oWorkEvents = o2o.geto2oWorkEvents()
             PatternScriptEntities.writeWorkEvents(o2oWorkEvents)
-
+        # Common post processor for ModelWorkEvents.ConvertPtMergedForm.o2oButton and BuiltTrainExport.ManifestForTrainPlayer.handle
             o2o = ModelWorkEvents.o2oWorkEvents()
             o2o.getWorkEvents()
             o2o.o2oHeader()

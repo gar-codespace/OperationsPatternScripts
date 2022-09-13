@@ -297,7 +297,7 @@ def makeGenericHeader():
     listHeader['trainDescription'] = PatternScriptEntities.BUNDLE['Pattern Report for Tracks']
     listHeader['trainComment'] = location.getComment()
     listHeader['date'] = unicode(PatternScriptEntities.timeStamp(), PatternScriptEntities.ENCODING)
-    listHeader['locations'] = [{'tracks': [{'cars': [], 'locos': []}]}]
+    listHeader['locations'] = [{'locationName': patternLocation, 'tracks': [{'cars': [], 'locos': []}]}]
 
     return listHeader
 
