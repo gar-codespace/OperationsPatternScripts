@@ -163,24 +163,23 @@ class CreateSetCarsFormGui:
 
         MOUSE_CLICKED.getSource().setBackground(PatternScriptEntities.JAVA_AWT.Color.GREEN)
 
-        ModelSetCarsForm.mergeForms(self.setCarsForm, self.buttonDict['textBoxEntry'])
+        PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX = PatternScriptEntities.makeReportItemWidthMatrix()
+    # Format for display and replace Set_To for the setCarsForm
+        ptSetCarsForm = ViewSetCarsForm.o2oButton(self.setCarsForm, self.buttonDict['textBoxEntry'])
+    # Append the ptSwitchList to the o2oSwitchList
+        ModelSetCarsForm.o2oButton(ptSetCarsForm)
 
-        switchListName = PatternScriptEntities.BUNDLE['Switch List for Track']
-        switchListPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + switchListName + '.json'
-        switchList = PatternScriptEntities.genericReadReport(switchListPath)
-        switchList = PatternScriptEntities.loadJson(switchList)
-
-        o2o = ModelWorkEvents.ConvertPtMergedForm(switchList)
-        o2o.thinTheHerd()
-        o2o.o2oWorkEvents()
-        o2o.o2oWorkEventsUpdate()
-        o2o.o2oWorkEventsWriter()
-
-        o2o = ModelWorkEvents.o2oWorkEvents()
-        o2o.getWorkEvents()
-        o2o.o2oHeader()
-        o2o.o2oLocations()
-        o2o.saveList()
+        o2o = ModelWorkEvents.ConvertPtMergedForm()
+        # o2o.thinTheHerd()
+        # o2o.o2oWorkEvents()
+        # o2o.o2oWorkEventsUpdate()
+        # o2o.o2oWorkEventsWriter()
+        #
+        # o2o = ModelWorkEvents.o2oWorkEvents()
+        # o2o.getWorkEvents()
+        # o2o.o2oHeader()
+        # o2o.o2oLocations()
+        # o2o.saveList()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

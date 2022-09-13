@@ -44,6 +44,30 @@ def setRsButton(textBoxEntry):
 
     return
 
+def o2oButton(ptSetCarsForm):
+    """Mini controller that appends the ptSetCarsForm to o2o Work Events.json.
+        Used by:
+        ControllerptSetCarsForm.CreateptSetCarsFormGui.o2oButton
+        """
+# Load the existing o2o switch list
+    o2oSwitchListName = PatternScriptEntities.BUNDLE['o2o Work Events']
+    o2oSwitchListPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + o2oSwitchListName + '.json'
+    o2oSwitchList = PatternScriptEntities.genericReadReport(o2oSwitchListPath)
+    o2oSwitchList = PatternScriptEntities.loadJson(o2oSwitchList)
+# Append cars and locos from ptSetCarsForm
+    o2oSwitchListCars = o2oSwitchList['locations'][0]['tracks'][0]['cars']
+    ptSetCarsFormCars = ptSetCarsForm['locations'][0]['tracks'][0]['cars']
+    o2oSwitchList['locations'][0]['tracks'][0]['cars'] = o2oSwitchListCars + ptSetCarsFormCars
+
+    o2oSwitchListLocos = o2oSwitchList['locations'][0]['tracks'][0]['locos']
+    ptSetCarsFormLocos = ptSetCarsForm['locations'][0]['tracks'][0]['locos']
+    o2oSwitchList['locations'][0]['tracks'][0]['locos'] = o2oSwitchListLocos + ptSetCarsFormLocos
+
+    o2oSwitchList = PatternScriptEntities.dumpJson(o2oSwitchList)
+    PatternScriptEntities.genericWriteReport(o2oSwitchListPath, o2oSwitchList)
+
+    return
+
 def moveRollingStock(switchList, textBoxEntry):
     """Similar to:
         ViewEntities.merge

@@ -39,6 +39,15 @@ def switchListButton(textBoxEntry):
 
     return
 
+def o2oButton(ptSetCarsForm, textBoxEntry):
+
+# Replace Set To with a track name, reformat for display
+    userInputList = ViewEntities.makeUserInputList(textBoxEntry)
+    o2oSwitchList = ViewEntities.merge(ptSetCarsForm, userInputList)
+    o2oSwitchList = ViewEntities.modifyTrackPattern(o2oSwitchList)
+
+    return o2oSwitchList
+
 def setCarsForTrackWindow(setCarsForTrackForm):
     """Used by:
         ControllerSetCarsForm.CreateSetCarsFormGui.makeFrame
