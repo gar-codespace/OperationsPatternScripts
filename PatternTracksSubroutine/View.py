@@ -87,6 +87,8 @@ def setRsButton():
     for i, trackName in enumerate(selectedTracks, start=1):
         trackPattern = ModelEntities.makeTrackPattern([trackName]) # makeTrackPattern takes a track list
         setCarsForm = ModelEntities.makeTrackPatternReport(trackPattern)
+    # Apply common formatting to report
+        setCarsForm = ViewEntities.modifyTrackPattern(setCarsForm)
 
         newFrame = ControllerSetCarsForm.CreateSetCarsFormGui(setCarsForm)
         newWindow = newFrame.makeFrame()

@@ -93,15 +93,13 @@ def moveRollingStock(switchList, textBoxEntry):
         toTrack = toLocation.getTrackByName(setTrack, None)
 
         rollingStock = PatternScriptEntities.EM.getByRoadAndNumber(loco['Road'], loco['Number'])
-        if ignoreTrackLength:
+        setResult = rollingStock.setLocation(toLocation, toTrack)
+        if ignoreTrackLength and toTrack.isTypeNameAccepted(loco['Type']):
             setResult = rollingStock.setLocation(toLocation, toTrack, True)
-        else:
-            setResult = rollingStock.setLocation(toLocation, toTrack)
 
         if setResult == 'okay':
             setCount += 1
         i += 1
-    # PatternScriptEntities.EMX.save()
 
     cars = switchList['locations'][0]['tracks'][0]['cars']
     for car in cars:
@@ -113,31 +111,20 @@ def moveRollingStock(switchList, textBoxEntry):
         toTrack = toLocation.getTrackByName(setTrack, None)
 
         rollingStock = PatternScriptEntities.CM.getByRoadAndNumber(car['Road'], car['Number'])
-        # setResult = rollingStock.setLocation(toLocation, toTrack)
+        setResult = rollingStock.setLocation(toLocation, toTrack)
         setResult = ''
-        x = toTrack.isRollingStockAccepted(rollingStock)
-        if ignoreTrackLength:
-            if x == 'okay':
-                setResult = rollingStock.setLocation(toLocation, toTrack, True)
+        if ignoreTrackLength and toTrack.isTypeNameAccepted(car['Type']):
+            setResult = rollingStock.setLocation(toLocation, toTrack, True)
 
         if setResult == 'okay':
             rsUpdate(toTrack, rollingStock)
             scheduleUpdate(toTrack, rollingStock)
             setCount += 1
         i += 1
-    # PatternScriptEntities.CMX.save()
 
     _psLog.info('Rolling stock count: ' + str(setCount) + ', processed.')
 
     return
-
-# def parseSetTo(setTo):
-#     """Moved to PatternScriptEntities """
-#
-#     x = setTo.split('[')
-#     y = x[1].split(']')
-#
-#     return y[0]
 
 def rsUpdate(toTrack, rollingStock):
     """Used by:

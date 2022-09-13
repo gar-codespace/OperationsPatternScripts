@@ -131,6 +131,7 @@ def modifyTrackPattern(trackPattern):
         Replaces load type with short load type.
         Used by:
         View.trackPatternButton
+        View.setRsButton
         ViewSetCarsForm.switchListButton
         """
 
@@ -313,9 +314,9 @@ def getShortLoadType(car):
 
     rs = PatternScriptEntities.CM.getByRoadAndNumber(car['Road'], car['Number'])
     lt = 'U'
-    if rs.getLoadType() == 'empty':
+    if rs.getLoadType() == 'empty' or rs.getLoadType() == 'Empty':
         lt = 'E'
-    if rs.getLoadType() == 'load':
+    if rs.getLoadType() == 'load' or rs.getLoadType() == 'Load':
         lt = 'L'
     if rs.isCaboose() or rs.isPassenger():
         lt = 'O'
