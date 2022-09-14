@@ -38,7 +38,7 @@ PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale()
 
 
 class TrainsTableListener(PatternScriptEntities.JAVX_SWING.event.TableModelListener):
-    """Catches user add or remove train while o2o/TrainPlayer support is enabled"""
+    """Catches user add or remove train while o2oSubroutine is enabled"""
 
     def __init__(self, builtTrainListener):
 
@@ -57,13 +57,13 @@ class TrainsTableListener(PatternScriptEntities.JAVX_SWING.event.TableModelListe
         return
 
 class BuiltTrainListener(java.beans.PropertyChangeListener):
-    """Starts o2o/TrainPlayer manifest export on trainBuilt"""
+    """Starts o2oWorkEventsBuilder on trainBuilt"""
 
     def propertyChange(self, TRAIN_BUILT):
 
         if TRAIN_BUILT.propertyName == 'TrainBuilt' and TRAIN_BUILT.newValue:
 
-            tpManifest = BuiltTrainExport.ManifestForTrainPlayer()
+            tpManifest = BuiltTrainExport.o2oWorkEventsBuilder()
             tpManifest.passInTrain(TRAIN_BUILT.getSource())
             tpManifest.start()
 
@@ -463,7 +463,7 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         return
 
-    def addTrainPlayerListeners(self):
+    def o2oSubroutineListeners(self):
 
         self.addTrainsTableListener()
         self.addBuiltTrainListener()
@@ -539,8 +539,8 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
             self.trainsTableModel.removeTableModelListener(self.trainsTableListener)
             self.removeBuiltTrainListener()
 
-            self.psLog.info('o2o/TrainPlayer support deactivated')
-            print('o2o/TrainPlayer support deactivated')
+            self.psLog.info('o2o subroutine deactivated')
+            print('o2o subroutine deactivated')
         else:
             patternConfig['CP']['SI'][1].update({'o2oSubroutine': True})
             TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE[u'Disable o2o subroutine'])
@@ -548,8 +548,8 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
             self.trainsTableModel.addTableModelListener(self.trainsTableListener)
             self.addBuiltTrainListener()
 
-            self.psLog.info('o2o/TrainPlayer support activated')
-            print('o2o/TrainPlayer support activated')
+            self.psLog.info('o2o subroutine activated')
+            print('o2o subroutine activated')
 
         PatternScriptEntities.writeConfigFile(patternConfig)
         self.closePsWindow()
@@ -668,7 +668,7 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         self.model.validatePatternConfig()
         PatternScriptEntities.validateStubFile().isStubFile()
         if PatternScriptEntities.readConfigFile()['CP']['SI'][1]['o2oSubroutine']:
-            self.addTrainPlayerListeners()
+            self.o2oSubroutineListeners()
         if PatternScriptEntities.readConfigFile()['CP']['AP']:
             self.addPatternScriptsButton()
 

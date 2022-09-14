@@ -82,16 +82,16 @@ class FindTrain:
         return PatternScriptEntities.loadJson(manifest)['date']
 
 
-class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
-    """Runs on JMRI train builds"""
+class o2oWorkEventsBuilder(jmri.jmrit.automat.AbstractAutomaton):
+    """Runs when a JMRI train is built"""
 
     def init(self):
 
-        self.SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.BuiltTrainExport.ManifestForTrainPlayer'
+        self.SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.BuiltTrainExport.o2oWorkEventsBuilder'
         self.SCRIPT_REV = 20220101
 
         self.standAloneLogging = StandAloneLogging()
-        self.o2oLog = PatternScriptEntities.LOGGING.getLogger('TP.ManifestForTrainPlayer')
+        self.o2oLog = PatternScriptEntities.LOGGING.getLogger('TP.o2oWorkEventsBuilder')
 
         return
 
@@ -124,13 +124,13 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
         o2o.convertHeader()
         o2o.convertBody()
         o2oWorkEvents = o2o.geto2oWorkEvents()
-    # Common post processor for ModelWorkEvents.ConvertPtMergedForm.o2oButton and BuiltTrainExport.ManifestForTrainPlayer.handle
+    # Common post processor for ModelWorkEvents.ConvertPtMergedForm.o2oButton and BuiltTrainExport.o2oWorkEventsBuilder.handle
         o2o = ModelWorkEvents.o2oWorkEvents(o2oWorkEvents)
         o2o.o2oHeader()
         o2o.o2oLocations()
         o2o.saveList()
 
-        self.o2oLog.info('Export JMRI manifest to TrainPlyer: ' + self.train.getName())
+        self.o2oLog.info('Export JMRI manifest to TrainPlayer: ' + self.train.getName())
 
         self.o2oLog.info('Export to TrainPlayer script location: ' + PLUGIN_ROOT)
         runTime = time.time() - startTime
@@ -160,7 +160,7 @@ if __name__ == "__builtin__":
     PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale()
     PatternScriptEntities.ENCODING = 'utf-8'
 
-    tpManifest = ManifestForTrainPlayer()
+    tpManifest = o2oWorkEventsBuilder()
     newestTrain = tpManifest.getNewestTrain()
     if newestTrain:
         tpManifest.passInTrain(newestTrain)

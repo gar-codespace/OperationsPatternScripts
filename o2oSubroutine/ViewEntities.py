@@ -8,7 +8,7 @@ from psEntities import PatternScriptEntities
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ViewEntities'
 SCRIPT_REV = 20220101
 
-class TrainPlayerPanel:
+class O2oSubroutinePanel:
 
     def __init__(self):
 
@@ -30,7 +30,7 @@ class TrainPlayerPanel:
 
         return
 
-    def makeTrainPlayerPanel(self):
+    def o2oPanelMaker(self):
 
         tpPanel = PatternScriptEntities.JAVX_SWING.JPanel()
 
@@ -42,7 +42,7 @@ class TrainPlayerPanel:
 
         return tpPanel
 
-    def getPanelWidgets(self):
+    def o2oWidgetGetter(self):
 
         self.controlWidgets.append(self.irButton)
         self.controlWidgets.append(self.nrButton)

@@ -6,7 +6,7 @@
 from psEntities import PatternScriptEntities
 from o2oSubroutine import ViewEntities
 
-SCRIPT_NAME = 'OperationsPatternScripts.TrianPlayerSubroutine.View'
+SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.View'
 SCRIPT_REV = 20220101
 
 
@@ -14,13 +14,13 @@ class ManageGui:
 
     def __init__(self):
 
-        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.TrainPlayer.View')
+        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.o2oSubroutine.View')
         self.configFile = PatternScriptEntities.readConfigFile('o2o')
 
         return
 
     def makeSubroutineFrame(self):
-        """Make the frame that all the TrainPlayer controls are added to"""
+        """Make the frame that all the o2o controls are added to"""
 
         subroutineFrame = PatternScriptEntities.JAVX_SWING.JPanel() # the track pattern panel
         encodedKey = unicode('o2o Subroutine', PatternScriptEntities.ENCODING)
@@ -31,13 +31,13 @@ class ManageGui:
         return subroutineFrame
 
     def makeSubroutinePanel(self):
-        """Make the TrainPlayer controls"""
+        """Make the o2o controls"""
 
         self.psLog.debug('View.makeSubroutinePanel')
 
-        trainPlayerPanel = ViewEntities.TrainPlayerPanel()
-        subroutinesPanel = trainPlayerPanel.makeTrainPlayerPanel()
-        subroutinePanelWidgets = trainPlayerPanel.getPanelWidgets()
+        o2oSubroutinePanel = ViewEntities.O2oSubroutinePanel()
+        subroutinesPanel = o2oSubroutinePanel.o2oPanelMaker()
+        subroutinePanelWidgets = o2oSubroutinePanel.o2oWidgetGetter()
 
         return subroutinesPanel, subroutinePanelWidgets
 

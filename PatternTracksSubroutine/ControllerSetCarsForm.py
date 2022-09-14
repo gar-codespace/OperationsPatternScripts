@@ -173,7 +173,7 @@ class CreateSetCarsFormGui:
         o2o.thinTheHerd()
         o2o.o2oSwitchListUpdater()
         o2oSwitchList = o2o.getO2oSwitchList()
-    # Common post processor for o2oButton and BuiltTrainExport.ManifestForTrainPlayer.handle
+    # Common post processor for o2oButton and BuiltTrainExport.o2oWorkEventsBuilder.handle
         o2o = ModelWorkEvents.o2oWorkEvents(o2oSwitchList)
         o2o.o2oHeader()
         o2o.o2oLocations()

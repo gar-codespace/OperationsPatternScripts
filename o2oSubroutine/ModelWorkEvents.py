@@ -191,7 +191,8 @@ class jmriManifestConversion:
 
 class o2oWorkEvents:
     """This class makes the o2o work event list for TrainPlayer
-        tpRollingStockData lets the plugin use TP rs IDs
+        TrainPlayer rolling stock IDs are used to identify TP RS,
+        tpRollingStockData is the LUT for that.
         """
 
     def __init__(self, workEvents):

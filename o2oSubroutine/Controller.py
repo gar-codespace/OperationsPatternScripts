@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""The TrainPlayer Subroutine will be implemented in V3, this is just the framework"""
+"""The o2o Subroutine."""
 
 from psEntities import PatternScriptEntities
 from o2oSubroutine import ModelImport
@@ -13,7 +13,7 @@ SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.Controller'
 SCRIPT_REV = 20220101
 
 class StartUp:
-    """Start the TrainPlayer subroutine"""
+    """Start the o2o subroutine"""
 
     def __init__(self, subroutineFrame=None):
 
@@ -29,7 +29,7 @@ class StartUp:
         subroutinePanel = self.makeSubroutinePanel()
         self.subroutineFrame.add(subroutinePanel)
 
-        self.psLog.info('TrainPlayer makeFrame completed')
+        self.psLog.info('o2o makeFrame completed')
 
         return self.subroutineFrame
 

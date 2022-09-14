@@ -169,7 +169,6 @@ class TrainPlayerImporter:
                 ship = 'Empty'
             schedule = (splitLine[3], splitLine[4], receive, ship)
             # x = (splitLine[1], {u'ID': splitLine[0], u'track': splitLine[2], u'label': splitLine[3], u'type': splitLine[4], u'schedule': schedule, u'staging': splitLine[7], u'viain': splitLine[8]})
-            # industryDict.append(x)
             industryDict[splitLine[0]] = {u'location': splitLine[1], u'track': splitLine[2], u'label': splitLine[3], u'type': splitLine[4], u'schedule': schedule, u'staging': splitLine[7], u'viain': splitLine[8]}
 
         self.rr['industries'] = industryDict
