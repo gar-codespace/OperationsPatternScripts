@@ -87,15 +87,18 @@ class o2oSwitchListConversion:
         self.o2oSwitchList['locations'][0]['tracks'][0]['cars'] = self.cars
         self.o2oSwitchList['locations'][0]['tracks'][0]['locos'] = self.locos
 
+        return
+
+    def getO2oSwitchList(self):
+
         return self.o2oSwitchList
 
-
-class ConvertJmriManifest:
+class jmriManifestConversion:
     """Converts the JMRI generated manifest for use by o2oWorkEvents"""
 
     def __init__(self, builtTrain):
 
-        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.o2o.ConvertJmriManifest')
+        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.o2o.jmriManifestConversion')
 
         self.builtTrain = builtTrain
         self.jmriManifest = {}
@@ -103,9 +106,9 @@ class ConvertJmriManifest:
 
         return
 
-    def getJmriManifest(self):
+    def jmriManifestGetter(self):
 
-        self.psLog.debug('getJmriManifest')
+        self.psLog.debug('jmriManifestGetter')
 
         reportName = self.builtTrain.getName()
         jsonFileName = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\train-' + reportName + '.json'
@@ -155,7 +158,6 @@ class ConvertJmriManifest:
                 parsedRS['PUSO'] = u'SL'
                 locos.append(parsedRS)
 
-            # self.o2oWorkEvents['locations'].append({'locationName': location['userName'], 'cars': cars, 'locos': locos})
             self.o2oWorkEvents['locations'].append({'locationName': location['userName'], 'tracks': [{'trackName': 'xyz', 'cars': cars, 'locos': locos}]})
 
         return
@@ -178,7 +180,7 @@ class ConvertJmriManifest:
         parsedRS['Location'] = rs['location']['userName']
         parsedRS['Track'] = rs['location']['track']['userName']
         parsedRS['Destination'] = rs['destination']['userName']
-        parsedRS['Set_To'] = '[' + rs['destination']['track']['userName'] + ']'
+        parsedRS['Set_To'] = rs['destination']['track']['userName']
 
         return parsedRS
 
@@ -258,7 +260,6 @@ class o2oWorkEvents:
 
         pu = rs['Location'] + ';' + rs['Track']
 
-        # setTo = PatternScriptEntities.parseSetTo(rs['Set_To'])
         so = rs['Destination'] + ';' + rs['Set_To']
 
         return rs['PUSO'] + ',' + tpID + ',' + rs['Road'] + ',' + rs['Number'] + ',' + rs['Type'] + ',' + rs['Load Type'] + ',' + load + ',' + pu + ',' + so
@@ -273,45 +274,3 @@ class o2oWorkEvents:
         print(SCRIPT_NAME + '.o2oWorkEvents ' + str(SCRIPT_REV))
 
         return
-
-
-
-# class ResetWorkEvents:
-#     """Creates a new work events json when the set cars button is pressed on the pattern scripts sub"""
-#
-#     def __init__(self):
-#
-#         self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.o2o.ResetWorkEvents')
-#
-#         self.workEvents = {}
-#
-#         return
-#
-#     def makePsWorkEventsHeader(self):
-#
-#         self.psLog.debug('makePsWorkEventsHeader')
-#
-#         OSU = PatternScriptEntities.JMRI.jmrit.operations.setup
-#         patternLocation = PatternScriptEntities.readConfigFile('PT')['PL']
-#         location = PatternScriptEntities.LM.getLocationByName(patternLocation)
-#
-#         self.workEvents['railroad'] = unicode(OSU.Setup.getRailroadName(), PatternScriptEntities.ENCODING)
-#         self.workEvents['trainName'] = unicode(OSU.Setup.getComment(), PatternScriptEntities.ENCODING)
-#         self.workEvents['trainDescription'] = PatternScriptEntities.BUNDLE['o2o Work Events']
-#         self.workEvents['trainComment'] = location.getComment()
-#         self.workEvents['date'] = PatternScriptEntities.timeStamp()
-#
-        locationName = PatternScriptEntities.readConfigFile()['PT']['PL']
-        trackDict = [{'cars': [], 'locos': []}]
-        locationDict = {'locationName': locationName, 'tracks': trackDict}
-        self.workEvents['locations'] = [locationDict]
-#
-#         return
-#
-#     def writeWorkEvents(self):
-#
-#         self.psLog.debug('writeWorkEvents')
-#
-#         ModelEntities.writeWorkEvents(self.workEvents)
-#
-#         return

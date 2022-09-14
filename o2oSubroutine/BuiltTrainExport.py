@@ -1,6 +1,6 @@
-"""Exports a TrainPlayer manifest into a csv for import into the TrainPlayer o2o script suite.
-Callable from the pattern scripts subroutine or stand alone.
-"""
+"""Exports a JMRI manifest into a csv for import into the TrainPlayer o2o script suite.
+    Callable from the pattern scripts subroutine or stand alone.
+    """
 
 import jmri
 import time
@@ -19,14 +19,14 @@ class StandAloneLogging():
 
         logPath = PatternScriptEntities.PROFILE_PATH  + 'operations\\buildstatus\\BuiltTrainExportLog.txt'
         self.logger = PatternScriptEntities.Logger(logPath)
-        self.tpLog = PatternScriptEntities.LOGGING.getLogger('TP.StandAlone')
+        self.o2oLog = PatternScriptEntities.LOGGING.getLogger('TP.StandAlone')
 
         return
 
     def startLogging(self):
 
         self.logger.startLogger('TP')
-        self.logger.initialLogMessage(self.tpLog)
+        self.logger.initialLogMessage(self.o2oLog)
 
         return
 
@@ -42,14 +42,14 @@ class FindTrain:
 
     def __init__(self):
 
-        self.tpLog = PatternScriptEntities.LOGGING.getLogger('TP.FindTrain')
+        self.o2oLog = PatternScriptEntities.LOGGING.getLogger('TP.FindTrain')
 
         return
 
     def findNewestTrain(self):
         """If more than 1 train is built, pick the newest one"""
 
-        self.tpLog.debug('findNewestTrain')
+        self.o2oLog.debug('findNewestTrain')
 
         if not PatternScriptEntities.TM.isAnyTrainBuilt():
 
@@ -66,7 +66,7 @@ class FindTrain:
 
     def getBuiltTrains(self):
 
-        self.tpLog.debug('getBuiltTrains')
+        self.o2oLog.debug('getBuiltTrains')
 
         builtTrainList = []
         for train in PatternScriptEntities.TM.getTrainsByStatusList():
@@ -91,7 +91,7 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
         self.SCRIPT_REV = 20220101
 
         self.standAloneLogging = StandAloneLogging()
-        self.tpLog = PatternScriptEntities.LOGGING.getLogger('TP.ManifestForTrainPlayer')
+        self.o2oLog = PatternScriptEntities.LOGGING.getLogger('TP.ManifestForTrainPlayer')
 
         return
 
@@ -111,32 +111,30 @@ class ManifestForTrainPlayer(jmri.jmrit.automat.AbstractAutomaton):
 
         startTime = time.time()
 
-        if PatternScriptEntities.tpDirectoryExists():
+        if not PatternScriptEntities.tpDirectoryExists():
+            self.o2oLog.warning('TrainPlayer Reports directory not found')
+            self.o2oLog.warning('TrainPlayer manifest export did not complete')
 
-            self.tpLog.debug('ModelWorkEvents.ConvertJmriManifest')
+            return False
 
-            o2o = ModelWorkEvents.ConvertJmriManifest(self.train)
-            o2o.getJmriManifest()
-            o2o.convertHeader()
-            o2o.convertBody()
-            o2oWorkEvents = o2o.geto2oWorkEvents()
-            PatternScriptEntities.writeWorkEvents(o2oWorkEvents)
-        # Common post processor for ModelWorkEvents.ConvertPtMergedForm.o2oButton and BuiltTrainExport.ManifestForTrainPlayer.handle
-            o2o = ModelWorkEvents.o2oWorkEvents()
-            o2o.getWorkEvents()
-            o2o.o2oHeader()
-            o2o.o2oLocations()
-            o2o.saveList()
+        self.o2oLog.debug('ModelWorkEvents.jmriManifestConversion')
 
-            self.tpLog.info('Export JMRI manifest to TrainPlyer: ' + self.train.getName())
-        else:
-            self.tpLog.warning('TrainPlayer Reports directory not found')
-            self.tpLog.warning('TrainPlayer manifest export did not complete')
+        o2o = ModelWorkEvents.jmriManifestConversion(self.train)
+        o2o.jmriManifestGetter()
+        o2o.convertHeader()
+        o2o.convertBody()
+        o2oWorkEvents = o2o.geto2oWorkEvents()
+    # Common post processor for ModelWorkEvents.ConvertPtMergedForm.o2oButton and BuiltTrainExport.ManifestForTrainPlayer.handle
+        o2o = ModelWorkEvents.o2oWorkEvents(o2oWorkEvents)
+        o2o.o2oHeader()
+        o2o.o2oLocations()
+        o2o.saveList()
 
+        self.o2oLog.info('Export JMRI manifest to TrainPlyer: ' + self.train.getName())
 
-        self.tpLog.info('Export to TrainPlayer script location: ' + PLUGIN_ROOT)
+        self.o2oLog.info('Export to TrainPlayer script location: ' + PLUGIN_ROOT)
         runTime = time.time() - startTime
-        self.tpLog.info('Manifest export (sec): ' + str(round(runTime, 4)))
+        self.o2oLog.info('Manifest export (sec): ' + str(round(runTime, 4)))
         print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
         print('Manifest export (sec): ' + str(round(runTime, 4)))
 

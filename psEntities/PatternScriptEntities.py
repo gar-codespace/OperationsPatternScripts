@@ -155,16 +155,16 @@ def tpDirectoryExists():
         print('TrainPlayer Reports destination directory not found')
         return
 
-def writeWorkEvents(psWorkEvents):
-    """Writes the o2o work events file"""
-
-    workEventName = BUNDLE['o2o Work Events']
-
-    jsonFileName = PROFILE_PATH + 'operations\\jsonManifests\\' + workEventName + '.json'
-    jsonFile = dumpJson(psWorkEvents)
-    genericWriteReport(jsonFileName, jsonFile)
-
-    return
+# def writeWorkEvents(psWorkEvents):
+#     """Writes the o2o work events file"""
+#
+#     workEventName = BUNDLE['o2o Work Events']
+#
+#     jsonFileName = PROFILE_PATH + 'operations\\jsonManifests\\' + workEventName + '.json'
+#     jsonFile = dumpJson(psWorkEvents)
+#     genericWriteReport(jsonFileName, jsonFile)
+#
+#     return
 
 def psLocale():
     """Dealers choice, both work"""
