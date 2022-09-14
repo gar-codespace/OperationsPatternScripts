@@ -42,6 +42,26 @@ LMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.LocationMa
 
 _psLog = LOGGING.getLogger('PS.PE.PatternScriptEntities')
 
+def getShortLoadType(car):
+    """Replaces empty and load with E, L, or O for occupied
+        Used by:
+        ViewEntities.modifyTrackPattern
+        ModelWorkEvent.o2oSwitchListConversion.parsePtRs
+        ModelWorkEvents.jmriManifestConversion.parseRS
+        JMRI defines custome load type as empty but default load type as Empty, hence the 'or' statement
+        Load, Empty, Occupied and Unknown are translated.
+        """
+
+    rs = CM.getByRoadAndNumber(car['Road'], car['Number'])
+    lt =  BUNDLE['unknown'].upper()[0]
+    if rs.getLoadType() == 'empty' or rs.getLoadType() == 'Empty':
+        lt = BUNDLE['empty'].upper()[0]
+    if rs.getLoadType() == 'load' or rs.getLoadType() == 'Load':
+        lt = BUNDLE['load'].upper()[0]
+    if rs.isCaboose() or rs.isPassenger():
+        lt = BUNDLE['occupied'].upper()[0]
+
+    return lt
 
 class Logger:
 
@@ -553,19 +573,3 @@ def translateMessageFormat():
     rosetta[' '] = ' '
 
     return rosetta
-
-
-# def readJsonWorkEventList(workEventName):
-#     """Used by:
-#         patternButton???
-#         Model.writeTrackPatternCsv
-#         ModelSetCarsForm.setRsToTrack
-#         """
-#
-#     reportPath = PROFILE_PATH + 'operations\\jsonManifests\\' + workEventName + '.json'
-#
-#     jsonEventList = genericReadReport(reportPath)
-#
-#     textWorkEventList = loadJson(jsonEventList)
-#
-#     return textWorkEventList

@@ -63,5 +63,9 @@
   "Make Work" : "Make Work",
   "Report Work" : "Report Work",
   "PUSO" : "PUSO",
+  "occupied" : "occupied",
+  "unknown" : "unknown",
+  "load" : "load",
+  "empty" : "empty",
   "version": 20220101
 }

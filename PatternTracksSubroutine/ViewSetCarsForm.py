@@ -235,6 +235,7 @@ class MakeSetCarsEqptRows():
         self.setCarsFormData = setCarsFormData
         self.textBoxEntry = []
 
+        self.rosetta = PatternScriptEntities.translateMessageFormat()
         self.carColor = PatternScriptEntities.getCarColor()
         self.locoColor = PatternScriptEntities.getLocoColor()
         self.alertColor = PatternScriptEntities.getAlertColor()
@@ -261,10 +262,9 @@ class MakeSetCarsEqptRows():
             for item in PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat():
                 if 'Tab' in item:
                     continue
-                label = PatternScriptEntities.JAVX_SWING.JLabel(loco[item])
-                box = makeSwingBox(self.reportWidth[item] \
-                        * self.panelWidth, self.panelHeight \
-                        )
+                translatedItem = self.rosetta[item]
+                label = PatternScriptEntities.JAVX_SWING.JLabel(loco[translatedItem])
+                box = makeSwingBox(self.reportWidth[translatedItem] * self.panelWidth, self.panelHeight)
                 box.add(label)
                 combinedInputLine.add(box)
 
@@ -294,14 +294,12 @@ class MakeSetCarsEqptRows():
             for item in PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
                 if 'Tab' in item:
                     continue
+                translatedItem = self.rosetta[item]
                 try:
-                    label = PatternScriptEntities.JAVX_SWING.JLabel(car[item])
-                except:
-                    # The hazardous field is a boolean so work around it
+                    label = PatternScriptEntities.JAVX_SWING.JLabel(car[translatedItem])
+                except: # The hazardous field is a boolean so work around it
                     label = PatternScriptEntities.JAVX_SWING.JLabel(PatternScriptEntities.BUNDLE['Hazardous'])
-                box = makeSwingBox(self.reportWidth[item] \
-                        * self.panelWidth, self.panelHeight \
-                        )
+                box = makeSwingBox(self.reportWidth[translatedItem] * self.panelWidth, self.panelHeight)
                 box.add(label)
                 combinedInputLine.add(box)
             combinedInputLine.add(PatternScriptEntities.JAVX_SWING.Box.createHorizontalGlue())

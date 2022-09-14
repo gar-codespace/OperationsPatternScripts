@@ -1,10 +1,6 @@
 
 Todo:
   Maybe use java io or os.path.join() to make all paths for better OS compatibility
-  Retest utf-8 compatability.
-  Verify all fields in Manifest Print Options still works. Also test with another language.
-  Why can load type be empty or Empty? Update ViewEntities.getShortLoadType
-  Look for duplication for resetting load type as O, E, L. PatternScriptEntities.getShortLoadType and ???
   ModelWorkEvents.*.parsePsWorkEventRs and ModelWorkEvents.*.parseRS do the same things in a different way, can they be merged?
   Tighten up the except part of all try/except
   TP import not bullet proof
@@ -15,87 +11,89 @@ Comments:
 
 Tested Items:
   Plugin
-    Handle multiple versions OK
-    Handles font size change OK
+    Handle multiple versions OK.
+    Handles font size change OK.
     Works if two instances of PanelPro are open
-    Test for file write locations OK
-    All Set Cars windows close when Pattern Scripts window is closed OK
-    PatternConfig.json version check OK
+    Test for file write locations OK.
+    All Set Cars windows close when Pattern Scripts window is closed OK.
+    PatternConfig.json version check OK.
     Moved ENCODING value into the config file
     Move config file master copy into psEntities to shield it from accidental edit
     Bad edits of config file protected as much as possible. CBB
     Pattern Scripts plugin hardened against errors  more or less. CBB
-    Plugin restarts OK
-    On defective config file, plugin replaces the defective file with the master copy OK
-    Plugin switches language OK
+    Plugin restarts OK.
+    On defective config file, plugin replaces the defective file with the master copy OK.
+    Plugin switches language OK.
     All SI items set to false works OK.
-    SI set to TP only works OK
+    SI set to TP only works OK.
+    Handles JMRI load type Empty or empty OK.
+    PatternScriptEntities.getShortLoadType works and translates OK.
 
   Reports
-    Test with really long location and spur names OK
-    Display load type as L E or O in reports OK
-    Kernel Size is displaying in reports OK
+    Test with really long location and spur names OK.
+    Display load type as L E or O in reports OK.
+    Kernel Size is displaying in reports OK.
     [Hold] changed to ['Current Track Name'] for reports
-    Ignore Track Length works with yard tracks OK
-    formatText formats ascii OK
-    formatText() works with utf-8 OK
-    Create JSON header OK
-    Create JSON body OK
-    Append JSON switchlist OK
-    Write JMRI location list to trainPlayer OK
-    Write JMRI workEvent list to TrainPlayer OK
-    Report Title - Pattern Report edits OK
-    Report Title - Set Cars edits OK
-    Report Title - TrainPlayer edits OK
-    CSV pattern and list written OK
-    Locos in report follow jmri.jmrit.operations.setup.Setup.getDropEngineMessageFormat OK
-    Cars in report follow jmri.jmrit.operations.setup.Setup.getLocalCarMessageFormat OK
-    Reports ignore Tab,Tab2, Tab3 OK
+    Ignore Track Length works with yard tracks OK.
+    formatText formats ascii OK.
+    formatText() works with utf-8 OK.
+    Create JSON header OK.
+    Create JSON body OK.
+    Append JSON switchlist OK.
+    Write JMRI location list to trainPlayer OK.
+    Write JMRI workEvent list to TrainPlayer OK.
+    Report Title - Pattern Report edits OK.
+    Report Title - Set Cars edits OK.
+    Report Title - TrainPlayer edits OK.
+    CSV pattern and list written OK.
+    Locos in report follow jmri.jmrit.operations.setup.Setup.getDropEngineMessageFormat OK.
+    Cars in report follow jmri.jmrit.operations.setup.Setup.getLocalCarMessageFormat OK.
+    Reports ignore Tab,Tab2, Tab3 OK.
 
   Actions
     _trackNameClickedOn moved to PatternScriptEntities.TRACK_NAME_CLICKED_ON
-    Caboose and passenger move OK
-    Caboose and Passenger car types are loaded as O for Occupied OK
+    Caboose and passenger move OK.
+    Caboose and Passenger car types are loaded as O for Occupied OK.
     When setting to a spur the reserved column for the spur shows an entry, as it should when setting a destination
-    RWE and RWL seems to work ok
-    Default load/empty toggling ok
-    Car move count advances when set into spur only OK
-    Schedule hit count advances OK
-    Set to spur ignores the cars load, but schedule sets it OK
+    RWE and RWL seems to work OK.
+    Default load/empty toggling OK.
+    Car move count advances when set into spur only OK.
+    Schedule hit count advances OK.
+    Set to spur ignores the cars load, but schedule sets it OK.
     Ignore Track Length works with schedules
-    Set cars to spur removes FD OK
-    Toggle AS Apply schedule in config file works OK
+    Set cars to spur removes FD OK.
+    Toggle AS Apply schedule in config file works OK.
 
   Language
-    Language changes OK
+    Language changes OK.
     Language bundle sketched in, to be hardened against web errors
     Bundle added with French test case
     BUNDLE calls placed in 'View' methods only as much as possible
-    Bundle creates new plugin and help page translations OK
+    Bundle creates new plugin and help page translations OK.
     DYI version of concurrency seems to work OK.
 
   o2o
     Add a listener to monitor if a new train is created or deleted, builtTrain listeners updated accordingly
-    New JMRI Railroad saveing the new xml OK
-    TP import creates the track length OK
+    New JMRI Railroad saveing the new xml OK.
+    TP import creates the track length OK.
     Adding script to run on train built for TP export is not needed, but still can be done.
     TrainPlayer subroutine sketched in, to be expanded
     TrainPlayer integration harden with train built listeners
-    TP Exports unicode OK
-    TrainPlayer support implements OK
-    ExportToTrainPlayer.py works as module OK
-    ExportToTrainPlayer.py works as script OK
+    TP Exports unicode OK.
+    TrainPlayer support implements OK.
+    ExportToTrainPlayer.py works as module OK.
+    ExportToTrainPlayer.py works as script OK.
     When run as a stand alone script, ManifestForTrainPlayer does not read config file, which is correct
 
 Catches Items:
-  Catches pattern report button press no tracks selected OK
-  Catches set cars button press no tracks selected OK
-  Catches user edit of location at location combo box OK
+  Catches pattern report button press no tracks selected OK.
+  Catches set cars button press no tracks selected OK.
+  Catches user edit of location at location combo box OK.
   Catches and ignores user edit of log display
-  Catches on the fly user edit of track names for pattern report OK
-  Catches on the fly user edit of track names for set cars OK
-  Catches empty boxes added to jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat() OK
-  Catches invalid track typed into set cars box OK
+  Catches on the fly user edit of track names for pattern report OK.
+  Catches on the fly user edit of track names for set cars OK.
+  Catches empty boxes added to jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat() OK.
+  Catches invalid track typed into set cars box OK.
   Catches on the fly edit of RS name or road
   Catches on the fly user corruption of config file more or less. Soft landing. CBB
   KeyError when editing config file crashed plugin, bummer. Restart button bale out.

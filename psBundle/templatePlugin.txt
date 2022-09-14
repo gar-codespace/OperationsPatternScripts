@@ -61,3 +61,7 @@ Window Help...
 Work Event List for TrainPlayer©
 Work Location:
 Yard tracks only
+occupied
+unknown
+load
+empty

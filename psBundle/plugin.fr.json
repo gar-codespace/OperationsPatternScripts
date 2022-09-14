@@ -16,6 +16,7 @@
   "Hold": "Tenir", 
   "Ignore track length": "Ignorer la longueur de la piste", 
   "Import TrainPlayer\u00a9 Railroad": "Importer le chemin de fer TrainPlayer\u00a9", 
+  "Location Comment": "Commentaire sur l'emplacement", 
   "Location:": "Emplacement :", 
   "Locomotives at": "Locomotives \u00e0", 
   "Make Work": "Faire du travail", 
@@ -24,6 +25,7 @@
   "No final destination": "Aucune destination finale", 
   "On Train": "En train", 
   "Operations Folder": "Dossier des op\u00e9rations", 
+  "Pattern Report for Tracks": "Rapport sur les motifs pour les pistes", 
   "Pattern Scripts": "Scripts de motifs", 
   "Report Totals for Cars:": "Rapport sur les totaux pour les voitures :", 
   "Report Work": "Rapport de travail", 
@@ -58,7 +60,11 @@
   "Work Location:": "Lieu de travail :", 
   "Yard tracks only": "Voies de triage uniquement", 
   "at": "\u00e0 l'adresse", 
+  "empty": "vide", 
+  "load": "charge", 
   "o2o Subroutine": "o2o Sous-routine", 
   "o2o Work Events": "\u00c9v\u00e9nements o2o Work", 
+  "occupied": "occup\u00e9", 
+  "unknown": "inconnu", 
   "version": 20220101
 }

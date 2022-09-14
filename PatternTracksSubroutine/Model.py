@@ -26,6 +26,22 @@ def trackPatternButton():
 
     return
 
+def setRsButton():
+    """Mini controller when the Set cars button is pressed
+        Creates a new o2o Work Events.json file
+        Used by:
+        Controller.StartUp.setRsButton
+        """
+
+    reportTitle = PatternScriptEntities.BUNDLE['o2o Work Events']
+    reportPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + reportTitle + '.json'
+
+    newHeader = ModelEntities.makeGenericHeader()
+    newHeaderReport = PatternScriptEntities.dumpJson(newHeader)
+    PatternScriptEntities.genericWriteReport(reportPath, newHeaderReport)
+
+    return
+
 def updatePatternLocation(selectedItem=None):
     """Catches user edits of locations
         Used by:

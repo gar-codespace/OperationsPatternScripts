@@ -140,8 +140,7 @@ class StartUp:
 
         View.setRsButton()
     # Reset the o2o switchlist
-        newHeader = ModelEntities.makeGenericHeader()
-        PatternScriptEntities.writeWorkEvents(newHeader)
+        Model.setRsButton()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

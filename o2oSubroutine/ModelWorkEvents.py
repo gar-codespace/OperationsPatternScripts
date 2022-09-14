@@ -59,10 +59,9 @@ class o2oSwitchListConversion:
         parsedRS['Number'] = rs['Number']
         parsedRS['Type'] = rs['Type']
         try:
-            parsedRS['Load Type'] = ModelEntities.getLoadType(rs['Type'], rs['Load'])
+            parsedRS['Load Type'] = PatternScriptEntities.getShortLoadType(rs)
             parsedRS['Load'] = rs['Load']
         except:
-            parsedRS['Load Type'] = 'O'
             parsedRS['Load'] = rs['Model']
         parsedRS['Location'] = rs['Location']
         parsedRS['Track'] = rs['Track']
@@ -172,7 +171,7 @@ class jmriManifestConversion:
         parsedRS['Road'] = rs['road']
         parsedRS['Number'] = rs['number']
         parsedRS['Type'] = rs['carType']
-        parsedRS['Load Type'] = ModelEntities.getLoadType(rs['carType'], rs['load'])
+        parsedRS['Load Type'] = PatternScriptEntities.getShortLoadType(rs)
         try:
             parsedRS['Load'] = rs['load']
         except:
