@@ -42,26 +42,6 @@ LMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.LocationMa
 
 _psLog = LOGGING.getLogger('PS.PE.PatternScriptEntities')
 
-def getShortLoadType(car):
-    """Replaces empty and load with E, L, or O for occupied
-        Used by:
-        ViewEntities.modifyTrackPattern
-        ModelWorkEvent.o2oSwitchListConversion.parsePtRs
-        ModelWorkEvents.jmriManifestConversion.parseRS
-        JMRI defines custome load type as empty but default load type as Empty, hence the 'or' statement
-        Load, Empty, Occupied and Unknown are translated.
-        """
-
-    rs = CM.getByRoadAndNumber(car['Road'], car['Number'])
-    lt =  BUNDLE['unknown'].upper()[0]
-    if rs.getLoadType() == 'empty' or rs.getLoadType() == 'Empty':
-        lt = BUNDLE['empty'].upper()[0]
-    if rs.getLoadType() == 'load' or rs.getLoadType() == 'Load':
-        lt = BUNDLE['load'].upper()[0]
-    if rs.isCaboose() or rs.isPassenger():
-        lt = BUNDLE['occupied'].upper()[0]
-
-    return lt
 
 class Logger:
 
@@ -162,30 +142,6 @@ class validateStubFile:
         return
 
 
-def tpDirectoryExists():
-
-    psLog = LOGGING.getLogger('PS.PE.PatternScriptEntities.tpDirectoryExists')
-
-    tpDirectory = JMRI.util.FileUtil.getHomePath() + 'AppData\\Roaming\\TrainPlayer\\Reports\\'
-    if JAVA_IO.File(tpDirectory).isDirectory():
-        psLog.info('TrainPlayer destination directory OK')
-        return True
-    else:
-        psLog.warning('TrainPlayer Reports destination directory not found')
-        print('TrainPlayer Reports destination directory not found')
-        return
-
-# def writeWorkEvents(psWorkEvents):
-#     """Writes the o2o work events file"""
-#
-#     workEventName = BUNDLE['o2o Work Events']
-#
-#     jsonFileName = PROFILE_PATH + 'operations\\jsonManifests\\' + workEventName + '.json'
-#     jsonFile = dumpJson(psWorkEvents)
-#     genericWriteReport(jsonFileName, jsonFile)
-#
-#     return
-
 def psLocale():
     """Dealers choice, both work"""
 
@@ -214,6 +170,27 @@ def makeReportItemWidthMatrix():
         reportMatrix[aKey] = aValue
 
     return reportMatrix
+
+def getShortLoadType(car):
+    """Replaces empty and load with E, L, or O for occupied
+        Used by:
+        ViewEntities.modifyTrackPattern
+        ModelWorkEvent.o2oSwitchListConversion.parsePtRs
+        ModelWorkEvents.jmriManifestConversion.parseRS
+        JMRI defines custome load type as empty but default load type as Empty, hence the 'or' statement
+        Load, Empty, Occupied and Unknown are translated.
+        """
+
+    rs = CM.getByRoadAndNumber(car['Road'], car['Number'])
+    lt =  BUNDLE['unknown'].upper()[0]
+    if rs.getLoadType() == 'empty' or rs.getLoadType() == 'Empty':
+        lt = BUNDLE['empty'].upper()[0]
+    if rs.getLoadType() == 'load' or rs.getLoadType() == 'Load':
+        lt = BUNDLE['load'].upper()[0]
+    if rs.isCaboose() or rs.isPassenger():
+        lt = BUNDLE['occupied'].upper()[0]
+
+    return lt
 
 def occuranceTally(listOfOccurances):
     """Tally the occurances of a word in a list and return a dictionary
@@ -359,6 +336,19 @@ def validateFileDestinationDirestories():
 
     return
 
+def tpDirectoryExists():
+
+    psLog = LOGGING.getLogger('PS.PE.PatternScriptEntities.tpDirectoryExists')
+
+    tpDirectory = JMRI.util.FileUtil.getHomePath() + 'AppData\\Roaming\\TrainPlayer\\Reports\\'
+    if JAVA_IO.File(tpDirectory).isDirectory():
+        psLog.info('TrainPlayer destination directory OK')
+        return True
+    else:
+        psLog.warning('TrainPlayer Reports destination directory not found')
+        print('TrainPlayer Reports destination directory not found')
+        return
+
 def validateConfigFileVersion():
     """Checks that the config file is the current version"""
 
@@ -372,14 +362,6 @@ def validateConfigFileVersion():
     else:
         _psLog.warning('PatternConfig.json version mismatch')
         return False
-
-def backupConfigFile():
-
-    copyFrom = JAVA_IO.File(PROFILE_PATH + 'operations\\PatternConfig.json')
-    copyTo = JAVA_IO.File(PROFILE_PATH + 'operations\\PatternConfig.json.bak')
-    JMRI.util.FileUtil.copy(copyFrom, copyTo)
-
-    return
 
 def restoreConfigFile():
     """Depricate in v3"""

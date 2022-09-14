@@ -71,24 +71,3 @@ def getSetToLocationAndTrack(locationName, trackName):
     except:
         print('Not found: ', locationName, trackName)
         return None, None
-
-
-
-
-# def getLoadType(type, load):
-#     """Used by:
-#         ModelWorkEvents.ConvertPtMergedForm.parsePsWorkEventRs
-#         ModelWorkEvents.ConvertJmriManifest.parseRS
-#         """
-#
-#     tc = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarLoads
-#     TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
-#
-#     lt = 'O'
-#     loadType = TCM.getLoadType(type, load)
-#     if loadType == 'empty':
-#         lt = 'E'
-#     if loadType == 'load':
-#         lt = 'L'
-#
-#     return lt

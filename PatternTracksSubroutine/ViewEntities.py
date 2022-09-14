@@ -306,24 +306,6 @@ def loopThroughRs(type, rsAttribs):
 
     return switchListRow
 
-# def getShortLoadType(car):
-#     """Replaces empty and load with E, L, or O for occupied
-#         Used by:
-#         ViewEntities.modifyTrackPattern
-#         JMRI defines custome load type as empty but default load type as Empty, hence the 'or' statement
-#         """
-#
-#     rs = PatternScriptEntities.CM.getByRoadAndNumber(car['Road'], car['Number'])
-#     lt = 'U'
-#     if rs.getLoadType() == 'empty' or rs.getLoadType() == 'Empty':
-#         lt = 'E'
-#     if rs.getLoadType() == 'load' or rs.getLoadType() == 'Load':
-#         lt = 'L'
-#     if rs.isCaboose() or rs.isPassenger():
-#         lt = 'O'
-#
-#     return lt
-
 def getStandins(car, standins):
     """Replaces null destination and fd with the standin from the config file
         Used by:
