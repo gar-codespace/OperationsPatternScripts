@@ -182,12 +182,18 @@ def getShortLoadType(car):
         Load, Empty, Occupied and Unknown are translated.
         """
 
-    rs = CM.getByRoadAndNumber(car['Road'], car['Number'])
+    try:
+        rs = CM.getByRoadAndNumber(car['Road'], car['Number']) # Pattern scripts nomenclature
+    except:
+        rs = CM.getByRoadAndNumber(car['road'], car['number']) # JMRI nomenclature
+
     lt =  BUNDLE['unknown'].upper()[0]
     if rs.getLoadType() == 'empty' or rs.getLoadType() == 'Empty':
         lt = BUNDLE['empty'].upper()[0]
+
     if rs.getLoadType() == 'load' or rs.getLoadType() == 'Load':
         lt = BUNDLE['load'].upper()[0]
+        
     if rs.isCaboose() or rs.isPassenger():
         lt = BUNDLE['occupied'].upper()[0]
 
