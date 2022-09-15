@@ -12,17 +12,21 @@ SCRIPT_REV = 20220101
 _psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.ViewSetCarsForm')
 
 def switchListButton(textBoxEntry):
-    """Mini controller when the Track Pattern Report button is pressed.
+    """Mini controller when the Switch List button is pressed.
         Formats and displays the Switch List for Track report.
         Used by:
         ControllerSetCarsForm.CreateSetCarsFormGui.switchListButton
         """
 
     _psLog.debug('View.trackPatternButton')
+
+# Boilerplate
+    reportName = PatternScriptEntities.BUNDLE['Switch List for Track']
+    fileName = reportName + '.json'
+    targetDir = PatternScriptEntities.PROFILE_PATH + '\\operations\\jsonManifests'
+    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
 # Get the switch list
-    switchListName = PatternScriptEntities.BUNDLE['Switch List for Track']
-    switchListPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + switchListName + '.json'
-    switchList = PatternScriptEntities.genericReadReport(switchListPath)
+    switchList = PatternScriptEntities.genericReadReport(targetPath)
     switchList = PatternScriptEntities.loadJson(switchList)
 # Replace Set To with a track name, reformat for display
     userInputList = ViewEntities.makeUserInputList(textBoxEntry)
@@ -32,10 +36,12 @@ def switchListButton(textBoxEntry):
     reportHeader = ViewEntities.makeTextReportHeader(switchList)
     reportLocations = ViewEntities.makeTextReportLocations(switchList, trackTotals=False)
 # Save formatted data
-    switchListPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\' + switchListName + '.txt'
-    PatternScriptEntities.genericWriteReport(switchListPath, reportHeader + reportLocations)
+    targetDir = PatternScriptEntities.PROFILE_PATH + '\\operations\\patternReports'
+    fileName = reportName + '.txt'
+    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
+    PatternScriptEntities.genericWriteReport(targetPath, reportHeader + reportLocations)
 # Display formatted data
-    PatternScriptEntities.genericDisplayReport(switchListPath)
+    PatternScriptEntities.genericDisplayReport(targetPath)
 
     return
 

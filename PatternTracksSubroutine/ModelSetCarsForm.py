@@ -18,11 +18,13 @@ def writeToJson(setCarsForm):
         ControllerSetCarsForm.CreateSetCarsFormGui.setRsButton
         """
 
-    switchListName = PatternScriptEntities.BUNDLE['Switch List for Track']
-    switchListPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + switchListName + '.json'
+    reportTitle = PatternScriptEntities.BUNDLE['Switch List for Track']
+    fileName = reportTitle + '.json'
+    targetDir = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests'
+    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
 
     switchListReport = PatternScriptEntities.dumpJson(setCarsForm)
-    PatternScriptEntities.genericWriteReport(switchListPath, switchListReport)
+    PatternScriptEntities.genericWriteReport(targetPath, switchListReport)
 
     return
 
@@ -35,9 +37,12 @@ def setRsButton(textBoxEntry):
 
     _psLog.debug('ModelSetCarsForm.setRsToTrack')
 
-    switchListName = PatternScriptEntities.BUNDLE['Switch List for Track']
-    switchListPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + switchListName + '.json'
-    switchList = PatternScriptEntities.genericReadReport(switchListPath)
+    reportTitle = PatternScriptEntities.BUNDLE['Switch List for Track']
+    fileName = reportTitle + '.json'
+    targetDir = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests'
+    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
+
+    switchList = PatternScriptEntities.genericReadReport(targetPath)
     switchList = PatternScriptEntities.loadJson(switchList)
 
     moveRollingStock(switchList, textBoxEntry)
@@ -49,10 +54,12 @@ def o2oButton(ptSetCarsForm):
         Used by:
         ControllerptSetCarsForm.CreateptSetCarsFormGui.o2oButton
         """
+    reportTitle = PatternScriptEntities.BUNDLE['o2o Work Events']
+    fileName = reportTitle + '.json'
+    targetDir = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests'
+    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
 # Load the existing o2o switch list
-    o2oSwitchListName = PatternScriptEntities.BUNDLE['o2o Work Events']
-    o2oSwitchListPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + o2oSwitchListName + '.json'
-    o2oSwitchList = PatternScriptEntities.genericReadReport(o2oSwitchListPath)
+    o2oSwitchList = PatternScriptEntities.genericReadReport(targetPath)
     o2oSwitchList = PatternScriptEntities.loadJson(o2oSwitchList)
 # Append cars and locos from ptSetCarsForm
     o2oSwitchListCars = o2oSwitchList['locations'][0]['tracks'][0]['cars']
@@ -62,9 +69,9 @@ def o2oButton(ptSetCarsForm):
     o2oSwitchListLocos = o2oSwitchList['locations'][0]['tracks'][0]['locos']
     ptSetCarsFormLocos = ptSetCarsForm['locations'][0]['tracks'][0]['locos']
     o2oSwitchList['locations'][0]['tracks'][0]['locos'] = o2oSwitchListLocos + ptSetCarsFormLocos
-
+# Write the appended file
     o2oSwitchList = PatternScriptEntities.dumpJson(o2oSwitchList)
-    PatternScriptEntities.genericWriteReport(o2oSwitchListPath, o2oSwitchList)
+    PatternScriptEntities.genericWriteReport(targetPath, o2oSwitchList)
 
     return
 

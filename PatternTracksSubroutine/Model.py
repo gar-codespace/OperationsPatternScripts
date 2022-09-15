@@ -17,12 +17,14 @@ def trackPatternButton():
         """
 
     reportTitle = PatternScriptEntities.BUNDLE['Track Pattern Report']
-    trackPatternPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + reportTitle + '.json'
+    fileName = reportTitle + '.json'
+    targetDir = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests'
+    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
 
     trackPattern = ModelEntities.makeTrackPattern()
     trackPatternReport = ModelEntities.makeTrackPatternReport(trackPattern)
     trackPatternReport = PatternScriptEntities.dumpJson(trackPatternReport)
-    PatternScriptEntities.genericWriteReport(trackPatternPath, trackPatternReport)
+    PatternScriptEntities.genericWriteReport(targetPath, trackPatternReport)
 
     return
 
@@ -34,11 +36,13 @@ def setRsButton():
         """
 
     reportTitle = PatternScriptEntities.BUNDLE['o2o Work Events']
-    reportPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + reportTitle + '.json'
+    fileName = reportTitle + '.json'
+    targetDir = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests'
+    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
 
     newHeader = ModelEntities.makeGenericHeader()
     newHeaderReport = PatternScriptEntities.dumpJson(newHeader)
-    PatternScriptEntities.genericWriteReport(reportPath, newHeaderReport)
+    PatternScriptEntities.genericWriteReport(targetPath, newHeaderReport)
 
     return
 
@@ -163,13 +167,17 @@ def writeTrackPatternCsv(trackPatternName):
 
     _psLog.debug('Model.writeTrackPatternCsv')
 #  Get json data
-    trackPatternPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + trackPatternName + '.json'
-    trackPattern = PatternScriptEntities.genericReadReport(trackPatternPath)
+    targetDir = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests'
+    fileName = trackPatternName + '.json'
+    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
+    trackPattern = PatternScriptEntities.genericReadReport(targetPath)
     trackPattern = PatternScriptEntities.loadJson(trackPattern)
 # Process json data into CSV
     trackPatternCsv = ModelEntities.makeTrackPatternCsv(trackPattern)
 # Write CSV data
-    csvPath = PatternScriptEntities.PROFILE_PATH + 'operations\\csvSwitchLists\\' + trackPatternName + '.csv'
-    PatternScriptEntities.genericWriteReport(csvPath, trackPatternCsv)
+    targetDir = PatternScriptEntities.PROFILE_PATH + 'operations\\csvSwitchLists\\'
+    fileName = trackPatternName + '.csv'
+    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
+    PatternScriptEntities.genericWriteReport(targetPath, trackPatternCsv)
 
     return

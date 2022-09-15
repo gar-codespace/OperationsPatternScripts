@@ -24,9 +24,12 @@ class o2oSwitchListConversion:
 
     def o2oSwitchListGetter(self):
 
-        o2oSwitchListName = PatternScriptEntities.BUNDLE['o2o Work Events']
-        o2oSwitchListPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + o2oSwitchListName + '.json'
-        o2oSwitchList = PatternScriptEntities.genericReadReport(o2oSwitchListPath)
+        reportName = PatternScriptEntities.BUNDLE['o2o Work Events']
+        fileName = reportName + '.json'
+        targetDir = PatternScriptEntities.PROFILE_PATH + '\\operations\\jsonManifests'
+        targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
+
+        o2oSwitchList = PatternScriptEntities.genericReadReport(targetPath)
         self.o2oSwitchList = PatternScriptEntities.loadJson(o2oSwitchList)
 
         return
@@ -110,8 +113,11 @@ class jmriManifestConversion:
         self.psLog.debug('jmriManifestGetter')
 
         reportName = self.builtTrain.getName()
-        jsonFileName = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\train-' + reportName + '.json'
-        workEventList = PatternScriptEntities.genericReadReport(jsonFileName)
+        fileName = 'train-' + reportName + '.json'
+        targetDir = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests'
+        targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
+
+        workEventList = PatternScriptEntities.genericReadReport(targetPath)
         self.jmriManifest = PatternScriptEntities.loadJson(workEventList)
 
         return
@@ -198,8 +204,12 @@ class o2oWorkEvents:
 
         self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.o2o.o2oWorkEvents')
 
-        jsonFileName = PatternScriptEntities.PROFILE_PATH + 'operations\\tpRollingStockData.json'
-        tpRollingStockData = PatternScriptEntities.genericReadReport(jsonFileName)
+        reportName = 'tpRollingStockData'
+        fileName = reportName + '.json'
+        targetDir = PatternScriptEntities.PROFILE_PATH + '\\operations'
+        targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
+
+        tpRollingStockData = PatternScriptEntities.genericReadReport(targetPath)
         self.tpRollingStockData = PatternScriptEntities.loadJson(tpRollingStockData)
 
         self.workEvents = workEvents
@@ -257,12 +267,16 @@ class o2oWorkEvents:
             load = rs['Load']
         except:
             load = rs['Model']
+        try: # Locos don't use load type
+            lt = rs['Load Type']
+        except:
+            lt = u'X'
 
         pu = rs['Location'] + ';' + rs['Track']
 
         so = rs['Destination'] + ';' + rs['Set_To']
 
-        return rs['PUSO'] + ',' + tpID + ',' + rs['Road'] + ',' + rs['Number'] + ',' + rs['Type'] + ',' + rs['Load Type'] + ',' + load + ',' + pu + ',' + so
+        return rs['PUSO'] + ',' + tpID + ',' + rs['Road'] + ',' + rs['Number'] + ',' + rs['Type'] + ',' + lt + ',' + load + ',' + pu + ',' + so
 
     def saveList(self):
 

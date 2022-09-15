@@ -17,8 +17,11 @@ class StandAloneLogging():
 
     def __init__(self):
 
-        logPath = PatternScriptEntities.PROFILE_PATH  + 'operations\\buildstatus\\BuiltTrainExportLog.txt'
-        self.logger = PatternScriptEntities.Logger(logPath)
+        fileName = 'BuiltTrainExportLog.txt'
+        targetDir = PatternScriptEntities.PROFILE_PATH  + '\\operations\\buildstatus'
+        targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
+
+        self.logger = PatternScriptEntities.Logger(targetPath)
         self.o2oLog = PatternScriptEntities.LOGGING.getLogger('TP.StandAlone')
 
         return

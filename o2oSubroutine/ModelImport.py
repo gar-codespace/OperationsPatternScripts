@@ -51,7 +51,10 @@ class TrainPlayerImporter:
         self.tpInventory = []
         self.okCounter = 0
 
-        self.rrFile = PatternScriptEntities.PROFILE_PATH + 'operations\\tpRailroadData.json'
+        reportName = 'tpRailroadData'
+        fileName = reportName + '.json'
+        targetDir = PatternScriptEntities.PROFILE_PATH + '\\operations'
+        self.rrFile = PatternScriptEntities.OS_Path.join(targetDir, fileName)
         self.rr = {}
 
         return

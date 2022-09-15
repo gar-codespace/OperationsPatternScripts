@@ -62,16 +62,20 @@ def getTpRailroadData():
     """Add error handling"""
 
     tpRailroad = []
-    reportPath = PatternScriptEntities.PROFILE_PATH + 'operations\\tpRailroadData.json'
+
+    reportName = 'tpRailroadData'
+    fileName = reportName + '.json'
+    targetDir = PatternScriptEntities.PROFILE_PATH + '\\operations'
+    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
 
     try:
-        PatternScriptEntities.JAVA_IO.File(reportPath).isFile()
+        PatternScriptEntities.JAVA_IO.File(targetPath).isFile()
         _psLog.info('tpRailroadData.json OK')
     except:
         _psLog.warning('tpRailroadData.json not found')
         return
 
-    report = PatternScriptEntities.genericReadReport(reportPath)
+    report = PatternScriptEntities.genericReadReport(targetPath)
     tpRailroad = PatternScriptEntities.loadJson(report)
 
     return tpRailroad
@@ -444,9 +448,14 @@ class NewRollingStock:
             name, number = ModelEntities.parseCarId(line[0])
             rsData[name + number] = line[7]
 
+
+        reportName = 'tpRollingStockData'
+        fileName = reportName + '.json'
+        targetDir = PatternScriptEntities.PROFILE_PATH + '\\operations'
+        targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
+
         formattedRsFile = PatternScriptEntities.dumpJson(rsData)
-        rsFile = PatternScriptEntities.PROFILE_PATH + 'operations\\tpRollingStockData.json'
-        PatternScriptEntities.genericWriteReport(rsFile, formattedRsFile)
+        PatternScriptEntities.genericWriteReport(targetPath, formattedRsFile)
 
         return
 

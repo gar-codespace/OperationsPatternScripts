@@ -1,6 +1,7 @@
 
 Todo:
   Maybe use java io or os.path.join() to make all paths for better OS compatibility
+  csv file not writting properly, Set_To not written
   ModelWorkEvents.*.parsePsWorkEventRs and ModelWorkEvents.*.parseRS do the same things in a different way, can they be merged?
   Tighten up the except part of all try/except
   TP import not bullet proof

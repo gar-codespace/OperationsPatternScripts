@@ -13,24 +13,27 @@ def getWorkEvents():
         ModelWorkEvents.o2oWorkEvents.getWorkEvents
         """
 
-    workEventName = PatternScriptEntities.BUNDLE['o2o Work Events']
-    jsonFileName = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + workEventName + '.json'
-    workEventList = PatternScriptEntities.genericReadReport(jsonFileName)
+    reportName = PatternScriptEntities.BUNDLE['o2o Work Events']
+    fileName = reportName + '.json'
+    targetDir = PatternScriptEntities.PROFILE_PATH + '\\operations\\jsonManifests'
+    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
+
+    workEventList = PatternScriptEntities.genericReadReport(targetPath)
     jsonFile = PatternScriptEntities.loadJson(workEventList)
 
     return jsonFile
 
 def getTpExport(fileName):
-    """Generic file getter
+    """Generic file getter, fileName includes .txt
         Used by:
         ModelImport.TrainPlayerImporter.getTpReportFiles
         """
 
-    fullPath = "AppData\\Roaming\\TrainPlayer\\Reports\\" + fileName
-    tpExportPath = PatternScriptEntities.JMRI.util.FileUtil.getHomePath() + fullPath
+    targetDir = PatternScriptEntities.JMRI.util.FileUtil.getHomePath() + '\\AppData\\Roaming\\TrainPlayer\\Reports'
+    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
 
-    if PatternScriptEntities.JAVA_IO.File(tpExportPath).isFile():
-        tpExport = PatternScriptEntities.genericReadReport(tpExportPath).split('\n')
+    if PatternScriptEntities.JAVA_IO.File(targetPath).isFile():
+        tpExport = PatternScriptEntities.genericReadReport(targetPath).split('\n')
         return tpExport
     else:
         return

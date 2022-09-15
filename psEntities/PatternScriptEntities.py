@@ -7,6 +7,7 @@ import jmri as JMRI
 import logging as LOGGING
 from java import io as JAVA_IO
 from HTMLParser import HTMLParser as HTML_PARSER
+from os import path as OS_Path
 
 import time
 from json import loads as jsonLoads, dumps as jsonDumps
@@ -403,9 +404,11 @@ def tryConfigFile():
 
 def getConfigFile():
 
-    configFilePath = PROFILE_PATH + 'operations\PatternConfig.json'
+    fileName = 'PatternConfig.json'
+    targetDir = PROFILE_PATH + '\\operations'
+    targetPath = OS_Path.join(targetDir, fileName)
 
-    return loadJson(genericReadReport(configFilePath))
+    return loadJson(genericReadReport(targetPath))
 
 def writeConfigFile(configFile):
 
@@ -417,12 +420,19 @@ def writeConfigFile(configFile):
 
 def writeNewConfigFile():
 
-    pcDirectory = PROFILE_PATH + 'operations\\'
-    JAVA_IO.File(pcDirectory).mkdir()
+    targetDir = PROFILE_PATH + 'operations\\'
+    JAVA_IO.File(targetDir).mkdir()
 
-    defaultConfigFilePath = PLUGIN_ROOT + '\psEntities\PatternConfig.json'
-    copyFrom = JAVA_IO.File(defaultConfigFilePath)
-    copyTo = JAVA_IO.File(PROFILE_PATH + 'operations\\PatternConfig.json')
+    fileName = 'PatternConfig.json'
+
+    targetDir = PLUGIN_ROOT + '\\psEntities'
+    targetPath = OS_Path.join(targetDir, fileName)
+    copyFrom = JAVA_IO.File(targetPath)
+
+    targetDir = PROFILE_PATH + '\\operations'
+    targetPath = OS_Path.join(targetDir, fileName)
+    copyTo = JAVA_IO.File(targetPath)
+
     JMRI.util.FileUtil.copy(copyFrom, copyTo)
 
     return
@@ -443,8 +453,10 @@ def makePatternLog():
     loggingIndex = logIndex()
     logLevel = loggingIndex[buildReportLevel]
 
-    logFileLocation = PROFILE_PATH + 'operations\\buildstatus\\PatternScriptsLog.txt'
-    patternLogFile = genericReadReport(logFileLocation)
+    fileName = 'PatternScriptsLog.txt'
+    targetDir = PROFILE_PATH + 'operations\\buildstatus'
+    targetPath = OS_Path.join(targetDir, fileName)
+    patternLogFile = genericReadReport(targetPath)
     for thisLine in patternLogFile.splitlines():
 
         if (loggingIndex['9'] in thisLine and int(buildReportLevel) > 0): # critical

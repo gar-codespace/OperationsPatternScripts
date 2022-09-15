@@ -53,21 +53,25 @@ def trackPatternButton():
         """
 
     _psLog.debug('View.trackPatternButton')
-
+# Boilerplate
+    reportName = PatternScriptEntities.BUNDLE['Track Pattern Report']
+    fileName = reportName + '.json'
+    targetDir = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests'
+    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
 # Get the report
-    reportTitle = PatternScriptEntities.BUNDLE['Track Pattern Report']
-    trackPatternPath = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests\\' + reportTitle + '.json'
-    trackPattern = PatternScriptEntities.genericReadReport(trackPatternPath)
+    trackPattern = PatternScriptEntities.genericReadReport(targetPath)
     trackPattern = PatternScriptEntities.loadJson(trackPattern)
 # Modify the report for display
     trackPattern = ViewEntities.modifyTrackPattern(trackPattern)
     reportHeader = ViewEntities.makeTextReportHeader(trackPattern)
     reportLocations = ViewEntities.makeTextReportLocations(trackPattern, trackTotals=True)
 # Save the modified report
-    trackPatternPath = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports\\' + reportTitle + '.txt'
-    PatternScriptEntities.genericWriteReport(trackPatternPath, reportHeader + reportLocations)
+    targetDir = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports'
+    fileName = reportName + '.txt'
+    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
+    PatternScriptEntities.genericWriteReport(targetPath, reportHeader + reportLocations)
 # Display the modified report
-    PatternScriptEntities.genericDisplayReport(trackPatternPath)
+    PatternScriptEntities.genericDisplayReport(targetPath)
 
     return
 
