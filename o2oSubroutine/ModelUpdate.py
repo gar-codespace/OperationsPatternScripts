@@ -3,7 +3,6 @@
 
 from psEntities import PatternScriptEntities
 from o2oSubroutine import ModelNew
-from o2oSubroutine import ModelEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelUpdate'
 SCRIPT_REV = 20220101

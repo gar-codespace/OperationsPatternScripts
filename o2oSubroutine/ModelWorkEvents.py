@@ -2,7 +2,6 @@
 # © 2021, 2022 Greg Ritacco
 
 from psEntities import PatternScriptEntities
-from o2oSubroutine import ModelEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelWorkEvents'
 SCRIPT_REV = 20220101

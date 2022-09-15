@@ -5,7 +5,7 @@ from psEntities import PatternScriptEntities
 from PatternTracksSubroutine import View
 from PatternTracksSubroutine import Model
 from PatternTracksSubroutine import ModelEntities
-from o2oSubroutine import ModelWorkEvents
+# from o2oSubroutine import ModelWorkEvents
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.Controller'
 SCRIPT_REV = 20220101

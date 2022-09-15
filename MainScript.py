@@ -63,9 +63,9 @@ class BuiltTrainListener(java.beans.PropertyChangeListener):
 
         if TRAIN_BUILT.propertyName == 'TrainBuilt' and TRAIN_BUILT.newValue:
 
-            tpManifest = BuiltTrainExport.o2oWorkEventsBuilder()
-            tpManifest.passInTrain(TRAIN_BUILT.getSource())
-            tpManifest.start()
+            o2oWorkEvents = BuiltTrainExport.o2oWorkEventsBuilder()
+            o2oWorkEvents.passInTrain(TRAIN_BUILT.getSource())
+            o2oWorkEvents.start()
 
         return
 
@@ -166,7 +166,7 @@ class Model:
         return pluginPanel
 
     def makeSubroutineList(self):
-        """ *.items() sorts the list, this oddball way does not sort the list"""
+        """for x, y in *.items() sorts the list, this oddball way does not sort the list"""
 
         subroutineList = []
         controlPanelConfig = PatternScriptEntities.readConfigFile('CP')
