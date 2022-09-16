@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-from psEntities import PatternScriptEntities
+from psEntities import PSE
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ModelEntities'
 SCRIPT_REV = 20220101
@@ -13,10 +13,10 @@ def makeTrackPattern(trackList=None):
         """
 
     if not trackList:
-        trackList = PatternScriptEntities.getSelectedTracks()
+        trackList = PSE.getSelectedTracks()
 
     detailsForTrack = []
-    patternLocation = PatternScriptEntities.readConfigFile('PT')['PL']
+    patternLocation = PSE.readConfigFile('PT')['PL']
     for trackName in trackList:
         detailsForTrack.append(getGenericTrackDetails(patternLocation, trackName))
 
@@ -44,7 +44,7 @@ def testSelectedItem(selectedItem):
         Model.updatePatternLocation
         """
 
-    allLocations = PatternScriptEntities.getAllLocations() #List of strings
+    allLocations = PSE.getAllLocations() #List of strings
     if selectedItem in allLocations:
         return selectedItem
     else:
@@ -56,10 +56,10 @@ def getAllTracksForLocation(location):
         Model.updatePatternLocation
         """
 
-    jmriTrackList = PatternScriptEntities.LM.getLocationByName(location).getTracksByNameList(None)
+    jmriTrackList = PSE.LM.getLocationByName(location).getTracksByNameList(None)
     trackDict = {}
     for track in jmriTrackList:
-        trackDict[unicode(track.getName(), PatternScriptEntities.ENCODING)] = False
+        trackDict[unicode(track.getName(), PSE.ENCODING)] = False
 
     return trackDict
 
@@ -71,7 +71,7 @@ def updateTrackCheckBoxes(trackCheckBoxes):
 
     dict = {}
     for item in trackCheckBoxes:
-        dict[unicode(item.text, PatternScriptEntities.ENCODING)] = item.selected
+        dict[unicode(item.text, PSE.ENCODING)] = item.selected
 
     return dict
 
@@ -83,7 +83,7 @@ def getGenericTrackDetails(locationName, trackName):
 
     genericTrackDetails = {}
     genericTrackDetails['trackName'] = trackName
-    genericTrackDetails['length'] =  PatternScriptEntities.LM.getLocationByName(locationName).getTrackByName(trackName, None).getLength()
+    genericTrackDetails['length'] =  PSE.LM.getLocationByName(locationName).getTrackByName(trackName, None).getLength()
     genericTrackDetails['locos'] = sortLocoList(getLocoListForTrack(trackName))
     genericTrackDetails['cars'] = sortCarList(getCarListForTrack(trackName))
 
@@ -91,12 +91,12 @@ def getGenericTrackDetails(locationName, trackName):
 
 def sortLocoList(locoList):
     """Try/Except protects against bad edit of config file
-        Sort order of PatternScriptEntities.readConfigFile('RM')['SL'] is top down
+        Sort order of PSE.readConfigFile('RM')['SL'] is top down
         Used by:
         getGenericTrackDetails
         """
 
-    sortLocos = PatternScriptEntities.readConfigFile('RM')['SL']
+    sortLocos = PSE.readConfigFile('RM')['SL']
     for sortKey in sortLocos:
         try:
             translatedkey = (sortKey)
@@ -114,14 +114,14 @@ def getRsOnTrains():
         """
 
     builtTrainList = []
-    for train in PatternScriptEntities.TM.getTrainsByStatusList():
+    for train in PSE.TM.getTrainsByStatusList():
         if train.isBuilt():
             builtTrainList.append(train)
 
     listOfAssignedRs = []
     for train in builtTrainList:
-        listOfAssignedRs += PatternScriptEntities.CM.getByTrainList(train)
-        listOfAssignedRs += PatternScriptEntities.EM.getByTrainList(train)
+        listOfAssignedRs += PSE.CM.getByTrainList(train)
+        listOfAssignedRs += PSE.EM.getByTrainList(train)
 
     return listOfAssignedRs
 
@@ -131,7 +131,7 @@ def getLocoListForTrack(track):
         getGenericTrackDetails
         """
 
-    location = PatternScriptEntities.readConfigFile('PT')['PL']
+    location = PSE.readConfigFile('PT')['PL']
     locoList = getLocoObjects(location, track)
 
     return [getDetailsForLoco(loco) for loco in locoList]
@@ -142,7 +142,7 @@ def getLocoObjects(location, track):
         """
 
     locoList = []
-    allLocos = PatternScriptEntities.EM.getByModelList()
+    allLocos = PSE.EM.getByModelList()
 
     return [loco for loco in allLocos if loco.getLocationName() == location and loco.getTrackName() == track]
 
@@ -170,7 +170,7 @@ def getDetailsForLoco(locoObject):
     try:
         locoDetailDict['Consist'] = locoObject.getConsist().getName()
     except:
-        locoDetailDict['Consist'] = PatternScriptEntities.BUNDLE['Single']
+        locoDetailDict['Consist'] = PSE.BUNDLE['Single']
     locoDetailDict['Set_To'] = u'[  ] '
     locoDetailDict[u'PUSO'] = u' '
     locoDetailDict[u' '] = u' ' # Catches KeyError - empty box added to getDropEngineMessageFormat
@@ -182,12 +182,12 @@ def getDetailsForLoco(locoObject):
 
 def sortCarList(carList):
     """Try/Except protects against bad edit of config file
-        Sort order of PatternScriptEntities.readConfigFile('RM')['SC'] is top down
+        Sort order of PSE.readConfigFile('RM')['SC'] is top down
         Used by:
         getGenericTrackDetails
         """
 
-    sortCars = PatternScriptEntities.readConfigFile('RM')['SC']
+    sortCars = PSE.readConfigFile('RM')['SC']
     for sortKey in sortCars:
         try:
             translatedkey = (sortKey)
@@ -203,7 +203,7 @@ def getCarListForTrack(track):
         getGenericTrackDetails
         """
 
-    location = PatternScriptEntities.readConfigFile('PT')['PL']
+    location = PSE.readConfigFile('PT')['PL']
     carList = getCarObjects(location, track)
     kernelTally = getKernelTally()
 
@@ -216,7 +216,7 @@ def getCarObjects(location, track):
         getCarListForTrack
         """
 
-    allCars = PatternScriptEntities.CM.getByIdList()
+    allCars = PSE.CM.getByIdList()
 
     return [car for car in allCars if car.getLocationName() == location and car.getTrackName() == track]
 
@@ -226,12 +226,12 @@ def getKernelTally():
         """
 
     tally = []
-    for car in PatternScriptEntities.CM.getByIdList():
+    for car in PSE.CM.getByIdList():
         kernelName = car.getKernelName()
         if kernelName:
             tally.append(kernelName)
 
-    kernelTally = PatternScriptEntities.occuranceTally(tally)
+    kernelTally = PSE.occuranceTally(tally)
 
     return kernelTally
 
@@ -242,7 +242,7 @@ def getDetailsForCar(carObject, kernelTally):
         """
 
     carDetailDict = {}
-    trackId = PatternScriptEntities.LM.getLocationByName(carObject.getLocationName()).getTrackById(carObject.getTrackId())
+    trackId = PSE.LM.getLocationByName(carObject.getLocationName()).getTrackById(carObject.getTrackId())
     try:
         kernelSize = kernelTally[carObject.getKernelName()]
     except:
@@ -287,16 +287,16 @@ def makeGenericHeader():
         Controller.StartUp.setRsButton
         """
 
-    OSU = PatternScriptEntities.JMRI.jmrit.operations.setup
-    patternLocation = PatternScriptEntities.readConfigFile('PT')['PL']
-    location = PatternScriptEntities.LM.getLocationByName(patternLocation)
+    OSU = PSE.JMRI.jmrit.operations.setup
+    patternLocation = PSE.readConfigFile('PT')['PL']
+    location = PSE.LM.getLocationByName(patternLocation)
 
     listHeader = {}
-    listHeader['railroad'] = unicode(OSU.Setup.getRailroadName(), PatternScriptEntities.ENCODING)
-    listHeader['trainName'] = unicode(OSU.Setup.getComment(), PatternScriptEntities.ENCODING)
-    listHeader['trainDescription'] = PatternScriptEntities.BUNDLE['Pattern Report for Tracks']
+    listHeader['railroad'] = unicode(OSU.Setup.getRailroadName(), PSE.ENCODING)
+    listHeader['trainName'] = unicode(OSU.Setup.getComment(), PSE.ENCODING)
+    listHeader['trainDescription'] = PSE.BUNDLE['Pattern Report for Tracks']
     listHeader['trainComment'] = location.getComment()
-    listHeader['date'] = unicode(PatternScriptEntities.timeStamp(), PatternScriptEntities.ENCODING)
+    listHeader['date'] = unicode(PSE.timeStamp(), PSE.ENCODING)
     listHeader['locations'] = [{'locationName': patternLocation, 'tracks': [{'cars': [], 'locos': []}]}]
 
     return listHeader
@@ -307,8 +307,8 @@ def makeInitialTrackList(location):
         """
 
     trackDict = {}
-    for track in PatternScriptEntities.LM.getLocationByName(location).getTracksByNameList(None):
-        trackDict[unicode(track, PatternScriptEntities.ENCODING)] = False
+    for track in PSE.LM.getLocationByName(location).getTracksByNameList(None):
+        trackDict[unicode(track, PSE.ENCODING)] = False
 
     return trackDict
 
@@ -326,7 +326,7 @@ def makeTrackPatternCsv(trackPattern):
                     u'YPC,Yard Pattern Comment,' + trackPattern['trainComment'] + '\n' \
                     u'VT,Valid,' + trackPattern['date'] + '\n'
     for track in trackPattern['locations'][0]['tracks']: # There is only one location
-        trackPatternCsv += u'TN,Track name,' + unicode(track['trackName'], PatternScriptEntities.ENCODING) + '\n'
+        trackPatternCsv += u'TN,Track name,' + unicode(track['trackName'], PSE.ENCODING) + '\n'
         trackPatternCsv += u'Set_To,PUSO,Road,Number,Type,Model,Length,Weight,Consist,Owner,Track,Location,Destination,Comment\n'
         for loco in track['locos']:
             trackPatternCsv +=  loco['Set_To'] + ',' \

@@ -3,7 +3,7 @@
 
 """The o2o Subroutine."""
 
-from psEntities import PatternScriptEntities
+from psEntities import PSE
 from o2oSubroutine import ModelImport
 from o2oSubroutine import ModelNew
 from o2oSubroutine import ModelUpdate
@@ -17,7 +17,7 @@ class StartUp:
 
     def __init__(self, subroutineFrame=None):
 
-        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.Controller')
+        self.psLog = PSE.LOGGING.getLogger('PS.TP.Controller')
         self.subroutineFrame = subroutineFrame
 
         return

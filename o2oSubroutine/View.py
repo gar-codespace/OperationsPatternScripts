@@ -3,7 +3,7 @@
 
 """Implemented in v3"""
 
-from psEntities import PatternScriptEntities
+from psEntities import PSE
 from o2oSubroutine import ViewEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.View'
@@ -14,18 +14,18 @@ class ManageGui:
 
     def __init__(self):
 
-        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.o2oSubroutine.View')
-        self.configFile = PatternScriptEntities.readConfigFile('o2o')
+        self.psLog = PSE.LOGGING.getLogger('PS.o2oSubroutine.View')
+        self.configFile = PSE.readConfigFile('o2o')
 
         return
 
     def makeSubroutineFrame(self):
         """Make the frame that all the o2o controls are added to"""
 
-        subroutineFrame = PatternScriptEntities.JAVX_SWING.JPanel() # the track pattern panel
-        encodedKey = unicode('o2o Subroutine', PatternScriptEntities.ENCODING)
-        subroutineFrame.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder(
-            PatternScriptEntities.BUNDLE[u'o2o Subroutine']
+        subroutineFrame = PSE.JAVX_SWING.JPanel() # the track pattern panel
+        encodedKey = unicode('o2o Subroutine', PSE.ENCODING)
+        subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(
+            PSE.BUNDLE[u'o2o Subroutine']
             )
 
         return subroutineFrame

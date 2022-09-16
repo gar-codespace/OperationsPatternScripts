@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-from psEntities import PatternScriptEntities
+from psEntities import PSE
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelWorkEvents'
 SCRIPT_REV = 20220101
@@ -12,7 +12,7 @@ class o2oSwitchListConversion:
 
     def __init__(self):
 
-        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.o2o.o2oSwitchListConversion')
+        self.psLog = PSE.LOGGING.getLogger('PS.o2o.o2oSwitchListConversion')
 
         self.o2oSwitchList = {}
 
@@ -23,13 +23,13 @@ class o2oSwitchListConversion:
 
     def o2oSwitchListGetter(self):
 
-        reportName = PatternScriptEntities.BUNDLE['o2o Work Events']
+        reportName = PSE.BUNDLE['o2o Work Events']
         fileName = reportName + '.json'
-        targetDir = PatternScriptEntities.PROFILE_PATH + '\\operations\\jsonManifests'
-        targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
+        targetDir = PSE.PROFILE_PATH + '\\operations\\jsonManifests'
+        targetPath = PSE.OS_Path.join(targetDir, fileName)
 
-        o2oSwitchList = PatternScriptEntities.genericReadReport(targetPath)
-        self.o2oSwitchList = PatternScriptEntities.loadJson(o2oSwitchList)
+        o2oSwitchList = PSE.genericReadReport(targetPath)
+        self.o2oSwitchList = PSE.loadJson(o2oSwitchList)
 
         return
 
@@ -61,7 +61,7 @@ class o2oSwitchListConversion:
         parsedRS['Number'] = rs['Number']
         parsedRS['Type'] = rs['Type']
         try:
-            parsedRS['Load Type'] = PatternScriptEntities.getShortLoadType(rs)
+            parsedRS['Load Type'] = PSE.getShortLoadType(rs)
             parsedRS['Load'] = rs['Load']
         except:
             parsedRS['Load'] = rs['Model']
@@ -99,7 +99,7 @@ class jmriManifestConversion:
 
     def __init__(self, builtTrain):
 
-        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.o2o.jmriManifestConversion')
+        self.psLog = PSE.LOGGING.getLogger('PS.o2o.jmriManifestConversion')
 
         self.builtTrain = builtTrain
         self.jmriManifest = {}
@@ -113,11 +113,11 @@ class jmriManifestConversion:
 
         reportName = self.builtTrain.getName()
         fileName = 'train-' + reportName + '.json'
-        targetDir = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests'
-        targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
+        targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
+        targetPath = PSE.OS_Path.join(targetDir, fileName)
 
-        workEventList = PatternScriptEntities.genericReadReport(targetPath)
-        self.jmriManifest = PatternScriptEntities.loadJson(workEventList)
+        workEventList = PSE.genericReadReport(targetPath)
+        self.jmriManifest = PSE.loadJson(workEventList)
 
         return
 
@@ -125,13 +125,13 @@ class jmriManifestConversion:
 
         self.psLog.debug('convertHeader')
 
-        self.o2oWorkEvents['railroad'] = PatternScriptEntities.HTML_PARSER().unescape(self.jmriManifest['railroad'])
-        self.o2oWorkEvents['trainName'] = PatternScriptEntities.HTML_PARSER().unescape(self.jmriManifest['userName'])
-        self.o2oWorkEvents['trainDescription'] = PatternScriptEntities.HTML_PARSER().unescape(self.jmriManifest['description'])
-        self.o2oWorkEvents['trainComment'] = PatternScriptEntities.HTML_PARSER().unescape(self.jmriManifest['description'])
+        self.o2oWorkEvents['railroad'] = PSE.HTML_PARSER().unescape(self.jmriManifest['railroad'])
+        self.o2oWorkEvents['trainName'] = PSE.HTML_PARSER().unescape(self.jmriManifest['userName'])
+        self.o2oWorkEvents['trainDescription'] = PSE.HTML_PARSER().unescape(self.jmriManifest['description'])
+        self.o2oWorkEvents['trainComment'] = PSE.HTML_PARSER().unescape(self.jmriManifest['description'])
 
-        epoch = PatternScriptEntities.convertJmriDateToEpoch(self.jmriManifest['date'])
-        self.o2oWorkEvents['date'] = PatternScriptEntities.timeStamp(epoch)
+        epoch = PSE.convertJmriDateToEpoch(self.jmriManifest['date'])
+        self.o2oWorkEvents['date'] = PSE.timeStamp(epoch)
         self.o2oWorkEvents['locations'] = []
 
         return
@@ -176,7 +176,7 @@ class jmriManifestConversion:
         parsedRS['Road'] = rs['road']
         parsedRS['Number'] = rs['number']
         parsedRS['Type'] = rs['carType']
-        parsedRS['Load Type'] = PatternScriptEntities.getShortLoadType(rs)
+        parsedRS['Load Type'] = PSE.getShortLoadType(rs)
         try:
             parsedRS['Load'] = rs['load']
         except:
@@ -201,21 +201,21 @@ class o2oWorkEvents:
 
     def __init__(self, workEvents):
 
-        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.o2o.o2oWorkEvents')
+        self.psLog = PSE.LOGGING.getLogger('PS.o2o.o2oWorkEvents')
 
         reportName = 'tpRollingStockData'
         fileName = reportName + '.json'
-        targetDir = PatternScriptEntities.PROFILE_PATH + '\\operations'
-        targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
+        targetDir = PSE.PROFILE_PATH + '\\operations'
+        targetPath = PSE.OS_Path.join(targetDir, fileName)
 
-        tpRollingStockData = PatternScriptEntities.genericReadReport(targetPath)
-        self.tpRollingStockData = PatternScriptEntities.loadJson(tpRollingStockData)
+        tpRollingStockData = PSE.genericReadReport(targetPath)
+        self.tpRollingStockData = PSE.loadJson(tpRollingStockData)
 
         self.workEvents = workEvents
         self.o2oList = ''
 
-        workEventName = PatternScriptEntities.BUNDLE['o2o Work Events']
-        self.o2oWorkEventPath = PatternScriptEntities.JMRI.util.FileUtil.getHomePath() \
+        workEventName = PSE.BUNDLE['o2o Work Events']
+        self.o2oWorkEventPath = PSE.JMRI.util.FileUtil.getHomePath() \
                 + 'AppData\Roaming\TrainPlayer\Reports\JMRI Report - o2o Work Events.csv'
 
         return
@@ -281,8 +281,8 @@ class o2oWorkEvents:
 
         self.psLog.debug('saveList')
 
-        if PatternScriptEntities.tpDirectoryExists():
-            PatternScriptEntities.genericWriteReport(self.o2oWorkEventPath, self.o2oList)
+        if PSE.tpDirectoryExists():
+            PSE.genericWriteReport(self.o2oWorkEventPath, self.o2oList)
 
         print(SCRIPT_NAME + '.o2oWorkEvents ' + str(SCRIPT_REV))
 

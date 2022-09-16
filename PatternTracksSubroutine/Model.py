@@ -1,13 +1,13 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-from psEntities import PatternScriptEntities
+from psEntities import PSE
 from PatternTracksSubroutine import ModelEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.Model'
 SCRIPT_REV = 20220101
 
-_psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.Model')
+_psLog = PSE.LOGGING.getLogger('PS.PT.Model')
 
 def trackPatternButton():
     """Mini controller when the Track Pattern Report button is pressed
@@ -16,15 +16,15 @@ def trackPatternButton():
         Controller.StartUp.trackPatternButton
         """
 
-    reportTitle = PatternScriptEntities.BUNDLE['Track Pattern Report']
+    reportTitle = PSE.BUNDLE['Track Pattern Report']
     fileName = reportTitle + '.json'
-    targetDir = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests'
-    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
+    targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
+    targetPath = PSE.OS_Path.join(targetDir, fileName)
 
     trackPattern = ModelEntities.makeTrackPattern()
     trackPatternReport = ModelEntities.makeTrackPatternReport(trackPattern)
-    trackPatternReport = PatternScriptEntities.dumpJson(trackPatternReport)
-    PatternScriptEntities.genericWriteReport(targetPath, trackPatternReport)
+    trackPatternReport = PSE.dumpJson(trackPatternReport)
+    PSE.genericWriteReport(targetPath, trackPatternReport)
 
     return
 
@@ -35,14 +35,14 @@ def setRsButton():
         Controller.StartUp.setRsButton
         """
 
-    reportTitle = PatternScriptEntities.BUNDLE['o2o Work Events']
+    reportTitle = PSE.BUNDLE['o2o Work Events']
     fileName = reportTitle + '.json'
-    targetDir = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests'
-    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
+    targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
+    targetPath = PSE.OS_Path.join(targetDir, fileName)
 
     newHeader = ModelEntities.makeGenericHeader()
-    newHeaderReport = PatternScriptEntities.dumpJson(newHeader)
-    PatternScriptEntities.genericWriteReport(targetPath, newHeaderReport)
+    newHeaderReport = PSE.dumpJson(newHeader)
+    PSE.genericWriteReport(targetPath, newHeaderReport)
 
     return
 
@@ -54,9 +54,9 @@ def updatePatternLocation(selectedItem=None):
 
     _psLog.debug('Model.updatePatternLocation')
 
-    configFile = PatternScriptEntities.readConfigFile()
+    configFile = PSE.readConfigFile()
     newLocation = ModelEntities.testSelectedItem(selectedItem)
-    newLocationList = PatternScriptEntities.getAllLocations()
+    newLocationList = PSE.getAllLocations()
     newLocationTrackDict = ModelEntities.getAllTracksForLocation(newLocation)
     configFile['PT'].update({'PA': False})
     configFile['PT'].update({'PI': False})
@@ -64,7 +64,7 @@ def updatePatternLocation(selectedItem=None):
     configFile['PT'].update({'AL': newLocationList})
     configFile['PT'].update({'PT': newLocationTrackDict})
 
-    PatternScriptEntities.writeConfigFile(configFile)
+    PSE.writeConfigFile(configFile)
     _psLog.info('The track list for location ' + newLocation + ' has been created')
 
     return newLocation
@@ -96,15 +96,15 @@ def updateConfigFile(controls):
 
     _psLog.debug('Model.updateConfigFile')
 
-    focusOn = PatternScriptEntities.readConfigFile('PT')
+    focusOn = PSE.readConfigFile('PT')
     focusOn.update({"PL": controls[0].getSelectedItem()})
     focusOn.update({"PA": controls[1].selected})
     focusOn.update({"PI": controls[2].selected})
     focusOn.update({"PT": ModelEntities.updateTrackCheckBoxes(controls[3])})
 
-    newConfigFile = PatternScriptEntities.readConfigFile()
+    newConfigFile = PSE.readConfigFile()
     newConfigFile.update({"PT": focusOn})
-    PatternScriptEntities.writeConfigFile(newConfigFile)
+    PSE.writeConfigFile(newConfigFile)
 
     _psLog.info('Controls settings for configuration file updated')
 
@@ -120,13 +120,13 @@ def verifySelectedTracks():
     _psLog.debug('Model.verifySelectedTracks')
 
     validStatus = True
-    allTracksList = PatternScriptEntities.getTracksByLocation(None)
+    allTracksList = PSE.getTracksByLocation(None)
 
     if not allTracksList:
         _psLog.warning('PatternConfig.JSON corrupted, new file written.')
         return False
 
-    patternTracks = PatternScriptEntities.readConfigFile('PT')['PT']
+    patternTracks = PSE.readConfigFile('PT')['PT']
     for track in patternTracks:
         if not track in allTracksList:
             validStatus = False
@@ -141,10 +141,10 @@ def updateLocations():
 
     _psLog.debug('Model.updateLocations')
 
-    newConfigFile = PatternScriptEntities.readConfigFile()
+    newConfigFile = PSE.readConfigFile()
     subConfigfile = newConfigFile['PT']
 
-    allLocations = PatternScriptEntities.getAllLocations()
+    allLocations = PSE.getAllLocations()
     if not allLocations:
         _psLog.warning('There are no locations for this profile')
         return
@@ -155,7 +155,7 @@ def updateLocations():
 
     subConfigfile.update({'AL': allLocations})
     newConfigFile.update({'PT': subConfigfile})
-    PatternScriptEntities.writeConfigFile(newConfigFile)
+    PSE.writeConfigFile(newConfigFile)
 
     return newConfigFile
 
@@ -167,17 +167,17 @@ def writeTrackPatternCsv(trackPatternName):
 
     _psLog.debug('Model.writeTrackPatternCsv')
 #  Get json data
-    targetDir = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests'
+    targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
     fileName = trackPatternName + '.json'
-    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
-    trackPattern = PatternScriptEntities.genericReadReport(targetPath)
-    trackPattern = PatternScriptEntities.loadJson(trackPattern)
+    targetPath = PSE.OS_Path.join(targetDir, fileName)
+    trackPattern = PSE.genericReadReport(targetPath)
+    trackPattern = PSE.loadJson(trackPattern)
 # Process json data into CSV
     trackPatternCsv = ModelEntities.makeTrackPatternCsv(trackPattern)
 # Write CSV data
-    targetDir = PatternScriptEntities.PROFILE_PATH + 'operations\\csvSwitchLists\\'
+    targetDir = PSE.PROFILE_PATH + 'operations\\csvSwitchLists\\'
     fileName = trackPatternName + '.csv'
-    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
-    PatternScriptEntities.genericWriteReport(targetPath, trackPatternCsv)
+    targetPath = PSE.OS_Path.join(targetDir, fileName)
+    PSE.genericWriteReport(targetPath, trackPatternCsv)
 
     return

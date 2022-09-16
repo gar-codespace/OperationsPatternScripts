@@ -2,7 +2,7 @@
 # © 2021, 2022 Greg Ritacco
 
 # from PatternTracksSubroutine import Model
-from psEntities import PatternScriptEntities
+from psEntities import PSE
 from PatternTracksSubroutine import ModelEntities
 from PatternTracksSubroutine import ViewEntities
 from PatternTracksSubroutine import ControllerSetCarsForm
@@ -10,24 +10,24 @@ from PatternTracksSubroutine import ControllerSetCarsForm
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.View'
 SCRIPT_REV = 20220101
 
-_psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.View')
+_psLog = PSE.LOGGING.getLogger('PS.PT.View')
 
 class ManageGui:
 
     def __init__(self):
 
-        # self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.View')
+        # self.psLog = PSE.LOGGING.getLogger('PS.PT.View')
 
         return
 
     def makeSubroutineFrame(self):
         """Make the frame that all the Track Pattern controls are added to"""
 
-        subroutineFrame = PatternScriptEntities.JAVX_SWING.JPanel() # the Track Pattern panel
-        subroutineFrame.setLayout(PatternScriptEntities.JAVX_SWING.BoxLayout(
-                subroutineFrame, PatternScriptEntities.JAVX_SWING.BoxLayout.Y_AXIS))
-        subroutineFrame.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder( \
-                PatternScriptEntities.BUNDLE['Track Pattern Subroutine'] \
+        subroutineFrame = PSE.JAVX_SWING.JPanel() # the Track Pattern panel
+        subroutineFrame.setLayout(PSE.JAVX_SWING.BoxLayout(
+                subroutineFrame, PSE.JAVX_SWING.BoxLayout.Y_AXIS))
+        subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder( \
+                PSE.BUNDLE['Track Pattern Subroutine'] \
                 )
 
         return subroutineFrame
@@ -54,24 +54,24 @@ def trackPatternButton():
 
     _psLog.debug('View.trackPatternButton')
 # Boilerplate
-    reportName = PatternScriptEntities.BUNDLE['Track Pattern Report']
+    reportName = PSE.BUNDLE['Track Pattern Report']
     fileName = reportName + '.json'
-    targetDir = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests'
-    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
+    targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
+    targetPath = PSE.OS_Path.join(targetDir, fileName)
 # Get the report
-    trackPattern = PatternScriptEntities.genericReadReport(targetPath)
-    trackPattern = PatternScriptEntities.loadJson(trackPattern)
+    trackPattern = PSE.genericReadReport(targetPath)
+    trackPattern = PSE.loadJson(trackPattern)
 # Modify the report for display
     trackPattern = ViewEntities.modifyTrackPattern(trackPattern)
     reportHeader = ViewEntities.makeTextReportHeader(trackPattern)
     reportLocations = ViewEntities.makeTextReportLocations(trackPattern, trackTotals=True)
 # Save the modified report
-    targetDir = PatternScriptEntities.PROFILE_PATH + 'operations\\patternReports'
+    targetDir = PSE.PROFILE_PATH + 'operations\\patternReports'
     fileName = reportName + '.txt'
-    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
-    PatternScriptEntities.genericWriteReport(targetPath, reportHeader + reportLocations)
+    targetPath = PSE.OS_Path.join(targetDir, fileName)
+    PSE.genericWriteReport(targetPath, reportHeader + reportLocations)
 # Display the modified report
-    PatternScriptEntities.genericDisplayReport(targetPath)
+    PSE.genericDisplayReport(targetPath)
 
     return
 
@@ -80,13 +80,13 @@ def setRsButton():
 
     _psLog.debug('setRsButton')
 
-    selectedTracks = PatternScriptEntities.getSelectedTracks()
+    selectedTracks = PSE.getSelectedTracks()
     if not selectedTracks:
         _psLog.warning('No tracks were selected for the Set Cars button')
 
         return
 
-    locationName = PatternScriptEntities.readConfigFile('PT')['PL']
+    locationName = PSE.readConfigFile('PT')['PL']
     windowOffset = 200
     for i, trackName in enumerate(selectedTracks, start=1):
         trackPattern = ModelEntities.makeTrackPattern([trackName]) # makeTrackPattern takes a track list
@@ -96,7 +96,7 @@ def setRsButton():
 
         newFrame = ControllerSetCarsForm.CreateSetCarsFormGui(setCarsForm)
         newWindow = newFrame.makeFrame()
-        newWindow.setTitle(PatternScriptEntities.BUNDLE['Set Rolling Stock for track:'] + ' ' + trackName)
+        newWindow.setTitle(PSE.BUNDLE['Set Rolling Stock for track:'] + ' ' + trackName)
         newWindow.setName('setCarsWindow')
         newWindow.setLocation(windowOffset, 180)
         newWindow.pack()

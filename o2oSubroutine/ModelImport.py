@@ -3,13 +3,13 @@
 
 """Use the TP inventory, locations and industries text files to generate the tpRailroadData.json file"""
 
-from psEntities import PatternScriptEntities
+from psEntities import PSE
 from o2oSubroutine import ModelEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelImport'
 SCRIPT_REV = 20220101
 
-_psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.ModelImport')
+_psLog = PSE.LOGGING.getLogger('PS.TP.ModelImport')
 
 def importTpRailroad():
     """Mini controller generates the tpRailroadData.json file"""
@@ -40,7 +40,7 @@ class TrainPlayerImporter:
 
     def __init__(self):
 
-        o2oConfig =  PatternScriptEntities.readConfigFile('o2o')
+        o2oConfig =  PSE.readConfigFile('o2o')
 
         self.tpLocationsFile = o2oConfig['TRL']
         self.tpIndustriesFile = o2oConfig['TRI']
@@ -53,8 +53,8 @@ class TrainPlayerImporter:
 
         reportName = 'tpRailroadData'
         fileName = reportName + '.json'
-        targetDir = PatternScriptEntities.PROFILE_PATH + '\\operations'
-        self.rrFile = PatternScriptEntities.OS_Path.join(targetDir, fileName)
+        targetDir = PSE.PROFILE_PATH + '\\operations'
+        self.rrFile = PSE.OS_Path.join(targetDir, fileName)
         self.rr = {}
 
         return
@@ -96,7 +96,7 @@ class TrainPlayerImporter:
         self.rr[u'trainplayerDate'] = self.tpLocations.pop(0)
         self.rr[u'railroadName'] = self.tpLocations.pop(0)
         self.rr[u'railroadDescription'] = self.tpLocations.pop(0)
-        self.rr[u'date'] = PatternScriptEntities.timeStamp()
+        self.rr[u'date'] = PSE.timeStamp()
         self.tpLocations.pop(0) # Remove key
 
         self.tpIndustries.pop(0) # Remove date
@@ -147,7 +147,7 @@ class TrainPlayerImporter:
     def getTrackType(self, tpType):
         """Convert TP track types into JMRI track types."""
 
-        typeRubric = PatternScriptEntities.readConfigFile('o2o')['TR']
+        typeRubric = PSE.readConfigFile('o2o')['TR']
 
         return typeRubric[tpType]
 
@@ -303,7 +303,7 @@ class TrainPlayerImporter:
 
         _psLog.debug('writeTPLayoutData')
 
-        formattedRrFile = PatternScriptEntities.dumpJson(self.rr)
-        PatternScriptEntities.genericWriteReport(self.rrFile, formattedRrFile)
+        formattedRrFile = PSE.dumpJson(self.rr)
+        PSE.genericWriteReport(self.rrFile, formattedRrFile)
 
         return

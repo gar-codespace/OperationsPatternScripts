@@ -3,13 +3,13 @@
 
 """Display methods for the Set Cars Form for Track X form"""
 
-from psEntities import PatternScriptEntities
+from psEntities import PSE
 from PatternTracksSubroutine import ViewEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ViewSetCarsForm'
 SCRIPT_REV = 20220101
 
-_psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.ViewSetCarsForm')
+_psLog = PSE.LOGGING.getLogger('PS.PT.ViewSetCarsForm')
 
 def switchListButton(textBoxEntry):
     """Mini controller when the Switch List button is pressed.
@@ -21,13 +21,13 @@ def switchListButton(textBoxEntry):
     _psLog.debug('View.trackPatternButton')
 
 # Boilerplate
-    reportName = PatternScriptEntities.BUNDLE['Switch List for Track']
+    reportName = PSE.BUNDLE['Switch List for Track']
     fileName = reportName + '.json'
-    targetDir = PatternScriptEntities.PROFILE_PATH + '\\operations\\jsonManifests'
-    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
+    targetDir = PSE.PROFILE_PATH + '\\operations\\jsonManifests'
+    targetPath = PSE.OS_Path.join(targetDir, fileName)
 # Get the switch list
-    switchList = PatternScriptEntities.genericReadReport(targetPath)
-    switchList = PatternScriptEntities.loadJson(switchList)
+    switchList = PSE.genericReadReport(targetPath)
+    switchList = PSE.loadJson(switchList)
 # Replace Set To with a track name, reformat for display
     userInputList = ViewEntities.makeUserInputList(textBoxEntry)
     switchList = ViewEntities.merge(switchList, userInputList)
@@ -36,12 +36,12 @@ def switchListButton(textBoxEntry):
     reportHeader = ViewEntities.makeTextReportHeader(switchList)
     reportLocations = ViewEntities.makeTextReportLocations(switchList, trackTotals=False)
 # Save formatted data
-    targetDir = PatternScriptEntities.PROFILE_PATH + '\\operations\\patternReports'
+    targetDir = PSE.PROFILE_PATH + '\\operations\\patternReports'
     fileName = reportName + '.txt'
-    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
-    PatternScriptEntities.genericWriteReport(targetPath, reportHeader + reportLocations)
+    targetPath = PSE.OS_Path.join(targetDir, fileName)
+    PSE.genericWriteReport(targetPath, reportHeader + reportLocations)
 # Display formatted data
-    PatternScriptEntities.genericDisplayReport(targetPath)
+    PSE.genericDisplayReport(targetPath)
 
     return
 
@@ -59,7 +59,7 @@ def setCarsForTrackWindow(setCarsForTrackForm):
         ControllerSetCarsForm.CreateSetCarsFormGui.makeFrame
         """
 
-    setCarsWindow = PatternScriptEntities.JMRI.util.JmriJFrame()
+    setCarsWindow = PSE.JMRI.util.JmriJFrame()
     setCarsWindow.add(setCarsForTrackForm)
 
     return setCarsWindow
@@ -74,34 +74,34 @@ def makeSetCarsForTrackForm(setCarsFormData):
 
     buttonDict = {}
 
-    setCarsForm = PatternScriptEntities.JAVX_SWING.JPanel()
-    setCarsForm.setLayout(PatternScriptEntities.JAVX_SWING.BoxLayout(
-        setCarsForm, PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS)
+    setCarsForm = PSE.JAVX_SWING.JPanel()
+    setCarsForm.setLayout(PSE.JAVX_SWING.BoxLayout(
+        setCarsForm, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS)
         )
 
     setCarsFormHeader = makeSetCarsFormHeader(setCarsFormData)
     setCarsForm.add(setCarsFormHeader)
-    setCarsForm.add(PatternScriptEntities.JAVX_SWING.JSeparator())
+    setCarsForm.add(PSE.JAVX_SWING.JSeparator())
 
     setCarsRowOfTracks, buttonList = makeSetCarsTrackButtons()
     buttonDict['trackButtons'] = buttonList
     setCarsForm.add(setCarsRowOfTracks)
-    setCarsForm.add(PatternScriptEntities.JAVX_SWING.JSeparator())
+    setCarsForm.add(PSE.JAVX_SWING.JSeparator())
 
-    setCarsFormBody = PatternScriptEntities.JAVX_SWING.JPanel()
-    setCarsFormBody.setLayout(PatternScriptEntities.JAVX_SWING.BoxLayout(
-        setCarsFormBody, PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS)
+    setCarsFormBody = PSE.JAVX_SWING.JPanel()
+    setCarsFormBody.setLayout(PSE.JAVX_SWING.BoxLayout(
+        setCarsFormBody, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS)
         )
 
     setCarsEqptRows = MakeSetCarsEqptRows(setCarsFormData)
 
     if setCarsFormData['locations'][0]['tracks'][0]['locos']:
-        locoFormBody = PatternScriptEntities.JAVX_SWING.JPanel()
-        locoFormBody.setLayout(PatternScriptEntities.JAVX_SWING.BoxLayout(
-            locoFormBody, PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS)
+        locoFormBody = PSE.JAVX_SWING.JPanel()
+        locoFormBody.setLayout(PSE.JAVX_SWING.BoxLayout(
+            locoFormBody, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS)
             )
-        locoFormBody.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder( \
-                PatternScriptEntities.BUNDLE['Locomotives at'] \
+        locoFormBody.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder( \
+                PSE.BUNDLE['Locomotives at'] \
                 +  ' ' + setCarsFormData['locations'][0]['tracks'][0]['trackName'] \
                 )
 
@@ -111,12 +111,12 @@ def makeSetCarsForTrackForm(setCarsFormData):
         setCarsFormBody.add(locoFormBody)
 
     if setCarsFormData['locations'][0]['tracks'][0]['cars']:
-        carFormBody = PatternScriptEntities.JAVX_SWING.JPanel()
-        carFormBody.setLayout(PatternScriptEntities.JAVX_SWING.BoxLayout(
-            carFormBody, PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS)
+        carFormBody = PSE.JAVX_SWING.JPanel()
+        carFormBody.setLayout(PSE.JAVX_SWING.BoxLayout(
+            carFormBody, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS)
             )
-        carFormBody.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder( \
-                PatternScriptEntities.BUNDLE['Cars at'] \
+        carFormBody.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder( \
+                PSE.BUNDLE['Cars at'] \
                 +  ' ' + setCarsFormData['locations'][0]['tracks'][0]['trackName'] \
                 )
 
@@ -127,16 +127,16 @@ def makeSetCarsForTrackForm(setCarsFormData):
 
     buttonDict['textBoxEntry'] = setCarsEqptRows.textBoxEntryList()
 
-    setCarsFormPane = PatternScriptEntities.JAVX_SWING.JScrollPane(setCarsFormBody)
+    setCarsFormPane = PSE.JAVX_SWING.JScrollPane(setCarsFormBody)
     setCarsForm.add(setCarsFormPane)
-    setCarsForm.add(PatternScriptEntities.JAVX_SWING.JSeparator())
+    setCarsForm.add(PSE.JAVX_SWING.JSeparator())
 
     setCarsSchedule, scheduleButton = makeSetCarsScheduleRow(setCarsFormData)
     buttonDict['scheduleButton'] = []
-    if setCarsSchedule and PatternScriptEntities.readConfigFile('PT')['AS']:
+    if setCarsSchedule and PSE.readConfigFile('PT')['AS']:
         setCarsForm.add(setCarsSchedule)
         buttonDict['scheduleButton'] = scheduleButton
-        setCarsForm.add(PatternScriptEntities.JAVX_SWING.JSeparator())
+        setCarsForm.add(PSE.JAVX_SWING.JSeparator())
 
     setCarsFooter, footerButtons = MakeSetCarsFooter()
     buttonDict['footerButtons'] = footerButtons
@@ -152,8 +152,8 @@ def makeSwingBox(xWidth, yHeight):
         makeSetCarsLocoRows
         """
 
-    xName = PatternScriptEntities.JAVX_SWING.Box(PatternScriptEntities.JAVX_SWING.BoxLayout.X_AXIS)
-    xName.setPreferredSize(PatternScriptEntities.JAVA_AWT.Dimension(width=xWidth, height=yHeight))
+    xName = PSE.JAVX_SWING.Box(PSE.JAVX_SWING.BoxLayout.X_AXIS)
+    xName.setPreferredSize(PSE.JAVA_AWT.Dimension(width=xWidth, height=yHeight))
 
     return xName
 
@@ -165,32 +165,32 @@ def makeSetCarsFormHeader(setCarsFormData):
 
     _psLog.debug('makeSetCarsFormHeader')
 
-    configFile = PatternScriptEntities.readConfigFile('PT')
+    configFile = PSE.readConfigFile('PT')
 
-    combinedHeader = PatternScriptEntities.JAVX_SWING.JPanel()
-    combinedHeader.setLayout(PatternScriptEntities.JAVX_SWING.BoxLayout(
-        combinedHeader, PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS)
+    combinedHeader = PSE.JAVX_SWING.JPanel()
+    combinedHeader.setLayout(PSE.JAVX_SWING.BoxLayout(
+        combinedHeader, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS)
         )
-    combinedHeader.setAlignmentX(PatternScriptEntities.JAVA_AWT.Component.CENTER_ALIGNMENT)
-    combinedHeader.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createEmptyBorder(10,0,10,0)
+    combinedHeader.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
+    combinedHeader.border = PSE.JAVX_SWING.BorderFactory.createEmptyBorder(10,0,10,0)
 
-    headerRRLabel = PatternScriptEntities.JAVX_SWING.JLabel(setCarsFormData['railroad'])
-    headerRRLabel.setAlignmentX(PatternScriptEntities.JAVA_AWT.Component.CENTER_ALIGNMENT)
+    headerRRLabel = PSE.JAVX_SWING.JLabel(setCarsFormData['railroad'])
+    headerRRLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
     headerRRBox = makeSwingBox(100, configFile['PH'])
     headerRRBox.add(headerRRLabel)
 
-    headerYTLabel = PatternScriptEntities.JAVX_SWING.JLabel()
-    headerYTLabel.setAlignmentX(PatternScriptEntities.JAVA_AWT.Component.CENTER_ALIGNMENT)
+    headerYTLabel = PSE.JAVX_SWING.JLabel()
+    headerYTLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
     trackName = setCarsFormData['locations'][0]['tracks'][0]['trackName'] # There's only one track
     locationName = setCarsFormData['locations'][0]['locationName'] # There's only one location
-    headerYTLabel.setText(PatternScriptEntities.BUNDLE['Set Rolling Stock for track:'] \
-                + ' ' + trackName + ' ' + PatternScriptEntities.BUNDLE['at'] + ' ' + locationName)
+    headerYTLabel.setText(PSE.BUNDLE['Set Rolling Stock for track:'] \
+                + ' ' + trackName + ' ' + PSE.BUNDLE['at'] + ' ' + locationName)
 
     headerYTBox = makeSwingBox(100, configFile['PH'])
     headerYTBox.add(headerYTLabel)
 
-    headerValidLabel = PatternScriptEntities.JAVX_SWING.JLabel(setCarsFormData['date'])
-    headerValidLabel.setAlignmentX(PatternScriptEntities.JAVA_AWT.Component.CENTER_ALIGNMENT)
+    headerValidLabel = PSE.JAVX_SWING.JLabel(setCarsFormData['date'])
+    headerValidLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
     headerValidBox = makeSwingBox(100, configFile['PH'])
     headerValidBox.add(headerValidLabel)
 
@@ -205,17 +205,17 @@ def makeSetCarsTrackButtons():
         makeSetCarsForTrackForm
         """
 
-    location =  PatternScriptEntities.readConfigFile('PT')['PL']
-    allTracksAtLoc =  PatternScriptEntities.LM.getLocationByName(location).getTracksByNameList(None)
+    location =  PSE.readConfigFile('PT')['PL']
+    allTracksAtLoc =  PSE.LM.getLocationByName(location).getTracksByNameList(None)
 
-    buttonPanel = PatternScriptEntities.JAVX_SWING.JPanel()
-    buttonPanel.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder( \
-            PatternScriptEntities.BUNDLE['Tracks at'] \
+    buttonPanel = PSE.JAVX_SWING.JPanel()
+    buttonPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder( \
+            PSE.BUNDLE['Tracks at'] \
             +  ' ' + location \
             )
     buttonList = []
     for track in allTracksAtLoc:
-        selectTrackButton = PatternScriptEntities.JAVX_SWING.JButton(track.getName())
+        selectTrackButton = PSE.JAVX_SWING.JButton(track.getName())
         buttonList.append(selectTrackButton)
         buttonPanel.add(selectTrackButton)
 
@@ -233,18 +233,18 @@ class MakeSetCarsEqptRows():
         self.SCRIPT_NAME = 'OperationsPatternScripts.MakeSetCarsEqptRows'
         self.SCRIPT_REV = 20220101
 
-        self.reportWidth = PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX
-        fontSize = PatternScriptEntities.PM.getFontSize()
+        self.reportWidth = PSE.REPORT_ITEM_WIDTH_MATRIX
+        fontSize = PSE.PM.getFontSize()
         self.panelHeight = fontSize + 4
         self.panelWidth = fontSize - 2
 
         self.setCarsFormData = setCarsFormData
         self.textBoxEntry = []
 
-        self.rosetta = PatternScriptEntities.translateMessageFormat()
-        self.carColor = PatternScriptEntities.getCarColor()
-        self.locoColor = PatternScriptEntities.getLocoColor()
-        self.alertColor = PatternScriptEntities.getAlertColor()
+        self.rosetta = PSE.translateMessageFormat()
+        self.carColor = PSE.getCarColor()
+        self.locoColor = PSE.getLocoColor()
+        self.alertColor = PSE.getAlertColor()
 
         return
 
@@ -255,26 +255,26 @@ class MakeSetCarsEqptRows():
         locos = self.setCarsFormData['locations'][0]['tracks'][0]['locos']
 
         for loco in locos:
-            combinedInputLine = PatternScriptEntities.JAVX_SWING.JPanel()
+            combinedInputLine = PSE.JAVX_SWING.JPanel()
             combinedInputLine.setBackground(self.locoColor)
             if loco['On_Train']:
                 combinedInputLine.setBackground(self.alertColor)
-            inputText = PatternScriptEntities.JAVX_SWING.JTextField(5)
+            inputText = PSE.JAVX_SWING.JTextField(5)
             self.textBoxEntry.append(inputText)
             inputBox = makeSwingBox(self.panelWidth * 6, self.panelHeight)
             inputBox.add(inputText)
             combinedInputLine.add(inputBox)
 
-            for item in PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat():
+            for item in PSE.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat():
                 if 'Tab' in item:
                     continue
                 translatedItem = self.rosetta[item]
-                label = PatternScriptEntities.JAVX_SWING.JLabel(loco[translatedItem])
+                label = PSE.JAVX_SWING.JLabel(loco[translatedItem])
                 box = makeSwingBox(self.reportWidth[translatedItem] * self.panelWidth, self.panelHeight)
                 box.add(label)
                 combinedInputLine.add(box)
 
-            combinedInputLine.add(PatternScriptEntities.JAVX_SWING.Box.createHorizontalGlue())
+            combinedInputLine.add(PSE.JAVX_SWING.Box.createHorizontalGlue())
 
             listOfLocoRows.append(combinedInputLine)
 
@@ -287,28 +287,28 @@ class MakeSetCarsEqptRows():
         cars = self.setCarsFormData['locations'][0]['tracks'][0]['cars']
 
         for car in cars:
-            combinedInputLine = PatternScriptEntities.JAVX_SWING.JPanel()
+            combinedInputLine = PSE.JAVX_SWING.JPanel()
             combinedInputLine.setBackground(self.carColor)
             if car['On_Train']:
                 combinedInputLine.setBackground(self.alertColor)
-            inputText = PatternScriptEntities.JAVX_SWING.JTextField(5)
+            inputText = PSE.JAVX_SWING.JTextField(5)
             self.textBoxEntry.append(inputText)
             inputBox = makeSwingBox(self.panelWidth * 6, self.panelHeight)
             inputBox.add(inputText)
             combinedInputLine.add(inputBox)
 
-            for item in PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
+            for item in PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
                 if 'Tab' in item:
                     continue
                 translatedItem = self.rosetta[item]
                 try:
-                    label = PatternScriptEntities.JAVX_SWING.JLabel(car[translatedItem])
+                    label = PSE.JAVX_SWING.JLabel(car[translatedItem])
                 except: # The hazardous field is a boolean so work around it
-                    label = PatternScriptEntities.JAVX_SWING.JLabel(PatternScriptEntities.BUNDLE['Hazardous'])
+                    label = PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Hazardous'])
                 box = makeSwingBox(self.reportWidth[translatedItem] * self.panelWidth, self.panelHeight)
                 box.add(label)
                 combinedInputLine.add(box)
-            combinedInputLine.add(PatternScriptEntities.JAVX_SWING.Box.createHorizontalGlue())
+            combinedInputLine.add(PSE.JAVX_SWING.Box.createHorizontalGlue())
             listOfCarRows.append(combinedInputLine)
 
         return listOfCarRows
@@ -327,18 +327,18 @@ def makeSetCarsScheduleRow(setCarsFormData):
 
     trackLocation = setCarsFormData['locations'][0]['locationName']
     trackName = setCarsFormData['locations'][0]['tracks'][0]['trackName']
-    trackObject = PatternScriptEntities.LM.getLocationByName(trackLocation).getTrackByName(trackName, None)
+    trackObject = PSE.LM.getLocationByName(trackLocation).getTrackByName(trackName, None)
     scheduleObject = trackObject.getSchedule()
     schedulePanel = None
     scheduleList = []
     if (scheduleObject):
-        schedulePanel = PatternScriptEntities.JAVX_SWING.JPanel()
-        schedulePanel.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder(
-            PatternScriptEntities.BUNDLE['Schedule for'] + ' ' + trackName
+        schedulePanel = PSE.JAVX_SWING.JPanel()
+        schedulePanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(
+            PSE.BUNDLE['Schedule for'] + ' ' + trackName
             )
-        scheduleButton = PatternScriptEntities.JAVX_SWING.JButton(scheduleObject.getName())
+        scheduleButton = PSE.JAVX_SWING.JButton(scheduleObject.getName())
         scheduleList.append(scheduleButton)
-        schedulePanel.add(PatternScriptEntities.JAVX_SWING.JLabel(PatternScriptEntities.BUNDLE['Schedule:'] + ' '))
+        schedulePanel.add(PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Schedule:'] + ' '))
         schedulePanel.add(scheduleButton)
 
     return schedulePanel, scheduleList
@@ -351,48 +351,48 @@ def MakeSetCarsFooter():
 
     _psLog.debug('MakeSetCarsFooter')
 
-    makeWorkPanel = PatternScriptEntities.JAVX_SWING.JPanel()
-    makeWorkPanel.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder(
-        unicode(PatternScriptEntities.BUNDLE['Make Work'], PatternScriptEntities.ENCODING)
+    makeWorkPanel = PSE.JAVX_SWING.JPanel()
+    makeWorkPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(
+        unicode(PSE.BUNDLE['Make Work'], PSE.ENCODING)
         )
 
-    printButton = PatternScriptEntities.JAVX_SWING.JButton(
-        unicode(PatternScriptEntities.BUNDLE['Switch List'], PatternScriptEntities.ENCODING)
+    printButton = PSE.JAVX_SWING.JButton(
+        unicode(PSE.BUNDLE['Switch List'], PSE.ENCODING)
         )
 
-    o2oButton = PatternScriptEntities.JAVX_SWING.JButton(
-        unicode(PatternScriptEntities.BUNDLE['o2o Work Events'], PatternScriptEntities.ENCODING)
+    o2oButton = PSE.JAVX_SWING.JButton(
+        unicode(PSE.BUNDLE['o2o Work Events'], PSE.ENCODING)
         )
-    if not PatternScriptEntities.readConfigFile()['CP']['SI'][1]['o2oSubroutine']:
+    if not PSE.readConfigFile()['CP']['SI'][1]['o2oSubroutine']:
         o2oButton.setVisible(False)
 
-    makeWorkPanel.add(PatternScriptEntities.JAVX_SWING.Box.createRigidArea(
-        PatternScriptEntities.JAVA_AWT.Dimension(20,0))
+    makeWorkPanel.add(PSE.JAVX_SWING.Box.createRigidArea(
+        PSE.JAVA_AWT.Dimension(20,0))
         )
     makeWorkPanel.add(printButton)
     makeWorkPanel.add(o2oButton)
-    makeWorkPanel.add(PatternScriptEntities.JAVX_SWING.Box.createRigidArea(
-        PatternScriptEntities.JAVA_AWT.Dimension(20,0))
+    makeWorkPanel.add(PSE.JAVX_SWING.Box.createRigidArea(
+        PSE.JAVA_AWT.Dimension(20,0))
         )
 
-    reportWorkPanel = PatternScriptEntities.JAVX_SWING.JPanel()
-    reportWorkPanel.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createTitledBorder(
-        unicode(PatternScriptEntities.BUNDLE['Report Work'], PatternScriptEntities.ENCODING)
+    reportWorkPanel = PSE.JAVX_SWING.JPanel()
+    reportWorkPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(
+        unicode(PSE.BUNDLE['Report Work'], PSE.ENCODING)
         )
 
-    setButton = PatternScriptEntities.JAVX_SWING.JButton(
-        unicode(PatternScriptEntities.BUNDLE['Set Rolling Stock to Track'], PatternScriptEntities.ENCODING)
+    setButton = PSE.JAVX_SWING.JButton(
+        unicode(PSE.BUNDLE['Set Rolling Stock to Track'], PSE.ENCODING)
         )
 
-    reportWorkPanel.add(PatternScriptEntities.JAVX_SWING.Box.createRigidArea(
-        PatternScriptEntities.JAVA_AWT.Dimension(20,0))
+    reportWorkPanel.add(PSE.JAVX_SWING.Box.createRigidArea(
+        PSE.JAVA_AWT.Dimension(20,0))
         )
     reportWorkPanel.add(setButton)
-    reportWorkPanel.add(PatternScriptEntities.JAVX_SWING.Box.createRigidArea(
-        PatternScriptEntities.JAVA_AWT.Dimension(20,0))
+    reportWorkPanel.add(PSE.JAVX_SWING.Box.createRigidArea(
+        PSE.JAVA_AWT.Dimension(20,0))
         )
 
-    combinedFooter = PatternScriptEntities.JAVX_SWING.JPanel()
+    combinedFooter = PSE.JAVX_SWING.JPanel()
     combinedFooter.add(makeWorkPanel)
     combinedFooter.add(reportWorkPanel)
 

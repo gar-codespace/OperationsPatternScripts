@@ -18,7 +18,7 @@ SCRIPT_DIR = 'OperationsPatternScripts'
 PLUGIN_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
 
 sysPath.append(PLUGIN_ROOT)
-from psEntities import PatternScriptEntities
+from psEntities import PSE
 from psBundle import Bundle
 from o2oSubroutine import BuiltTrainExport
 
@@ -27,17 +27,17 @@ SCRIPT_REV = 20220101
 
 Bundle.BUNDLE_DIR = PLUGIN_ROOT + '\\psBundle\\'
 
-PatternScriptEntities.JMRI = jmri
-PatternScriptEntities.JAVA_AWT = java.awt
-PatternScriptEntities.JAVX_SWING = javax.swing
-PatternScriptEntities.TIME = time
+PSE.JMRI = jmri
+PSE.JAVA_AWT = java.awt
+PSE.JAVX_SWING = javax.swing
+PSE.TIME = time
 
-PatternScriptEntities.PLUGIN_ROOT = PLUGIN_ROOT
-PatternScriptEntities.ENCODING = PatternScriptEntities.readConfigFile('CP')['SE']
-PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale()
+PSE.PLUGIN_ROOT = PLUGIN_ROOT
+PSE.ENCODING = PSE.readConfigFile('CP')['SE']
+PSE.BUNDLE = Bundle.getBundleForLocale()
 
 
-class TrainsTableListener(PatternScriptEntities.JAVX_SWING.event.TableModelListener):
+class TrainsTableListener(PSE.JAVX_SWING.event.TableModelListener):
     """Catches user add or remove train while o2oSubroutine is enabled"""
 
     def __init__(self, builtTrainListener):
@@ -48,7 +48,7 @@ class TrainsTableListener(PatternScriptEntities.JAVX_SWING.event.TableModelListe
 
     def tableChanged(self, TABLE_CHANGE):
 
-        trainList = PatternScriptEntities.TM.getTrainsByIdList()
+        trainList = PSE.TM.getTrainsByIdList()
         for train in trainList:
             train.removePropertyChangeListener(self.builtTrainListener)
     # Does not throw error if there is no listener to remove :)
@@ -69,10 +69,10 @@ class BuiltTrainListener(java.beans.PropertyChangeListener):
 
         return
 
-class PatternScriptsWindowListener(PatternScriptEntities.JAVA_AWT.event.WindowListener):
+class PatternScriptsWindowListener(PSE.JAVA_AWT.event.WindowListener):
     """Listener to respond to the plugin window operations.
-    May be expanded in v3.
-    """
+        May be expanded in v3.
+        """
 
     def __init__(self):
 
@@ -81,8 +81,8 @@ class PatternScriptsWindowListener(PatternScriptEntities.JAVA_AWT.event.WindowLi
     def closeSetCarsWindows(self):
         """Close all the Set Cars windows when the Pattern Scripts window is closed"""
 
-        for frameName in PatternScriptEntities.JMRI.util.JmriJFrame.getFrameList():
-            frame = PatternScriptEntities.JMRI.util.JmriJFrame.getFrame(frameName)
+        for frameName in PSE.JMRI.util.JmriJFrame.getFrameList():
+            frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
             if frame.getName() == 'setCarsWindow':
                 frame.setVisible(False)
                 frame.dispose()
@@ -130,12 +130,12 @@ class PatternScriptsWindowListener(PatternScriptEntities.JAVA_AWT.event.WindowLi
 
 def updateWindowParams(window):
 
-    configPanel = PatternScriptEntities.readConfigFile()
+    configPanel = PSE.readConfigFile()
     configPanel['CP'].update({'PH': window.getHeight()})
     configPanel['CP'].update({'PW': window.getWidth()})
     configPanel['CP'].update({'PX': window.getX()})
     configPanel['CP'].update({'PY': window.getY()})
-    PatternScriptEntities.writeConfigFile(configPanel)
+    PSE.writeConfigFile(configPanel)
 
     return
 
@@ -143,17 +143,17 @@ class Model:
 
     def __init__(self):
 
-        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.Model')
+        self.psLog = PSE.LOGGING.getLogger('PS.Model')
 
         return
 
     def validatePatternConfig(self):
         """To be reworked in v3"""
 
-        if not PatternScriptEntities.validateConfigFileVersion():
-            PatternScriptEntities.mergeConfigFiles()
+        if not PSE.validateConfigFileVersion():
+            PSE.mergeConfigFiles()
             self.psLog.info('Previous PatternConfig.json merged with new')
-            PatternScriptEntities.writeNewConfigFile()
+            PSE.writeNewConfigFile()
             self.psLog.warning('New PatternConfig.json file created for this profile')
 
         return
@@ -161,7 +161,7 @@ class Model:
     def makePatternScriptsPanel(self, pluginPanel):
 
         for subroutine in self.makeSubroutineList():
-            pluginPanel.add(PatternScriptEntities.JAVX_SWING.Box.createRigidArea(PatternScriptEntities.JAVA_AWT.Dimension(0,10)))
+            pluginPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,10)))
             pluginPanel.add(subroutine)
         return pluginPanel
 
@@ -169,7 +169,7 @@ class Model:
         """for x, y in *.items() sorts the list, this oddball way does not sort the list"""
 
         subroutineList = []
-        controlPanelConfig = PatternScriptEntities.readConfigFile('CP')
+        controlPanelConfig = PSE.readConfigFile('CP')
         for item in controlPanelConfig['SI']:
             for subroutine, include in item.items(): # The list is sorted, but there is only 1 item
                 if include:
@@ -185,9 +185,9 @@ class View:
 
     def __init__(self, scrollPanel):
 
-        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.View')
+        self.psLog = PSE.LOGGING.getLogger('PS.View')
 
-        self.cpSettings = PatternScriptEntities.readConfigFile('CP')
+        self.cpSettings = PSE.readConfigFile('CP')
 
         self.controlPanel = scrollPanel
         self.psPluginMenuItems = []
@@ -197,8 +197,8 @@ class View:
 
     def makePsButton(self):
 
-        psButton = PatternScriptEntities.JAVX_SWING.JButton()
-        psButton.setText(PatternScriptEntities.BUNDLE[u'Pattern Scripts'])
+        psButton = PSE.JAVX_SWING.JButton()
+        psButton.setText(PSE.BUNDLE[u'Pattern Scripts'])
         psButton.setName('psButton')
 
         return psButton
@@ -206,15 +206,15 @@ class View:
     def makePluginPanel(self):
         """Dealers choice, jPanel or Box"""
 
-        # pluginPanel = PatternScriptEntities.JAVX_SWING.JPanel()
-        pluginPanel = PatternScriptEntities.JAVX_SWING.Box(PatternScriptEntities.JAVX_SWING.BoxLayout.PAGE_AXIS)
+        # pluginPanel = PSE.JAVX_SWING.JPanel()
+        pluginPanel = PSE.JAVX_SWING.Box(PSE.JAVX_SWING.BoxLayout.PAGE_AXIS)
 
         return pluginPanel
 
     def makeScrollPanel(self, pluginPanel):
 
-        scrollPanel = PatternScriptEntities.JAVX_SWING.JScrollPane(pluginPanel)
-        scrollPanel.border = PatternScriptEntities.JAVX_SWING.BorderFactory.createLineBorder(PatternScriptEntities.JAVA_AWT.Color.GRAY)
+        scrollPanel = PSE.JAVX_SWING.JScrollPane(pluginPanel)
+        scrollPanel.border = PSE.JAVX_SWING.BorderFactory.createLineBorder(PSE.JAVA_AWT.Color.GRAY)
 
         return scrollPanel
 
@@ -224,7 +224,7 @@ class View:
 
     def makePatternScriptsWindow(self):
 
-        uniqueWindow = PatternScriptEntities.JMRI.util.JmriJFrame()
+        uniqueWindow = PSE.JMRI.util.JmriJFrame()
 
         asMenuItem = self.makeMenuItem(self.setAsDropDownText())
         tpMenuItem = self.makeMenuItem(self.setTpDropDownText())
@@ -239,10 +239,10 @@ class View:
         logMenuItem = self.makeMenuItem(self.setLmDropDownText())
         editConfigMenuItem = self.makeMenuItem(self.setEcDropDownText())
 
-        toolsMenu = PatternScriptEntities.JAVX_SWING.JMenu(PatternScriptEntities.BUNDLE[u'Tools'])
-        toolsMenu.add(PatternScriptEntities.JMRI.jmrit.operations.setup.OptionAction())
-        toolsMenu.add(PatternScriptEntities.JMRI.jmrit.operations.setup.PrintOptionAction())
-        toolsMenu.add(PatternScriptEntities.JMRI.jmrit.operations.setup.BuildReportOptionAction())
+        toolsMenu = PSE.JAVX_SWING.JMenu(PSE.BUNDLE[u'Tools'])
+        toolsMenu.add(PSE.JMRI.jmrit.operations.setup.OptionAction())
+        toolsMenu.add(PSE.JMRI.jmrit.operations.setup.PrintOptionAction())
+        toolsMenu.add(PSE.JMRI.jmrit.operations.setup.BuildReportOptionAction())
         toolsMenu.add(asMenuItem)
         toolsMenu.add(tpMenuItem)
         toolsMenu.add(o2oMenuItem)
@@ -250,21 +250,21 @@ class View:
         toolsMenu.add(ptMenuItem)
         toolsMenu.add(rsMenuItem)
 
-        helpMenu = PatternScriptEntities.JAVX_SWING.JMenu(PatternScriptEntities.BUNDLE[u'Help'])
+        helpMenu = PSE.JAVX_SWING.JMenu(PSE.BUNDLE[u'Help'])
         helpMenu.add(helpMenuItem)
         helpMenu.add(gitHubMenuItem)
         helpMenu.add(opsFolderMenuItem)
         helpMenu.add(logMenuItem)
 
-        psMenuBar = PatternScriptEntities.JAVX_SWING.JMenuBar()
+        psMenuBar = PSE.JAVX_SWING.JMenuBar()
         psMenuBar.add(toolsMenu)
-        psMenuBar.add(PatternScriptEntities.JMRI.jmrit.operations.OperationsMenu())
-        psMenuBar.add(PatternScriptEntities.JMRI.util.WindowMenu(uniqueWindow))
+        psMenuBar.add(PSE.JMRI.jmrit.operations.OperationsMenu())
+        psMenuBar.add(PSE.JMRI.util.WindowMenu(uniqueWindow))
         psMenuBar.add(helpMenu)
 
-        configPanel = PatternScriptEntities.readConfigFile('CP')
+        configPanel = PSE.readConfigFile('CP')
         uniqueWindow.setName('patternScriptsWindow')
-        uniqueWindow.setTitle(PatternScriptEntities.BUNDLE[u'Pattern Scripts'])
+        uniqueWindow.setTitle(PSE.BUNDLE[u'Pattern Scripts'])
         uniqueWindow.addWindowListener(PatternScriptsWindowListener())
         uniqueWindow.setJMenuBar(psMenuBar)
         uniqueWindow.add(self.controlPanel)
@@ -279,7 +279,7 @@ class View:
 
         itemText, itemName = itemMethod
 
-        menuItem = PatternScriptEntities.JAVX_SWING.JMenuItem(itemText)
+        menuItem = PSE.JAVX_SWING.JMenuItem(itemText)
         menuItem.setName(itemName)
         self.psPluginMenuItems.append(menuItem)
 
@@ -288,99 +288,99 @@ class View:
     def setAsDropDownText(self):
         """itemMethod - Set the drop down text per the Apply Schedule flag"""
 
-        patternConfig = PatternScriptEntities.readConfigFile('PT')
+        patternConfig = PSE.readConfigFile('PT')
         if patternConfig['AS']:
-            menuText = PatternScriptEntities.BUNDLE[u'Do Not Apply Schedule']
+            menuText = PSE.BUNDLE[u'Do Not Apply Schedule']
         else:
-            menuText = PatternScriptEntities.BUNDLE[u'Apply Schedule']
+            menuText = PSE.BUNDLE[u'Apply Schedule']
 
         return menuText, 'asItemSelected'
 
     def setTpDropDownText(self):
         """itemMethod - Set the drop down text per the config file PatternTracksSubroutine Include flag"""
 
-        patternConfig = PatternScriptEntities.readConfigFile('CP')
+        patternConfig = PSE.readConfigFile('CP')
         if patternConfig['SI'][0]['PatternTracksSubroutine']:
-            menuText = PatternScriptEntities.BUNDLE[u'Disable Track Pattern subroutine']
+            menuText = PSE.BUNDLE[u'Disable Track Pattern subroutine']
         else:
-            menuText = PatternScriptEntities.BUNDLE[u'Enable Track Pattern subroutine']
+            menuText = PSE.BUNDLE[u'Enable Track Pattern subroutine']
 
         return menuText, 'tpItemSelected'
 
     def setOoDropDownText(self):
         """itemMethod - Set the drop down text per the config file o2oSubroutine Include flag"""
 
-        patternConfig = PatternScriptEntities.readConfigFile('CP')
+        patternConfig = PSE.readConfigFile('CP')
         if patternConfig['SI'][1]['o2oSubroutine']:
-            menuText = PatternScriptEntities.BUNDLE[u'Disable o2o subroutine']
+            menuText = PSE.BUNDLE[u'Disable o2o subroutine']
         else:
-            menuText = PatternScriptEntities.BUNDLE[u'Enable o2o subroutine']
+            menuText = PSE.BUNDLE[u'Enable o2o subroutine']
 
         return menuText, 'ooItemSelected'
 
     def setPtDropDownText(self):
         """itemMethod - Set the drop down text for the Translate Plugin item"""
 
-        menuText = PatternScriptEntities.BUNDLE[u'Translate Plugin']
+        menuText = PSE.BUNDLE[u'Translate Plugin']
 
         return menuText, 'ptItemSelected'
 
     def setRsDropDownText(self):
         """itemMethod - Set the drop down text for the Restart From Default item"""
 
-        menuText = PatternScriptEntities.BUNDLE[u'Restart From Default']
+        menuText = PSE.BUNDLE[u'Restart From Default']
 
         return menuText, 'rsItemSelected'
 
     def setHmDropDownText(self):
         """itemMethod - Set the drop down text for the Log menu item"""
 
-        menuText = PatternScriptEntities.BUNDLE[u'Window Help...']
+        menuText = PSE.BUNDLE[u'Window Help...']
 
         return menuText, 'helpItemSelected'
 
     def setLmDropDownText(self):
         """itemMethod - Set the drop down text for the Log menu item"""
 
-        menuText = PatternScriptEntities.BUNDLE[u'View Log File']
+        menuText = PSE.BUNDLE[u'View Log File']
 
         return menuText, 'logItemSelected'
 
     def setGhDropDownText(self):
         """itemMethod - Set the drop down text for the gitHub page item"""
 
-        menuText = PatternScriptEntities.BUNDLE[u'GitHub Web Page']
+        menuText = PSE.BUNDLE[u'GitHub Web Page']
 
         return menuText, 'ghItemSelected'
 
     def setEcDropDownText(self):
         """itemMethod - Set the drop down text for the edit config file item"""
 
-        menuText = PatternScriptEntities.BUNDLE[u'Edit Config File']
+        menuText = PSE.BUNDLE[u'Edit Config File']
 
         return menuText, 'ecItemSelected'
 
     def setOfDropDownText(self):
         """itemMethod - Set the drop down text for the edit config file item"""
 
-        menuText = PatternScriptEntities.BUNDLE[u'Operations Folder']
+        menuText = PSE.BUNDLE[u'Operations Folder']
 
         return menuText, 'ofItemSelected'
 
-class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
+class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
     def init(self):
         """validateFileDestinationDirestories is first to create buildstatus dir so logging works on a new profile"""
 
-        PatternScriptEntities.validateFileDestinationDirestories()
+        PSE.validateFileDestinationDirestories()
 
-        logPath = PatternScriptEntities.PROFILE_PATH  + 'operations\\buildstatus\\PatternScriptsLog.txt'
-        self.logger = PatternScriptEntities.Logger(logPath)
+        logPath = PSE.PROFILE_PATH  + 'operations\\buildstatus\\PatternScriptsLog.txt'
+        self.logger = PSE.Logger(logPath)
         self.logger.startLogger('PS')
 
         self.model = Model()
 
-        self.trainsTableModel = PatternScriptEntities.JMRI.jmrit.operations.trains.TrainsTableModel()
+        self.trainsTableModel = PSE.JMRI.jmrit.operations.trains.TrainsTableModel()
         self.builtTrainListener = BuiltTrainListener()
         self.trainsTableListener = TrainsTableListener(self.builtTrainListener)
 
@@ -412,7 +412,7 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
     def addBuiltTrainListener(self):
 
-        trainList = PatternScriptEntities.TM.getTrainsByIdList()
+        trainList = PSE.TM.getTrainsByIdList()
         for train in trainList:
             train.addPropertyChangeListener(self.builtTrainListener)
 
@@ -420,7 +420,7 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
     def removeBuiltTrainListener(self):
 
-        trainList = PatternScriptEntities.TM.getTrainsByIdList()
+        trainList = PSE.TM.getTrainsByIdList()
         for train in trainList:
             train.removePropertyChangeListener(self.builtTrainListener)
 
@@ -437,8 +437,8 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
     def closePsWindow(self):
         """Invoked by Restart From Defaults pulldown"""
 
-        for frameName in PatternScriptEntities.JMRI.util.JmriJFrame.getFrameList():
-            frame = PatternScriptEntities.JMRI.util.JmriJFrame.getFrame(frameName)
+        for frameName in PSE.JMRI.util.JmriJFrame.getFrameList():
+            frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
             if frame.getName() == 'patternScriptsWindow':
                 updateWindowParams(frame)
                 frame.setVisible(False)
@@ -448,7 +448,7 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
     def buildThePlugin(self):
 
-        PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale()
+        PSE.BUNDLE = Bundle.getBundleForLocale()
 
         view = View(None)
         emptyPluginPanel = view.makePluginPanel()
@@ -484,20 +484,20 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         """menu item-Tools/Apply Schedule"""
 
         self.psLog.debug(AS_ACTIVATE_EVENT)
-        patternConfig = PatternScriptEntities.readConfigFile()
+        patternConfig = PSE.readConfigFile()
 
         if patternConfig['PT']['AS']:
             patternConfig['PT'].update({'AS': False})
-            AS_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE[u'Apply Schedule'])
+            AS_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Apply Schedule'])
             self.psLog.info('Apply Schedule turned off')
             print('Apply Schedule turned off')
         else:
             patternConfig['PT'].update({'AS': True})
-            AS_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE[u'Do Not Apply Schedule'])
+            AS_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Do Not Apply Schedule'])
             self.psLog.info('Apply Schedule turned on')
             print('Apply Schedule turned on')
 
-        PatternScriptEntities.writeConfigFile(patternConfig)
+        PSE.writeConfigFile(patternConfig)
 
         return
 
@@ -505,22 +505,22 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         """menu item-Tools/Enable Track Pattern subroutine"""
 
         self.psLog.debug(TP_ACTIVATE_EVENT)
-        patternConfig = PatternScriptEntities.readConfigFile()
+        patternConfig = PSE.readConfigFile()
 
         if patternConfig['CP']['SI'][0]['PatternTracksSubroutine']: # If enabled, turn it off
             patternConfig['CP']['SI'][0].update({'PatternTracksSubroutine': False})
-            TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE[u'Enable Track Pattern subroutine'])
+            TP_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Enable Track Pattern subroutine'])
 
             self.psLog.info('Track Pattern support deactivated')
             print('Track Pattern support deactivated')
         else:
             patternConfig['CP']['SI'][0].update({'PatternTracksSubroutine': True})
-            TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE[u'Disable Track Pattern subroutine'])
+            TP_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Disable Track Pattern subroutine'])
 
             self.psLog.info('Track Pattern support activated')
             print('Track Pattern support activated')
 
-        PatternScriptEntities.writeConfigFile(patternConfig)
+        PSE.writeConfigFile(patternConfig)
         self.closePsWindow()
         self.buildThePlugin()
 
@@ -530,11 +530,11 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         """menu item-Tools/Enable o2o subroutine"""
 
         self.psLog.debug(TP_ACTIVATE_EVENT)
-        patternConfig = PatternScriptEntities.readConfigFile()
+        patternConfig = PSE.readConfigFile()
 
         if patternConfig['CP']['SI'][1]['o2oSubroutine']: # If enabled, turn it off
             patternConfig['CP']['SI'][1].update({'o2oSubroutine': False})
-            TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE[u'Enable o2o subroutine'])
+            TP_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Enable o2o subroutine'])
 
             self.trainsTableModel.removeTableModelListener(self.trainsTableListener)
             self.removeBuiltTrainListener()
@@ -543,7 +543,7 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
             print('o2o subroutine deactivated')
         else:
             patternConfig['CP']['SI'][1].update({'o2oSubroutine': True})
-            TP_ACTIVATE_EVENT.getSource().setText(PatternScriptEntities.BUNDLE[u'Disable o2o subroutine'])
+            TP_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Disable o2o subroutine'])
 
             self.trainsTableModel.addTableModelListener(self.trainsTableListener)
             self.addBuiltTrainListener()
@@ -551,7 +551,7 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
             self.psLog.info('o2o subroutine activated')
             print('o2o subroutine activated')
 
-        PatternScriptEntities.writeConfigFile(patternConfig)
+        PSE.writeConfigFile(patternConfig)
         self.closePsWindow()
         self.buildThePlugin()
 
@@ -573,7 +573,7 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         self.psLog.debug(RESTART_PLUGIN_EVENT)
 
     #Shutdown Items
-        PatternScriptEntities.deleteConfigFile()
+        PSE.deleteConfigFile()
 
         self.removeTrainsTableListener()
         self.removeBuiltTrainListener()
@@ -582,8 +582,8 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         # self.logger.stopLogger('PS')
 
     #Startup Items
-        PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale()
-        PatternScriptEntities.validateStubFile().isStubFile()
+        PSE.BUNDLE = Bundle.getBundleForLocale()
+        PSE.validateStubFile().isStubFile()
         Bundle.makeHelpPage()
 
         # self.logger.startLogger('PS')
@@ -598,10 +598,10 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(OPEN_HELP_EVENT)
 
-        stubPath = PatternScriptEntities.JMRI.util.FileUtil.getPreferencesPath() + 'jmrihelp\\psStub.html'
-        stubUri = PatternScriptEntities.JAVA_IO.File(stubPath).toURI()
-        if PatternScriptEntities.JAVA_IO.File(stubUri).isFile():
-            PatternScriptEntities.JAVA_AWT.Desktop.getDesktop().browse(stubUri)
+        stubPath = PSE.JMRI.util.FileUtil.getPreferencesPath() + 'jmrihelp\\psStub.html'
+        stubUri = PSE.JAVA_IO.File(stubPath).toURI()
+        if PSE.JAVA_IO.File(stubUri).isFile():
+            PSE.JAVA_AWT.Desktop.getDesktop().browse(stubUri)
         else:
             self.psLog.warning('Help file not found')
 
@@ -612,11 +612,11 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(OPEN_LOG_EVENT)
 
-        patternLog = PatternScriptEntities.makePatternLog()
-        logFilePath = PatternScriptEntities.PROFILE_PATH + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
-        PatternScriptEntities.genericWriteReport(logFilePath, patternLog)
+        patternLog = PSE.makePatternLog()
+        logFilePath = PSE.PROFILE_PATH + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
+        PSE.genericWriteReport(logFilePath, patternLog)
 
-        PatternScriptEntities.genericDisplayReport(logFilePath)
+        PSE.genericDisplayReport(logFilePath)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -628,7 +628,7 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
         self.psLog.debug(OPEN_GH_EVENT)
 
         ghPagePath = 'https://github.com//GregRitacco//OperationsPatternScripts'
-        PatternScriptEntities.JMRI.util.HelpUtil.openWebPage(ghPagePath)
+        PSE.JMRI.util.HelpUtil.openWebPage(ghPagePath)
 
         return
 
@@ -637,9 +637,9 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(OPEN_EC_EVENT)
 
-        configPath = PatternScriptEntities.PROFILE_PATH + 'operations\\PatternConfig.json'
-        if PatternScriptEntities.JAVA_IO.File(configPath).isFile():
-            PatternScriptEntities.genericDisplayReport(configPath)
+        configPath = PSE.PROFILE_PATH + 'operations\\PatternConfig.json'
+        if PSE.JAVA_IO.File(configPath).isFile():
+            PSE.genericDisplayReport(configPath)
         else:
             self.psLog.warning('Not found: ' + configPath)
 
@@ -650,10 +650,10 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(OPEN_OF_EVENT)
 
-        opsFolderPath = PatternScriptEntities.PROFILE_PATH + 'operations\\'
-        opsFolder = PatternScriptEntities.JAVA_IO.File(opsFolderPath)
+        opsFolderPath = PSE.PROFILE_PATH + 'operations\\'
+        opsFolder = PSE.JAVA_IO.File(opsFolderPath)
         if opsFolder.exists():
-            PatternScriptEntities.JAVA_AWT.Desktop.getDesktop().open(opsFolder)
+            PSE.JAVA_AWT.Desktop.getDesktop().open(opsFolder)
         else:
             self.psLog.warning('Not found: ' + opsFolderPath)
 
@@ -661,19 +661,19 @@ class Controller(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
 
     def handle(self):
 
-        startTime = PatternScriptEntities.TIME.time()
-        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.Controller')
+        startTime = PSE.TIME.time()
+        self.psLog = PSE.LOGGING.getLogger('PS.Controller')
         self.logger.initialLogMessage(self.psLog)
 
         self.model.validatePatternConfig()
-        PatternScriptEntities.validateStubFile().isStubFile()
-        if PatternScriptEntities.readConfigFile()['CP']['SI'][1]['o2oSubroutine']:
+        PSE.validateStubFile().isStubFile()
+        if PSE.readConfigFile()['CP']['SI'][1]['o2oSubroutine']:
             self.o2oSubroutineListeners()
-        if PatternScriptEntities.readConfigFile()['CP']['AP']:
+        if PSE.readConfigFile()['CP']['AP']:
             self.addPatternScriptsButton()
 
         self.psLog.info('Current Pattern Scripts directory: ' + PLUGIN_ROOT)
-        runTime = PatternScriptEntities.TIME.time() - startTime
+        runTime = PSE.TIME.time() - startTime
         self.psLog.info('Main script run time (sec): ' + str(round(runTime, 4)))
         print('Current Pattern Scripts directory: ' + PLUGIN_ROOT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

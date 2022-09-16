@@ -1,7 +1,9 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""Support methods and package constants for all Pattern Script subroutines"""
+"""PSE is an abbreviation for PatternScriptEntities.
+    Support methods and package constants for all Pattern Script subroutines
+    """
 
 import jmri as JMRI
 import logging as LOGGING
@@ -23,7 +25,7 @@ TRACK_NAME_CLICKED_ON = ''
 
 SB = JMRI.jmrit.operations.setup.Bundle()
 
-SCRIPT_NAME = 'OperationsPatternScripts.psEntities.PatternScriptEntities'
+SCRIPT_NAME = 'OperationsPatternScripts.psEntities.PSE'
 SCRIPT_REV = 20220101
 
 OM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.OperationsManager)
@@ -41,7 +43,7 @@ CMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.cars.Ca
 EMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.engines.EngineManagerXml)
 LMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.LocationManagerXml)
 
-_psLog = LOGGING.getLogger('PS.PE.PatternScriptEntities')
+_psLog = LOGGING.getLogger('PS.PE.PSE')
 
 
 class Logger:
@@ -193,7 +195,7 @@ def getShortLoadType(car):
 
     if rs.getLoadType() == 'load' or rs.getLoadType() == 'Load':
         lt = BUNDLE['load'].upper()[0]
-        
+
     if rs.isCaboose() or rs.isPassenger():
         lt = BUNDLE['occupied'].upper()[0]
 
@@ -345,7 +347,7 @@ def validateFileDestinationDirestories():
 
 def tpDirectoryExists():
 
-    psLog = LOGGING.getLogger('PS.PE.PatternScriptEntities.tpDirectoryExists')
+    psLog = LOGGING.getLogger('PS.PE.PSE.tpDirectoryExists')
 
     tpDirectory = JMRI.util.FileUtil.getHomePath() + 'AppData\\Roaming\\TrainPlayer\\Reports\\'
     if JAVA_IO.File(tpDirectory).isDirectory():

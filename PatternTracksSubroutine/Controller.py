@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-from psEntities import PatternScriptEntities
+from psEntities import PSE
 from PatternTracksSubroutine import View
 from PatternTracksSubroutine import Model
 from PatternTracksSubroutine import ModelEntities
@@ -10,7 +10,7 @@ from PatternTracksSubroutine import ModelEntities
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.Controller'
 SCRIPT_REV = 20220101
 
-class LocationComboBox(PatternScriptEntities.JAVA_AWT.event.ActionListener):
+class LocationComboBox(PSE.JAVA_AWT.event.ActionListener):
     """Event triggered from location combobox selection"""
 
     def __init__(self, subroutineFrame):
@@ -36,7 +36,7 @@ class StartUp:
 
     def __init__(self, subroutineFrame=None):
 
-        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.Controller')
+        self.psLog = PSE.LOGGING.getLogger('PS.PT.Controller')
         self.subroutineFrame = subroutineFrame
 
         return
@@ -55,7 +55,7 @@ class StartUp:
     def makeSubroutinePanel(self):
         """Makes the control panel that sits inside the frame"""
 
-        if not PatternScriptEntities.readConfigFile('PT')['AL']:
+        if not PSE.readConfigFile('PT')['AL']:
             Model.updateLocations()
 
         self.subroutinePanel, self.widgets = View.ManageGui().makeSubroutinePanel()
@@ -76,17 +76,17 @@ class StartUp:
 
         if (self.widgets[1].selected):
             # trackList = Model.makeTrackList(self.widgets[0].getSelectedItem(), 'Yard')
-            trackList = PatternScriptEntities.getTracksByLocation('Yard')
+            trackList = PSE.getTracksByLocation('Yard')
         else:
             # trackList = Model.makeTrackList(self.widgets[0].getSelectedItem(), None)
-            trackList = PatternScriptEntities.getTracksByLocation(None)
+            trackList = PSE.getTracksByLocation(None)
 
-        configFile = PatternScriptEntities.readConfigFile()
+        configFile = PSE.readConfigFile()
         trackDict = Model.updatePatternTracks(trackList)
         configFile['PT'].update({'PT': trackDict})
         configFile['PT'].update({'PA': self.widgets[1].selected})
         configFile['PT'].update({'PI': self.widgets[2].selected})
-        PatternScriptEntities.writeConfigFile(configFile)
+        PSE.writeConfigFile(configFile)
 
         subroutinePanel = StartUp(self.subroutineFrame).makeSubroutinePanel()
         self.subroutineFrame.removeAll()
@@ -106,17 +106,17 @@ class StartUp:
             self.psLog.warning('Track not found, re-select the location')
             return
 
-        if not PatternScriptEntities.getSelectedTracks():
+        if not PSE.getSelectedTracks():
             self.psLog.warning('No tracks were selected for the pattern button')
             return
 
-        PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX = PatternScriptEntities.makeReportItemWidthMatrix()
+        PSE.REPORT_ITEM_WIDTH_MATRIX = PSE.makeReportItemWidthMatrix()
 
         Model.trackPatternButton()
         View.trackPatternButton()
 
-        if PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
-            workEventName = PatternScriptEntities.BUNDLE['Track Pattern Report']
+        if PSE.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
+            workEventName = PSE.BUNDLE['Track Pattern Report']
             Model.writeTrackPatternCsv(workEventName)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
@@ -136,7 +136,7 @@ class StartUp:
             self.psLog.warning('Track not found, re-select the location')
             return
 
-        PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX = PatternScriptEntities.makeReportItemWidthMatrix()
+        PSE.REPORT_ITEM_WIDTH_MATRIX = PSE.makeReportItemWidthMatrix()
 
         View.setRsButton()
     # Reset the o2o switchlist

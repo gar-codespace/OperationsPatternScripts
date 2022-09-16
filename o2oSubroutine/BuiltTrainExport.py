@@ -18,11 +18,11 @@ class StandAloneLogging():
     def __init__(self):
 
         fileName = 'BuiltTrainExportLog.txt'
-        targetDir = PatternScriptEntities.PROFILE_PATH  + '\\operations\\buildstatus'
-        targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
+        targetDir = PSE.PROFILE_PATH  + '\\operations\\buildstatus'
+        targetPath = PSE.OS_Path.join(targetDir, fileName)
 
-        self.logger = PatternScriptEntities.Logger(targetPath)
-        self.o2oLog = PatternScriptEntities.LOGGING.getLogger('TP.StandAlone')
+        self.logger = PSE.Logger(targetPath)
+        self.o2oLog = PSE.LOGGING.getLogger('TP.StandAlone')
 
         return
 
@@ -45,7 +45,7 @@ class FindTrain:
 
     def __init__(self):
 
-        self.o2oLog = PatternScriptEntities.LOGGING.getLogger('TP.FindTrain')
+        self.o2oLog = PSE.LOGGING.getLogger('TP.FindTrain')
 
         return
 
@@ -54,7 +54,7 @@ class FindTrain:
 
         self.o2oLog.debug('findNewestTrain')
 
-        if not PatternScriptEntities.TM.isAnyTrainBuilt():
+        if not PSE.TM.isAnyTrainBuilt():
 
             return
 
@@ -72,7 +72,7 @@ class FindTrain:
         self.o2oLog.debug('getBuiltTrains')
 
         builtTrainList = []
-        for train in PatternScriptEntities.TM.getTrainsByStatusList():
+        for train in PSE.TM.getTrainsByStatusList():
             if train.isBuilt():
                 builtTrainList.append(train)
 
@@ -82,7 +82,7 @@ class FindTrain:
 
         manifest = jmri.util.FileUtil.readFile(jmri.jmrit.operations.trains.JsonManifest(train).getFile())
 
-        return PatternScriptEntities.loadJson(manifest)['date']
+        return PSE.loadJson(manifest)['date']
 
 
 class o2oWorkEventsBuilder(jmri.jmrit.automat.AbstractAutomaton):
@@ -94,7 +94,7 @@ class o2oWorkEventsBuilder(jmri.jmrit.automat.AbstractAutomaton):
         self.SCRIPT_REV = 20220101
 
         self.standAloneLogging = StandAloneLogging()
-        self.o2oLog = PatternScriptEntities.LOGGING.getLogger('TP.o2oWorkEventsBuilder')
+        self.o2oLog = PSE.LOGGING.getLogger('TP.o2oWorkEventsBuilder')
 
         return
 
@@ -114,7 +114,7 @@ class o2oWorkEventsBuilder(jmri.jmrit.automat.AbstractAutomaton):
 
         startTime = time.time()
 
-        if not PatternScriptEntities.tpDirectoryExists():
+        if not PSE.tpDirectoryExists():
             self.o2oLog.warning('TrainPlayer Reports directory not found')
             self.o2oLog.warning('TrainPlayer manifest export did not complete')
 
@@ -152,16 +152,16 @@ if __name__ == "__builtin__":
 
     PLUGIN_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
     sysPath.append(PLUGIN_ROOT)
-    from psEntities import PatternScriptEntities
+    from psEntities import PSE
     from o2oSubroutine import ModelWorkEvents
     from o2oSubroutine import ModelEntities
     from psBundle import Bundle
 
     Bundle.BUNDLE_DIR = PLUGIN_ROOT + '\\psBundle\\'
 
-    PatternScriptEntities.PLUGIN_ROOT = PLUGIN_ROOT
-    PatternScriptEntities.BUNDLE = Bundle.getBundleForLocale()
-    PatternScriptEntities.ENCODING = 'utf-8'
+    PSE.PLUGIN_ROOT = PLUGIN_ROOT
+    PSE.BUNDLE = Bundle.getBundleForLocale()
+    PSE.ENCODING = 'utf-8'
 
     tpManifest = o2oWorkEventsBuilder()
     newestTrain = tpManifest.getNewestTrain()
@@ -172,6 +172,6 @@ if __name__ == "__builtin__":
 else:
 
     PLUGIN_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
-    from psEntities import PatternScriptEntities
+    from psEntities import PSE
     from o2oSubroutine import ModelWorkEvents
     from o2oSubroutine import ModelEntities

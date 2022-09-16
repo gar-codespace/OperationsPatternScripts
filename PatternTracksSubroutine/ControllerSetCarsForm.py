@@ -3,7 +3,7 @@
 
 """Makes a 'Set Cars Form for Track X' form for each selected track"""
 
-from psEntities import PatternScriptEntities
+from psEntities import PSE
 from PatternTracksSubroutine import Model
 from PatternTracksSubroutine import ModelSetCarsForm
 from PatternTracksSubroutine import ViewSetCarsForm
@@ -12,19 +12,19 @@ from o2oSubroutine import ModelWorkEvents
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ControllerSetCarsForm'
 SCRIPT_REV = 20220101
 
-class TextBoxEntryListener(PatternScriptEntities.JAVA_AWT.event.MouseAdapter):
+class TextBoxEntryListener(PSE.JAVA_AWT.event.MouseAdapter):
     """When any of the 'Set Cars Form for Track X' text inpou boxes is clicked on"""
 
     def __init__(self):
 
-        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.TextBoxEntryListener')
+        self.psLog = PSE.LOGGING.getLogger('PS.PT.TextBoxEntryListener')
 
         return
 
     def mouseClicked(self, MOUSE_CLICKED):
 
-        if PatternScriptEntities.TRACK_NAME_CLICKED_ON:
-            MOUSE_CLICKED.getSource().setText(PatternScriptEntities.TRACK_NAME_CLICKED_ON)
+        if PSE.TRACK_NAME_CLICKED_ON:
+            MOUSE_CLICKED.getSource().setText(PSE.TRACK_NAME_CLICKED_ON)
         else:
             self.psLog.warning('No track was selected')
 
@@ -37,7 +37,7 @@ class CreateSetCarsFormGui:
 
     def __init__(self, setCarsForm):
 
-        self.psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.CreateSetCarsFormGui')
+        self.psLog = PSE.LOGGING.getLogger('PS.PT.CreateSetCarsFormGui')
 
         self.setCarsForm = setCarsForm
         self.locationName = setCarsForm['locations'][0]['locationName']
@@ -89,7 +89,7 @@ class CreateSetCarsFormGui:
     def trackRowButton(self, MOUSE_CLICKED):
         """Any button of the 'Set Cars Form for Track X' - row of track buttons"""
 
-        PatternScriptEntities.TRACK_NAME_CLICKED_ON = unicode(MOUSE_CLICKED.getSource().getText(), PatternScriptEntities.ENCODING)
+        PSE.TRACK_NAME_CLICKED_ON = unicode(MOUSE_CLICKED.getSource().getText(), PSE.ENCODING)
 
         return
 
@@ -97,9 +97,9 @@ class CreateSetCarsFormGui:
         """The named schedule button if displayed for the active 'Set Cars Form for Track X' window"""
 
         scheduleName = MOUSE_CLICKED.getSource().getText()
-        schedule = PatternScriptEntities.SM.getScheduleByName(scheduleName)
-        track = PatternScriptEntities.LM.getLocationByName(self.locationName).getTrackByName(self.trackName, None)
-        PatternScriptEntities.JMRI.jmrit.operations.locations.schedules.ScheduleEditFrame(schedule, track)
+        schedule = PSE.SM.getScheduleByName(scheduleName)
+        track = PSE.LM.getLocationByName(self.locationName).getTrackByName(self.trackName, None)
+        PSE.JMRI.jmrit.operations.locations.schedules.ScheduleEditFrame(schedule, track)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -113,14 +113,14 @@ class CreateSetCarsFormGui:
         if not self.quickCheck():
             return
 
-        PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX = PatternScriptEntities.makeReportItemWidthMatrix()
+        PSE.REPORT_ITEM_WIDTH_MATRIX = PSE.makeReportItemWidthMatrix()
 
         ModelSetCarsForm.writeToJson(self.setCarsForm)
     # Modify and disply the set cars form
         ViewSetCarsForm.switchListButton(self.buttonDict['textBoxEntry'])
 
-        if PatternScriptEntities.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
-            workEventName = PatternScriptEntities.BUNDLE['Switch List for Track']
+        if PSE.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
+            workEventName = PSE.BUNDLE['Switch List for Track']
             Model.writeTrackPatternCsv(workEventName)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
@@ -137,7 +137,7 @@ class CreateSetCarsFormGui:
         if not self.quickCheck():
             return
 
-        PatternScriptEntities.REPORT_ITEM_WIDTH_MATRIX = PatternScriptEntities.makeReportItemWidthMatrix()
+        PSE.REPORT_ITEM_WIDTH_MATRIX = PSE.makeReportItemWidthMatrix()
 
         ModelSetCarsForm.writeToJson(self.setCarsForm)
     # Set the cars to the selected tracks
@@ -161,7 +161,7 @@ class CreateSetCarsFormGui:
         if not self.quickCheck():
             return
 
-        MOUSE_CLICKED.getSource().setBackground(PatternScriptEntities.JAVA_AWT.Color.GREEN)
+        MOUSE_CLICKED.getSource().setBackground(PSE.JAVA_AWT.Color.GREEN)
 
     # Format for display and replace Set_To for the setCarsForm
         ptSetCarsForm = ViewSetCarsForm.o2oButton(self.setCarsForm, self.buttonDict['textBoxEntry'])

@@ -3,13 +3,13 @@
 
 """From tpRailroadData.json, a new rr is created and the xml files are seeded"""
 
-from psEntities import PatternScriptEntities
+from psEntities import PSE
 from o2oSubroutine import ModelEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelNew'
 SCRIPT_REV = 20220101
 
-_psLog = PatternScriptEntities.LOGGING.getLogger('PS.TP.ModelNew')
+_psLog = PSE.LOGGING.getLogger('PS.TP.ModelNew')
 
 
 def newJmriRailroad():
@@ -17,25 +17,25 @@ def newJmriRailroad():
 
     closeAllEditWindows()
     jmriRailroad = SetupXML()
-    PatternScriptEntities.OM.initialize()
+    PSE.OM.initialize()
     jmriRailroad.tweakOperationsXml()
-    PatternScriptEntities.OMX.save()
+    PSE.OMX.save()
 
     allRsRosters = NewRsAttributes()
-    PatternScriptEntities.CM.initialize()
+    PSE.CM.initialize()
     allRsRosters.newRoads()
     allRsRosters.newCarAar()
     allRsRosters.newCarLoads()
     allRsRosters.newCarKernels()
 
-    PatternScriptEntities.EM.initialize()
+    PSE.EM.initialize()
     allRsRosters.newLocoModels()
     allRsRosters.newLocoTypes()
     allRsRosters.newLocoConsist()
 
     newLocations = NewLocationsAndTracks()
-    PatternScriptEntities.LM.initialize()
-    PatternScriptEntities.LM.dispose()
+    PSE.LM.initialize()
+    PSE.LM.dispose()
     newLocations.newLocations()
     newLocations.newSchedules()
     newLocations.newTracks()
@@ -45,16 +45,16 @@ def newJmriRailroad():
     newInventory.getTpInventory()
     newInventory.splitTpList()
     newInventory.makeTpRollingStockData()
-    PatternScriptEntities.CM.dispose()
-    PatternScriptEntities.EM.dispose()
+    PSE.CM.dispose()
+    PSE.EM.dispose()
     newInventory.newCars()
     newInventory.newLocos()
-    PatternScriptEntities.CMX.save()
-    PatternScriptEntities.EMX.save()
+    PSE.CMX.save()
+    PSE.EMX.save()
 
     newLocations.setNonSpurTrackLength()
     newLocations.refineSpurTypes()
-    PatternScriptEntities.LMX.save()
+    PSE.LMX.save()
 
     return
 
@@ -65,18 +65,18 @@ def getTpRailroadData():
 
     reportName = 'tpRailroadData'
     fileName = reportName + '.json'
-    targetDir = PatternScriptEntities.PROFILE_PATH + '\\operations'
-    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
+    targetDir = PSE.PROFILE_PATH + '\\operations'
+    targetPath = PSE.OS_Path.join(targetDir, fileName)
 
     try:
-        PatternScriptEntities.JAVA_IO.File(targetPath).isFile()
+        PSE.JAVA_IO.File(targetPath).isFile()
         _psLog.info('tpRailroadData.json OK')
     except:
         _psLog.warning('tpRailroadData.json not found')
         return
 
-    report = PatternScriptEntities.genericReadReport(targetPath)
-    tpRailroad = PatternScriptEntities.loadJson(report)
+    report = PSE.genericReadReport(targetPath)
+    tpRailroad = PSE.loadJson(report)
 
     return tpRailroad
 
@@ -85,8 +85,8 @@ def closeAllEditWindows():
         Lazy work around, figure this our for real later
         """
 
-    for frameName in PatternScriptEntities.JMRI.util.JmriJFrame.getFrameList():
-        frame = PatternScriptEntities.JMRI.util.JmriJFrame.getFrame(frameName)
+    for frameName in PSE.JMRI.util.JmriJFrame.getFrameList():
+        frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
         if frame.getTitle().startswith('Edit'):
             frame.setVisible(False)
             frame.dispose()
@@ -98,7 +98,7 @@ class SetupXML:
 
     def __init__(self):
 
-        self.o2oConfig =  PatternScriptEntities.readConfigFile('o2o')
+        self.o2oConfig =  PSE.readConfigFile('o2o')
         self.TpRailroad = getTpRailroadData()
 
         return
@@ -110,7 +110,7 @@ class SetupXML:
 
         _psLog.debug('tweakOperationsXml')
 
-        OSU = PatternScriptEntities.JMRI.jmrit.operations.setup
+        OSU = PSE.JMRI.jmrit.operations.setup
         OSU.Setup.setRailroadName(self.TpRailroad['railroadName'])
         OSU.Setup.setComment(self.TpRailroad['railroadDescription'])
 
@@ -147,15 +147,15 @@ class NewRsAttributes:
 
         _psLog.debug('newRoads')
 
-        tc = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarRoads
-        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
+        tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarRoads
+        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
         # TCM.dispose()
         nameList = TCM.getNames()
         for xName in nameList:
-            xName = unicode(xName, PatternScriptEntities.ENCODING)
+            xName = unicode(xName, PSE.ENCODING)
             TCM.deleteName(xName)
         for xName in self.tpRailroadData['roads']:
-            xName = unicode(xName, PatternScriptEntities.ENCODING)
+            xName = unicode(xName, PSE.ENCODING)
             TCM.addName(xName)
 
         return
@@ -165,15 +165,15 @@ class NewRsAttributes:
 
         _psLog.debug('newCarAar')
 
-        tc = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarTypes
-        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
+        tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarTypes
+        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
         TCM.dispose()
         nameList = TCM.getNames()
         for xName in nameList:
-            xName = unicode(xName, PatternScriptEntities.ENCODING)
+            xName = unicode(xName, PSE.ENCODING)
             TCM.deleteName(xName)
         for xName in self.tpRailroadData['carAAR']:
-            xName = unicode(xName, PatternScriptEntities.ENCODING)
+            xName = unicode(xName, PSE.ENCODING)
             TCM.addName(xName)
 
         return
@@ -183,11 +183,11 @@ class NewRsAttributes:
 
         _psLog.debug('newCarLoads')
 
-        tc = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.CarLoads
-        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
+        tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarLoads
+        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
         carLoads = self.tpRailroadData['carLoads']
         for aar in self.tpRailroadData['carAAR']:
-            aar = unicode(aar, PatternScriptEntities.ENCODING)
+            aar = unicode(aar, PSE.ENCODING)
             TCM.addType(aar)
             TCM.addName(aar, 'Empty')
             TCM.addName(aar, 'Load')
@@ -205,15 +205,15 @@ class NewRsAttributes:
 
         _psLog.debug('newCarKernels')
 
-        # tc = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.cars.KernelManager
-        # TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
-        nameList = PatternScriptEntities.KM.getNameList()
+        # tc = PSE.JMRI.jmrit.operations.rollingstock.cars.KernelManager
+        # TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+        nameList = PSE.KM.getNameList()
         for xName in nameList:
-            xName = unicode(xName, PatternScriptEntities.ENCODING)
-            PatternScriptEntities.KM.deleteKernel(xName)
+            xName = unicode(xName, PSE.ENCODING)
+            PSE.KM.deleteKernel(xName)
         for xName in self.tpRailroadData['carKernel']:
-            xName = unicode(xName, PatternScriptEntities.ENCODING)
-            PatternScriptEntities.KM.newKernel(xName)
+            xName = unicode(xName, PSE.ENCODING)
+            PSE.KM.newKernel(xName)
 
         return
 
@@ -222,15 +222,15 @@ class NewRsAttributes:
 
         _psLog.debug('newLocoModels')
 
-        tc = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.engines.EngineModels
-        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
+        tc = PSE.JMRI.jmrit.operations.rollingstock.engines.EngineModels
+        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
         nameList = TCM.getNames()
         for xName in nameList:
-            xName = unicode(xName, PatternScriptEntities.ENCODING)
+            xName = unicode(xName, PSE.ENCODING)
             TCM.deleteName(xName)
         for xName in self.tpRailroadData['locoModels']:
-            xModel = unicode(xName[0], PatternScriptEntities.ENCODING)
-            xType = unicode(xName[1], PatternScriptEntities.ENCODING)
+            xModel = unicode(xName[0], PSE.ENCODING)
+            xType = unicode(xName[1], PSE.ENCODING)
             TCM.addName(xModel)
             TCM.setModelType(xModel, xType)
             TCM.setModelLength(xModel, '40')
@@ -242,14 +242,14 @@ class NewRsAttributes:
 
         _psLog.debug('newLocoTypes')
 
-        tc = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.engines.EngineTypes
-        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
+        tc = PSE.JMRI.jmrit.operations.rollingstock.engines.EngineTypes
+        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
         nameList = TCM.getNames()
         for xName in nameList:
-            xName = unicode(xName, PatternScriptEntities.ENCODING)
+            xName = unicode(xName, PSE.ENCODING)
             TCM.deleteName(xName)
         for xName in self.tpRailroadData['locoTypes']:
-            xName = unicode(xName, PatternScriptEntities.ENCODING)
+            xName = unicode(xName, PSE.ENCODING)
             TCM.addName(xName)
 
         return
@@ -259,15 +259,15 @@ class NewRsAttributes:
 
         _psLog.debug('newLocoConsist')
 
-        # tc = PatternScriptEntities.JMRI.jmrit.operations.rollingstock.engines.ConsistManager
-        # TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
-        nameList = PatternScriptEntities.ZM.getNameList()
+        # tc = PSE.JMRI.jmrit.operations.rollingstock.engines.ConsistManager
+        # TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+        nameList = PSE.ZM.getNameList()
         for xName in nameList:
-            xName = unicode(xName, PatternScriptEntities.ENCODING)
-            PatternScriptEntities.ZM.deleteConsist(xName)
+            xName = unicode(xName, PSE.ENCODING)
+            PSE.ZM.deleteConsist(xName)
         for xName in self.tpRailroadData['locoConsists']:
-            xName = unicode(xName, PatternScriptEntities.ENCODING)
-            PatternScriptEntities.ZM.newConsist(xName)
+            xName = unicode(xName, PSE.ENCODING)
+            PSE.ZM.newConsist(xName)
 
         return
 
@@ -277,7 +277,7 @@ class NewLocationsAndTracks:
     def __init__(self):
 
         self.tpRailroadData = getTpRailroadData()
-        self.o2oConfig =  PatternScriptEntities.readConfigFile('o2o')
+        self.o2oConfig =  PSE.readConfigFile('o2o')
 
         return
 
@@ -295,7 +295,7 @@ class NewLocationsAndTracks:
         _psLog.debug('newLocations')
 
         for location in self.tpRailroadData['locations']:
-            newLocation = PatternScriptEntities.LM.newLocation(location)
+            newLocation = PSE.LM.newLocation(location)
 
         return
 
@@ -306,8 +306,8 @@ class NewLocationsAndTracks:
 
         _psLog.debug('newSchedules')
 
-        tc = PatternScriptEntities.JMRI.jmrit.operations.locations.schedules.ScheduleManager
-        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
+        tc = PSE.JMRI.jmrit.operations.locations.schedules.ScheduleManager
+        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
         TCM.dispose()
         for id, industry in self.tpRailroadData['industries'].items():
             scheduleLineItem = industry['schedule']
@@ -323,11 +323,11 @@ class NewLocationsAndTracks:
 
         _psLog.debug('newTracks')
 
-        tc = PatternScriptEntities.JMRI.jmrit.operations.locations.schedules.ScheduleManager
-        TCM = PatternScriptEntities.JMRI.InstanceManager.getDefault(tc)
+        tc = PSE.JMRI.jmrit.operations.locations.schedules.ScheduleManager
+        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
         # TCM.dispose()
         for item in self.tpRailroadData['locales']:
-            loc = PatternScriptEntities.LM.getLocationByName(item[1]['location'])
+            loc = PSE.LM.getLocationByName(item[1]['location'])
             xTrack = loc.addTrack(item[1]['track'], item[1]['type'])
             xTrack.setComment(item[0])
             trackLength = int(item[1]['capacity']) * 44
@@ -346,7 +346,7 @@ class NewLocationsAndTracks:
 
         for item in self.tpRailroadData['locales']:
             if item[1]['type'] == 'Spur':
-                loc = PatternScriptEntities.LM.getLocationByName(item[1]['location'])
+                loc = PSE.LM.getLocationByName(item[1]['location'])
                 track = loc.getTrackByName(item[1]['track'], None)
                 for typeName in loc.getTypeNames():
                     track.deleteTypeName(typeName)
@@ -360,7 +360,7 @@ class NewLocationsAndTracks:
 
         _psLog.debug('setNonSpurTrackLength')
 
-        trackList = PatternScriptEntities.getAllTracks()
+        trackList = PSE.getAllTracks()
         for track in trackList:
             if track.getTrackType() == 'Spur':
                 continue
@@ -378,7 +378,7 @@ class NewLocationsAndTracks:
         _psLog.debug('refineSpurTypes')
 
         for id, attribs in self.tpRailroadData['industries'].items():
-            track = PatternScriptEntities.LM.getLocationByName(attribs['location']).getTrackByName(attribs['track'], None)
+            track = PSE.LM.getLocationByName(attribs['location']).getTrackByName(attribs['track'], None)
             track.addTypeName(attribs['type'])
 
         return
@@ -390,15 +390,15 @@ class NewRollingStock:
 
     def __init__(self):
 
-        self.o2oConfig = PatternScriptEntities.readConfigFile('o2o')
+        self.o2oConfig = PSE.readConfigFile('o2o')
 
         self.tpRollingStockFile = self.o2oConfig['TRR']
         self.tpInventory = []
         self.tpCars = {}
         self.tpLocos = {}
 
-        self.jmriCars = PatternScriptEntities.CM.getList()
-        self.jmriLocos = PatternScriptEntities.EM.getList()
+        self.jmriCars = PSE.CM.getList()
+        self.jmriLocos = PSE.EM.getList()
 
         return
 
@@ -451,11 +451,11 @@ class NewRollingStock:
 
         reportName = 'tpRollingStockData'
         fileName = reportName + '.json'
-        targetDir = PatternScriptEntities.PROFILE_PATH + '\\operations'
-        targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
+        targetDir = PSE.PROFILE_PATH + '\\operations'
+        targetPath = PSE.OS_Path.join(targetDir, fileName)
 
-        formattedRsFile = PatternScriptEntities.dumpJson(rsData)
-        PatternScriptEntities.genericWriteReport(targetPath, formattedRsFile)
+        formattedRsFile = PSE.dumpJson(rsData)
+        PSE.genericWriteReport(targetPath, formattedRsFile)
 
         return
 
@@ -467,7 +467,7 @@ class NewRollingStock:
 
         for id, attribs in self.tpCars.items():
             rsRoad, rsNumber = ModelEntities.parseCarId(id)
-            updatedCar = PatternScriptEntities.CM.newRS(rsRoad, rsNumber)
+            updatedCar = PSE.CM.newRS(rsRoad, rsNumber)
             xLocation, xTrack = ModelEntities.getSetToLocationAndTrack(attribs['location'], attribs['track'])
             if not xLocation:
                 _psLog.warning(id + 'not set at: ' + attribs['location'], attribs['track'])
@@ -487,7 +487,7 @@ class NewRollingStock:
                     updatedCar.setLoadName('E')
             except:
                 print('Not found', xTrack, updatedCar.getId())
-            updatedCar.setKernel(PatternScriptEntities.KM.getKernelByName(attribs['kernel']))
+            updatedCar.setKernel(PSE.KM.getKernelByName(attribs['kernel']))
 
         return
 
@@ -497,7 +497,7 @@ class NewRollingStock:
 
         for id, attribs in self.tpLocos.items():
             rsRoad, rsNumber = ModelEntities.parseCarId(id)
-            updatedLoco = PatternScriptEntities.EM.newRS(rsRoad, rsNumber)
+            updatedLoco = PSE.EM.newRS(rsRoad, rsNumber)
             location, track = ModelEntities.getSetToLocationAndTrack(attribs['location'], attribs['track'])
             if not location:
                 _psLog.warning(id + 'not set at: ' + attribs['location'], attribs['track'])
@@ -508,6 +508,6 @@ class NewRollingStock:
         # Setting the model will automatically set the type
             updatedLoco.setWeight('2')
             updatedLoco.setColor('Black')
-            updatedLoco.setConsist(PatternScriptEntities.ZM.getConsistByName(attribs['consist']))
+            updatedLoco.setConsist(PSE.ZM.getConsistByName(attribs['consist']))
 
         return

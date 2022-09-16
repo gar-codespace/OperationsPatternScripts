@@ -3,7 +3,7 @@
 
 """Creates the TrainPlayer panel, implemented in v3."""
 
-from psEntities import PatternScriptEntities
+from psEntities import PSE
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ViewEntities'
 SCRIPT_REV = 20220101
@@ -12,18 +12,18 @@ class O2oSubroutinePanel:
 
     def __init__(self):
 
-        self.configFile = PatternScriptEntities.readConfigFile('o2o')
+        self.configFile = PSE.readConfigFile('o2o')
 
-        self.irButton = PatternScriptEntities.JAVX_SWING.JButton()
-        self.irButton.setText(PatternScriptEntities.BUNDLE[u'Import TrainPlayer© Railroad'])
+        self.irButton = PSE.JAVX_SWING.JButton()
+        self.irButton.setText(PSE.BUNDLE[u'Import TrainPlayer© Railroad'])
         self.irButton.setName('irButton')
 
-        self.nrButton = PatternScriptEntities.JAVX_SWING.JButton()
-        self.nrButton.setText(PatternScriptEntities.BUNDLE[u'New JMRI Railroad'])
+        self.nrButton = PSE.JAVX_SWING.JButton()
+        self.nrButton.setText(PSE.BUNDLE[u'New JMRI Railroad'])
         self.nrButton.setName('nrButton')
 
-        self.urButton = PatternScriptEntities.JAVX_SWING.JButton()
-        self.urButton.setText(PatternScriptEntities.BUNDLE[u'Update Rolling Stock'])
+        self.urButton = PSE.JAVX_SWING.JButton()
+        self.urButton.setText(PSE.BUNDLE[u'Update Rolling Stock'])
         self.urButton.setName('urButton')
 
         self.controlWidgets = []
@@ -32,12 +32,12 @@ class O2oSubroutinePanel:
 
     def o2oPanelMaker(self):
 
-        tpPanel = PatternScriptEntities.JAVX_SWING.JPanel()
+        tpPanel = PSE.JAVX_SWING.JPanel()
 
         tpPanel.add(self.irButton)
-        tpPanel.add(PatternScriptEntities.JAVX_SWING.Box.createRigidArea(PatternScriptEntities.JAVA_AWT.Dimension(20,0)))
+        tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
         tpPanel.add(self.nrButton)
-        tpPanel.add(PatternScriptEntities.JAVX_SWING.Box.createRigidArea(PatternScriptEntities.JAVA_AWT.Dimension(20,0)))
+        tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
         tpPanel.add(self.urButton)
 
         return tpPanel

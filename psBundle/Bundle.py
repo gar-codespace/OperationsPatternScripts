@@ -6,15 +6,15 @@
 from urllib2 import urlopen
 import sys
 
-from psEntities import PatternScriptEntities
+from psEntities import PSE
 from psBundle import Translators
 
 SCRIPT_NAME = 'OperationsPatternScripts.psBundle.Bundle'
 SCRIPT_REV = 20220101
 
-_psLog = PatternScriptEntities.LOGGING.getLogger('PS.B.Bundle')
+_psLog = PSE.LOGGING.getLogger('PS.B.Bundle')
 
-BUNDLE_DIR = PatternScriptEntities.PLUGIN_ROOT + '\\psBundle\\'
+BUNDLE_DIR = PSE.PLUGIN_ROOT + '\\psBundle\\'
 
 PLUGIN = [] # Scratch file for translation
 HELP = [] # Scratch file for translation
@@ -22,37 +22,37 @@ HELP = [] # Scratch file for translation
 def getBundleForLocale():
     """Gets the bundle for the current locale if it exists, otherwise english."""
 
-    psLocale = 'plugin.' + PatternScriptEntities.psLocale() + '.json'
-    fileList = PatternScriptEntities.JAVA_IO.File(BUNDLE_DIR).list()
+    psLocale = 'plugin.' + PSE.psLocale() + '.json'
+    fileList = PSE.JAVA_IO.File(BUNDLE_DIR).list()
 
     if psLocale in fileList:
         bundleFileLocation = BUNDLE_DIR + psLocale
     else:
         bundleFileLocation = BUNDLE_DIR + 'plugin.en.json'
 
-    bundleFile = PatternScriptEntities.genericReadReport(bundleFileLocation)
-    bundleFile = PatternScriptEntities.loadJson(bundleFile)
+    bundleFile = PSE.genericReadReport(bundleFileLocation)
+    bundleFile = PSE.loadJson(bundleFile)
 
     return bundleFile
 
 def getHelpPageForLocale():
     """Gets the help page for the current locale if it exists, otherwise english."""
 
-    psLocale = PatternScriptEntities.psLocale() + '.json'
-    fileList = PatternScriptEntities.JAVA_IO.File(BUNDLE_DIR).list()
+    psLocale = PSE.psLocale() + '.json'
+    fileList = PSE.JAVA_IO.File(BUNDLE_DIR).list()
 
     if psLocale in fileList:
         bundleFileLocation = BUNDLE_DIR + 'help.' + psLocale + '.json'
     else:
         bundleFileLocation = BUNDLE_DIR + 'help.en.json'
 
-    helpBundleFile = PatternScriptEntities.genericReadReport(bundleFileLocation)
+    helpBundleFile = PSE.genericReadReport(bundleFileLocation)
 
 def validateKeyFile():
     """Checks that the keys.py file exists"""
 
     itemTarget =  BUNDLE_DIR + 'Keys.py'
-    if PatternScriptEntities.JAVA_IO.File(itemTarget).isFile():
+    if PSE.JAVA_IO.File(itemTarget).isFile():
         return True
     else:
         _psLog.warning('Authentication key file not found')
@@ -62,22 +62,22 @@ def validateKeyFile():
 def makeBundles():
     """Makes a translated bundle for each of the items in readConfigFile('CP')['BT']"""
 
-    bundleTargets = PatternScriptEntities.readConfigFile('CP')['BT']
+    bundleTargets = PSE.readConfigFile('CP')['BT']
 
     for item in bundleTargets:
 
-        startTime = PatternScriptEntities.TIME.time()
+        startTime = PSE.TIME.time()
 
         itemSource =  BUNDLE_DIR + 'template' + item + '.txt'
-        itemTarget =  BUNDLE_DIR + item.lower() + '.' + PatternScriptEntities.psLocale()[:2] + '.json'
+        itemTarget =  BUNDLE_DIR + item.lower() + '.' + PSE.psLocale()[:2] + '.json'
         itemScratch = getattr(sys.modules[__name__], item.upper())
         bundleFile = getBundleTemplate(itemSource)
 
-        if not PatternScriptEntities.JAVA_IO.File(itemTarget).isFile():
+        if not PSE.JAVA_IO.File(itemTarget).isFile():
             translation = baseTranslator(bundleFile, itemScratch)
-            PatternScriptEntities.genericWriteReport(itemTarget, translation)
+            PSE.genericWriteReport(itemTarget, translation)
 
-            runTime = PatternScriptEntities.TIME.time() - startTime
+            runTime = PSE.TIME.time() - startTime
             _psLog.info(item + ' translation time: ' + str(round(runTime, 2)))
 
         else:
@@ -89,7 +89,7 @@ def makeBundles():
 
 def getBundleTemplate(file):
 
-    baseTemplate = PatternScriptEntities.genericReadReport(file)
+    baseTemplate = PSE.genericReadReport(file)
 
     bundleTemplate = baseTemplate.splitlines()
 
@@ -101,13 +101,13 @@ def baseTranslator(bundleFile, scratchFile):
     translator.setTranslationService()
     translator.translateItems()
     baseTranslation = translator.makeDictionary()
-    translation = PatternScriptEntities.dumpJson(baseTranslation)
+    translation = PSE.dumpJson(baseTranslation)
 
     return translation
 
 
 class Translator:
-    """Choice of translators from PatternScriptEntities.readConfigFile('CP')['TS']['TC']"""
+    """Choice of translators from PSE.readConfigFile('CP')['TS']['TC']"""
 
     def __init__(self, bundleFile, scratchFile):
 
@@ -116,7 +116,7 @@ class Translator:
         self.tempResult = []
         self.scratchFile = scratchFile
 
-        controlPanel = PatternScriptEntities.readConfigFile('CP')
+        controlPanel = PSE.readConfigFile('CP')
         self.translatorChoice = controlPanel['TS'][controlPanel['TC']]
 
         return
@@ -134,7 +134,7 @@ class Translator:
     # Meter the items to be translated
         i = 0
         for item in self.bundleFile:
-            encodedItem = unicode(item, PatternScriptEntities.ENCODING)
+            encodedItem = unicode(item, PSE.ENCODING)
             bundleItem = MakeBundleItem()
             url = self.translationService.getTheUrl(encodedItem)
             bundleItem.passInAttributes(self.scratchFile, url, item)
@@ -142,19 +142,19 @@ class Translator:
             i += 1
             if i == 10:
                 i = 0
-                PatternScriptEntities.TIME.sleep(.7)
+                PSE.TIME.sleep(.7)
 
     # Homebrew version of await
-        timeOut = PatternScriptEntities.TIME.time() + 20
+        timeOut = PSE.TIME.time() + 20
         while True:
-            if PatternScriptEntities.TIME.time() > timeOut:
+            if PSE.TIME.time() > timeOut:
                 _psLog.warning('Connection Timed Out')
                 print('Connection Timed Out')
                 break
             if len(self.scratchFile) == len(self.bundleFile):
                 print('Translation Completed')
                 break
-            PatternScriptEntities.TIME.sleep(.1)
+            PSE.TIME.sleep(.1)
 
     def makeDictionary(self):
 
@@ -165,7 +165,7 @@ class Translator:
         return self.translationDict
 
 
-class MakeBundleItem(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton):
+class MakeBundleItem(PSE.JMRI.jmrit.automat.AbstractAutomaton):
     """Homebrew version of concurrency."""
 
     def init(self):
@@ -191,13 +191,13 @@ class MakeBundleItem(PatternScriptEntities.JMRI.jmrit.automat.AbstractAutomaton)
         for i in range(3):
             try:
                 response = urlopen(self.url)
-                translation = PatternScriptEntities.loadJson(response.read())
+                translation = PSE.loadJson(response.read())
                 response.close()
             except:
                 _psLog.warning('Not translated: ' + self.item)
             if response:
                 break
-            PatternScriptEntities.TIME.sleep(.05)
+            PSE.TIME.sleep(.05)
 
         translation['source'] = self.item
         translation['error'] = self.item
@@ -210,20 +210,20 @@ def makeHelpPage():
     """Makes the help page for the current locale."""
 
     helpPageTemplatePath = BUNDLE_DIR + 'templateHelp.html.txt'
-    baseHelpPage = PatternScriptEntities.genericReadReport(helpPageTemplatePath)
+    baseHelpPage = PSE.genericReadReport(helpPageTemplatePath)
 
-    translationMatrixPath = BUNDLE_DIR + 'help.' + PatternScriptEntities.psLocale() + '.json'
-    baseTranslationMatrix = PatternScriptEntities.genericReadReport(translationMatrixPath)
-    translationMatrix = PatternScriptEntities.loadJson(baseTranslationMatrix)
+    translationMatrixPath = BUNDLE_DIR + 'help.' + PSE.psLocale() + '.json'
+    baseTranslationMatrix = PSE.genericReadReport(translationMatrixPath)
+    translationMatrix = PSE.loadJson(baseTranslationMatrix)
 
     for hKey, hValue in translationMatrix.items():
 
-        hKey = unicode(hKey, PatternScriptEntities.ENCODING)
-        hValue = unicode(hValue, PatternScriptEntities.ENCODING)
+        hKey = unicode(hKey, PSE.ENCODING)
+        hValue = unicode(hValue, PSE.ENCODING)
 
         baseHelpPage = baseHelpPage.replace(hKey, hValue)
 
-    helpPagePath = PatternScriptEntities.PLUGIN_ROOT + '\\psSupport\\' + 'Help.' + PatternScriptEntities.psLocale() + '.html'
-    PatternScriptEntities.genericWriteReport(helpPagePath, baseHelpPage)
+    helpPagePath = PSE.PLUGIN_ROOT + '\\psSupport\\' + 'Help.' + PSE.psLocale() + '.html'
+    PSE.genericWriteReport(helpPagePath, baseHelpPage)
 
     return

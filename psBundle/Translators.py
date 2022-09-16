@@ -5,7 +5,7 @@
 
 from urllib import urlencode
 
-from psEntities import PatternScriptEntities
+from psEntities import PSE
 try:
     from psBundle import Keys
 except:
@@ -26,9 +26,9 @@ class useDeepL:
     def getTheUrl(self, item):
 
         params = urlencode( (('auth_key', self.AUTH_KEY),
-                                 ('text', item.encode(PatternScriptEntities.ENCODING)),
+                                 ('text', item.encode(PSE.ENCODING)),
                                  ('source_lang', self.SOURCE_LANG),
-                                 ('target_lang', PatternScriptEntities.psLocale()),
+                                 ('target_lang', PSE.psLocale()),
                                  ('split_sentences', 0))
                                  )
 

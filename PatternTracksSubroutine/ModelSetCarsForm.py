@@ -3,13 +3,13 @@
 
 """Process methods for the Set Cars Form for Track X form"""
 
-from psEntities import PatternScriptEntities
+from psEntities import PSE
 from PatternTracksSubroutine import ModelEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ModelSetCarsForm'
 SCRIPT_REV = 20220101
 
-_psLog = PatternScriptEntities.LOGGING.getLogger('PS.PT.ModelSetCarsForm')
+_psLog = PSE.LOGGING.getLogger('PS.PT.ModelSetCarsForm')
 
 def writeToJson(setCarsForm):
     """Mini controller that writes the set cars form to json.
@@ -18,13 +18,13 @@ def writeToJson(setCarsForm):
         ControllerSetCarsForm.CreateSetCarsFormGui.setRsButton
         """
 
-    reportTitle = PatternScriptEntities.BUNDLE['Switch List for Track']
+    reportTitle = PSE.BUNDLE['Switch List for Track']
     fileName = reportTitle + '.json'
-    targetDir = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests'
-    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
+    targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
+    targetPath = PSE.OS_Path.join(targetDir, fileName)
 
-    switchListReport = PatternScriptEntities.dumpJson(setCarsForm)
-    PatternScriptEntities.genericWriteReport(targetPath, switchListReport)
+    switchListReport = PSE.dumpJson(setCarsForm)
+    PSE.genericWriteReport(targetPath, switchListReport)
 
     return
 
@@ -37,13 +37,13 @@ def setRsButton(textBoxEntry):
 
     _psLog.debug('ModelSetCarsForm.setRsToTrack')
 
-    reportTitle = PatternScriptEntities.BUNDLE['Switch List for Track']
+    reportTitle = PSE.BUNDLE['Switch List for Track']
     fileName = reportTitle + '.json'
-    targetDir = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests'
-    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
+    targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
+    targetPath = PSE.OS_Path.join(targetDir, fileName)
 
-    switchList = PatternScriptEntities.genericReadReport(targetPath)
-    switchList = PatternScriptEntities.loadJson(switchList)
+    switchList = PSE.genericReadReport(targetPath)
+    switchList = PSE.loadJson(switchList)
 
     moveRollingStock(switchList, textBoxEntry)
 
@@ -54,13 +54,13 @@ def o2oButton(ptSetCarsForm):
         Used by:
         ControllerptSetCarsForm.CreateptSetCarsFormGui.o2oButton
         """
-    reportTitle = PatternScriptEntities.BUNDLE['o2o Work Events']
+    reportTitle = PSE.BUNDLE['o2o Work Events']
     fileName = reportTitle + '.json'
-    targetDir = PatternScriptEntities.PROFILE_PATH + 'operations\\jsonManifests'
-    targetPath = PatternScriptEntities.OS_Path.join(targetDir, fileName)
+    targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
+    targetPath = PSE.OS_Path.join(targetDir, fileName)
 # Load the existing o2o switch list
-    o2oSwitchList = PatternScriptEntities.genericReadReport(targetPath)
-    o2oSwitchList = PatternScriptEntities.loadJson(o2oSwitchList)
+    o2oSwitchList = PSE.genericReadReport(targetPath)
+    o2oSwitchList = PSE.loadJson(o2oSwitchList)
 # Append cars and locos from ptSetCarsForm
     o2oSwitchListCars = o2oSwitchList['locations'][0]['tracks'][0]['cars']
     ptSetCarsFormCars = ptSetCarsForm['locations'][0]['tracks'][0]['cars']
@@ -70,8 +70,8 @@ def o2oButton(ptSetCarsForm):
     ptSetCarsFormLocos = ptSetCarsForm['locations'][0]['tracks'][0]['locos']
     o2oSwitchList['locations'][0]['tracks'][0]['locos'] = o2oSwitchListLocos + ptSetCarsFormLocos
 # Write the appended file
-    o2oSwitchList = PatternScriptEntities.dumpJson(o2oSwitchList)
-    PatternScriptEntities.genericWriteReport(targetPath, o2oSwitchList)
+    o2oSwitchList = PSE.dumpJson(o2oSwitchList)
+    PSE.genericWriteReport(targetPath, o2oSwitchList)
 
     return
 
@@ -83,23 +83,23 @@ def moveRollingStock(switchList, textBoxEntry):
     setCount = 0
     i = 0
 
-    ignoreTrackLength = PatternScriptEntities.readConfigFile('PT')['PI']
+    ignoreTrackLength = PSE.readConfigFile('PT')['PI']
 
-    allTracksAtLoc = PatternScriptEntities.getTracksByLocation(None)
+    allTracksAtLoc = PSE.getTracksByLocation(None)
 
-    location = PatternScriptEntities.readConfigFile('PT')['PL']
-    toLocation = PatternScriptEntities.LM.getLocationByName(unicode(location, PatternScriptEntities.ENCODING))
+    location = PSE.readConfigFile('PT')['PL']
+    toLocation = PSE.LM.getLocationByName(unicode(location, PSE.ENCODING))
 
     locos = switchList['locations'][0]['tracks'][0]['locos']
     for loco in locos:
         setTrack = switchList['locations'][0]['tracks'][0]['trackName']
-        userInput = unicode(textBoxEntry[i].getText(), PatternScriptEntities.ENCODING)
+        userInput = unicode(textBoxEntry[i].getText(), PSE.ENCODING)
         if userInput in allTracksAtLoc:
             setTrack = userInput
 
         toTrack = toLocation.getTrackByName(setTrack, None)
 
-        rollingStock = PatternScriptEntities.EM.getByRoadAndNumber(loco['Road'], loco['Number'])
+        rollingStock = PSE.EM.getByRoadAndNumber(loco['Road'], loco['Number'])
         setResult = rollingStock.setLocation(toLocation, toTrack)
         if ignoreTrackLength and toTrack.isTypeNameAccepted(loco['Type']):
             setResult = rollingStock.setLocation(toLocation, toTrack, True)
@@ -111,13 +111,13 @@ def moveRollingStock(switchList, textBoxEntry):
     cars = switchList['locations'][0]['tracks'][0]['cars']
     for car in cars:
         setTrack = switchList['locations'][0]['tracks'][0]['trackName']
-        userInput = unicode(textBoxEntry[i].getText(), PatternScriptEntities.ENCODING)
+        userInput = unicode(textBoxEntry[i].getText(), PSE.ENCODING)
         if userInput in allTracksAtLoc:
             setTrack = userInput
 
         toTrack = toLocation.getTrackByName(setTrack, None)
 
-        rollingStock = PatternScriptEntities.CM.getByRoadAndNumber(car['Road'], car['Number'])
+        rollingStock = PSE.CM.getByRoadAndNumber(car['Road'], car['Number'])
         setResult = rollingStock.setLocation(toLocation, toTrack)
         setResult = ''
         if ignoreTrackLength and toTrack.isTypeNameAccepted(car['Type']):
@@ -153,8 +153,8 @@ def scheduleUpdate(toTrack, rollingStock):
         moveRollingStock
         """
 
-    schedule = PatternScriptEntities.SM.getScheduleByName(toTrack.getScheduleName())
-    if schedule and PatternScriptEntities.readConfigFile('PT')['AS']:
+    schedule = PSE.SM.getScheduleByName(toTrack.getScheduleName())
+    if schedule and PSE.readConfigFile('PT')['AS']:
         carType = rollingStock.getTypeName()
         rollingStock.setLoadName(schedule.getItemByType(carType).getShipLoadName())
         rollingStock.setDestination(schedule.getItemByType(carType).getDestination(), schedule.getItemByType(carType).getDestinationTrack(), True) # force set dest
