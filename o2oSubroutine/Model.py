@@ -9,13 +9,13 @@ from o2oSubroutine import ModelEntities
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelNew'
 SCRIPT_REV = 20220101
 
-_psLog = PSE.LOGGING.getLogger('PS.TP.ModelNew')
+_psLog = PSE.LOGGING.getLogger('PS.TP.Model')
 
 
 def newJmriRailroad():
-    """Mini controller to make a new JMRI railroad from the tpRailroadData.json and TP Inventory.txt files"""
+    """Mini controller to make a new JMRI railroad from the tpRailroadData.json and TrainPlayer Report - Rolling Stock.txt files"""
 
-    closeAllEditWindows()
+    ModelEntities.closeAllEditWindows()
     jmriRailroad = SetupXML()
     PSE.OM.initialize()
     jmriRailroad.tweakOperationsXml()
@@ -58,55 +58,54 @@ def newJmriRailroad():
 
     return
 
-def getTpRailroadData():
-    """Add error handling"""
-
-    tpRailroad = []
-
-    reportName = 'tpRailroadData'
-    fileName = reportName + '.json'
-    targetDir = PSE.PROFILE_PATH + '\\operations'
-    targetPath = PSE.OS_Path.join(targetDir, fileName)
-
-    try:
-        PSE.JAVA_IO.File(targetPath).isFile()
-        _psLog.info('tpRailroadData.json OK')
-    except:
-        _psLog.warning('tpRailroadData.json not found')
-        return
-
-    report = PSE.genericReadReport(targetPath)
-    tpRailroad = PSE.loadJson(report)
-
-    return tpRailroad
-
-def closeAllEditWindows():
-    """Close all the 'Edit' windows when the New button is pressed
-        Lazy work around, figure this our for real later
+def updateRollingStock():
+    """Mini controller to update the rolling stock inventory.
+        Nothing fancy, new car and engine xml files are written.
         """
 
-    for frameName in PSE.JMRI.util.JmriJFrame.getFrameList():
-        frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
-        if frame.getTitle().startswith('Edit'):
-            frame.setVisible(False)
-            frame.dispose()
+    ModelEntities.closeAllEditWindows()
+
+# Create new car and engine xml in memory
+    allRsRosters = NewRsAttributes()
+
+    PSE.CM.initialize()
+    allRsRosters.newRoads()
+    allRsRosters.newCarAar()
+    allRsRosters.newCarLoads()
+    allRsRosters.newCarKernels()
+
+    PSE.EM.initialize()
+    allRsRosters.newLocoModels()
+    allRsRosters.newLocoTypes()
+    allRsRosters.newLocoConsist()
+# Write the new lists to the xml files, not changing the rest of the xml
+    newInventory = NewRollingStock()
+    newInventory.getTpInventory()
+    newInventory.splitTpList()
+    newInventory.makeTpRollingStockData()
+    PSE.CM.dispose()
+    PSE.EM.dispose()
+    newInventory.newCars()
+    newInventory.newLocos()
+    PSE.CMX.save()
+    PSE.EMX.save()
 
     return
 
 
 class SetupXML:
+    """Make tweeks to Operations.xml here."""
 
     def __init__(self):
 
         self.o2oConfig =  PSE.readConfigFile('o2o')
-        self.TpRailroad = getTpRailroadData()
+        self.TpRailroad = ModelEntities.getTpRailroadData()
 
         return
 
     def tweakOperationsXml(self):
-        """Make tweeks to Operations.xml here.
-            Some of these are just favorites of mine.
-            """
+
+        """Some of these are just favorites of mine."""
 
         _psLog.debug('tweakOperationsXml')
 
@@ -138,7 +137,7 @@ class NewRsAttributes:
 
     def __init__(self):
 
-        self.tpRailroadData = getTpRailroadData()
+        self.tpRailroadData = ModelEntities.getTpRailroadData()
 
         return
 
@@ -276,7 +275,7 @@ class NewLocationsAndTracks:
 
     def __init__(self):
 
-        self.tpRailroadData = getTpRailroadData()
+        self.tpRailroadData = ModelEntities.getTpRailroadData()
         self.o2oConfig =  PSE.readConfigFile('o2o')
 
         return

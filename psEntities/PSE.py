@@ -19,11 +19,12 @@ PLUGIN_ROOT = ''
 PROFILE_PATH = JMRI.util.FileUtil.getProfilePath()
 ENCODING = ''
 BUNDLE = {}
-J_BUNDLE = JMRI.jmrit.operations.setup.Setup()
 REPORT_ITEM_WIDTH_MATRIX = {}
 TRACK_NAME_CLICKED_ON = ''
 
-SB = JMRI.jmrit.operations.setup.Bundle()
+# Dealers choice, both work OK:
+J_BUNDLE = JMRI.jmrit.operations.setup.Setup()
+# SB = JMRI.jmrit.operations.setup.Bundle()
 
 SCRIPT_NAME = 'OperationsPatternScripts.psEntities.PSE'
 SCRIPT_REV = 20220101

@@ -4,8 +4,8 @@
 """The o2o Subroutine."""
 
 from psEntities import PSE
+from o2oSubroutine import Model
 from o2oSubroutine import ModelImport
-from o2oSubroutine import ModelNew
 from o2oSubroutine import ModelUpdate
 from o2oSubroutine import View
 
@@ -43,7 +43,7 @@ class StartUp:
 
     def activateWidgets(self):
         '''The *.getName value is the name of the action for the widget.
-            IE: importTpRailroad, newJmriRailroad, updateRollingStock
+            IE: importTpRailroad, newJmriRailroad, updateRollingStock, updateLocations
             '''
 
         for widget in self.widgets:
@@ -64,7 +64,8 @@ class StartUp:
     def newJmriRailroad(self, EVENT):
         '''Creates a new JMRI railroad from the tpRailroadData.json file'''
 
-        ModelNew.newJmriRailroad()
+        ModelImport.importTpRailroad()
+        Model.newJmriRailroad()
 
         self.psLog.debug(EVENT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
@@ -72,9 +73,21 @@ class StartUp:
         return
 
     def updateRollingStock(self, EVENT):
-        '''Updates JMRI railroad from the json file'''
+        '''Writes a new car and engine xml'''
 
-        ModelUpdate.updateRollingStock()
+        ModelImport.importTpRailroad()
+        Model.updateRollingStock()
+
+        self.psLog.debug(EVENT)
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+        return
+
+    def updateLocations(self, EVENT):
+        '''Writes a new locations xml'''
+
+        ModelImport.importTpRailroad()
+        print('updateLocations button pressed')
 
         self.psLog.debug(EVENT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

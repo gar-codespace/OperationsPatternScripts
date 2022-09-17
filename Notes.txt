@@ -68,24 +68,25 @@ Tested Items:
 
   Language
     Language changes OK.
-    Language bundle sketched in, to be hardened against web errors
-    Bundle added with French test case
-    BUNDLE calls placed in 'View' methods only as much as possible
+    Language bundle sketched in, to be hardened against web errors.
+    Bundle added with French test case.
+    BUNDLE calls placed in 'View' methods only as much as possible.
     Bundle creates new plugin and help page translations OK.
     DYI version of concurrency seems to work OK.
 
   o2o
-    Add a listener to monitor if a new train is created or deleted, builtTrain listeners updated accordingly
+    importTpRailroad rolled into New JMRI Railroad and Update Rolling Stock.
+    Add a listener to monitor if a new train is created or deleted, builtTrain listeners updated accordingly.
     New JMRI Railroad saveing the new xml OK.
     TP import creates the track length OK.
     Adding script to run on train built for TP export is not needed, but still can be done.
-    TrainPlayer subroutine sketched in, to be expanded
-    TrainPlayer integration harden with train built listeners
+    TrainPlayer subroutine sketched in, to be expanded.
+    TrainPlayer integration harden with train built listeners.
     TP Exports unicode OK.
     TrainPlayer support implements OK.
     ExportToTrainPlayer.py works as module OK.
     ExportToTrainPlayer.py works as script OK.
-    When run as a stand alone script, ManifestForTrainPlayer does not read config file, which is correct
+    When run as a stand alone script, ManifestForTrainPlayer does not read config file, which is correct.
 
 Catches Items:
   Catches pattern report button press no tracks selected OK.
@@ -99,16 +100,16 @@ Catches Items:
   Catches on the fly edit of RS name or road
   Catches on the fly user corruption of config file more or less. Soft landing. CBB
   KeyError when editing config file crashed plugin, bummer. Restart button bale out.
-  Catches user add/remove train while TP export is enabled
-  Catches user edit train while TP export is enabled
+  Catches user add/remove train while TP export is enabled.
+  Catches user edit train while TP export is enabled.
 
 Version 3 ideas:
-  Harden up Bundle against web errors, untranslated items
-  How to use locale modifier, IE en-GB
+  Harden up Bundle against web errors, untranslated items.
+  How to use locale modifier, IE en-GB.
   Should import button be part of new and update?
   Implement TrainPlayer Support subroutine.
   Implement mergeConfigFiles()
-  Enhance and harden BUNDLE
+  Enhance and harden BUNDLE.
   Start working on distributed JMRI
     Set Cars windows add work to work list or docket, similar to TrainPlayer button, add Yardmaster button to Set Cars windows. Work can then be reported as it's done.
     jmri.jmrit.operations.locations.YardmasterFrame(location)

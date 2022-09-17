@@ -1,8 +1,6 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""Implemented in v3"""
-
 from psEntities import PSE
 from o2oSubroutine import ViewEntities
 

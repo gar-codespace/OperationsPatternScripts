@@ -23,6 +23,7 @@ No FD track
 New JMRI Railroad
 No final destination
 o2o Work Events
+o2o Subroutine
 On Train
 Operations Folder
 Pattern Report for Tracks
@@ -51,9 +52,9 @@ Track Pattern Report
 Track Totals for Cars:
 Track:
 Tracks at
-o2o Subroutine
 Translate Plugin
 Import TrainPlayer© Railroad
+Update Locations
 Update Rolling Stock
 Update Inventory Error Report
 View Log File

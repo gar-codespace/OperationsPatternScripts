@@ -1,6 +1,8 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
+"""Creates the TrainPlayer JMRI Report - o2o Work Events.csv file from either PatternTracksSubroutine or BuiltTrainExport"""
+
 from psEntities import PSE
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelWorkEvents'

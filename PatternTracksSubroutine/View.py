@@ -1,7 +1,6 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-# from PatternTracksSubroutine import Model
 from psEntities import PSE
 from PatternTracksSubroutine import ModelEntities
 from PatternTracksSubroutine import ViewEntities

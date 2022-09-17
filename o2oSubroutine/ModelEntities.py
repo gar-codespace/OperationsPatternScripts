@@ -6,6 +6,8 @@ from psEntities import PSE
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelEntities'
 SCRIPT_REV = 20220101
 
+_psLog = PSE.LOGGING.getLogger('PS.TP.ModelNew')
+
 def getWorkEvents():
     """Gets the o2o work events file
         Used by:
@@ -74,3 +76,38 @@ def getSetToLocationAndTrack(locationName, trackName):
     except:
         print('Not found: ', locationName, trackName)
         return None, None
+
+def closeAllEditWindows():
+    """Close all the 'Edit' windows when the New button is pressed
+        Lazy work around, figure this our for real later
+        """
+
+    for frameName in PSE.JMRI.util.JmriJFrame.getFrameList():
+        frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
+        if frame.getTitle().startswith('Edit'):
+            frame.setVisible(False)
+            frame.dispose()
+
+    return
+
+def getTpRailroadData():
+    """Add error handling"""
+
+    tpRailroad = []
+
+    reportName = 'tpRailroadData'
+    fileName = reportName + '.json'
+    targetDir = PSE.PROFILE_PATH + '\\operations'
+    targetPath = PSE.OS_Path.join(targetDir, fileName)
+
+    try:
+        PSE.JAVA_IO.File(targetPath).isFile()
+        _psLog.info('tpRailroadData.json OK')
+    except:
+        _psLog.warning('tpRailroadData.json not found')
+        return
+
+    report = PSE.genericReadReport(targetPath)
+    tpRailroad = PSE.loadJson(report)
+
+    return tpRailroad
