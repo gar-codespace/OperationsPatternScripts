@@ -104,8 +104,8 @@ class SetupXML:
         return
 
     def tweakOperationsXml(self):
-        """Make tweeks to Operations.xml here
-            Some of these are just favorites of mine
+        """Make tweeks to Operations.xml here.
+            Some of these are just favorites of mine.
             """
 
         _psLog.debug('tweakOperationsXml')

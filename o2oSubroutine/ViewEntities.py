@@ -11,20 +11,21 @@ SCRIPT_REV = 20220101
 class O2oSubroutinePanel:
 
     def __init__(self):
+        """The *.setName value is the name of the action for the widget"""
 
         self.configFile = PSE.readConfigFile('o2o')
 
         self.irButton = PSE.JAVX_SWING.JButton()
         self.irButton.setText(PSE.BUNDLE[u'Import TrainPlayer© Railroad'])
-        self.irButton.setName('irButton')
+        self.irButton.setName('importTpRailroad')
 
         self.nrButton = PSE.JAVX_SWING.JButton()
         self.nrButton.setText(PSE.BUNDLE[u'New JMRI Railroad'])
-        self.nrButton.setName('nrButton')
+        self.nrButton.setName('newJmriRailroad')
 
         self.urButton = PSE.JAVX_SWING.JButton()
         self.urButton.setText(PSE.BUNDLE[u'Update Rolling Stock'])
-        self.urButton.setName('urButton')
+        self.urButton.setName('updateRollingStock')
 
         self.controlWidgets = []
 

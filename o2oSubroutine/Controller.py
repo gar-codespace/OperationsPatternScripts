@@ -42,11 +42,12 @@ class StartUp:
         return self.subroutinePanel
 
     def activateWidgets(self):
-        '''Maybe get them by name?'''
+        '''The *.getName value is the name of the action for the widget.
+            IE: importTpRailroad, newJmriRailroad, updateRollingStock
+            '''
 
-        self.widgets[0].actionPerformed = self.importTpRailroad
-        self.widgets[1].actionPerformed = self.newJmriRailroad
-        self.widgets[2].actionPerformed = self.updateRollingStock
+        for widget in self.widgets:
+            widget.actionPerformed = getattr(self, widget.getName())
 
         return
 
@@ -55,6 +56,7 @@ class StartUp:
 
         ModelImport.importTpRailroad()
 
+        self.psLog.debug(EVENT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
@@ -64,6 +66,7 @@ class StartUp:
 
         ModelNew.newJmriRailroad()
 
+        self.psLog.debug(EVENT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
@@ -73,6 +76,7 @@ class StartUp:
 
         ModelUpdate.updateRollingStock()
 
+        self.psLog.debug(EVENT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
