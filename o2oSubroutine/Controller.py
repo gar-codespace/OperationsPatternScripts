@@ -76,7 +76,7 @@ class StartUp:
         '''Writes a new car and engine xml'''
 
         ModelImport.importTpRailroad()
-        Model.updateRollingStock()
+        Model.updateJmriRailroad()
 
         self.psLog.debug(EVENT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
@@ -86,8 +86,8 @@ class StartUp:
     def updateLocations(self, EVENT):
         '''Writes a new locations xml'''
 
-        ModelImport.importTpRailroad()
-        print('updateLocations button pressed')
+        # ModelImport.importTpRailroad()
+        # Model.updateLocations()
 
         self.psLog.debug(EVENT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

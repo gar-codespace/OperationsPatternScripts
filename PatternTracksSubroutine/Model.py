@@ -56,7 +56,7 @@ def updatePatternLocation(selectedItem=None):
 
     configFile = PSE.readConfigFile()
     newLocation = ModelEntities.testSelectedItem(selectedItem)
-    newLocationList = PSE.getAllLocations()
+    newLocationList = PSE.getAllLocationNames()
     newLocationTrackDict = ModelEntities.getAllTracksForLocation(newLocation)
     configFile['PT'].update({'PA': False})
     configFile['PT'].update({'PI': False})
@@ -144,7 +144,7 @@ def updateLocations():
     newConfigFile = PSE.readConfigFile()
     subConfigfile = newConfigFile['PT']
 
-    allLocations = PSE.getAllLocations()
+    allLocations = PSE.getAllLocationNames()
     if not allLocations:
         _psLog.warning('There are no locations for this profile')
         return

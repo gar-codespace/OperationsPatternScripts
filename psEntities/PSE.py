@@ -32,6 +32,7 @@ SCRIPT_REV = 20220101
 OM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.OperationsManager)
 PM = JMRI.InstanceManager.getDefault(JMRI.util.gui.GuiLafPreferencesManager)
 TM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.trains.TrainManager)
+RM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.routes.RouteManager)
 LM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.LocationManager)
 CM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.cars.CarManager)
 KM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.cars.KernelManager)
@@ -40,9 +41,12 @@ EM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.engines.
 ZM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.engines.ConsistManager)
 
 OMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.setup.OperationsSetupXml)
+TMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.trains.TrainManagerXml)
+RMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.routes.RouteManagerXml)
+LMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.LocationManagerXml)
+SMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.LocationManagerXml)
 CMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.cars.CarManagerXml)
 EMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.engines.EngineManagerXml)
-LMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.LocationManagerXml)
 
 _psLog = LOGGING.getLogger('PS.PE.PSE')
 
@@ -219,8 +223,11 @@ def occuranceTally(listOfOccurances):
 
     return dict
 
-def getAllLocations():
-    """JMRI sorts the list"""
+def getAllLocationNames():
+    """JMRI sorts the list
+        This is confusing, getAllLocationNames returns a list of strings,
+        getAllTracks returns a list of objects
+        """
 
     allLocations = LM.getLocationsByNameList()
     locationList = []
@@ -233,8 +240,7 @@ def getAllTracks():
     """All tracks for all locations"""
 
     trackList = []
-    for location in getAllLocations():
-
+    for location in getAllLocationNames():
         trackList += LM.getLocationByName(location).getTracksByNameList(None)
 
     return trackList

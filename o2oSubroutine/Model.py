@@ -6,7 +6,7 @@
 from psEntities import PSE
 from o2oSubroutine import ModelEntities
 
-SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelNew'
+SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.Model'
 SCRIPT_REV = 20220101
 
 _psLog = PSE.LOGGING.getLogger('PS.TP.Model')
@@ -15,82 +15,238 @@ _psLog = PSE.LOGGING.getLogger('PS.TP.Model')
 def newJmriRailroad():
     """Mini controller to make a new JMRI railroad from the tpRailroadData.json and TrainPlayer Report - Rolling Stock.txt files"""
 
-    ModelEntities.closeAllEditWindows()
-    jmriRailroad = SetupXML()
+    ModelEntities.closeTroublesomeWindows()
+
+    PSE.TM.dispose()
+    PSE.RM.dispose()
+    PSE.LM.dispose()
+    PSE.SM.dispose()
+    PSE.CM.dispose()
+    PSE.EM.dispose()
+
     PSE.OM.initialize()
+    PSE.TM.initialize()
+    PSE.RM.initialize()
+    PSE.LM.initialize()
+    PSE.SM.initialize()
+    PSE.CM.initialize()
+    PSE.EM.initialize()
+
+    jmriRailroad = SetupXML()
     jmriRailroad.tweakOperationsXml()
-    PSE.OMX.save()
 
     allRsRosters = NewRsAttributes()
-    PSE.CM.initialize()
     allRsRosters.newRoads()
     allRsRosters.newCarAar()
     allRsRosters.newCarLoads()
     allRsRosters.newCarKernels()
 
-    PSE.EM.initialize()
     allRsRosters.newLocoModels()
     allRsRosters.newLocoTypes()
     allRsRosters.newLocoConsist()
 
     newLocations = NewLocationsAndTracks()
-    PSE.LM.initialize()
-    PSE.LM.dispose()
     newLocations.newLocations()
     newLocations.newSchedules()
     newLocations.newTracks()
-    newLocations.deselectCarTypesForSpurs()
+    newLocations.addCarTypesToSpurs()
 
     newInventory = NewRollingStock()
     newInventory.getTpInventory()
     newInventory.splitTpList()
     newInventory.makeTpRollingStockData()
-    PSE.CM.dispose()
-    PSE.EM.dispose()
     newInventory.newCars()
     newInventory.newLocos()
+
     PSE.CMX.save()
     PSE.EMX.save()
 
-    newLocations.setNonSpurTrackLength()
-    newLocations.refineSpurTypes()
+    _psLog.debug('setNonSpurTrackLength')
+    ModelEntities.setNonSpurTrackLength()
     PSE.LMX.save()
+    PSE.RMX.save()
+    PSE.TMX.save()
+    PSE.OMX.save()
 
     return
 
-def updateRollingStock():
-    """Mini controller to update the rolling stock inventory.
+def updateJmriRailroad():
+    """Mini controller to update JMRI railroad from the tpRailroadData.json and
+        TrainPlayer Report - Rolling Stock.txt files.
+        Does not change the Trains and Routes xml.
         Nothing fancy, new car and engine xml files are written.
+        Used by:
+        Controller.StartUp.updateRailroad
         """
 
-    ModelEntities.closeAllEditWindows()
+    ModelEntities.closeTroublesomeWindows()
 
-# Create new car and engine xml in memory
-    allRsRosters = NewRsAttributes()
+    PSE.CM.dispose()
+    PSE.EM.dispose()
+    PSE.SM.dispose()
 
+    # PSE.LM.initialize()
     PSE.CM.initialize()
+    PSE.EM.initialize()
+    PSE.SM.initialize()
+
+    allRsRosters = NewRsAttributes()
     allRsRosters.newRoads()
     allRsRosters.newCarAar()
     allRsRosters.newCarLoads()
     allRsRosters.newCarKernels()
 
-    PSE.EM.initialize()
     allRsRosters.newLocoModels()
     allRsRosters.newLocoTypes()
     allRsRosters.newLocoConsist()
-# Write the new lists to the xml files, not changing the rest of the xml
+
+    updateLocations = UpdateLocationsAndTracks()
+    updateLocations.addNewLocations()
+    updateLocations.newSchedules()
+    updateLocations.getAllTpTrackIds()
+    updateLocations.getAllImportTrackIds()
+    updateLocations.parseTrackIdLists()
+    updateLocations.removeObsoleteTracks()
+    updateLocations.addNewTracks()
+    updateLocations.updateContinuingTracks()
+    updateLocations.addCarTypesToSpurs()
+    updateLocations.removeObsoleteLocations()
+
     newInventory = NewRollingStock()
     newInventory.getTpInventory()
     newInventory.splitTpList()
     newInventory.makeTpRollingStockData()
-    PSE.CM.dispose()
-    PSE.EM.dispose()
     newInventory.newCars()
     newInventory.newLocos()
+
     PSE.CMX.save()
     PSE.EMX.save()
 
+    _psLog.debug('setNonSpurTrackLength')
+    ModelEntities.setNonSpurTrackLength()
+    PSE.LMX.save()
+
     return
+
+
+class UpdateLocationsAndTracks():
+
+    def __init__(self):
+
+        self.allJmriLocations = PSE.getAllLocationNames()
+
+        self.allJmriTracks = PSE.getAllTracks()
+        self.currentRailroadTrackIds = []
+
+        self.importedRailroad = ModelEntities.getTpRailroadData()
+        self.importedRailroadTrackIds = []
+
+        self.newTrackIds = []
+        self.obsoleteTrackIds = []
+        self.continuingTrackIds = []
+
+        return
+
+    def addNewLocations(self):
+
+        newLocations = list(set(self.importedRailroad['locations']) - set(self.allJmriLocations))
+        for location in newLocations:
+            print('Add: ', location)
+
+            PSE.LM.newLocation(location)
+
+        return
+
+    def newSchedules(self):
+        """Creates new schedules from tpRailroadData.json [industries]
+            The schedule name is the TP track label
+            """
+
+        _psLog.debug('newSchedules')
+
+        for id, industry in self.importedRailroad['industries'].items():
+            ModelEntities.makeNewSchedule(id, industry)
+
+        return
+
+    def getAllTpTrackIds(self):
+        """These are the TrainPlayer track IDs in the JMRI track's comment field"""
+
+        for track in self.allJmriTracks:
+            self.currentRailroadTrackIds.append(track.getComment())
+
+        return
+
+    def getAllImportTrackIds(self):
+
+        for localeId, locale in self.importedRailroad['locales'].items():
+            self.importedRailroadTrackIds.append(localeId)
+
+        return
+
+    def parseTrackIdLists(self):
+
+        self.obsoleteTrackIds = list(set(self.currentRailroadTrackIds) - set(self.importedRailroadTrackIds))
+        self.newTrackIds = list(set(self.importedRailroadTrackIds) - set(self.currentRailroadTrackIds))
+        self.continuingTrackIds = list(set(self.currentRailroadTrackIds) - set(self.obsoleteTrackIds))
+
+        return
+
+    def removeObsoleteTracks(self):
+
+        trackList = ModelEntities.getJmriTracksByTpId()
+        for tpTrackId in self.obsoleteTrackIds:
+            _psLog.info('Remove: ', location.getTrackByName(trackList[tpTrackId][1]))
+            print('Remove: ', location.getTrackByName(trackList[tpTrackId][1], None))
+
+            location = PSE.LM.getLocationByName(trackList[tpTrackId][0])
+            # location.deleteTrack(location.getTrackByName(trackList[tpTrackId][1], None))
+
+        return
+
+    def addNewTracks(self):
+
+        for trackId in self.newTrackIds:
+            trackData = self.tpRailroadData['locales'][newTrackId]
+
+            _psLog.info('Add: ', trackData['location'], trackData['track'])
+            print('Add: ', trackData['location'], trackData['track'])
+
+            ModelEntities.makeNewTrack(trackId, trackData)
+
+        return
+
+    def updateContinuingTracks(self):
+
+        for trackId in self.continuingTrackIds:
+            trackData = self.importedRailroad['locales'][trackId]
+
+            _psLog.info('Update: ', trackData['location'], trackData['track'])
+            print('Update: ', trackData['location'], trackData['track'])
+
+            ModelEntities.makeNewTrack(trackId, trackData)
+
+        return
+
+    def addCarTypesToSpurs(self):
+        """Checks the car types check box for car types used at each spur"""
+
+        _psLog.debug('addCarTypesToSpurs')
+
+        for id, industry in self.importedRailroad['industries'].items():
+            ModelEntities.selectCarTypes(id, industry)
+
+        return
+
+    def removeObsoleteLocations(self):
+
+        obsoleteLocations = list(set(self.allJmriLocations) - set(self.importedRailroad['locations']))
+        for location in obsoleteLocations:
+            print('Remove: ', location)
+
+            PSE.LM.getLocationByName(location).dispose()
+
+        return
 
 
 class SetupXML:
@@ -104,7 +260,6 @@ class SetupXML:
         return
 
     def tweakOperationsXml(self):
-
         """Some of these are just favorites of mine."""
 
         _psLog.debug('tweakOperationsXml')
@@ -276,16 +431,6 @@ class NewLocationsAndTracks:
     def __init__(self):
 
         self.tpRailroadData = ModelEntities.getTpRailroadData()
-        self.o2oConfig =  PSE.readConfigFile('o2o')
-
-        return
-
-    def tweakStagingTracks(self, track):
-        """Tweak default settings for staging Tracks here"""
-
-        track.setAddCustomLoadsAnySpurEnabled(self.o2oConfig['SCL'])
-        track.setRemoveCustomLoadsEnabled(self.o2oConfig['RCL'])
-        track.setLoadEmptyEnabled(self.o2oConfig['LEE'])
 
         return
 
@@ -298,6 +443,18 @@ class NewLocationsAndTracks:
 
         return
 
+    def newTracks(self):
+        """Set spur length to spaces from TP
+            Deselect all types for spur tracks
+            """
+
+        _psLog.debug('newTracks')
+
+        for trackId, trackData in self.tpRailroadData['locales'].items():
+            ModelEntities.makeNewTrack(trackId, trackData)
+
+        return
+
     def newSchedules(self):
         """Creates new schedules from tpRailroadData.json [industries]
             The schedule name is the TP track label
@@ -305,82 +462,21 @@ class NewLocationsAndTracks:
 
         _psLog.debug('newSchedules')
 
-        tc = PSE.JMRI.jmrit.operations.locations.schedules.ScheduleManager
-        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
-        TCM.dispose()
         for id, industry in self.tpRailroadData['industries'].items():
-            scheduleLineItem = industry['schedule']
-            schedule = TCM.newSchedule(scheduleLineItem[0])
-            scheduleItem = schedule.addItem(scheduleLineItem[1])
-            scheduleItem.setReceiveLoadName(scheduleLineItem[2])
-            scheduleItem.setShipLoadName(scheduleLineItem[3])
+            ModelEntities.makeNewSchedule(id, industry)
 
         return
 
-    def newTracks(self):
-        """Set spur length to spaces from TP"""
+    def addCarTypesToSpurs(self):
+        """Checks the car types check box for car types used at each spur"""
 
-        _psLog.debug('newTracks')
+        _psLog.debug('addCarTypesToSpurs')
 
-        tc = PSE.JMRI.jmrit.operations.locations.schedules.ScheduleManager
-        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
-        # TCM.dispose()
-        for item in self.tpRailroadData['locales']:
-            loc = PSE.LM.getLocationByName(item[1]['location'])
-            xTrack = loc.addTrack(item[1]['track'], item[1]['type'])
-            xTrack.setComment(item[0])
-            trackLength = int(item[1]['capacity']) * 44
-            xTrack.setLength(trackLength)
-            if item[1]['type'] == 'Spur':
-                xTrack.setSchedule(TCM.getScheduleByName(item[1]['label']))
-            if item[1]['type'] == 'Staging':
-                self.tweakStagingTracks(xTrack)
+        for id, industry in self.tpRailroadData['industries'].items():
+            ModelEntities.selectCarTypes(id, industry)
 
         return
 
-    def deselectCarTypesForSpurs(self):
-        """Deselect all types for spur tracks"""
-
-        _psLog.debug('deselectCarTypesForSpurs')
-
-        for item in self.tpRailroadData['locales']:
-            if item[1]['type'] == 'Spur':
-                loc = PSE.LM.getLocationByName(item[1]['location'])
-                track = loc.getTrackByName(item[1]['track'], None)
-                for typeName in loc.getTypeNames():
-                    track.deleteTypeName(typeName)
-
-        return
-
-    def setNonSpurTrackLength(self):
-        """All non spur tracks length set to number of cars occupying track.
-            Move default multiplier to the config file
-            """
-
-        _psLog.debug('setNonSpurTrackLength')
-
-        trackList = PSE.getAllTracks()
-        for track in trackList:
-            if track.getTrackType() == 'Spur':
-                continue
-            rsTotal = track.getNumberCars() + track.getNumberEngines()
-            if rsTotal == 0:
-                rsTotal = 1
-            newTrackLength = rsTotal * 44
-            track.setLength(newTrackLength)
-
-        return
-
-    def refineSpurTypes(self):
-        """Select specific car types for the spur, as defined in TP"""
-
-        _psLog.debug('refineSpurTypes')
-
-        for id, attribs in self.tpRailroadData['industries'].items():
-            track = PSE.LM.getLocationByName(attribs['location']).getTrackByName(attribs['track'], None)
-            track.addTypeName(attribs['type'])
-
-        return
 
 class NewRollingStock:
     """Updates the JMRI RS inventory.

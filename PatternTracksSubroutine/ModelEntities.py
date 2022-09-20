@@ -44,7 +44,7 @@ def testSelectedItem(selectedItem):
         Model.updatePatternLocation
         """
 
-    allLocations = PSE.getAllLocations() #List of strings
+    allLocations = PSE.getAllLocationNames() #List of strings
     if selectedItem in allLocations:
         return selectedItem
     else:

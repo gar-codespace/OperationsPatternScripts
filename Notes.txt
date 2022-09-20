@@ -5,6 +5,7 @@ Todo:
   Tighten up the except part of all try/except
   TP import not bullet proof
   How to publish DeepL
+  Location manager has the combo box stuff
 
 Comments:
   Schedule does not prevent setting a car to a track
