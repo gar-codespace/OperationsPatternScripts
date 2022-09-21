@@ -43,7 +43,7 @@ class StartUp:
 
     def activateWidgets(self):
         '''The *.getName value is the name of the action for the widget.
-            IE: importTpRailroad, newJmriRailroad, updateRollingStock, updateLocations
+            IE: importTpRailroad, newJmriRailroad, updateJmriRailroad, updateLocations
             '''
 
         for widget in self.widgets:
@@ -51,15 +51,15 @@ class StartUp:
 
         return
 
-    def importTpRailroad(self, EVENT):
-        '''Writes a tpRailroadData.json file from the 3 TrainPlayer report files'''
-
-        ModelImport.importTpRailroad()
-
-        self.psLog.debug(EVENT)
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-
-        return
+    # def importTpRailroad(self, EVENT):
+    #     '''Writes a tpRailroadData.json file from the 3 TrainPlayer report files'''
+    #
+    #     ModelImport.importTpRailroad()
+    #
+    #     self.psLog.debug(EVENT)
+    #     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+    #
+    #     return
 
     def newJmriRailroad(self, EVENT):
         '''Creates a new JMRI railroad from the tpRailroadData.json file'''
@@ -72,7 +72,7 @@ class StartUp:
 
         return
 
-    def updateRollingStock(self, EVENT):
+    def updateJmriRailroad(self, EVENT):
         '''Writes a new car and engine xml'''
 
         ModelImport.importTpRailroad()
@@ -83,13 +83,13 @@ class StartUp:
 
         return
 
-    def updateLocations(self, EVENT):
-        '''Writes a new locations xml'''
-
-        # ModelImport.importTpRailroad()
-        # Model.updateLocations()
-
-        self.psLog.debug(EVENT)
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-
-        return
+    # def updateLocations(self, EVENT):
+    #     '''Writes a new locations xml'''
+    #
+    #     # ModelImport.importTpRailroad()
+    #     # Model.updateLocations()
+    #
+    #     self.psLog.debug(EVENT)
+    #     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+    #
+    #     return

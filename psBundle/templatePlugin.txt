@@ -55,7 +55,7 @@ Tracks at
 Translate Plugin
 Import TrainPlayer© Railroad
 Update Locations
-Update Rolling Stock
+Update JMRI Railroad
 Update Inventory Error Report
 View Log File
 Window Help...
