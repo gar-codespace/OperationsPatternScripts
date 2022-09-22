@@ -181,10 +181,10 @@ def makeReportItemWidthMatrix():
 def getShortLoadType(car):
     """Replaces empty and load with E, L, or O for occupied
         Used by:
-        ViewEntities.modifyTrackPattern
+        ViewEntities.modifyTrackPatternReport
         ModelWorkEvent.o2oSwitchListConversion.parsePtRs
         ModelWorkEvents.jmriManifestConversion.parseRS
-        JMRI defines custome load type as empty but default load type as Empty, hence the 'or' statement
+        JMRI defines custom load type as empty but default load type as Empty, hence the 'or' statement
         Load, Empty, Occupied and Unknown are translated.
         """
 
@@ -223,36 +223,20 @@ def occuranceTally(listOfOccurances):
     return dict
 
 def getAllLocationNames():
-    """JMRI sorts the list
-        This is confusing, getAllLocationNames returns a list of strings,
-        getAllTracks returns a list of objects
-        """
+    """JMRI sorts the list, returns list of location names"""
 
-    allLocations = LM.getLocationsByNameList()
-    locationList = []
-    for item in allLocations:
-        locationList.append(unicode(item.getName(), ENCODING))
+    locationNames = []
+    for item in LM.getLocationsByNameList():
+        locationNames.append(unicode(item.getName(), ENCODING))
 
-    return locationList
-
-def getAllTrackNames():
-    """All track names for all locations"""
-
-    trackList = []
-    for location in getAllLocationNames():
-        trackList = LM.getLocationByName(location).getTracksList()
-        for track in trackList:
-            trackList.append(track.getName())
-
-    return trackList
+    return locationNames
 
 def getAllTracks():
-    """When the inconsistancy is sorted out have both tracks and locations return objects.
-        All tracks for all locations"""
+    """All track objects for all locations"""
 
     trackList = []
-    for location in getAllLocationNames():
-        trackList += LM.getLocationByName(location).getTracksByNameList(None)
+    for location in LM.getList():
+        trackList += location.getTracksByNameList(None)
 
     return trackList
 
@@ -379,31 +363,24 @@ def tpDirectoryExists():
 def validateConfigFileVersion():
     """Checks that the config file is the current version"""
 
-    configFilePath = PLUGIN_ROOT + '\psEntities\PatternConfig.json'
-    validPatternConfig = loadJson(genericReadReport(configFilePath))
-    userPatternConfig = getConfigFile()
+    targetDir =  PLUGIN_ROOT + '\\psEntities'
+    fileName = 'PatternConfig.json'
+    targetPath = OS_Path.join(targetDir, fileName)
+    validPatternConfig = loadJson(genericReadReport(targetPath))
 
-    if validPatternConfig['CP']['RV'] == userPatternConfig['CP']['RV']:
+    if validPatternConfig['CP']['RV'] == readConfigFile('CP')['RV']:
         _psLog.info('The PatternConfig.json file is the correct version')
         return True
     else:
         _psLog.warning('PatternConfig.json version mismatch')
         return False
 
-def restoreConfigFile():
-    """Depricate in v3"""
-
-    copyFrom = JAVA_IO.File(JMRI.util.FileUtil.getProfilePath() + 'operations\PatternConfig.json.bak')
-    copyTo = JAVA_IO.File(PROFILE_PATH + 'operations\\PatternConfig.json')
-    JMRI.util.FileUtil.copy(copyFrom, copyTo)
-
-    return
-
 def mergeConfigFiles():
     """Implemented in v3"""
     return
 
 def readConfigFile(subConfig=None):
+    """tryConfigFile will return the config file if it's ok or a new one otherwise."""
 
     configFile = tryConfigFile()
 
@@ -418,7 +395,7 @@ def tryConfigFile():
     try:
         configFile = getConfigFile()
     except ValueError:
-        restoreConfigFile()
+        writeNewConfigFile()
         configFile = getConfigFile()
         _psLog.warning('Defective PatternConfig.json found, new file written')
     except IOError:
@@ -430,8 +407,8 @@ def tryConfigFile():
 
 def getConfigFile():
 
-    fileName = 'PatternConfig.json'
     targetDir = PROFILE_PATH + '\\operations'
+    fileName = 'PatternConfig.json'
     targetPath = OS_Path.join(targetDir, fileName)
 
     return loadJson(genericReadReport(targetPath))
@@ -485,15 +462,15 @@ def makePatternLog():
     patternLogFile = genericReadReport(targetPath)
     for thisLine in patternLogFile.splitlines():
 
-        if (loggingIndex['9'] in thisLine and int(buildReportLevel) > 0): # critical
+        if loggingIndex['9'] in thisLine and int(buildReportLevel) > 0: # critical
             outputPatternLog += thisLine + '\n'
-        if (loggingIndex['7'] in thisLine and int(buildReportLevel) > 0): # error
+        if loggingIndex['7'] in thisLine and int(buildReportLevel) > 0: # error
             outputPatternLog += thisLine + '\n'
-        if (loggingIndex['5'] in thisLine and int(buildReportLevel) > 0): # warning
+        if loggingIndex['5'] in thisLine and int(buildReportLevel) > 0: # warning
             outputPatternLog += thisLine + '\n'
-        if (loggingIndex['3'] in thisLine and int(buildReportLevel) > 2): # info
+        if loggingIndex['3'] in thisLine and int(buildReportLevel) > 2: # info
             outputPatternLog += thisLine + '\n'
-        if (loggingIndex['1'] in thisLine and int(buildReportLevel) > 4): # debug
+        if loggingIndex['1'] in thisLine and int(buildReportLevel) > 4: # debug
             outputPatternLog += thisLine + '\n'
 
     return outputPatternLog

@@ -31,7 +31,7 @@ def switchListButton(textBoxEntry):
 # Replace Set To with a track name, reformat for display
     userInputList = ViewEntities.makeUserInputList(textBoxEntry)
     switchList = ViewEntities.merge(switchList, userInputList)
-    switchList = ViewEntities.modifyTrackPattern(switchList)
+    switchList = ViewEntities.modifyTrackPatternReport(switchList)
 # Make switch list for print
     reportHeader = ViewEntities.makeTextReportHeader(switchList)
     reportLocations = ViewEntities.makeTextReportLocations(switchList, trackTotals=False)
@@ -50,7 +50,7 @@ def o2oButton(ptSetCarsForm, textBoxEntry):
 # Replace Set To with a track name, reformat for display
     userInputList = ViewEntities.makeUserInputList(textBoxEntry)
     o2oSwitchList = ViewEntities.merge(ptSetCarsForm, userInputList)
-    o2oSwitchList = ViewEntities.modifyTrackPattern(o2oSwitchList)
+    o2oSwitchList = ViewEntities.modifyTrackPatternReport(o2oSwitchList)
 
     return o2oSwitchList
 
@@ -331,7 +331,7 @@ def makeSetCarsScheduleRow(setCarsFormData):
     scheduleObject = trackObject.getSchedule()
     schedulePanel = None
     scheduleList = []
-    if (scheduleObject):
+    if scheduleObject:
         schedulePanel = PSE.JAVX_SWING.JPanel()
         schedulePanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(
             PSE.BUNDLE['Schedule for'] + ' ' + trackName

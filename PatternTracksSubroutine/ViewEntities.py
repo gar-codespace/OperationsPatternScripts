@@ -14,6 +14,7 @@ class TrackPatternPanel:
     def __init__(self):
 
         self.configFile = PSE.readConfigFile('PT')
+
         self.yardTracksOnly = PSE.JAVX_SWING.JCheckBox()
         self.yardTracksOnly.setText(PSE.BUNDLE['Yard tracks only'] + ' ')
         self.yardTracksOnly.setSelected(self.configFile['PA'])
@@ -33,43 +34,43 @@ class TrackPatternPanel:
         self.scButton.setName('scButton')
 
         self.trackCheckBoxes = []
-        self.controlObjects = []
 
         return
 
-    def makeLocationComboBox(self):
-        """Make the combo box of user selectable locations"""
+    def makeLocationRow(self):
+        """Make widget row containing: 'Loaction:', combo box, 'Yard Tracks Only', 'Ignore Track Length'.
+            PSE.LM.getComboBox() includes box.addItem(null); which is unwanted
+            """
 
         patternLabel = PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Location:'])
         locationList = self.configFile['AL']
+
         self.locationComboBox = PSE.JAVX_SWING.JComboBox(locationList)
         self.locationComboBox.setName('locationComboBox')
         self.locationComboBox.setSelectedItem(self.configFile['PL'])
-        patternComboBox = PSE.JAVX_SWING.Box(PSE.JAVX_SWING.BoxLayout.X_AXIS)
+
+        patternComboBox = PSE.JAVX_SWING.JPanel()
+        patternComboBox.setAlignmentX(PSE.JAVX_SWING.JPanel.CENTER_ALIGNMENT)
+
         patternComboBox.add(patternLabel)
         patternComboBox.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
         patternComboBox.add(self.locationComboBox)
+        patternComboBox.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
+        patternComboBox.add(self.yardTracksOnly)
+        patternComboBox.add(self.ignoreTrackLength)
 
         return patternComboBox
 
-    def makeLocationCheckBoxes(self):
-        """Any track type and ignore length flags"""
+    def makeTracksRow(self):
+        """Make the row of check boxes, one for each track"""
 
-        flagInputBox = PSE.JAVX_SWING.Box(PSE.JAVX_SWING.BoxLayout.X_AXIS) # make a box for the label and input box
-        flagInputBox.add(self.yardTracksOnly)
-        flagInputBox.add(self.ignoreTrackLength)
-
-        return flagInputBox
-
-    def makeTrackCheckBoxes(self):
-        """Make a panel of check boxes, one for each track"""
-
-        rowLabel = PSE.JAVX_SWING.JLabel()
         tracksPanel = PSE.JAVX_SWING.JPanel()
         tracksPanel.setAlignmentX(PSE.JAVX_SWING.JPanel.CENTER_ALIGNMENT)
+
+        rowLabel = PSE.JAVX_SWING.JLabel()
         tracksPanel.add(rowLabel)
         trackDict = self.configFile['PT'] # pattern tracks
-        if (trackDict):
+        if trackDict:
             rowLabel.text = PSE.BUNDLE['Track List:'] + ' '
             for track, flag in sorted(trackDict.items()):
                 trackCheckBox = tracksPanel.add(PSE.JAVX_SWING.JCheckBox(track, flag))
@@ -83,8 +84,8 @@ class TrackPatternPanel:
 
         return tracksPanel
 
-    def makeButtonPanel(self):
-        """Button panel added to makeTrackPatternPanel"""
+    def makeButtonsRow(self):
+        """Make the row of action buttons: 'Track Pattern', 'Set Rolling Stock.' """
 
         buttonPanel = PSE.JAVX_SWING.JPanel()
         buttonPanel.setAlignmentX(PSE.JAVX_SWING.JPanel.CENTER_ALIGNMENT)
@@ -96,36 +97,31 @@ class TrackPatternPanel:
     def getPanelWidgets(self):
         """A list of the widgets created by this class"""
 
-        self.controlObjects.append(self.locationComboBox)
-        self.controlObjects.append(self.yardTracksOnly)
-        self.controlObjects.append(self.ignoreTrackLength)
-        self.controlObjects.append(self.trackCheckBoxes)
-        self.controlObjects.append(self.ypButton)
-        self.controlObjects.append(self.scButton)
+        panelWidgets = []
+        panelWidgets.append(self.locationComboBox)
+        panelWidgets.append(self.yardTracksOnly)
+        panelWidgets.append(self.ignoreTrackLength)
+        panelWidgets.append(self.trackCheckBoxes)
+        panelWidgets.append(self.ypButton)
+        panelWidgets.append(self.scButton)
 
-        return self.controlObjects
+        return panelWidgets
 
     def makeTrackPatternPanel(self):
         """Make the pattern tracks panel object"""
 
         tpPanel = PSE.JAVX_SWING.JPanel() # the pattern tracks panel
         tpPanel.setLayout(PSE.JAVX_SWING.BoxLayout(tpPanel, PSE.JAVX_SWING.BoxLayout.Y_AXIS))
-        inputRow = PSE.JAVX_SWING.JPanel()
-        inputRow.setLayout(PSE.JAVX_SWING.BoxLayout(inputRow, PSE.JAVX_SWING.BoxLayout.X_AXIS))
-        inputRow.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(12,0)))
-        inputRow.add(self.makeLocationComboBox())
-        inputRow.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
-        inputRow.add(self.makeLocationCheckBoxes())
-        trackCheckBoxes = self.makeTrackCheckBoxes()
-        buttonPanel = self.makeButtonPanel()
-        tpPanel.add(inputRow)
-        tpPanel.add(trackCheckBoxes)
-        tpPanel.add(buttonPanel)
+
+        tpPanel.add(self.makeLocationRow())
+        tpPanel.add(self.makeTracksRow())
+        tpPanel.add(self.makeButtonsRow())
+
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return tpPanel
 
-def modifyTrackPattern(trackPattern):
+def modifyTrackPatternReport(trackPattern):
     """Make adjustments to the way the reports display here.
         The undeflying json is not changed.
         Replaces blank Dest and FD with standins.
@@ -153,6 +149,25 @@ def modifyTrackPattern(trackPattern):
 
     return trackPattern
 
+def getStandins(car, standins):
+    """Replaces null destination and fd with the standin from the config file
+        Used by:
+        modifyTrackPatternReport
+        """
+
+    destStandin = car['Destination']
+    if not car['Destination']:
+        destStandin = standins['DS']
+
+    try: # No FD for locos
+        fdStandin = car['Final Dest']
+        if not car['Final Dest']:
+            fdStandin = standins['FD']
+    except:
+        fdStandin = ''
+
+    return destStandin, fdStandin
+    
 def makeTextReportHeader(textWorkEventList):
     """Makes the header for generic text reports
         Used by:
@@ -306,22 +321,3 @@ def loopThroughRs(type, rsAttribs):
         switchListRow += PSE.formatText(rsAttribs[item], itemWidth)
 
     return switchListRow
-
-def getStandins(car, standins):
-    """Replaces null destination and fd with the standin from the config file
-        Used by:
-        ModelSetCarsForm.merge
-        """
-
-    destStandin = car['Destination']
-    if not car['Destination']:
-        destStandin = standins['DS']
-
-    try: # No FD for locos
-        fdStandin = car['Final Dest']
-        if not car['Final Dest']:
-            fdStandin = standins['FD']
-    except:
-        fdStandin = ''
-
-    return destStandin, fdStandin

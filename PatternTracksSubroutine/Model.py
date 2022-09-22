@@ -80,7 +80,7 @@ def updatePatternTracks(trackList):
     for track in trackList:
         trackDict[track] = False
 
-    if (trackDict):
+    if trackDict:
         _psLog.warning('The track list for this location has changed')
     else:
         _psLog.warning('There are no yard tracks for this location')

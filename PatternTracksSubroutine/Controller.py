@@ -74,7 +74,7 @@ class StartUp:
 
     def yardTrackOnlyCheckBox(self, EVENT):
 
-        if (self.widgets[1].selected):
+        if self.widgets[1].selected:
             # trackList = Model.makeTrackList(self.widgets[0].getSelectedItem(), 'Yard')
             trackList = PSE.getTracksByLocation('Yard')
         else:

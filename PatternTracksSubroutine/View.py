@@ -61,7 +61,7 @@ def trackPatternButton():
     trackPattern = PSE.genericReadReport(targetPath)
     trackPattern = PSE.loadJson(trackPattern)
 # Modify the report for display
-    trackPattern = ViewEntities.modifyTrackPattern(trackPattern)
+    trackPattern = ViewEntities.modifyTrackPatternReport(trackPattern)
     reportHeader = ViewEntities.makeTextReportHeader(trackPattern)
     reportLocations = ViewEntities.makeTextReportLocations(trackPattern, trackTotals=True)
 # Save the modified report
@@ -91,7 +91,7 @@ def setRsButton():
         trackPattern = ModelEntities.makeTrackPattern([trackName]) # makeTrackPattern takes a track list
         setCarsForm = ModelEntities.makeTrackPatternReport(trackPattern)
     # Apply common formatting to report
-        setCarsForm = ViewEntities.modifyTrackPattern(setCarsForm)
+        setCarsForm = ViewEntities.modifyTrackPatternReport(setCarsForm)
 
         newFrame = ControllerSetCarsForm.CreateSetCarsFormGui(setCarsForm)
         newWindow = newFrame.makeFrame()
