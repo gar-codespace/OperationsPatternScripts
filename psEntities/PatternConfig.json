@@ -76,7 +76,7 @@
     "PW" : 1500,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20220906
+    "RV" : 20220907
   },
   "RM" : {
     "DS" : "No Waybill",
@@ -137,7 +137,8 @@
     "RM": 8
   },
   "o2o" : {
-    "RN": "o2o-Work-Events",
+    "RN" : "o2o-Work-Events",
+    "DL" : 44,
     "PC": [
       "B",
       "BE",

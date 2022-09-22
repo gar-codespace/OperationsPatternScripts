@@ -97,8 +97,11 @@ def updateJmriRailroad():
     updateLocations.getContinuingLocations()
     updateLocations.getContinuingTracks()
     PSE.LM.dispose()
-    PSE.SM.dispose()
-    updateLocations.newSchedules()
+    updateLocations.getScheduleLists()
+    updateLocations.removeObsoleteSchedules()
+    updateLocations.addNewSchedules()
+    # PSE.SM.dispose()
+    # updateLocations.newSchedules()
     updateLocations.addNewLocations()
     updateLocations.addContinuingLocations()
     updateLocations.addNewTracks()
@@ -151,12 +154,15 @@ class UpdateLocationsAndTracks():
         self.continuingLocations = {}
         self.continuingTracks = {}
 
+        self.obsoleteSchedules = []
+        self.newSchedules = []
+
         return
 
     def getContinuingLocations(self):
         """A dictionary of all the continuing location objects by name."""
 
-        _psLog.info('getContinuingLocations')
+        _psLog.debug('getContinuingLocations')
 
         for location in self.continuingLocationNames:
             self.continuingLocations[location] = PSE.LM.getLocationByName(location)
@@ -166,22 +172,45 @@ class UpdateLocationsAndTracks():
     def getContinuingTracks(self):
         """A dictionary of all the continuing track objects by TP track ID."""
 
-        _psLog.info('getContinuingTracks')
+        _psLog.debug('getContinuingTracks')
 
         for id in self.continuingTrackIds:
             self.continuingTracks[id] = self.allTracksHash[id]
 
         return
 
-    def newSchedules(self):
-        """Creates new schedules from tpRailroadData.json [industries]
-            The schedule name is the TP track label
-            """
+    def getScheduleLists(self):
 
-        _psLog.debug('newSchedules')
+        _psLog.debug('removeObsoleteSchedules')
 
+        updatedSchedules = []
         for id, industry in self.importedRailroad['industries'].items():
-            ModelEntities.makeNewSchedule(id, industry)
+            updatedSchedules.append(industry['schedule'][0])
+        updatedSchedules = list(set(updatedSchedules))
+
+        currentSchedules = []
+        for schedule in PSE.SM.getSchedulesByNameList():
+            currentSchedules.append(schedule.getName())
+
+        self.obsoleteSchedules = list(set(currentSchedules) - set(updatedSchedules))
+        self.newSchedules = list(set(updatedSchedules) - set(currentSchedules))
+
+        return
+
+    def removeObsoleteSchedules(self):
+
+        for schedule in self.obsoleteSchedules:
+            obsolete = PSE.SM.getScheduleByName(schedule)
+            PSE.SM.deregister(obsolete)
+
+        return
+
+    def addNewSchedules(self):
+
+        for newSchedule in self.newSchedules:
+            for id, industry in self.importedRailroad['industries'].items():
+                if industry['schedule'][0] == newSchedule:
+                    ModelEntities.makeNewSchedule(id, industry)
 
         return
 

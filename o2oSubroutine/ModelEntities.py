@@ -22,8 +22,6 @@ def updateContinuingTracks(trackId, trackData, previousTrackData):
     if loc.isStaging() and trackData['type'] == 'Staging':
         previousTrackData.setTrackType(trackData['type'])
         previousTrackData.setName(trackData['track'])
-        trackLength = int(trackData['capacity']) * 44
-        previousTrackData.setLength(trackLength)
 
         tweakStagingTracks(previousTrackData)
         _psLog.debug(trackData['track'] + ' updated at ' + trackData['type'])
@@ -31,14 +29,15 @@ def updateContinuingTracks(trackId, trackData, previousTrackData):
     if not loc.isStaging() and trackData['type'] != 'Staging':
         previousTrackData.setTrackType(trackData['type'])
         previousTrackData.setName(trackData['track'])
-        trackLength = int(trackData['capacity']) * 44
-        previousTrackData.setLength(trackLength)
+
         _psLog.debug(trackData['track'] + ' updated at ' + trackData['type'])
 
     if trackData['type'] == 'Spur':
+        trackLength = int(trackData['capacity']) * PSE.readConfigFile('o2o')['DL']
+        previousTrackData.setLength(trackLength)
         previousTrackData.setSchedule(PSE.SM.getScheduleByName(trackData['label']))
         for typeName in loc.getTypeNames():
-            previousTrackData.deleteTypeName(typeName)        
+            previousTrackData.deleteTypeName(typeName)
 
     loc.register(previousTrackData)
     return
@@ -75,7 +74,6 @@ def selectCarTypes(id, industry):
 
 def setNonSpurTrackLength():
     """All non spur tracks length set to number of cars occupying track.
-        Move default multiplier to the config file
         Used by:
         Model.newJmriRailroad
         Model.updateJmriRailroad
@@ -88,7 +86,7 @@ def setNonSpurTrackLength():
         rsTotal = track.getNumberCars() + track.getNumberEngines()
         if rsTotal == 0:
             rsTotal = 1
-        newTrackLength = rsTotal * 44
+        newTrackLength = rsTotal * PSE.readConfigFile('o2o')['DL']
         track.setLength(newTrackLength)
         if track.getName() == '~':
             track.setLength(1000)
@@ -100,11 +98,7 @@ def makeNewSchedule(id, industry):
         Model.NewLocationsAndTracks.newSchedules
         """
 
-    # tc = PSE.JMRI.jmrit.operations.locations.schedules.ScheduleManager
-    # TCM = PSE.JMRI.InstanceManager.getDefault(tc)
-
     scheduleLineItem = industry['schedule']
-    # schedule = TCM.newSchedule(scheduleLineItem[0])
     schedule = PSE.SM.newSchedule(scheduleLineItem[0])
     scheduleItem = schedule.addItem(scheduleLineItem[1])
     scheduleItem.setReceiveLoadName(scheduleLineItem[2])
@@ -112,10 +106,8 @@ def makeNewSchedule(id, industry):
 
     return
 
-
-
 def makeNewTrack(trackId, trackData):
-    """Set spur length to spaces from TP
+    """Set spur length to 'spaces' from TP
         Deselect all types for spur tracks
         Used by:
         Model.NewLocationsAndTracks.newLocations
@@ -123,17 +115,14 @@ def makeNewTrack(trackId, trackData):
         Model.UpdateLocationsAndTracks.updateContinuingTracks
         """
 
-    tc = PSE.JMRI.jmrit.operations.locations.schedules.ScheduleManager
-    TCM = PSE.JMRI.InstanceManager.getDefault(tc)
-
     loc = PSE.LM.getLocationByName(trackData['location'])
     xTrack = loc.addTrack(trackData['track'], trackData['type'])
     xTrack.setComment(trackId)
-    trackLength = int(trackData['capacity']) * 44
-    xTrack.setLength(trackLength)
     _psLog.debug('deselectCarTypesForSpurs')
     if trackData['type'] == 'Spur':
-        xTrack.setSchedule(TCM.getScheduleByName(trackData['label']))
+        trackLength = int(trackData['capacity']) * PSE.readConfigFile('o2o')['DL']
+        xTrack.setLength(trackLength)
+        xTrack.setSchedule(PSE.SM.getScheduleByName(trackData['label']))
         for typeName in loc.getTypeNames():
             xTrack.deleteTypeName(typeName)
     if trackData['type'] == 'Staging':

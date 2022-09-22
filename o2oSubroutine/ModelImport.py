@@ -152,7 +152,7 @@ class TrainPlayerImporter:
     def getAllTpIndustry(self):
         """self.tpIndustryList format: ID, JMRI Location Name, JMRI Track Name, Industry, AAR, S/R, Load, Staging, ViaIn
             Makes a list of tuples of the industries and their data.
-            industry format: [JMRI Location Name, {ID, JMRI Track Name, Industry, AAR, schedule(label, aar, receive, ship), Staging, ViaIn}]
+            industry format: [JMRI Location Name, {ID, JMRI Track Name, Industry, AAR, schedule(label, aar, receive, ship), Staging, ViaIn, ViaOut}]
             """
 
         _psLog.debug('getAllTpIndustry')
@@ -170,7 +170,7 @@ class TrainPlayerImporter:
                 ship = 'Empty'
             schedule = (splitLine[3], splitLine[4], receive, ship)
             # x = (splitLine[1], {u'ID': splitLine[0], u'track': splitLine[2], u'label': splitLine[3], u'type': splitLine[4], u'schedule': schedule, u'staging': splitLine[7], u'viain': splitLine[8]})
-            industryDict[splitLine[0]] = {u'location': splitLine[1], u'track': splitLine[2], u'label': splitLine[3], u'type': splitLine[4], u'schedule': schedule, u'staging': splitLine[7], u'viain': splitLine[8]}
+            industryDict[splitLine[0]] = {u'location': splitLine[1], u'track': splitLine[2], u'label': splitLine[3], u'type': splitLine[4], u'schedule': schedule, u'staging': splitLine[7], u'viaIn': splitLine[8], u'viaOut': splitLine[9]}
 
         self.rr['industries'] = industryDict
 
