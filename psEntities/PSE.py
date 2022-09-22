@@ -44,7 +44,6 @@ OMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.setup.OperationsSetu
 TMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.trains.TrainManagerXml)
 RMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.routes.RouteManagerXml)
 LMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.LocationManagerXml)
-SMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.LocationManagerXml)
 CMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.cars.CarManagerXml)
 EMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.engines.EngineManagerXml)
 
@@ -236,8 +235,20 @@ def getAllLocationNames():
 
     return locationList
 
+def getAllTrackNames():
+    """All track names for all locations"""
+
+    trackList = []
+    for location in getAllLocationNames():
+        trackList = LM.getLocationByName(location).getTracksList()
+        for track in trackList:
+            trackList.append(track.getName())
+
+    return trackList
+
 def getAllTracks():
-    """All tracks for all locations"""
+    """When the inconsistancy is sorted out have both tracks and locations return objects.
+        All tracks for all locations"""
 
     trackList = []
     for location in getAllLocationNames():

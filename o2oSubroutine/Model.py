@@ -24,14 +24,6 @@ def newJmriRailroad():
     PSE.CM.dispose()
     PSE.EM.dispose()
 
-    PSE.OM.initialize()
-    PSE.TM.initialize()
-    PSE.RM.initialize()
-    PSE.LM.initialize()
-    PSE.SM.initialize()
-    PSE.CM.initialize()
-    PSE.EM.initialize()
-
     jmriRailroad = SetupXML()
     jmriRailroad.tweakOperationsXml()
 
@@ -58,15 +50,22 @@ def newJmriRailroad():
     newInventory.newCars()
     newInventory.newLocos()
 
-    PSE.CMX.save()
-    PSE.EMX.save()
-
     _psLog.debug('setNonSpurTrackLength')
     ModelEntities.setNonSpurTrackLength()
+
+    PSE.CMX.save()
+    PSE.EMX.save()
     PSE.LMX.save()
     PSE.RMX.save()
     PSE.TMX.save()
     PSE.OMX.save()
+
+    PSE.OMX.initialize()
+    PSE.TMX.initialize()
+    PSE.RMX.initialize()
+    PSE.LMX.initialize()
+    PSE.CMX.initialize()
+    PSE.EMX.initialize()
 
     return
 
@@ -83,12 +82,6 @@ def updateJmriRailroad():
 
     PSE.CM.dispose()
     PSE.EM.dispose()
-    PSE.SM.dispose()
-
-    # PSE.LM.initialize()
-    PSE.CM.initialize()
-    PSE.EM.initialize()
-    PSE.SM.initialize()
 
     allRsRosters = NewRsAttributes()
     allRsRosters.newRoads()
@@ -101,16 +94,16 @@ def updateJmriRailroad():
     allRsRosters.newLocoConsist()
 
     updateLocations = UpdateLocationsAndTracks()
-    updateLocations.addNewLocations()
+    updateLocations.getContinuingLocations()
+    updateLocations.getContinuingTracks()
+    PSE.LM.dispose()
+    PSE.SM.dispose()
     updateLocations.newSchedules()
-    updateLocations.getAllTpTrackIds()
-    updateLocations.getAllImportTrackIds()
-    updateLocations.parseTrackIdLists()
-    updateLocations.removeObsoleteTracks()
+    updateLocations.addNewLocations()
+    updateLocations.addContinuingLocations()
     updateLocations.addNewTracks()
-    updateLocations.updateContinuingTracks()
+    updateLocations.addContinuingTracks()
     updateLocations.addCarTypesToSpurs()
-    updateLocations.removeObsoleteLocations()
 
     newInventory = NewRollingStock()
     newInventory.getTpInventory()
@@ -119,12 +112,19 @@ def updateJmriRailroad():
     newInventory.newCars()
     newInventory.newLocos()
 
-    PSE.CMX.save()
-    PSE.EMX.save()
-
     _psLog.debug('setNonSpurTrackLength')
     ModelEntities.setNonSpurTrackLength()
+
+    PSE.CMX.save()
+    PSE.EMX.save()
     PSE.LMX.save()
+
+    PSE.OMX.initialize()
+    PSE.TMX.initialize()
+    PSE.RMX.initialize()
+    PSE.LMX.initialize()
+    PSE.CMX.initialize()
+    PSE.EMX.initialize()
 
     return
 
@@ -133,27 +133,43 @@ class UpdateLocationsAndTracks():
 
     def __init__(self):
 
-        self.allJmriLocations = PSE.getAllLocationNames()
-
-        self.allJmriTracks = PSE.getAllTracks()
-        self.currentRailroadTrackIds = []
-
         self.importedRailroad = ModelEntities.getTpRailroadData()
-        self.importedRailroadTrackIds = []
 
-        self.newTrackIds = []
-        self.obsoleteTrackIds = []
-        self.continuingTrackIds = []
+        allCurrentLocationNames = PSE.getAllLocationNames()
+        self.newLocationNames = list(set(self.importedRailroad['locations']) - set(allCurrentLocationNames))
+        self.continuingLocationNames = list(set(self.importedRailroad['locations']) - set(self.newLocationNames))
+
+        importedRailroadTrackIds = [id for id in self.importedRailroad['locales']]
+        allCurrentRailroadTrackIds = ModelEntities.getAllTrackIds()
+        self.newTrackIds = list(set(importedRailroadTrackIds) - set(allCurrentRailroadTrackIds))
+        self.continuingTrackIds = list(set(allCurrentRailroadTrackIds) - set(self.newTrackIds))
+
+        self.allTracksHash = {}
+        for track in PSE.getAllTracks():
+            self.allTracksHash[track.getComment()] = track # (TP track ID, JMRI track object)
+
+        self.continuingLocations = {}
+        self.continuingTracks = {}
 
         return
 
-    def addNewLocations(self):
+    def getContinuingLocations(self):
+        """A dictionary of all the continuing location objects by name."""
 
-        newLocations = list(set(self.importedRailroad['locations']) - set(self.allJmriLocations))
-        for location in newLocations:
-            print('Add: ', location)
+        _psLog.info('getContinuingLocations')
 
-            PSE.LM.newLocation(location)
+        for location in self.continuingLocationNames:
+            self.continuingLocations[location] = PSE.LM.getLocationByName(location)
+
+        return
+
+    def getContinuingTracks(self):
+        """A dictionary of all the continuing track objects by TP track ID."""
+
+        _psLog.info('getContinuingTracks')
+
+        for id in self.continuingTrackIds:
+            self.continuingTracks[id] = self.allTracksHash[id]
 
         return
 
@@ -169,62 +185,68 @@ class UpdateLocationsAndTracks():
 
         return
 
-    def getAllTpTrackIds(self):
-        """These are the TrainPlayer track IDs in the JMRI track's comment field"""
+    def addNewLocations(self):
 
-        for track in self.allJmriTracks:
-            self.currentRailroadTrackIds.append(track.getComment())
+        if not self.newLocationNames:
+            _psLog.info('0 locations added')
 
-        return
+            return
 
-    def getAllImportTrackIds(self):
+        for i, location in enumerate(self.newLocationNames, start=1):
+            PSE.LM.newLocation(location)
+            # print(i)
 
-        for localeId, locale in self.importedRailroad['locales'].items():
-            self.importedRailroadTrackIds.append(localeId)
-
-        return
-
-    def parseTrackIdLists(self):
-
-        self.obsoleteTrackIds = list(set(self.currentRailroadTrackIds) - set(self.importedRailroadTrackIds))
-        self.newTrackIds = list(set(self.importedRailroadTrackIds) - set(self.currentRailroadTrackIds))
-        self.continuingTrackIds = list(set(self.currentRailroadTrackIds) - set(self.obsoleteTrackIds))
+        print(str(i) + ' locations added')
+        _psLog.info(str(i) + ' locations added')
 
         return
 
-    def removeObsoleteTracks(self):
+    def addContinuingLocations(self):
 
-        trackList = ModelEntities.getJmriTracksByTpId()
-        for tpTrackId in self.obsoleteTrackIds:
-            _psLog.info('Remove: ', location.getTrackByName(trackList[tpTrackId][1]))
-            print('Remove: ', location.getTrackByName(trackList[tpTrackId][1], None))
+        if not self.continuingLocationNames:
+            _psLog.info('0 locations updated')
 
-            location = PSE.LM.getLocationByName(trackList[tpTrackId][0])
-            # location.deleteTrack(location.getTrackByName(trackList[tpTrackId][1], None))
+            return
+
+        for i, location in enumerate(self.continuingLocationNames, start=1):
+            ModelEntities.updateContinuingLocation(location)
+
+
+        print(str(i) + ' locations updated')
+        _psLog.info(str(i) + ' locations updated')
 
         return
 
     def addNewTracks(self):
 
-        for trackId in self.newTrackIds:
-            trackData = self.tpRailroadData['locales'][newTrackId]
+        if not self.newTrackIds:
+            _psLog.info('0 tracks added')
 
-            _psLog.info('Add: ', trackData['location'], trackData['track'])
-            print('Add: ', trackData['location'], trackData['track'])
+            return
 
+        for i, trackId in enumerate(self.newTrackIds):
+            trackData = self.importedRailroad['locales'][trackId]
             ModelEntities.makeNewTrack(trackId, trackData)
+
+        print(str(i) + ' tracks added')
+        _psLog.info(str(i) + ' tracks added')
 
         return
 
-    def updateContinuingTracks(self):
+    def addContinuingTracks(self):
 
-        for trackId in self.continuingTrackIds:
+        if not self.continuingTrackIds:
+            _psLog.info('0 tracks updated')
+
+            return
+
+        for i, trackId in enumerate(self.continuingTrackIds):
             trackData = self.importedRailroad['locales'][trackId]
+            previousTrackData = self.allTracksHash[trackId]
+            ModelEntities.updateContinuingTracks(trackId, trackData, previousTrackData)
 
-            _psLog.info('Update: ', trackData['location'], trackData['track'])
-            print('Update: ', trackData['location'], trackData['track'])
-
-            ModelEntities.makeNewTrack(trackId, trackData)
+        print(str(i) + ' tracks updated')
+        _psLog.info(str(i) + ' tracks updated')
 
         return
 
@@ -235,16 +257,6 @@ class UpdateLocationsAndTracks():
 
         for id, industry in self.importedRailroad['industries'].items():
             ModelEntities.selectCarTypes(id, industry)
-
-        return
-
-    def removeObsoleteLocations(self):
-
-        obsoleteLocations = list(set(self.allJmriLocations) - set(self.importedRailroad['locations']))
-        for location in obsoleteLocations:
-            print('Remove: ', location)
-
-            PSE.LM.getLocationByName(location).dispose()
 
         return
 

@@ -9,6 +9,59 @@ SCRIPT_REV = 20220101
 _psLog = PSE.LOGGING.getLogger('PS.TP.ModelNew')
 
 
+def updateContinuingTracks(trackId, trackData, previousTrackData):
+    """The data in previousTrackData is modified by
+        the data in trackData.
+        Deselect all types for spur tracks.
+        Used by:
+        Model.UpdateLocationsAndTracks.updateContinuingTracks
+        """
+
+    loc = PSE.LM.getLocationByName(trackData['location'])
+
+    if loc.isStaging() and trackData['type'] == 'Staging':
+        previousTrackData.setTrackType(trackData['type'])
+        previousTrackData.setName(trackData['track'])
+        trackLength = int(trackData['capacity']) * 44
+        previousTrackData.setLength(trackLength)
+
+        tweakStagingTracks(previousTrackData)
+        _psLog.debug(trackData['track'] + ' updated at ' + trackData['type'])
+
+    if not loc.isStaging() and trackData['type'] != 'Staging':
+        previousTrackData.setTrackType(trackData['type'])
+        previousTrackData.setName(trackData['track'])
+        trackLength = int(trackData['capacity']) * 44
+        previousTrackData.setLength(trackLength)
+        _psLog.debug(trackData['track'] + ' updated at ' + trackData['type'])
+
+    if trackData['type'] == 'Spur':
+        previousTrackData.setSchedule(PSE.SM.getScheduleByName(trackData['label']))
+        for typeName in loc.getTypeNames():
+            previousTrackData.deleteTypeName(typeName)        
+
+    loc.register(previousTrackData)
+    return
+
+def updateContinuingLocation(location):
+    """Apply JMRI level user changes here"""
+
+    PSE.LM.newLocation(location)
+
+    return
+
+
+def getAllTrackIds():
+    """All track IDs for all locations"""
+
+    trackIds = []
+    for location in PSE.getAllLocationNames():
+        trackList = PSE.LM.getLocationByName(location).getTracksList()
+        for track in trackList:
+            trackIds.append(track.getComment())
+
+    return trackIds
+
 def selectCarTypes(id, industry):
     """Used by:
         Model.NewLocationsAndTracks.addCarTypesToSpurs
@@ -37,6 +90,8 @@ def setNonSpurTrackLength():
             rsTotal = 1
         newTrackLength = rsTotal * 44
         track.setLength(newTrackLength)
+        if track.getName() == '~':
+            track.setLength(1000)
 
     return
 
@@ -45,16 +100,19 @@ def makeNewSchedule(id, industry):
         Model.NewLocationsAndTracks.newSchedules
         """
 
-    tc = PSE.JMRI.jmrit.operations.locations.schedules.ScheduleManager
-    TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+    # tc = PSE.JMRI.jmrit.operations.locations.schedules.ScheduleManager
+    # TCM = PSE.JMRI.InstanceManager.getDefault(tc)
 
     scheduleLineItem = industry['schedule']
-    schedule = TCM.newSchedule(scheduleLineItem[0])
+    # schedule = TCM.newSchedule(scheduleLineItem[0])
+    schedule = PSE.SM.newSchedule(scheduleLineItem[0])
     scheduleItem = schedule.addItem(scheduleLineItem[1])
     scheduleItem.setReceiveLoadName(scheduleLineItem[2])
     scheduleItem.setShipLoadName(scheduleLineItem[3])
 
     return
+
+
 
 def makeNewTrack(trackId, trackData):
     """Set spur length to spaces from TP
