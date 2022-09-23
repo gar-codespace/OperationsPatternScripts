@@ -23,6 +23,8 @@ class ManageGui:
         """Make the frame that all the Track Pattern controls are added to"""
 
         subroutineFrame = PSE.JAVX_SWING.JPanel() # the Track Pattern panel
+        subroutineFrame.setName(u'PatternTracksSubroutine')
+        print(subroutineFrame.getName())
         subroutineFrame.setLayout(PSE.JAVX_SWING.BoxLayout(
                 subroutineFrame, PSE.JAVX_SWING.BoxLayout.Y_AXIS))
         subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder( \

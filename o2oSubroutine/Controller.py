@@ -70,6 +70,13 @@ class StartUp:
         self.psLog.debug(EVENT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
+
+        x = EVENT.getSource()
+        y = x.getParent().getParent().getParent()
+        for z in y.getComponents():
+            if z.getName() == 'PatternTracksSubroutine':
+                print('Found it !!!!')
+
         return
 
     def updateJmriRailroad(self, EVENT):

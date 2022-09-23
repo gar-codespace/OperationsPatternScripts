@@ -21,7 +21,8 @@ class ManageGui:
         """Make the frame that all the o2o controls are added to"""
 
         subroutineFrame = PSE.JAVX_SWING.JPanel() # the track pattern panel
-        encodedKey = unicode('o2o Subroutine', PSE.ENCODING)
+        subroutineFrame.setName(u'o2oSubroutine')
+        # encodedKey = unicode('o2o Subroutine', PSE.ENCODING)
         subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(
             PSE.BUNDLE[u'o2o Subroutine']
             )

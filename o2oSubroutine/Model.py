@@ -4,6 +4,7 @@
 """From tpRailroadData.json, a new rr is created and the xml files are seeded"""
 
 from psEntities import PSE
+from PatternTracksSubroutine import Model
 from o2oSubroutine import ModelEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.Model'
