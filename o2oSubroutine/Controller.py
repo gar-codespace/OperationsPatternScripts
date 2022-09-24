@@ -4,6 +4,7 @@
 """The o2o Subroutine."""
 
 from psEntities import PSE
+from PatternTracksSubroutine import Controller
 from o2oSubroutine import Model
 from o2oSubroutine import ModelImport
 from o2oSubroutine import ModelUpdate
@@ -51,31 +52,16 @@ class StartUp:
 
         return
 
-    # def importTpRailroad(self, EVENT):
-    #     '''Writes a tpRailroadData.json file from the 3 TrainPlayer report files'''
-    #
-    #     ModelImport.importTpRailroad()
-    #
-    #     self.psLog.debug(EVENT)
-    #     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-    #
-    #     return
-
     def newJmriRailroad(self, EVENT):
         '''Creates a new JMRI railroad from the tpRailroadData.json file'''
 
         ModelImport.importTpRailroad()
         Model.newJmriRailroad()
 
+        Controller.updatePatternTracksSubroutine(EVENT)
+
         self.psLog.debug(EVENT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-
-
-        x = EVENT.getSource()
-        y = x.getParent().getParent().getParent()
-        for z in y.getComponents():
-            if z.getName() == 'PatternTracksSubroutine':
-                print('Found it !!!!')
 
         return
 
@@ -85,10 +71,22 @@ class StartUp:
         ModelImport.importTpRailroad()
         Model.updateJmriRailroad()
 
+        Model.updatePatternTracksSubroutine(EVENT)
+
         self.psLog.debug(EVENT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
+
+    # def importTpRailroad(self, EVENT):
+    #     '''Writes a tpRailroadData.json file from the 3 TrainPlayer report files'''
+    #
+    #     ModelImport.importTpRailroad()
+    #
+    #     self.psLog.debug(EVENT)
+    #     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+    #
+    #     return
 
     # def updateLocations(self, EVENT):
     #     '''Writes a new locations xml'''

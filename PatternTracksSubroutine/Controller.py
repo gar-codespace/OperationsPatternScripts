@@ -5,10 +5,10 @@ from psEntities import PSE
 from PatternTracksSubroutine import View
 from PatternTracksSubroutine import Model
 from PatternTracksSubroutine import ModelEntities
-# from o2oSubroutine import ModelWorkEvents
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.Controller'
 SCRIPT_REV = 20220101
+
 
 class LocationComboBox(PSE.JAVA_AWT.event.ActionListener):
     """Event triggered from location combobox selection"""
@@ -22,14 +22,39 @@ class LocationComboBox(PSE.JAVA_AWT.event.ActionListener):
     def actionPerformed(self, EVENT):
 
         Model.updatePatternLocation(EVENT.getSource().getSelectedItem())
-        subroutinePanel = StartUp(self.subroutineFrame).makeSubroutinePanel()
-        self.subroutineFrame.removeAll()
-        self.subroutineFrame.add(subroutinePanel)
-        self.subroutineFrame.revalidate()
+        restartSubroutine(self.subroutineFrame)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
+
+
+def updatePatternTracksSubroutine(event):
+    """Allows other subroutines to update and restart the PT Sub"""
+
+    Model.updatePatternLocation()
+# It's a lot easier to go up from button than down from frame
+    parent = event.getSource().getParent().getParent().getParent()
+    for component in parent.getComponents():
+        if component.getName() == 'PatternTracksSubroutine':
+            restartSubroutine(component.getComponents()[0])
+
+    return
+
+def restartSubroutine(subroutineFrame):
+    """Generic subroutine restarter.
+        Used by:
+        LocationComboBox.actionPerformed
+        updatePatternTracksSubroutine
+        """
+
+    subroutinePanel = StartUp(subroutineFrame).makeSubroutinePanel()
+    subroutineFrame.removeAll()
+    subroutineFrame.add(subroutinePanel)
+    subroutineFrame.revalidate()
+
+    return
+
 
 class StartUp:
     """Start the pattern tracks subroutine"""
@@ -53,7 +78,9 @@ class StartUp:
         return self.subroutineFrame
 
     def makeSubroutinePanel(self):
-        """Makes the control panel that sits inside the frame"""
+        """Makes the control panel that sits inside the frame
+            Change this to call widgets by name
+            """
 
         if not PSE.readConfigFile('PT')['AL']:
             Model.updateLocations()
@@ -75,10 +102,8 @@ class StartUp:
     def yardTrackOnlyCheckBox(self, EVENT):
 
         if self.widgets[1].selected:
-            # trackList = Model.makeTrackList(self.widgets[0].getSelectedItem(), 'Yard')
             trackList = PSE.getTracksByLocation('Yard')
         else:
-            # trackList = Model.makeTrackList(self.widgets[0].getSelectedItem(), None)
             trackList = PSE.getTracksByLocation(None)
 
         configFile = PSE.readConfigFile()

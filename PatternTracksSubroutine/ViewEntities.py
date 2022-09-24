@@ -167,7 +167,7 @@ def getStandins(car, standins):
         fdStandin = ''
 
     return destStandin, fdStandin
-    
+
 def makeTextReportHeader(textWorkEventList):
     """Makes the header for generic text reports
         Used by:

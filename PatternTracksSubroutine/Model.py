@@ -49,7 +49,8 @@ def setRsButton():
 def updatePatternLocation(selectedItem=None):
     """Catches user edits of locations
         Used by:
-        Controller.LocationComboBox.actionPerformed
+        PTSub.Controller.LocationComboBox.actionPerformed
+        o2oSub.Model.updatePatternTracksSubroutine
         """
 
     _psLog.debug('Model.updatePatternLocation')

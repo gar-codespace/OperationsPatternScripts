@@ -38,7 +38,7 @@ def makeTrackPatternReport(trackPattern):
 
     return trackPatternReport
 
-def testSelectedItem(selectedItem):
+def testSelectedItem(selectedItem=None):
     """Catches user edit of locations
         Used by:
         Model.updatePatternLocation
