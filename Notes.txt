@@ -1,6 +1,7 @@
 
 Todo:
-  Map TP OC Class/XO reserved to something in JMRI/o2o import.
+  Mapped TP OC Class/XO reserved as JMRI spur, maybe change that.
+  Turn off NSEW flags for all ~ and XO reserved.(track.setTrainDirections(0))
   o2o new and update not bullet proof
   New and Update o2o buttons should refresh the PS Subroutine GUI
 

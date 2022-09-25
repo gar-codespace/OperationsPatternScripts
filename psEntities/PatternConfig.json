@@ -76,7 +76,7 @@
     "PW" : 1500,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20220907
+    "RV" : 20220908
   },
   "RM" : {
     "DS" : "No Waybill",
@@ -230,7 +230,8 @@
       "industry": "Spur",
       "interchange": "Interchange",
       "staging": "Staging",
-      "class yard": "Yard"
+      "class yard": "Yard",
+      "XO reserved": "Spur"
     }
   }
 }
