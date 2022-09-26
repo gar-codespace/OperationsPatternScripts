@@ -2,7 +2,7 @@
 # © 2021, 2022 Greg Ritacco
 
 """PSE is an abbreviation for PatternScriptEntities.
-    Support methods and package constants for all Pattern Script subroutines
+    Support methods and package constants for all Pattern Script subroutines.
     """
 
 import jmri as JMRI
@@ -87,7 +87,7 @@ class Logger:
 
 
 class createStubFile:
-    """Copy of the JMRI Java version of createStubFile"""
+    """Copy of the JMRI Java version of createStubFile."""
 
     def __init__(self):
 
@@ -160,13 +160,13 @@ class createStubFile:
 
 
 def psLocale():
-    """Dealers choice, both work"""
+    """Dealers choice, both work."""
 
     return PM.getLocale().toString()
     # return unicode(PM.getLocale(), ENCODING)
 
 def formatText(item, length):
-    """Truncate each item to its defined length in PatternConfig.json and add a space at the end"""
+    """Truncate each item to its defined length in PatternConfig.json and add a space at the end."""
 
     if isinstance(item, bool): # Hazardous is a boolean
         item = 'HazMat'
@@ -189,13 +189,13 @@ def makeReportItemWidthMatrix():
     return reportMatrix
 
 def getShortLoadType(car):
-    """Replaces empty and load with E, L, or O for occupied
+    """Replaces empty and load with E, L, or O for occupied.
+        JMRI defines custom load type as empty but default load type as Empty, hence the 'or' statement.
+        Load, Empty, Occupied and Unknown are translated by the bundle.
         Used by:
         ViewEntities.modifyTrackPatternReport
         ModelWorkEvent.o2oSwitchListConversion.parsePtRs
         ModelWorkEvents.jmriManifestConversion.parseRS
-        JMRI defines custom load type as empty but default load type as Empty, hence the 'or' statement
-        Load, Empty, Occupied and Unknown are translated.
         """
 
     try:
@@ -216,9 +216,9 @@ def getShortLoadType(car):
     return lt
 
 def occuranceTally(listOfOccurances):
-    """Tally the occurances of a word in a list and return a dictionary
-    Home grown version of collections.Counter
-    """
+    """Tally the occurances of a word in a list and return a dictionary.
+        Home grown version of collections.Counter.
+        """
 
     dict = {}
     while len(listOfOccurances):
@@ -233,7 +233,7 @@ def occuranceTally(listOfOccurances):
     return dict
 
 def getAllLocationNames():
-    """JMRI sorts the list, returns list of location names"""
+    """JMRI sorts the list, returns list of location names.""""
 
     locationNames = []
     for item in LM.getLocationsByNameList():
@@ -242,7 +242,7 @@ def getAllLocationNames():
     return locationNames
 
 def getAllTracks():
-    """All track objects for all locations"""
+    """All track objects for all locations."""
 
     trackList = []
     for location in LM.getList():
@@ -266,14 +266,14 @@ def getTracksByLocation(trackType):
         return allTracksList
 
 def getSelectedTracks():
-    """Gets the tracks checked in the Track Pattern Subroutine"""
+    """Gets the tracks checked in the Track Pattern Subroutine."""
 
     patternTracks = readConfigFile('PT')['PT']
 
     return [track for track, include in sorted(patternTracks.items()) if include]
 
 def timeStamp(epochTime=0):
-    """Valid Time, get local time adjusted for time zone and dst"""
+    """Valid Time, get local time adjusted for time zone and dst."""
 
     if epochTime == 0:
         epochTime = time.time()
@@ -285,7 +285,7 @@ def timeStamp(epochTime=0):
     return time.strftime('%a %b %d %Y %I:%M %p %Z', time.gmtime(epochTime - timeOffset))
 
 def convertJmriDateToEpoch(jmriTime):
-    """2022-02-26T17:16:17.807+0000"""
+    """Example: 2022-02-26T17:16:17.807+0000"""
 
     epochTime = time.mktime(time.strptime(jmriTime, "%Y-%m-%dT%H:%M:%S.%f+0000"))
 
@@ -297,7 +297,7 @@ def convertJmriDateToEpoch(jmriTime):
     return epochTime
 
 def genericReadReport(filePath):
-    """try/except catches initial read of config file"""
+    """try/except catches initial read of config file."""
 
     try:
         ENCODING
@@ -317,7 +317,7 @@ def genericWriteReport(filePath, genericReport):
     return
 
 def genericDisplayReport(genericReportPath):
-    """Dealer's choice, the JMRI or Java version"""
+    """Dealer's choice, the JMRI or Java version."""
 
     # JMRI.util.HelpUtil.openWindowsFile(genericReportPath)
     JAVA_AWT.Desktop.getDesktop().edit(JAVA_IO.File(genericReportPath))
@@ -337,8 +337,8 @@ def dumpJson(switchList):
     return jsonSwitchList
 
 def validateFileDestinationDirestories():
-    """Checks that the folders this plugin writes to exist
-        buildstatus is first so logging will work on a new layout
+    """Checks that the folders this plugin writes to exist.
+        Buildstatus is first so logging will work on a new layout.
         """
 
     destDirPath = JMRI.util.FileUtil.getProfilePath() + 'operations\\'
@@ -371,7 +371,7 @@ def tpDirectoryExists():
         return
 
 def validateConfigFileVersion():
-    """Checks that the config file is the current version"""
+    """Checks that the config file is the current version."""
 
     targetDir =  PLUGIN_ROOT + '\\psEntities'
     fileName = 'PatternConfig.json'
@@ -400,7 +400,7 @@ def readConfigFile(subConfig=None):
         return configFile[subConfig]
 
 def tryConfigFile():
-    """Catch some user edit mistakes"""
+    """Catch some user edit mistakes."""
 
     try:
         configFile = getConfigFile()
@@ -458,7 +458,7 @@ def deleteConfigFile():
     return
 
 def makePatternLog():
-    """creates a pattern log for display based on the log level, as set by getBuildReportLevel"""
+    """creates a pattern log for display based on the log level, as set by getBuildReportLevel."""
 
     outputPatternLog = ''
     buildReportLevel = JMRI.jmrit.operations.setup.Setup.getBuildReportLevel()
@@ -486,14 +486,14 @@ def makePatternLog():
     return outputPatternLog
 
 def logIndex():
-    """Moved here but may be put back into configFile"""
+    """Moved here but may be put back into configFile."""
 
     loggingIndex = {"9": "- CRITICAL -", "7": "- ERROR -", "5": "- WARNING -", "3": "- INFO -", "1": "- DEBUG -"}
 
     return loggingIndex
 
 def getGenericColor(colorName):
-    """A bit of protection against bad edits"""
+    """Try/Except is a bit of protection against bad edits."""
 
     colorPalette = readConfigFile('CD')['CP']
 
@@ -538,7 +538,7 @@ def getAlertColor():
 
 def translateMessageFormat():
     """The messageFormat is in the locale's language, it has to be hashed to the plugin fields.
-        Dealers choice, J_BUNDLE.ROAD or SB.handleGetMessage('Road')
+        Dealers choice, J_BUNDLE.ROAD or SB.handleGetMessage('Road').
         """
 
     rosetta = {}
