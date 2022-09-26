@@ -86,13 +86,15 @@ class Logger:
         return
 
 
-class validateStubFile:
+class createStubFile:
     """Copy of the JMRI Java version of createStubFile"""
 
     def __init__(self):
 
-        self.stubLocation = JMRI.util.FileUtil.getPreferencesPath() + '\\jmrihelp\\'
-        self.stubFileName = self.stubLocation + 'psStub.html'
+        self.stubLocation = JMRI.util.FileUtil.getPreferencesPath() + '\\jmrihelp'
+        stubFileName = 'psStub.html'
+        self.stubFilePath = OS_Path.join(self.stubLocation, stubFileName)
+
         self.helpFilePath = ''
         self.newStubFile = ''
 
@@ -109,9 +111,15 @@ class validateStubFile:
 
     def makehelpFilePath(self):
 
-        helpFilePath = PLUGIN_ROOT + '\psSupport\Help.' + psLocale() + '.html'
+        helpFileLocation = PLUGIN_ROOT + '\\psSupport'
+        helpFileName = 'Help.' + psLocale() + '.html'
+        helpFilePath = OS_Path.join(helpFileLocation, helpFileName)
+
+
+
         if not JAVA_IO.File(helpFilePath).isFile():
-            helpFilePath = PLUGIN_ROOT + '\psSupport\Help.en.html'
+            helpFileName = 'Help.en.html'
+            helpFilePath = OS_Path.join(helpFileLocation, helpFileName)
 
         helpFileUri = JAVA_IO.File(helpFilePath).toURI()
         self.helpFilePath = unicode(helpFileUri, ENCODING)
@@ -120,12 +128,14 @@ class validateStubFile:
 
     def updateStubTemplate(self):
 
-        stubTemplateLocation = JMRI.util.FileUtil.getProgramPath() + 'help\\' \
-                + psLocale()[:2] + '\\local\\stub_template.html'
-        if not JAVA_IO.File(stubTemplateLocation).isFile():
-            stubTemplateLocation = PLUGIN_ROOT + '\psEntities\stub_template.html'
+        stubTemplateLocation = JMRI.util.FileUtil.getProgramPath() + 'help\\' + psLocale()[:2] + '\\local'
+        stubTemplateFile = 'stub_template.html'
+        stubTemplatePath = OS_Path.join(stubTemplateLocation, stubTemplateFile)
+        if not JAVA_IO.File(stubTemplatePath).isFile():
+            stubTemplateLocation = PLUGIN_ROOT + '\\psEntities'
+            stubTemplatePath = OS_Path.join(stubTemplateLocation, stubTemplateFile)
 
-        stubTemplate = genericReadReport(stubTemplateLocation)
+        stubTemplate = genericReadReport(stubTemplatePath)
         stubTemplate = stubTemplate.replace("../index.html#", "")
         stubTemplate = stubTemplate.replace("<!--HELP_KEY-->", self.helpFilePath)
         self.newStubFile = stubTemplate.replace("<!--URL_HELP_KEY-->", "")
@@ -134,7 +144,7 @@ class validateStubFile:
 
     def writeStubFile(self):
 
-        genericWriteReport(self.stubFileName, self.newStubFile)
+        genericWriteReport(self.stubFilePath, self.newStubFile)
         _psLog.debug('psStub writen from stub_template')
 
         return

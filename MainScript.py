@@ -583,7 +583,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
     #Startup Items
         PSE.BUNDLE = Bundle.getBundleForLocale()
-        PSE.validateStubFile().isStubFile()
+        PSE.createStubFile().isStubFile()
         Bundle.makeHelpPage()
 
         # self.logger.startLogger('PS')
@@ -666,7 +666,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         self.logger.initialLogMessage(self.psLog)
 
         self.model.validatePatternConfig()
-        PSE.validateStubFile().isStubFile()
+        PSE.createStubFile().isStubFile()
         if PSE.readConfigFile()['CP']['SI'][1]['o2oSubroutine']:
             self.o2oSubroutineListeners()
         if PSE.readConfigFile()['CP']['AP']:
