@@ -233,7 +233,7 @@ def occuranceTally(listOfOccurances):
     return dict
 
 def getAllLocationNames():
-    """JMRI sorts the list, returns list of location names.""""
+    """JMRI sorts the list, returns list of location names."""
 
     locationNames = []
     for item in LM.getLocationsByNameList():
@@ -336,37 +336,49 @@ def dumpJson(switchList):
 
     return jsonSwitchList
 
-def validateFileDestinationDirestories():
-    """Checks that the folders this plugin writes to exist.
-        Buildstatus is first so logging will work on a new layout.
-        """
+def makeBuildStatusFolder():
+    """The buildStatus folder is created first so the log file can be written"""
 
-    destDirPath = JMRI.util.FileUtil.getProfilePath() + 'operations\\'
-    listOfDirectories = ['buildstatus', 'csvManifests', 'csvSwitchLists', 'jsonManifests', 'switchLists', 'patternReports']
+    opsDirectory = JMRI.util.FileUtil.getProfilePath() + '\\operations'
+    targetDirectory = OS_Path.join(opsDirectory, 'buildstatus')
+    if not JAVA_IO.File(targetDirectory).isDirectory():
+        JAVA_IO.File(targetDirectory).mkdirs()
+
+    return
+
+def makeReportFolders():
+    """Checks/creates the folders this plugin writes to."""
+
+    opsDirectory = JMRI.util.FileUtil.getProfilePath() + '\\operations'
+    directories = ['csvManifests', 'csvSwitchLists', 'jsonManifests', 'switchLists', 'patternReports']
     x = 0
-    for directory in listOfDirectories:
-        testDirectory = destDirPath + directory + '\\'
-        if JAVA_IO.File(testDirectory).isDirectory():
+    for directory in directories:
+        targetDirectory = OS_Path.join(opsDirectory, directory)
+        if not JAVA_IO.File(targetDirectory).isDirectory():
+            JAVA_IO.File(targetDirectory).mkdirs()
+            _psLog.info('Directory created: ' + targetDirectory)
             x += 1
-        else:
-            JAVA_IO.File(testDirectory).mkdirs()
-            _psLog.warning(directory + ' created at ' + destDirPath)
 
-    if x == len(listOfDirectories):
+    if x == 0:
         _psLog.info('Destination folders check OK')
+    else:
+        _psLog.info(str(x) + 'Destination folders created')
 
     return
 
 def tpDirectoryExists():
+    """Checks for the Reports folder in TraipPlayer.
+        Possibly move this to o2o.ModelEntities.
+        """
 
-    psLog = LOGGING.getLogger('PS.PE.PSE.tpDirectoryExists')
+    tpDirectory = JMRI.util.FileUtil.getHomePath() + 'AppData\\Roaming\\TrainPlayer\\Reports'
+    tpDirectory = OS_Path.join(tpDirectory)
 
-    tpDirectory = JMRI.util.FileUtil.getHomePath() + 'AppData\\Roaming\\TrainPlayer\\Reports\\'
     if JAVA_IO.File(tpDirectory).isDirectory():
-        psLog.info('TrainPlayer destination directory OK')
+        _psLog.info('TrainPlayer destination directory OK')
         return True
     else:
-        psLog.warning('TrainPlayer Reports destination directory not found')
+        _psLog.warning('TrainPlayer Reports destination directory not found')
         print('TrainPlayer Reports destination directory not found')
         return
 
@@ -400,7 +412,7 @@ def readConfigFile(subConfig=None):
         return configFile[subConfig]
 
 def tryConfigFile():
-    """Catch some user edit mistakes."""
+    """Try/except catches some user edit mistakes."""
 
     try:
         configFile = getConfigFile()

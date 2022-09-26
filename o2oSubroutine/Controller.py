@@ -18,7 +18,7 @@ class StartUp:
 
     def __init__(self, subroutineFrame=None):
 
-        self.psLog = PSE.LOGGING.getLogger('PS.TP.Controller')
+        self.psLog = PSE.LOGGING.getLogger('PS.o2o.Controller')
         self.subroutineFrame = subroutineFrame
 
         return

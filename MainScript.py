@@ -143,7 +143,7 @@ class Model:
 
     def __init__(self):
 
-        self.psLog = PSE.LOGGING.getLogger('PS.Model')
+        self.psLog = PSE.LOGGING.getLogger('PS.Main.Model')
 
         return
 
@@ -370,12 +370,15 @@ class View:
 class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
     def init(self):
-        """validateFileDestinationDirestories is first to create buildstatus dir so logging works on a new profile"""
+        """ """
 
-        PSE.validateFileDestinationDirestories()
+        PSE.makeBuildStatusFolder()
 
-        logPath = PSE.PROFILE_PATH  + 'operations\\buildstatus\\PatternScriptsLog.txt'
-        self.logger = PSE.Logger(logPath)
+        logFilePath = PSE.PROFILE_PATH  + '\\operations\\buildstatus'
+        logFilename = 'PatternScriptsLog.txt'
+        logFileTarget = PSE.OS_Path.join(logFilePath, logFilename)
+
+        self.logger = PSE.Logger(logFileTarget)
         self.logger.startLogger('PS')
 
         self.model = Model()
@@ -662,9 +665,10 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
     def handle(self):
 
         startTime = PSE.TIME.time()
-        self.psLog = PSE.LOGGING.getLogger('PS.Controller')
+        self.psLog = PSE.LOGGING.getLogger('PS.Main.Controller')
         self.logger.initialLogMessage(self.psLog)
 
+        PSE.makeReportFolders()
         self.model.validatePatternConfig()
         PSE.createStubFile().isStubFile()
         if PSE.readConfigFile()['CP']['SI'][1]['o2oSubroutine']:
