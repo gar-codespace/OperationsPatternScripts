@@ -132,22 +132,23 @@ class TrainPlayerImporter:
         _psLog.debug('getRrLocales')
 
         locales = {}
-        locales['00'] = {u'location': 'Unknown', u'track': '~', u'label': '~', u'type': 'Yard', u'capacity': '100'}
+        locales['00'] = {u'location': 'Unknown', u'track': '~', u'label': '~', u'type': 'class yard', u'capacity': '100'}
 
         for lineItem in self.tpLocations:
             splitLine = lineItem.split(';')
-            locales[splitLine[0]] = {u'location': splitLine[1], u'track': splitLine[2], u'label': splitLine[3], u'type': self.getTrackType(splitLine[4]), u'capacity': splitLine[5]}
+            # locales[splitLine[0]] = {u'location': splitLine[1], u'track': splitLine[2], u'label': splitLine[3], u'type': self.getTrackType(splitLine[4]), u'capacity': splitLine[5]}
+            locales[splitLine[0]] = {u'location': splitLine[1], u'track': splitLine[2], u'label': splitLine[3], u'type': splitLine[4], u'capacity': splitLine[5]}
 
         self.rr['locales'] = locales
 
         return
 
-    def getTrackType(self, tpType):
-        """Convert TP track types into JMRI track types."""
-
-        typeRubric = PSE.readConfigFile('o2o')['TR']
-
-        return typeRubric[tpType]
+    # def getTrackType(self, tpType):
+    #     """Convert TP track types into JMRI track types."""
+    #
+    #     typeRubric = PSE.readConfigFile('o2o')['TR']
+    #
+    #     return typeRubric[tpType]
 
     def getAllTpIndustry(self):
         """self.tpIndustryList format: ID, JMRI Location Name, JMRI Track Name, Industry, AAR, S/R, Load, Staging, ViaIn

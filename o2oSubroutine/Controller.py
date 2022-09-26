@@ -71,7 +71,7 @@ class StartUp:
         ModelImport.importTpRailroad()
         Model.updateJmriRailroad()
 
-        Model.updatePatternTracksSubroutine(EVENT)
+        Controller.updatePatternTracksSubroutine(EVENT)
 
         self.psLog.debug(EVENT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

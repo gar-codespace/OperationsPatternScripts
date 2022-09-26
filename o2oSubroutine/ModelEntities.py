@@ -115,9 +115,13 @@ def makeNewTrack(trackId, trackData):
         Model.UpdateLocationsAndTracks.updateContinuingTracks
         """
 
+    typeRubric = PSE.readConfigFile('o2o')['TR']
+    jmriTrackType = typeRubric[trackData['type']]
+
     loc = PSE.LM.getLocationByName(trackData['location'])
-    xTrack = loc.addTrack(trackData['track'], trackData['type'])
+    xTrack = loc.addTrack(trackData['track'], jmriTrackType)
     xTrack.setComment(trackId)
+
     _psLog.debug('deselectCarTypesForSpurs')
     if trackData['type'] == 'Spur':
         trackLength = int(trackData['capacity']) * PSE.readConfigFile('o2o')['DL']
@@ -127,6 +131,8 @@ def makeNewTrack(trackId, trackData):
             xTrack.deleteTypeName(typeName)
     if trackData['type'] == 'Staging':
         tweakStagingTracks(xTrack)
+    if trackData['type'] == 'XO reserved':
+        xTrack.setTrainDirections(0)
 
     return
 
