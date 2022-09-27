@@ -86,14 +86,12 @@ class Logger:
         return
 
 
-class createStubFile:
-    """Copy of the JMRI Java version of createStubFile."""
+class CreateStubFile:
+    """Copy of the JMRI Java version of CreateStubFile."""
 
     def __init__(self):
 
-        self.stubLocation = JMRI.util.FileUtil.getPreferencesPath() + '\\jmrihelp'
-        stubFileName = 'psStub.html'
-        self.stubFilePath = OS_Path.join(self.stubLocation, stubFileName)
+        self.stubLocation = OS_Path.join(JMRI.util.FileUtil.getPreferencesPath(), 'jmrihelp')
 
         self.helpFilePath = ''
         self.newStubFile = ''
@@ -109,51 +107,48 @@ class createStubFile:
 
         return
 
-    def makehelpFilePath(self):
+    def getHelpFileURI(self):
 
-        helpFileLocation = PLUGIN_ROOT + '\\psSupport'
         helpFileName = 'Help.' + psLocale() + '.html'
-        helpFilePath = OS_Path.join(helpFileLocation, helpFileName)
-
-
+        helpFilePath = OS_Path.join(PLUGIN_ROOT, 'psSupport', helpFileName)
 
         if not JAVA_IO.File(helpFilePath).isFile():
             helpFileName = 'Help.en.html'
-            helpFilePath = OS_Path.join(helpFileLocation, helpFileName)
+            helpFilePath = OS_Path.join(PLUGIN_ROOT, 'psSupport', helpFileName)
 
-        helpFileUri = JAVA_IO.File(helpFilePath).toURI()
-        self.helpFilePath = unicode(helpFileUri, ENCODING)
+        self.helpFilePath = JAVA_IO.File(helpFilePath).toURI().toString()
 
         return
 
-    def updateStubTemplate(self):
+    def makeNewStubFile(self):
 
-        stubTemplateLocation = JMRI.util.FileUtil.getProgramPath() + 'help\\' + psLocale()[:2] + '\\local'
         stubTemplateFile = 'stub_template.html'
-        stubTemplatePath = OS_Path.join(stubTemplateLocation, stubTemplateFile)
+        stubTemplatePath = OS_Path.join(JMRI.util.FileUtil.getProgramPath(), 'help', psLocale()[:2], 'local', stubTemplateFile)
         if not JAVA_IO.File(stubTemplatePath).isFile():
-            stubTemplateLocation = PLUGIN_ROOT + '\\psEntities'
-            stubTemplatePath = OS_Path.join(stubTemplateLocation, stubTemplateFile)
+            stubTemplatePath = OS_Path.join(PLUGIN_ROOT, 'psEntities', stubTemplateFile)
 
         stubTemplate = genericReadReport(stubTemplatePath)
         stubTemplate = stubTemplate.replace("../index.html#", "")
         stubTemplate = stubTemplate.replace("<!--HELP_KEY-->", self.helpFilePath)
         self.newStubFile = stubTemplate.replace("<!--URL_HELP_KEY-->", "")
 
-        return self.newStubFile
+        return
 
     def writeStubFile(self):
 
-        genericWriteReport(self.stubFilePath, self.newStubFile)
+        stubFilePath = OS_Path.join(self.stubLocation, 'psStub.html')
+
+        genericWriteReport(stubFilePath, self.newStubFile)
         _psLog.debug('psStub writen from stub_template')
 
         return
 
-    def isStubFile(self):
+    def make(self):
+        """Mini controller guides the new stub file process."""
 
         self.validateStubLocation()
-        self.makehelpFilePath()
-        self.updateStubTemplate()
+        self.getHelpFileURI()
+        self.makeNewStubFile()
         self.writeStubFile()
 
         return

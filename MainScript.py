@@ -584,7 +584,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
     #Startup Items
         PSE.BUNDLE = Bundle.getBundleForLocale()
-        PSE.createStubFile().isStubFile()
+        PSE.CreateStubFile().make()
         Bundle.makeHelpPage()
 
         # self.logger.startLogger('OPS')
@@ -672,7 +672,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         PSE.makeReportFolders()
         self.model.validatePatternConfig()
-        PSE.createStubFile().isStubFile()
+        PSE.CreateStubFile().make()
         if PSE.readConfigFile()['CP']['SI'][1]['o2oSubroutine']:
             self.o2oSubroutineListeners()
         if PSE.readConfigFile()['CP']['AP']:
