@@ -2,10 +2,7 @@
 Todo:
   o2o new and update not bullet proof.
   Maybe not write a new Stub File each time?
-  Change default size of the plugin window.
-  Revisit all logging. Change PS to OPS
-  Reorder themethods in PSEto flow more logically.
-  move PSE.tpDirectoryExists to o2o.ModelEntities
+  Reorder the methods in PSE to flow more logically.
   csv file not writting properly, Set_To not written.
   ModelWorkEvents.*.parsePsWorkEventRs and ModelWorkEvents.*.parseRS do the same things in a different way, can they be merged?
   Tighten up the except part of all try/except.

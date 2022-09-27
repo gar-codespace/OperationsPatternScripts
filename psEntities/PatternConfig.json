@@ -72,11 +72,11 @@
         "o2oSubroutine": true
       }
     ],
-    "PH" : 220,
-    "PW" : 1500,
+    "PH" : 280,
+    "PW" : 1100,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20220908
+    "RV" : 20220909
   },
   "RM" : {
     "DS" : "No Waybill",
