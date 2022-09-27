@@ -9,6 +9,22 @@ SCRIPT_REV = 20220101
 _psLog = PSE.LOGGING.getLogger('PS.TP.ModelNew')
 
 
+def tpDirectoryExists():
+    """Checks for the Reports folder in TraipPlayer.
+        Possibly move this to o2o.ModelEntities.
+        """
+
+    tpDirectory = PSE.JMRI.util.FileUtil.getHomePath() + 'AppData\\Roaming\\TrainPlayer\\Reports'
+    tpDirectory = PSE.OS_Path.join(tpDirectory)
+
+    if PSE.JAVA_IO.File(tpDirectory).isDirectory():
+        _psLog.info('TrainPlayer destination directory OK')
+        return True
+    else:
+        _psLog.warning('TrainPlayer Reports destination directory not found')
+        print('TrainPlayer Reports destination directory not found')
+        return
+
 def updateContinuingTracks(trackId, trackData, previousTrackData):
     """The data in previousTrackData is modified by
         the data in trackData.

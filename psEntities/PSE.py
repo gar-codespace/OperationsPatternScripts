@@ -366,21 +366,21 @@ def makeReportFolders():
 
     return
 
-def tpDirectoryExists():
-    """Checks for the Reports folder in TraipPlayer.
-        Possibly move this to o2o.ModelEntities.
-        """
-
-    tpDirectory = JMRI.util.FileUtil.getHomePath() + 'AppData\\Roaming\\TrainPlayer\\Reports'
-    tpDirectory = OS_Path.join(tpDirectory)
-
-    if JAVA_IO.File(tpDirectory).isDirectory():
-        _psLog.info('TrainPlayer destination directory OK')
-        return True
-    else:
-        _psLog.warning('TrainPlayer Reports destination directory not found')
-        print('TrainPlayer Reports destination directory not found')
-        return
+# def tpDirectoryExists():
+#     """Checks for the Reports folder in TraipPlayer.
+#         Possibly move this to o2o.ModelEntities.
+#         """
+#
+#     tpDirectory = JMRI.util.FileUtil.getHomePath() + 'AppData\\Roaming\\TrainPlayer\\Reports'
+#     tpDirectory = OS_Path.join(tpDirectory)
+#
+#     if JAVA_IO.File(tpDirectory).isDirectory():
+#         _psLog.info('TrainPlayer destination directory OK')
+#         return True
+#     else:
+#         _psLog.warning('TrainPlayer Reports destination directory not found')
+#         print('TrainPlayer Reports destination directory not found')
+#         return
 
 def validateConfigFileVersion():
     """Checks that the config file is the current version."""

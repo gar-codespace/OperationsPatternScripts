@@ -114,7 +114,7 @@ class o2oWorkEventsBuilder(jmri.jmrit.automat.AbstractAutomaton):
 
         startTime = time.time()
 
-        if not PSE.tpDirectoryExists():
+        if not ModelEntities.tpDirectoryExists():
             self.o2oLog.warning('TrainPlayer Reports directory not found')
             self.o2oLog.warning('TrainPlayer manifest export did not complete')
 

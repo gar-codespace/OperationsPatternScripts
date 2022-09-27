@@ -4,6 +4,7 @@
 """Creates the TrainPlayer JMRI Report - o2o Work Events.csv file from either PatternTracksSubroutine or BuiltTrainExport"""
 
 from psEntities import PSE
+from o2oSubroutine import ModelEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelWorkEvents'
 SCRIPT_REV = 20220101
@@ -283,7 +284,7 @@ class o2oWorkEvents:
 
         self.psLog.debug('saveList')
 
-        if PSE.tpDirectoryExists():
+        if ModelEntities.tpDirectoryExists():
             PSE.genericWriteReport(self.o2oWorkEventPath, self.o2oList)
 
         print(SCRIPT_NAME + '.o2oWorkEvents ' + str(SCRIPT_REV))
