@@ -374,9 +374,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         PSE.makeBuildStatusFolder()
 
-        logFilePath = PSE.PROFILE_PATH  + '\\operations\\buildstatus'
-        logFilename = 'PatternScriptsLog.txt'
-        logFileTarget = PSE.OS_Path.join(logFilePath, logFilename)
+        logFileTarget = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations', 'buildstatus', 'PatternScriptsLog.txt')
 
         self.logger = PSE.Logger(logFileTarget)
         self.logger.startLogger('PS')
@@ -601,8 +599,9 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(OPEN_HELP_EVENT)
 
-        stubPath = PSE.JMRI.util.FileUtil.getPreferencesPath() + 'jmrihelp\\psStub.html'
-        stubUri = PSE.JAVA_IO.File(stubPath).toURI()
+        stubFileTarget = PSE.OS_Path.join(PSE.JMRI.util.FileUtil.getPreferencesPath(), 'jmrihelp', 'psStub.html')
+        stubUri = PSE.JAVA_IO.File(stubFileTarget).toURI()
+        # stubUri = JAVA_NET.URI(str(stubFileTarget)).create()
         if PSE.JAVA_IO.File(stubUri).isFile():
             PSE.JAVA_AWT.Desktop.getDesktop().browse(stubUri)
         else:
@@ -616,10 +615,11 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         self.psLog.debug(OPEN_LOG_EVENT)
 
         patternLog = PSE.makePatternLog()
-        logFilePath = PSE.PROFILE_PATH + 'operations\\buildstatus\\PatternScriptsLog_temp.txt'
-        PSE.genericWriteReport(logFilePath, patternLog)
 
-        PSE.genericDisplayReport(logFilePath)
+        logFileTarget = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations', 'buildstatus', 'PatternScriptsLog_temp.txt')
+
+        PSE.genericWriteReport(logFileTarget, patternLog)
+        PSE.genericDisplayReport(logFileTarget)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -630,8 +630,8 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(OPEN_GH_EVENT)
 
-        ghPagePath = 'https://github.com//GregRitacco//OperationsPatternScripts'
-        PSE.JMRI.util.HelpUtil.openWebPage(ghPagePath)
+        ghURL = 'https://github.com//GregRitacco//OperationsPatternScripts'
+        PSE.JMRI.util.HelpUtil.openWebPage(ghURL)
 
         return
 
@@ -640,11 +640,12 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(OPEN_EC_EVENT)
 
-        configPath = PSE.PROFILE_PATH + 'operations\\PatternConfig.json'
-        if PSE.JAVA_IO.File(configPath).isFile():
-            PSE.genericDisplayReport(configPath)
+        configTarget = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations', 'PatternConfig.json')
+
+        if PSE.JAVA_IO.File(configTarget).isFile():
+            PSE.genericDisplayReport(configTarget)
         else:
-            self.psLog.warning('Not found: ' + configPath)
+            self.psLog.warning('Not found: ' + configTarget)
 
         return
 
@@ -653,7 +654,8 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(OPEN_OF_EVENT)
 
-        opsFolderPath = PSE.PROFILE_PATH + 'operations\\'
+        opsFolderPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations')
+
         opsFolder = PSE.JAVA_IO.File(opsFolderPath)
         if opsFolder.exists():
             PSE.JAVA_AWT.Desktop.getDesktop().open(opsFolder)
