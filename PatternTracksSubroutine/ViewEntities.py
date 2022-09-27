@@ -254,7 +254,7 @@ def merge(switchList, userInputList):
         """
 
     longestTrackString = findLongestTrackString()
-    allTracksAtLoc = PSE.getTracksByLocation(None)
+    allTracksAtLoc = PSE.getTracksNamesByLocation(None)
 
     i = 0
     locos = switchList['locations'][0]['tracks'][0]['locos']

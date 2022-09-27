@@ -51,6 +51,7 @@ _psLog = LOGGING.getLogger('OPS.PSE.PSE')
 
 
 class Logger:
+    """Homebrew logging."""
 
     def __init__(self, logPath):
 
@@ -154,11 +155,96 @@ class CreateStubFile:
         return
 
 
+"""Utility Methods"""
+
 def psLocale():
     """Dealers choice, both work."""
 
     return PM.getLocale().toString()
     # return unicode(PM.getLocale(), ENCODING)
+
+def occuranceTally(listOfOccurances):
+    """Tally the occurances of a word in a list and return a dictionary.
+        Home grown version of collections.Counter.
+        """
+
+    dict = {}
+    while len(listOfOccurances):
+        occurance = listOfOccurances[-1]
+        tally = 0
+        for i in xrange(len(listOfOccurances) - 1, -1, -1): # run list from bottom up
+            if (listOfOccurances[i] == occurance):
+                tally += 1
+                listOfOccurances.pop(i)
+        dict[occurance] = tally
+
+    return dict
+
+def getAllLocationNames():
+    """JMRI sorts the list, returns list of location names."""
+
+    locationNames = []
+    for item in LM.getLocationsByNameList():
+        locationNames.append(unicode(item.getName(), ENCODING))
+
+    return locationNames
+
+def getAllTracks():
+    """All track objects for all locations."""
+
+    trackList = []
+    for location in LM.getList():
+        trackList += location.getTracksByNameList(None)
+
+    return trackList
+
+def getSelectedTracks():
+    """Gets the track objects checked in the Track Pattern Subroutine."""
+
+    patternTracks = readConfigFile('PT')['PT']
+
+    return [track for track, include in sorted(patternTracks.items()) if include]
+
+def getTracksNamesByLocation(trackType):
+    """Used by:
+        Model.verifySelectedTracks
+        ViewEntities.merge
+        """
+
+    patternLocation = readConfigFile('PT')['PL']
+    allTracksAtLoc = []
+    try: # Catch on the fly user edit of config file error
+        for track in LM.getLocationByName(patternLocation).getTracksByNameList(trackType):
+            allTracksAtLoc.append(unicode(track.getName(), ENCODING))
+        return allTracksAtLoc
+    except AttributeError:
+        return allTracksAtLoc
+
+"""Formatting Methods"""
+
+def timeStamp(epochTime=0):
+    """Valid Time, get local time adjusted for time zone and dst."""
+
+    if epochTime == 0:
+        epochTime = time.time()
+    if time.localtime(epochTime).tm_isdst and time.daylight: # If local dst and dst are both 1
+        timeOffset = time.altzone
+    else:
+        timeOffset = time.timezone # in seconds
+
+    return time.strftime('%a %b %d %Y %I:%M %p %Z', time.gmtime(epochTime - timeOffset))
+
+def convertJmriDateToEpoch(jmriTime):
+    """Example: 2022-02-26T17:16:17.807+0000"""
+
+    epochTime = time.mktime(time.strptime(jmriTime, "%Y-%m-%dT%H:%M:%S.%f+0000"))
+
+    if time.localtime(epochTime).tm_isdst and time.daylight: # If local dst and dst are both 1
+        epochTime -= time.altzone
+    else:
+        epochTime -= time.timezone # in seconds
+
+    return epochTime
 
 def formatText(item, length):
     """Truncate each item to its defined length in PatternConfig.json and add a space at the end."""
@@ -210,86 +296,37 @@ def getShortLoadType(car):
 
     return lt
 
-def occuranceTally(listOfOccurances):
-    """Tally the occurances of a word in a list and return a dictionary.
-        Home grown version of collections.Counter.
-        """
+"""File Handling Methods"""
 
-    dict = {}
-    while len(listOfOccurances):
-        occurance = listOfOccurances[-1]
-        tally = 0
-        for i in xrange(len(listOfOccurances) - 1, -1, -1): # run list from bottom up
-            if (listOfOccurances[i] == occurance):
-                tally += 1
-                listOfOccurances.pop(i)
-        dict[occurance] = tally
+def makeBuildStatusFolder():
+    """The buildStatus folder is created first so the log file can be written"""
 
-    return dict
+    opsDirectory = JMRI.util.FileUtil.getProfilePath() + '\\operations'
+    targetDirectory = OS_Path.join(opsDirectory, 'buildstatus')
+    if not JAVA_IO.File(targetDirectory).isDirectory():
+        JAVA_IO.File(targetDirectory).mkdirs()
 
-def getAllLocationNames():
-    """JMRI sorts the list, returns list of location names."""
+    return
 
-    locationNames = []
-    for item in LM.getLocationsByNameList():
-        locationNames.append(unicode(item.getName(), ENCODING))
+def makeReportFolders():
+    """Checks/creates the folders this plugin writes to."""
 
-    return locationNames
+    opsDirectory = JMRI.util.FileUtil.getProfilePath() + '\\operations'
+    directories = ['csvManifests', 'csvSwitchLists', 'jsonManifests', 'switchLists', 'patternReports']
+    x = 0
+    for directory in directories:
+        targetDirectory = OS_Path.join(opsDirectory, directory)
+        if not JAVA_IO.File(targetDirectory).isDirectory():
+            JAVA_IO.File(targetDirectory).mkdirs()
+            _psLog.info('Directory created: ' + targetDirectory)
+            x += 1
 
-def getAllTracks():
-    """All track objects for all locations."""
-
-    trackList = []
-    for location in LM.getList():
-        trackList += location.getTracksByNameList(None)
-
-    return trackList
-
-def getTracksByLocation(trackType):
-    """Used by:
-        Model.verifySelectedTracks
-        ViewEntities.merge
-        """
-
-    patternLocation = readConfigFile('PT')['PL']
-    allTracksList = []
-    try: # Catch on the fly user edit of config file error
-        for track in LM.getLocationByName(patternLocation).getTracksByNameList(trackType):
-            allTracksList.append(unicode(track.getName(), ENCODING))
-        return allTracksList
-    except AttributeError:
-        return allTracksList
-
-def getSelectedTracks():
-    """Gets the tracks checked in the Track Pattern Subroutine."""
-
-    patternTracks = readConfigFile('PT')['PT']
-
-    return [track for track, include in sorted(patternTracks.items()) if include]
-
-def timeStamp(epochTime=0):
-    """Valid Time, get local time adjusted for time zone and dst."""
-
-    if epochTime == 0:
-        epochTime = time.time()
-    if time.localtime(epochTime).tm_isdst and time.daylight: # If local dst and dst are both 1
-        timeOffset = time.altzone
+    if x == 0:
+        _psLog.info('Destination folders check OK')
     else:
-        timeOffset = time.timezone # in seconds
+        _psLog.info(str(x) + 'Destination folders created')
 
-    return time.strftime('%a %b %d %Y %I:%M %p %Z', time.gmtime(epochTime - timeOffset))
-
-def convertJmriDateToEpoch(jmriTime):
-    """Example: 2022-02-26T17:16:17.807+0000"""
-
-    epochTime = time.mktime(time.strptime(jmriTime, "%Y-%m-%dT%H:%M:%S.%f+0000"))
-
-    if time.localtime(epochTime).tm_isdst and time.daylight: # If local dst and dst are both 1
-        epochTime -= time.altzone
-    else:
-        epochTime -= time.timezone # in seconds
-
-    return epochTime
+    return
 
 def genericReadReport(filePath):
     """try/except catches initial read of config file."""
@@ -331,51 +368,7 @@ def dumpJson(switchList):
 
     return jsonSwitchList
 
-def makeBuildStatusFolder():
-    """The buildStatus folder is created first so the log file can be written"""
-
-    opsDirectory = JMRI.util.FileUtil.getProfilePath() + '\\operations'
-    targetDirectory = OS_Path.join(opsDirectory, 'buildstatus')
-    if not JAVA_IO.File(targetDirectory).isDirectory():
-        JAVA_IO.File(targetDirectory).mkdirs()
-
-    return
-
-def makeReportFolders():
-    """Checks/creates the folders this plugin writes to."""
-
-    opsDirectory = JMRI.util.FileUtil.getProfilePath() + '\\operations'
-    directories = ['csvManifests', 'csvSwitchLists', 'jsonManifests', 'switchLists', 'patternReports']
-    x = 0
-    for directory in directories:
-        targetDirectory = OS_Path.join(opsDirectory, directory)
-        if not JAVA_IO.File(targetDirectory).isDirectory():
-            JAVA_IO.File(targetDirectory).mkdirs()
-            _psLog.info('Directory created: ' + targetDirectory)
-            x += 1
-
-    if x == 0:
-        _psLog.info('Destination folders check OK')
-    else:
-        _psLog.info(str(x) + 'Destination folders created')
-
-    return
-
-# def tpDirectoryExists():
-#     """Checks for the Reports folder in TraipPlayer.
-#         Possibly move this to o2o.ModelEntities.
-#         """
-#
-#     tpDirectory = JMRI.util.FileUtil.getHomePath() + 'AppData\\Roaming\\TrainPlayer\\Reports'
-#     tpDirectory = OS_Path.join(tpDirectory)
-#
-#     if JAVA_IO.File(tpDirectory).isDirectory():
-#         _psLog.info('TrainPlayer destination directory OK')
-#         return True
-#     else:
-#         _psLog.warning('TrainPlayer Reports destination directory not found')
-#         print('TrainPlayer Reports destination directory not found')
-#         return
+"""Configuration File Methods"""
 
 def validateConfigFileVersion():
     """Checks that the config file is the current version."""
@@ -464,6 +457,8 @@ def deleteConfigFile():
 
     return
 
+"""Logging Methods"""
+
 def makePatternLog():
     """creates a pattern log for display based on the log level, as set by getBuildReportLevel."""
 
@@ -498,6 +493,8 @@ def logIndex():
     loggingIndex = {"9": "- CRITICAL -", "7": "- ERROR -", "5": "- WARNING -", "3": "- INFO -", "1": "- DEBUG -"}
 
     return loggingIndex
+
+"""Color Handling Methods"""
 
 def getGenericColor(colorName):
     """Try/Except is a bit of protection against bad edits."""
@@ -542,6 +539,8 @@ def getAlertColor():
         _psLog.warning('Alert color definition not found in PatternConfig.json')
 
     return color
+
+"""Translation Methods"""
 
 def translateMessageFormat():
     """The messageFormat is in the locale's language, it has to be hashed to the plugin fields.

@@ -121,15 +121,15 @@ def verifySelectedTracks():
     _psLog.debug('verifySelectedTracks')
 
     validStatus = True
-    allTracksList = PSE.getTracksByLocation(None)
+    allTracksAtLoc = PSE.getTracksNamesByLocation(None)
 
-    if not allTracksList:
+    if not allTracksAtLoc:
         _psLog.warning('PatternConfig.JSON corrupted, new file written.')
         return False
 
     patternTracks = PSE.readConfigFile('PT')['PT']
     for track in patternTracks:
-        if not track in allTracksList:
+        if not track in allTracksAtLoc:
             validStatus = False
 
     return validStatus

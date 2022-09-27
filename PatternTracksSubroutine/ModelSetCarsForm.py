@@ -85,7 +85,7 @@ def moveRollingStock(switchList, textBoxEntry):
 
     ignoreTrackLength = PSE.readConfigFile('PT')['PI']
 
-    allTracksAtLoc = PSE.getTracksByLocation(None)
+    allTracksAtLoc = PSE.getTracksNamesByLocation(None)
 
     location = PSE.readConfigFile('PT')['PL']
     toLocation = PSE.LM.getLocationByName(unicode(location, PSE.ENCODING))
