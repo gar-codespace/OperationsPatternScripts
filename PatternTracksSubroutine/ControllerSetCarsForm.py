@@ -12,12 +12,12 @@ from o2oSubroutine import ModelWorkEvents
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ControllerSetCarsForm'
 SCRIPT_REV = 20220101
 
+_psLog = PSE.LOGGING.getLogger('OPS.PT.ControllerSetCarsForm')
+
 class TextBoxEntryListener(PSE.JAVA_AWT.event.MouseAdapter):
     """When any of the 'Set Cars Form for Track X' text inpou boxes is clicked on"""
 
     def __init__(self):
-
-        self.psLog = PSE.LOGGING.getLogger('PS.PT.TextBoxEntryListener')
 
         return
 
@@ -26,7 +26,7 @@ class TextBoxEntryListener(PSE.JAVA_AWT.event.MouseAdapter):
         if PSE.TRACK_NAME_CLICKED_ON:
             MOUSE_CLICKED.getSource().setText(PSE.TRACK_NAME_CLICKED_ON)
         else:
-            self.psLog.warning('No track was selected')
+            _psLog.warning('No track was selected')
 
         return
 
@@ -36,8 +36,6 @@ class CreateSetCarsFormGui:
         """
 
     def __init__(self, setCarsForm):
-
-        self.psLog = PSE.LOGGING.getLogger('PS.PT.CreateSetCarsFormGui')
 
         self.setCarsForm = setCarsForm
         self.locationName = setCarsForm['locations'][0]['locationName']
@@ -80,10 +78,10 @@ class CreateSetCarsFormGui:
     def quickCheck(self):
 
         if not ModelSetCarsForm.testValidityOfForm(self.setCarsForm, self.buttonDict['textBoxEntry']):
-            self.psLog.critical('FAIL - ModelSetCarsForm.testValidityOfForm')
+            _psLog.critical('FAIL - testValidityOfForm')
             return False
         else:
-            self.psLog.info('PASS - ModelSetCarsForm.testValidityOfForm')
+            _psLog.info('PASS - testValidityOfForm')
             return True
 
     def trackRowButton(self, MOUSE_CLICKED):
@@ -108,7 +106,7 @@ class CreateSetCarsFormGui:
     def switchListButton(self, MOUSE_CLICKED):
         """Makes a Set Cars (SC) switch list for the active 'Set Rolling Stock for Track X' window"""
 
-        self.psLog.info(MOUSE_CLICKED)
+        _psLog.info(MOUSE_CLICKED)
 
         if not self.quickCheck():
             return
@@ -132,7 +130,7 @@ class CreateSetCarsFormGui:
             the 'Set Cars Form for Track X' form
             """
 
-        self.psLog.info(MOUSE_CLICKED)
+        _psLog.info(MOUSE_CLICKED)
 
         if not self.quickCheck():
             return
@@ -156,7 +154,7 @@ class CreateSetCarsFormGui:
             List is reset when set cars button on Track Pattern Sub is pressed
             """
 
-        self.psLog.info(MOUSE_CLICKED)
+        _psLog.info(MOUSE_CLICKED)
 
         if not self.quickCheck():
             return

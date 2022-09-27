@@ -9,13 +9,14 @@ from o2oSubroutine import ModelEntities
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelWorkEvents'
 SCRIPT_REV = 20220101
 
+_psLog = PSE.LOGGING.getLogger('OPS.o2o.ModelWorkEvents')
 
 class o2oSwitchListConversion:
     """Converts the appended o2o switchlist for use by o2oWorkEvents"""
 
     def __init__(self):
 
-        self.psLog = PSE.LOGGING.getLogger('PS.o2o.o2oSwitchListConversion')
+        # self.psLog = PSE.LOGGING.getLogger('OPS.o2o.o2oSwitchListConversion')
 
         self.o2oSwitchList = {}
 
@@ -102,7 +103,7 @@ class jmriManifestConversion:
 
     def __init__(self, builtTrain):
 
-        self.psLog = PSE.LOGGING.getLogger('PS.o2o.jmriManifestConversion')
+        # self.psLog = PSE.LOGGING.getLogger('OPS.o2o.jmriManifestConversion')
 
         self.builtTrain = builtTrain
         self.jmriManifest = {}
@@ -112,7 +113,7 @@ class jmriManifestConversion:
 
     def jmriManifestGetter(self):
 
-        self.psLog.debug('jmriManifestGetter')
+        _psLog.debug('jmriManifestConversion.jmriManifestGetter')
 
         reportName = self.builtTrain.getName()
         fileName = 'train-' + reportName + '.json'
@@ -126,7 +127,7 @@ class jmriManifestConversion:
 
     def convertHeader(self):
 
-        self.psLog.debug('convertHeader')
+        _psLog.debug('jmriManifestConversion.convertHeader')
 
         self.o2oWorkEvents['railroad'] = PSE.HTML_PARSER().unescape(self.jmriManifest['railroad'])
         self.o2oWorkEvents['trainName'] = PSE.HTML_PARSER().unescape(self.jmriManifest['userName'])
@@ -141,7 +142,7 @@ class jmriManifestConversion:
 
     def convertBody(self):
 
-        self.psLog.debug('convertBody')
+        _psLog.debug('jmriManifestConversion.convertBody')
 
         for location in self.jmriManifest['locations']:
 
@@ -204,7 +205,7 @@ class o2oWorkEvents:
 
     def __init__(self, workEvents):
 
-        self.psLog = PSE.LOGGING.getLogger('PS.o2o.o2oWorkEvents')
+        self.psLog = PSE.LOGGING.getLogger('OPS.o2o.o2oWorkEvents')
 
         reportName = 'tpRollingStockData'
         fileName = reportName + '.json'
@@ -225,7 +226,7 @@ class o2oWorkEvents:
 
     def o2oHeader(self):
 
-        self.psLog.debug('o2oHeader')
+        _psLog.debug('o2oWorkEvents.o2oHeader')
 
         self.o2oList = 'HN,' + self.workEvents['railroad'] + '\n'
         self.o2oList += 'HT,' + self.workEvents['trainName'] + '\n'
@@ -240,7 +241,7 @@ class o2oWorkEvents:
     def o2oLocations(self):
         """This has to work for both JMRI and o2o generated lists"""
 
-        self.psLog.debug('o2oLocations')
+        _psLog.debug('o2oWorkEvents.o2oLocations')
 
         counter = 1
 
@@ -282,7 +283,7 @@ class o2oWorkEvents:
 
     def saveList(self):
 
-        self.psLog.debug('saveList')
+        _psLog.debug('o2oWorkEvents.saveList')
 
         if ModelEntities.tpDirectoryExists():
             PSE.genericWriteReport(self.o2oWorkEventPath, self.o2oList)

@@ -13,12 +13,14 @@ from o2oSubroutine import View
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.Controller'
 SCRIPT_REV = 20220101
 
+_psLog = PSE.LOGGING.getLogger('OPS.o2o.Controller')
+
 class StartUp:
     """Start the o2o subroutine"""
 
     def __init__(self, subroutineFrame=None):
 
-        self.psLog = PSE.LOGGING.getLogger('PS.o2o.Controller')
+        # self.psLog = PSE.LOGGING.getLogger('OPS.o2o.Controller')
         self.subroutineFrame = subroutineFrame
 
         return
@@ -30,7 +32,7 @@ class StartUp:
         subroutinePanel = self.makeSubroutinePanel()
         self.subroutineFrame.add(subroutinePanel)
 
-        self.psLog.info('o2o makeFrame completed')
+        _psLog.info('o2o makeFrame completed')
 
         return self.subroutineFrame
 
@@ -60,7 +62,7 @@ class StartUp:
 
         Controller.updatePatternTracksSubroutine(EVENT)
 
-        self.psLog.debug(EVENT)
+        _psLog.debug(EVENT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
@@ -73,7 +75,7 @@ class StartUp:
 
         Controller.updatePatternTracksSubroutine(EVENT)
 
-        self.psLog.debug(EVENT)
+        psLog.debug(EVENT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
@@ -83,7 +85,7 @@ class StartUp:
     #
     #     ModelImport.importTpRailroad()
     #
-    #     self.psLog.debug(EVENT)
+    #     psLog.debug(EVENT)
     #     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
     #
     #     return
@@ -94,7 +96,7 @@ class StartUp:
     #     # ModelImport.importTpRailroad()
     #     # Model.updateLocations()
     #
-    #     self.psLog.debug(EVENT)
+    #     psLog.debug(EVENT)
     #     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
     #
     #     return

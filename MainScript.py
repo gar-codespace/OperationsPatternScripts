@@ -143,7 +143,7 @@ class Model:
 
     def __init__(self):
 
-        self.psLog = PSE.LOGGING.getLogger('PS.Main.Model')
+        self.psLog = PSE.LOGGING.getLogger('OPS.Main.Model')
 
         return
 
@@ -185,7 +185,7 @@ class View:
 
     def __init__(self, scrollPanel):
 
-        self.psLog = PSE.LOGGING.getLogger('PS.View')
+        self.psLog = PSE.LOGGING.getLogger('OPS.Main.View')
 
         self.cpSettings = PSE.readConfigFile('CP')
 
@@ -377,7 +377,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         logFileTarget = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations', 'buildstatus', 'PatternScriptsLog.txt')
 
         self.logger = PSE.Logger(logFileTarget)
-        self.logger.startLogger('PS')
+        self.logger.startLogger('OPS')
 
         self.model = Model()
 
@@ -580,14 +580,14 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         self.removeBuiltTrainListener()
 
         self.closePsWindow()
-        # self.logger.stopLogger('PS')
+        # self.logger.stopLogger('OPS')
 
     #Startup Items
         PSE.BUNDLE = Bundle.getBundleForLocale()
         PSE.createStubFile().isStubFile()
         Bundle.makeHelpPage()
 
-        # self.logger.startLogger('PS')
+        # self.logger.startLogger('OPS')
         self.buildThePlugin()
 
         self.psLog.info('Pattern Scripts plugin restarted')
@@ -667,7 +667,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
     def handle(self):
 
         startTime = PSE.TIME.time()
-        self.psLog = PSE.LOGGING.getLogger('PS.Main.Controller')
+        self.psLog = PSE.LOGGING.getLogger('OPS.Main.Controller')
         self.logger.initialLogMessage(self.psLog)
 
         PSE.makeReportFolders()

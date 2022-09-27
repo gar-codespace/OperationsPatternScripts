@@ -6,8 +6,7 @@ from psEntities import PSE
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelEntities'
 SCRIPT_REV = 20220101
 
-_psLog = PSE.LOGGING.getLogger('PS.TP.ModelNew')
-
+_psLog = PSE.LOGGING.getLogger('OPS.TP.ModelNew')
 
 def tpDirectoryExists():
     """Checks for the Reports folder in TraipPlayer.
@@ -40,13 +39,10 @@ def updateContinuingTracks(trackId, trackData, previousTrackData):
         previousTrackData.setName(trackData['track'])
 
         tweakStagingTracks(previousTrackData)
-        _psLog.debug(trackData['track'] + ' updated at ' + trackData['type'])
 
     if not loc.isStaging() and trackData['type'] != 'Staging':
         previousTrackData.setTrackType(trackData['type'])
         previousTrackData.setName(trackData['track'])
-
-        _psLog.debug(trackData['track'] + ' updated at ' + trackData['type'])
 
     if trackData['type'] == 'Spur':
         trackLength = int(trackData['capacity']) * PSE.readConfigFile('o2o')['DL']
@@ -55,6 +51,8 @@ def updateContinuingTracks(trackId, trackData, previousTrackData):
         for typeName in loc.getTypeNames():
             previousTrackData.deleteTypeName(typeName)
 
+
+    _psLog.debug(trackData['track'] + ' updated at ' + trackData['type'])
     loc.register(previousTrackData)
     return
 

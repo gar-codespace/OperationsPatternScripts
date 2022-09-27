@@ -47,7 +47,7 @@ LMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.LocationMa
 CMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.cars.CarManagerXml)
 EMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.engines.EngineManagerXml)
 
-_psLog = LOGGING.getLogger('PS.PE.PSE')
+_psLog = LOGGING.getLogger('OPS.PSE.PSE')
 
 
 class Logger:

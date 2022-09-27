@@ -9,7 +9,7 @@ from PatternTracksSubroutine import ViewEntities
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ViewSetCarsForm'
 SCRIPT_REV = 20220101
 
-_psLog = PSE.LOGGING.getLogger('PS.PT.ViewSetCarsForm')
+_psLog = PSE.LOGGING.getLogger('OPS.PT.ViewSetCarsForm')
 
 def switchListButton(textBoxEntry):
     """Mini controller when the Switch List button is pressed.
@@ -18,7 +18,7 @@ def switchListButton(textBoxEntry):
         ControllerSetCarsForm.CreateSetCarsFormGui.switchListButton
         """
 
-    _psLog.debug('View.trackPatternButton')
+    _psLog.debug('switchListButton')
 
 # Boilerplate
     reportName = PSE.BUNDLE['Switch List for Track']
@@ -226,7 +226,7 @@ class MakeSetCarsEqptRows():
         makeSetCarsForTrackForm
         """
 
-    _psLog.debug('MakeSetCarsEqptRows')
+    # _psLog.debug('MakeSetCarsEqptRows')
 
     def __init__(self, setCarsFormData):
 

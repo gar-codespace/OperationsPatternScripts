@@ -9,7 +9,7 @@ from o2oSubroutine import ModelEntities
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelImport'
 SCRIPT_REV = 20220101
 
-_psLog = PSE.LOGGING.getLogger('PS.TP.ModelImport')
+_psLog = PSE.LOGGING.getLogger('OPS.TP.ModelImport')
 
 def importTpRailroad():
     """Mini controller generates the tpRailroadData.json file"""

@@ -1,6 +1,8 @@
 
 Todo:
   o2o new and update not bullet proof.
+  Maybe not write a new Stub File each time?
+  Change default size of the plugin window.
   Revisit all logging. Change PS to OPS
   Reorder themethods in PSEto flow more logically.
   move PSE.tpDirectoryExists to o2o.ModelEntities

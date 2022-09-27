@@ -9,7 +9,7 @@ from PatternTracksSubroutine import ModelEntities
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ModelSetCarsForm'
 SCRIPT_REV = 20220101
 
-_psLog = PSE.LOGGING.getLogger('PS.PT.ModelSetCarsForm')
+_psLog = PSE.LOGGING.getLogger('OPS.PT.ModelSetCarsForm')
 
 def writeToJson(setCarsForm):
     """Mini controller that writes the set cars form to json.
@@ -35,7 +35,7 @@ def setRsButton(textBoxEntry):
         ControllerSetCarsForm.CreateSetCarsFormGui.setRsButton
         """
 
-    _psLog.debug('ModelSetCarsForm.setRsToTrack')
+    _psLog.debug('setRsButton')
 
     reportTitle = PSE.BUNDLE['Switch List for Track']
     fileName = reportTitle + '.json'
@@ -171,7 +171,7 @@ def testValidityOfForm(setCarsForm, textBoxEntry):
         ControllerSetCarsForm.CreateSetCarsFormGui.quickCheck
         """
 
-    _psLog.debug('ModelSetCarsForm.testValidityOfForm')
+    _psLog.debug('testValidityOfForm')
 
     locoCount = len(setCarsForm['locations'][0]['tracks'][0]['locos'])
     carCount = len(setCarsForm['locations'][0]['tracks'][0]['cars'])

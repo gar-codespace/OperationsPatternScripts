@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""From tpRailroadData.json, a new rr is created and the xml files are seeded"""
+"""From tpRailroadData.json, a new rr is created and the xml files are seeded."""
 
 from psEntities import PSE
 from PatternTracksSubroutine import Model
@@ -10,11 +10,10 @@ from o2oSubroutine import ModelEntities
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.Model'
 SCRIPT_REV = 20220101
 
-_psLog = PSE.LOGGING.getLogger('PS.TP.Model')
-
+_psLog = PSE.LOGGING.getLogger('OPS.o2o.Model')
 
 def newJmriRailroad():
-    """Mini controller to make a new JMRI railroad from the tpRailroadData.json and TrainPlayer Report - Rolling Stock.txt files"""
+    """Mini controller to make a new JMRI railroad from the tpRailroadData.json and TrainPlayer Report - Rolling Stock.txt files."""
 
     ModelEntities.closeTroublesomeWindows()
 
@@ -182,7 +181,7 @@ class UpdateLocationsAndTracks():
 
     def getScheduleLists(self):
 
-        _psLog.debug('removeObsoleteSchedules')
+        _psLog.debug('getScheduleLists')
 
         updatedSchedules = []
         for id, industry in self.importedRailroad['industries'].items():
@@ -561,7 +560,7 @@ class NewRollingStock:
             self.tpLocos dictionary format: {JMRI ID :  [Model, AAR, JMRI Location, JMRI Track, 'unloadable', Consist]}
             """
 
-        _psLog.debug('TsplitTpList')
+        _psLog.debug('splitTpList')
 
         for item in self.tpInventory:
             line = item.split(';')

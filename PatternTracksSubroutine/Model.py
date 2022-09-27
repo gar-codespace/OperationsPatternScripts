@@ -7,7 +7,7 @@ from PatternTracksSubroutine import ModelEntities
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.Model'
 SCRIPT_REV = 20220101
 
-_psLog = PSE.LOGGING.getLogger('PS.PT.Model')
+_psLog = PSE.LOGGING.getLogger('OPS.PT.Model')
 
 def trackPatternButton():
     """Mini controller when the Track Pattern Report button is pressed
@@ -53,7 +53,7 @@ def updatePatternLocation(selectedItem=None):
         o2oSub.Model.updatePatternTracksSubroutine
         """
 
-    _psLog.debug('Model.updatePatternLocation')
+    _psLog.debug('updatePatternLocation')
 
     configFile = PSE.readConfigFile()
     newLocation = ModelEntities.testSelectedItem(selectedItem)
@@ -76,7 +76,7 @@ def updatePatternTracks(trackList):
         Controller.StartUp.yardTrackOnlyCheckBox
         """
 
-    _psLog.debug('Model.updatePatternTracks')
+    _psLog.debug('updatePatternTracks')
     trackDict = {}
     for track in trackList:
         trackDict[track] = False
@@ -95,7 +95,7 @@ def updateConfigFile(controls):
         Controller.StartUp.setCarsButton
         """
 
-    _psLog.debug('Model.updateConfigFile')
+    _psLog.debug('updateConfigFile')
 
     focusOn = PSE.readConfigFile('PT')
     focusOn.update({"PL": controls[0].getSelectedItem()})
@@ -118,7 +118,7 @@ def verifySelectedTracks():
         Controller.StartUp.setCarsButton
         """
 
-    _psLog.debug('Model.verifySelectedTracks')
+    _psLog.debug('verifySelectedTracks')
 
     validStatus = True
     allTracksList = PSE.getTracksByLocation(None)
@@ -140,7 +140,7 @@ def updateLocations():
         Controller.StartUp.makeSubroutinePanel
         """
 
-    _psLog.debug('Model.updateLocations')
+    _psLog.debug('updateLocations')
 
     newConfigFile = PSE.readConfigFile()
     subConfigfile = newConfigFile['PT']
@@ -166,7 +166,7 @@ def writeTrackPatternCsv(trackPatternName):
         Controller.StartUp.trackPatternButton
         """
 
-    _psLog.debug('Model.writeTrackPatternCsv')
+    _psLog.debug('writeTrackPatternCsv')
 #  Get json data
     targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
     fileName = trackPatternName + '.json'

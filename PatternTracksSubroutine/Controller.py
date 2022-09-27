@@ -9,6 +9,8 @@ from PatternTracksSubroutine import ModelEntities
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.Controller'
 SCRIPT_REV = 20220101
 
+_psLog = PSE.LOGGING.getLogger('OPS.PT.Controller')
+
 
 class LocationComboBox(PSE.JAVA_AWT.event.ActionListener):
     """Event triggered from location combobox selection"""
@@ -61,7 +63,7 @@ class StartUp:
 
     def __init__(self, subroutineFrame=None):
 
-        self.psLog = PSE.LOGGING.getLogger('PS.PT.Controller')
+        # self.psLog = PSE.LOGGING.getLogger('OPS.PT.Controller')
         self.subroutineFrame = subroutineFrame
 
         return
@@ -73,7 +75,7 @@ class StartUp:
         subroutinePanel = self.makeSubroutinePanel()
         self.subroutineFrame.add(subroutinePanel)
 
-        self.psLog.info('pattern tracks makeFrame completed')
+        _psLog.info('pattern tracks makeFrame completed')
 
         return self.subroutineFrame
 
@@ -87,6 +89,8 @@ class StartUp:
 
         self.subroutinePanel, self.widgets = View.ManageGui().makeSubroutinePanel()
         self.activateWidgets()
+
+        _psLog.info('pattern tracks panel completed')
 
         return self.subroutinePanel
 
@@ -123,7 +127,7 @@ class StartUp:
     def trackPatternButton(self, EVENT):
         """Makes a pattern tracks report based on the config file (PR)"""
 
-        self.psLog.debug('Controller.trackPatternButton')
+        _psLog.debug('trackPatternButton')
 
         Model.updateConfigFile(self.widgets)
 
@@ -153,12 +157,12 @@ class StartUp:
             Resets the o2o switchlist with a new header
             """
 
-        self.psLog.debug('Controller.setRsButton')
+        _psLog.debug('setRsButton')
 
         Model.updateConfigFile(self.widgets)
 
         if not Model.verifySelectedTracks():
-            self.psLog.warning('Track not found, re-select the location')
+            _psLog.warning('Track not found, re-select the location')
             return
 
         PSE.REPORT_ITEM_WIDTH_MATRIX = PSE.makeReportItemWidthMatrix()

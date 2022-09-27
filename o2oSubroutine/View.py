@@ -7,12 +7,13 @@ from o2oSubroutine import ViewEntities
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.View'
 SCRIPT_REV = 20220101
 
+_psLog = PSE.LOGGING.getLogger('OPS.o2o.View')
 
 class ManageGui:
 
     def __init__(self):
 
-        self.psLog = PSE.LOGGING.getLogger('PS.o2oSubroutine.View')
+        self.psLog = PSE.LOGGING.getLogger('OPS.o2oSubroutine.View')
         self.configFile = PSE.readConfigFile('o2o')
 
         return
@@ -32,7 +33,7 @@ class ManageGui:
     def makeSubroutinePanel(self):
         """Make the o2o controls"""
 
-        self.psLog.debug('View.makeSubroutinePanel')
+        _psLog.debug('makeSubroutinePanel')
 
         o2oSubroutinePanel = ViewEntities.O2oSubroutinePanel()
         subroutinesPanel = o2oSubroutinePanel.o2oPanelMaker()

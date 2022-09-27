@@ -9,13 +9,13 @@ from PatternTracksSubroutine import ControllerSetCarsForm
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.View'
 SCRIPT_REV = 20220101
 
-_psLog = PSE.LOGGING.getLogger('PS.PT.View')
+_psLog = PSE.LOGGING.getLogger('OPS.PT.View')
 
 class ManageGui:
 
     def __init__(self):
 
-        # self.psLog = PSE.LOGGING.getLogger('PS.PT.View')
+        # self.psLog = PSE.LOGGING.getLogger('OPS.PT.View')
 
         return
 
@@ -36,7 +36,7 @@ class ManageGui:
     def makeSubroutinePanel(self):
         """Make the Track Pattern controls"""
 
-        _psLog.debug('View.makeSubroutinePanel')
+        _psLog.debug('makeSubroutinePanel')
 
         trackPatternPanel = ViewEntities.TrackPatternPanel()
         subroutinesPanel = trackPatternPanel.makeTrackPatternPanel()
@@ -53,7 +53,7 @@ def trackPatternButton():
         Controller.StartUp.trackPatternButton
         """
 
-    _psLog.debug('View.trackPatternButton')
+    _psLog.debug('trackPatternButton')
 # Boilerplate
     reportName = PSE.BUNDLE['Track Pattern Report']
     fileName = reportName + '.json'
