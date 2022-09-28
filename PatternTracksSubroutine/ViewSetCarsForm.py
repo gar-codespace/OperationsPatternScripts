@@ -36,7 +36,7 @@ def switchListButton(textBoxEntry):
     reportHeader = ViewEntities.makeTextReportHeader(switchList)
     reportLocations = ViewEntities.makeTextReportLocations(switchList, trackTotals=False)
 # Save formatted data
-    fileName = reportName + '.txt'
+    fileName = PSE.BUNDLE['Switch List for Track'] + '.txt'
     # targetDir = PSE.PROFILE_PATH + '\\operations\\patternReports'
     targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations\\patternReports', fileName)
     PSE.genericWriteReport(targetPath, reportHeader + reportLocations)

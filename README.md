@@ -29,18 +29,20 @@ If there is no schedule the plugin will attempt to apply the car's RWE or RWL pa
 If no RWE or RWL, the plugin will then try to load the car with the custom designation for 'Empty' or 'Load' for that cars' load type.  
 If none of the above, a car moved from a spur will toggle default load/empty designation.  
 
-## Use with TrainPlayer software
+## Use with TrainPlayer© software
 This plugin also contains a subroutine so that JMRI can be used as the Ops engine for TrainPlayer's Advanced Ops module. The TrainPlayer side scripts can be found [here](https://github.com/GregRitacco/QuickKeys).  
 
 ## How To Use This Plugin
 The following are YouTube videos covering the use of this plugin:  
 
 How to add this plugin to JMRI  
-[How to use this plugin](https://youtu.be/GjPtXk3oKmc)  
-[Plugin demonstration at a yard](https://youtu.be/IdXvxyo-E3Y)  
-[Plugin demonstration at industry](https://youtu.be/2Tv6sUMDD_Y)  
+[How to set up this plugin](https://youtu.be/GjPtXk3oKmc)  
 [How to modify this plugin](https://youtu.be/DK6O9AQmqXo)  
-[Use this plugin with TrainPlayer©](https://youtu.be/rlUfoSesnQo)  
+[Selecting subroutines]  
+[Track Pattern Subroutine - Demonstration at a yard](https://youtu.be/IdXvxyo-E3Y)  
+[Track Pattern Subroutine - Demonstration at industry](https://youtu.be/2Tv6sUMDD_Y)  
+[How to modify this plugin](https://youtu.be/DK6O9AQmqXo)  
+[o2o, the ops to ops subroutine for TrainPlayer©](https://youtu.be/rlUfoSesnQo)  
 
 Disclaimer:
 There are many people on YouTube who are good at making demo videos. I am not one of them.  
