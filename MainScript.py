@@ -18,14 +18,14 @@ SCRIPT_DIR = 'OperationsPatternScripts'
 PLUGIN_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
 
 sysPath.append(PLUGIN_ROOT)
-from psEntities import PSE
-from psBundle import Bundle
+from opsEntities import PSE
+from opsBundle import Bundle
 from o2oSubroutine import BuiltTrainExport
 
 SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
 SCRIPT_REV = 20220101
 
-Bundle.BUNDLE_DIR = PLUGIN_ROOT + '\\psBundle\\'
+Bundle.BUNDLE_DIR = PLUGIN_ROOT + '\\opsBundle\\'
 
 PSE.JMRI = jmri
 PSE.JAVA_AWT = java.awt

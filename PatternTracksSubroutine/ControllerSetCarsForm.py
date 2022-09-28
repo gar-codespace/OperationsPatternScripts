@@ -3,7 +3,7 @@
 
 """Makes a 'Set Cars Form for Track X' form for each selected track"""
 
-from psEntities import PSE
+from opsEntities import PSE
 from PatternTracksSubroutine import Model
 from PatternTracksSubroutine import ModelSetCarsForm
 from PatternTracksSubroutine import ViewSetCarsForm

@@ -3,7 +3,7 @@
 
 """Process methods for the Set Cars Form for Track X form"""
 
-from psEntities import PSE
+from opsEntities import PSE
 from PatternTracksSubroutine import ModelEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ModelSetCarsForm'

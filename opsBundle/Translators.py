@@ -5,9 +5,9 @@
 
 from urllib import urlencode
 
-from psEntities import PSE
+from opsEntities import PSE
 try:
-    from psBundle import Keys
+    from opsBundle import Keys
 except:
     pass
     

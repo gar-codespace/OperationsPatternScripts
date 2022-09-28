@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-from psEntities import PSE
+from opsEntities import PSE
 from o2oSubroutine import ViewEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.View'

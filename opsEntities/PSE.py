@@ -26,7 +26,7 @@ TRACK_NAME_CLICKED_ON = ''
 J_BUNDLE = JMRI.jmrit.operations.setup.Setup()
 # SB = JMRI.jmrit.operations.setup.Bundle()
 
-SCRIPT_NAME = 'OperationsPatternScripts.psEntities.PSE'
+SCRIPT_NAME = 'OperationsPatternScripts.opsEntities.PSE'
 SCRIPT_REV = 20220101
 
 OM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.OperationsManager)
@@ -111,11 +111,11 @@ class CreateStubFile:
     def getHelpFileURI(self):
 
         helpFileName = 'Help.' + psLocale() + '.html'
-        helpFilePath = OS_Path.join(PLUGIN_ROOT, 'psSupport', helpFileName)
+        helpFilePath = OS_Path.join(PLUGIN_ROOT, 'opsSupport', helpFileName)
 
         if not JAVA_IO.File(helpFilePath).isFile():
             helpFileName = 'Help.en.html'
-            helpFilePath = OS_Path.join(PLUGIN_ROOT, 'psSupport', helpFileName)
+            helpFilePath = OS_Path.join(PLUGIN_ROOT, 'opsSupport', helpFileName)
 
         self.helpFilePath = JAVA_IO.File(helpFilePath).toURI().toString()
 
@@ -126,7 +126,7 @@ class CreateStubFile:
         stubTemplateFile = 'stub_template.html'
         stubTemplatePath = OS_Path.join(JMRI.util.FileUtil.getProgramPath(), 'help', psLocale()[:2], 'local', stubTemplateFile)
         if not JAVA_IO.File(stubTemplatePath).isFile():
-            stubTemplatePath = OS_Path.join(PLUGIN_ROOT, 'psEntities', stubTemplateFile)
+            stubTemplatePath = OS_Path.join(PLUGIN_ROOT, 'opsEntities', stubTemplateFile)
 
         stubTemplate = genericReadReport(stubTemplatePath)
         stubTemplate = stubTemplate.replace("../index.html#", "")
@@ -373,7 +373,7 @@ def dumpJson(switchList):
 def validateConfigFileVersion():
     """Checks that the config file is the current version."""
 
-    targetDir =  PLUGIN_ROOT + '\\psEntities'
+    targetDir =  PLUGIN_ROOT + '\\opsEntities'
     fileName = 'PatternConfig.json'
     targetPath = OS_Path.join(targetDir, fileName)
     validPatternConfig = loadJson(genericReadReport(targetPath))
@@ -438,7 +438,7 @@ def writeNewConfigFile():
 
     fileName = 'PatternConfig.json'
 
-    targetDir = PLUGIN_ROOT + '\\psEntities'
+    targetDir = PLUGIN_ROOT + '\\opsEntities'
     targetPath = OS_Path.join(targetDir, fileName)
     copyFrom = JAVA_IO.File(targetPath)
 

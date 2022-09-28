@@ -3,7 +3,7 @@
 
 """Use the TP inventory, locations and industries text files to generate the tpRailroadData.json file"""
 
-from psEntities import PSE
+from opsEntities import PSE
 from o2oSubroutine import ModelEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelImport'

@@ -3,11 +3,10 @@
 
 """The o2o Subroutine."""
 
-from psEntities import PSE
+from opsEntities import PSE
 from PatternTracksSubroutine import Controller
 from o2oSubroutine import Model
 from o2oSubroutine import ModelImport
-from o2oSubroutine import ModelUpdate
 from o2oSubroutine import View
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.Controller'

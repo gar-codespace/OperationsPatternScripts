@@ -3,7 +3,7 @@
 
 """Creates the TrainPlayer panel, implemented in v3."""
 
-from psEntities import PSE
+from opsEntities import PSE
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ViewEntities'
 SCRIPT_REV = 20220101

@@ -6,15 +6,15 @@
 from urllib2 import urlopen
 import sys
 
-from psEntities import PSE
-from psBundle import Translators
+from opsEntities import PSE
+from opsBundle import Translators
 
-SCRIPT_NAME = 'OperationsPatternScripts.psBundle.Bundle'
+SCRIPT_NAME = 'OperationsPatternScripts.opsBundle.Bundle'
 SCRIPT_REV = 20220101
 
 _psLog = PSE.LOGGING.getLogger('OPS.B.Bundle')
 
-BUNDLE_DIR = PSE.PLUGIN_ROOT + '\\psBundle\\'
+BUNDLE_DIR = PSE.PLUGIN_ROOT + '\\opsBundle\\'
 
 PLUGIN = [] # Scratch file for translation
 HELP = [] # Scratch file for translation
@@ -223,7 +223,7 @@ def makeHelpPage():
 
         baseHelpPage = baseHelpPage.replace(hKey, hValue)
 
-    helpPagePath = PSE.PLUGIN_ROOT + '\\psSupport\\' + 'Help.' + PSE.psLocale() + '.html'
+    helpPagePath = PSE.PLUGIN_ROOT + '\\opsSupport\\' + 'Help.' + PSE.psLocale() + '.html'
     PSE.genericWriteReport(helpPagePath, baseHelpPage)
 
     return

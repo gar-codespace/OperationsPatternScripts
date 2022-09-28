@@ -152,12 +152,12 @@ if __name__ == "__builtin__":
 
     PLUGIN_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
     sysPath.append(PLUGIN_ROOT)
-    from psEntities import PSE
+    from opsEntities import PSE
     from o2oSubroutine import ModelWorkEvents
     from o2oSubroutine import ModelEntities
-    from psBundle import Bundle
+    from opsBundle import Bundle
 
-    Bundle.BUNDLE_DIR = PLUGIN_ROOT + '\\psBundle\\'
+    Bundle.BUNDLE_DIR = PLUGIN_ROOT + '\\opsBundle\\'
 
     PSE.PLUGIN_ROOT = PLUGIN_ROOT
     PSE.BUNDLE = Bundle.getBundleForLocale()
@@ -172,6 +172,6 @@ if __name__ == "__builtin__":
 else:
 
     PLUGIN_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
-    from psEntities import PSE
+    from opsEntities import PSE
     from o2oSubroutine import ModelWorkEvents
     from o2oSubroutine import ModelEntities
