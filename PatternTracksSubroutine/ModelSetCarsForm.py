@@ -20,8 +20,8 @@ def writeToJson(setCarsForm):
 
     reportTitle = PSE.BUNDLE['Switch List for Track']
     fileName = reportTitle + '.json'
-    targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
-    targetPath = PSE.OS_Path.join(targetDir, fileName)
+    # targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
+    targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations\\jsonManifests', fileName)
 
     switchListReport = PSE.dumpJson(setCarsForm)
     PSE.genericWriteReport(targetPath, switchListReport)
@@ -39,8 +39,8 @@ def setRsButton(textBoxEntry):
 
     reportTitle = PSE.BUNDLE['Switch List for Track']
     fileName = reportTitle + '.json'
-    targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
-    targetPath = PSE.OS_Path.join(targetDir, fileName)
+    # targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
+    targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations\\jsonManifests', fileName)
 
     switchList = PSE.genericReadReport(targetPath)
     switchList = PSE.loadJson(switchList)
@@ -56,8 +56,8 @@ def o2oButton(ptSetCarsForm):
         """
     reportTitle = PSE.BUNDLE['o2o Work Events']
     fileName = reportTitle + '.json'
-    targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
-    targetPath = PSE.OS_Path.join(targetDir, fileName)
+    # targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
+    targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations\\jsonManifests', fileName)
 # Load the existing o2o switch list
     o2oSwitchList = PSE.genericReadReport(targetPath)
     o2oSwitchList = PSE.loadJson(o2oSwitchList)

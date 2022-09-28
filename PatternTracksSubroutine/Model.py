@@ -16,10 +16,10 @@ def trackPatternButton():
         Controller.StartUp.trackPatternButton
         """
 
-    reportTitle = PSE.BUNDLE['Track Pattern Report']
-    fileName = reportTitle + '.json'
-    targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
-    targetPath = PSE.OS_Path.join(targetDir, fileName)
+    # reportTitle = PSE.BUNDLE['Track Pattern Report']
+    fileName = PSE.BUNDLE['Track Pattern Report'] + '.json'
+    # targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
+    targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations\\jsonManifests', fileName)
 
     trackPattern = ModelEntities.makeTrackPattern()
     trackPatternReport = ModelEntities.makeTrackPatternReport(trackPattern)
@@ -35,10 +35,10 @@ def setRsButton():
         Controller.StartUp.setRsButton
         """
 
-    reportTitle = PSE.BUNDLE['o2o Work Events']
-    fileName = reportTitle + '.json'
-    targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
-    targetPath = PSE.OS_Path.join(targetDir, fileName)
+    # reportTitle = PSE.BUNDLE['o2o Work Events']
+    fileName = PSE.BUNDLE['o2o Work Events'] + '.json'
+    # targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
+    targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations\\jsonManifests', fileName)
 
     newHeader = ModelEntities.makeGenericHeader()
     newHeaderReport = PSE.dumpJson(newHeader)
@@ -168,17 +168,17 @@ def writeTrackPatternCsv(trackPatternName):
 
     _psLog.debug('writeTrackPatternCsv')
 #  Get json data
-    targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
     fileName = trackPatternName + '.json'
-    targetPath = PSE.OS_Path.join(targetDir, fileName)
+    # targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
+    targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations\\jsonManifests', fileName)
     trackPattern = PSE.genericReadReport(targetPath)
     trackPattern = PSE.loadJson(trackPattern)
 # Process json data into CSV
     trackPatternCsv = ModelEntities.makeTrackPatternCsv(trackPattern)
 # Write CSV data
-    targetDir = PSE.PROFILE_PATH + 'operations\\csvSwitchLists\\'
     fileName = trackPatternName + '.csv'
-    targetPath = PSE.OS_Path.join(targetDir, fileName)
+    # targetDir = PSE.PROFILE_PATH + 'operations\\csvSwitchLists\\'
+    targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations\\csvSwitchLists', fileName)
     PSE.genericWriteReport(targetPath, trackPatternCsv)
 
     return

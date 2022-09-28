@@ -75,7 +75,7 @@ class StartUp:
 
         Controller.updatePatternTracksSubroutine(EVENT)
 
-        psLog.debug(EVENT)
+        _psLog.debug(EVENT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return

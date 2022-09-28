@@ -18,8 +18,8 @@ class StandAloneLogging():
     def __init__(self):
 
         fileName = 'BuiltTrainExportLog.txt'
-        targetDir = PSE.PROFILE_PATH  + '\\operations\\buildstatus'
-        targetPath = PSE.OS_Path.join(targetDir, fileName)
+        # targetDir = PSE.PROFILE_PATH  + '\\operations\\buildstatus'
+        targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH , 'operations\\buildstatus', fileName)
 
         self.logger = PSE.Logger(targetPath)
         self.o2oLog = PSE.LOGGING.getLogger('TP.StandAlone')

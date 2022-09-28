@@ -13,8 +13,8 @@ def tpDirectoryExists():
         Possibly move this to o2o.ModelEntities.
         """
 
-    tpDirectory = PSE.JMRI.util.FileUtil.getHomePath() + 'AppData\\Roaming\\TrainPlayer\\Reports'
-    tpDirectory = PSE.OS_Path.join(tpDirectory)
+    # tpDirectory = PSE.JMRI.util.FileUtil.getHomePath() + 'AppData\\Roaming\\TrainPlayer\\Reports'
+    tpDirectory = PSE.OS_Path.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData\\Roaming\\TrainPlayer\\Reports')
 
     if PSE.JAVA_IO.File(tpDirectory).isDirectory():
         _psLog.info('TrainPlayer destination directory OK')
@@ -191,8 +191,8 @@ def getWorkEvents():
 
     reportName = PSE.BUNDLE['o2o Work Events']
     fileName = reportName + '.json'
-    targetDir = PSE.PROFILE_PATH + '\\operations\\jsonManifests'
-    targetPath = PSE.OS_Path.join(targetDir, fileName)
+    # targetDir = PSE.PROFILE_PATH + '\\operations\\jsonManifests'
+    targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations\\jsonManifests', fileName)
 
     workEventList = PSE.genericReadReport(targetPath)
     jsonFile = PSE.loadJson(workEventList)
@@ -205,8 +205,8 @@ def getTpExport(fileName):
         ModelImport.TrainPlayerImporter.getTpReportFiles
         """
 
-    targetDir = PSE.JMRI.util.FileUtil.getHomePath() + '\\AppData\\Roaming\\TrainPlayer\\Reports'
-    targetPath = PSE.OS_Path.join(targetDir, fileName)
+    # targetDir = PSE.JMRI.util.FileUtil.getHomePath() + '\\AppData\\Roaming\\TrainPlayer\\Reports'
+    targetPath = PSE.OS_Path.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData\\Roaming\\TrainPlayer\\Reports', fileName)
 
     if PSE.JAVA_IO.File(targetPath).isFile():
         tpExport = PSE.genericReadReport(targetPath).split('\n')
@@ -272,8 +272,8 @@ def getTpRailroadData():
 
     reportName = 'tpRailroadData'
     fileName = reportName + '.json'
-    targetDir = PSE.PROFILE_PATH + '\\operations'
-    targetPath = PSE.OS_Path.join(targetDir, fileName)
+    # targetDir = PSE.PROFILE_PATH + '\\operations'
+    targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations', fileName)
 
     try:
         PSE.JAVA_IO.File(targetPath).isFile()

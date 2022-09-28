@@ -21,10 +21,10 @@ def switchListButton(textBoxEntry):
     _psLog.debug('switchListButton')
 
 # Boilerplate
-    reportName = PSE.BUNDLE['Switch List for Track']
-    fileName = reportName + '.json'
-    targetDir = PSE.PROFILE_PATH + '\\operations\\jsonManifests'
-    targetPath = PSE.OS_Path.join(targetDir, fileName)
+    # reportName = PSE.BUNDLE['Switch List for Track']
+    fileName = PSE.BUNDLE['Switch List for Track'] + '.json'
+    # targetDir = PSE.PROFILE_PATH + '\\operations\\jsonManifests'
+    targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations\\jsonManifests', fileName)
 # Get the switch list
     switchList = PSE.genericReadReport(targetPath)
     switchList = PSE.loadJson(switchList)
@@ -36,9 +36,9 @@ def switchListButton(textBoxEntry):
     reportHeader = ViewEntities.makeTextReportHeader(switchList)
     reportLocations = ViewEntities.makeTextReportLocations(switchList, trackTotals=False)
 # Save formatted data
-    targetDir = PSE.PROFILE_PATH + '\\operations\\patternReports'
     fileName = reportName + '.txt'
-    targetPath = PSE.OS_Path.join(targetDir, fileName)
+    # targetDir = PSE.PROFILE_PATH + '\\operations\\patternReports'
+    targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations\\patternReports', fileName)
     PSE.genericWriteReport(targetPath, reportHeader + reportLocations)
 # Display formatted data
     PSE.genericDisplayReport(targetPath)

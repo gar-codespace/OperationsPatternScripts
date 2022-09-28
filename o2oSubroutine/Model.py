@@ -587,8 +587,8 @@ class NewRollingStock:
 
         reportName = 'tpRollingStockData'
         fileName = reportName + '.json'
-        targetDir = PSE.PROFILE_PATH + '\\operations'
-        targetPath = PSE.OS_Path.join(targetDir, fileName)
+        # targetDir = PSE.PROFILE_PATH + '\\operations'
+        targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations', fileName)
 
         formattedRsFile = PSE.dumpJson(rsData)
         PSE.genericWriteReport(targetPath, formattedRsFile)
