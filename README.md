@@ -52,7 +52,7 @@ This plugin has been tested with:
 * JMRI 4.25.4 with Java 8u301, JMRI 4.26 with Java 8u311, Windows 10 Pro and Home  
 
 ## License
-The scripts included in this plugin are © 2021 Greg Ritacco.  
+The scripts included in this plugin are © 2021, 2022 Greg Ritacco.  
 Other then that, there are no restrictions on use.
 
 
