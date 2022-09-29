@@ -1,5 +1,5 @@
 {
-  "  Additionally, cars can be moved from track to track within a location,": "De plus, les voitures peuvent \u00eatre d\u00e9plac\u00e9es d'une piste \u00e0 l'autre dans un m\u00eame lieu,", 
+  "  Additionally, cars can be moved from track to track within a location,": "En outre, les voitures peuvent \u00eatre d\u00e9plac\u00e9es d'une piste \u00e0 l'autre dans un m\u00eame lieu,", 
   "  The idea is to expand the capability of TrainPlayer\u00a9's Advanced Ops feature to include the operational flexibility of Operations Pro,": "L'id\u00e9e est d'\u00e9tendre les capacit\u00e9s de la fonction Advanced Ops de TrainPlayer\u00a9 pour y inclure la flexibilit\u00e9 op\u00e9rationnelle d'Operations Pro,", 
   "  and optionally, if a car is moved onto a spur, the schedule for that spur can be applied.>Track Pattern and Switch List JSON format": "et, en option, si un wagon est d\u00e9plac\u00e9 sur un embranchement, le programme de cet embranchement peut \u00eatre appliqu\u00e9.>Mod\u00e8le de voie et liste d'aiguillages au format JSON", 
   "  while also eleminating the tedium of keeping two databases synchronised.": "tout en \u00e9liminant l'ennui de maintenir deux bases de donn\u00e9es synchronis\u00e9es.", 
@@ -20,7 +20,7 @@
   ">Destination Track designator": ">D\u00e9signation de la voie de destination", 
   ">Destination designator": ">D\u00e9signation de la destination", 
   ">Do not edit these": ">Ne pas modifier ces \u00e9l\u00e9ments", 
-  ">Each JMRI profile gets its own configuration file, which is named PatternConfig.json.": ">Chaque profil JMRI re\u00e7oit son propre fichier de configuration, nomm\u00e9 PatternConfig.json.", 
+  ">Each JMRI profile gets its own configuration file, which is named PatternConfig.json.": ">Chaque profil JMRI obtient son propre fichier de configuration, nomm\u00e9 PatternConfig.json.", 
   ">Final Destination designator": ">Indicateur de destination finale", 
   ">Final destination Track designator": ">Destination finale Indicateur de piste", 
   ">Green value": ">Valeur verte", 

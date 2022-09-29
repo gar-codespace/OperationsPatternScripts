@@ -2,6 +2,9 @@
 # © 2021, 2022 Greg Ritacco
 
 from opsEntities import PSE
+import apps
+import jmri.jmrit
+import jmri.util.swing
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelEntities'
 SCRIPT_REV = 20220101
@@ -252,15 +255,15 @@ def getSetToLocationAndTrack(locationName, trackName):
         return None, None
 
 def closeTroublesomeWindows():
-    """Close all the 'Troublesome' windows when the New JMRI Railroad button is pressed.
-        Lazy work around, figure this our for real later.
-        """
-
-    frames = ['JMRI System Console', 'PanelPro', 'Pattern Scripts']
+    """Close all the 'Troublesome' windows when the New JMRI Railroad button is pressed."""
+    # frames = ['JMRI System Console', 'PanelPro', PSE.BUNDLE['Pattern Scripts']]
 
     for frameName in PSE.JMRI.util.JmriJFrame.getFrameList():
         frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
-        if not frame.getTitle() in frames:
+        # print(frame.class)
+        # print(frame.__str__())
+        if not 'JmriJFrame' in frame.__str__():
+            print("Yipee")
             frame.dispose()
 
     return

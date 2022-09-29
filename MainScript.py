@@ -8,6 +8,7 @@ import javax.swing
 import time
 
 from sys import path as sysPath
+from os import path as OS_Path
 from java.beans import PropertyChangeListener
 from apps import Apps
 
@@ -15,24 +16,25 @@ SCRIPT_DIR = 'OperationsPatternScripts'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b1'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b2'
 
-PLUGIN_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
+PLUGIN_ROOT = OS_Path.join(jmri.util.FileUtil.getPreferencesPath(), SCRIPT_DIR)
 
 sysPath.append(PLUGIN_ROOT)
 from opsEntities import PSE
+PSE.PLUGIN_ROOT = PLUGIN_ROOT
 from opsBundle import Bundle
 from o2oSubroutine import BuiltTrainExport
 
 SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
 SCRIPT_REV = 20220101
 
-Bundle.BUNDLE_DIR = PLUGIN_ROOT + '\\opsBundle\\'
+# Bundle.BUNDLE_DIR = PLUGIN_ROOT + '\\opsBundle\\'
+Bundle.BUNDLE_DIR = OS_Path.join(PSE.PLUGIN_ROOT, 'opsBundle')
 
 PSE.JMRI = jmri
 PSE.JAVA_AWT = java.awt
 PSE.JAVX_SWING = javax.swing
 PSE.TIME = time
 
-PSE.PLUGIN_ROOT = PLUGIN_ROOT
 PSE.ENCODING = PSE.readConfigFile('CP')['SE']
 PSE.BUNDLE = Bundle.getBundleForLocale()
 
@@ -449,7 +451,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
     def buildThePlugin(self):
 
-        PSE.BUNDLE = Bundle.getBundleForLocale()
+        # PSE.BUNDLE = Bundle.getBundleForLocale()
 
         view = View(None)
         emptyPluginPanel = view.makePluginPanel()

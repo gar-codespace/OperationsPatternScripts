@@ -10,8 +10,8 @@ try:
     from opsBundle import Keys
 except:
     pass
-    
-class useDeepL:
+
+class UseDeepL:
     """Specifics for using DeepL"""
 
     def __init__(self):

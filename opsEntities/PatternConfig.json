@@ -57,11 +57,11 @@
   },
   "CP" : {
     "TS" : {
-      "UD" : "useDeepL",
-      "UX" : "Some Other Translation Service"
+      "UD" : "UseDeepL",
+      "UX" : "UseSomethingElse"
     },
     "TC" : "UD",
-    "BT" : ["Plugin", "Help"],
+    "BT" : ["plugin", "help"],
     "AP" : true,
     "SE" : "utf-8",
     "SI": [
@@ -76,7 +76,7 @@
     "PW" : 1100,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20220909
+    "RV" : 20220911
   },
   "RM" : {
     "DS" : "No Waybill",
