@@ -256,15 +256,12 @@ def getSetToLocationAndTrack(locationName, trackName):
 
 def closeTroublesomeWindows():
     """Close all the 'Troublesome' windows when the New JMRI Railroad button is pressed."""
+    
     # frames = ['JMRI System Console', 'PanelPro', PSE.BUNDLE['Pattern Scripts']]
 
     for frameName in PSE.JMRI.util.JmriJFrame.getFrameList():
-        frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
-        # print(frame.class)
-        # print(frame.__str__())
-        if not 'JmriJFrame' in frame.__str__():
-            print("Yipee")
-            frame.dispose()
+        if not 'JmriJFrame' in frameName.__str__():
+            frameName.dispose()
 
     return
 

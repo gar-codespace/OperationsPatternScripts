@@ -54,6 +54,21 @@ def o2oButton(ptSetCarsForm, textBoxEntry):
 
     return o2oSwitchList
 
+class SetCarsFrame(PSE.JMRI.util.JmriJFrame):
+
+    def __init__(self, setCarsForTrackForm):
+
+        self.setCarsForTrackForm = setCarsForTrackForm
+
+        return
+
+    def addSetCarsForm(self):
+
+        self.add(self.setCarsForTrackForm)
+
+        return self
+
+
 def setCarsForTrackWindow(setCarsForTrackForm):
     """Used by:
         ControllerSetCarsForm.CreateSetCarsFormGui.makeFrame

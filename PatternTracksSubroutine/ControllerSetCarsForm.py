@@ -48,7 +48,10 @@ class CreateSetCarsFormGui:
         """Create a JMRI jFrame window"""
 
         setCarsForTrackForm, self.buttonDict = ViewSetCarsForm.makeSetCarsForTrackForm(self.setCarsForm)
-        setCarsForTrackWindow = ViewSetCarsForm.setCarsForTrackWindow(setCarsForTrackForm)
+
+        # setCarsForTrackWindow = ViewSetCarsForm.setCarsForTrackWindow(setCarsForTrackForm)
+        setCarsForTrackWindow = ViewSetCarsForm.SetCarsFrame(setCarsForTrackForm).addSetCarsForm()
+
         self.activateButtons()
 
         return setCarsForTrackWindow
