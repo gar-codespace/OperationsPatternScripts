@@ -83,8 +83,8 @@ class PatternScriptsWindowListener(PSE.JAVA_AWT.event.WindowListener):
     def closeSetCarsWindows(self):
         """Close all the Set Cars windows when the Pattern Scripts window is closed"""
 
-        for frameName in PSE.JMRI.util.JmriJFrame.getFrameList():
-            frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
+        for frame in PSE.JMRI.util.JmriJFrame.getFrameList():
+            # frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
             if frame.getName() == 'setCarsWindow':
                 frame.setVisible(False)
                 frame.dispose()
@@ -110,6 +110,7 @@ class PatternScriptsWindowListener(PSE.JAVA_AWT.event.WindowListener):
 
     def windowClosing(self, WINDOW_CLOSING):
 
+        self.closeSetCarsWindows()
         updateWindowParams(WINDOW_CLOSING.getSource())
 
         return
@@ -440,10 +441,11 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
     def closePsWindow(self):
         """Invoked by Restart From Defaults pulldown"""
 
-        for frameName in PSE.JMRI.util.JmriJFrame.getFrameList():
-            frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
+        for frame in PSE.JMRI.util.JmriJFrame.getFrameList():
+            # frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
             if frame.getName() == 'patternScriptsWindow':
                 updateWindowParams(frame)
+                #frame.firePropertyChange(PS_WINDOW_CLOSED, 0, 1)
                 frame.setVisible(False)
                 frame.dispose()
 
@@ -555,8 +557,8 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
             print('o2o subroutine activated')
 
         PSE.writeConfigFile(patternConfig)
-        self.closePsWindow()
-        self.buildThePlugin()
+        self.shutdownPlugin()
+        self.startupPlugin()
 
         return
 

@@ -12,6 +12,21 @@ SCRIPT_REV = 20220101
 _psLog = PSE.LOGGING.getLogger('OPS.PT.ViewSetCarsForm')
 
 
+
+
+class SetCarsTableListener(java.beans.PropertyChangeListener):
+    """ """
+
+    def __init__(self):
+
+        return
+
+    def tableChanged(self, PS_WINDOW_CLOSED):
+
+        return
+
+
+
 def switchListAsCsv(textBoxEntry):
     """Track Pattern Report json is written as a CSV file
         Used by:
@@ -86,6 +101,7 @@ class SetCarsFrame(PSE.JMRI.util.JmriJFrame):
     def addSetCarsForm(self):
 
         self.add(self.setCarsForTrackForm)
+        self.addPropertyChangeListener(SetCarsTableListener)
 
         return self
 
