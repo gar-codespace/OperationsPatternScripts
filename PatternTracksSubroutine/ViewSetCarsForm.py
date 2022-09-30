@@ -69,15 +69,15 @@ class SetCarsFrame(PSE.JMRI.util.JmriJFrame):
         return self
 
 
-def setCarsForTrackWindow(setCarsForTrackForm):
-    """Used by:
-        ControllerSetCarsForm.CreateSetCarsFormGui.makeFrame
-        """
-
-    setCarsWindow = PSE.JMRI.util.JmriJFrame()
-    setCarsWindow.add(setCarsForTrackForm)
-
-    return setCarsWindow
+# def setCarsForTrackWindow(setCarsForTrackForm):
+#     """Used by:
+#         ControllerSetCarsForm.CreateSetCarsFormGui.makeFrame
+#         """
+#
+#     setCarsWindow = PSE.JMRI.util.JmriJFrame()
+#     setCarsWindow.add(setCarsForTrackForm)
+#
+#     return setCarsWindow
 
 def makeSetCarsForTrackForm(setCarsFormData):
     """Creates and populates the 'Set Cars Form for Track X' form

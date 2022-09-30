@@ -568,6 +568,12 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         Bundle.makeBundles()
         Bundle.makeHelpPage()
 
+        self.shutdownPlugin()
+        self.startupPlugin()
+
+        self.psLog.info('Pattern Scripts plugin translated')
+        self.psLog.info('Pattern Scripts plugin restarted')
+
         return
 
     def rsItemSelected(self, RESTART_PLUGIN_EVENT):
@@ -575,24 +581,30 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(RESTART_PLUGIN_EVENT)
 
-    #Shutdown Items
         PSE.deleteConfigFile()
+
+        self.shutdownPlugin()
+        self.startupPlugin()
+
+        self.psLog.info('Pattern Scripts plugin restarted')
+
+        return
+
+    def shutdownPlugin(self):
 
         self.removeTrainsTableListener()
         self.removeBuiltTrainListener()
-
         self.closePsWindow()
-        # self.logger.stopLogger('OPS')
 
-    #Startup Items
+        return
+
+    def startupPlugin(self):
+
         PSE.BUNDLE = Bundle.getBundleForLocale()
         PSE.CreateStubFile().make()
         Bundle.makeHelpPage()
 
-        # self.logger.startLogger('OPS')
         self.buildThePlugin()
-
-        self.psLog.info('Pattern Scripts plugin restarted')
 
         return
 
