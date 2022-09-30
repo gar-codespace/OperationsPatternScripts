@@ -158,7 +158,11 @@ class CreateStubFile:
 """Utility Methods"""
 
 def psLocale():
-    """Dealers choice, both work."""
+    """Dealers choice, both work.
+        Used by:
+        Bundle
+        Translaters
+        """
 
     return PM.getLocale().toString()
     # return unicode(PM.getLocale(), ENCODING)
@@ -166,6 +170,9 @@ def psLocale():
 def occuranceTally(listOfOccurances):
     """Tally the occurances of a word in a list and return a dictionary.
         Home grown version of collections.Counter.
+        Used by:
+        ModelEntities.getKernelTally
+        ViewEntities.makeTextReportLocations
         """
 
     dict = {}
@@ -181,7 +188,14 @@ def occuranceTally(listOfOccurances):
     return dict
 
 def getAllLocationNames():
-    """JMRI sorts the list, returns list of location names."""
+    """JMRI sorts the list, returns list of location names.
+        Used by:
+        Model.UpdateLocationsAndTracks
+        ModelEntities.getAllTrackIds
+        Model.updatePatternLocation
+        Model.updateLocations
+        ModelEntities.testSelectedItem
+        """
 
     locationNames = []
     for item in LM.getLocationsByNameList():
@@ -190,7 +204,12 @@ def getAllLocationNames():
     return locationNames
 
 def getAllTracks():
-    """All track objects for all locations."""
+    """All track objects for all locations.
+        Used by:
+        Model.UpdateLocationsAndTracks
+        ModelEntities.setNonSpurTrackLength
+        Model.updatePatternLocation
+        """
 
     trackList = []
     for location in LM.getList():
@@ -199,7 +218,12 @@ def getAllTracks():
     return trackList
 
 def getSelectedTracks():
-    """Gets the track objects checked in the Track Pattern Subroutine."""
+    """Gets the track objects checked in the Track Pattern Subroutine.
+        Used by:
+        Controller.StartUp.trackPatternButton
+        ModelEntities.makeTrackPattern
+        View.setRsButton
+        """
 
     patternTracks = readConfigFile('PT')['PT']
 

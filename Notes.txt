@@ -1,7 +1,6 @@
 
 Todo:
   o2o new and update not bullet proof.
-  reboot each subroutine on language translation.
   Update OPS help html.
   Add Used by: to PSE.
   csv file not writting properly, Set_To not written.
