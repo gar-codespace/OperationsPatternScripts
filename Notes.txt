@@ -2,9 +2,8 @@
 Todo:
   o2o new and update not bullet proof.
   Update OPS help html.
-  Add Used by: to PSE.
-  csv file not writting properly, Set_To not written.
-  ModelWorkEvents.*.parsePsWorkEventRs and ModelWorkEvents.*.parseRS do the same things in a different way, can they be merged?
+  Add more 'Used by:' to PSE.
+  020.ModelWorkEvents.*.parsePtRs and o2o.ModelWorkEvents.*.parseRS do the same things in a different way, can they be merged?
   Tighten up the except part of all try/except.
   How to publish DeepL?
 
@@ -13,7 +12,6 @@ Comments:
 
 Tested Items:
   Plugin
-    Replaced PatternScriptEntities with PSE everywhere.
     Handle multiple versions OK.
     Handles font size change OK.
     Works if two instances of PanelPro are open

@@ -121,8 +121,7 @@ class CreateSetCarsFormGui:
         ViewSetCarsForm.switchListButton(self.buttonDict['textBoxEntry'])
 
         if PSE.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
-            workEventName = PSE.BUNDLE['Switch List for Track']
-            Model.writeTrackPatternCsv(workEventName)
+            ViewSetCarsForm.switchListAsCsv(self.buttonDict['textBoxEntry'])
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

@@ -15,8 +15,6 @@ class ManageGui:
 
     def __init__(self):
 
-        # self.psLog = PSE.LOGGING.getLogger('OPS.PT.View')
-
         return
 
     def makeSubroutineFrame(self):
@@ -105,5 +103,26 @@ def setRsButton():
         _psLog.info(u'Set Rolling Stock Window created for track ' + trackName)
         windowOffset += 50
     _psLog.info(str(i) + ' Set Rolling Stock windows for ' + locationName + ' created')
+
+    return
+
+def trackPatternAsCsv():
+    """Track Pattern Report json is written as a CSV file
+        Used by:
+        Controller.StartUp.trackPatternButton
+        """
+
+    _psLog.debug('trackPatternAsCsv')
+#  Get json data
+    fileName = PSE.BUNDLE['Track Pattern Report'] + '.json'
+    targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+    trackPatternCsv = PSE.genericReadReport(targetPath)
+    trackPatternCsv = PSE.loadJson(trackPatternCsv)
+# Process json data into CSV
+    trackPatternCsv = ViewEntities.makeTrackPatternCsv(trackPatternCsv)
+# Write CSV data
+    fileName = PSE.BUNDLE['Track Pattern Report'] + '.csv'
+    targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations', 'csvSwitchLists', fileName)
+    PSE.genericWriteReport(targetPath, trackPatternCsv)
 
     return

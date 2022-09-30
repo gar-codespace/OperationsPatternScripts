@@ -4,7 +4,7 @@
 from opsEntities import PSE
 from PatternTracksSubroutine import View
 from PatternTracksSubroutine import Model
-from PatternTracksSubroutine import ModelEntities
+# from PatternTracksSubroutine import ModelEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.Controller'
 SCRIPT_REV = 20220101
@@ -145,8 +145,7 @@ class StartUp:
         View.trackPatternButton()
 
         if PSE.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
-            workEventName = PSE.BUNDLE['Track Pattern Report']
-            Model.writeTrackPatternCsv(workEventName)
+            View.trackPatternAsCsv()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

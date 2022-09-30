@@ -180,8 +180,8 @@ class jmriManifestConversion:
         parsedRS['Road'] = rs['road']
         parsedRS['Number'] = rs['number']
         parsedRS['Type'] = rs['carType']
-        parsedRS['Load Type'] = PSE.getShortLoadType(rs)
         try:
+            parsedRS['Load Type'] = PSE.getShortLoadType(rs)
             parsedRS['Load'] = rs['load']
         except:
             parsedRS['Load'] = rs['model']

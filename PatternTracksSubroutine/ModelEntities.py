@@ -312,64 +312,64 @@ def makeInitialTrackList(location):
 
     return trackDict
 
-def makeTrackPatternCsv(trackPattern):
-    """CSV writer does not support utf-8
-        Used by:
-        Model.writeTrackPatternCsv
-        """
-
-    trackPatternCsv = u'Operator,Description,Parameters\n' \
-                    u'RT,Report Type,' + trackPattern['trainDescription'] + '\n' \
-                    u'RN,Railroad Name,' + trackPattern['railroad'] + '\n' \
-                    u'LN,Location Name,' + trackPattern['locations'][0]['locationName'] + '\n' \
-                    u'PRNTR,Printer Name,\n' \
-                    u'YPC,Yard Pattern Comment,' + trackPattern['trainComment'] + '\n' \
-                    u'VT,Valid,' + trackPattern['date'] + '\n'
-    for track in trackPattern['locations'][0]['tracks']: # There is only one location
-        trackPatternCsv += u'TN,Track name,' + unicode(track['trackName'], PSE.ENCODING) + '\n'
-        trackPatternCsv += u'Set_To,PUSO,Road,Number,Type,Model,Length,Weight,Consist,Owner,Track,Location,Destination,Comment\n'
-        for loco in track['locos']:
-            trackPatternCsv +=  loco['Set_To'] + ',' \
-                            + loco['PUSO'] + ',' \
-                            + loco['Road'] + ',' \
-                            + loco['Number'] + ',' \
-                            + loco['Type'] + ',' \
-                            + loco['Model'] + ',' \
-                            + loco['Length'] + ',' \
-                            + loco['Weight'] + ',' \
-                            + loco['Consist'] + ',' \
-                            + loco['Owner'] + ',' \
-                            + loco['Track'] + ',' \
-                            + loco['Location'] + ',' \
-                            + loco['Destination'] + ',' \
-                            + loco['Comment'] + ',' \
-                            + '\n'
-        trackPatternCsv += u'Set_To,PUSO,Road,Number,Type,Length,Weight,Load,Load_Type,Hazardous,Color,Kernel,Kernel_Size,Owner,Track,Location,Destination,Dest&Track,Final_Dest,FD&Track,Comment,Drop_Comment,Pickup_Comment,RWE\n'
-        for car in track['cars']:
-            trackPatternCsv +=  car['Set_To'] + ',' \
-                            + car['PUSO'] + ',' \
-                            + car['Road'] + ',' \
-                            + car['Number'] + ',' \
-                            + car['Type'] + ',' \
-                            + car['Length'] + ',' \
-                            + car['Weight'] + ',' \
-                            + car['Load'] + ',' \
-                            + car['Load Type'] + ',' \
-                            + str(car['Hazardous']) + ',' \
-                            + car['Color'] + ',' \
-                            + car['Kernel'] + ',' \
-                            + car['Kernel Size'] + ',' \
-                            + car['Owner'] + ',' \
-                            + car['Track'] + ',' \
-                            + car['Location'] + ',' \
-                            + car['Destination'] + ',' \
-                            + car['Dest&Track'] + ',' \
-                            + car['Final Dest'] + ',' \
-                            + car['FD&Track'] + ',' \
-                            + car['Comment'] + ',' \
-                            + car['SetOut Msg'] + ',' \
-                            + car['PickUp Msg'] + ',' \
-                            + car['RWE'] \
-                            + '\n'
-
-    return trackPatternCsv
+# def makeTrackPatternCsv(trackPattern):
+#     """CSV writer does not support utf-8
+#         Used by:
+#         Model.writeTrackPatternCsv
+#         """
+#
+#     trackPatternCsv = u'Operator,Description,Parameters\n' \
+#                     u'RT,Report Type,' + trackPattern['trainDescription'] + '\n' \
+#                     u'RN,Railroad Name,' + trackPattern['railroad'] + '\n' \
+#                     u'LN,Location Name,' + trackPattern['locations'][0]['locationName'] + '\n' \
+#                     u'PRNTR,Printer Name,\n' \
+#                     u'YPC,Yard Pattern Comment,' + trackPattern['trainComment'] + '\n' \
+#                     u'VT,Valid,' + trackPattern['date'] + '\n'
+#     for track in trackPattern['locations'][0]['tracks']: # There is only one location
+#         trackPatternCsv += u'TN,Track name,' + unicode(track['trackName'], PSE.ENCODING) + '\n'
+#         trackPatternCsv += u'Set_To,PUSO,Road,Number,Type,Model,Length,Weight,Consist,Owner,Track,Location,Destination,Comment\n'
+#         for loco in track['locos']:
+#             trackPatternCsv +=  loco['Set_To'] + ',' \
+#                             + loco['PUSO'] + ',' \
+#                             + loco['Road'] + ',' \
+#                             + loco['Number'] + ',' \
+#                             + loco['Type'] + ',' \
+#                             + loco['Model'] + ',' \
+#                             + loco['Length'] + ',' \
+#                             + loco['Weight'] + ',' \
+#                             + loco['Consist'] + ',' \
+#                             + loco['Owner'] + ',' \
+#                             + loco['Track'] + ',' \
+#                             + loco['Location'] + ',' \
+#                             + loco['Destination'] + ',' \
+#                             + loco['Comment'] + ',' \
+#                             + '\n'
+#         trackPatternCsv += u'Set_To,PUSO,Road,Number,Type,Length,Weight,Load,Load_Type,Hazardous,Color,Kernel,Kernel_Size,Owner,Track,Location,Destination,Dest&Track,Final_Dest,FD&Track,Comment,Drop_Comment,Pickup_Comment,RWE\n'
+#         for car in track['cars']:
+#             trackPatternCsv +=  car['Set_To'] + ',' \
+#                             + car['PUSO'] + ',' \
+#                             + car['Road'] + ',' \
+#                             + car['Number'] + ',' \
+#                             + car['Type'] + ',' \
+#                             + car['Length'] + ',' \
+#                             + car['Weight'] + ',' \
+#                             + car['Load'] + ',' \
+#                             + car['Load Type'] + ',' \
+#                             + str(car['Hazardous']) + ',' \
+#                             + car['Color'] + ',' \
+#                             + car['Kernel'] + ',' \
+#                             + car['Kernel Size'] + ',' \
+#                             + car['Owner'] + ',' \
+#                             + car['Track'] + ',' \
+#                             + car['Location'] + ',' \
+#                             + car['Destination'] + ',' \
+#                             + car['Dest&Track'] + ',' \
+#                             + car['Final Dest'] + ',' \
+#                             + car['FD&Track'] + ',' \
+#                             + car['Comment'] + ',' \
+#                             + car['SetOut Msg'] + ',' \
+#                             + car['PickUp Msg'] + ',' \
+#                             + car['RWE'] \
+#                             + '\n'
+#
+#     return trackPatternCsv
