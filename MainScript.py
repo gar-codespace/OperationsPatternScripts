@@ -101,7 +101,7 @@ class PatternScriptsWindowListener(PSE.JAVA_AWT.event.WindowListener):
 
     def windowClosed(self, WINDOW_CLOSED):
 
-        self.closeSetCarsWindows()
+        # self.closeSetCarsWindows()
         button = self.getPsButton()
         button.setEnabled(True)
         WINDOW_CLOSED.getSource().dispose()
@@ -110,8 +110,15 @@ class PatternScriptsWindowListener(PSE.JAVA_AWT.event.WindowListener):
 
     def windowClosing(self, WINDOW_CLOSING):
 
-        self.closeSetCarsWindows()
+        # self.closeSetCarsWindows()
         updateWindowParams(WINDOW_CLOSING.getSource())
+
+
+        # print(dir(frame))
+        # print(frame.HIDE_ON_CLOSE)
+        WINDOW_CLOSING.getSource().firePropertyChange('windowStateChanged', False, True)
+        WINDOW_CLOSING.getSource().firePropertyChange('windowClosing', False, True)
+        print('windowClosing')
 
         return
 
@@ -445,7 +452,12 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
             # frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
             if frame.getName() == 'patternScriptsWindow':
                 updateWindowParams(frame)
-                #frame.firePropertyChange(PS_WINDOW_CLOSED, 0, 1)
+
+
+
+                frame.firePropertyChange('psWindowClosing', False, True)
+
+
                 frame.setVisible(False)
                 frame.dispose()
 
@@ -587,6 +599,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.shutdownPlugin()
         self.startupPlugin()
+        RESTART_PLUGIN_EVENT.getSource().firePropertyChange('psWindowClosing', False, True)
 
         self.psLog.info('Pattern Scripts plugin restarted')
 

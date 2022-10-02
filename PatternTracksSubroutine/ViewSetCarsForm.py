@@ -3,6 +3,8 @@
 
 """Display methods for the Set Cars Form for Track X form"""
 
+# from java.beans import PropertyChangeListener as PCL
+
 from opsEntities import PSE
 from PatternTracksSubroutine import ViewEntities
 
@@ -14,16 +16,15 @@ _psLog = PSE.LOGGING.getLogger('OPS.PT.ViewSetCarsForm')
 
 
 
-class SetCarsTableListener(java.beans.PropertyChangeListener):
-    """ """
-
-    def __init__(self):
-
-        return
-
-    def tableChanged(self, PS_WINDOW_CLOSED):
-
-        return
+# class SetCarsTableListener(PCL):
+#     """ """
+#
+#     def propertyChange(self, PS_WINDOW_CLOSING):
+#
+#         if PS_WINDOW_CLOSING.propertyName == 'psWindowClosing' and PS_WINDOW_CLOSING.newValue:
+#             print('Yipee')
+#
+#         return
 
 
 
@@ -101,20 +102,20 @@ class SetCarsFrame(PSE.JMRI.util.JmriJFrame):
     def addSetCarsForm(self):
 
         self.add(self.setCarsForTrackForm)
-        self.addPropertyChangeListener(SetCarsTableListener)
+        # self.addPropertyChangeListener(SetCarsTableListener)
 
         return self
 
 
-# def setCarsForTrackWindow(setCarsForTrackForm):
-#     """Used by:
-#         ControllerSetCarsForm.CreateSetCarsFormGui.makeFrame
-#         """
-#
-#     setCarsWindow = PSE.JMRI.util.JmriJFrame()
-#     setCarsWindow.add(setCarsForTrackForm)
-#
-#     return setCarsWindow
+def setCarsForTrackWindow(setCarsForTrackForm):
+    """Used by:
+        ControllerSetCarsForm.CreateSetCarsFormGui.makeFrame
+        """
+
+    setCarsWindow = PSE.JMRI.util.JmriJFrame()
+    setCarsWindow.add(setCarsForTrackForm)
+
+    return setCarsWindow
 
 def makeSetCarsForTrackForm(setCarsFormData):
     """Creates and populates the 'Set Cars Form for Track X' form

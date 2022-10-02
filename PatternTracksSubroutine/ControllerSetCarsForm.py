@@ -14,6 +14,7 @@ SCRIPT_REV = 20220101
 
 _psLog = PSE.LOGGING.getLogger('OPS.PT.ControllerSetCarsForm')
 
+
 class TextBoxEntryListener(PSE.JAVA_AWT.event.MouseAdapter):
     """When any of the 'Set Cars Form for Track X' text inpou boxes is clicked on"""
 
@@ -49,8 +50,8 @@ class CreateSetCarsFormGui:
 
         setCarsForTrackForm, self.buttonDict = ViewSetCarsForm.makeSetCarsForTrackForm(self.setCarsForm)
 
-        # setCarsForTrackWindow = ViewSetCarsForm.setCarsForTrackWindow(setCarsForTrackForm)
-        setCarsForTrackWindow = ViewSetCarsForm.SetCarsFrame(setCarsForTrackForm).addSetCarsForm()
+        setCarsForTrackWindow = ViewSetCarsForm.setCarsForTrackWindow(setCarsForTrackForm)
+        # setCarsForTrackWindow = ViewSetCarsForm.SetCarsFrame(setCarsForTrackForm).addSetCarsForm()
 
         self.activateButtons()
 
