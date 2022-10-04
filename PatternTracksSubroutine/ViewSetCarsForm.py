@@ -3,8 +3,6 @@
 
 """Display methods for the Set Cars Form for Track X form"""
 
-# from java.beans import PropertyChangeListener as PCL
-
 from opsEntities import PSE
 from PatternTracksSubroutine import ViewEntities
 
@@ -12,21 +10,6 @@ SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ViewSetCarsForm'
 SCRIPT_REV = 20220101
 
 _psLog = PSE.LOGGING.getLogger('OPS.PT.ViewSetCarsForm')
-
-
-
-
-# class SetCarsTableListener(PCL):
-#     """ """
-#
-#     def propertyChange(self, PS_WINDOW_CLOSING):
-#
-#         if PS_WINDOW_CLOSING.propertyName == 'psWindowClosing' and PS_WINDOW_CLOSING.newValue:
-#             print('Yipee')
-#
-#         return
-
-
 
 def switchListAsCsv(textBoxEntry):
     """Track Pattern Report json is written as a CSV file
@@ -102,7 +85,7 @@ class SetCarsFrame(PSE.JMRI.util.JmriJFrame):
     def addSetCarsForm(self):
 
         self.add(self.setCarsForTrackForm)
-        # self.addPropertyChangeListener(SetCarsTableListener)
+        self.addPropertyChangeListener(Listeners.SetCarsTable())
 
         return self
 

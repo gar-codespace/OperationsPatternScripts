@@ -4,6 +4,7 @@
 """Makes a 'Set Cars Form for Track X' form for each selected track"""
 
 from opsEntities import PSE
+from opsEntities import Listeners
 from PatternTracksSubroutine import Model
 from PatternTracksSubroutine import ModelSetCarsForm
 from PatternTracksSubroutine import ViewSetCarsForm
@@ -14,22 +15,22 @@ SCRIPT_REV = 20220101
 
 _psLog = PSE.LOGGING.getLogger('OPS.PT.ControllerSetCarsForm')
 
-
-class TextBoxEntryListener(PSE.JAVA_AWT.event.MouseAdapter):
-    """When any of the 'Set Cars Form for Track X' text inpou boxes is clicked on"""
-
-    def __init__(self):
-
-        return
-
-    def mouseClicked(self, MOUSE_CLICKED):
-
-        if PSE.TRACK_NAME_CLICKED_ON:
-            MOUSE_CLICKED.getSource().setText(PSE.TRACK_NAME_CLICKED_ON)
-        else:
-            _psLog.warning('No track was selected')
-
-        return
+#
+# class TextBoxEntryListener(PSE.JAVA_AWT.event.MouseAdapter):
+#     """When any of the 'Set Cars Form for Track X' text inpou boxes is clicked on"""
+#
+#     def __init__(self):
+#
+#         return
+#
+#     def mouseClicked(self, MOUSE_CLICKED):
+#
+#         if PSE.TRACK_NAME_CLICKED_ON:
+#             MOUSE_CLICKED.getSource().setText(PSE.TRACK_NAME_CLICKED_ON)
+#         else:
+#             _psLog.warning('No track was selected')
+#
+#         return
 
 class CreateSetCarsFormGui:
     """Creates an instance of each 'Set Cars Form for Track X' window,
@@ -63,7 +64,7 @@ class CreateSetCarsFormGui:
             track.actionPerformed = self.trackRowButton
 
         for inputText in self.buttonDict['textBoxEntry']:
-            inputText.addMouseListener(TextBoxEntryListener())
+            inputText.addMouseListener(Listeners.TextBoxEntry())
 
         try:
             self.buttonDict['scheduleButton'][0].actionPerformed = self.scheduleButton

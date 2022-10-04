@@ -8,8 +8,10 @@
 import jmri as JMRI
 import logging as LOGGING
 from java import io as JAVA_IO
+import java.beans as JAVA_BEANS
 from HTMLParser import HTMLParser as HTML_PARSER
 from os import path as OS_Path
+from apps import Apps
 
 import time
 from json import loads as jsonLoads, dumps as jsonDumps
@@ -154,6 +156,40 @@ class CreateStubFile:
 
         return
 
+
+"""GUI Methods"""
+
+def getPsButton():
+    """Gets the Pattern Scripts button on the PanelPro frame"""
+
+    buttonSpaceComponents = Apps.buttonSpace().getComponents()
+    for component in buttonSpaceComponents:
+        if component.getName() == 'psButton':
+            return component
+        else:
+            return None
+
+def closeSetCarsWindows():
+    """Close all the Set Cars windows when the Pattern Scripts window is closed"""
+
+    for frame in JMRI.util.JmriJFrame.getFrameList():
+        if frame.getName() == 'setCarsWindow':
+            frame.setVisible(False)
+            frame.dispose()
+
+    return
+
+def updateWindowParams(window):
+    """This can be done automatically by setting a prop somewhere"""
+
+    configPanel = readConfigFile()
+    configPanel['CP'].update({'PH': window.getHeight()})
+    configPanel['CP'].update({'PW': window.getWidth()})
+    configPanel['CP'].update({'PX': window.getX()})
+    configPanel['CP'].update({'PY': window.getY()})
+    writeConfigFile(configPanel)
+
+    return
 
 """Utility Methods"""
 
