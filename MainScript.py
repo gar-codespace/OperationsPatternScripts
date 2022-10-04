@@ -8,7 +8,7 @@ import javax.swing
 import time
 
 from sys import path as sysPath
-from os import path as OS_Path
+from os import path as OS_PATH
 from java.beans import PropertyChangeListener
 # from apps import Apps
 
@@ -16,7 +16,7 @@ SCRIPT_DIR = 'OperationsPatternScripts'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b1'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b2'
 
-PLUGIN_ROOT = OS_Path.join(jmri.util.FileUtil.getPreferencesPath(), SCRIPT_DIR)
+PLUGIN_ROOT = OS_PATH.join(jmri.util.FileUtil.getPreferencesPath(), SCRIPT_DIR)
 
 sysPath.append(PLUGIN_ROOT)
 from opsEntities import PSE
@@ -36,7 +36,7 @@ SCRIPT_REV = 20220101
 
 PSE.ENCODING = PSE.readConfigFile('CP')['SE']
 
-Bundle.BUNDLE_DIR = OS_Path.join(PSE.PLUGIN_ROOT, 'opsBundle')
+Bundle.BUNDLE_DIR = OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle')
 PSE.BUNDLE = Bundle.getBundleForLocale()
 
 
@@ -275,7 +275,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         PSE.makeBuildStatusFolder()
 
-        logFileTarget = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations', 'buildstatus', 'PatternScriptsLog.txt')
+        logFileTarget = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'buildstatus', 'PatternScriptsLog.txt')
 
         self.logger = PSE.Logger(logFileTarget)
         self.logger.startLogger('OPS')
@@ -515,7 +515,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(OPEN_HELP_EVENT)
 
-        stubFileTarget = PSE.OS_Path.join(PSE.JMRI.util.FileUtil.getPreferencesPath(), 'jmrihelp', 'psStub.html')
+        stubFileTarget = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getPreferencesPath(), 'jmrihelp', 'psStub.html')
         stubUri = PSE.JAVA_IO.File(stubFileTarget).toURI()
         # stubUri = JAVA_NET.URI(str(stubFileTarget)).create()
         if PSE.JAVA_IO.File(stubUri).isFile():
@@ -532,7 +532,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         patternLog = PSE.makePatternLog()
 
-        logFileTarget = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations', 'buildstatus', 'PatternScriptsLog_temp.txt')
+        logFileTarget = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'buildstatus', 'PatternScriptsLog_temp.txt')
 
         PSE.genericWriteReport(logFileTarget, patternLog)
         PSE.genericDisplayReport(logFileTarget)
@@ -556,7 +556,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(OPEN_EC_EVENT)
 
-        configTarget = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations', 'PatternConfig.json')
+        configTarget = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'PatternConfig.json')
 
         if PSE.JAVA_IO.File(configTarget).isFile():
             PSE.genericDisplayReport(configTarget)
@@ -570,7 +570,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(OPEN_OF_EVENT)
 
-        opsFolderPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations')
+        opsFolderPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations')
 
         opsFolder = PSE.JAVA_IO.File(opsFolderPath)
         if opsFolder.exists():

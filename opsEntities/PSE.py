@@ -10,7 +10,7 @@ import logging as LOGGING
 from java import io as JAVA_IO
 import java.beans as JAVA_BEANS
 from HTMLParser import HTMLParser as HTML_PARSER
-from os import path as OS_Path
+from os import path as OS_PATH
 from apps import Apps as APPS
 
 import time
@@ -94,7 +94,7 @@ class CreateStubFile:
 
     def __init__(self):
 
-        self.stubLocation = OS_Path.join(JMRI.util.FileUtil.getPreferencesPath(), 'jmrihelp')
+        self.stubLocation = OS_PATH.join(JMRI.util.FileUtil.getPreferencesPath(), 'jmrihelp')
 
         self.helpFilePath = ''
         self.newStubFile = ''
@@ -113,11 +113,11 @@ class CreateStubFile:
     def getHelpFileURI(self):
 
         helpFileName = 'Help.' + psLocale() + '.html'
-        helpFilePath = OS_Path.join(PLUGIN_ROOT, 'opsSupport', helpFileName)
+        helpFilePath = OS_PATH.join(PLUGIN_ROOT, 'opsSupport', helpFileName)
 
         if not JAVA_IO.File(helpFilePath).isFile():
             helpFileName = 'Help.en.html'
-            helpFilePath = OS_Path.join(PLUGIN_ROOT, 'opsSupport', helpFileName)
+            helpFilePath = OS_PATH.join(PLUGIN_ROOT, 'opsSupport', helpFileName)
 
         self.helpFilePath = JAVA_IO.File(helpFilePath).toURI().toString()
 
@@ -126,9 +126,9 @@ class CreateStubFile:
     def makeNewStubFile(self):
 
         stubTemplateFile = 'stub_template.html'
-        stubTemplatePath = OS_Path.join(JMRI.util.FileUtil.getProgramPath(), 'help', psLocale()[:2], 'local', stubTemplateFile)
+        stubTemplatePath = OS_PATH.join(JMRI.util.FileUtil.getProgramPath(), 'help', psLocale()[:2], 'local', stubTemplateFile)
         if not JAVA_IO.File(stubTemplatePath).isFile():
-            stubTemplatePath = OS_Path.join(PLUGIN_ROOT, 'opsEntities', stubTemplateFile)
+            stubTemplatePath = OS_PATH.join(PLUGIN_ROOT, 'opsEntities', stubTemplateFile)
 
         stubTemplate = genericReadReport(stubTemplatePath)
         stubTemplate = stubTemplate.replace("../index.html#", "")
@@ -139,7 +139,7 @@ class CreateStubFile:
 
     def writeStubFile(self):
 
-        stubFilePath = OS_Path.join(self.stubLocation, 'psStub.html')
+        stubFilePath = OS_PATH.join(self.stubLocation, 'psStub.html')
 
         genericWriteReport(stubFilePath, self.newStubFile)
         _psLog.debug('psStub writen from stub_template')
@@ -362,7 +362,7 @@ def makeBuildStatusFolder():
     """The buildStatus folder is created first so the log file can be written"""
 
     opsDirectory = JMRI.util.FileUtil.getProfilePath() + '\\operations'
-    targetDirectory = OS_Path.join(opsDirectory, 'buildstatus')
+    targetDirectory = OS_PATH.join(opsDirectory, 'buildstatus')
     if not JAVA_IO.File(targetDirectory).isDirectory():
         JAVA_IO.File(targetDirectory).mkdirs()
 
@@ -375,7 +375,7 @@ def makeReportFolders():
     directories = ['csvManifests', 'csvSwitchLists', 'jsonManifests', 'switchLists', 'patternReports']
     x = 0
     for directory in directories:
-        targetDirectory = OS_Path.join(opsDirectory, directory)
+        targetDirectory = OS_PATH.join(opsDirectory, directory)
         if not JAVA_IO.File(targetDirectory).isDirectory():
             JAVA_IO.File(targetDirectory).mkdirs()
             _psLog.info('Directory created: ' + targetDirectory)
@@ -435,7 +435,7 @@ def validateConfigFileVersion():
 
     targetDir =  PLUGIN_ROOT + '\\opsEntities'
     fileName = 'PatternConfig.json'
-    targetPath = OS_Path.join(targetDir, fileName)
+    targetPath = OS_PATH.join(targetDir, fileName)
     validPatternConfig = loadJson(genericReadReport(targetPath))
 
     if validPatternConfig['CP']['RV'] == readConfigFile('CP')['RV']:
@@ -479,7 +479,7 @@ def getConfigFile():
 
     targetDir = PROFILE_PATH + '\\operations'
     fileName = 'PatternConfig.json'
-    targetPath = OS_Path.join(targetDir, fileName)
+    targetPath = OS_PATH.join(targetDir, fileName)
 
     return loadJson(genericReadReport(targetPath))
 
@@ -499,11 +499,11 @@ def writeNewConfigFile():
     fileName = 'PatternConfig.json'
 
     targetDir = PLUGIN_ROOT + '\\opsEntities'
-    targetPath = OS_Path.join(targetDir, fileName)
+    targetPath = OS_PATH.join(targetDir, fileName)
     copyFrom = JAVA_IO.File(targetPath)
 
     targetDir = PROFILE_PATH + '\\operations'
-    targetPath = OS_Path.join(targetDir, fileName)
+    targetPath = OS_PATH.join(targetDir, fileName)
     copyTo = JAVA_IO.File(targetPath)
 
     JMRI.util.FileUtil.copy(copyFrom, copyTo)
@@ -530,7 +530,7 @@ def makePatternLog():
 
     fileName = 'PatternScriptsLog.txt'
     targetDir = PROFILE_PATH + 'operations\\buildstatus'
-    targetPath = OS_Path.join(targetDir, fileName)
+    targetPath = OS_PATH.join(targetDir, fileName)
     patternLogFile = genericReadReport(targetPath)
     for thisLine in patternLogFile.splitlines():
 

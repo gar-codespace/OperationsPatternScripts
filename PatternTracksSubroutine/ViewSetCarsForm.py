@@ -20,7 +20,7 @@ def switchListAsCsv(textBoxEntry):
     _psLog.debug('switchListAsCsv')
 #  Get json data
     fileName = PSE.BUNDLE['Switch List for Track'] + '.json'
-    targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
     trackPattern = PSE.genericReadReport(targetPath)
     trackPattern = PSE.loadJson(trackPattern)
 # Process json data into CSV
@@ -29,7 +29,7 @@ def switchListAsCsv(textBoxEntry):
     trackPatternCsv = ViewEntities.makeTrackPatternCsv(trackPattern)
 # Write CSV data
     fileName = PSE.BUNDLE['Switch List for Track'] + '.csv'
-    targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations', 'csvSwitchLists', fileName)
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'csvSwitchLists', fileName)
     PSE.genericWriteReport(targetPath, trackPatternCsv)
 
     return
@@ -45,7 +45,7 @@ def switchListButton(textBoxEntry):
 
 # Boilerplate
     fileName = PSE.BUNDLE['Switch List for Track'] + '.json'
-    targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
 # Get the switch list
     switchList = PSE.genericReadReport(targetPath)
     switchList = PSE.loadJson(switchList)
@@ -58,7 +58,7 @@ def switchListButton(textBoxEntry):
     reportLocations = ViewEntities.makeTextReportLocations(switchList, trackTotals=False)
 # Save formatted data
     fileName = PSE.BUNDLE['Switch List for Track'] + '.txt'
-    targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations', 'patternReports', fileName)
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'patternReports', fileName)
     PSE.genericWriteReport(targetPath, reportHeader + reportLocations)
 # Display formatted data
     PSE.genericDisplayReport(targetPath)

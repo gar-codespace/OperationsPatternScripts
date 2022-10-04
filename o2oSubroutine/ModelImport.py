@@ -54,7 +54,7 @@ class TrainPlayerImporter:
         reportName = 'tpRailroadData'
         fileName = reportName + '.json'
         # targetDir = PSE.PROFILE_PATH + '\\operations'
-        self.rrFile = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations', fileName)
+        self.rrFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
         self.rr = {}
 
         return

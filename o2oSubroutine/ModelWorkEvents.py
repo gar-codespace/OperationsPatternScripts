@@ -30,7 +30,7 @@ class o2oSwitchListConversion:
         reportName = PSE.BUNDLE['o2o Work Events']
         fileName = reportName + '.json'
         # targetDir = PSE.PROFILE_PATH + '\\operations\\jsonManifests'
-        targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations\\jsonManifests', fileName)
+        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations\\jsonManifests', fileName)
 
         o2oSwitchList = PSE.genericReadReport(targetPath)
         self.o2oSwitchList = PSE.loadJson(o2oSwitchList)
@@ -118,7 +118,7 @@ class jmriManifestConversion:
         reportName = self.builtTrain.getName()
         fileName = 'train-' + reportName + '.json'
         # targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
-        targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations\\jsonManifests', fileName)
+        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations\\jsonManifests', fileName)
 
         workEventList = PSE.genericReadReport(targetPath)
         self.jmriManifest = PSE.loadJson(workEventList)
@@ -210,7 +210,7 @@ class o2oWorkEvents:
         reportName = 'tpRollingStockData'
         fileName = reportName + '.json'
         targetDir = PSE.PROFILE_PATH + '\\operations'
-        targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations', fileName)
+        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
 
         tpRollingStockData = PSE.genericReadReport(targetPath)
         self.tpRollingStockData = PSE.loadJson(tpRollingStockData)

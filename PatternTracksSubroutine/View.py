@@ -55,7 +55,7 @@ def trackPatternButton():
     reportName = PSE.BUNDLE['Track Pattern Report']
     fileName = reportName + '.json'
     # targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
-    targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations\\jsonManifests', fileName)
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations\\jsonManifests', fileName)
 # Get the report
     trackPattern = PSE.genericReadReport(targetPath)
     trackPattern = PSE.loadJson(trackPattern)
@@ -66,7 +66,7 @@ def trackPatternButton():
 # Save the modified report
     fileName = reportName + '.txt'
     # targetDir = PSE.PROFILE_PATH + 'operations\\patternReports'
-    targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations\\patternReports', fileName)
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations\\patternReports', fileName)
     PSE.genericWriteReport(targetPath, reportHeader + reportLocations)
 # Display the modified report
     PSE.genericDisplayReport(targetPath)
@@ -115,14 +115,14 @@ def trackPatternAsCsv():
     _psLog.debug('trackPatternAsCsv')
 #  Get json data
     fileName = PSE.BUNDLE['Track Pattern Report'] + '.json'
-    targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
     trackPatternCsv = PSE.genericReadReport(targetPath)
     trackPatternCsv = PSE.loadJson(trackPatternCsv)
 # Process json data into CSV
     trackPatternCsv = ViewEntities.makeTrackPatternCsv(trackPatternCsv)
 # Write CSV data
     fileName = PSE.BUNDLE['Track Pattern Report'] + '.csv'
-    targetPath = PSE.OS_Path.join(PSE.PROFILE_PATH, 'operations', 'csvSwitchLists', fileName)
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'csvSwitchLists', fileName)
     PSE.genericWriteReport(targetPath, trackPatternCsv)
 
     return

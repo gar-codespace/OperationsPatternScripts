@@ -14,7 +14,7 @@ SCRIPT_REV = 20220101
 
 _psLog = PSE.LOGGING.getLogger('OPS.B.Bundle')
 
-PSE.BUNDLE_DIR = PSE.OS_Path.join(PSE.PLUGIN_ROOT, 'opsBundle')
+PSE.BUNDLE_DIR = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle')
 # print('jjjjjjjjjjjjjjj', PSE.BUNDLE_DIR)
 # BUNDLE_DIR = PSE.PLUGIN_ROOT + '\\opsBundle\\'
 
@@ -33,9 +33,9 @@ def getBundleForLocale():
     fileList = PSE.JAVA_IO.File(PSE.BUNDLE_DIR).list()
 
     if psLocale in fileList:
-        bundleFileLocation = PSE.OS_Path.join(PSE.BUNDLE_DIR, psLocale)
+        bundleFileLocation = PSE.OS_PATH.join(PSE.BUNDLE_DIR, psLocale)
     else:
-        bundleFileLocation = PSE.OS_Path.join(PSE.BUNDLE_DIR, 'plugin.en.json')
+        bundleFileLocation = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'plugin.en.json')
 
     bundleFile = PSE.genericReadReport(bundleFileLocation)
     bundleFile = PSE.loadJson(bundleFile)
@@ -49,11 +49,11 @@ def makeHelpPage():
         Main.Controller.ptItemSelected
         """
 
-    helpPageTemplatePath = PSE.OS_Path.join(PSE.BUNDLE_DIR, 'templateHelp.html.txt')
+    helpPageTemplatePath = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'templateHelp.html.txt')
     baseHelpPage = PSE.genericReadReport(helpPageTemplatePath)
 
     fileName = 'help.' + PSE.psLocale() + '.json'
-    translationMatrixPath = PSE.OS_Path.join(PSE.BUNDLE_DIR, fileName)
+    translationMatrixPath = PSE.OS_PATH.join(PSE.BUNDLE_DIR, fileName)
     baseTranslationMatrix = PSE.genericReadReport(translationMatrixPath)
     translationMatrix = PSE.loadJson(baseTranslationMatrix)
 
@@ -64,7 +64,7 @@ def makeHelpPage():
         baseHelpPage = baseHelpPage.replace(hKey, hValue)
 
     fileName = 'Help.' + PSE.psLocale() + '.html'
-    helpPagePath = PSE.OS_Path.join(PSE.PLUGIN_ROOT, 'opsSupport', fileName)
+    helpPagePath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsSupport', fileName)
     PSE.genericWriteReport(helpPagePath, baseHelpPage)
 
     return
@@ -75,7 +75,7 @@ def validateKeyFile():
         Main.View
         """
 
-    itemTarget =  PSE.OS_Path.join(PSE.BUNDLE_DIR, 'Keys.py')
+    itemTarget =  PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'Keys.py')
     if PSE.JAVA_IO.File(itemTarget).isFile():
         return True
     else:
@@ -97,10 +97,10 @@ def makeBundles():
         startTime = PSE.TIME.time()
 
         fileName = 'template' + item + '.txt'
-        itemSource = PSE.OS_Path.join(PSE.BUNDLE_DIR, fileName)
+        itemSource = PSE.OS_PATH.join(PSE.BUNDLE_DIR, fileName)
 
         fileName = item + '.' + PSE.psLocale()[:2] + '.json'
-        itemTarget = PSE.OS_Path.join(PSE.BUNDLE_DIR, fileName)
+        itemTarget = PSE.OS_PATH.join(PSE.BUNDLE_DIR, fileName)
 
         itemScratch = list(getattr(sys.modules[__name__], item.upper()))
         bundleFile = getBundleTemplate(itemSource)
