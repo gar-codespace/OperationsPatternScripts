@@ -2,33 +2,14 @@
 # © 2021, 2022 Greg Ritacco
 
 from opsEntities import PSE
+from opsEntities import Listeners
 from PatternTracksSubroutine import View
 from PatternTracksSubroutine import Model
-# from PatternTracksSubroutine import ModelEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.Controller'
 SCRIPT_REV = 20220101
 
 _psLog = PSE.LOGGING.getLogger('OPS.PT.Controller')
-
-
-class LocationComboBox(PSE.JAVA_AWT.event.ActionListener):
-    """Event triggered from location combobox selection"""
-
-    def __init__(self, subroutineFrame):
-
-        self.subroutineFrame = subroutineFrame
-
-        return
-
-    def actionPerformed(self, EVENT):
-
-        Model.updatePatternLocation(EVENT.getSource().getSelectedItem())
-        restartSubroutine(self.subroutineFrame)
-
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-
-        return
 
 
 def updatePatternTracksSubroutine(event):
@@ -96,7 +77,7 @@ class StartUp:
 
     def activateWidgets(self):
 
-        self.widgets[0].addActionListener(LocationComboBox(self.subroutineFrame))
+        self.widgets[0].addActionListener(Listeners.LocationComboBox(self.subroutineFrame))
         self.widgets[1].actionPerformed = self.yardTrackOnlyCheckBox
         self.widgets[4].actionPerformed = self.trackPatternButton
         self.widgets[5].actionPerformed = self.setRsButton

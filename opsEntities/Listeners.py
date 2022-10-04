@@ -1,9 +1,35 @@
 """Keep all the listeners in one place, plus a couple of utility methods."""
 
 from opsEntities import PSE
+from PatternTracksSubroutine import Controller
+from PatternTracksSubroutine import Model
 from o2oSubroutine import BuiltTrainExport
 
+SCRIPT_NAME = 'OperationsPatternScripts.opsEntities.Listeners'
+SCRIPT_REV = 20220101
+
 _psLog = PSE.LOGGING.getLogger('OPS.OE.Listeners')
+
+
+class LocationComboBox(PSE.JAVA_AWT.event.ActionListener):
+    """Event triggered from location combobox use."""
+
+    def __init__(self, subroutineFrame):
+
+        self.subroutineFrame = subroutineFrame
+
+        return
+
+    def actionPerformed(self, EVENT):
+
+        print('name:', self.subroutineFrame.getName())
+
+        Model.updatePatternLocation(EVENT.getSource().getSelectedItem())
+        Controller.restartSubroutine(self.subroutineFrame)
+
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+        return
 
 
 class SetCarsTable(PSE.JAVA_BEANS.PropertyChangeListener):
@@ -20,7 +46,7 @@ class SetCarsTable(PSE.JAVA_BEANS.PropertyChangeListener):
 
 
 class TextBoxEntry(PSE.JAVA_AWT.event.MouseAdapter):
-    """When any of the 'Set Cars Form for Track X' text input boxes is clicked on"""
+    """When any of the 'Set Cars Form for Track X' text input boxes is clicked on."""
 
     def __init__(self):
 
@@ -37,7 +63,7 @@ class TextBoxEntry(PSE.JAVA_AWT.event.MouseAdapter):
 
 
 class TrainsTable(PSE.JAVX_SWING.event.TableModelListener):
-    """Catches user add or remove train while o2oSubroutine is enabled"""
+    """Catches user add or remove train while o2oSubroutine is enabled."""
 
     def __init__(self, builtTrainListener):
 
@@ -57,7 +83,7 @@ class TrainsTable(PSE.JAVX_SWING.event.TableModelListener):
 
 
 class BuiltTrain(PSE.JAVA_BEANS.PropertyChangeListener):
-    """Starts o2oWorkEventsBuilder on trainBuilt"""
+    """Starts o2oWorkEventsBuilder on trainBuilt."""
 
     def propertyChange(self, TRAIN_BUILT):
 
@@ -109,26 +135,3 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         return
     def windowDeactivated(self, WINDOW_DEACTIVATED):
         return
-
-
-# def closeSetCarsWindows():
-#     """Close all the Set Cars windows when the Pattern Scripts window is closed"""
-#
-#     for frame in PSE.JMRI.util.JmriJFrame.getFrameList():
-#         if frame.getName() == 'setCarsWindow':
-#             frame.setVisible(False)
-#             frame.dispose()
-#
-#     return
-
-# def updateWindowParams(window):
-#     """This can be done automatically by setting a prop somewhere"""
-#
-#     configPanel = PSE.readConfigFile()
-#     configPanel['CP'].update({'PH': window.getHeight()})
-#     configPanel['CP'].update({'PW': window.getWidth()})
-#     configPanel['CP'].update({'PX': window.getX()})
-#     configPanel['CP'].update({'PY': window.getY()})
-#     PSE.writeConfigFile(configPanel)
-#
-#     return
