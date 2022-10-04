@@ -1,8 +1,5 @@
 """Keep all the listeners in one place, plus a couple of utility methods."""
 
-# from java.beans import PropertyChangeListener
-# from apps import Apps
-
 from opsEntities import PSE
 from o2oSubroutine import BuiltTrainExport
 
@@ -81,14 +78,6 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
     def __init__(self):
 
         return
-
-    # def getPsButton(self):
-    #     """Gets the Pattern Scripts button on the PanelPro frame"""
-    #
-    #     buttonSpaceComponents = Apps.buttonSpace().getComponents()
-    #     for component in buttonSpaceComponents:
-    #         if component.getName() == 'psButton':
-    #             return component
 
     def windowClosed(self, WINDOW_CLOSED):
 

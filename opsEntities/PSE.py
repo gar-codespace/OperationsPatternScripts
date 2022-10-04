@@ -11,7 +11,7 @@ from java import io as JAVA_IO
 import java.beans as JAVA_BEANS
 from HTMLParser import HTMLParser as HTML_PARSER
 from os import path as OS_Path
-from apps import Apps
+from apps import Apps as APPS
 
 import time
 from json import loads as jsonLoads, dumps as jsonDumps
@@ -162,7 +162,7 @@ class CreateStubFile:
 def getPsButton():
     """Gets the Pattern Scripts button on the PanelPro frame"""
 
-    buttonSpaceComponents = Apps.buttonSpace().getComponents()
+    buttonSpaceComponents = APPS.buttonSpace().getComponents()
     for component in buttonSpaceComponents:
         if component.getName() == 'psButton':
             return component

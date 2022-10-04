@@ -10,7 +10,7 @@ import time
 from sys import path as sysPath
 from os import path as OS_Path
 from java.beans import PropertyChangeListener
-from apps import Apps
+# from apps import Apps
 
 SCRIPT_DIR = 'OperationsPatternScripts'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b1'
@@ -39,116 +39,6 @@ PSE.ENCODING = PSE.readConfigFile('CP')['SE']
 Bundle.BUNDLE_DIR = OS_Path.join(PSE.PLUGIN_ROOT, 'opsBundle')
 PSE.BUNDLE = Bundle.getBundleForLocale()
 
-
-# class TrainsTableListener(PSE.JAVX_SWING.event.TableModelListener):
-#     """Catches user add or remove train while o2oSubroutine is enabled"""
-#
-#     def __init__(self, builtTrainListener):
-#
-#         self.builtTrainListener = builtTrainListener
-#
-#         return
-#
-#     def tableChanged(self, TABLE_CHANGE):
-#
-#         trainList = PSE.TM.getTrainsByIdList()
-#         for train in trainList:
-#             train.removePropertyChangeListener(self.builtTrainListener)
-#     # Does not throw error if there is no listener to remove :)
-#             train.addPropertyChangeListener(self.builtTrainListener)
-#
-#         return
-
-# class BuiltTrainListener(java.beans.PropertyChangeListener):
-#     """Starts o2oWorkEventsBuilder on trainBuilt"""
-#
-#     def propertyChange(self, TRAIN_BUILT):
-#
-#         if TRAIN_BUILT.propertyName == 'TrainBuilt' and TRAIN_BUILT.newValue:
-#
-#             o2oWorkEvents = BuiltTrainExport.o2oWorkEventsBuilder()
-#             o2oWorkEvents.passInTrain(TRAIN_BUILT.getSource())
-#             o2oWorkEvents.start()
-#
-#         return
-
-# class PatternScriptsWindowListener(PSE.JAVA_AWT.event.WindowListener):
-#     """Listener to respond to the plugin window operations.
-#         May be expanded in v3.
-#         """
-#
-#     def __init__(self):
-#
-#         return
-#
-#     def closeSetCarsWindows(self):
-#         """Close all the Set Cars windows when the Pattern Scripts window is closed"""
-#
-#         for frame in PSE.JMRI.util.JmriJFrame.getFrameList():
-#             # frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
-#             if frame.getName() == 'setCarsWindow':
-#                 frame.setVisible(False)
-#                 frame.dispose()
-#
-#         return
-#
-#     def getPsButton(self):
-#         """Gets the Pattern Scripts button on the PanelPro frame"""
-#
-#         buttonSpaceComponents = Apps.buttonSpace().getComponents()
-#         for component in buttonSpaceComponents:
-#             if component.getName() == 'psButton':
-#                 return component
-#
-#     def windowClosed(self, WINDOW_CLOSED):
-#
-#         # self.closeSetCarsWindows()
-#         button = self.getPsButton()
-#         button.setEnabled(True)
-#         WINDOW_CLOSED.getSource().dispose()
-#
-#         return
-#
-#     def windowClosing(self, WINDOW_CLOSING):
-#
-#         # self.closeSetCarsWindows()
-#         updateWindowParams(WINDOW_CLOSING.getSource())
-#
-#
-#         # print(dir(frame))
-#         # print(frame.HIDE_ON_CLOSE)
-#         WINDOW_CLOSING.getSource().firePropertyChange('windowStateChanged', False, True)
-#         WINDOW_CLOSING.getSource().firePropertyChange('windowClosing', False, True)
-#         print('windowClosing')
-#
-#         return
-#
-#     def windowOpened(self, WINDOW_OPENED):
-#
-#         button = self.getPsButton()
-#         button.setEnabled(False)
-#
-#         return
-#
-#     def windowIconified(self, WINDOW_ICONIFIED):
-#         return
-#     def windowDeiconified(self, WINDOW_DEICONIFIED):
-#         return
-#     def windowActivated(self, WINDOW_ACTIVATED):
-#         return
-#     def windowDeactivated(self, WINDOW_DEACTIVATED):
-#         return
-#
-# def updateWindowParams(window):
-#
-#     configPanel = PSE.readConfigFile()
-#     configPanel['CP'].update({'PH': window.getHeight()})
-#     configPanel['CP'].update({'PW': window.getWidth()})
-#     configPanel['CP'].update({'PX': window.getX()})
-#     configPanel['CP'].update({'PY': window.getY()})
-#     PSE.writeConfigFile(configPanel)
-#
-#     return
 
 class Model:
 
@@ -405,8 +295,8 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.patternScriptsButton = View(None).makePsButton()
         self.patternScriptsButton.actionPerformed = self.patternScriptsButtonAction
-        Apps.buttonSpace().add(self.patternScriptsButton)
-        Apps.buttonSpace().revalidate()
+        PSE.APPS.buttonSpace().add(self.patternScriptsButton)
+        PSE.APPS.buttonSpace().revalidate()
 
         return
 
