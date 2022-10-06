@@ -1,4 +1,4 @@
-"""Keep all the listeners in one place, plus a couple of utility methods."""
+"""Keep all the listeners in one place."""
 
 from opsEntities import PSE
 
@@ -59,8 +59,8 @@ class TrainsTable(PSE.JAVX_SWING.event.TableModelListener):
 
         trainList = PSE.TM.getTrainsByIdList()
         for train in trainList:
+        # Does not throw error if there is no listener to remove :)
             train.removePropertyChangeListener(self.builtTrainListener)
-    # Does not throw error if there is no listener to remove :)
             train.addPropertyChangeListener(self.builtTrainListener)
 
         return

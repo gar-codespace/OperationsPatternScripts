@@ -1,6 +1,7 @@
 
 Todo:
   o2o new and update not bullet proof.
+  JMRI prop to automatically save size and pos, replaces PSE.updateWindowParams()
   Update OPS help html.
   Add more 'Used by:' to PSE.
   020.ModelWorkEvents.*.parsePtRs and o2o.ModelWorkEvents.*.parseRS do the same things in a different way, can they be merged?
