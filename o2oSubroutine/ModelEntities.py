@@ -16,8 +16,7 @@ def tpDirectoryExists():
         Possibly move this to o2o.ModelEntities.
         """
 
-    # tpDirectory = PSE.JMRI.util.FileUtil.getHomePath() + 'AppData\\Roaming\\TrainPlayer\\Reports'
-    tpDirectory = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData\\Roaming\\TrainPlayer\\Reports')
+    tpDirectory = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData', 'Roaming', 'TrainPlayer', 'Reports')
 
     if PSE.JAVA_IO.File(tpDirectory).isDirectory():
         _psLog.info('TrainPlayer destination directory OK')
@@ -60,23 +59,22 @@ def updateContinuingTracks(trackId, trackData, previousTrackData):
     return
 
 def updateContinuingLocation(location):
-    """Apply JMRI level user changes here"""
+    """Apply JMRI level user changes here."""
 
     PSE.LM.newLocation(location)
 
     return
 
-
-def getAllTrackIds():
-    """All track IDs for all locations"""
-
-    trackIds = []
-    for location in PSE.getAllLocationNames():
-        trackList = PSE.LM.getLocationByName(location).getTracksList()
-        for track in trackList:
-            trackIds.append(track.getComment())
-
-    return trackIds
+# def getAllTrackIds():
+#     """All track IDs for all locations."""
+#
+#     trackIds = []
+#     for location in PSE.getAllLocationNames():
+#         trackList = PSE.LM.getLocationByName(location).getTracksList()
+#         for track in trackList:
+#             trackIds.append(track.getComment())
+#
+#     return trackIds
 
 def selectCarTypes(id, industry):
     """Used by:
@@ -256,7 +254,7 @@ def getSetToLocationAndTrack(locationName, trackName):
 
 def closeTroublesomeWindows():
     """Close all the 'Troublesome' windows when the New JMRI Railroad button is pressed."""
-    
+
     # frames = ['JMRI System Console', 'PanelPro', PSE.BUNDLE['Pattern Scripts']]
 
     for frameName in PSE.JMRI.util.JmriJFrame.getFrameList():

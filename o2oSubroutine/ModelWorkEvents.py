@@ -16,8 +16,6 @@ class o2oSwitchListConversion:
 
     def __init__(self):
 
-        # self.psLog = PSE.LOGGING.getLogger('OPS.o2o.o2oSwitchListConversion')
-
         self.o2oSwitchList = {}
 
         self.cars = []
@@ -29,8 +27,7 @@ class o2oSwitchListConversion:
 
         reportName = PSE.BUNDLE['o2o Work Events']
         fileName = reportName + '.json'
-        # targetDir = PSE.PROFILE_PATH + '\\operations\\jsonManifests'
-        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations\\jsonManifests', fileName)
+        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
 
         o2oSwitchList = PSE.genericReadReport(targetPath)
         self.o2oSwitchList = PSE.loadJson(o2oSwitchList)
@@ -103,8 +100,6 @@ class jmriManifestConversion:
 
     def __init__(self, builtTrain):
 
-        # self.psLog = PSE.LOGGING.getLogger('OPS.o2o.jmriManifestConversion')
-
         self.builtTrain = builtTrain
         self.jmriManifest = {}
         self.o2oWorkEvents = {}
@@ -117,8 +112,7 @@ class jmriManifestConversion:
 
         reportName = self.builtTrain.getName()
         fileName = 'train-' + reportName + '.json'
-        # targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
-        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations\\jsonManifests', fileName)
+        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
 
         workEventList = PSE.genericReadReport(targetPath)
         self.jmriManifest = PSE.loadJson(workEventList)

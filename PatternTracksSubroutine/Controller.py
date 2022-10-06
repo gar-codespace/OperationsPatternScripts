@@ -44,7 +44,6 @@ class StartUp:
 
     def __init__(self, subroutineFrame=None):
 
-        # self.psLog = PSE.LOGGING.getLogger('OPS.PT.Controller')
         self.subroutineFrame = subroutineFrame
 
         return

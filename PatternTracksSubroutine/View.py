@@ -54,8 +54,7 @@ def trackPatternButton():
 # Boilerplate
     reportName = PSE.BUNDLE['Track Pattern Report']
     fileName = reportName + '.json'
-    # targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations\\jsonManifests', fileName)
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
 # Get the report
     trackPattern = PSE.genericReadReport(targetPath)
     trackPattern = PSE.loadJson(trackPattern)
@@ -65,8 +64,7 @@ def trackPatternButton():
     reportLocations = ViewEntities.makeTextReportLocations(trackPattern, trackTotals=True)
 # Save the modified report
     fileName = reportName + '.txt'
-    # targetDir = PSE.PROFILE_PATH + 'operations\\patternReports'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations\\patternReports', fileName)
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'patternReports', fileName)
     PSE.genericWriteReport(targetPath, reportHeader + reportLocations)
 # Display the modified report
     PSE.genericDisplayReport(targetPath)

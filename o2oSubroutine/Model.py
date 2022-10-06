@@ -143,7 +143,7 @@ class UpdateLocationsAndTracks():
         self.continuingLocationNames = list(set(self.importedRailroad['locations']) - set(self.newLocationNames))
 
         importedRailroadTrackIds = [id for id in self.importedRailroad['locales']]
-        allCurrentRailroadTrackIds = ModelEntities.getAllTrackIds()
+        allCurrentRailroadTrackIds = PSE.getAllTrackIds()
         self.newTrackIds = list(set(importedRailroadTrackIds) - set(allCurrentRailroadTrackIds))
         self.continuingTrackIds = list(set(allCurrentRailroadTrackIds) - set(self.newTrackIds))
 
@@ -223,7 +223,6 @@ class UpdateLocationsAndTracks():
 
         for i, location in enumerate(self.newLocationNames, start=1):
             PSE.LM.newLocation(location)
-            # print(i)
 
         print(str(i) + ' locations added')
         _psLog.info(str(i) + ' locations added')
@@ -329,7 +328,7 @@ class SetupXML:
 
 
 class NewRsAttributes:
-    """TCM - Temporary Context Manager"""
+    """TCM - Temporary Context Manager."""
 
     def __init__(self):
 
@@ -338,13 +337,12 @@ class NewRsAttributes:
         return
 
     def newRoads(self):
-        """Replace defailt JMRI road names with the road names from the tpRailroadData.json file"""
+        """Replace defailt JMRI road names with the road names from the tpRailroadData.json file."""
 
         _psLog.debug('newRoads')
 
         tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarRoads
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
-        # TCM.dispose()
         nameList = TCM.getNames()
         for xName in nameList:
             xName = unicode(xName, PSE.ENCODING)
@@ -356,7 +354,7 @@ class NewRsAttributes:
         return
 
     def newCarAar(self):
-        """Replace defailt JMRI type names with the aar names from the tpRailroadData.json file"""
+        """Replace defailt JMRI type names with the aar names from the tpRailroadData.json file."""
 
         _psLog.debug('newCarAar')
 
@@ -374,7 +372,7 @@ class NewRsAttributes:
         return
 
     def newCarLoads(self):
-        """Add the loads and load types for each car type (TP AAR) in tpRailroadData.json"""
+        """Add the loads and load types for each car type (TP AAR) in tpRailroadData.json."""
 
         _psLog.debug('newCarLoads')
 
@@ -396,12 +394,10 @@ class NewRsAttributes:
         return
 
     def newCarKernels(self):
-        """Updates the car roster kernels with those from tpRailroadData.json"""
+        """Updates the car roster kernels with those from tpRailroadData.json."""
 
         _psLog.debug('newCarKernels')
 
-        # tc = PSE.JMRI.jmrit.operations.rollingstock.cars.KernelManager
-        # TCM = PSE.JMRI.InstanceManager.getDefault(tc)
         nameList = PSE.KM.getNameList()
         for xName in nameList:
             xName = unicode(xName, PSE.ENCODING)
@@ -413,7 +409,7 @@ class NewRsAttributes:
         return
 
     def newLocoModels(self):
-        """Replace defailt JMRI engine models with the model names from the tpRailroadData.json file"""
+        """Replace defailt JMRI engine models with the model names from the tpRailroadData.json file."""
 
         _psLog.debug('newLocoModels')
 
@@ -433,7 +429,7 @@ class NewRsAttributes:
         return
 
     def newLocoTypes(self):
-        """Replace defailt JMRI engine types with the type names from the tpRailroadData.json file"""
+        """Replace defailt JMRI engine types with the type names from the tpRailroadData.json file."""
 
         _psLog.debug('newLocoTypes')
 
@@ -450,12 +446,10 @@ class NewRsAttributes:
         return
 
     def newLocoConsist(self):
-        """Replace defailt JMRI consist names with the consist names from the tpRailroadData.json file"""
+        """Replace defailt JMRI consist names with the consist names from the tpRailroadData.json file."""
 
         _psLog.debug('newLocoConsist')
 
-        # tc = PSE.JMRI.jmrit.operations.rollingstock.engines.ConsistManager
-        # TCM = PSE.JMRI.InstanceManager.getDefault(tc)
         nameList = PSE.ZM.getNameList()
         for xName in nameList:
             xName = unicode(xName, PSE.ENCODING)
@@ -587,7 +581,6 @@ class NewRollingStock:
 
         reportName = 'tpRollingStockData'
         fileName = reportName + '.json'
-        # targetDir = PSE.PROFILE_PATH + '\\operations'
         targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
 
         formattedRsFile = PSE.dumpJson(rsData)

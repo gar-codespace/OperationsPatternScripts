@@ -9,8 +9,6 @@ import time
 
 from sys import path as sysPath
 from os import path as OS_PATH
-from java.beans import PropertyChangeListener
-# from apps import Apps
 
 SCRIPT_DIR = 'OperationsPatternScripts'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b1'
@@ -29,7 +27,6 @@ PSE.PLUGIN_ROOT = PLUGIN_ROOT
 
 from opsEntities import Listeners
 from opsBundle import Bundle
-# from o2oSubroutine import BuiltTrainExport
 
 SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
 SCRIPT_REV = 20220101

@@ -18,8 +18,7 @@ class StandAloneLogging():
     def __init__(self):
 
         fileName = 'BuiltTrainExportLog.txt'
-        # targetDir = PSE.PROFILE_PATH  + '\\operations\\buildstatus'
-        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH , 'operations\\buildstatus', fileName)
+        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH , 'operations', 'buildstatus', fileName)
 
         self.logger = PSE.Logger(targetPath)
         self.o2oLog = PSE.LOGGING.getLogger('TP.StandAlone')
@@ -134,10 +133,11 @@ class o2oWorkEventsBuilder(jmri.jmrit.automat.AbstractAutomaton):
         o2o.saveList()
 
         self.o2oLog.info('Export JMRI manifest to TrainPlayer: ' + self.train.getName())
-
         self.o2oLog.info('Export to TrainPlayer script location: ' + PLUGIN_ROOT)
+
         runTime = time.time() - startTime
         self.o2oLog.info('Manifest export (sec): ' + str(round(runTime, 4)))
+
         print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
         print('Manifest export (sec): ' + str(round(runTime, 4)))
 
@@ -149,15 +149,18 @@ if __name__ == "__builtin__":
 
     import jmri
     from sys import path as sysPath
+    from os import path as osPath
 
-    PLUGIN_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
+    PLUGIN_ROOT = osPath.join(jmri.util.FileUtil.getPreferencesPath(), SCRIPT_DIR)
     sysPath.append(PLUGIN_ROOT)
+
     from opsEntities import PSE
     from o2oSubroutine import ModelWorkEvents
     from o2oSubroutine import ModelEntities
     from opsBundle import Bundle
 
-    Bundle.BUNDLE_DIR = PLUGIN_ROOT + '\\opsBundle\\'
+    # Bundle.BUNDLE_DIR = PLUGIN_ROOT + '\\opsBundle\\'
+    Bundle.BUNDLE_DIR = PSE.OS_PATH.join(PLUGIN_ROOT, 'opsBundle')
 
     PSE.PLUGIN_ROOT = PLUGIN_ROOT
     PSE.BUNDLE = Bundle.getBundleForLocale()
@@ -170,8 +173,11 @@ if __name__ == "__builtin__":
         tpManifest.start()
 
 else:
+    
+    from os import path as osPath
 
-    PLUGIN_ROOT = jmri.util.FileUtil.getPreferencesPath() + SCRIPT_DIR
+    PLUGIN_ROOT = osPath.join(jmri.util.FileUtil.getPreferencesPath(), SCRIPT_DIR)
+
     from opsEntities import PSE
     from o2oSubroutine import ModelWorkEvents
     from o2oSubroutine import ModelEntities

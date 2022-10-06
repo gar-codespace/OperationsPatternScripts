@@ -19,7 +19,6 @@ class StartUp:
 
     def __init__(self, subroutineFrame=None):
 
-        # self.psLog = PSE.LOGGING.getLogger('OPS.o2o.Controller')
         self.subroutineFrame = subroutineFrame
 
         return
@@ -78,24 +77,3 @@ class StartUp:
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
-
-    # def importTpRailroad(self, EVENT):
-    #     '''Writes a tpRailroadData.json file from the 3 TrainPlayer report files'''
-    #
-    #     ModelImport.importTpRailroad()
-    #
-    #     psLog.debug(EVENT)
-    #     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-    #
-    #     return
-
-    # def updateLocations(self, EVENT):
-    #     '''Writes a new locations xml'''
-    #
-    #     # ModelImport.importTpRailroad()
-    #     # Model.updateLocations()
-    #
-    #     psLog.debug(EVENT)
-    #     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-    #
-    #     return

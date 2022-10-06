@@ -53,7 +53,6 @@ class TrainPlayerImporter:
 
         reportName = 'tpRailroadData'
         fileName = reportName + '.json'
-        # targetDir = PSE.PROFILE_PATH + '\\operations'
         self.rrFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
         self.rr = {}
 
@@ -136,19 +135,11 @@ class TrainPlayerImporter:
 
         for lineItem in self.tpLocations:
             splitLine = lineItem.split(';')
-            # locales[splitLine[0]] = {u'location': splitLine[1], u'track': splitLine[2], u'label': splitLine[3], u'type': self.getTrackType(splitLine[4]), u'capacity': splitLine[5]}
             locales[splitLine[0]] = {u'location': splitLine[1], u'track': splitLine[2], u'label': splitLine[3], u'type': splitLine[4], u'capacity': splitLine[5]}
 
         self.rr['locales'] = locales
 
         return
-
-    # def getTrackType(self, tpType):
-    #     """Convert TP track types into JMRI track types."""
-    #
-    #     typeRubric = PSE.readConfigFile('o2o')['TR']
-    #
-    #     return typeRubric[tpType]
 
     def getAllTpIndustry(self):
         """self.tpIndustryList format: ID, JMRI Location Name, JMRI Track Name, Industry, AAR, S/R, Load, Staging, ViaIn
@@ -170,7 +161,6 @@ class TrainPlayerImporter:
                 receive = splitLine[6]
                 ship = 'Empty'
             schedule = (splitLine[3], splitLine[4], receive, ship)
-            # x = (splitLine[1], {u'ID': splitLine[0], u'track': splitLine[2], u'label': splitLine[3], u'type': splitLine[4], u'schedule': schedule, u'staging': splitLine[7], u'viain': splitLine[8]})
             industryDict[splitLine[0]] = {u'location': splitLine[1], u'track': splitLine[2], u'label': splitLine[3], u'type': splitLine[4], u'schedule': schedule, u'staging': splitLine[7], u'viaIn': splitLine[8], u'viaOut': splitLine[9]}
 
         self.rr['industries'] = industryDict

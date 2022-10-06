@@ -16,9 +16,7 @@ def trackPatternButton():
         Controller.StartUp.trackPatternButton
         """
 
-    # reportTitle = PSE.BUNDLE['Track Pattern Report']
     fileName = PSE.BUNDLE['Track Pattern Report'] + '.json'
-    # targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations\\jsonManifests', fileName)
 
     trackPattern = ModelEntities.makeTrackPattern()
@@ -35,9 +33,7 @@ def setRsButton():
         Controller.StartUp.setRsButton
         """
 
-    # reportTitle = PSE.BUNDLE['o2o Work Events']
     fileName = PSE.BUNDLE['o2o Work Events'] + '.json'
-    # targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations\\jsonManifests', fileName)
 
     newHeader = ModelEntities.makeGenericHeader()
@@ -159,29 +155,3 @@ def updateLocations():
     PSE.writeConfigFile(newConfigFile)
 
     return newConfigFile
-
-# def writeTrackPatternCsv(setCarsForm):
-#     """Track Pattern Report json is written as a CSV file
-#         Used by:
-#         Controller.StartUp.trackPatternButton
-#         """
-#
-#     _psLog.debug('writeTrackPatternCsv')
-# #  Get json data
-#     fileName = PSE.BUNDLE['Switch List for Track'] + '.json'
-#     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
-#     trackPattern = PSE.genericReadReport(targetPath)
-#     trackPattern = PSE.loadJson(trackPattern)
-# # Process json data into CSV
-#
-#
-#
-#
-#
-#     trackPatternCsv = ModelEntities.makeTrackPatternCsv(trackPattern)
-# # Write CSV data
-#     fileName = PSE.BUNDLE['Switch List for Track'] + '.csv'
-#     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'csvSwitchLists', fileName)
-#     PSE.genericWriteReport(targetPath, trackPatternCsv)
-#
-#     return

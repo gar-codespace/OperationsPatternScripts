@@ -227,7 +227,7 @@ def getAllLocationNames():
     """JMRI sorts the list, returns list of location names.
         Used by:
         Model.UpdateLocationsAndTracks
-        ModelEntities.getAllTrackIds
+        PSE.getAllTrackIds
         Model.updatePatternLocation
         Model.updateLocations
         ModelEntities.testSelectedItem
@@ -252,6 +252,17 @@ def getAllTracks():
         trackList += location.getTracksByNameList(None)
 
     return trackList
+
+def getAllTrackIds():
+    """All track IDs for all locations."""
+
+    trackIds = []
+    for location in getAllLocationNames():
+        trackList = LM.getLocationByName(location).getTracksList()
+        for track in trackList:
+            trackIds.append(track.getComment())
+
+    return trackIds
 
 def getSelectedTracks():
     """Gets the track objects checked in the Track Pattern Subroutine.

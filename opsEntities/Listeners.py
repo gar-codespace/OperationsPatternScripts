@@ -1,9 +1,6 @@
 """Keep all the listeners in one place, plus a couple of utility methods."""
 
 from opsEntities import PSE
-# from PatternTracksSubroutine import Controller
-# from PatternTracksSubroutine import Model
-# from o2oSubroutine import BuiltTrainExport
 
 SCRIPT_NAME = 'OperationsPatternScripts.opsEntities.Listeners'
 SCRIPT_REV = 20220101
@@ -22,7 +19,6 @@ class LocationComboBox(PSE.JAVA_AWT.event.ActionListener):
 
     def actionPerformed(self, EVENT):
 
-        # xModule = __import__('PatternTracksSubroutine', fromlist=['Controller'])
         xModule = __import__('PatternTracksSubroutine', globals(), locals(), ['Controller', 'Model'], 0)
 
         xModule.Model.updatePatternLocation(EVENT.getSource().getSelectedItem())

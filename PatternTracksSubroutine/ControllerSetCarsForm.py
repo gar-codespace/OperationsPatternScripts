@@ -15,22 +15,6 @@ SCRIPT_REV = 20220101
 
 _psLog = PSE.LOGGING.getLogger('OPS.PT.ControllerSetCarsForm')
 
-#
-# class TextBoxEntryListener(PSE.JAVA_AWT.event.MouseAdapter):
-#     """When any of the 'Set Cars Form for Track X' text inpou boxes is clicked on"""
-#
-#     def __init__(self):
-#
-#         return
-#
-#     def mouseClicked(self, MOUSE_CLICKED):
-#
-#         if PSE.TRACK_NAME_CLICKED_ON:
-#             MOUSE_CLICKED.getSource().setText(PSE.TRACK_NAME_CLICKED_ON)
-#         else:
-#             _psLog.warning('No track was selected')
-#
-#         return
 
 class CreateSetCarsFormGui:
     """Creates an instance of each 'Set Cars Form for Track X' window,
@@ -52,7 +36,6 @@ class CreateSetCarsFormGui:
         setCarsForTrackForm, self.buttonDict = ViewSetCarsForm.makeSetCarsForTrackForm(self.setCarsForm)
 
         setCarsForTrackWindow = ViewSetCarsForm.setCarsForTrackWindow(setCarsForTrackForm)
-        # setCarsForTrackWindow = ViewSetCarsForm.SetCarsFrame(setCarsForTrackForm).addSetCarsForm()
 
         self.activateButtons()
 
@@ -131,7 +114,7 @@ class CreateSetCarsFormGui:
 
     def setRsButton(self, MOUSE_CLICKED):
         """Event that moves cars to the tracks entered in the text box of
-            the 'Set Cars Form for Track X' form
+            the 'Set Cars Form for Track X' form.
             """
 
         _psLog.info(MOUSE_CLICKED)
@@ -154,8 +137,8 @@ class CreateSetCarsFormGui:
         return
 
     def o2oButton(self, MOUSE_CLICKED):
-        """Accumulate switch lists into the o2o-Work-Events switch list
-            List is reset when set cars button on Track Pattern Sub is pressed
+        """Accumulate switch lists into the o2o-Work-Events switch list.
+            List is reset when set cars button on Track Pattern Sub is pressed.
             """
 
         _psLog.info(MOUSE_CLICKED)

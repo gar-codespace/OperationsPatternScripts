@@ -256,12 +256,11 @@ def makeSetCarsTrackButtons():
 
     return buttonPanel, buttonList
 
+
 class MakeSetCarsEqptRows():
     """Used by:
         makeSetCarsForTrackForm
         """
-
-    # _psLog.debug('MakeSetCarsEqptRows')
 
     def __init__(self, setCarsFormData):
 
@@ -351,6 +350,7 @@ class MakeSetCarsEqptRows():
     def textBoxEntryList(self):
 
         return self.textBoxEntry
+
 
 def makeSetCarsScheduleRow(setCarsFormData):
     """Using [0] to avoid for loop since there is only 1 location and track
