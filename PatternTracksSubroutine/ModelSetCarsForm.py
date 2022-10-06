@@ -20,7 +20,7 @@ def writeToJson(setCarsForm):
 
     reportTitle = PSE.BUNDLE['Switch List for Track']
     fileName = reportTitle + '.json'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations\\jsonManifests', fileName)
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
 
     switchListReport = PSE.dumpJson(setCarsForm)
     PSE.genericWriteReport(targetPath, switchListReport)
@@ -54,7 +54,6 @@ def o2oButton(ptSetCarsForm):
         """
     reportTitle = PSE.BUNDLE['o2o Work Events']
     fileName = reportTitle + '.json'
-    # targetDir = PSE.PROFILE_PATH + 'operations\\jsonManifests'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
 # Load the existing o2o switch list
     o2oSwitchList = PSE.genericReadReport(targetPath)

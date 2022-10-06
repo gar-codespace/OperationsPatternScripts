@@ -203,7 +203,6 @@ class o2oWorkEvents:
 
         reportName = 'tpRollingStockData'
         fileName = reportName + '.json'
-        targetDir = PSE.PROFILE_PATH + '\\operations'
         targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
 
         tpRollingStockData = PSE.genericReadReport(targetPath)
@@ -212,9 +211,8 @@ class o2oWorkEvents:
         self.workEvents = workEvents
         self.o2oList = ''
 
-        workEventName = PSE.BUNDLE['o2o Work Events']
-        self.o2oWorkEventPath = PSE.JMRI.util.FileUtil.getHomePath() \
-                + 'AppData\Roaming\TrainPlayer\Reports\JMRI Report - o2o Work Events.csv'
+        fileName = 'JMRI Report - o2o Work Events.csv'
+        self.o2oWorkEventPath = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData', 'Roaming', 'TrainPlayer', 'Reports', fileName)
 
         return
 

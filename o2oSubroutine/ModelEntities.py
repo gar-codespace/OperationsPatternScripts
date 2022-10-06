@@ -65,17 +65,6 @@ def updateContinuingLocation(location):
 
     return
 
-# def getAllTrackIds():
-#     """All track IDs for all locations."""
-#
-#     trackIds = []
-#     for location in PSE.getAllLocationNames():
-#         trackList = PSE.LM.getLocationByName(location).getTracksList()
-#         for track in trackList:
-#             trackIds.append(track.getComment())
-#
-#     return trackIds
-
 def selectCarTypes(id, industry):
     """Used by:
         Model.NewLocationsAndTracks.addCarTypesToSpurs
@@ -192,8 +181,7 @@ def getWorkEvents():
 
     reportName = PSE.BUNDLE['o2o Work Events']
     fileName = reportName + '.json'
-    # targetDir = PSE.PROFILE_PATH + '\\operations\\jsonManifests'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations\\jsonManifests', fileName)
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
 
     workEventList = PSE.genericReadReport(targetPath)
     jsonFile = PSE.loadJson(workEventList)
@@ -206,8 +194,7 @@ def getTpExport(fileName):
         ModelImport.TrainPlayerImporter.getTpReportFiles
         """
 
-    # targetDir = PSE.JMRI.util.FileUtil.getHomePath() + '\\AppData\\Roaming\\TrainPlayer\\Reports'
-    targetPath = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData\\Roaming\\TrainPlayer\\Reports', fileName)
+    targetPath = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData', 'Roaming', 'TrainPlayer', 'Reports', fileName)
 
     if PSE.JAVA_IO.File(targetPath).isFile():
         tpExport = PSE.genericReadReport(targetPath).split('\n')
@@ -253,9 +240,11 @@ def getSetToLocationAndTrack(locationName, trackName):
         return None, None
 
 def closeTroublesomeWindows():
-    """Close all the 'Troublesome' windows when the New JMRI Railroad button is pressed."""
-
-    # frames = ['JMRI System Console', 'PanelPro', PSE.BUNDLE['Pattern Scripts']]
+    """Close all the 'Troublesome' windows when the New JMRI Railroad button is pressed.
+        Used by:
+        o2oSubroutine.Model.newJmriRailroad
+        o2oSubroutine.Model.updateJmriRailroad
+        """
 
     for frameName in PSE.JMRI.util.JmriJFrame.getFrameList():
         if not 'JmriJFrame' in frameName.__str__():
@@ -270,7 +259,6 @@ def getTpRailroadData():
 
     reportName = 'tpRailroadData'
     fileName = reportName + '.json'
-    # targetDir = PSE.PROFILE_PATH + '\\operations'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
 
     try:

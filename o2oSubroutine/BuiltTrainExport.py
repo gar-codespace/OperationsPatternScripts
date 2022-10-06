@@ -159,7 +159,6 @@ if __name__ == "__builtin__":
     from o2oSubroutine import ModelEntities
     from opsBundle import Bundle
 
-    # Bundle.BUNDLE_DIR = PLUGIN_ROOT + '\\opsBundle\\'
     Bundle.BUNDLE_DIR = PSE.OS_PATH.join(PLUGIN_ROOT, 'opsBundle')
 
     PSE.PLUGIN_ROOT = PLUGIN_ROOT
@@ -173,7 +172,7 @@ if __name__ == "__builtin__":
         tpManifest.start()
 
 else:
-    
+
     from os import path as osPath
 
     PLUGIN_ROOT = osPath.join(jmri.util.FileUtil.getPreferencesPath(), SCRIPT_DIR)

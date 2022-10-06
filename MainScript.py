@@ -349,8 +349,6 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
     def buildThePlugin(self):
 
-        # PSE.BUNDLE = Bundle.getBundleForLocale()
-
         view = View(None)
         emptyPluginPanel = view.makePluginPanel()
         populatedPluginPanel = self.model.makePatternScriptsPanel(emptyPluginPanel)

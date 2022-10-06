@@ -15,8 +15,6 @@ SCRIPT_REV = 20220101
 _psLog = PSE.LOGGING.getLogger('OPS.B.Bundle')
 
 PSE.BUNDLE_DIR = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle')
-# print('jjjjjjjjjjjjjjj', PSE.BUNDLE_DIR)
-# BUNDLE_DIR = PSE.PLUGIN_ROOT + '\\opsBundle\\'
 
 PLUGIN = [] # Scratch file for translation
 HELP = [] # Scratch file for translation

@@ -160,7 +160,11 @@ class CreateStubFile:
 """GUI Methods"""
 
 def getPsButton():
-    """Gets the Pattern Scripts button on the PanelPro frame"""
+    """Gets the Pattern Scripts button on the PanelPro frame.
+        Used by:
+        Listeners.PatternScriptsWindow.windowClosed
+        Listeners.PatternScriptsWindow.windowOpened
+        """
 
     buttonSpaceComponents = APPS.buttonSpace().getComponents()
     for component in buttonSpaceComponents:
@@ -170,7 +174,11 @@ def getPsButton():
             return None
 
 def closeSetCarsWindows():
-    """Close all the Set Cars windows when the Pattern Scripts window is closed"""
+    """Close all the Set Cars windows when the Pattern Scripts window is closed.
+        Used by:
+        MainScript.Controller.closePsWindow
+        Listeners.PatternScriptsWindow.windowClosing
+        """
 
     for frame in JMRI.util.JmriJFrame.getFrameList():
         if frame.getName() == 'setCarsWindow':
@@ -180,7 +188,11 @@ def closeSetCarsWindows():
     return
 
 def updateWindowParams(window):
-    """This can be done automatically by setting a prop somewhere"""
+    """This can be done automatically by setting a prop somewhere
+        Used by:
+        MainScript.Controller.closePsWindow
+        Listeners.PatternScriptsWindow.windowClosing
+        """
 
     configPanel = readConfigFile()
     configPanel['CP'].update({'PH': window.getHeight()})
@@ -254,7 +266,10 @@ def getAllTracks():
     return trackList
 
 def getAllTrackIds():
-    """All track IDs for all locations."""
+    """All track IDs for all locations.
+        Used by:
+        o2oSubroutine.Model.UpdateLocationsAndTracks
+        """
 
     trackIds = []
     for location in getAllLocationNames():
@@ -294,7 +309,12 @@ def getTracksNamesByLocation(trackType):
 """Formatting Methods"""
 
 def timeStamp(epochTime=0):
-    """Valid Time, get local time adjusted for time zone and dst."""
+    """Valid Time, get local time adjusted for time zone and dst.
+        Used by:
+        o2oSubroutine.ModelImport.TrainPlayerImporter.processFileHeaders
+        o2oSubroutine.ModelWorkEvents.jmriManifestConversion.convertHeader
+        PatternTracksSubroutine.ModelEntities.makeGenericHeader
+        """
 
     if epochTime == 0:
         epochTime = time.time()
@@ -306,7 +326,10 @@ def timeStamp(epochTime=0):
     return time.strftime('%a %b %d %Y %I:%M %p %Z', time.gmtime(epochTime - timeOffset))
 
 def convertJmriDateToEpoch(jmriTime):
-    """Example: 2022-02-26T17:16:17.807+0000"""
+    """Example: 2022-02-26T17:16:17.807+0000
+        Used by:
+        o2oSubroutine.ModelWorkEvents.jmriManifestConversion.convertHeader
+        """
 
     epochTime = time.mktime(time.strptime(jmriTime, "%Y-%m-%dT%H:%M:%S.%f+0000"))
 
@@ -318,7 +341,11 @@ def convertJmriDateToEpoch(jmriTime):
     return epochTime
 
 def formatText(item, length):
-    """Truncate each item to its defined length in PatternConfig.json and add a space at the end."""
+    """Truncate each item to its defined length in PatternConfig.json and add a space at the end.
+        Used by:
+        PatternTracksSubroutine.ViewEntities.merge
+        PatternTracksSubroutine.ViewEntities.loopThroughRs
+        """
 
     if isinstance(item, bool): # Hazardous is a boolean
         item = 'HazMat'
@@ -330,7 +357,13 @@ def formatText(item, length):
     return xItem + u' '
 
 def makeReportItemWidthMatrix():
-    """The attribute widths (AW) for each of the rolling stock attributes is defined in the report matrix (RM) of the config file."""
+    """The attribute widths (AW) for each of the rolling stock attributes is defined in the report matrix (RM) of the config file.
+        Used by:
+        PatternTracksSubroutine.Controller.StartUp.trackPatternButton
+        PatternTracksSubroutine.Controller.StartUp.setRsButton
+        PatternTracksSubroutine.ControllerSetCarsForm.CreateSetCarsFormGui.switchListButton
+        PatternTracksSubroutine.ControllerSetCarsForm.CreateSetCarsFormGui.setRsButton
+        """
 
     reportMatrix = {}
     attributeWidths = readConfigFile('RM')['AW']
@@ -370,19 +403,24 @@ def getShortLoadType(car):
 """File Handling Methods"""
 
 def makeBuildStatusFolder():
-    """The buildStatus folder is created first so the log file can be written"""
+    """The buildStatus folder is created first so the log file can be written.
+        Used by:
+        MainScript.Controller
+        """
 
-    opsDirectory = JMRI.util.FileUtil.getProfilePath() + '\\operations'
-    targetDirectory = OS_PATH.join(opsDirectory, 'buildstatus')
+    targetDirectory = OS_PATH.join(JMRI.util.FileUtil.getProfilePath(), 'operations', 'buildstatus')
     if not JAVA_IO.File(targetDirectory).isDirectory():
         JAVA_IO.File(targetDirectory).mkdirs()
 
     return
 
 def makeReportFolders():
-    """Checks/creates the folders this plugin writes to."""
+    """Checks/creates the folders this plugin writes to.
+        Used By:
+        MainScript.Controller
+        """
 
-    opsDirectory = JMRI.util.FileUtil.getProfilePath() + '\\operations'
+    opsDirectory = OS_PATH.join(JMRI.util.FileUtil.getProfilePath(), 'operations')
     directories = ['csvManifests', 'csvSwitchLists', 'jsonManifests', 'switchLists', 'patternReports']
     x = 0
     for directory in directories:
@@ -400,7 +438,10 @@ def makeReportFolders():
     return
 
 def genericReadReport(filePath):
-    """try/except catches initial read of config file."""
+    """try/except catches initial read of config file.
+        Used by:
+        Everything
+        """
 
     try:
         ENCODING
@@ -413,6 +454,8 @@ def genericReadReport(filePath):
     return genericReport
 
 def genericWriteReport(filePath, genericReport):
+    """Used by:
+        Everything"""
 
     with codecsOpen(filePath, 'wb', encoding=ENCODING) as textWorkFile:
         textWorkFile.write(genericReport)
@@ -420,7 +463,13 @@ def genericWriteReport(filePath, genericReport):
     return
 
 def genericDisplayReport(genericReportPath):
-    """Dealer's choice, the JMRI or Java version."""
+    """Dealer's choice, the JMRI or Java version.
+        Used by:
+        MainScript.Controller.logItemSelected
+        MainScript.Controller.ecItemSelected
+        PatternTracksSubroutine.View.trackPatternButton
+        PatternTracksSubroutine.ViewSetCarsForm.switchListButton
+        """
 
     # JMRI.util.HelpUtil.openWindowsFile(genericReportPath)
     JAVA_AWT.Desktop.getDesktop().edit(JAVA_IO.File(genericReportPath))
@@ -428,12 +477,16 @@ def genericDisplayReport(genericReportPath):
     return
 
 def loadJson(switchList):
+    """Used by:
+        Everything"""
 
     jsonSwitchList = jsonLoads(switchList)
 
     return jsonSwitchList
 
 def dumpJson(switchList):
+    """Used by:
+        Everything"""
 
     jsonSwitchList = jsonDumps(switchList, indent=2, sort_keys=True)
 
@@ -442,11 +495,13 @@ def dumpJson(switchList):
 """Configuration File Methods"""
 
 def validateConfigFileVersion():
-    """Checks that the config file is the current version."""
+    """Checks that the config file is the current version.
+        Used by:
+        OperationsPatternScripts.MainScript.Model
+        """
 
-    targetDir =  PLUGIN_ROOT + '\\opsEntities'
     fileName = 'PatternConfig.json'
-    targetPath = OS_PATH.join(targetDir, fileName)
+    targetPath = OS_PATH.join(PLUGIN_ROOT, 'opsEntities', fileName)
     validPatternConfig = loadJson(genericReadReport(targetPath))
 
     if validPatternConfig['CP']['RV'] == readConfigFile('CP')['RV']:
@@ -461,7 +516,10 @@ def mergeConfigFiles():
     return
 
 def readConfigFile(subConfig=None):
-    """tryConfigFile will return the config file if it's ok or a new one otherwise."""
+    """tryConfigFile will return the config file if it's ok or a new one otherwise.
+        Used by:
+        Everything
+        """
 
     configFile = tryConfigFile()
 
@@ -471,7 +529,10 @@ def readConfigFile(subConfig=None):
         return configFile[subConfig]
 
 def tryConfigFile():
-    """Try/except catches some user edit mistakes."""
+    """Try/except catches some user edit mistakes.
+        Used by:
+        PSE.readConfigFile
+        """
 
     try:
         configFile = getConfigFile()
@@ -487,51 +548,69 @@ def tryConfigFile():
     return configFile
 
 def getConfigFile():
+    """Used by:
+        tryConfigFile
+        """
 
-    targetDir = PROFILE_PATH + '\\operations'
     fileName = 'PatternConfig.json'
-    targetPath = OS_PATH.join(targetDir, fileName)
+    targetPath = OS_PATH.join(PROFILE_PATH, 'operations', fileName)
 
     return loadJson(genericReadReport(targetPath))
 
 def writeConfigFile(configFile):
+    """Used by:
+        MainScript.Controller
+        PSE.updateWindowParams
+        PatternTracksSubroutine.Controller.StartUp.yardTrackOnlyCheckBox
+        PatternTracksSubroutine.Model
+        """
 
-    configFilePath = PROFILE_PATH + 'operations\\PatternConfig.json'
-    formattedConfigFile = dumpJson(configFile)
-    genericWriteReport(configFilePath, formattedConfigFile)
+    fileName = 'PatternConfig.json'
+    targetPath = OS_PATH.join(PROFILE_PATH, 'operations', fileName)
+    targetFile = dumpJson(configFile)
+    genericWriteReport(targetPath, targetFile)
 
     return
 
 def writeNewConfigFile():
+    """Used by:
+        MainScript.Model.validatePatternConfig
+        PSE.tryConfigFile
+        """
 
-    targetDir = PROFILE_PATH + 'operations\\'
+    targetDir = OS_PATH.join(PROFILE_PATH, 'operations')
     JAVA_IO.File(targetDir).mkdir()
 
     fileName = 'PatternConfig.json'
 
-    targetDir = PLUGIN_ROOT + '\\opsEntities'
-    targetPath = OS_PATH.join(targetDir, fileName)
-    copyFrom = JAVA_IO.File(targetPath)
+    targetFile = OS_PATH.join(PLUGIN_ROOT, 'opsEntities', fileName)
+    copyFrom = JAVA_IO.File(targetFile)
 
-    targetDir = PROFILE_PATH + '\\operations'
-    targetPath = OS_PATH.join(targetDir, fileName)
-    copyTo = JAVA_IO.File(targetPath)
+    targetFile = OS_PATH.join(PROFILE_PATH, 'operations', fileName)
+    copyTo = JAVA_IO.File(targetFile)
 
     JMRI.util.FileUtil.copy(copyFrom, copyTo)
 
     return
 
 def deleteConfigFile():
+    """Used by:
+        MainScript.Controller.rsItemSelected
+        """
 
-    configFilePath = PROFILE_PATH + 'operations\PatternConfig.json'
-    JAVA_IO.File(configFilePath).delete()
+    fileName = 'PatternConfig.json'
+    targetFile = OS_PATH.join(PROFILE_PATH, 'operations', fileName)
+    JAVA_IO.File(targetFile).delete()
 
     return
 
 """Logging Methods"""
 
 def makePatternLog():
-    """creates a pattern log for display based on the log level, as set by getBuildReportLevel."""
+    """creates a pattern log for display based on the log level, as set by getBuildReportLevel.
+        Used by:
+        MainScript.Controller.logItemSelected
+        """
 
     outputPatternLog = ''
     buildReportLevel = JMRI.jmrit.operations.setup.Setup.getBuildReportLevel()
@@ -540,8 +619,7 @@ def makePatternLog():
     logLevel = loggingIndex[buildReportLevel]
 
     fileName = 'PatternScriptsLog.txt'
-    targetDir = PROFILE_PATH + 'operations\\buildstatus'
-    targetPath = OS_PATH.join(targetDir, fileName)
+    targetPath = OS_PATH.join(PROFILE_PATH, 'operations', 'buildstatus', fileName)
     patternLogFile = genericReadReport(targetPath)
     for thisLine in patternLogFile.splitlines():
 
@@ -559,7 +637,10 @@ def makePatternLog():
     return outputPatternLog
 
 def logIndex():
-    """Moved here but may be put back into configFile."""
+    """Moved here but may be put back into configFile.
+        Used by:
+        PSE.makePatternLog
+        """
 
     loggingIndex = {"9": "- CRITICAL -", "7": "- ERROR -", "5": "- WARNING -", "3": "- INFO -", "1": "- DEBUG -"}
 
@@ -568,7 +649,12 @@ def logIndex():
 """Color Handling Methods"""
 
 def getGenericColor(colorName):
-    """Try/Except is a bit of protection against bad edits."""
+    """Try/Except is a bit of protection against bad edits.
+        Used by:
+        PSE.getCarColor
+        PSE.getLocoColor
+        PSE.getAlertColor
+        """
 
     colorPalette = readConfigFile('CD')['CP']
 
@@ -585,6 +671,9 @@ def getGenericColor(colorName):
         return None
 
 def getCarColor():
+    """Used by:
+        PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
+        """
 
     colorName = readConfigFile('CD')['carColor']
     color = getGenericColor(colorName)
@@ -594,6 +683,9 @@ def getCarColor():
     return color
 
 def getLocoColor():
+    """Used by:
+        PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
+        """
 
     colorName = readConfigFile('CD')['locoColor']
     color = getGenericColor(colorName)
@@ -603,6 +695,9 @@ def getLocoColor():
     return color
 
 def getAlertColor():
+    """Used by:
+        PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
+        """
 
     colorName = readConfigFile('CD')['alertColor']
     color = getGenericColor(colorName)
@@ -616,6 +711,9 @@ def getAlertColor():
 def translateMessageFormat():
     """The messageFormat is in the locale's language, it has to be hashed to the plugin fields.
         Dealers choice, J_BUNDLE.ROAD or SB.handleGetMessage('Road').
+        Used by:
+        PatternTracksSubroutine.ViewEntities.loopThroughRs
+        PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
         """
 
     rosetta = {}

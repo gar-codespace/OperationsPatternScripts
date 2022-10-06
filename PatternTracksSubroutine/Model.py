@@ -17,7 +17,7 @@ def trackPatternButton():
         """
 
     fileName = PSE.BUNDLE['Track Pattern Report'] + '.json'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations\\jsonManifests', fileName)
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
 
     trackPattern = ModelEntities.makeTrackPattern()
     trackPatternReport = ModelEntities.makeTrackPatternReport(trackPattern)
@@ -34,7 +34,7 @@ def setRsButton():
         """
 
     fileName = PSE.BUNDLE['o2o Work Events'] + '.json'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations\\jsonManifests', fileName)
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
 
     newHeader = ModelEntities.makeGenericHeader()
     newHeaderReport = PSE.dumpJson(newHeader)
