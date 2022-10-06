@@ -85,7 +85,6 @@ class SetCarsFrame(PSE.JMRI.util.JmriJFrame):
     def addSetCarsForm(self):
 
         self.add(self.setCarsForTrackForm)
-        self.addPropertyChangeListener(Listeners.SetCarsTable())
 
         return self
 

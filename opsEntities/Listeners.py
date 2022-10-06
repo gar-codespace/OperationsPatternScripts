@@ -1,9 +1,9 @@
 """Keep all the listeners in one place, plus a couple of utility methods."""
 
 from opsEntities import PSE
-from PatternTracksSubroutine import Controller
-from PatternTracksSubroutine import Model
-from o2oSubroutine import BuiltTrainExport
+# from PatternTracksSubroutine import Controller
+# from PatternTracksSubroutine import Model
+# from o2oSubroutine import BuiltTrainExport
 
 SCRIPT_NAME = 'OperationsPatternScripts.opsEntities.Listeners'
 SCRIPT_REV = 20220101
@@ -22,25 +22,13 @@ class LocationComboBox(PSE.JAVA_AWT.event.ActionListener):
 
     def actionPerformed(self, EVENT):
 
-        print('name:', self.subroutineFrame.getName())
+        # xModule = __import__('PatternTracksSubroutine', fromlist=['Controller'])
+        xModule = __import__('PatternTracksSubroutine', globals(), locals(), ['Controller', 'Model'], 0)
 
-        Model.updatePatternLocation(EVENT.getSource().getSelectedItem())
-        Controller.restartSubroutine(self.subroutineFrame)
+        xModule.Model.updatePatternLocation(EVENT.getSource().getSelectedItem())
+        xModule.Controller.restartSubroutine(self.subroutineFrame)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-
-        return
-
-
-class SetCarsTable(PSE.JAVA_BEANS.PropertyChangeListener):
-    """ """
-
-    def propertyChange(self, PS_WINDOW_CLOSING):
-
-        print(PS_WINDOW_CLOSING.propertyName)
-
-        if PS_WINDOW_CLOSING.propertyName == 'psWindowClosing' and PS_WINDOW_CLOSING.newValue:
-            print('Yipee')
 
         return
 
@@ -88,8 +76,9 @@ class BuiltTrain(PSE.JAVA_BEANS.PropertyChangeListener):
     def propertyChange(self, TRAIN_BUILT):
 
         if TRAIN_BUILT.propertyName == 'TrainBuilt' and TRAIN_BUILT.newValue:
+            xModule = __import__('o2oSubroutine', globals(), locals(), ['BuiltTrainExport'], 0)
 
-            o2oWorkEvents = BuiltTrainExport.o2oWorkEventsBuilder()
+            o2oWorkEvents = xModule.BuiltTrainExport.o2oWorkEventsBuilder()
             o2oWorkEvents.passInTrain(TRAIN_BUILT.getSource())
             o2oWorkEvents.start()
 
