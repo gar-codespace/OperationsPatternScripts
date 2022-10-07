@@ -42,9 +42,9 @@ class TrainPlayerImporter:
 
         o2oConfig =  PSE.readConfigFile('o2o')
 
-        self.tpLocationsFile = o2oConfig['TRL']
-        self.tpIndustriesFile = o2oConfig['TRI']
-        self.tpRollingStockFile = o2oConfig['TRR']
+        self.tpLocationsFile = o2oConfig['RF']['TRL']
+        self.tpIndustriesFile = o2oConfig['RF']['TRI']
+        self.tpRollingStockFile = o2oConfig['RF']['TRR']
 
         self.tpLocations = []
         self.tpIndustries = []

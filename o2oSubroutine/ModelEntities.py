@@ -115,7 +115,7 @@ def makeNewTrack(trackId, trackData):
         Model.UpdateLocationsAndTracks.addNewTracks
         Model.UpdateLocationsAndTracks.updateContinuingTracks
         """
-        
+
     _psLog.debug('makeNewTrack')
 
     typeRubric = PSE.readConfigFile('o2o')['TR']
@@ -125,13 +125,13 @@ def makeNewTrack(trackId, trackData):
     xTrack = loc.addTrack(trackData['track'], jmriTrackType)
     xTrack.setComment(trackId)
 
-    if trackData['type'] == 'Spur':
+    if trackData['type'] == 'industry':
         trackLength = int(trackData['capacity']) * PSE.readConfigFile('o2o')['DL']
         xTrack.setLength(trackLength)
         xTrack.setSchedule(PSE.SM.getScheduleByName(trackData['label']))
         for typeName in loc.getTypeNames():
             xTrack.deleteTypeName(typeName)
-    if trackData['type'] == 'Staging':
+    if trackData['type'] == 'staging':
         tweakStagingTracks(xTrack)
     if trackData['type'] == 'XO reserved':
         xTrack.setTrainDirections(0)
@@ -146,9 +146,11 @@ def tweakStagingTracks(track):
 
     o2oConfig =  PSE.readConfigFile('o2o')
 
-    track.setAddCustomLoadsAnySpurEnabled(o2oConfig['SCL'])
-    track.setRemoveCustomLoadsEnabled(o2oConfig['RCL'])
-    track.setLoadEmptyEnabled(o2oConfig['LEE'])
+    print(o2oConfig['SM']['SCL'])
+
+    track.setAddCustomLoadsAnySpurEnabled(o2oConfig['SM']['SCL'])
+    track.setRemoveCustomLoadsEnabled(o2oConfig['SM']['RCL'])
+    track.setLoadEmptyEnabled(o2oConfig['SM']['LEE'])
 
     return
 

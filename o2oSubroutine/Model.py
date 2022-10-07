@@ -308,19 +308,19 @@ class SetupXML:
         OSU.Setup.setRailroadName(self.TpRailroad['railroadName'])
         OSU.Setup.setComment(self.TpRailroad['railroadDescription'])
 
-        OSU.Setup.setMainMenuEnabled(self.o2oConfig['SME'])
-        OSU.Setup.setCloseWindowOnSaveEnabled(self.o2oConfig['CWS'])
-        OSU.Setup.setBuildAggressive(self.o2oConfig['SBA'])
-        OSU.Setup.setStagingTrackImmediatelyAvail(self.o2oConfig['SIA'])
-        OSU.Setup.setCarTypes(self.o2oConfig['SCT'])
-        OSU.Setup.setStagingTryNormalBuildEnabled(self.o2oConfig['TNB'])
-        OSU.Setup.setManifestEditorEnabled(self.o2oConfig['SME'])
+        OSU.Setup.setMainMenuEnabled(self.o2oConfig['TO']['SME'])
+        OSU.Setup.setCloseWindowOnSaveEnabled(self.o2oConfig['TO']['CWS'])
+        OSU.Setup.setBuildAggressive(self.o2oConfig['TO']['SBA'])
+        OSU.Setup.setStagingTrackImmediatelyAvail(self.o2oConfig['TO']['SIA'])
+        OSU.Setup.setCarTypes(self.o2oConfig['TO']['SCT'])
+        OSU.Setup.setStagingTryNormalBuildEnabled(self.o2oConfig['TO']['TNB'])
+        OSU.Setup.setManifestEditorEnabled(self.o2oConfig['TO']['SME'])
 
-        OSU.Setup.setPickupManifestMessageFormat(self.o2oConfig['PUC'])
-        OSU.Setup.setDropManifestMessageFormat(self.o2oConfig['SOC'])
-        OSU.Setup.setLocalManifestMessageFormat(self.o2oConfig['MC'])
-        OSU.Setup.setPickupEngineMessageFormat(self.o2oConfig['PUL'])
-        OSU.Setup.setDropEngineMessageFormat(self.o2oConfig['SOL'])
+        OSU.Setup.setPickupManifestMessageFormat(self.o2oConfig['TO']['PUC'])
+        OSU.Setup.setDropManifestMessageFormat(self.o2oConfig['TO']['SOC'])
+        OSU.Setup.setLocalManifestMessageFormat(self.o2oConfig['TO']['MC'])
+        OSU.Setup.setPickupEngineMessageFormat(self.o2oConfig['TO']['PUL'])
+        OSU.Setup.setDropEngineMessageFormat(self.o2oConfig['TO']['SOL'])
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -522,7 +522,7 @@ class NewRollingStock:
 
         self.o2oConfig = PSE.readConfigFile('o2o')
 
-        self.tpRollingStockFile = self.o2oConfig['TRR']
+        self.tpRollingStockFile = self.o2oConfig['RF']['TRR']
         self.tpInventory = []
         self.tpCars = {}
         self.tpLocos = {}

@@ -112,11 +112,11 @@ class StartUp:
         Model.updateConfigFile(self.widgets)
 
         if not Model.verifySelectedTracks():
-            self.psLog.warning('Track not found, re-select the location')
+            _psLog.warning('Track not found, re-select the location')
             return
 
         if not PSE.getSelectedTracks():
-            self.psLog.warning('No tracks were selected for the pattern button')
+            _psLog.warning('No tracks were selected for the pattern button')
             return
 
         PSE.REPORT_ITEM_WIDTH_MATRIX = PSE.makeReportItemWidthMatrix()

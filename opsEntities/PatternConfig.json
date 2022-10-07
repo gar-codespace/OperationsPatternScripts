@@ -184,7 +184,7 @@
       "EMX",
       "LMX"
     ],
-    "SM" : {
+    "SR" : {
       "Z" : 1,
       "N" : 2,
       "TT" : 3,
@@ -208,24 +208,30 @@
       "Dest&Track",
       "FD&Track"
     ],
-    "SME" : true,
-    "CWS" : true,
-    "SBA" : true,
-    "SIA" : true,
-    "SCL" : true,
-    "RCL" : true,
-    "LEE" : true,
-    "SME" : true,
-    "TNB" : false,
-    "SCT" : "ARR Codes",
-    "TRL" : "TrainPlayer Report - Locations.txt",
-    "TRI" : "TrainPlayer Report - Industries.txt",
-    "TRR" : "TrainPlayer Report - Rolling Stock.txt",
-    "PUC" : ["Road", "Number", "Type", "Load Type", "Load", "Destination"],
-    "SOC" : ["Road", "Number", "Type", "Load Type", "Load", "Destination"],
-    "MC" : ["Road", "Number", "Type", "Load Type", "Load", "Final Dest"],
-    "PUL" : ["Road", "Number", "Model", "Consist", "Destination"],
-    "SOL" : ["Road", "Number", "Model", "Consist", "Destination"],
+    "RF" : {
+      "TRL" : "TrainPlayer Report - Locations.txt",
+      "TRI" : "TrainPlayer Report - Industries.txt",
+      "TRR" : "TrainPlayer Report - Rolling Stock.txt"
+    },
+    "TO" : {
+      "SME" : true,
+      "CWS" : true,
+      "SBA" : true,
+      "SIA" : true,
+      "SCT" : "ARR Codes",
+      "TNB" : false,
+      "SME" : true,
+      "PUC" : ["Road", "Number", "Type", "Load Type", "Load", "Destination"],
+      "SOC" : ["Road", "Number", "Type", "Load Type", "Load", "Destination"],
+      "MC" : ["Road", "Number", "Type", "Load Type", "Load", "Final Dest"],
+      "PUL" : ["Road", "Number", "Model", "Consist", "Destination"],
+      "SOL" : ["Road", "Number", "Model", "Consist", "Destination"]
+    },
+    "SM" : {
+      "SCL" : true,
+      "RCL" : true,
+      "LEE" : true
+    },
     "TR" : {
       "industry": "Spur",
       "interchange": "Interchange",

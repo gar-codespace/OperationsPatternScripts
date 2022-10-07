@@ -50,7 +50,7 @@
 <h2>Track Pattern Subroutine</h2>
 <h3>Introduction</h3>
 <p>La sous-routine Track Pattern permet de générer des rapports de motifs pour les pistes à un seul endroit.
-En outre, les voitures peuvent être déplacées d'une piste à l'autre dans un même lieu,
+De plus, les voitures peuvent être déplacées d'une piste à l'autre dans un même lieu,
   and optionally, if a car is moved onto a spur, the schedule for that spur can be applied.</p>
 
 <h3>Organisation</h3>
@@ -173,7 +173,7 @@ Dans d'autres cas, si une erreur est commise en modifiant le fichier PatternConf
     "PL" : "", <font color="blue">Pattern Location (écrit par ce plugin)</font>
     "PT" : { <font color="blue">Pattern-Tracks (écrit par ce plugin)</font>
     },
-    "PA" : false, <font color="blue">Drapeau "Yard Tracks Only" (défini par l'utilisateur, écrit par ce plugin)</font>
+    "PA" : false, <font color="blue">drapeau "Yard Tracks Only" (défini par l'utilisateur, écrit par ce plugin)</font>
     "PI" : false, <font color="blue">Ignorer l'indicateur Track Length (défini par l'utilisateur, écrit par ce plugin)</font>
     "AS" : true, <font color="blue">Appliquer le drapeau Schedule (défini par l'utilisateur, écrit par ce plugin)</font>
     "TI" : false, <font color="blue">TrainPlayer Include flag (défini par l'utilisateur, écrit par ce plugin)</font>
@@ -280,7 +280,7 @@ tout en éliminant l'ennui de maintenir deux bases de données synchronisées.</
       "OperationsEngineRoster",
       "OperationsLocationRoster"
     ],
-    "SM" : {  <font color="blue">Scale Matrix </font>JMRI Échelle de chemin de fer miniature.
+    "SR" : {  <font color="blue">Scale Rubric</font> JMRI Model Railroad scale.
       "Z" : 1,
       "N" : 2,
       "TT" : 3,
@@ -293,19 +293,36 @@ tout en éliminant l'ennui de maintenir deux bases de données synchronisées.</
       "O" : 10,
       "G" : 11
     },
-    "SME" : <font color="green">true</font>,  setMainMenuEnabled
-    "CWS" : <font color="green">true</font>,  setCloseWindowOnSaveEnabled
-    "SBA" : <font color="green">true</font>,  setBuildAggressive
-    "SIA" : <font color="green">true</font>,  setStagingTrackImmediatelyAvail
-    "SCT" : <font color="green">"ARR Codes"</font>,  setCarTypes
-    "SCL" : <font color="green">true</font>,  setAddCustomLoadsAnySpurEnabled
-    "RCL" : <font color="green">true</font>,  setRemoveCustomLoadsEnabled
-    "LEE" : <font color="green">true</font>,  setLoadEmptyEnabled
-    "TR" : {  <font color="blue">Type Rubric</font> Align TrainPlayer to JMRI track types.
+    "RF" : { <font color="blue">Report Files</font> Noms des fichiers d'exportation de la mise en page de TrainPlayer.
+      "TRL" : <font color="blue">"TrainPlayer Report - Locations.txt"</font>,
+      "TRI" : <font color="blue">"TrainPlayer Report - Industries.txt"</font>,
+      "TRR" : <font color="blue">"TrainPlayer Report - Rolling Stock.txt"</font>
+    },
+    "TO" : { <font color="blue">Tweek Operations</font> Ajustements des paramètres des opérations.
+      "SME" : <font color="green">true</font>,  setMainMenuEnabled
+      "CWS" : <font color="green">true</font>,  setCloseWindowOnSaveEnabled
+      "SBA" : <font color="green">true</font>,  setBuildAggressive
+      "SIA" : <font color="green">true</font>,  setStagingTrackImmediatelyAvail
+      "SCT" : <font color="green">"ARR Codes"</font>,  setCarTypes
+      "TNB" : <font color="green">true</font>,  setStagingTryNormalBuildEnabled
+      "SME" : <font color="green">true</font>,  setManifestEditorEnabled
+      "PUC" : <font color="green">"Road", "Number", "Type", "Load Type", "Load", "Destination"</font>,  setPickupManifestMessageFormat
+      "SOC" : <font color="green">"Road", "Number", "Type", "Load Type", "Load", "Destination"</font>,  setDropManifestMessageFormat
+      "MC" : <font color="green">"Road", "Number", "Type", "Load Type", "Load", "Final Dest"</font>,  setLocalManifestMessageFormat
+      "PUL" : <font color="green">"Road", "Number", "Model", "Consist", "Destination"</font>,  setPickupEngineMessageFormat
+      "SOL" : <font color="green">"Road", "Number", "Model", "Consist", "Destination"</font>,  setDropEngineMessageFormat
+      },
+    "SM" : {
+      "SCL" : <font color="green">true</font>,  setAddCustomLoadsAnySpurEnabled
+      "RCL" : <font color="green">true</font>,  setRemoveCustomLoadsEnabled
+      "LEE" : <font color="green">true</font>,  setLoadEmptyEnabled
+    },
+    "TR" : {  <font color="blue">Type Rubric</font> Aligner les types de voies du TrainPlayer et du JMRI.
       "industry": "Spur",
       "interchange": "Interchange",
       "staging": "Staging",
-      "class yard": "Yard"
+      "class yard": "Yard",
+      "XO reserved": "Spur"
     }
 
 </pre>

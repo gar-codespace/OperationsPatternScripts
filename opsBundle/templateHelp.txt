@@ -1,4 +1,6 @@
 >Add button to Panel Pro frame, plugin is not displayed but still enabled
+> Adjustments to operations settings.
+> Align TrainPlayer and JMRI track types.
 >All Locations (written by this plugin)
 >Alpha value
 >Any of these colors can be changed
@@ -13,6 +15,7 @@
 >Default panel width
 >Track Pattern Subroutine - Demonstration at a yard</A>
 >Track Pattern Subroutine - Demonstration at industry</A>
+>Default encoding
 >Destination designator
 >Destination Track designator
 >Do not edit these
@@ -32,11 +35,11 @@ In other cases, if a mistake is made editing the PatternConfig.json file, the pl
 >Ignore Track Length flag (set by user, written by this plugin)
 >Include this subroutine in the Control Panel
 >Introduction
->JMRI Model Railroad scale.
+> JMRI Model Railroad scale.
 >Key
 >List of TrainPlayer caboose car codes.
 >List of TrainPlayer car codes for passenger cars.
->Default encoding
+> Names of the TrainPlayer layout export files.
 >No color can be specified with ""
 >Not Implemented
 >o2o Subroutine, ops 2 ops
