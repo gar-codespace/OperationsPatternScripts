@@ -13,7 +13,6 @@ class ManageGui:
 
     def __init__(self):
 
-        self.psLog = PSE.LOGGING.getLogger('OPS.o2oSubroutine.View')
         self.configFile = PSE.readConfigFile('o2o')
 
         return

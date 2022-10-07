@@ -1,10 +1,8 @@
 
 Todo:
   o2o new and update not bullet proof.
-  JMRI prop to automatically save size and pos, replaces PSE.updateWindowParams()
   Update OPS help html.
   Tighten up the except part of all try/except.
-  Revisit logging again.
   How to publish DeepL?
   Make a subroutine template called GenericSubroutine.
 
@@ -18,6 +16,7 @@ Tested Items:
     Works if two instances of PanelPro are open
     Test for file write locations OK.
     All Set Cars windows close when Pattern Scripts window is closed OK.
+    Setting JmriJFrame(True, True) has no effect, size and position is manually saved.
     PatternConfig.json version check OK.
     Moved ENCODING value into the config file
     Move config file master copy into psEntities to shield it from accidental edit.

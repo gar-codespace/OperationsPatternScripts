@@ -49,7 +49,7 @@ LMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.LocationMa
 CMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.cars.CarManagerXml)
 EMX = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.engines.EngineManagerXml)
 
-_psLog = LOGGING.getLogger('OPS.PSE.PSE')
+_psLog = LOGGING.getLogger('OPS.OE.PSE')
 
 
 class Logger:
@@ -139,10 +139,11 @@ class CreateStubFile:
 
     def writeStubFile(self):
 
+        _psLog.debug('CreateStubFile.writeStubFile')
+
         stubFilePath = OS_PATH.join(self.stubLocation, 'psStub.html')
 
         genericWriteReport(stubFilePath, self.newStubFile)
-        _psLog.debug('psStub writen from stub_template')
 
         return
 
@@ -188,7 +189,7 @@ def closeSetCarsWindows():
     return
 
 def updateWindowParams(window):
-    """This can be done automatically by setting a prop somewhere
+    """Setting JmriJFrame(True, True) has no effect
         Used by:
         MainScript.Controller.closePsWindow
         Listeners.PatternScriptsWindow.windowClosing
@@ -658,53 +659,57 @@ def getGenericColor(colorName):
 
     colorPalette = readConfigFile('CD')['CP']
 
-    try:
-        r = colorPalette[colorName]["R"]
-        g = colorPalette[colorName]["G"]
-        b = colorPalette[colorName]["B"]
-        a = colorPalette[colorName]["A"]
 
-        return JAVA_AWT.Color(r, g, b, a)
+    r = colorPalette[colorName]["R"]
+    g = colorPalette[colorName]["G"]
+    b = colorPalette[colorName]["B"]
+    a = colorPalette[colorName]["A"]
 
-    except KeyError:
+    return JAVA_AWT.Color(r, g, b, a)
 
-        return None
+
 
 def getCarColor():
     """Used by:
         PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
         """
 
-    colorName = readConfigFile('CD')['carColor']
-    color = getGenericColor(colorName)
-    if not color:
+    try:
+        colorName = readConfigFile('CD')['carColor']
+        color = getGenericColor(colorName)
+        return color
+    except:
         _psLog.warning('Car color definition not found in PatternConfig.json')
+        return JAVA_AWT.Color(0, 0, 0, 0)
 
-    return color
 
 def getLocoColor():
     """Used by:
         PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
         """
 
-    colorName = readConfigFile('CD')['locoColor']
-    color = getGenericColor(colorName)
-    if not color:
+    try:
+        colorName = readConfigFile('CD')['locoColor']
+        color = getGenericColor(colorName)
+        return color
+    except:
         _psLog.warning('Engine color definition not found in PatternConfig.json')
+        return JAVA_AWT.Color(0, 0, 0, 0)
 
-    return color
 
 def getAlertColor():
     """Used by:
         PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
         """
 
-    colorName = readConfigFile('CD')['alertColor']
-    color = getGenericColor(colorName)
-    if not color:
+    try:
+        colorName = readConfigFile('CD')['alertColor']
+        color = getGenericColor(colorName)
+        return color
+    except:
         _psLog.warning('Alert color definition not found in PatternConfig.json')
+        return JAVA_AWT.Color(0, 0, 0, 0)
 
-    return color
 
 """Translation Methods"""
 

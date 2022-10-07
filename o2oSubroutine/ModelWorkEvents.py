@@ -192,14 +192,12 @@ class jmriManifestConversion:
 
 
 class o2oWorkEvents:
-    """This class makes the o2o work event list for TrainPlayer
+    """This class makes the o2o work event list for TrainPlayer.
         TrainPlayer rolling stock IDs are used to identify TP RS,
-        tpRollingStockData is the LUT for that.
+        using tpRollingStockData.json as the LUT.
         """
 
     def __init__(self, workEvents):
-
-        self.psLog = PSE.LOGGING.getLogger('OPS.o2o.o2oWorkEvents')
 
         reportName = 'tpRollingStockData'
         fileName = reportName + '.json'

@@ -9,12 +9,10 @@ import jmri.util.swing
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelEntities'
 SCRIPT_REV = 20220101
 
-_psLog = PSE.LOGGING.getLogger('OPS.TP.ModelNew')
+_psLog = PSE.LOGGING.getLogger('OPS.o2o.ModelEntities')
 
 def tpDirectoryExists():
-    """Checks for the Reports folder in TraipPlayer.
-        Possibly move this to o2o.ModelEntities.
-        """
+    """Checks for the Reports folder in TraipPlayer."""
 
     tpDirectory = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData', 'Roaming', 'TrainPlayer', 'Reports')
 
@@ -27,8 +25,7 @@ def tpDirectoryExists():
         return
 
 def updateContinuingTracks(trackId, trackData, previousTrackData):
-    """The data in previousTrackData is modified by
-        the data in trackData.
+    """The data in previousTrackData is modified by the data in trackData.
         Deselect all types for spur tracks.
         Used by:
         Model.UpdateLocationsAndTracks.updateContinuingTracks
@@ -111,13 +108,15 @@ def makeNewSchedule(id, industry):
     return
 
 def makeNewTrack(trackId, trackData):
-    """Set spur length to 'spaces' from TP
-        Deselect all types for spur tracks
+    """Set spur length to 'spaces' from TP.
+        Deselect all types for spur tracks.
         Used by:
         Model.NewLocationsAndTracks.newLocations
         Model.UpdateLocationsAndTracks.addNewTracks
         Model.UpdateLocationsAndTracks.updateContinuingTracks
         """
+        
+    _psLog.debug('makeNewTrack')
 
     typeRubric = PSE.readConfigFile('o2o')['TR']
     jmriTrackType = typeRubric[trackData['type']]
@@ -126,7 +125,6 @@ def makeNewTrack(trackId, trackData):
     xTrack = loc.addTrack(trackData['track'], jmriTrackType)
     xTrack.setComment(trackId)
 
-    _psLog.debug('deselectCarTypesForSpurs')
     if trackData['type'] == 'Spur':
         trackLength = int(trackData['capacity']) * PSE.readConfigFile('o2o')['DL']
         xTrack.setLength(trackLength)

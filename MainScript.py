@@ -46,7 +46,7 @@ class Model:
         return
 
     def validatePatternConfig(self):
-        """To be reworked in v3"""
+        """To be reworked when mergeConfigFiles() is implemented."""
 
         if not PSE.validateConfigFileVersion():
             PSE.mergeConfigFiles()
@@ -122,6 +122,8 @@ class View:
 
     def makePatternScriptsWindow(self):
 
+        self.psLog.debug('makePatternScriptsWindow')
+
         uniqueWindow = PSE.JMRI.util.JmriJFrame()
 
         asMenuItem = self.makeMenuItem(self.setAsDropDownText())
@@ -166,7 +168,7 @@ class View:
         uniqueWindow.addWindowListener(Listeners.PatternScriptsWindow())
         uniqueWindow.setJMenuBar(psMenuBar)
         uniqueWindow.add(self.controlPanel)
-        uniqueWindow.pack()
+        # uniqueWindow.pack()
         uniqueWindow.setSize(configPanel['PW'], configPanel['PH'])
         uniqueWindow.setLocation(configPanel['PX'], configPanel['PY'])
         uniqueWindow.setVisible(True)
@@ -334,10 +336,12 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         return
 
     def closePsWindow(self):
-        """Invoked by Restart From Defaults pulldown"""
+        """Used by:
+            tpItemSelected
+            shutdownPlugin
+            """
 
         for frame in PSE.JMRI.util.JmriJFrame.getFrameList():
-            # frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
             if frame.getName() == 'patternScriptsWindow':
                 PSE.updateWindowParams(frame)
                 PSE.closeSetCarsWindows()
@@ -348,6 +352,11 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         return
 
     def buildThePlugin(self):
+        """Used by:
+            tpItemSelected
+            startupPlugin
+            patternScriptsButtonAction
+            """
 
         view = View(None)
         emptyPluginPanel = view.makePluginPanel()
@@ -371,8 +380,10 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
     def addMenuItemListeners(self):
         """Use the pull down item names as the attribute to set the
-        listener: asItemSelected, tpItemSelected, ooItemSelected, logItemSelected, helpItemSelected, Etc.
-        """
+            listener: asItemSelected, tpItemSelected, ooItemSelected, logItemSelected, helpItemSelected, Etc.
+            Used by:
+            buildThePlugin
+            """
 
         for menuItem in self.menuItemList:
             menuItem.addActionListener(getattr(self, menuItem.getName()))
@@ -487,24 +498,6 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         return
 
-    def shutdownPlugin(self):
-
-        self.removeTrainsTableListener()
-        self.removeBuiltTrainListener()
-        self.closePsWindow()
-
-        return
-
-    def startupPlugin(self):
-
-        PSE.BUNDLE = Bundle.getBundleForLocale()
-        PSE.CreateStubFile().make()
-        Bundle.makeHelpPage()
-
-        self.buildThePlugin()
-
-        return
-
     def helpItemSelected(self, OPEN_HELP_EVENT):
         """menu item-Help/Window help..."""
 
@@ -575,6 +568,34 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         return
 
+    def shutdownPlugin(self):
+        """Used by:
+            ptItemSelected
+            rsItemSelected
+            ooItemSelected
+            """
+
+        self.removeTrainsTableListener()
+        self.removeBuiltTrainListener()
+        self.closePsWindow()
+
+        return
+
+    def startupPlugin(self):
+        """Used by:
+            ptItemSelected
+            rsItemSelected
+            ooItemSelected
+            """
+
+        PSE.BUNDLE = Bundle.getBundleForLocale()
+        PSE.CreateStubFile().make()
+        Bundle.makeHelpPage()
+
+        self.buildThePlugin()
+
+        return
+        
     def handle(self):
 
         startTime = PSE.TIME.time()

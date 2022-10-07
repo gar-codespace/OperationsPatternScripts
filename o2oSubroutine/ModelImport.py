@@ -9,7 +9,7 @@ from o2oSubroutine import ModelEntities
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelImport'
 SCRIPT_REV = 20220101
 
-_psLog = PSE.LOGGING.getLogger('OPS.TP.ModelImport')
+_psLog = PSE.LOGGING.getLogger('OPS.o2o.ModelImport')
 
 def importTpRailroad():
     """Mini controller generates the tpRailroadData.json file"""
@@ -74,7 +74,7 @@ class TrainPlayerImporter:
             _psLog.info('TrainPlayer Industries file OK')
             self.okCounter += 1
         except:
-            _psLog.warning('TrainPlayer Locations file not found')
+            _psLog.warning('TrainPlayer Industries file not found')
             print('Not found: ' + self.tpIndustriesFile)
 
         try:

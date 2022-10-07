@@ -94,14 +94,14 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
 
         button = PSE.getPsButton()
         button.setEnabled(True)
-        WINDOW_CLOSED.getSource().dispose()
 
         return
 
     def windowClosing(self, WINDOW_CLOSING):
 
-        PSE.closeSetCarsWindows()
         PSE.updateWindowParams(WINDOW_CLOSING.getSource())
+        PSE.closeSetCarsWindows()
+        WINDOW_CLOSING.getSource().dispose()
 
         return
 

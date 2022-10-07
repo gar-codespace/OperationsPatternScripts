@@ -12,7 +12,7 @@ from opsBundle import Translators
 SCRIPT_NAME = 'OperationsPatternScripts.opsBundle.Bundle'
 SCRIPT_REV = 20220101
 
-_psLog = PSE.LOGGING.getLogger('OPS.B.Bundle')
+_psLog = PSE.LOGGING.getLogger('OPS.OB.Bundle')
 
 PSE.BUNDLE_DIR = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle')
 
