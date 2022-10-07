@@ -1,6 +1,6 @@
 
 Todo:
-  o2o new and update not bullet proof.
+  Harden o2o sub.
   Tighten up the except part of all try/except.
   How to publish DeepL?
 

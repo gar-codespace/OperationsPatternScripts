@@ -540,8 +540,7 @@ class NewRollingStock:
             self.tpInventory.pop(0) # Remove the key
             _psLog.info('TrainPlayer Inventory file OK')
         except:
-            _psLog.warning('Not found: ' + self.tpRollingStockFile)
-            pass
+            _psLog.warning('TrainPlayer Inventory file not found')
 
         return
 
@@ -574,13 +573,14 @@ class NewRollingStock:
 
         rsData = {}
         for item in self.tpInventory:
-            line = item.split(';')
-            name, number = ModelEntities.parseCarId(line[0])
-            rsData[name + number] = line[7]
+            try:
+                line = item.split(';')
+                name, number = ModelEntities.parseCarId(line[0])
+                rsData[name + number] = line[7]
+            except:
+                pass
 
-
-        reportName = 'tpRollingStockData'
-        fileName = reportName + '.json'
+        fileName = 'tpRollingStockData.json'
         targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
 
         formattedRsFile = PSE.dumpJson(rsData)

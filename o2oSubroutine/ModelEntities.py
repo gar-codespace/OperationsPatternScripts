@@ -146,8 +146,6 @@ def tweakStagingTracks(track):
 
     o2oConfig =  PSE.readConfigFile('o2o')
 
-    print(o2oConfig['SM']['SCL'])
-
     track.setAddCustomLoadsAnySpurEnabled(o2oConfig['SM']['SCL'])
     track.setRemoveCustomLoadsEnabled(o2oConfig['SM']['RCL'])
     track.setLoadEmptyEnabled(o2oConfig['SM']['LEE'])
@@ -236,7 +234,7 @@ def getSetToLocationAndTrack(locationName, trackName):
         track = location.getTrackByName(trackName, None)
         return location, track
     except:
-        print('Not found: ', locationName, trackName)
+        print('Location and track not found: ', locationName, trackName)
         return None, None
 
 def closeTroublesomeWindows():
