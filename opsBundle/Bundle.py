@@ -4,7 +4,6 @@
 """Choose or create a language translation bundle for the current locale"""
 
 from urllib2 import urlopen
-import sys
 
 from opsEntities import PSE
 from opsBundle import Translators
@@ -16,11 +15,9 @@ _psLog = PSE.LOGGING.getLogger('OPS.OB.Bundle')
 
 PSE.BUNDLE_DIR = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle')
 
-PLUGIN = [] # Scratch file for translation
-HELP = [] # Scratch file for translation
 
 def getBundleForLocale():
-    """Gets the bundle for the current locale if it exists, otherwise english.
+    """Gets the bundle json for the current locale if it exists, otherwise english.
         Used by:
         Main.Controller.buildThePlugin
         Main.Controller.ptItemSelected
@@ -40,6 +37,89 @@ def getBundleForLocale():
 
     return bundleFile
 
+def getAllTextBundles():
+    """Combines the plugin bundle.txt file with all the bundle.txt files
+        for each subroutine listed in configFile("CP")["SI"].
+        Each bundle.txt file ends with a <CR>.
+        """
+
+    _psLog.debug('getAllTextBundles')
+
+    targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle', 'bundle.txt')
+    textBundles = PSE.genericReadReport(targetPath)
+
+    listOfSubroutines = []
+    subroutine = PSE.readConfigFile('CP')['SI']
+    for item in subroutine:
+        listOfSubroutines.append(''.join(item.keys()))
+
+    for subroutine in listOfSubroutines:
+        targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, subroutine, 'bundle.txt')
+        bundle = PSE.genericReadReport(targetPath)
+        textBundles += bundle
+
+    return textBundles
+
+def makePluginBundle(textBundle):
+    """Makes the plugin.<locale>.json file from getAllTextBundles()"""
+
+    fileName = 'plugin.' + PSE.psLocale()[:2] + '.json'
+    targetFile = PSE.OS_PATH.join(PSE.BUNDLE_DIR, fileName)
+
+    if PSE.JAVA_IO.File(targetFile).isFile():
+        _psLog.info('Translated bundle already exists')
+
+        return
+
+    translation = baseTranslator(textBundle)
+    PSE.genericWriteReport(targetFile, translation)
+
+    return
+
+def makeHelpBundle():
+    """Makes the help.<locale>.json file from bundle.help.txt"""
+
+    itemTarget = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'bundle.help.txt')
+    textBundle = PSE.genericReadReport(itemTarget)
+
+    fileName = 'help.' + PSE.psLocale()[:2] + '.json'
+    targetFile = PSE.OS_PATH.join(PSE.BUNDLE_DIR, fileName)
+
+    if PSE.JAVA_IO.File(targetFile).isFile():
+        _psLog.info('Translated bundle already exists')
+
+        return
+
+    translation = baseTranslator(textBundle)
+    PSE.genericWriteReport(targetFile, translation)
+
+    return
+
+def baseTranslator(textBundle):
+    """Mini controller translates each item in the bundleFile,
+        then appends it to the RAM based scratchFile.
+        used by:
+        makePluginBundle
+        makeHelpBundle
+        """
+
+    startTime = PSE.TIME.time()
+
+    scratch = []
+    translation = {}
+
+    inputBundle = textBundle.splitlines()
+    translator = Translator(inputBundle, scratch)
+    translator.setTranslationService()
+    translator.translateItems()
+    baseTranslation = translator.makeDictionary()
+    translation = PSE.dumpJson(baseTranslation)
+
+    runTime = PSE.TIME.time() - startTime
+    _psLog.info('Bundle translation time: ' + str(round(runTime, 2)))
+
+    return translation
+
 def makeHelpPage():
     """Makes the help page for the current locale.
         Used by:
@@ -47,7 +127,7 @@ def makeHelpPage():
         Main.Controller.ptItemSelected
         """
 
-    helpPageTemplatePath = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'templateHelp.html.txt')
+    helpPageTemplatePath = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'help.html.txt')
     baseHelpPage = PSE.genericReadReport(helpPageTemplatePath)
 
     fileName = 'help.' + PSE.psLocale() + '.json'
@@ -61,7 +141,7 @@ def makeHelpPage():
 
         baseHelpPage = baseHelpPage.replace(hKey, hValue)
 
-    fileName = 'Help.' + PSE.psLocale() + '.html'
+    fileName = 'help.' + PSE.psLocale() + '.html'
     helpPagePath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsSupport', fileName)
     PSE.genericWriteReport(helpPagePath, baseHelpPage)
 
@@ -81,67 +161,6 @@ def validateKeyFile():
         print('Authentication key file not found')
         return False
 
-def makeBundles():
-    """Makes a translated bundle for each of the items in readConfigFile('CP')['BT']
-        Example: itemScratch = opsBundle.Bundle.PLUGIN, stores translated items as they are returned.
-        Used by:
-        Main.Controller.ptItemSelected
-        """
-
-    bundleTargets = PSE.readConfigFile('CP')['BT']
-
-    for item in bundleTargets:
-
-        startTime = PSE.TIME.time()
-
-        fileName = 'template' + item + '.txt'
-        itemSource = PSE.OS_PATH.join(PSE.BUNDLE_DIR, fileName)
-
-        fileName = item + '.' + PSE.psLocale()[:2] + '.json'
-        itemTarget = PSE.OS_PATH.join(PSE.BUNDLE_DIR, fileName)
-
-        itemScratch = list(getattr(sys.modules[__name__], item.upper()))
-        bundleFile = getBundleTemplate(itemSource)
-
-        if not PSE.JAVA_IO.File(itemTarget).isFile():
-            translation = baseTranslator(bundleFile, itemScratch)
-            PSE.genericWriteReport(itemTarget, translation)
-
-            runTime = PSE.TIME.time() - startTime
-            _psLog.info(item + ' translation time: ' + str(round(runTime, 2)))
-
-        else:
-            _psLog.info(item + ' already exists')
-
-    print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-
-    return
-
-def getBundleTemplate(file):
-    """used by:
-        makeBundles
-        """
-
-    baseTemplate = PSE.genericReadReport(file)
-
-    bundleTemplate = baseTemplate.splitlines()
-
-    return bundleTemplate
-
-def baseTranslator(bundleFile, scratchFile):
-    """Mini controller translates each item in the bundleFile,
-        then appends it to the RAM based scratchFile.
-        used by:
-        makeBundles
-        """
-
-    translator = Translator(bundleFile, scratchFile)
-    translator.setTranslationService()
-    translator.translateItems()
-    baseTranslation = translator.makeDictionary()
-    translation = PSE.dumpJson(baseTranslation)
-
-    return translation
 
 
 class Translator:

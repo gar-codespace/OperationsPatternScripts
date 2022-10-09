@@ -280,7 +280,7 @@ while also eleminating the tedium of keeping two databases synchronised.</p>
       "OperationsEngineRoster",
       "OperationsLocationRoster"
     ],
-    "SR" : {  <font color="blue">Scale Rubric</font>, JMRI Model Railroad scale.
+    "SR" : {  <font color="blue">Scale Rubric</font> JMRI Model Railroad scale.
       "Z" : 1,
       "N" : 2,
       "TT" : 3,
@@ -312,7 +312,7 @@ while also eleminating the tedium of keeping two databases synchronised.</p>
       "PUL" : <font color="green">"Road", "Number", "Model", "Consist", "Destination"</font>,  setPickupEngineMessageFormat
       "SOL" : <font color="green">"Road", "Number", "Model", "Consist", "Destination"</font>,  setDropEngineMessageFormat
       },
-    "SM" : { <font color="blue">Staging Modifiers</font> Tweek staging track settings.
+    "SM" : {
       "SCL" : <font color="green">true</font>,  setAddCustomLoadsAnySpurEnabled
       "RCL" : <font color="green">true</font>,  setRemoveCustomLoadsEnabled
       "LEE" : <font color="green">true</font>,  setLoadEmptyEnabled

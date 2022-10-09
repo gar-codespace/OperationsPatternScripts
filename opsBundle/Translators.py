@@ -1,7 +1,10 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""Bundle translation services."""
+"""Bundle translation services.
+    The Translation Services offered are in configFile('CP')['TS']
+    The Translation Choice is configFile('CP')['TC']
+    """
 
 from urllib import urlencode
 

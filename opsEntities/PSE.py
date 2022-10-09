@@ -112,11 +112,11 @@ class CreateStubFile:
 
     def getHelpFileURI(self):
 
-        helpFileName = 'Help.' + psLocale() + '.html'
+        helpFileName = 'help.' + psLocale() + '.html'
         helpFilePath = OS_PATH.join(PLUGIN_ROOT, 'opsSupport', helpFileName)
 
         if not JAVA_IO.File(helpFilePath).isFile():
-            helpFileName = 'Help.en.html'
+            helpFileName = 'help.en.html'
             helpFilePath = OS_PATH.join(PLUGIN_ROOT, 'opsSupport', helpFileName)
 
         self.helpFilePath = JAVA_IO.File(helpFilePath).toURI().toString()

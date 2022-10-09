@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""Template."""
+"""This template serves as the framework for additional subroutines."""
 
 from opsEntities import PSE
 from GenericSubroutine import Model
@@ -10,7 +10,7 @@ from GenericSubroutine import View
 SCRIPT_NAME = 'OperationsPatternScripts.GenericSubroutine.Controller'
 SCRIPT_REV = 20220101
 
-_psLog = PSE.LOGGING.getLogger('OPS.o2o.Controller')
+_psLog = PSE.LOGGING.getLogger('OPS.GS.Controller')
 
 class StartUp:
     """Start the o2o subroutine"""

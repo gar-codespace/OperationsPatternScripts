@@ -472,7 +472,10 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(TRANSLATE_PLUGIN_EVENT)
 
-        Bundle.makeBundles()
+        textBundles = Bundle.getAllTextBundles()
+        Bundle.makePluginBundle(textBundles)
+
+        Bundle.makeHelpBundle()
         Bundle.makeHelpPage()
 
         self.shutdownPlugin()
@@ -595,7 +598,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         self.buildThePlugin()
 
         return
-        
+
     def handle(self):
 
         startTime = PSE.TIME.time()

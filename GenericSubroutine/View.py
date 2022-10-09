@@ -1,13 +1,15 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
+"""Template."""
+
 from opsEntities import PSE
 from GenericSubroutine import ViewEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.GenericSubroutine.View'
 SCRIPT_REV = 20220101
 
-_psLog = PSE.LOGGING.getLogger('OPS.GenericSubroutine.View')
+_psLog = PSE.LOGGING.getLogger('OPS.GS.View')
 
 class ManageGui:
 
@@ -23,7 +25,7 @@ class ManageGui:
         subroutineFrame = PSE.JAVX_SWING.JPanel() # the track pattern panel
         subroutineFrame.setName(u'generic')
         subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(
-            PSE.BUNDLE[u'Subroutine Name']
+            PSE.BUNDLE[u'Generic Subroutine']
             )
 
         return subroutineFrame

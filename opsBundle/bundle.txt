@@ -1,0 +1,16 @@
+Apply Schedule
+Do Not Apply Schedule
+Enable o2o subroutine
+Disable o2o subroutine
+Enable Track Pattern subroutine
+Disable Track Pattern subroutine
+Edit Config File
+GitHub Web Page
+Help
+Operations Folder
+Pattern Scripts
+Restart From Default
+Tools
+Translate Plugin
+View Log File
+Window Help...

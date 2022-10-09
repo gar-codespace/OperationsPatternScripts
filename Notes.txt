@@ -1,6 +1,9 @@
 
 Todo:
   Harden o2o sub.
+  Test bundle integrity on plugin start.
+  Test Generic Subroutine.
+  Read configFile("CP")["SI"] and automate the Activate/Deactivate pulldown items in the 'Tools' menu item.
   Tighten up the except part of all try/except.
   How to publish DeepL?
 

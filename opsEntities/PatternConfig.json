@@ -61,7 +61,6 @@
       "UX" : "UseSomethingElse"
     },
     "TC" : "UD",
-    "BT" : ["plugin", "help"],
     "AP" : true,
     "SE" : "utf-8",
     "SI": [
@@ -76,7 +75,7 @@
     "PW" : 1100,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20220911
+    "RV" : 20221001
   },
   "RM" : {
     "DS" : "No Waybill",

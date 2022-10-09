@@ -1,38 +1,30 @@
 Action
-Apply Schedule
 at
 Available:
 Cars at
-Disable o2o subroutine
-Disable Track Pattern subroutine
-Do Not Apply Schedule
-Edit Config File
-Enable o2o subroutine
-Enable Track Pattern subroutine
+empty
 Eqpt. Length:
-GitHub Web Page
 Hazardous
-Help
 Hold
 Ignore track length
+Import TrainPlayer© Railroad
+load
+Location Comment
 Location:
 Locomotives at
 Make Work
 No FD track
-New JMRI Railroad
 No final destination
+occupied
 On Train
-Operations Folder
-Pattern Scripts
-Track Pattern Subroutine
+Pattern Report for Tracks
 Report Totals for Cars:
 Report Work
-Restart From Default
 Restart with default settings
 Schedule for
 Schedule:
-Set Cars Form for track:
-Set Cars to Track
+Set Rolling Stock for track:
+Set Rolling Stock to Track
 Set to
 Set to Track
 Single
@@ -40,21 +32,17 @@ Switch List
 Switch List for Selected Tracks
 Switch List for Track
 There are no yard tracks for this location
-Tools
 Total Cars:
 Track Length:
 Track List:
 Track Pattern Report
+Track Pattern Subroutine
 Track Totals for Cars:
 Track:
 Tracks at
-o2o Subroutine
-Translate Plugin
-Import TrainPlayer© Railroad
-Update Rolling Stock
+unknown
 Update Inventory Error Report
-View Log File
-Window Help...
+Update Locations
 Work Event List for TrainPlayer©
 Work Location:
 Yard tracks only

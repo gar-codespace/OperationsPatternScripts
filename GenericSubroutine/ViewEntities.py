@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""Creates the TrainPlayer panel."""
+"""Template."""
 
 from opsEntities import PSE
 
@@ -14,8 +14,8 @@ class GenericSubroutinePanel:
         """The *.setName value is the name of the action for the widget"""
 
         self.nrButton = PSE.JAVX_SWING.JButton()
-        self.nrButton.setText(PSE.BUNDLE[u'New JMRI Railroad'])
-        self.nrButton.setName('newJmriRailroad')
+        self.nrButton.setText(PSE.BUNDLE[u'Button'])
+        self.nrButton.setName('Button')
 
         self.controlWidgets = []
 
