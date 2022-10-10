@@ -1,4 +1,7 @@
 {
+  "GS" : {
+    "abc": 123
+  },
   "CD": {
     "CP": {
       "BLANCH": {
@@ -69,13 +72,16 @@
       },
       {
         "o2oSubroutine": true
+      },
+      {
+        "GenericSubroutine": true
       }
     ],
     "PH" : 280,
     "PW" : 1100,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20221001
+    "RV" : 20221003
   },
   "RM" : {
     "DS" : "No Waybill",

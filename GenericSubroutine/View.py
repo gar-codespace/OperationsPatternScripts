@@ -15,7 +15,7 @@ class ManageGui:
 
     def __init__(self):
 
-        self.configFile = PSE.readConfigFile('generic')
+        self.configFile = PSE.readConfigFile('GS')
 
         return
 
@@ -24,9 +24,7 @@ class ManageGui:
 
         subroutineFrame = PSE.JAVX_SWING.JPanel() # the track pattern panel
         subroutineFrame.setName(u'generic')
-        subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(
-            PSE.BUNDLE[u'Generic Subroutine']
-            )
+        subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE[u'Generic Subroutine'])
 
         return subroutineFrame
 

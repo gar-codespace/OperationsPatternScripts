@@ -68,5 +68,7 @@
   "unknown" : "unknown",
   "load" : "load",
   "empty" : "empty",
+  "Generic Subroutine" : "Generic Subroutine",
+  "Button" : "Button",
   "version": 20220101
 }
