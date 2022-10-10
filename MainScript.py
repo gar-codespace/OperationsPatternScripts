@@ -129,6 +129,7 @@ class View:
         asMenuItem = self.makeMenuItem(self.setAsDropDownText())
         tpMenuItem = self.makeMenuItem(self.setTpDropDownText())
         o2oMenuItem = self.makeMenuItem(self.setOoDropDownText())
+        gsMenuItem = self.makeMenuItem(self.setGsDropDownText()) # Generic subroutine menu item
         ptMenuItem = self.makeMenuItem(self.setPtDropDownText())
         if not self.isKeyFile:
             ptMenuItem.setEnabled(False)
@@ -146,6 +147,7 @@ class View:
         toolsMenu.add(asMenuItem)
         toolsMenu.add(tpMenuItem)
         toolsMenu.add(o2oMenuItem)
+        # toolsMenu.add(gsMenuItem)
         toolsMenu.add(editConfigMenuItem)
         toolsMenu.add(ptMenuItem)
         toolsMenu.add(rsMenuItem)
@@ -197,7 +199,7 @@ class View:
         return menuText, 'asItemSelected'
 
     def setTpDropDownText(self):
-        """itemMethod - Set the drop down text per the config file PatternTracksSubroutine Include flag"""
+        """itemMethod - Set the drop down text per the config file PatternTracksSubroutine Include flag ['CP']['SI']"""
 
         patternConfig = PSE.readConfigFile('CP')
         if patternConfig['SI'][0]['PatternTracksSubroutine']:
@@ -208,7 +210,7 @@ class View:
         return menuText, 'tpItemSelected'
 
     def setOoDropDownText(self):
-        """itemMethod - Set the drop down text per the config file o2oSubroutine Include flag"""
+        """itemMethod - Set the drop down text per the config file o2oSubroutine Include flag ['CP']['SI']"""
 
         patternConfig = PSE.readConfigFile('CP')
         if patternConfig['SI'][1]['o2oSubroutine']:
@@ -217,6 +219,19 @@ class View:
             menuText = PSE.BUNDLE[u'Enable o2o subroutine']
 
         return menuText, 'ooItemSelected'
+
+    def setGsDropDownText(self):
+        """itemMethod - Set the drop down text per the config file genericSubroutine Include flag ['CP']['SI']
+            Template when including another subroutine
+            """
+
+        patternConfig = PSE.readConfigFile('CP')
+        if patternConfig['SI'][1]['o2oSubroutine']:
+            menuText = PSE.BUNDLE[u'Disable generic subroutine']
+        else:
+            menuText = PSE.BUNDLE[u'Enable generic subroutine']
+
+        return menuText, 'gsItemSelected'
 
     def setPtDropDownText(self):
         """itemMethod - Set the drop down text for the Translate Plugin item"""
@@ -261,7 +276,7 @@ class View:
         return menuText, 'ecItemSelected'
 
     def setOfDropDownText(self):
-        """itemMethod - Set the drop down text for the edit config file item"""
+        """itemMethod - Set the drop down text for the operations folder item"""
 
         menuText = PSE.BUNDLE[u'Operations Folder']
 
@@ -436,15 +451,15 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         return
 
-    def ooItemSelected(self, TP_ACTIVATE_EVENT):
+    def ooItemSelected(self, O2O_ACTIVATE_EVENT):
         """menu item-Tools/Enable o2o subroutine"""
 
-        self.psLog.debug(TP_ACTIVATE_EVENT)
+        self.psLog.debug(O2O_ACTIVATE_EVENT)
         patternConfig = PSE.readConfigFile()
 
         if patternConfig['CP']['SI'][1]['o2oSubroutine']: # If enabled, turn it off
             patternConfig['CP']['SI'][1].update({'o2oSubroutine': False})
-            TP_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Enable o2o subroutine'])
+            O2O_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Enable o2o subroutine'])
 
             self.trainsTableModel.removeTableModelListener(self.trainsTableListener)
             self.removeBuiltTrainListener()
@@ -453,7 +468,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
             print('o2o subroutine deactivated')
         else:
             patternConfig['CP']['SI'][1].update({'o2oSubroutine': True})
-            TP_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Disable o2o subroutine'])
+            O2O_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Disable o2o subroutine'])
 
             self.trainsTableModel.addTableModelListener(self.trainsTableListener)
             self.addBuiltTrainListener()
@@ -464,6 +479,15 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         PSE.writeConfigFile(patternConfig)
         self.shutdownPlugin()
         self.startupPlugin()
+
+        return
+
+    def gsItemSelected(GS_ACTIVATE_EVENT):
+        """menu item-Tools/Enable Generic Subroutine.
+            Put stuff here that the subroutine does.
+            """
+
+        self.psLog.debug(GS_ACTIVATE_EVENT)
 
         return
 

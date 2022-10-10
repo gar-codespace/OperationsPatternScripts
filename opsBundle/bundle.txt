@@ -1,9 +1,11 @@
 Apply Schedule
 Do Not Apply Schedule
-Enable o2o subroutine
+Disable generic subroutine
 Disable o2o subroutine
-Enable Track Pattern subroutine
 Disable Track Pattern subroutine
+Enable generic subroutine
+Enable o2o subroutine
+Enable Track Pattern subroutine
 Edit Config File
 GitHub Web Page
 Help

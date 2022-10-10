@@ -1,7 +1,6 @@
 
 Todo:
   Harden o2o sub.
-  Read configFile("CP")["SI"] and automate the Activate/Deactivate pulldown items in the 'Tools' menu item.
   Tighten up the except part of all try/except.
   How to publish DeepL?
 
@@ -107,6 +106,7 @@ Catches Items:
 
 Version 3 ideas:
   020.ModelWorkEvents.*.parsePtRs and o2o.ModelWorkEvents.*.parseRS do the same things in a different way, can they be merged?
+  Read configFile("CP")["SI"] and automate the Activate/Deactivate pulldown items in the 'Tools' menu item.
   Harden up Bundle against web errors, untranslated items.
   How to use locale modifier, IE en-GB.
   Should import button be part of new and update?

@@ -70,5 +70,7 @@
   "empty" : "empty",
   "Generic Subroutine" : "Generic Subroutine",
   "Button" : "Button",
+  "Enable generic subroutine" : "Enable generic subroutine",
+  "Disable generic subroutine" : "Disable generic subroutine",
   "version": 20220101
 }
