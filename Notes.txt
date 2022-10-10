@@ -10,14 +10,13 @@ Comments:
 Tested Items:
   Plugin
     Handle multiple versions OK.
-    Generic sub tests OK.
     Handles font size change OK.
-    Works if two instances of PanelPro are open
+    Works if two instances of PanelPro are open OK.
     Test for file write locations OK.
     All Set Cars windows close when Pattern Scripts window is closed OK.
     Setting JmriJFrame(True, True) has no effect, size and position is manually saved.
     PatternConfig.json version check OK.
-    Moved ENCODING value into the config file
+    Moved ENCODING value into the config file.
     Move config file master copy into psEntities to shield it from accidental edit.
     Bad edits of config file protected as much as possible. CBB
     Pattern Scripts plugin hardened against errors  more or less. CBB
@@ -28,6 +27,7 @@ Tested Items:
     SI set to TP only works OK.
     Handles JMRI load type Empty or empty OK.
     PatternScriptEntities.getShortLoadType works and translates OK.
+    Generic sub tests OK.
 
   Reports
     Test with really long location and spur names OK.

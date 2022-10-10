@@ -74,14 +74,14 @@
         "o2oSubroutine": true
       },
       {
-        "GenericSubroutine": true
+        "GenericSubroutine": false
       }
     ],
     "PH" : 280,
     "PW" : 1100,
     "PX" : 0,
     "PY" : 0,
-    "RV" : 20221003
+    "RV" : 20221004
   },
   "RM" : {
     "DS" : "No Waybill",
