@@ -41,9 +41,19 @@ class StartUp:
         return self.subroutinePanel
 
     def activateWidgets(self):
-        """The *.getName value is the name of the action for the widget."""
+        """The widget.getName() value is the name of the action for the widget.
+            IE 'button'
+            """
 
-        # for widget in self.widgets:
-        #     widget.actionPerformed = getattr(self, widget.getName())
+        for widget in self.widgets:
+            widget.actionPerformed = getattr(self, widget.getName())
+
+        return
+
+    def button(self, EVENT):
+        '''Whatever it is this button does.'''
+
+        _psLog.debug(EVENT)
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return

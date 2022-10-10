@@ -15,7 +15,7 @@ class GenericSubroutinePanel:
 
         self.nrButton = PSE.JAVX_SWING.JButton()
         self.nrButton.setText(PSE.BUNDLE[u'Button'])
-        self.nrButton.setName('Button')
+        self.nrButton.setName('button')
 
         self.controlWidgets = []
 
