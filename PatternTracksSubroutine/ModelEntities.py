@@ -102,7 +102,7 @@ def sortLocoList(locoList):
             translatedkey = (sortKey)
             locoList.sort(key=lambda row: row[translatedkey])
         except:
-            pass
+            print('Loco lst not sorted')
 
     return locoList
 
@@ -193,7 +193,7 @@ def sortCarList(carList):
             translatedkey = (sortKey)
             carList.sort(key=lambda row: row[translatedkey])
         except:
-            pass
+            print('Car list not sorted')
 
     return carList
 

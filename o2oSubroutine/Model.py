@@ -578,6 +578,7 @@ class NewRollingStock:
                 name, number = ModelEntities.parseCarId(line[0])
                 rsData[name + number] = line[7]
             except:
+                _psLog.warning('Line not parsed: ' + item)
                 pass
 
         fileName = 'tpRollingStockData.json'

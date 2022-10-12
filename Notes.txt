@@ -1,7 +1,6 @@
 
 Todo:
-  Harden o2o sub.
-  Tighten up the except part of all try/except.
+  Retest everything.
   How to publish DeepL?
 
 Comments:

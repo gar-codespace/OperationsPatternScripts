@@ -198,8 +198,7 @@ def getTpExport(fileName):
         tpExport = PSE.genericReadReport(targetPath).split('\n')
         return tpExport
     else:
-        return
-    return
+        return False
 
 def parseCarId(carId):
     """Splits a TP car id into a JMRI road name and number

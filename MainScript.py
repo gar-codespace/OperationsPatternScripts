@@ -226,7 +226,7 @@ class View:
             """
 
         patternConfig = PSE.readConfigFile('CP')
-        if patternConfig['SI'][1]['o2oSubroutine']:
+        if patternConfig['SI'][2]['GenericSubroutine']:
             menuText = PSE.BUNDLE[u'Disable generic subroutine']
         else:
             menuText = PSE.BUNDLE[u'Enable generic subroutine']

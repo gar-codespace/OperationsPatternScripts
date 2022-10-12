@@ -55,12 +55,14 @@ class StartUp:
     def newJmriRailroad(self, EVENT):
         '''Creates a new JMRI railroad from the tpRailroadData.json file'''
 
-        ModelImport.importTpRailroad()
-        Model.newJmriRailroad()
+        _psLog.debug(EVENT)
+
+        if ModelImport.importTpRailroad():
+            Model.newJmriRailroad()
+        else:
+            print('Railroad not imported')
 
         Controller.updatePatternTracksSubroutine(EVENT)
-
-        _psLog.debug(EVENT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
@@ -68,12 +70,14 @@ class StartUp:
     def updateJmriRailroad(self, EVENT):
         '''Writes a new car and engine xml'''
 
-        ModelImport.importTpRailroad()
-        Model.updateJmriRailroad()
-
-        Controller.updatePatternTracksSubroutine(EVENT)
-
         _psLog.debug(EVENT)
+
+        if ModelImport.importTpRailroad():
+            Model.updateJmriRailroad()
+        else:
+            print('Railroad not imported')
+            
+        Controller.updatePatternTracksSubroutine(EVENT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return

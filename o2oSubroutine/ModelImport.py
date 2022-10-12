@@ -15,25 +15,35 @@ def importTpRailroad():
     """Mini controller generates the tpRailroadData.json file"""
 
     trainPlayerImport = TrainPlayerImporter()
+# Import the three files
+    if not trainPlayerImport.getTpReportFiles():
+        _psLog.critical('One or more missing files')
+        return False
+# Test the integrity of the files
+    try:
+        trainPlayerImport.processFileHeaders()
+        trainPlayerImport.getRrLocations()
+        trainPlayerImport.getRrLocales()
+        trainPlayerImport.getAllTpRoads()
+        trainPlayerImport.getAllTpIndustry()
 
-    trainPlayerImport.getTpReportFiles()
-    trainPlayerImport.processFileHeaders()
-    trainPlayerImport.getRrLocations()
-    trainPlayerImport.getRrLocales()
-    trainPlayerImport.getAllTpRoads()
-    trainPlayerImport.getAllTpIndustry()
+        trainPlayerImport.getAllTpCarAar()
+        trainPlayerImport.getAllTpCarLoads()
+        trainPlayerImport.getAllTpCarKernels()
 
-    trainPlayerImport.getAllTpCarAar()
-    trainPlayerImport.getAllTpCarLoads()
-    trainPlayerImport.getAllTpCarKernels()
+        trainPlayerImport.getAllTpLocoTypes()
+        trainPlayerImport.getAllTpLocoModels()
+        trainPlayerImport.getAllTpLocoConsists()
 
-    trainPlayerImport.getAllTpLocoTypes()
-    trainPlayerImport.getAllTpLocoModels()
-    trainPlayerImport.getAllTpLocoConsists()
+        trainPlayerImport.writeTPLayoutData()
 
-    trainPlayerImport.writeTPLayoutData()
+        return True
 
-    return
+    except IndexError:
+        print('Error: files corrupted')
+        _psLog.critical('Error: TrainPlayer export files corrupted')
+        return False
+
 
 
 class TrainPlayerImporter:
@@ -49,7 +59,6 @@ class TrainPlayerImporter:
         self.tpLocations = []
         self.tpIndustries = []
         self.tpInventory = []
-        self.okCounter = 0
 
         reportName = 'tpRailroadData'
         fileName = reportName + '.json'
@@ -59,33 +68,37 @@ class TrainPlayerImporter:
         return
 
     def getTpReportFiles(self):
-        """Needs to do more if the files don't check"""
+        """Returns true if all 3 files import ok."""
 
-        try:
-            self.tpLocations = ModelEntities.getTpExport(self.tpLocationsFile)
+        fileCheck = True
+
+        self.tpLocations = ModelEntities.getTpExport(self.tpLocationsFile)
+        if self.tpLocations:
             _psLog.info('TrainPlayer Locations file OK')
-            self.okCounter += 1
-        except:
-            _psLog.warning('TrainPlayer Locations file not found')
+        else:
+            _psLog.critical('TrainPlayer Locations file not found')
             print('Not found: ' + self.tpLocationsFile)
+            fileCheck = False
 
-        try:
-            self.tpIndustries = ModelEntities.getTpExport(self.tpIndustriesFile)
+
+        self.tpIndustries = ModelEntities.getTpExport(self.tpIndustriesFile)
+        if self.tpIndustries:
             _psLog.info('TrainPlayer Industries file OK')
-            self.okCounter += 1
-        except:
-            _psLog.warning('TrainPlayer Industries file not found')
+        else:
+            _psLog.critical('TrainPlayer Industries file not found')
             print('Not found: ' + self.tpIndustriesFile)
+            fileCheck = False
 
-        try:
-            self.tpInventory = ModelEntities.getTpExport(self.tpRollingStockFile)
+
+        self.tpInventory = ModelEntities.getTpExport(self.tpRollingStockFile)
+        if self.tpInventory:
             _psLog.info('TrainPlayer Inventory file OK')
-            self.okCounter += 1
-        except:
-            _psLog.warning('TrainPlayer Inventory file not found')
+        else:
+            _psLog.critical('TrainPlayer Inventory file not found')
             print('Not found: ' + self.tpRollingStockFile)
+            fileCheck = False
 
-        return
+        return fileCheck
 
     def processFileHeaders(self):
         """Process the header info from the TP report files"""
