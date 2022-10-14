@@ -76,7 +76,22 @@ class StartUp:
             Model.updateJmriRailroad()
         else:
             print('Railroad not imported')
-            
+
+        Controller.updatePatternTracksSubroutine(EVENT)
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+        return
+
+    def updateJmriRollingingStock(self, EVENT):
+        '''Writes a new car and engine xml'''
+
+        _psLog.debug(EVENT)
+
+        if ModelImport.importTpRailroad():
+            Model.updateJmriRollingingStock()
+        else:
+            print('Rolling Stock not updated')
+
         Controller.updatePatternTracksSubroutine(EVENT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

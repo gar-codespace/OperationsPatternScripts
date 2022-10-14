@@ -1,5 +1,5 @@
-
 Todo:
+  Why does o2o update need a restart of jmri to load the routes?
   Retest everything.
   How to publish DeepL?
 

@@ -13,7 +13,10 @@ SCRIPT_REV = 20220101
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.Model')
 
 def newJmriRailroad():
-    """Mini controller to make a new JMRI railroad from the tpRailroadData.json and TrainPlayer Report - Rolling Stock.txt files."""
+    """Mini controller to make a new JMRI railroad from the tpRailroadData.json and TrainPlayer Report - Rolling Stock.txt files.
+        Used by:
+        Controller.StartUp.newJmriRailroad
+        """
 
     ModelEntities.closeTroublesomeWindows()
 
@@ -24,18 +27,28 @@ def newJmriRailroad():
     PSE.CM.dispose()
     PSE.EM.dispose()
 
+    fileName = 'OperationsTrainRoster.xml'
+    targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
+    PSE.JAVA_IO.File(targetFile).delete()
+
+    fileName = 'OperationsRouteRoster.xml'
+    targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
+    PSE.JAVA_IO.File(targetFile).delete()
+
     jmriRailroad = SetupXML()
     jmriRailroad.tweakOperationsXml()
 
-    allRsRosters = NewRsAttributes()
-    allRsRosters.newRoads()
-    allRsRosters.newCarAar()
-    allRsRosters.newCarLoads()
-    allRsRosters.newCarKernels()
+    deleteRoads()
+    deleteCarAar()
 
-    allRsRosters.newLocoModels()
-    allRsRosters.newLocoTypes()
-    allRsRosters.newLocoConsist()
+    allRsRosters = AddRsAttributes()
+    allRsRosters.addRoads()
+    allRsRosters.addCarAar()
+    allRsRosters.addCarLoads()
+    allRsRosters.addCarKernels()
+    allRsRosters.addLocoModels()
+    allRsRosters.addLocoTypes()
+    allRsRosters.addLocoConsist()
 
     newLocations = NewLocationsAndTracks()
     newLocations.newLocations()
@@ -70,43 +83,57 @@ def newJmriRailroad():
     return
 
 def updateJmriRailroad():
-    """Mini controller to update JMRI railroad from the tpRailroadData.json and
-        TrainPlayer Report - Rolling Stock.txt files.
+    """Mini controller to update JMRI railroad.
         Does not change the Trains and Routes xml.
-        Nothing fancy, new car and engine xml files are written.
+        Nothing fancy, new location, car and engine xml files are written.
         Used by:
-        Controller.StartUp.updateRailroad
+        Controller.StartUp.updateJmriRailroad
         """
 
     ModelEntities.closeTroublesomeWindows()
 
+    PSE.TM.dispose()
+    PSE.RM.dispose()
+    PSE.LM.dispose()
+    PSE.SM.dispose()
     PSE.CM.dispose()
     PSE.EM.dispose()
 
-    allRsRosters = NewRsAttributes()
-    allRsRosters.newRoads()
-    allRsRosters.newCarAar()
-    allRsRosters.newCarLoads()
-    allRsRosters.newCarKernels()
+    copyFiles('', '.bak')
+    # backUpList = ['OperationsTrainRoster', 'OperationsRouteRoster']
+    # for item in backUpList:
+    #     sourceName = item + '.xml'
+    #     backupName = item + '.xml.ops'
+    #
+    #     sourceFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', sourceName)
+    #     sourceFile = PSE.JAVA_IO.File(sourceFile)
+    #
+    #     targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', backupName)
+    #     targetFile = PSE.JAVA_IO.File(targetFile)
+    #
+    #     try:
+    #         PSE.JMRI.util.FileUtil.copy(sourceFile, targetFile)
+    #     except:
+    #         print('Not found: ' + item)
 
-    allRsRosters.newLocoModels()
-    allRsRosters.newLocoTypes()
-    allRsRosters.newLocoConsist()
+    deleteRoads()
+    deleteCarAar()
 
-    updateLocations = UpdateLocationsAndTracks()
-    updateLocations.getContinuingLocations()
-    updateLocations.getContinuingTracks()
-    PSE.LM.dispose()
-    updateLocations.getScheduleLists()
-    updateLocations.removeObsoleteSchedules()
-    updateLocations.addNewSchedules()
-    # PSE.SM.dispose()
-    # updateLocations.newSchedules()
-    updateLocations.addNewLocations()
-    updateLocations.addContinuingLocations()
-    updateLocations.addNewTracks()
-    updateLocations.addContinuingTracks()
-    updateLocations.addCarTypesToSpurs()
+    allRsRosters = AddRsAttributes()
+    allRsRosters.addRoads()
+    allRsRosters.addCarAar()
+    allRsRosters.addCarLoads()
+    allRsRosters.addCarKernels()
+
+    allRsRosters.addLocoModels()
+    allRsRosters.addLocoTypes()
+    allRsRosters.addLocoConsist()
+
+    newLocations = NewLocationsAndTracks()
+    newLocations.newLocations()
+    newLocations.newSchedules()
+    newLocations.newTracks()
+    newLocations.addCarTypesToSpurs()
 
     newInventory = NewRollingStock()
     newInventory.getTpInventory()
@@ -122,14 +149,229 @@ def updateJmriRailroad():
     PSE.EMX.save()
     PSE.LMX.save()
 
-    PSE.OMX.initialize()
-    PSE.TMX.initialize()
-    PSE.RMX.initialize()
-    PSE.LMX.initialize()
-    PSE.CMX.initialize()
+    copyFiles('.bak', '')
+
+    # backUpList = ['OperationsTrainRoster', 'OperationsRouteRoster']
+    # for item in backUpList:
+    #     sourceName = item + '.xml.ops'
+    #     backupName = item + '.xml'
+    #
+    #     sourceFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', sourceName)
+    #     sourceFile = PSE.JAVA_IO.File(sourceFile)
+    #
+    #     targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', backupName)
+    #     targetFile = PSE.JAVA_IO.File(targetFile)
+    #
+    #     try:
+    #         PSE.JMRI.util.FileUtil.copy(sourceFile, targetFile)
+    #     except:
+    #         print('Not found: ' + item)
+
     PSE.EMX.initialize()
+    PSE.CMX.initialize()
+    PSE.LMX.initialize()
+    PSE.RMX.initialize()
+    PSE.TMX.initialize()
+    PSE.OMX.initialize()
 
     return
+
+def updateJmriRollingingStock():
+    """Mini controller to update only the rolling stock.
+        Used by:
+        Controller.Startup.updateJmriRollingingStock
+        """
+
+    ModelEntities.closeTroublesomeWindows()
+
+    PSE.CM.dispose()
+    PSE.EM.dispose()
+
+    allRsRosters = AddRsAttributes()
+    allRsRosters.addRoads()
+    allRsRosters.addCarAar()
+    allRsRosters.addCarLoads()
+    allRsRosters.addCarKernels()
+
+    allRsRosters.addLocoModels()
+    allRsRosters.addLocoTypes()
+    allRsRosters.addLocoConsist()
+
+    newInventory = NewRollingStock()
+    newInventory.getTpInventory()
+    newInventory.splitTpList()
+    newInventory.makeTpRollingStockData()
+    newInventory.newCars()
+    newInventory.newLocos()
+
+    PSE.CMX.save()
+    PSE.EMX.save()
+
+    return
+
+def copyFiles(fromSuffix, toSuffix):
+    """Specify a null suffix as '' """
+
+    backUpList = ['OperationsTrainRoster', 'OperationsRouteRoster']
+    for item in backUpList:
+        fromName = item + '.xml' + fromSuffix
+        toName = item + '.xml' + toSuffix
+
+        sourceFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fromName)
+        sourceFile = PSE.JAVA_IO.File(sourceFile)
+
+        targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', toName)
+        targetFile = PSE.JAVA_IO.File(targetFile)
+    # JMRI handles the error if there is no file
+        PSE.JMRI.util.FileUtil.copy(sourceFile, targetFile)
+
+    return
+
+def deleteRoads():
+    """Deletes the 'stock' road names that are part of a new JMRI car xml. """
+
+    _psLog.debug('deleteRoads')
+
+    tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarRoads
+    TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+    nameList = TCM.getNames()
+    for xName in nameList:
+        TCM.deleteName(xName)
+
+    return
+
+def deleteCarAar():
+    """Deletes the 'stock' car types that are part of a new JMRI car xml. """
+
+    _psLog.debug('deleteCarAar')
+
+    tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarTypes
+    TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+    nameList = TCM.getNames()
+    for xName in nameList:
+        TCM.deleteName(xName)
+
+    return
+
+
+class AddRsAttributes:
+    """TCM - Temporary Context Manager.
+        Nothing is removed from the operations xml files, only added to.
+        """
+
+    def __init__(self):
+
+        self.tpRailroadData = ModelEntities.getTpRailroadData()
+
+        return
+
+    def addRoads(self):
+        """Add any new road name from the tpRailroadData.json file.
+            Don't do this: newNames = list(set(self.tpRailroadData['roads']) - set(TCM.getNames()))
+            Null lists cause the default list to be added.
+            """
+
+        _psLog.debug('newRoads')
+
+        tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarRoads
+        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+        for xName in self.tpRailroadData['roads']:
+            TCM.addName(xName)
+
+        return
+
+    def addCarAar(self):
+        """Add any new type names using the aar names from the tpRailroadData.json file."""
+
+        _psLog.debug('newCarAar')
+
+        tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarTypes
+        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+        for xName in self.tpRailroadData['carAAR']:
+            TCM.addName(xName)
+
+        return
+
+    def addCarLoads(self):
+        """Add the loads and load types for each car type (TP AAR) in tpRailroadData.json.
+            Empty is the only TP empty type.
+            """
+
+        _psLog.debug('newCarLoads')
+
+        tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarLoads
+        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+        carLoads = self.tpRailroadData['carLoads']
+        for aar in self.tpRailroadData['carAAR']:
+            aar = unicode(aar, PSE.ENCODING)
+            TCM.addType(aar)
+            TCM.addName(aar, 'Empty')
+            TCM.addName(aar, 'Load')
+            TCM.setLoadType(aar, 'Empty', 'empty')
+            TCM.setLoadType(aar, 'Load', 'load')
+
+            for load in carLoads[aar]:
+                TCM.addName(aar, load)
+                TCM.setLoadType(aar, load, 'load')
+
+        return
+
+    def addCarKernels(self):
+        """Add new kernels using those from tpRailroadData.json."""
+
+        _psLog.debug('newCarKernels')
+
+        nameList = PSE.KM.getNameList()
+        for xName in self.tpRailroadData['carKernel']:
+            xName = unicode(xName, PSE.ENCODING)
+            PSE.KM.newKernel(xName)
+
+        return
+
+    def addLocoModels(self):
+        """Add new engine models using the model names from the tpRailroadData.json file."""
+
+        _psLog.debug('newLocoModels')
+
+        tc = PSE.JMRI.jmrit.operations.rollingstock.engines.EngineModels
+        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+        nameList = TCM.getNames()
+        for xName in self.tpRailroadData['locoModels']:
+            xModel = unicode(xName[0], PSE.ENCODING)
+            xType = unicode(xName[1], PSE.ENCODING)
+            TCM.addName(xModel)
+            TCM.setModelType(xModel, xType)
+            TCM.setModelLength(xModel, '40')
+
+        return
+
+    def addLocoTypes(self):
+        """Add new engine types using the type names from the tpRailroadData.json file."""
+
+        _psLog.debug('newLocoTypes')
+
+        tc = PSE.JMRI.jmrit.operations.rollingstock.engines.EngineTypes
+        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+        nameList = TCM.getNames()
+        for xName in self.tpRailroadData['locoTypes']:
+            xName = unicode(xName, PSE.ENCODING)
+            TCM.addName(xName)
+
+        return
+
+    def addLocoConsist(self):
+        """Add new JMRI consist names using the consist names from the tpRailroadData.json file."""
+
+        _psLog.debug('newLocoConsist')
+
+        nameList = PSE.ZM.getNameList()
+        for xName in self.tpRailroadData['locoConsists']:
+            xName = unicode(xName, PSE.ENCODING)
+            PSE.ZM.newConsist(xName)
+
+        return
+
+
 
 
 class UpdateLocationsAndTracks():
@@ -343,10 +585,10 @@ class NewRsAttributes:
 
         tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarRoads
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
-        nameList = TCM.getNames()
-        for xName in nameList:
-            xName = unicode(xName, PSE.ENCODING)
-            TCM.deleteName(xName)
+        # nameList = TCM.getNames()
+        # for xName in nameList:
+        #     xName = unicode(xName, PSE.ENCODING)
+        #     TCM.deleteName(xName)
         for xName in self.tpRailroadData['roads']:
             xName = unicode(xName, PSE.ENCODING)
             TCM.addName(xName)

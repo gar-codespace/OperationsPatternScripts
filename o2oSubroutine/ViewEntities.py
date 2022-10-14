@@ -21,6 +21,10 @@ class O2oSubroutinePanel:
         self.urButton.setText(PSE.BUNDLE[u'Update JMRI Railroad'])
         self.urButton.setName('updateJmriRailroad')
 
+        self.rsButton = PSE.JAVX_SWING.JButton()
+        self.rsButton.setText('Update Rolling Stock')
+        self.rsButton.setName('updateJmriRollingingStock')
+
         self.controlWidgets = []
 
         return
@@ -32,6 +36,8 @@ class O2oSubroutinePanel:
         tpPanel.add(self.nrButton)
         tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
         tpPanel.add(self.urButton)
+        tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
+        tpPanel.add(self.rsButton)
 
         return tpPanel
 
@@ -39,5 +45,6 @@ class O2oSubroutinePanel:
 
         self.controlWidgets.append(self.nrButton)
         self.controlWidgets.append(self.urButton)
+        self.controlWidgets.append(self.rsButton)
 
         return self.controlWidgets
