@@ -1,5 +1,6 @@
 Todo:
-  Why does o2o update need a restart of jmri to load the routes?
+  Possibly remove unicode from o2o.Model.AddRsAttributes
+  Might not have to index cars by ID. makeTpRollingStockData may be unnecessary.
   Retest everything.
   How to publish DeepL?
 
