@@ -3,6 +3,8 @@
 
 """From tpRailroadData.json, a new rr is created and the xml files are seeded."""
 
+import java.nio.file as JAVA_NIO
+
 from opsEntities import PSE
 from PatternTracksSubroutine import Model
 from o2oSubroutine import ModelEntities
@@ -10,10 +12,15 @@ from o2oSubroutine import ModelEntities
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.Model'
 SCRIPT_REV = 20220101
 
+"""Maybe move FILE_LIST to configFile.json?"""
+FILE_LIST = ['OperationsTrainRoster.xml', 'OperationsRouteRoster.xml']
+
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.Model')
 
 def newJmriRailroad():
-    """Mini controller to make a new JMRI railroad from the tpRailroadData.json and TrainPlayer Report - Rolling Stock.txt files.
+    """Mini controller to make a new JMRI railroad.
+        tpRailroadData.json and TrainPlayer Report - Rolling Stock.txt
+        are used as source files.
         Used by:
         Controller.StartUp.newJmriRailroad
         """
@@ -27,19 +34,12 @@ def newJmriRailroad():
     PSE.CM.dispose()
     PSE.EM.dispose()
 
-    fileName = 'OperationsTrainRoster.xml'
-    targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
-    PSE.JAVA_IO.File(targetFile).delete()
-
-    fileName = 'OperationsRouteRoster.xml'
-    targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
-    PSE.JAVA_IO.File(targetFile).delete()
+    deleteFiles()
+    deleteRoads()
+    deleteCarAar()
 
     jmriRailroad = SetupXML()
     jmriRailroad.tweakOperationsXml()
-
-    deleteRoads()
-    deleteCarAar()
 
     allRsRosters = AddRsAttributes()
     allRsRosters.addRoads()
@@ -106,7 +106,6 @@ def updateJmriRailroad():
     allRsRosters.addCarAar()
     allRsRosters.addCarLoads()
     allRsRosters.addCarKernels()
-
     allRsRosters.addLocoModels()
     allRsRosters.addLocoTypes()
     allRsRosters.addLocoConsist()
@@ -159,7 +158,6 @@ def updateJmriRollingingStock():
     allRsRosters.addCarAar()
     allRsRosters.addCarLoads()
     allRsRosters.addCarKernels()
-
     allRsRosters.addLocoModels()
     allRsRosters.addLocoTypes()
     allRsRosters.addLocoConsist()
@@ -179,24 +177,38 @@ def updateJmriRollingingStock():
 
     return
 
+def deleteFiles():
+
+    for fileName in FILE_LIST:
+        targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
+        if PSE.JAVA_IO.File(targetFile).delete():
+            _psLog.info('Deleted: ' + fileName)
+        else:
+            _psLog.warning('Not deleted: ' + fileName)
+
+    return
+
 def copyFiles(fromSuffix, toSuffix):
     """Utility to backup and restore any operations xml file.
         Specify a null suffix as ''
-        Work in the JMRI methods?
+        This method is abstracted to backup and restore, which is not a feature of JMRI backup()
         """
 
-    backUpList = ['OperationsTrainRoster', 'OperationsRouteRoster']
-    for item in backUpList:
-        fromName = item + '.xml' + fromSuffix
-        toName = item + '.xml' + toSuffix
+    for fileName in FILE_LIST:
+        fromName = fileName + fromSuffix
+        toName = fileName + toSuffix
 
         sourceFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fromName)
-        sourceFile = PSE.JAVA_IO.File(sourceFile)
+        sourceFile = PSE.JAVA_IO.File(sourceFile).toPath()
 
         targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', toName)
-        targetFile = PSE.JAVA_IO.File(targetFile)
-    # JMRI handles the error if there is no file
-        PSE.JMRI.util.FileUtil.copy(sourceFile, targetFile)
+        targetFile = PSE.JAVA_IO.File(targetFile).toPath()
+
+        try:
+            JAVA_NIO.Files.copy(sourceFile, targetFile, JAVA_NIO.StandardCopyOption.REPLACE_EXISTING)
+            _psLog.info('Copied: ' + fileName)
+        except:
+            _psLog.warning('Not copied: ' + fileName)
 
     return
 
