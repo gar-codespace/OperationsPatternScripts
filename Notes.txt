@@ -1,36 +1,36 @@
 Todo:
-  Retest everything.
   How to publish DeepL?
+  Display all log-critical messages to script output window.
 
 Comments:
   Schedule does not prevent setting a car to a track.
+  Setting JmriJFrame(True, True) has no effect, size and position is manually saved.
+  Moved ENCODING value into the config file.
+  Move config file master copy into psEntities to shield it from accidental edit.
+  os.path.join() is used to make all paths for better OS compatibility.
+  Plugin is Javafied as much as possible.
+  _trackNameClickedOn moved to PSE.TRACK_NAME_CLICKED_ON
 
 Tested Items:
   Plugin
     Handle multiple versions OK.
     Handles font size change OK.
-    Works if two instances of PanelPro are open OK.
     Test for file write locations OK.
+    Works if two instances of PanelPro are open OK.
     All Set Cars windows close when Pattern Scripts window is closed OK.
-    Setting JmriJFrame(True, True) has no effect, size and position is manually saved.
     PatternConfig.json version check OK.
-    Moved ENCODING value into the config file.
-    Move config file master copy into psEntities to shield it from accidental edit.
     Bad edits of config file protected as much as possible. CBB
+    On defective config file, plugin replaces the defective file with the master copy OK.
     Pattern Scripts plugin hardened against errors  more or less. CBB
     Plugin restarts OK.
-    On defective config file, plugin replaces the defective file with the master copy OK.
-    Plugin switches language OK.
+    Handles JMRI load type Empty or empty OK.
     All SI items set to false works OK.
     SI set to TP only works OK.
-    Handles JMRI load type Empty or empty OK.
-    PatternScriptEntities.getShortLoadType works and translates OK.
     Generic sub tests OK.
 
   Reports
     Test with really long location and spur names OK.
-    Try os.path.join() to make all paths for better OS compatibility.
-    Display load type as L E or O in reports OK.
+    PatternScriptEntities.getShortLoadType works and translates OK.
     Kernel Size is displaying in reports OK.
     [Hold] changed to ['Current Track Name'] for reports.
     Ignore Track Length works with yard tracks OK.
@@ -50,7 +50,6 @@ Tested Items:
     Reports ignore Tab,Tab2, Tab3 OK.
 
   Actions
-    _trackNameClickedOn moved to PatternScriptEntities.TRACK_NAME_CLICKED_ON
     Caboose and passenger move OK.
     Caboose and Passenger car types are loaded as O for Occupied OK.
     When setting to a spur the reserved column for the spur shows an entry, as it should when setting a destination.
@@ -91,26 +90,21 @@ Catches Items:
   Catches pattern report button press no tracks selected OK.
   Catches set cars button press no tracks selected OK.
   Catches user edit of location at location combo box OK.
-  Catches and ignores user edit of log display.
+  Catches and ignores user edit of log display OK.
   Catches on the fly user edit of track names for pattern report OK.
   Catches on the fly user edit of track names for set cars OK.
   Catches empty boxes added to jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat() OK.
   Catches invalid track typed into set cars box OK.
   Catches on the fly edit of RS name or road.
-  Catches on the fly user corruption of config file more or less. Soft landing. CBB
-  KeyError when editing config file crashed plugin, bummer. Restart button bale out.
   Catches user add/remove train while TP export is enabled.
   Catches user edit train while TP export is enabled.
+  Catches missing or corrupt TrainPlayer layout export files OK.
 
 Version 3 ideas:
   020.ModelWorkEvents.*.parsePtRs and o2o.ModelWorkEvents.*.parseRS do the same things in a different way, can they be merged?
-  Read configFile("CP")["SI"] and automate the Activate/Deactivate pulldown items in the 'Tools' menu item.
   Harden up Bundle against web errors, untranslated items.
   How to use locale modifier, IE en-GB.
-  Should import button be part of new and update?
-  Implement TrainPlayer Support subroutine.
   Implement mergeConfigFiles()
-  Enhance and harden BUNDLE.
   Start working on distributed JMRI
     Set Cars windows add work to work list or docket, similar to TrainPlayer button, add Yardmaster button to Set Cars windows. Work can then be reported as it's done.
     jmri.jmrit.operations.locations.YardmasterFrame(location)
@@ -128,36 +122,3 @@ Colors:
   # LICHEN = java.awt.Color(244,255,236) # Light green
   # FADED = java.awt.Color(237,225,245) # Light purple
   # BLANCH = java.awt.Color(235,225,212) # Light orange
-
-Bundle Constants Used
-  ROAD = Bundle.getMessage("Road"); // the supported message format options
-  NUMBER = Bundle.getMessage("Number");
-  TYPE = Bundle.getMessage("Type");
-  MODEL = Bundle.getMessage("Model");
-  LENGTH = Bundle.getMessage("Length");
-  WEIGHT = Bundle.getMessage("Weight");
-  LOAD = Bundle.getMessage("Load");
-  LOAD_TYPE = Bundle.getMessage("Load_Type");
-  COLOR = Bundle.getMessage("Color");
-  TRACK = Bundle.getMessage("Track");
-  DESTINATION = Bundle.getMessage("Destination");
-  DEST_TRACK = Bundle.getMessage("Dest&Track");
-  FINAL_DEST = Bundle.getMessage("Final_Dest");
-  FINAL_DEST_TRACK = Bundle.getMessage("FD&Track");
-  LOCATION = Bundle.getMessage("Location");
-  CONSIST = Bundle.getMessage("Consist");
-  KERNEL = Bundle.getMessage("Kernel");
-  KERNEL_SIZE = Bundle.getMessage("Kernel_Size");
-  OWNER = Bundle.getMessage("Owner");
-  RWE = Bundle.getMessage("RWE");
-  COMMENT = Bundle.getMessage("Comment");
-  DROP_COMMENT = Bundle.getMessage("SetOut_Msg");
-  PICKUP_COMMENT = Bundle.getMessage("PickUp_Msg");
-  HAZARDOUS = Bundle.getMessage("Hazardous");
-  BLANK = " "; // blank has be a character or a space
-  BOX = " [ ] "; // NOI18N
-
-  The tabs are ignored by this plugin
-  TAB = Bundle.getMessage("Tab"); // used to tab out in tabular mode
-  TAB2 = Bundle.getMessage("Tab2");
-  TAB3 = Bundle.getMessage("Tab3");
