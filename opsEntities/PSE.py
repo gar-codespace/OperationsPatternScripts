@@ -1,20 +1,21 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""PSE is an abbreviation for PatternScriptEntities.
+"""PSE is an abbreviation for Pattern Script Entities.
     Support methods and package constants for all Pattern Script subroutines.
     """
 
 import jmri as JMRI
 import logging as LOGGING
 from java import io as JAVA_IO
+import java.nio.file as JAVA_NIO
 import java.beans as JAVA_BEANS
 from HTMLParser import HTMLParser as HTML_PARSER
 from os import path as OS_PATH
 from apps import Apps as APPS
 
 import time
-from json import loads as jsonLoads, dumps as jsonDumps
+from json import loads as jsonLoadS, dumps as jsonDumpS
 from codecs import open as codecsOpen
 
 PLUGIN_ROOT = ''
@@ -409,7 +410,7 @@ def makeBuildStatusFolder():
         MainScript.Controller
         """
 
-    targetDirectory = OS_PATH.join(JMRI.util.FileUtil.getProfilePath(), 'operations', 'buildstatus')
+    targetDirectory = OS_PATH.join(PROFILE_PATH, 'operations', 'buildstatus')
     if not JAVA_IO.File(targetDirectory).isDirectory():
         JAVA_IO.File(targetDirectory).mkdirs()
 
@@ -421,7 +422,7 @@ def makeReportFolders():
         MainScript.Controller
         """
 
-    opsDirectory = OS_PATH.join(JMRI.util.FileUtil.getProfilePath(), 'operations')
+    opsDirectory = OS_PATH.join(PROFILE_PATH, 'operations')
     directories = ['csvManifests', 'csvSwitchLists', 'jsonManifests', 'switchLists', 'patternReports']
     x = 0
     for directory in directories:
@@ -477,21 +478,17 @@ def genericDisplayReport(genericReportPath):
 
     return
 
-def loadJson(switchList):
+def loadJson(file):
     """Used by:
         Everything"""
 
-    jsonSwitchList = jsonLoads(switchList)
+    return jsonLoadS(file)
 
-    return jsonSwitchList
-
-def dumpJson(switchList):
+def dumpJson(file):
     """Used by:
         Everything"""
 
-    jsonSwitchList = jsonDumps(switchList, indent=2, sort_keys=True)
-
-    return jsonSwitchList
+    return jsonDumpS(file, indent=2, sort_keys=True)
 
 """Configuration File Methods"""
 
@@ -585,12 +582,12 @@ def writeNewConfigFile():
     fileName = 'PatternConfig.json'
 
     targetFile = OS_PATH.join(PLUGIN_ROOT, 'opsEntities', fileName)
-    copyFrom = JAVA_IO.File(targetFile)
+    copyFrom = JAVA_IO.File(targetFile).toPath()
 
     targetFile = OS_PATH.join(PROFILE_PATH, 'operations', fileName)
-    copyTo = JAVA_IO.File(targetFile)
+    copyTo = JAVA_IO.File(targetFile).toPath()
 
-    JMRI.util.FileUtil.copy(copyFrom, copyTo)
+    JAVA_NIO.Files.copy(copyFrom, copyTo, JAVA_NIO.StandardCopyOption.REPLACE_EXISTING)
 
     return
 

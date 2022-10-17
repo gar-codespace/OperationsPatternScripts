@@ -3,8 +3,6 @@
 
 """From tpRailroadData.json, a new rr is created and the xml files are seeded."""
 
-import java.nio.file as JAVA_NIO
-
 from opsEntities import PSE
 from PatternTracksSubroutine import Model
 from o2oSubroutine import ModelEntities
@@ -205,7 +203,7 @@ def copyFiles(fromSuffix, toSuffix):
         targetFile = PSE.JAVA_IO.File(targetFile).toPath()
 
         try:
-            JAVA_NIO.Files.copy(sourceFile, targetFile, JAVA_NIO.StandardCopyOption.REPLACE_EXISTING)
+            PSE.JAVA_NIO.Files.copy(sourceFile, targetFile, PSE.JAVA_NIO.StandardCopyOption.REPLACE_EXISTING)
             _psLog.info('Copied: ' + fileName)
         except:
             _psLog.warning('Not copied: ' + fileName)
@@ -326,7 +324,7 @@ class AddRsAttributes:
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
         carLoads = self.tpRailroadData['carLoads']
         for aar in self.tpRailroadData['carAAR']:
-            aar = unicode(aar, PSE.ENCODING)
+            # aar = unicode(aar, PSE.ENCODING)
             TCM.addType(aar)
             TCM.addName(aar, 'Empty')
             TCM.addName(aar, 'Load')
@@ -346,7 +344,7 @@ class AddRsAttributes:
 
         nameList = PSE.KM.getNameList()
         for xName in self.tpRailroadData['carKernel']:
-            xName = unicode(xName, PSE.ENCODING)
+            # xName = unicode(xName, PSE.ENCODING)
             PSE.KM.newKernel(xName)
 
         return
@@ -360,8 +358,10 @@ class AddRsAttributes:
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
         nameList = TCM.getNames()
         for xName in self.tpRailroadData['locoModels']:
-            xModel = unicode(xName[0], PSE.ENCODING)
-            xType = unicode(xName[1], PSE.ENCODING)
+            # xModel = unicode(xName[0], PSE.ENCODING)
+            # xType = unicode(xName[1], PSE.ENCODING)
+            xModel = xName[0]
+            xType = xName[1]
             TCM.addName(xModel)
             TCM.setModelType(xModel, xType)
             TCM.setModelLength(xModel, '40')
@@ -377,7 +377,7 @@ class AddRsAttributes:
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
         nameList = TCM.getNames()
         for xName in self.tpRailroadData['locoTypes']:
-            xName = unicode(xName, PSE.ENCODING)
+            # xName = unicode(xName, PSE.ENCODING)
             TCM.addName(xName)
 
         return
@@ -389,7 +389,7 @@ class AddRsAttributes:
 
         nameList = PSE.ZM.getNameList()
         for xName in self.tpRailroadData['locoConsists']:
-            xName = unicode(xName, PSE.ENCODING)
+            # xName = unicode(xName, PSE.ENCODING)
             PSE.ZM.newConsist(xName)
 
         return
