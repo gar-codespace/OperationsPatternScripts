@@ -18,6 +18,7 @@ def importTpRailroad():
 # Import the three files
     if not trainPlayerImport.getTpReportFiles():
         _psLog.critical('One or more missing files')
+        PSE.outputPanel('ALERT: One or more TrainPlayer export files are missing')
         return False
 # Test the integrity of the files
     try:
@@ -41,7 +42,8 @@ def importTpRailroad():
 
     except IndexError:
         print('Error: files corrupted')
-        _psLog.critical('Error: TrainPlayer export files corrupted')
+        _psLog.critical('Error: One or more TrainPlayer export files are corrupted')
+        PSE.outputPanel('ALERT: One or more TrainPlayer export files are corrupted')
         return False
 
 
@@ -77,6 +79,7 @@ class TrainPlayerImporter:
             _psLog.info('TrainPlayer Locations file OK')
         else:
             _psLog.critical('TrainPlayer Locations file not found')
+            PSE.outputPanel('ALERT: TrainPlayer Locations file not found')
             print('Not found: ' + self.tpLocationsFile)
             fileCheck = False
 
@@ -86,6 +89,7 @@ class TrainPlayerImporter:
             _psLog.info('TrainPlayer Industries file OK')
         else:
             _psLog.critical('TrainPlayer Industries file not found')
+            PSE.outputPanel('ALERT: TrainPlayer Industries file not found')
             print('Not found: ' + self.tpIndustriesFile)
             fileCheck = False
 
@@ -95,6 +99,7 @@ class TrainPlayerImporter:
             _psLog.info('TrainPlayer Inventory file OK')
         else:
             _psLog.critical('TrainPlayer Inventory file not found')
+            PSE.outputPanel('ALERT: TrainPlayer Inventory file not found')
             print('Not found: ' + self.tpRollingStockFile)
             fileCheck = False
 

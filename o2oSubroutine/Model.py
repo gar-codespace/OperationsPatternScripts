@@ -109,16 +109,16 @@ def updateJmriRailroad():
     allRsRosters.addLocoModels()
     allRsRosters.addLocoTypes()
     allRsRosters.addLocoConsist()
-
+# Current implementation
     newLocations = NewLocationsAndTracks()
     newLocations.newLocations()
     newLocations.newSchedules()
     newLocations.newTracks()
     newLocations.addCarTypesToSpurs()
-# Version 3
+# Version 3 implementation
     updatedLocations = UpdateLocationsAndTracks()
-
-    makeTpLocaleData()
+    updatedLocations.getCurrent()
+    updatedLocations.makeUpdated()
 
     newInventory = NewRollingStock()
     newInventory.getTpInventory()
@@ -153,20 +153,7 @@ def updateJmriRollingingStock():
         """
 
     ModelEntities.closeTroublesomeWindows()
-
-    # x = PSE.JMRI.script.swing.ScriptOutput()
-    # window = PSE.JMRI.util.JmriJFrame.getFrame("Script Output")
-    #
-    # # get the top component into that, which we now know is the scroll pane
-    # scrollpane = window.getContentPane().getComponents()[0]
-    # viewport = scrollpane.getComponents()[0]
-    # # make a list of the components in the viewport
-    # textarea = viewport.getComponents()[0]
-    # textarea.text = 'Hello\n'
-    # textarea.text += 'Hello\n'
-    # textarea.text += 'Hello Yall\n'
-
-
+    
     PSE.CM.dispose()
     PSE.EM.dispose()
 
@@ -453,17 +440,25 @@ class UpdateLocationsAndTracks:
     def getCurrent(self):
         """self.currentLocale = tpLocaleData.json"""
 
+        fileName = 'tpLocaleData.json'
+        filePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
+        self.currentLocale = PSE.loadJson(PSE.genericReadReport(filePath))
+
         return
 
     def makeUpdated(self):
-        """Make this file"""
+        """Update tpLocaleData.json with the new layout data."""
 
-        self.updatedLocale = {}
+        makeTpLocaleData()
+
+        fileName = 'tpLocaleData.json'
+        filePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
+        self.updatedLocale = PSE.loadJson(PSE.genericReadReport(filePath))
 
         return
 
-    def blendMatrices(self):
-        """Make these lists"""
+    def compareDataSets(self):
+        """Compare current and updated, make these lists."""
 
         self.newLocations = []
         self.oldLocations = []
@@ -491,7 +486,7 @@ class UpdateLocationsAndTracks:
 
         return
 
-    def updateTrackParameters(self):
+    def addCarTypesToSpurs(self):
         """If needed."""
 
         return

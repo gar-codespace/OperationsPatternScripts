@@ -179,5 +179,6 @@ def testValidityOfForm(setCarsForm, textBoxEntry):
     if len(textBoxEntry) == locoCount + carCount:
         return True
     else:
-        _psLog.critical('mismatched input list and car roster lengths')
+        _psLog.critical('Mismatched input list and car roster lengths')
+        PSE.outputPanel('FAIL: Mismatched input list and car roster lengths')
         return False

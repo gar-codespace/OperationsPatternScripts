@@ -161,6 +161,24 @@ class CreateStubFile:
 
 """GUI Methods"""
 
+def outputPanel(message):
+    """Adds the message to the Script Output window.
+        https://groups.io/g/jmriusers/message/33745
+        https://groups.io/g/jmriusers/message/33747
+        """
+
+    if not JMRI.util.JmriJFrame.getFrame("Script Output"):
+        JMRI.jmrit.jython.JythonWindow().actionPerformed(None)
+
+    window = JMRI.util.JmriJFrame.getFrame("Script Output")
+    scrollpane = window.getContentPane().getComponents()[0]
+    viewport = scrollpane.getComponents()[0]
+    textarea = viewport.getComponents()[0]
+    oldMessage = textarea.text
+    textarea.text = oldMessage + message + '\n'
+
+    return
+
 def getPsButton():
     """Gets the Pattern Scripts button on the PanelPro frame.
         Used by:
