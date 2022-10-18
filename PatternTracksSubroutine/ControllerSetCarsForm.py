@@ -67,7 +67,7 @@ class CreateSetCarsFormGui:
 
         if not ModelSetCarsForm.testValidityOfForm(self.setCarsForm, self.buttonDict['textBoxEntry']):
             _psLog.critical('FAIL - CreateSetCarsFormGui.quickCheck.testValidityOfForm')
-            PSE.outputPanel('FAIL: CreateSetCarsFormGui.quickCheck.testValidityOfForm')
+            PSE.outputPanel(PSE.BUNDLE['FAIL: CreateSetCarsFormGui.quickCheck.testValidityOfForm'])
             return False
         else:
             _psLog.info('PASS - testValidityOfForm')

@@ -174,8 +174,7 @@ def outputPanel(message):
     scrollpane = window.getContentPane().getComponents()[0]
     viewport = scrollpane.getComponents()[0]
     textarea = viewport.getComponents()[0]
-    oldMessage = textarea.text
-    textarea.text = oldMessage + message + '\n'
+    textarea.text += message + '\n'
 
     return
 

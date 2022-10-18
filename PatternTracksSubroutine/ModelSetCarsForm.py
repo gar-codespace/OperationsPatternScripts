@@ -180,5 +180,5 @@ def testValidityOfForm(setCarsForm, textBoxEntry):
         return True
     else:
         _psLog.critical('Mismatched input list and car roster lengths')
-        PSE.outputPanel('FAIL: Mismatched input list and car roster lengths')
+        PSE.outputPanel(PSE.BUNDLE['FAIL: Mismatched input list and car roster lengths'])
         return False

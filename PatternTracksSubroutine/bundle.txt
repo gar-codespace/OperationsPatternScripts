@@ -46,3 +46,5 @@ Update Locations
 Work Event List for TrainPlayer©
 Work Location:
 Yard tracks only
+FAIL: CreateSetCarsFormGui.quickCheck.testValidityOfForm
+FAIL: Mismatched input list and car roster lengths
