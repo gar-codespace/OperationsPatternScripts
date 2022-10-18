@@ -54,6 +54,8 @@ def newJmriRailroad():
     newLocations.newTracks()
     newLocations.addCarTypesToSpurs()
 
+    makeTpLocaleData()
+
     newInventory = NewRollingStock()
     newInventory.getTpInventory()
     newInventory.splitTpList()
@@ -113,6 +115,10 @@ def updateJmriRailroad():
     newLocations.newSchedules()
     newLocations.newTracks()
     newLocations.addCarTypesToSpurs()
+# Version 3
+    updatedLocations = UpdateLocationsAndTracks()
+
+    makeTpLocaleData()
 
     newInventory = NewRollingStock()
     newInventory.getTpInventory()
@@ -148,6 +154,19 @@ def updateJmriRollingingStock():
 
     ModelEntities.closeTroublesomeWindows()
 
+    # x = PSE.JMRI.script.swing.ScriptOutput()
+    # window = PSE.JMRI.util.JmriJFrame.getFrame("Script Output")
+    #
+    # # get the top component into that, which we now know is the scroll pane
+    # scrollpane = window.getContentPane().getComponents()[0]
+    # viewport = scrollpane.getComponents()[0]
+    # # make a list of the components in the viewport
+    # textarea = viewport.getComponents()[0]
+    # textarea.text = 'Hello\n'
+    # textarea.text += 'Hello\n'
+    # textarea.text += 'Hello Yall\n'
+
+
     PSE.CM.dispose()
     PSE.EM.dispose()
 
@@ -172,6 +191,19 @@ def updateJmriRollingingStock():
 
     PSE.EM.initialize()
     PSE.CM.initialize()
+
+    return
+
+def makeTpLocaleData():
+    """Copies tpRailroadData.json['locales'] to tpLocaleData.json"""
+
+    fileName = 'tpRailroadData.json'
+    filePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
+    sourceData = PSE.loadJson(PSE.genericReadReport(filePath))
+
+    fileName = 'tpLocaleData.json'
+    filePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
+    PSE.genericWriteReport(filePath, PSE.dumpJson(sourceData['locales']))
 
     return
 
@@ -391,6 +423,80 @@ class AddRsAttributes:
         for xName in self.tpRailroadData['locoConsists']:
             # xName = unicode(xName, PSE.ENCODING)
             PSE.ZM.newConsist(xName)
+
+        return
+
+
+class UpdateLocationsAndTracks:
+    """Comming in v3.
+        Analize wether location changes are:
+        Change to existing location name,
+        New location alltogether,
+        Change to existing track name and/or attributes,
+        New track alltogether.
+        """
+
+    def __init__(self):
+
+        self.currentLocale = {}
+        self.updatedLocale = {}
+
+        self.newLocations = []
+        self.oldLocations = []
+        self.updateLocations = []
+        self.newTracks = []
+        self.oldTracks = []
+        self.updateTracks = []
+
+        return
+
+    def getCurrent(self):
+        """self.currentLocale = tpLocaleData.json"""
+
+        return
+
+    def makeUpdated(self):
+        """Make this file"""
+
+        self.updatedLocale = {}
+
+        return
+
+    def blendMatrices(self):
+        """Make these lists"""
+
+        self.newLocations = []
+        self.oldLocations = []
+        self.updateLocations = []
+        self.newTracks = []
+        self.oldTracks = []
+        self.updateTracks = []
+
+        return
+
+    def makeNewLocations(self):
+
+        return
+
+    def updateExistingLocations(self):
+        """The only thing to update is to change the location name."""
+
+        return
+
+    def makeNewTracks(self):
+
+        return
+
+    def updateExistingTracks(self):
+
+        return
+
+    def updateTrackParameters(self):
+        """If needed."""
+
+        return
+
+    def deleteOldLocationsAndTracks(self):
 
         return
 

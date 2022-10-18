@@ -92,7 +92,7 @@ class StartUp:
         else:
             print('Rolling Stock not updated')
 
-        Controller.updatePatternTracksSubroutine(EVENT)
+        # Controller.updatePatternTracksSubroutine(EVENT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return

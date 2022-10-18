@@ -152,23 +152,23 @@ def tweakStagingTracks(track):
 
     return
 
-def getTpTrackByTpId(tpTrackId):
+# def getTpTrackByTpId(tpTrackId):
+#
+#     importedRailroad = getTpRailroadData()
+#     trackData = importedRailroad['locales'][tpTrackId]
+#     location = PSE.LM.getLocationByName(trackData['location'])
+#     track = location.getTrackByName(trackData['track'], None)
+#
+#     return track
 
-    importedRailroad = getTpRailroadData()
-    trackData = importedRailroad['locales'][tpTrackId]
-    location = PSE.LM.getLocationByName(trackData['location'])
-    track = location.getTrackByName(trackData['track'], None)
-
-    return track
-
-def getJmriTracksByTpId():
-
-    jmriTracks = {}
-    for location in PSE.LM.getLocationsByNameList():
-        for track in location.getTracksList():
-            jmriTracks[track.getComment()] = (location.getName(), track.getName())
-
-    return jmriTracks
+# def getJmriTracksByTpId():
+#
+#     jmriTracks = {}
+#     for location in PSE.LM.getLocationsByNameList():
+#         for track in location.getTracksList():
+#             jmriTracks[track.getComment()] = (location.getName(), track.getName())
+#
+#     return jmriTracks
 
 def getWorkEvents():
     """Gets the o2o work events file

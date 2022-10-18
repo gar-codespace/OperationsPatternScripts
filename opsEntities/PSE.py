@@ -267,19 +267,19 @@ def getAllTracks():
 
     return trackList
 
-def getAllTrackIds():
-    """All track IDs for all locations.
-        Used by:
-        o2oSubroutine.Model.UpdateLocationsAndTracks
-        """
-
-    trackIds = []
-    for location in getAllLocationNames():
-        trackList = LM.getLocationByName(location).getTracksList()
-        for track in trackList:
-            trackIds.append(track.getComment())
-
-    return trackIds
+# def getAllTrackIds():
+#     """All track IDs for all locations.
+#         Used by:
+#         o2oSubroutine.Model.UpdateLocationsAndTracks
+#         """
+#
+#     trackIds = []
+#     for location in getAllLocationNames():
+#         trackList = LM.getLocationByName(location).getTracksList()
+#         for track in trackList:
+#             trackIds.append(track.getComment())
+#
+#     return trackIds
 
 def getSelectedTracks():
     """Gets the track objects checked in the Track Pattern Subroutine.
