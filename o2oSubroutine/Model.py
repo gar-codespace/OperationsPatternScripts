@@ -54,7 +54,7 @@ def newJmriRailroad():
     newLocations.newTracks()
     newLocations.addCarTypesToSpurs()
 
-    makeTpLocaleData()
+    MakeTpLocaleData().make()
 
     newInventory = NewRollingStock()
     newInventory.getTpInventory()
@@ -119,6 +119,7 @@ def updateJmriRailroad():
     updatedLocations = UpdateLocationsAndTracks()
     updatedLocations.getCurrent()
     updatedLocations.makeUpdated()
+    updatedLocations.compareLocations()
 
     newInventory = NewRollingStock()
     newInventory.getTpInventory()
@@ -153,7 +154,7 @@ def updateJmriRollingingStock():
         """
 
     ModelEntities.closeTroublesomeWindows()
-    
+
     PSE.CM.dispose()
     PSE.EM.dispose()
 
@@ -178,19 +179,6 @@ def updateJmriRollingingStock():
 
     PSE.EM.initialize()
     PSE.CM.initialize()
-
-    return
-
-def makeTpLocaleData():
-    """Copies tpRailroadData.json['locales'] to tpLocaleData.json"""
-
-    fileName = 'tpRailroadData.json'
-    filePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
-    sourceData = PSE.loadJson(PSE.genericReadReport(filePath))
-
-    fileName = 'tpLocaleData.json'
-    filePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
-    PSE.genericWriteReport(filePath, PSE.dumpJson(sourceData['locales']))
 
     return
 
@@ -255,6 +243,19 @@ def deleteCarAar():
 
     return
 
+def makeTpLocaleData():
+    """Copies tpRailroadData.json['locales'] to tpLocaleData.json"""
+
+    fileName = 'tpRailroadData.json'
+    filePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
+    sourceData = PSE.loadJson(PSE.genericReadReport(filePath))
+
+    fileName = 'tpLocaleData.json'
+    filePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
+    PSE.genericWriteReport(filePath, PSE.dumpJson(sourceData['locales']))
+
+    return
+
 
 class SetupXML:
     """Make tweeks to Operations.xml here."""
@@ -290,6 +291,81 @@ class SetupXML:
         OSU.Setup.setDropEngineMessageFormat(self.o2oConfig['TO']['SOL'])
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+        return
+
+
+class MakeTpLocaleData:
+    """Makes the tpLocaleData.json file."""
+
+    def __init__(self):
+
+        self.sourceData = {}
+        self.tpLocaleData = {}
+
+        self.locationList = []
+
+        return
+
+    def getTpRrData(self):
+
+        fileName = 'tpRailroadData.json'
+        filePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
+        self.sourceData = PSE.loadJson(PSE.genericReadReport(filePath))
+
+        return
+
+    def getLocations(self):
+
+        for id, data in self.sourceData['locales'].items():
+            self.locationList.append(data['location'])
+
+        self.locationList = list(set(self.locationList))
+
+        return
+
+    def makeLocationRubric(self):
+
+        locationScratch = {}
+        for location in self.locationList:
+            idScratch = []
+            for id, data in self.sourceData['locales'].items():
+                if data['location'] == location:
+                    idScratch.append(id)
+
+            locationScratch[location] = idScratch
+
+        self.tpLocaleData['locations'] = locationScratch
+
+        return
+
+    def makeTrackRubric(self):
+
+        trackScratch = {}
+        for id, data in self.sourceData['locales'].items():
+            track = data['location'] + ';' + data['track']
+            trackScratch[track] = id
+
+        self.tpLocaleData['tracks'] = trackScratch
+
+        return
+
+    def writeTpLocaleData(self):
+
+        fileName = 'tpLocaleData.json'
+        filePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
+        PSE.genericWriteReport(filePath, PSE.dumpJson(self.tpLocaleData))
+
+        return
+
+    def make(self):
+        """Mini controller"""
+
+        self.getTpRrData()
+        self.getLocations()
+        self.makeLocationRubric()
+        self.makeTrackRubric()
+        self.writeTpLocaleData()
 
         return
 
@@ -449,7 +525,7 @@ class UpdateLocationsAndTracks:
     def makeUpdated(self):
         """Update tpLocaleData.json with the new layout data."""
 
-        makeTpLocaleData()
+        MakeTpLocaleData().make()
 
         fileName = 'tpLocaleData.json'
         filePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
@@ -457,8 +533,11 @@ class UpdateLocationsAndTracks:
 
         return
 
-    def compareDataSets(self):
+    def compareLocations(self):
         """Compare current and updated, make these lists."""
+
+        print(self.currentLocale['locations'].keys())
+        print(self.updatedLocale['locations'].keys())
 
         self.newLocations = []
         self.oldLocations = []
