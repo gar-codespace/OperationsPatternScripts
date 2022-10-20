@@ -262,6 +262,7 @@ def getAllLocationNames():
         Model.updatePatternLocation
         Model.updateLocations
         ModelEntities.testSelectedItem
+        o2oSubroutine.Model.UpdateLocationsAndTracks.addNewLocations
         """
 
     locationNames = []

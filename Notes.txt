@@ -1,5 +1,7 @@
 Todo:
   How to publish DeepL?
+  o2o update railroad replace all getTracksByNameList(None) with track types.
+  Remove track id from track comment.
 
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -26,7 +28,7 @@ Tested Items:
     All SI items set to false works OK.
     SI set to TP only works OK.
     Generic sub tests OK.
-    Display all 'critical' log messages to Script Output window.
+    Display all 'critical' log messages to Script Output window OK.
 
   Reports
     Test with really long location and spur names OK.

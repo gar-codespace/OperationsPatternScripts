@@ -24,44 +24,6 @@ def tpDirectoryExists():
         print('TrainPlayer Reports destination directory not found')
         return
 
-def updateContinuingTracks(trackId, trackData, previousTrackData):
-    """The data in previousTrackData is modified by the data in trackData.
-        Deselect all types for spur tracks.
-        Used by:
-        Model.UpdateLocationsAndTracks.updateContinuingTracks
-        """
-
-    loc = PSE.LM.getLocationByName(trackData['location'])
-
-    if loc.isStaging() and trackData['type'] == 'Staging':
-        previousTrackData.setTrackType(trackData['type'])
-        previousTrackData.setName(trackData['track'])
-
-        tweakStagingTracks(previousTrackData)
-
-    if not loc.isStaging() and trackData['type'] != 'Staging':
-        previousTrackData.setTrackType(trackData['type'])
-        previousTrackData.setName(trackData['track'])
-
-    if trackData['type'] == 'Spur':
-        trackLength = int(trackData['capacity']) * PSE.readConfigFile('o2o')['DL']
-        previousTrackData.setLength(trackLength)
-        previousTrackData.setSchedule(PSE.SM.getScheduleByName(trackData['label']))
-        for typeName in loc.getTypeNames():
-            previousTrackData.deleteTypeName(typeName)
-
-
-    _psLog.debug(trackData['track'] + ' updated at ' + trackData['type'])
-    loc.register(previousTrackData)
-    return
-
-def updateContinuingLocation(location):
-    """Apply JMRI level user changes here."""
-
-    PSE.LM.newLocation(location)
-
-    return
-
 def selectCarTypes(id, industry):
     """Used by:
         Model.NewLocationsAndTracks.addCarTypesToSpurs
@@ -73,30 +35,40 @@ def selectCarTypes(id, industry):
 
     return
 
-def setNonSpurTrackLength():
-    """All non spur tracks length set to number of cars occupying track.
-        Used by:
-        Model.newJmriRailroad
-        Model.updateJmriRailroad
-        """
+# def setNonSpurTrackLength():
+#     """All non spur tracks length set to number of cars occupying track.
+#         Used by:
+#         Model.newJmriRailroad
+#         Model.updateJmriRailroad
+#         """
+#
+#     trackList = PSE.getAllTracks()
+#     for track in trackList:
+#         if track.getTrackType() == 'Spur':
+#             continue
+#         rsTotal = track.getNumberCars() + track.getNumberEngines()
+#         if rsTotal == 0:
+#             rsTotal = 1
+#         newTrackLength = rsTotal * PSE.readConfigFile('o2o')['DL']
+#         track.setLength(newTrackLength)
+#         if track.getName() == '~':
+#             track.setLength(1000)
+#
+#     return
 
-    trackList = PSE.getAllTracks()
-    for track in trackList:
-        if track.getTrackType() == 'Spur':
-            continue
-        rsTotal = track.getNumberCars() + track.getNumberEngines()
-        if rsTotal == 0:
-            rsTotal = 1
-        newTrackLength = rsTotal * PSE.readConfigFile('o2o')['DL']
-        track.setLength(newTrackLength)
-        if track.getName() == '~':
-            track.setLength(1000)
-
-    return
+# def deleteAllSchedules():
+#     """Used by:
+#         Model.UpdateLocationsAndTracks
+#         """
+#
+#     PSE.SM.dispose()
+#
+#     return
 
 def makeNewSchedule(id, industry):
     """Used by:
         Model.NewLocationsAndTracks.newSchedules
+        Model.UpdateLocationsAndTracks
         """
 
     scheduleLineItem = industry['schedule']
@@ -113,7 +85,6 @@ def makeNewTrack(trackId, trackData):
         Used by:
         Model.NewLocationsAndTracks.newLocations
         Model.UpdateLocationsAndTracks.addNewTracks
-        Model.UpdateLocationsAndTracks.updateContinuingTracks
         """
 
     _psLog.debug('makeNewTrack')
