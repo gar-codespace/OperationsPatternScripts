@@ -1,8 +1,6 @@
 Todo:
   How to publish DeepL?
-  Add open console window to configFile.
   o2o update railroad replace all getTracksByNameList(None) with track types.
-  Remove track id from track comment.
 
 Comments:
   Schedule does not prevent setting a car to a track.

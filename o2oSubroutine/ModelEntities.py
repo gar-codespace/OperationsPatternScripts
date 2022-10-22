@@ -94,7 +94,7 @@ def makeNewTrack(trackId, trackData):
 
     loc = PSE.LM.getLocationByName(trackData['location'])
     xTrack = loc.addTrack(trackData['track'], jmriTrackType)
-    xTrack.setComment(trackId)
+    # xTrack.setComment(trackId)
 
     if trackData['type'] == 'industry':
         trackLength = int(trackData['capacity']) * PSE.readConfigFile('o2o')['DL']
