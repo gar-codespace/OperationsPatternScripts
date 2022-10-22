@@ -17,6 +17,7 @@ from apps import Apps as APPS
 import time
 from json import loads as jsonLoadS, dumps as jsonDumpS
 from codecs import open as codecsOpen
+import apps
 
 PLUGIN_ROOT = ''
 PROFILE_PATH = JMRI.util.FileUtil.getProfilePath()
@@ -160,6 +161,13 @@ class CreateStubFile:
 
 
 """GUI Methods"""
+
+def openSystemConsole():
+
+    console = apps.SystemConsole.getConsole()
+    console.setVisible(readConfigFile()['CP']['OC'])
+
+    return
 
 def outputPanel(message):
     """Adds the message to the Script Output window.

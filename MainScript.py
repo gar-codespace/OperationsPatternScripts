@@ -637,6 +637,8 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         if PSE.readConfigFile()['CP']['AP']:
             self.addPatternScriptsButton()
 
+        PSE.openSystemConsole()
+
         self.psLog.info('Current Pattern Scripts directory: ' + PLUGIN_ROOT)
         runTime = PSE.TIME.time() - startTime
         self.psLog.info('Main script run time (sec): ' + str(round(runTime, 4)))
