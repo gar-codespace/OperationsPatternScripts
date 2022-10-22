@@ -165,7 +165,7 @@ def updateTrackParams():
     for id, trackData in tpRailroadData['locales'].items():
         trackType = o2oConfig['TR'][trackData['type']]
         location = PSE.LM.getLocationByName(trackData['location'])
-        track = location.getTrackByName(trackData['track'], trackType)
+        track = location.getTrackByName(trackData['track'], None)
         track.setTrackType(trackType)
 
         trackLength = int(trackData['capacity']) * o2oConfig['DL']
@@ -485,9 +485,10 @@ class UpdateLocationsAndTracks:
         for cLocation, cIds in self.currentLocale['locations'].items():
             for uLocation, uIds in self.updatedLocale['locations'].items():
                 if cIds == uIds:
+                    typeNames = PSE.LM.getLocationByName(cLocation).getTypeNames()
                     PSE.LM.getLocationByName(cLocation).setName(uLocation)
-                    for typeName in PSE.LM.getLocationByName(cLocation).getTypeNames():
-                        PSE.LM.getLocationByName(cLocation).addTypeName(typeName)
+                    for typeName in typeNames:
+                        PSE.LM.getLocationByName(uLocation).addTypeName(typeName)
 
         return
 
@@ -561,14 +562,18 @@ class UpdateLocationsAndTracks:
         for item in self.oldTracks:
             locTrack = item.split(';')
             location = PSE.LM.getLocationByName(locTrack[0])
-            location.getTrackByName(locTrack[1], None).dispose()
+            track = location.getTrackByName(locTrack[1], None)
+            location.deleteTrack(track)
+            track.dispose()
 
         return
 
     def deleteOldLocations(self):
 
         for item in self.oldLocations:
-            PSE.LM.getLocationByName(item).dispose()
+            location = PSE.LM.getLocationByName(item)
+            PSE.LM.deregister(location)
+            location.dispose()
 
         return
 

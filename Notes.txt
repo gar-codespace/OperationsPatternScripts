@@ -1,5 +1,6 @@
 Todo:
   How to publish DeepL?
+  Add open console window to configFile.
   o2o update railroad replace all getTracksByNameList(None) with track types.
   Remove track id from track comment.
 
@@ -11,6 +12,7 @@ Comments:
   os.path.join() is used to make all paths for better OS compatibility.
   Plugin is Javafied as much as possible.
   _trackNameClickedOn moved to PSE.TRACK_NAME_CLICKED_ON
+  o2o importTpRailroad rolled into New JMRI Railroad and Update Rolling Stock.
 
 Tested Items:
   Plugin
@@ -29,6 +31,8 @@ Tested Items:
     SI set to TP only works OK.
     Generic sub tests OK.
     Display all 'critical' log messages to Script Output window OK.
+    Add a listener to monitor if a new train is created or deleted, builtTrain listeners updated accordingly.
+    Mapped TP OC Class/XO reserved as JMRI spur, turn off train directions.
 
   Reports
     Test with really long location and spur names OK.
@@ -73,20 +77,19 @@ Tested Items:
     DYI version of concurrency seems to work OK.
 
   o2o
-    importTpRailroad rolled into New JMRI Railroad and Update Rolling Stock.
-    Add a listener to monitor if a new train is created or deleted, builtTrain listeners updated accordingly.
-    New JMRI Railroad saveing the new xml OK.
+    New JMRI Railroad working OK.
     TP import creates the track length OK.
-    Adding script to run on train built for TP export is not needed, but still can be done.
-    TrainPlayer subroutine sketched in, to be expanded.
-    TrainPlayer integration harden with train built listeners.
-    TP Exports unicode OK.
-    TrainPlayer support implements OK.
     ExportToTrainPlayer.py works as module OK.
     ExportToTrainPlayer.py works as script OK.
     When run as a stand alone script, ManifestForTrainPlayer does not read config file, which is correct.
-    Mapped TP OC Class/XO reserved as JMRI spur, turn off train directions. Maybe change that.
     New and Update o2o buttons refreshes the PS Subroutine GUI OK.
+    Update RR updates track length OK.
+    Update RR updates track type OK.
+    Update RR renames locations OK.
+    Update RR renames tracks OK.
+    Update RR adds new location and new track OK.
+    Update RR deletes old locations and tracks OK.
+    Update RR deletes an old track from an existing location OK.
 
 Catches Items:
   Catches pattern report button press no tracks selected OK.
