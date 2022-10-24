@@ -49,7 +49,7 @@ def newJmriRailroad():
     newSchedules()
     newLocations.newTracks()
 
-    updateTrackParams()
+    setTrackLength()
     addCarTypesToSpurs()
     MakeTpLocaleData().make()
 
@@ -101,12 +101,13 @@ def updateJmriRailroad():
     updatedLocations.parseLocations()
     updatedLocations.addNewLocations()
 
-    updatedLocations.renameTracks()
+    newSchedules()
     updatedLocations.parseTracks()
+    updatedLocations.renameTracks()
     updatedLocations.addNewTracks()
 
-    newSchedules()
-    updateTrackParams()
+    updateTrackType()
+    setTrackLength()
     addCarTypesToSpurs()
 
     newInventory = NewRollingStock()
@@ -156,8 +157,26 @@ def updateJmriRollingingStock():
 
     return
 
-def updateTrackParams():
-    """Update an existing tracks length and track type."""
+def setTrackLength():
+    """Set an existing tracks length."""
+
+    _psLog.debug('setTrackLength')
+
+    o2oConfig = PSE.readConfigFile('o2o')
+    tpRailroadData = ModelEntities.getTpRailroadData()
+
+    for id, trackData in tpRailroadData['locales'].items():
+        location = PSE.LM.getLocationByName(trackData['location'])
+        track = location.getTrackByName(trackData['track'], None)
+
+        trackLength = int(trackData['capacity']) * o2oConfig['DL']
+        track.setLength(trackLength)
+
+    return
+
+def updateTrackType():
+
+    _psLog.debug('updateTrackType')
 
     o2oConfig = PSE.readConfigFile('o2o')
     tpRailroadData = ModelEntities.getTpRailroadData()
@@ -166,20 +185,20 @@ def updateTrackParams():
         trackType = o2oConfig['TR'][trackData['type']]
         location = PSE.LM.getLocationByName(trackData['location'])
         track = location.getTrackByName(trackData['track'], None)
-        track.setTrackType(trackType)
+        if track.getTrackType() != trackType:
+            track.setTrackType(trackType)
+            track.setTrainDirections(15)
 
-        trackLength = int(trackData['capacity']) * o2oConfig['DL']
-        track.setLength(trackLength)
-
-        if trackData['type'] == 'staging':
-            ModelEntities.tweakStagingTracks(track)
-        if trackData['type'] == 'XO reserved':
-            track.setTrainDirections(0)
         if trackData['type'] == 'industry':
-            track.setSchedule(PSE.SM.getScheduleByName(trackData['label']))
-            for typeName in location.getTypeNames():
-                track.deleteTypeName(typeName)
-
+            ModelEntities.setTrackTypeIndustry(trackData)
+        if trackData['type'] == 'interchange':
+            ModelEntities.setTrackTypeInterchange(trackData)
+        if trackData['type'] == 'staging':
+            ModelEntities.setTrackTypeStaging(trackData)
+        if trackData['type'] == 'class yard':
+            ModelEntities.setTrackTypeClassYard(trackData)
+        if trackData['type'] == 'XO reserved':
+            ModelEntities.setTrackTypeXoReserved(trackData)
     return
 
 def newSchedules():
@@ -199,8 +218,8 @@ def addCarTypesToSpurs():
 
     _psLog.debug('addCarTypesToSpurs')
 
-    for id, industry in ModelEntities.getTpRailroadData()['industries'].items():
-        ModelEntities.selectCarTypes(id, industry)
+    industries = ModelEntities.getTpRailroadData()['industries']
+    ModelEntities.selectCarTypes(industries)
 
     return
 
@@ -287,12 +306,12 @@ class MakeTpLocaleData:
 
         return
 
-    def makeTrackRubric(self):
+    def makeTrackIdRubric(self):
 
         trackScratch = {}
         for id, data in self.sourceData['locales'].items():
             track = data['location'] + ';' + data['track']
-            trackScratch[track] = id
+            trackScratch[id] = track
 
         self.tpLocaleData['tracks'] = trackScratch
 
@@ -312,7 +331,7 @@ class MakeTpLocaleData:
         self.getTpRrData()
         self.getLocations()
         self.makeLocationRubric()
-        self.makeTrackRubric()
+        self.makeTrackIdRubric()
         self.writeTpLocaleData()
 
         return
@@ -449,6 +468,8 @@ class UpdateLocationsAndTracks:
 
         self.newLocations = []
         self.oldLocations = []
+
+        self.continuingTracks = []
         self.newTracks = []
         self.oldTracks = []
 
@@ -513,36 +534,53 @@ class UpdateLocationsAndTracks:
 
         return
 
-    def renameTracks(self):
-        """*********FIX THIS REPLACE NONE WITH A TRACK TYPE**********
-            Rename tracks that have not changed locations
-            """
-
-        _psLog.debug('renameTracks')
-
-        trackList = []
-        for cTrack, cIds in self.currentLocale['tracks'].items():
-            cLocTrack = cTrack.split(';')
-            for uTrack, uIds in self.updatedLocale['tracks'].items():
-                uLocTrack = uTrack.split(';')
-                if cIds == uIds:
-                    PSE.LM.getLocationByName(uLocTrack[0]).getTrackByName(cLocTrack[1], None).setName(uLocTrack[1])
-
-        return
-
     def parseTracks(self):
 
         _psLog.debug('parseTracks')
 
-        currentTracks = []
-        for location in PSE.LM.getList():
-            for track in location.getTracksByNameList(None):
-                currentTracks.append(location.getName() + ';' + track.getName())
+        currentKeys = self.currentLocale['tracks'].keys()
+        updateKeys = self.updatedLocale['tracks'].keys()
 
-        updateTracks = list(uTrack for uTrack, uId in self.updatedLocale['tracks'].items())
+        oldKeys = list(set(currentKeys) - set(updateKeys))
+        continuingKeys = list(set(currentKeys) - set(oldKeys))
+        newKeys = list(set(updateKeys) - set(currentKeys))
 
-        self.newTracks = list(set(updateTracks) - set(currentTracks))
-        self.oldTracks = list(set(currentTracks) - set(updateTracks))
+        for key in oldKeys:
+            self.oldTracks.append(self.currentLocale['tracks'][key])
+
+        for key in newKeys:
+            self.newTracks.append(self.updatedLocale['tracks'][key])
+
+        for key in continuingKeys:
+            cTrack = self.currentLocale['tracks'][key]
+            cLocTrack = cTrack.split(';')
+            uTrack = self.updatedLocale['tracks'][key]
+            uLocTrack = uTrack.split(';')
+            if cLocTrack[0] == uLocTrack[0]:
+                self.continuingTracks.append(cTrack)
+            else:
+                self.newTracks.append(uTrack)
+                self.oldTracks.append(cTrack)
+
+        _psLog.info('Continuing tracks: ' + str(self.continuingTracks))
+        _psLog.info('New tracks: ' + str(self.newTracks))
+        _psLog.info('Old tracks: ' + str(self.oldTracks))
+
+        return
+
+    def renameTracks(self):
+        """*********FIX THIS REPLACE NONE WITH A TRACK TYPE**********
+            Rename tracks that have not changed locations.
+            """
+
+        _psLog.debug('renameTracks')
+
+        invertDict = {value: key for key, value in self.currentLocale['tracks'].items()}
+        for track in self.continuingTracks:
+            index = invertDict[track]
+            cLocTrack = track.split(';')
+            uLocTrack = self.updatedLocale['tracks'][index].split(';')
+            PSE.LM.getLocationByName(cLocTrack[0]).getTrackByName(cLocTrack[1], None).setName(uLocTrack[1])
 
         return
 
@@ -604,28 +642,6 @@ class NewLocationsAndTracks:
 
         for trackId, trackData in self.tpRailroadData['locales'].items():
             ModelEntities.makeNewTrack(trackId, trackData)
-
-        return
-
-    def newSchedules(self):
-        """Creates new schedules from tpRailroadData.json [industries].
-            The schedule name is the TP track label.
-            """
-
-        _psLog.debug('newSchedules')
-
-        for id, industry in self.tpRailroadData['industries'].items():
-            ModelEntities.makeNewSchedule(id, industry)
-
-        return
-
-    def addCarTypesToSpurs(self):
-        """Checks the car types check box for car types used at each spur"""
-
-        _psLog.debug('addCarTypesToSpurs')
-
-        for id, industry in self.tpRailroadData['industries'].items():
-            ModelEntities.selectCarTypes(id, industry)
 
         return
 

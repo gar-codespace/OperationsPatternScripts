@@ -24,46 +24,32 @@ def tpDirectoryExists():
         print('TrainPlayer Reports destination directory not found')
         return
 
-def selectCarTypes(id, industry):
-    """Used by:
+def selectCarTypes(industries):
+    """For each track in industries, first deselect all the RS types,
+        then select just the RS types used by that track, leaving unused types  deselected.
+        Used by:
         Model.NewLocationsAndTracks.addCarTypesToSpurs
         Model.UpdateLocationsAndTracks.addCarTypesToSpurs
         """
+# Deselect all type names for each industry track
+    locationList = []
+    for id, industry in industries.items():
+        locationList.append(industry['location'] + ';' + industry['track'])
 
-    track = PSE.LM.getLocationByName(industry['location']).getTrackByName(industry['track'], None)
-    track.addTypeName(industry['type'])
+    locationList = list(set(locationList))
+    for location in locationList:
+        locTrack = location.split(';')
+        location = PSE.LM.getLocationByName(locTrack[0])
+        track = location.getTrackByName(locTrack[1], None)
+        for typeName in track.getTypeNames():
+            track.deleteTypeName(typeName)
+
+# Select only those types used at the industry.
+    for id, industry in industries.items():
+        track = PSE.LM.getLocationByName(industry['location']).getTrackByName(industry['track'], None)
+        track.addTypeName(industry['type'])
 
     return
-
-# def setNonSpurTrackLength():
-#     """All non spur tracks length set to number of cars occupying track.
-#         Used by:
-#         Model.newJmriRailroad
-#         Model.updateJmriRailroad
-#         """
-#
-#     trackList = PSE.getAllTracks()
-#     for track in trackList:
-#         if track.getTrackType() == 'Spur':
-#             continue
-#         rsTotal = track.getNumberCars() + track.getNumberEngines()
-#         if rsTotal == 0:
-#             rsTotal = 1
-#         newTrackLength = rsTotal * PSE.readConfigFile('o2o')['DL']
-#         track.setLength(newTrackLength)
-#         if track.getName() == '~':
-#             track.setLength(1000)
-#
-#     return
-
-# def deleteAllSchedules():
-#     """Used by:
-#         Model.UpdateLocationsAndTracks
-#         """
-#
-#     PSE.SM.dispose()
-#
-#     return
 
 def makeNewSchedule(id, industry):
     """Used by:
@@ -97,49 +83,77 @@ def makeNewTrack(trackId, trackData):
     # xTrack.setComment(trackId)
 
     if trackData['type'] == 'industry':
-        trackLength = int(trackData['capacity']) * PSE.readConfigFile('o2o')['DL']
-        xTrack.setLength(trackLength)
-        xTrack.setSchedule(PSE.SM.getScheduleByName(trackData['label']))
-        for typeName in loc.getTypeNames():
-            xTrack.deleteTypeName(typeName)
+        setTrackTypeIndustry(trackData)
+    if trackData['type'] == 'interchange':
+        setTrackTypeInterchange(trackData)
     if trackData['type'] == 'staging':
-        tweakStagingTracks(xTrack)
+        setTrackTypeStaging(trackData)
+    if trackData['type'] == 'class yard':
+        setTrackTypeClassYard(trackData)
     if trackData['type'] == 'XO reserved':
-        xTrack.setTrainDirections(0)
+        setTrackTypeXoReserved(trackData)
 
     return
 
-def tweakStagingTracks(track):
-    """Tweak default settings for staging Tracks here
+def setTrackTypeIndustry(trackData):
+    """Settings for TP 'industry' track types.
+        Used by:
+        makeNewTrack
+        """
+
+    loc = PSE.LM.getLocationByName(trackData['location'])
+    track = loc.getTrackByName(trackData['track'], None)
+    track.setSchedule(PSE.SM.getScheduleByName(trackData['label']))
+
+    return track
+
+def setTrackTypeInterchange(trackData):
+    """Settings for TP 'interchange' track types.
+        Used by:
+        makeNewTrack
+        """
+
+    return
+
+def setTrackTypeStaging(trackData):
+    """Settings for TP 'staging' track types.
         Used by:
         makeNewTrack
         """
 
     o2oConfig =  PSE.readConfigFile('o2o')
 
+    location = PSE.LM.getLocationByName(trackData['location'])
+    track = location.getTrackByName(trackData['track'], None)
+
     track.setAddCustomLoadsAnySpurEnabled(o2oConfig['SM']['SCL'])
     track.setRemoveCustomLoadsEnabled(o2oConfig['SM']['RCL'])
     track.setLoadEmptyEnabled(o2oConfig['SM']['LEE'])
 
+    return track
+
+def setTrackTypeClassYard(trackData):
+    """Settings for TP 'class yard' track types.
+        Used by:
+        makeNewTrack
+        """
+
     return
 
-# def getTpTrackByTpId(tpTrackId):
-#
-#     importedRailroad = getTpRailroadData()
-#     trackData = importedRailroad['locales'][tpTrackId]
-#     location = PSE.LM.getLocationByName(trackData['location'])
-#     track = location.getTrackByName(trackData['track'], None)
-#
-#     return track
+def setTrackTypeXoReserved(trackData):
+    """Settings for TP 'XO reserved' track types.
+        XO tracks are spurs with all train directions turned off.
+        All car types are selected.
+        Used by:
+        makeNewTrack
+        """
 
-# def getJmriTracksByTpId():
-#
-#     jmriTracks = {}
-#     for location in PSE.LM.getLocationsByNameList():
-#         for track in location.getTracksList():
-#             jmriTracks[track.getComment()] = (location.getName(), track.getName())
-#
-#     return jmriTracks
+    track = setTrackTypeIndustry(trackData)
+    track.setTrainDirections(0)
+    for type in track.getTypeNames():
+        track.addTypeName(type)
+
+    return track
 
 def getWorkEvents():
     """Gets the o2o work events file
