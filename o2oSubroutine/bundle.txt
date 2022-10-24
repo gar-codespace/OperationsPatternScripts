@@ -1,6 +1,8 @@
+Create New Railroad
 New JMRI Railroad
 o2o Subroutine
 o2o Work Events
+Update Current Railroad
 Update JMRI Railroad
 ALERT: One or more TrainPlayer export files are missing
 ALERT: One or more TrainPlayer export files are corrupted

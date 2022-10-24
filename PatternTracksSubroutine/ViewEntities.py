@@ -90,6 +90,7 @@ class TrackPatternPanel:
         buttonPanel = PSE.JAVX_SWING.JPanel()
         buttonPanel.setAlignmentX(PSE.JAVX_SWING.JPanel.CENTER_ALIGNMENT)
         buttonPanel.add(self.ypButton)
+        buttonPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(30,0)))
         buttonPanel.add(self.scButton)
 
         return buttonPanel

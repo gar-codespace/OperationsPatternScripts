@@ -14,11 +14,11 @@ class O2oSubroutinePanel:
         """The *.setName value is the name of the action for the widget"""
 
         self.nrButton = PSE.JAVX_SWING.JButton()
-        self.nrButton.setText(PSE.BUNDLE[u'New JMRI Railroad'])
+        self.nrButton.setText(PSE.BUNDLE['New JMRI Railroad'])
         self.nrButton.setName('newJmriRailroad')
 
         self.urButton = PSE.JAVX_SWING.JButton()
-        self.urButton.setText(PSE.BUNDLE[u'Update JMRI Railroad'])
+        self.urButton.setText(PSE.BUNDLE['Update JMRI Railroad'])
         self.urButton.setName('updateJmriRailroad')
 
         self.rsButton = PSE.JAVX_SWING.JButton()
@@ -32,12 +32,24 @@ class O2oSubroutinePanel:
     def o2oPanelMaker(self):
 
         tpPanel = PSE.JAVX_SWING.JPanel()
+        newRrPanel = PSE.JAVX_SWING.JPanel()
+        updateRrPanel = PSE.JAVX_SWING.JPanel()
 
-        tpPanel.add(self.nrButton)
-        tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
-        tpPanel.add(self.urButton)
-        tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
-        tpPanel.add(self.rsButton)
+        newRrPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE['Create New Railroad'])
+        newRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(50,0)))
+        newRrPanel.add(self.nrButton)
+        newRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(50,0)))
+
+        updateRrPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE['Update Current Railroad'])
+        updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(50,0)))
+        updateRrPanel.add(self.urButton)
+        updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(30,0)))
+        updateRrPanel.add(self.rsButton)
+        updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(50,0)))
+
+        tpPanel.add(newRrPanel)
+        tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(30,0)))
+        tpPanel.add(updateRrPanel)
 
         return tpPanel
 

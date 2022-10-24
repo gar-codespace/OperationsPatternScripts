@@ -23,9 +23,7 @@ class ManageGui:
         subroutineFrame = PSE.JAVX_SWING.JPanel() # the track pattern panel
         subroutineFrame.setName(u'o2oSubroutine')
         # encodedKey = unicode('o2o Subroutine', PSE.ENCODING)
-        subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(
-            PSE.BUNDLE[u'o2o Subroutine']
-            )
+        subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE[u'o2o Subroutine'])
 
         return subroutineFrame
 
