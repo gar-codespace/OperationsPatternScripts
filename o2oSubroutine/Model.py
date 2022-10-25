@@ -167,7 +167,9 @@ def setTrackLength():
 
     for id, trackData in tpRailroadData['locales'].items():
         location = PSE.LM.getLocationByName(trackData['location'])
-        track = location.getTrackByName(trackData['track'], None)
+        trackType = o2oConfig['TR'][trackData['type']]
+        print(trackType)
+        track = location.getTrackByName(trackData['track'], trackType)
 
         trackLength = int(trackData['capacity']) * o2oConfig['DL']
         track.setLength(trackLength)
@@ -309,11 +311,15 @@ class MakeTpLocaleData:
     def makeTrackIdRubric(self):
 
         trackScratch = {}
+        trackData = {}
         for id, data in self.sourceData['locales'].items():
             track = data['location'] + ';' + data['track']
+            otherTrack = (data['location'], data['track'], data['type'])
             trackScratch[id] = track
+            trackData[id] = otherTrack
 
         self.tpLocaleData['tracks'] = trackScratch
+        self.tpLocaleData['trackz'] = trackData
 
         return
 
@@ -575,12 +581,23 @@ class UpdateLocationsAndTracks:
 
         _psLog.debug('renameTracks')
 
-        invertDict = {value: key for key, value in self.currentLocale['tracks'].items()}
-        for track in self.continuingTracks:
-            index = invertDict[track]
-            cLocTrack = track.split(';')
-            uLocTrack = self.updatedLocale['tracks'][index].split(';')
-            PSE.LM.getLocationByName(cLocTrack[0]).getTrackByName(cLocTrack[1], None).setName(uLocTrack[1])
+        # invertDict = {value: key for key, value in self.currentLocale['tracks'].items()}
+        # for track in self.continuingTracks:
+        #     index = invertDict[track]
+        #     cLocTrack = track.split(';')
+        #     uLocTrack = self.updatedLocale['tracks'][index].split(';')
+        #     PSE.LM.getLocationByName(cLocTrack[0]).getTrackByName(cLocTrack[1], None).setName(uLocTrack[1])
+
+
+
+        invertDict = {value: key for key, value in self.currentLocale['trackz'].items()}
+        for cTrack in self.continuingTracks:
+            index = invertDict[cTrack]
+            uTrack = self.updatedLocale['trackz'][index]
+            PSE.LM.getLocationByName(cTrack[0]).getTracktTrackByName(cTrack[1], cTrack[2]).setName(uTrack[1])
+
+
+
 
         return
 
