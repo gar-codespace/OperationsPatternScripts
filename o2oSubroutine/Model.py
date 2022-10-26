@@ -99,17 +99,15 @@ def updateJmriRailroad():
     MakeTpLocaleData().make()
     updatedLocations.getUpdated()
 
-    updatedLocations.renameLocations()
     updatedLocations.parseLocations()
+    updatedLocations.processLocations()
     updatedLocations.addNewLocations()
-
-    updatedLocations.parseTracks()
-    updatedLocations.renameTracks()
-    updatedLocations.addNewTracks()
 
     ModelEntities.newSchedules()
 
-    updatedLocations.updateTrackParams()
+    updatedLocations.parseTracks()
+    updatedLocations.recastTracks()
+    updatedLocations.addNewTracks()
 
     ModelEntities.setTrackLength()
     ModelEntities.addCarTypesToSpurs()
@@ -167,8 +165,12 @@ class SetupXML:
 
     def __init__(self):
 
+        self.scriptName = SCRIPT_NAME + '.SetupXML'
+
         self.o2oConfig =  PSE.readConfigFile('o2o')
         self.TpRailroad = ModelEntities.getTpRailroadData()
+
+        print(self.scriptName + ' ' + str(SCRIPT_REV))
 
         return
 
@@ -195,8 +197,6 @@ class SetupXML:
         OSU.Setup.setPickupEngineMessageFormat(self.o2oConfig['TO']['PUL'])
         OSU.Setup.setDropEngineMessageFormat(self.o2oConfig['TO']['SOL'])
 
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-
         return
 
 
@@ -205,10 +205,14 @@ class MakeTpLocaleData:
 
     def __init__(self):
 
+        self.scriptName = SCRIPT_NAME + '.MakeTpLocaleData'
+
         self.sourceData = {}
         self.tpLocaleData = {}
 
         self.locationList = []
+
+        print(self.scriptName + ' ' + str(SCRIPT_REV))
 
         return
 
@@ -283,7 +287,11 @@ class AddRsAttributes:
 
     def __init__(self):
 
+        self.scriptName = SCRIPT_NAME + '.AddRsAttributes'
+
         self.tpRailroadData = ModelEntities.getTpRailroadData()
+
+        print(self.scriptName + ' ' + str(SCRIPT_REV))
 
         return
 
@@ -393,18 +401,23 @@ class UpdateLocationsAndTracks:
 
     def __init__(self):
 
+        self.scriptName = SCRIPT_NAME + '.UpdateLocationsAndTracks'
+
         self.o2oConfig = PSE.readConfigFile('o2o')
         self.tpRailroadData = ModelEntities.getTpRailroadData()
 
         self.currentLocale = {}
         self.updatedLocale = {}
 
-        self.newLocations = []
         self.oldLocations = []
+        self.newLocations = []
+        self.renameLocations = []
 
-        self.continuingTracks = []
-        self.newTracks = []
-        self.oldTracks = []
+        self.oldKeys = []
+        self.newKeys = []
+        self.continuingKeys = []
+
+        print(self.scriptName + ' ' + str(SCRIPT_REV))
 
         return
 
@@ -430,21 +443,6 @@ class UpdateLocationsAndTracks:
 
         return
 
-    def renameLocations(self):
-        """Way too nested."""
-
-        _psLog.debug('renameLocations')
-
-        for cLocation, cIds in self.currentLocale['locations'].items():
-            for uLocation, uIds in self.updatedLocale['locations'].items():
-                if cIds == uIds:
-                    typeNames = PSE.LM.getLocationByName(cLocation).getTypeNames()
-                    PSE.LM.getLocationByName(cLocation).setName(uLocation)
-                    for typeName in typeNames:
-                        PSE.LM.getLocationByName(uLocation).addTypeName(typeName)
-
-        return
-
     def parseLocations(self):
 
         _psLog.debug('parseLocations')
@@ -452,8 +450,30 @@ class UpdateLocationsAndTracks:
         currentLocations = PSE.getAllLocationNames()
         updateLocations = [uLocation for uLocation, uIds in self.updatedLocale['locations'].items()]
 
-        self.newLocations = list(set(updateLocations) - set(currentLocations))
-        self.oldLocations = list(set(currentLocations) - set(updateLocations))
+        unchangedLocations = []
+        modifiedLocations = []
+        for cLocation, cIds in self.currentLocale['locations'].items():
+            for uLocation, uIds in self.updatedLocale['locations'].items():
+                if cIds == uIds and cLocation == uLocation:
+                    unchangedLocations.append(cLocation)
+                if cIds == uIds and cLocation != uLocation:
+                    self.renameLocations.append((cLocation, uLocation))
+                    modifiedLocations.append(cLocation)
+                    modifiedLocations.append(uLocation)
+                # if cLocation == uLocation and cIds != uIds:
+                #     modifiedLocations.append(cLocation)
+
+        self.oldLocations = list(set(currentLocations) - set(unchangedLocations) - set(modifiedLocations))
+        self.newLocations = list(set(updateLocations) - set(unchangedLocations) - set(modifiedLocations))
+
+        return
+
+    def processLocations(self):
+
+        _psLog.debug('renameLocations')
+
+        for item in self.renameLocations:
+            PSE.LM.getLocationByName(item[0]).setName(item[1])
 
         return
 
@@ -473,66 +493,43 @@ class UpdateLocationsAndTracks:
         currentKeys = self.currentLocale['tracks'].keys()
         updateKeys = self.updatedLocale['tracks'].keys()
 
-        oldKeys = list(set(currentKeys) - set(updateKeys))
-        continuingKeys = list(set(currentKeys) - set(oldKeys))
-        newKeys = list(set(updateKeys) - set(currentKeys))
+        self.oldKeys = list(set(currentKeys) - set(updateKeys))
+        self.newKeys = list(set(updateKeys) - set(currentKeys))
+        self.continuingKeys = list(set(currentKeys) - set(self.oldKeys))
 
-        for key in oldKeys:
-            self.oldTracks.append(self.currentLocale['tracks'][key])
-
-        for key in newKeys:
-            self.newTracks.append(self.updatedLocale['tracks'][key])
-
-        for key in continuingKeys:
-            cTrack = self.currentLocale['tracks'][key]
-            uTrack = self.updatedLocale['tracks'][key]
-            if cTrack[0] == uTrack[0]:
-                self.continuingTracks.append(cTrack)
-            else:
-                self.newTracks.append(uTrack)
-                self.oldTracks.append(cTrack)
-
-        _psLog.info('Continuing tracks: ' + str(self.continuingTracks))
-        _psLog.info('New tracks: ' + str(self.newTracks))
-        _psLog.info('Old tracks: ' + str(self.oldTracks))
+        _psLog.info('Old keys: ' + str(self.oldKeys))
+        _psLog.info('New keys: ' + str(self.newKeys))
+        _psLog.info('Continuing keys: ' + str(self.continuingKeys))
 
         return
 
-    def renameTracks(self):
-        """Rename tracks that have not changed locations.
-            Too much indenting?
+    def recastTracks(self):
+        """For tracks that have not changed locations, update:
+            name
+            track type
+            train diretions (keep this?)
+            track attributes
             """
 
-        _psLog.debug('renameTracks')
+        _psLog.debug('recastTracks')
 
-        print(self.continuingTracks)
+        for key in self.continuingKeys:
+            location = self.updatedLocale['tracks'][key][0]
 
-        for cTrack in self.continuingTracks:
-            for id, data in self.currentLocale['tracks'].items():
-                if cTrack == self.currentLocale['tracks'][id]:
-                    uTrack = self.updatedLocale['tracks'][id]
-                    trackType = self.o2oConfig['TR'][cTrack[2]]
-                    PSE.LM.getLocationByName(cTrack[0]).getTrackByName(cTrack[1], trackType).setName(uTrack[1])
+            track = self.currentLocale['tracks'][key][1]
+            trackType = self.currentLocale['tracks'][key][2]
+            jmriTrackType = self.o2oConfig['TR'][trackType]
 
-        return
+            newTrack = self.updatedLocale['tracks'][key][1]
+            newTrackType = self.updatedLocale['tracks'][key][2]
+            newJmriTrackType = self.o2oConfig['TR'][newTrackType]
 
-    def updateTrackParams(self):
-        """For all continuing track IDs, update the type, train dirs, and track attribs."""
+            location = PSE.LM.getLocationByName(location)
+            location.getTrackByName(track, jmriTrackType).setName(newTrack)
+            location.getTrackByName(newTrack, jmriTrackType).setTrackType(newJmriTrackType)
+            location.getTrackByName(newTrack, newJmriTrackType).setTrainDirections(15)
 
-        _psLog.debug('updateTrackParams')
-
-        for id, trackData in self.tpRailroadData['locales'].items():
-
-            location = PSE.LM.getLocationByName(self.updatedLocale['tracks'][id][0])
-            cTrackType = self.currentLocale['tracks'][id][2]
-
-            track = location.getTrackByName(self.updatedLocale['tracks'][id][1], self.o2oConfig['TR'][cTrackType])
-
-            uTrackType = self.updatedLocale['tracks'][id][2]
-            jmriTrackType = self.o2oConfig['TR'][uTrackType]
-
-            track.setTrackType(jmriTrackType)
-            track.setTrainDirections(15)
+            trackData = self.tpRailroadData['locales'][key]
             ModelEntities.setTrackAttribs(trackData)
 
         return
@@ -541,19 +538,19 @@ class UpdateLocationsAndTracks:
 
         _psLog.debug('addNewTracks')
 
-        for locTrack in self.newTracks:
-            trackId = self.updatedLocale['tracks'][locTrack]
-            trackData = self.tpRailroadData['locales'][trackId]
-            ModelEntities.makeNewTrack(trackId, trackData)
+        for key in self.newKeys:
+            trackData = self.tpRailroadData['locales'][key]
+            ModelEntities.makeNewTrack(key, trackData)
 
         return
 
     def deleteOldTracks(self):
 
-        for item in self.oldTracks:
-            trackType = self.o2oConfig['TR'][item[2]]
-            location = PSE.LM.getLocationByName(item[0])
-            track = location.getTrackByName(item[1], trackType)
+        for key in self.oldKeys:
+            trackData = self.currentLocale['tracks'][key]
+            trackType = self.o2oConfig['TR'][trackData[2]]
+            location = PSE.LM.getLocationByName(trackData[0])
+            track = location.getTrackByName(trackData[1], trackType)
             location.deleteTrack(track)
             track.dispose()
 
@@ -573,7 +570,11 @@ class NewLocationsAndTracks:
 
     def __init__(self):
 
+        self.scriptName = SCRIPT_NAME + '.NewLocationsAndTracks'
+
         self.tpRailroadData = ModelEntities.getTpRailroadData()
+
+        print(self.scriptName + ' ' + str(SCRIPT_REV))
 
         return
 
@@ -600,6 +601,8 @@ class NewRollingStock:
 
     def __init__(self):
 
+        self.scriptName = SCRIPT_NAME + '.NewRollingStock'
+
         self.o2oConfig = PSE.readConfigFile('o2o')
 
         self.tpRollingStockFile = self.o2oConfig['RF']['TRR']
@@ -609,6 +612,8 @@ class NewRollingStock:
 
         self.jmriCars = PSE.CM.getList()
         self.jmriLocos = PSE.EM.getList()
+
+        print(self.scriptName + ' ' + str(SCRIPT_REV))
 
         return
 

@@ -1,6 +1,7 @@
 Todo:
   How to publish DeepL?
   Track type 'staging' can't be mixed in with other track types, the location must be staging.
+  If a new location is created and existing track moved to new location it crashes.
 
 Comments:
   Schedule does not prevent setting a car to a track.

@@ -140,7 +140,8 @@ def makeNewTrack(trackId, trackData):
     return
 
 def setTrackAttribs(trackData):
-    """Mini controller to set the attributes for each JMRI track type.
+    """Mini controller to set the attributes for each track,
+        based on TrainPlayer track type.
         Used by:
         makeNewTrack
         Model.UpdateLocationsAndTracks.updateTrackParams
@@ -178,9 +179,15 @@ def setTrackTypeIndustry(trackData):
 
 def setTrackTypeInterchange(trackData):
     """Settings for TP 'interchange' track types.
+        Select all car and loco types.
         Used by:
         makeNewTrack
         """
+
+    location = PSE.LM.getLocationByName(trackData['location'])
+    track = location.getTrackByName(trackData['track'], None)
+    for type in track.getTypeNames():
+        track.addTypeName(type)
 
     return
 
