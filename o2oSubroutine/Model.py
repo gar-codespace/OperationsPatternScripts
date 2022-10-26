@@ -46,7 +46,9 @@ def newJmriRailroad():
 
     newLocations = NewLocationsAndTracks()
     newLocations.newLocations()
+
     newSchedules()
+
     newLocations.newTracks()
 
     setTrackLength()
@@ -101,12 +103,12 @@ def updateJmriRailroad():
     updatedLocations.parseLocations()
     updatedLocations.addNewLocations()
 
-    newSchedules()
     updatedLocations.parseTracks()
     updatedLocations.renameTracks()
     updatedLocations.addNewTracks()
+    newSchedules()
+    updatedLocations.updateTrackType()
 
-    updateTrackType()
     setTrackLength()
     addCarTypesToSpurs()
 
@@ -168,7 +170,6 @@ def setTrackLength():
     for id, trackData in tpRailroadData['locales'].items():
         location = PSE.LM.getLocationByName(trackData['location'])
         trackType = o2oConfig['TR'][trackData['type']]
-        print(trackType)
         track = location.getTrackByName(trackData['track'], trackType)
 
         trackLength = int(trackData['capacity']) * o2oConfig['DL']
@@ -176,31 +177,38 @@ def setTrackLength():
 
     return
 
-def updateTrackType():
+# def updateTrackType():
+#
+#     _psLog.debug('updateTrackType')
+#
+#     o2oConfig = PSE.readConfigFile('o2o')
+#     tpRailroadData = ModelEntities.getTpRailroadData()
+#
+#     for id, trackData in tpRailroadData['locales'].items():
+#         trackType = o2oConfig['TR'][trackData['type']]
+#         location = PSE.LM.getLocationByName(trackData['location'])
+#         track = location.getTrackByName(trackData['track'], None)
+#         if track.getTrackType() != trackType:
+#             track.setTrackType(trackType)
+#             track.setTrainDirections(15)
+#
+#         if trackData['type'] == 'industry':
+#             ModelEntities.setTrackTypeIndustry(trackData)
+#         if trackData['type'] == 'interchange':
+#             ModelEntities.setTrackTypeInterchange(trackData)
+#         if trackData['type'] == 'staging':
+#             ModelEntities.setTrackTypeStaging(trackData)
+#         if trackData['type'] == 'class yard':
+#             ModelEntities.setTrackTypeClassYard(trackData)
+#         if trackData['type'] == 'XO reserved':
+#             ModelEntities.setTrackTypeXoReserved(trackData)
+#     return
 
-    _psLog.debug('updateTrackType')
+def deleteAllSchedules():
 
-    o2oConfig = PSE.readConfigFile('o2o')
-    tpRailroadData = ModelEntities.getTpRailroadData()
+    for schedule in PSE.SM.getSchedulesByIdList():
+        schedule.dispose()
 
-    for id, trackData in tpRailroadData['locales'].items():
-        trackType = o2oConfig['TR'][trackData['type']]
-        location = PSE.LM.getLocationByName(trackData['location'])
-        track = location.getTrackByName(trackData['track'], None)
-        if track.getTrackType() != trackType:
-            track.setTrackType(trackType)
-            track.setTrainDirections(15)
-
-        if trackData['type'] == 'industry':
-            ModelEntities.setTrackTypeIndustry(trackData)
-        if trackData['type'] == 'interchange':
-            ModelEntities.setTrackTypeInterchange(trackData)
-        if trackData['type'] == 'staging':
-            ModelEntities.setTrackTypeStaging(trackData)
-        if trackData['type'] == 'class yard':
-            ModelEntities.setTrackTypeClassYard(trackData)
-        if trackData['type'] == 'XO reserved':
-            ModelEntities.setTrackTypeXoReserved(trackData)
     return
 
 def newSchedules():
@@ -313,13 +321,13 @@ class MakeTpLocaleData:
         trackScratch = {}
         trackData = {}
         for id, data in self.sourceData['locales'].items():
-            track = data['location'] + ';' + data['track']
+            # track = data['location'] + ';' + data['track']
             otherTrack = (data['location'], data['track'], data['type'])
-            trackScratch[id] = track
+            # trackScratch[id] = track
             trackData[id] = otherTrack
 
-        self.tpLocaleData['tracks'] = trackScratch
-        self.tpLocaleData['trackz'] = trackData
+        # self.tpLocaleData['tracks'] = trackScratch
+        self.tpLocaleData['tracks'] = trackData
 
         return
 
@@ -559,10 +567,8 @@ class UpdateLocationsAndTracks:
 
         for key in continuingKeys:
             cTrack = self.currentLocale['tracks'][key]
-            cLocTrack = cTrack.split(';')
             uTrack = self.updatedLocale['tracks'][key]
-            uLocTrack = uTrack.split(';')
-            if cLocTrack[0] == uLocTrack[0]:
+            if cTrack[0] == cTrack[0]:
                 self.continuingTracks.append(cTrack)
             else:
                 self.newTracks.append(uTrack)
@@ -575,29 +581,38 @@ class UpdateLocationsAndTracks:
         return
 
     def renameTracks(self):
-        """*********FIX THIS REPLACE NONE WITH A TRACK TYPE**********
-            Rename tracks that have not changed locations.
+        """Rename tracks that have not changed locations.
+            Too much indenting?
             """
 
         _psLog.debug('renameTracks')
 
-        # invertDict = {value: key for key, value in self.currentLocale['tracks'].items()}
-        # for track in self.continuingTracks:
-        #     index = invertDict[track]
-        #     cLocTrack = track.split(';')
-        #     uLocTrack = self.updatedLocale['tracks'][index].split(';')
-        #     PSE.LM.getLocationByName(cLocTrack[0]).getTrackByName(cLocTrack[1], None).setName(uLocTrack[1])
-
-
-
-        invertDict = {value: key for key, value in self.currentLocale['trackz'].items()}
         for cTrack in self.continuingTracks:
-            index = invertDict[cTrack]
-            uTrack = self.updatedLocale['trackz'][index]
-            PSE.LM.getLocationByName(cTrack[0]).getTracktTrackByName(cTrack[1], cTrack[2]).setName(uTrack[1])
+            for id, data in self.currentLocale['tracks'].items():
+                if cTrack == self.currentLocale['tracks'][id]:
+                    uTrack = self.updatedLocale['tracks'][id]
+                    trackType = self.o2oConfig['TR'][cTrack[2]]
+                    PSE.LM.getLocationByName(cTrack[0]).getTrackByName(cTrack[1], trackType).setName(uTrack[1])
 
+        return
 
+    def updateTrackType(self):
 
+        _psLog.debug('updateTrackType')
+
+        for id, trackData in self.tpRailroadData['locales'].items():
+
+            location = PSE.LM.getLocationByName(self.updatedLocale['tracks'][id][0])
+            cTrackType = self.currentLocale['tracks'][id][2]
+
+            track = location.getTrackByName(self.updatedLocale['tracks'][id][1], self.o2oConfig['TR'][cTrackType])
+
+            uTrackType = self.updatedLocale['tracks'][id][2]
+            jmriTrackType = self.o2oConfig['TR'][uTrackType]
+
+            track.setTrackType(jmriTrackType)
+            track.setTrainDirections(15)
+            ModelEntities.setTrackAttribs(trackData)
 
         return
 
@@ -615,9 +630,9 @@ class UpdateLocationsAndTracks:
     def deleteOldTracks(self):
 
         for item in self.oldTracks:
-            locTrack = item.split(';')
-            location = PSE.LM.getLocationByName(locTrack[0])
-            track = location.getTrackByName(locTrack[1], None)
+            trackType = self.o2oConfig['TR'][item[2]]
+            location = PSE.LM.getLocationByName(item[0])
+            track = location.getTrackByName(item[1], trackType)
             location.deleteTrack(track)
             track.dispose()
 

@@ -51,6 +51,10 @@ def selectCarTypes(industries):
 
     return
 
+
+
+
+
 def makeNewSchedule(id, industry):
     """Used by:
         Model.NewLocationsAndTracks.newSchedules
@@ -75,21 +79,35 @@ def makeNewTrack(trackId, trackData):
 
     _psLog.debug('makeNewTrack')
 
-    typeRubric = PSE.readConfigFile('o2o')['TR']
-    jmriTrackType = typeRubric[trackData['type']]
+    o2oConfig = PSE.readConfigFile('o2o')
+    jmriTrackType = o2oConfig['TR'][trackData['type']]
 
-    loc = PSE.LM.getLocationByName(trackData['location'])
-    xTrack = loc.addTrack(trackData['track'], jmriTrackType)
-    # xTrack.setComment(trackId)
+    location = PSE.LM.getLocationByName(trackData['location'])
+    location.addTrack(trackData['track'], jmriTrackType)
+
+    setTrackAttribs(trackData)
+    
+    return
+
+def setTrackAttribs(trackData):
+    """Mini controller to set the attributes for each JMRI track type.
+        Used by:
+        makeNewTrack
+        Model.UpdateLocationsAndTracks.updateTrackType
+        """
 
     if trackData['type'] == 'industry':
         setTrackTypeIndustry(trackData)
+
     if trackData['type'] == 'interchange':
         setTrackTypeInterchange(trackData)
+
     if trackData['type'] == 'staging':
         setTrackTypeStaging(trackData)
+
     if trackData['type'] == 'class yard':
         setTrackTypeClassYard(trackData)
+
     if trackData['type'] == 'XO reserved':
         setTrackTypeXoReserved(trackData)
 
@@ -101,8 +119,9 @@ def setTrackTypeIndustry(trackData):
         makeNewTrack
         """
 
-    loc = PSE.LM.getLocationByName(trackData['location'])
-    track = loc.getTrackByName(trackData['track'], None)
+    location = PSE.LM.getLocationByName(trackData['location'])
+    track = location.getTrackByName(trackData['track'], None)
+
     track.setSchedule(PSE.SM.getScheduleByName(trackData['label']))
 
     return track

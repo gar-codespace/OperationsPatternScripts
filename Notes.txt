@@ -1,7 +1,6 @@
 Todo:
   How to publish DeepL?
-  o2o update railroad replace all getTracksByNameList(None) with track types.
-  check TP exporting track capacity correctly.
+  Track type 'staging' can't be mixed in with other track types, the location must be staging.
 
 Comments:
   Schedule does not prevent setting a car to a track.
