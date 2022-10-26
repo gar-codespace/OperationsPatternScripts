@@ -47,12 +47,12 @@ def newJmriRailroad():
     newLocations = NewLocationsAndTracks()
     newLocations.newLocations()
 
-    newSchedules()
+    ModelEntities.newSchedules()
 
     newLocations.newTracks()
 
-    setTrackLength()
-    addCarTypesToSpurs()
+    ModelEntities.setTrackLength()
+    ModelEntities.addCarTypesToSpurs()
     MakeTpLocaleData().make()
 
     newInventory = NewRollingStock()
@@ -106,11 +106,13 @@ def updateJmriRailroad():
     updatedLocations.parseTracks()
     updatedLocations.renameTracks()
     updatedLocations.addNewTracks()
-    newSchedules()
-    updatedLocations.updateTrackType()
 
-    setTrackLength()
-    addCarTypesToSpurs()
+    ModelEntities.newSchedules()
+
+    updatedLocations.updateTrackParams()
+
+    ModelEntities.setTrackLength()
+    ModelEntities.addCarTypesToSpurs()
 
     newInventory = NewRollingStock()
     newInventory.getTpInventory()
@@ -156,80 +158,6 @@ def updateJmriRollingingStock():
 
     PSE.CMX.save()
     PSE.EMX.save()
-
-    return
-
-def setTrackLength():
-    """Set an existing tracks length."""
-
-    _psLog.debug('setTrackLength')
-
-    o2oConfig = PSE.readConfigFile('o2o')
-    tpRailroadData = ModelEntities.getTpRailroadData()
-
-    for id, trackData in tpRailroadData['locales'].items():
-        location = PSE.LM.getLocationByName(trackData['location'])
-        trackType = o2oConfig['TR'][trackData['type']]
-        track = location.getTrackByName(trackData['track'], trackType)
-
-        trackLength = int(trackData['capacity']) * o2oConfig['DL']
-        track.setLength(trackLength)
-
-    return
-
-# def updateTrackType():
-#
-#     _psLog.debug('updateTrackType')
-#
-#     o2oConfig = PSE.readConfigFile('o2o')
-#     tpRailroadData = ModelEntities.getTpRailroadData()
-#
-#     for id, trackData in tpRailroadData['locales'].items():
-#         trackType = o2oConfig['TR'][trackData['type']]
-#         location = PSE.LM.getLocationByName(trackData['location'])
-#         track = location.getTrackByName(trackData['track'], None)
-#         if track.getTrackType() != trackType:
-#             track.setTrackType(trackType)
-#             track.setTrainDirections(15)
-#
-#         if trackData['type'] == 'industry':
-#             ModelEntities.setTrackTypeIndustry(trackData)
-#         if trackData['type'] == 'interchange':
-#             ModelEntities.setTrackTypeInterchange(trackData)
-#         if trackData['type'] == 'staging':
-#             ModelEntities.setTrackTypeStaging(trackData)
-#         if trackData['type'] == 'class yard':
-#             ModelEntities.setTrackTypeClassYard(trackData)
-#         if trackData['type'] == 'XO reserved':
-#             ModelEntities.setTrackTypeXoReserved(trackData)
-#     return
-
-def deleteAllSchedules():
-
-    for schedule in PSE.SM.getSchedulesByIdList():
-        schedule.dispose()
-
-    return
-
-def newSchedules():
-    """Creates new schedules from tpRailroadData.json [industries].
-        The schedule name is the TP track label.
-        """
-
-    _psLog.debug('newSchedules')
-
-    for id, industry in ModelEntities.getTpRailroadData()['industries'].items():
-        ModelEntities.makeNewSchedule(id, industry)
-
-    return
-
-def addCarTypesToSpurs():
-    """Checks the car types check box for car types used at each spur"""
-
-    _psLog.debug('addCarTypesToSpurs')
-
-    industries = ModelEntities.getTpRailroadData()['industries']
-    ModelEntities.selectCarTypes(industries)
 
     return
 
@@ -321,12 +249,9 @@ class MakeTpLocaleData:
         trackScratch = {}
         trackData = {}
         for id, data in self.sourceData['locales'].items():
-            # track = data['location'] + ';' + data['track']
             otherTrack = (data['location'], data['track'], data['type'])
-            # trackScratch[id] = track
             trackData[id] = otherTrack
 
-        # self.tpLocaleData['tracks'] = trackScratch
         self.tpLocaleData['tracks'] = trackData
 
         return
@@ -400,7 +325,6 @@ class AddRsAttributes:
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
         carLoads = self.tpRailroadData['carLoads']
         for aar in self.tpRailroadData['carAAR']:
-            # aar = unicode(aar, PSE.ENCODING)
             TCM.addType(aar)
             TCM.addName(aar, 'Empty')
             TCM.addName(aar, 'Load')
@@ -420,7 +344,6 @@ class AddRsAttributes:
 
         nameList = PSE.KM.getNameList()
         for xName in self.tpRailroadData['carKernel']:
-            # xName = unicode(xName, PSE.ENCODING)
             PSE.KM.newKernel(xName)
 
         return
@@ -433,8 +356,6 @@ class AddRsAttributes:
         tc = PSE.JMRI.jmrit.operations.rollingstock.engines.EngineModels
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
         for xName in self.tpRailroadData['locoModels']:
-            # xModel = unicode(xName[0], PSE.ENCODING)
-            # xType = unicode(xName[1], PSE.ENCODING)
             xModel = xName[0]
             xType = xName[1]
             TCM.addName(xModel)
@@ -451,7 +372,6 @@ class AddRsAttributes:
         tc = PSE.JMRI.jmrit.operations.rollingstock.engines.EngineTypes
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
         for xName in self.tpRailroadData['locoTypes']:
-            # xName = unicode(xName, PSE.ENCODING)
             TCM.addName(xName)
 
         return
@@ -463,7 +383,6 @@ class AddRsAttributes:
 
         nameList = PSE.ZM.getNameList()
         for xName in self.tpRailroadData['locoConsists']:
-            # xName = unicode(xName, PSE.ENCODING)
             PSE.ZM.newConsist(xName)
 
         return
@@ -490,7 +409,7 @@ class UpdateLocationsAndTracks:
         return
 
     def getCurrent(self):
-        """self.currentLocale = tpLocaleData.json"""
+        """self.currentLocale = the existing tpLocaleData.json"""
 
         _psLog.debug('getCurrent')
 
@@ -501,7 +420,7 @@ class UpdateLocationsAndTracks:
         return
 
     def getUpdated(self):
-        """self.updatedLocale = tpLocaleData.json"""
+        """self.updatedLocale = a new tpLocaleData.json"""
 
         _psLog.debug('getUpdated')
 
@@ -516,7 +435,6 @@ class UpdateLocationsAndTracks:
 
         _psLog.debug('renameLocations')
 
-        locList = []
         for cLocation, cIds in self.currentLocale['locations'].items():
             for uLocation, uIds in self.updatedLocale['locations'].items():
                 if cIds == uIds:
@@ -568,7 +486,7 @@ class UpdateLocationsAndTracks:
         for key in continuingKeys:
             cTrack = self.currentLocale['tracks'][key]
             uTrack = self.updatedLocale['tracks'][key]
-            if cTrack[0] == cTrack[0]:
+            if cTrack[0] == uTrack[0]:
                 self.continuingTracks.append(cTrack)
             else:
                 self.newTracks.append(uTrack)
@@ -587,6 +505,8 @@ class UpdateLocationsAndTracks:
 
         _psLog.debug('renameTracks')
 
+        print(self.continuingTracks)
+
         for cTrack in self.continuingTracks:
             for id, data in self.currentLocale['tracks'].items():
                 if cTrack == self.currentLocale['tracks'][id]:
@@ -596,9 +516,10 @@ class UpdateLocationsAndTracks:
 
         return
 
-    def updateTrackType(self):
+    def updateTrackParams(self):
+        """For all continuing track IDs, update the type, train dirs, and track attribs."""
 
-        _psLog.debug('updateTrackType')
+        _psLog.debug('updateTrackParams')
 
         for id, trackData in self.tpRailroadData['locales'].items():
 
@@ -666,9 +587,6 @@ class NewLocationsAndTracks:
         return
 
     def newTracks(self):
-        """Set spur length to spaces from TP.
-            Deselect all types for spur tracks.
-            """
 
         _psLog.debug('newTracks')
 
@@ -679,9 +597,6 @@ class NewLocationsAndTracks:
 
 
 class NewRollingStock:
-    """Updates the JMRI RS inventory.
-        Deletes JMRI RS not in TP Inventory.txt
-        """
 
     def __init__(self):
 
@@ -806,39 +721,3 @@ class NewRollingStock:
             updatedLoco.setConsist(PSE.ZM.getConsistByName(attribs['consist']))
 
         return
-
-
-# def deleteFiles():
-#
-#     for fileName in FILE_LIST:
-#         targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
-#         if PSE.JAVA_IO.File(targetFile).delete():
-#             _psLog.info('Deleted: ' + fileName)
-#         else:
-#             _psLog.warning('Not deleted: ' + fileName)
-#
-#     return
-
-# def copyFiles(fromSuffix, toSuffix):
-#     """Utility to backup and restore any operations xml file.
-#         Specify a null suffix as ''
-#         This method is abstracted to backup and restore, which is not a feature of JMRI backup()
-#         """
-#
-#     for fileName in FILE_LIST:
-#         fromName = fileName + fromSuffix
-#         toName = fileName + toSuffix
-#
-#         sourceFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fromName)
-#         sourceFile = PSE.JAVA_IO.File(sourceFile).toPath()
-#
-#         targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', toName)
-#         targetFile = PSE.JAVA_IO.File(targetFile).toPath()
-#
-#         try:
-#             PSE.JAVA_NIO.Files.copy(sourceFile, targetFile, PSE.JAVA_NIO.StandardCopyOption.REPLACE_EXISTING)
-#             _psLog.info('Copied: ' + fileName)
-#         except:
-#             _psLog.warning('Not copied: ' + fileName)
-#
-#     return

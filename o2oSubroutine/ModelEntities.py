@@ -51,21 +51,71 @@ def selectCarTypes(industries):
 
     return
 
+def setTrackLength():
+    """Set an existing tracks length."""
 
+    _psLog.debug('setTrackLength')
 
+    o2oConfig = PSE.readConfigFile('o2o')
+    tpRailroadData = getTpRailroadData()
 
+    for id, trackData in tpRailroadData['locales'].items():
+        location = PSE.LM.getLocationByName(trackData['location'])
+        trackType = o2oConfig['TR'][trackData['type']]
+        track = location.getTrackByName(trackData['track'], trackType)
 
-def makeNewSchedule(id, industry):
-    """Used by:
-        Model.NewLocationsAndTracks.newSchedules
-        Model.UpdateLocationsAndTracks
+        trackLength = int(trackData['capacity']) * o2oConfig['DL']
+        track.setLength(trackLength)
+
+    return
+
+def getTpRailroadData():
+    """Add error handling"""
+
+    tpRailroad = []
+
+    reportName = 'tpRailroadData'
+    fileName = reportName + '.json'
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
+
+    try:
+        PSE.JAVA_IO.File(targetPath).isFile()
+        _psLog.info('tpRailroadData.json OK')
+    except:
+        _psLog.warning('tpRailroadData.json not found')
+        return
+
+    report = PSE.genericReadReport(targetPath)
+    tpRailroad = PSE.loadJson(report)
+
+    return tpRailroad
+
+def newSchedules():
+    """Creates new schedules from tpRailroadData.json [industries].
+        The schedule name is the TP track label.
+        Used by:
+        Model.newJmriRailroad
+        Model.updateJmriRailroad
         """
 
-    scheduleLineItem = industry['schedule']
-    schedule = PSE.SM.newSchedule(scheduleLineItem[0])
-    scheduleItem = schedule.addItem(scheduleLineItem[1])
-    scheduleItem.setReceiveLoadName(scheduleLineItem[2])
-    scheduleItem.setShipLoadName(scheduleLineItem[3])
+    _psLog.debug('newSchedules')
+
+    for id, industry in getTpRailroadData()['industries'].items():
+        scheduleLineItem = industry['schedule']
+        schedule = PSE.SM.newSchedule(scheduleLineItem[0])
+        scheduleItem = schedule.addItem(scheduleLineItem[1])
+        scheduleItem.setReceiveLoadName(scheduleLineItem[2])
+        scheduleItem.setShipLoadName(scheduleLineItem[3])
+
+    return
+
+def addCarTypesToSpurs():
+    """Checks the car types check box for car types used at each spur"""
+
+    _psLog.debug('addCarTypesToSpurs')
+
+    industries = getTpRailroadData()['industries']
+    selectCarTypes(industries)
 
     return
 
@@ -86,14 +136,14 @@ def makeNewTrack(trackId, trackData):
     location.addTrack(trackData['track'], jmriTrackType)
 
     setTrackAttribs(trackData)
-    
+
     return
 
 def setTrackAttribs(trackData):
     """Mini controller to set the attributes for each JMRI track type.
         Used by:
         makeNewTrack
-        Model.UpdateLocationsAndTracks.updateTrackType
+        Model.UpdateLocationsAndTracks.updateTrackParams
         """
 
     if trackData['type'] == 'industry':
@@ -252,24 +302,3 @@ def closeTroublesomeWindows():
             frameName.dispose()
 
     return
-
-def getTpRailroadData():
-    """Add error handling"""
-
-    tpRailroad = []
-
-    reportName = 'tpRailroadData'
-    fileName = reportName + '.json'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
-
-    try:
-        PSE.JAVA_IO.File(targetPath).isFile()
-        _psLog.info('tpRailroadData.json OK')
-    except:
-        _psLog.warning('tpRailroadData.json not found')
-        return
-
-    report = PSE.genericReadReport(targetPath)
-    tpRailroad = PSE.loadJson(report)
-
-    return tpRailroad
