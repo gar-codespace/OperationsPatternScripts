@@ -23,6 +23,13 @@ def newJmriRailroad():
         Controller.StartUp.newJmriRailroad
         """
 
+    tpLocaleData = MakeTpLocaleData()
+    tpLocaleData.make()
+    if tpLocaleData.isValid():
+        tpLocaleData.write()
+    else:
+        return False
+
     ModelEntities.closeTroublesomeWindows()
 
     PSE.TM.dispose()
@@ -45,15 +52,13 @@ def newJmriRailroad():
     allRsRosters.addLocoConsist()
 
     newLocations = NewLocationsAndTracks()
+
     newLocations.newLocations()
-
     ModelEntities.newSchedules()
-
     newLocations.newTracks()
 
     ModelEntities.setTrackLength()
     ModelEntities.addCarTypesToSpurs()
-    MakeTpLocaleData().make()
 
     newInventory = NewRollingStock()
     newInventory.getTpInventory()
@@ -67,7 +72,7 @@ def newJmriRailroad():
     PSE.LMX.save()
     PSE.OMX.save()
 
-    return
+    return True
 
 def updateJmriRailroad():
     """Mini controller to update JMRI railroad.
@@ -77,6 +82,11 @@ def updateJmriRailroad():
         Used by:
         Controller.StartUp.updateJmriRailroad
         """
+
+    tpLocaleData = MakeTpLocaleData()
+    tpLocaleData.make()
+    if not tpLocaleData.isValid():
+        return False
 
     ModelEntities.closeTroublesomeWindows()
 
@@ -94,9 +104,8 @@ def updateJmriRailroad():
     allRsRosters.addLocoConsist()
 
     updatedLocations = UpdateLocationsAndTracks()
-
     updatedLocations.getCurrent()
-    MakeTpLocaleData().make()
+    tpLocaleData.write()
     updatedLocations.getUpdated()
 
     updatedLocations.parseLocations()
@@ -106,8 +115,9 @@ def updateJmriRailroad():
     ModelEntities.newSchedules()
 
     updatedLocations.parseTracks()
-    updatedLocations.recastTracks()
+    updatedLocations.deleteOldTracks()
     updatedLocations.addNewTracks()
+    updatedLocations.recastTracks()
 
     ModelEntities.setTrackLength()
     ModelEntities.addCarTypesToSpurs()
@@ -119,13 +129,12 @@ def updateJmriRailroad():
     newInventory.newCars()
     newInventory.newLocos()
 
-    updatedLocations.deleteOldTracks()
     updatedLocations.deleteOldLocations()
 
     PSE.CMX.save()
     PSE.EMX.save()
 
-    return
+    return True
 
 def updateJmriRollingingStock():
     """Mini controller to update only the rolling stock.
@@ -133,31 +142,35 @@ def updateJmriRollingingStock():
         Controller.Startup.updateJmriRollingingStock
         """
 
-    ModelEntities.closeTroublesomeWindows()
+    try:
+        ModelEntities.closeTroublesomeWindows()
 
-    PSE.CM.dispose()
-    PSE.EM.dispose()
+        PSE.CM.dispose()
+        PSE.EM.dispose()
 
-    allRsRosters = AddRsAttributes()
-    allRsRosters.addRoads()
-    allRsRosters.addCarAar()
-    allRsRosters.addCarLoads()
-    allRsRosters.addCarKernels()
-    allRsRosters.addLocoModels()
-    allRsRosters.addLocoTypes()
-    allRsRosters.addLocoConsist()
+        allRsRosters = AddRsAttributes()
+        allRsRosters.addRoads()
+        allRsRosters.addCarAar()
+        allRsRosters.addCarLoads()
+        allRsRosters.addCarKernels()
+        allRsRosters.addLocoModels()
+        allRsRosters.addLocoTypes()
+        allRsRosters.addLocoConsist()
 
-    newInventory = NewRollingStock()
-    newInventory.getTpInventory()
-    newInventory.splitTpList()
-    newInventory.makeTpRollingStockData()
-    newInventory.newCars()
-    newInventory.newLocos()
+        newInventory = NewRollingStock()
+        newInventory.getTpInventory()
+        newInventory.splitTpList()
+        newInventory.makeTpRollingStockData()
+        newInventory.newCars()
+        newInventory.newLocos()
 
-    PSE.CMX.save()
-    PSE.EMX.save()
+        PSE.CMX.save()
+        PSE.EMX.save()
 
-    return
+        return True
+
+    except:
+        return False
 
 
 class SetupXML:
@@ -260,7 +273,30 @@ class MakeTpLocaleData:
 
         return
 
-    def writeTpLocaleData(self):
+    def isValid(self):
+        """Catch  all user errors here.
+            Can't have staging and non-staging track types at the same location.
+            """
+
+        stagingLocations = []
+        nonstagingLocations = []
+
+        for id, trackData in self.tpLocaleData['tracks'].items():
+            if trackData[2] == 'staging':
+                stagingLocations.append(trackData[0])
+            else:
+                nonstagingLocations.append(trackData[0])
+
+        result = list(set(stagingLocations) & set(nonstagingLocations))
+        if len(result) == 0:
+            _psLog.info('tpLocaleData file OK, no location/track conflicts')
+            return True
+        else:
+            PSE.outputPanel(PSE.BUNDLE['ALERT: Staging and non staging tracks at same location: '] + str(result))
+            _psLog.critical('ALERT: Staging and non staging tracks at same location: ' + str(result))
+            return False
+
+    def write(self):
 
         fileName = 'tpLocaleData.json'
         filePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
@@ -275,7 +311,6 @@ class MakeTpLocaleData:
         self.getLocations()
         self.makeLocationRubric()
         self.makeTrackIdRubric()
-        self.writeTpLocaleData()
 
         return
 
@@ -460,10 +495,7 @@ class UpdateLocationsAndTracks:
                     self.renameLocations.append((cLocation, uLocation))
                     modifiedLocations.append(cLocation)
                     modifiedLocations.append(uLocation)
-                # if cLocation == uLocation and cIds != uIds:
-                #     modifiedLocations.append(cLocation)
 
-        self.oldLocations = list(set(currentLocations) - set(unchangedLocations) - set(modifiedLocations))
         self.newLocations = list(set(updateLocations) - set(unchangedLocations) - set(modifiedLocations))
 
         return
@@ -495,7 +527,14 @@ class UpdateLocationsAndTracks:
 
         self.oldKeys = list(set(currentKeys) - set(updateKeys))
         self.newKeys = list(set(updateKeys) - set(currentKeys))
-        self.continuingKeys = list(set(currentKeys) - set(self.oldKeys))
+
+        for cKey, cData in self.currentLocale['tracks'].items():
+            for uKey, uData in self.updatedLocale['tracks'].items():
+                if cKey == uKey and cData[0] == uData[0]:
+                    self.continuingKeys.append(cKey)
+                if cKey == uKey and cData[0] != uData[0]:
+                    self.newKeys.append(cKey)
+                    self.oldKeys.append(cKey)
 
         _psLog.info('Old keys: ' + str(self.oldKeys))
         _psLog.info('New keys: ' + str(self.newKeys))
@@ -525,7 +564,8 @@ class UpdateLocationsAndTracks:
             newJmriTrackType = self.o2oConfig['TR'][newTrackType]
 
             location = PSE.LM.getLocationByName(location)
-            location.getTrackByName(track, jmriTrackType).setName(newTrack)
+            track = location.getTrackByName(track, jmriTrackType)
+            track.setName(newTrack)
             location.getTrackByName(newTrack, jmriTrackType).setTrackType(newJmriTrackType)
             location.getTrackByName(newTrack, newJmriTrackType).setTrainDirections(15)
 
@@ -546,22 +586,28 @@ class UpdateLocationsAndTracks:
 
     def deleteOldTracks(self):
 
+        # print(self.oldKeys)
+
         for key in self.oldKeys:
-            trackData = self.currentLocale['tracks'][key]
-            trackType = self.o2oConfig['TR'][trackData[2]]
-            location = PSE.LM.getLocationByName(trackData[0])
-            track = location.getTrackByName(trackData[1], trackType)
+            cTrackData = self.currentLocale['tracks'][key]
+
+            # print(cTrackData)
+
+            trackType = self.o2oConfig['TR'][cTrackData[2]]
+            location = PSE.LM.getLocationByName(cTrackData[0])
+            track = location.getTrackByName(cTrackData[1], trackType)
             location.deleteTrack(track)
             track.dispose()
 
         return
 
     def deleteOldLocations(self):
+        """Delete locations which have no tracks."""
 
-        for item in self.oldLocations:
-            location = PSE.LM.getLocationByName(item)
-            PSE.LM.deregister(location)
-            location.dispose()
+        for location in PSE.LM.getList():
+            if not location.getTracksList():
+                PSE.LM.deregister(location)
+                location.dispose()
 
         return
 
@@ -571,7 +617,6 @@ class NewLocationsAndTracks:
     def __init__(self):
 
         self.scriptName = SCRIPT_NAME + '.NewLocationsAndTracks'
-
         self.tpRailroadData = ModelEntities.getTpRailroadData()
 
         print(self.scriptName + ' ' + str(SCRIPT_REV))
@@ -673,7 +718,6 @@ class NewRollingStock:
         PSE.genericWriteReport(targetPath, formattedRsFile)
 
         return
-
 
     def newCars(self):
         """'kernel': u'', 'type': u'box x23 prr', 'aar': u'XM', 'load': u'Empty', 'location': u'City', 'track': u'701'}"""

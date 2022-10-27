@@ -1,7 +1,8 @@
 Todo:
   How to publish DeepL?
-  Track type 'staging' can't be mixed in with other track types, the location must be staging.
-  If a new location is created and existing track moved to new location it crashes.
+  Rework updatePatternTracksSubroutine, it seems a bit nutty.
+  Maybe embellish the ALERT script outputs.
+  Baybe blank the script out put message on button push, or close window.
 
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -91,6 +92,8 @@ Tested Items:
     Update RR deletes an old track from an existing location OK.
     Update RR moves an existing track to a new location OK.
     Update RR moves an existing track to a different existing location OK.
+    Update RR resolves staging/non-staging tracks at same location OK.
+    Update RR works with making new location and adding existing track to it OK.
 
 Catches Items:
   Catches pattern report button press no tracks selected OK.

@@ -47,7 +47,6 @@ def importTpRailroad():
         return False
 
 
-
 class TrainPlayerImporter:
 
     def __init__(self):

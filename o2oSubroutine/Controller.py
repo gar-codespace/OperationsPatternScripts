@@ -53,46 +53,75 @@ class StartUp:
         return
 
     def newJmriRailroad(self, EVENT):
-        '''Creates a new JMRI railroad from the tpRailroadData.json file'''
+        """Creates a new JMRI railroad from the tpRailroadData.json file"""
 
         _psLog.debug(EVENT)
 
         if ModelImport.importTpRailroad():
-            Model.newJmriRailroad()
+            print('TrainPlayer railroad data imported OK')
+            _psLog.info('TrainPlayer railroad data imported OK')
         else:
-            print('Railroad not imported')
+            print('TrainPlayer railroad not imported')
+            _psLog.critical('TrainPlayer railroad not imported')
+            return
 
-        Controller.updatePatternTracksSubroutine(EVENT)
+        if Model.newJmriRailroad():
+            Controller.updatePatternTracksSubroutine(EVENT)
+            print('New JMRI railroad built from TrainPlayer data')
+            _psLog.info('New JMRI railroad built from TrainPlayer data')
+        else:
+            print('New JMRI railroad not built')
+            _psLog.critical('New JMRI railroad not built')
+
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 
     def updateJmriRailroad(self, EVENT):
-        '''Writes a new car and engine xml'''
+        """Updates the locations data and writes new car and engine data."""
 
         _psLog.debug(EVENT)
 
         if ModelImport.importTpRailroad():
-            Model.updateJmriRailroad()
+            print('TrainPlayer railroad data imported OK')
+            _psLog.info('TrainPlayer railroad data imported OK')
         else:
-            print('Railroad not imported')
+            print('TrainPlayer railroad not imported')
+            _psLog.critical('TrainPlayer railroad not imported')
+            return
 
-        Controller.updatePatternTracksSubroutine(EVENT)
+        if Model.updateJmriRailroad():
+            Controller.updatePatternTracksSubroutine(EVENT)
+            print('JMRI railroad updated from TrainPlayer data')
+            _psLog.info('JMRI railroad updated from TrainPlayer data')
+        else:
+            print('JMRI railroad not updated')
+            _psLog.critical('JMRI railroad not updated')
+
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 
     def updateJmriRollingingStock(self, EVENT):
-        '''Writes a new car and engine xml'''
+        """Writes new car and engine data."""
 
         _psLog.debug(EVENT)
 
         if ModelImport.importTpRailroad():
-            Model.updateJmriRollingingStock()
+            print('TrainPlayer railroad data imported OK')
+            _psLog.info('TrainPlayer railroad data imported OK')
         else:
-            print('Rolling Stock not updated')
+            print('TrainPlayer railroad not imported')
+            _psLog.critical('TrainPlayer railroad not imported')
+            return
 
-        # Controller.updatePatternTracksSubroutine(EVENT)
+        if Model.updateJmriRollingingStock():
+            print('JMRI rolling stock updated')
+            _psLog.info('JMRI rolling stock updated')
+        else:
+            print('JMRI rolling stock not updated')
+            _psLog.critical('JMRI rolling stock not updated')
+
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return

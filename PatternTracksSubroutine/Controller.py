@@ -17,7 +17,7 @@ def updatePatternTracksSubroutine(event):
 
     Model.updatePatternLocation()
 # It's a lot easier to go up from button than down from frame
-    parent = event.getSource().getParent().getParent().getParent()
+    parent = event.getSource().getParent().getParent().getParent().getParent()
     for component in parent.getComponents():
         if component.getName() == 'PatternTracksSubroutine':
             restartSubroutine(component.getComponents()[0])

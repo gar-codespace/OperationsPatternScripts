@@ -79,6 +79,7 @@
   "ALERT: TrainPlayer Locations file not found" : "ALERT: TrainPlayer Locations file not found",
   "ALERT: TrainPlayer Industries file not found" : "ALERT: TrainPlayer Industries file not found",
   "ALERT: TrainPlayer Inventory file not found" : "ALERT: TrainPlayer Inventory file not found",
+  "ALERT: Staging and non staging tracks at same location: " : "ALERT: Staging and non staging tracks at same location: ",
   "FAIL: CreateSetCarsFormGui.quickCheck.testValidityOfForm" : "FAIL: CreateSetCarsFormGui.quickCheck.testValidityOfForm",
   "FAIL: Mismatched input list and car roster lengths" : "FAIL: Mismatched input list and car roster lengths",
   "version": 20220101
