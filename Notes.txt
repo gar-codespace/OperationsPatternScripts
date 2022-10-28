@@ -1,8 +1,6 @@
 Todo:
   How to publish DeepL?
   Rework updatePatternTracksSubroutine, it seems a bit nutty.
-  Maybe embellish the ALERT script outputs.
-  Baybe blank the script out put message on button push, or close window.
 
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -33,6 +31,7 @@ Tested Items:
     Display all 'critical' log messages to Script Output window OK.
     Add a listener to monitor if a new train is created or deleted, builtTrain listeners updated accordingly.
     Mapped TP OC Class/XO reserved as JMRI spur, turn off train directions.
+    ALERT messages open and display to the script output window OK.
 
   Reports
     Test with really long location and spur names OK.

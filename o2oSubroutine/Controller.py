@@ -57,6 +57,8 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
+        PSE.closeOutputPanel()
+
         if ModelImport.importTpRailroad():
             print('TrainPlayer railroad data imported OK')
             _psLog.info('TrainPlayer railroad data imported OK')
@@ -82,6 +84,8 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
+        PSE.closeOutputPanel()
+
         if ModelImport.importTpRailroad():
             print('TrainPlayer railroad data imported OK')
             _psLog.info('TrainPlayer railroad data imported OK')
@@ -106,6 +110,8 @@ class StartUp:
         """Writes new car and engine data."""
 
         _psLog.debug(EVENT)
+
+        PSE.closeOutputPanel()
 
         if ModelImport.importTpRailroad():
             print('TrainPlayer railroad data imported OK')

@@ -4,9 +4,13 @@ o2o Subroutine
 o2o Work Events
 Update Current Railroad
 Update JMRI Railroad
-ALERT: One or more TrainPlayer export files are missing
-ALERT: One or more TrainPlayer export files are corrupted
-ALERT: TrainPlayer Locations file not found
-ALERT: TrainPlayer Industries file not found
-ALERT: TrainPlayer Inventory file not found
-ALERT: Staging and non staging tracks at same location: 
+ALERT: One or more TrainPlayer export files are missing.
+ALERT: One or more TrainPlayer export files are corrupted.
+ALERT: TrainPlayer Locations file not found.
+ALERT: TrainPlayer Industries file not found.
+ALERT: TrainPlayer Inventory file not found.
+ALERT: Staging and non-staging tracks at same location:
+No changes were made to your JMRI layout.
+TrainPlayer layout not imported to JMRI.
+From TrainPlayer, export layout to JMRI.
+JMRI does not allow staging and non-staging track types at the same location.

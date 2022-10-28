@@ -169,7 +169,7 @@ def openSystemConsole():
 
     return
 
-def outputPanel(message):
+def openOutputPanel(message):
     """Adds the message to the Script Output window.
         https://groups.io/g/jmriusers/message/33745
         https://groups.io/g/jmriusers/message/33747
@@ -183,6 +183,17 @@ def outputPanel(message):
     viewport = scrollpane.getComponents()[0]
     textarea = viewport.getComponents()[0]
     textarea.text += message + '\n'
+
+    return
+
+def closeOutputPanel():
+
+    try:
+        outputPanel = JMRI.util.JmriJFrame.getFrame("Script Output")
+        outputPanel.setVisible(False)
+        outputPanel.dispose()
+    except:
+        pass
 
     return
 
