@@ -61,6 +61,7 @@ class Model:
         for subroutine in self.makeSubroutineList():
             pluginPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,10)))
             pluginPanel.add(subroutine)
+            pluginPanel.setName('plugin panel')
         return pluginPanel
 
     def makeSubroutineList(self):

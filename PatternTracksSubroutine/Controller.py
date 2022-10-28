@@ -12,12 +12,14 @@ SCRIPT_REV = 20220101
 _psLog = PSE.LOGGING.getLogger('OPS.PT.Controller')
 
 
-def updatePatternTracksSubroutine(event):
-    """Allows other subroutines to update and restart the PT Sub"""
+def updatePatternTracksSubroutine(parent):
+    """Allows other subroutines to update and restart the PT Subroutine."""
+
+    if not parent:
+        return
 
     Model.updatePatternLocation()
-# It's a lot easier to go up from button than down from frame
-    parent = event.getSource().getParent().getParent().getParent().getParent()
+
     for component in parent.getComponents():
         if component.getName() == 'PatternTracksSubroutine':
             restartSubroutine(component.getComponents()[0])
@@ -25,9 +27,9 @@ def updatePatternTracksSubroutine(event):
     return
 
 def restartSubroutine(subroutineFrame):
-    """Generic subroutine restarter.
+    """Subroutine restarter.
         Used by:
-        LocationComboBox.actionPerformed
+        opsEntities.Listeners.LocationComboBox.actionPerformed
         updatePatternTracksSubroutine
         """
 

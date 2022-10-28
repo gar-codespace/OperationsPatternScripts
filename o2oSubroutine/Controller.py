@@ -4,15 +4,45 @@
 """The o2o Subroutine."""
 
 from opsEntities import PSE
-from PatternTracksSubroutine import Controller
 from o2oSubroutine import Model
 from o2oSubroutine import ModelImport
 from o2oSubroutine import View
+from PatternTracksSubroutine import Controller as PtController
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.Controller'
 SCRIPT_REV = 20220101
 
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.Controller')
+
+
+def updateO2oSubroutine(parent):
+    """Allows other subroutines to update and restart the o2o Sub.
+        Not implemented.
+        """
+
+    if not parent:
+        return
+
+    # Do stuff here.
+
+    for component in parent.getComponents():
+        if component.getName() == 'o2oSubroutine':
+            restartSubroutine(component.getComponents()[0])
+
+    return
+
+def restartSubroutine(subroutineFrame):
+    """Subroutine restarter.
+        Used by:
+        """
+
+    subroutinePanel = StartUp(subroutineFrame).makeSubroutinePanel()
+    subroutineFrame.removeAll()
+    subroutineFrame.add(subroutinePanel)
+    subroutineFrame.revalidate()
+
+    return
+
 
 class StartUp:
     """Start the o2o subroutine"""
@@ -68,7 +98,8 @@ class StartUp:
             return
 
         if Model.newJmriRailroad():
-            Controller.updatePatternTracksSubroutine(EVENT)
+            parent = PSE.findPluginPanel(EVENT.getSource())
+            PtController.updatePatternTracksSubroutine(parent)
             print('New JMRI railroad built from TrainPlayer data')
             _psLog.info('New JMRI railroad built from TrainPlayer data')
         else:
@@ -95,7 +126,9 @@ class StartUp:
             return
 
         if Model.updateJmriRailroad():
-            Controller.updatePatternTracksSubroutine(EVENT)
+            # parent = EVENT.getSource().getParent().getParent().getParent().getParent()
+            parent = PSE.findPluginPanel(EVENT.getSource())
+            PtController.updatePatternTracksSubroutine(parent)
             print('JMRI railroad updated from TrainPlayer data')
             _psLog.info('JMRI railroad updated from TrainPlayer data')
         else:

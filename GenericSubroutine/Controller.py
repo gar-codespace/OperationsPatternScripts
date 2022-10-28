@@ -12,6 +12,36 @@ SCRIPT_REV = 20220101
 
 _psLog = PSE.LOGGING.getLogger('OPS.GS.Controller')
 
+
+def updateGenericSubroutine(parent):
+    """Allows other subroutines to update and restart the Generic Sub.
+        Not implemented.
+        """
+
+    if not parent:
+        return
+
+    # Do stuff here.
+
+    for component in parent.getComponents():
+        if component.getName() == 'genericSubroutine':
+            restartSubroutine(component.getComponents()[0])
+
+    return
+
+def restartSubroutine(subroutineFrame):
+    """Subroutine restarter.
+        Used by:
+        """
+
+    subroutinePanel = StartUp(subroutineFrame).makeSubroutinePanel()
+    subroutineFrame.removeAll()
+    subroutineFrame.add(subroutinePanel)
+    subroutineFrame.revalidate()
+
+    return
+
+
 class StartUp:
     """Start the o2o subroutine"""
 

@@ -162,6 +162,22 @@ class CreateStubFile:
 
 """GUI Methods"""
 
+def findPluginPanel(source):
+    """For components in frames, find the plugin panel.
+        The components in the plugin panel are the subroutines.
+        It's a lot easier to bubble up than to drill down.
+        """
+
+    parent = source.getParent()
+    while True:
+        if not parent:
+            print('Top level frame not found')
+            return
+        if parent.getName() == 'plugin panel':
+            return parent
+        else:
+            parent = parent.getParent()
+
 def openSystemConsole():
 
     console = apps.SystemConsole.getConsole()

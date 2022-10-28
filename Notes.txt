@@ -1,6 +1,5 @@
 Todo:
   How to publish DeepL?
-  Rework updatePatternTracksSubroutine, it seems a bit nutty.
 
 Comments:
   Schedule does not prevent setting a car to a track.
