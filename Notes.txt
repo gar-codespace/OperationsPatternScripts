@@ -1,5 +1,7 @@
 Todo:
   How to publish DeepL?
+  Move ControllerSetCarsForm.CreateSetCarsFormGui.o2oButton to the o2o subroutine.
+  Maybe move o2o model FILE_LIST to configFile.json?
 
 Comments:
   Schedule does not prevent setting a car to a track.

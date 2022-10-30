@@ -1,6 +1,11 @@
 # © 2021, 2022 Greg Ritacco
 
-"""Pattern Scripts plugin for JMRI Operations Pro"""
+"""
+Pattern Scripts plugin for JMRI Operations Pro
+OPS = Operations Pattern Scripts
+© 2021, 2022 Greg Ritacco
+No restrictions on use, but I would appreciate the reference.
+"""
 
 import jmri
 import java.awt
@@ -61,11 +66,14 @@ class Model:
         for subroutine in self.makeSubroutineList():
             pluginPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,10)))
             pluginPanel.add(subroutine)
-            pluginPanel.setName('plugin panel')
+            pluginPanel.setName('OPS Plugin Panel')
         return pluginPanel
 
     def makeSubroutineList(self):
-        """for x, y in *.items() sorts the list, this oddball way does not sort the list"""
+        """for x, y in *.items() sorts the list, but that's a bad thing.
+            This oddball way does not sort the list,
+            so the subroutines display in the order listed in the config file.
+            """
 
         subroutineList = []
         controlPanelConfig = PSE.readConfigFile('CP')
@@ -103,7 +111,7 @@ class View:
         return psButton
 
     def makePluginPanel(self):
-        """Dealers choice, jPanel or Box"""
+        """Dealers choice, jPanel or Box."""
 
         # pluginPanel = PSE.JAVX_SWING.JPanel()
         pluginPanel = PSE.JAVX_SWING.Box(PSE.JAVX_SWING.BoxLayout.PAGE_AXIS)
@@ -179,6 +187,7 @@ class View:
         return
 
     def makeMenuItem(self, itemMethod):
+        """Makes all the items for the custom drop down menus."""
 
         itemText, itemName = itemMethod
 
@@ -189,7 +198,7 @@ class View:
         return menuItem
 
     def setAsDropDownText(self):
-        """itemMethod - Set the drop down text per the Apply Schedule flag"""
+        """itemMethod - Set the drop down text per the Apply Schedule flag."""
 
         patternConfig = PSE.readConfigFile('PT')
         if patternConfig['AS']:
@@ -222,9 +231,7 @@ class View:
         return menuText, 'ooItemSelected'
 
     def setGsDropDownText(self):
-        """itemMethod - Set the drop down text per the config file genericSubroutine Include flag ['CP']['SI']
-            Template when including another subroutine
-            """
+        """itemMethod - Set the drop down text per the config file Subroutine Include flag ['CP']['SI']"""
 
         patternConfig = PSE.readConfigFile('CP')
         if patternConfig['SI'][2]['GenericSubroutine']:
@@ -235,49 +242,49 @@ class View:
         return menuText, 'gsItemSelected'
 
     def setPtDropDownText(self):
-        """itemMethod - Set the drop down text for the Translate Plugin item"""
+        """itemMethod - Set the drop down text for the Translate Plugin item."""
 
         menuText = PSE.BUNDLE[u'Translate Plugin']
 
         return menuText, 'ptItemSelected'
 
     def setRsDropDownText(self):
-        """itemMethod - Set the drop down text for the Restart From Default item"""
+        """itemMethod - Set the drop down text for the Restart From Default item."""
 
         menuText = PSE.BUNDLE[u'Restart From Default']
 
         return menuText, 'rsItemSelected'
 
     def setHmDropDownText(self):
-        """itemMethod - Set the drop down text for the Log menu item"""
+        """itemMethod - Set the drop down text for the Log menu item."""
 
         menuText = PSE.BUNDLE[u'Window Help...']
 
         return menuText, 'helpItemSelected'
 
     def setLmDropDownText(self):
-        """itemMethod - Set the drop down text for the Log menu item"""
+        """itemMethod - Set the drop down text for the Log menu item."""
 
         menuText = PSE.BUNDLE[u'View Log File']
 
         return menuText, 'logItemSelected'
 
     def setGhDropDownText(self):
-        """itemMethod - Set the drop down text for the gitHub page item"""
+        """itemMethod - Set the drop down text for the gitHub page item."""
 
         menuText = PSE.BUNDLE[u'GitHub Web Page']
 
         return menuText, 'ghItemSelected'
 
     def setEcDropDownText(self):
-        """itemMethod - Set the drop down text for the edit config file item"""
+        """itemMethod - Set the drop down text for the edit config file item."""
 
         menuText = PSE.BUNDLE[u'Edit Config File']
 
         return menuText, 'ecItemSelected'
 
     def setOfDropDownText(self):
-        """itemMethod - Set the drop down text for the operations folder item"""
+        """itemMethod - Set the drop down text for the operations folder item."""
 
         menuText = PSE.BUNDLE[u'Operations Folder']
 
@@ -306,7 +313,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         return
 
     def addPatternScriptsButton(self):
-        """The Pattern Scripts button on the PanelPro frame"""
+        """The Pattern Scripts button on the PanelPro frame."""
 
         self.patternScriptsButton = View(None).makePsButton()
         self.patternScriptsButton.actionPerformed = self.patternScriptsButtonAction
@@ -520,7 +527,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.shutdownPlugin()
         self.startupPlugin()
-        RESTART_PLUGIN_EVENT.getSource().firePropertyChange('psWindowClosing', False, True)
+        # RESTART_PLUGIN_EVENT.getSource().firePropertyChange('psWindowClosing', False, True)
 
         self.psLog.info('Pattern Scripts plugin restarted')
 

@@ -10,7 +10,6 @@ from o2oSubroutine import ModelEntities
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.Model'
 SCRIPT_REV = 20220101
 
-"""Maybe move FILE_LIST to configFile.json?"""
 FILE_LIST = ['OperationsTrainRoster.xml', 'OperationsRouteRoster.xml']
 
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.Model')
@@ -52,9 +51,10 @@ def newJmriRailroad():
     allRsRosters.addLocoConsist()
 
     newLocations = NewLocationsAndTracks()
-
     newLocations.newLocations()
+
     ModelEntities.newSchedules()
+    
     newLocations.newTracks()
 
     ModelEntities.setTrackLength()

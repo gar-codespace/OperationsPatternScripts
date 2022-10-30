@@ -173,7 +173,7 @@ def findPluginPanel(source):
         if not parent:
             print('Top level frame not found')
             return
-        if parent.getName() == 'plugin panel':
+        if parent.getName() == 'OPS Plugin Panel':
             return parent
         else:
             parent = parent.getParent()
@@ -242,7 +242,7 @@ def closeSetCarsWindows():
     return
 
 def updateWindowParams(window):
-    """Setting JmriJFrame(True, True) has no effect
+    """Setting JmriJFrame(True, True) has no effect that I can figure.
         Used by:
         MainScript.Controller.closePsWindow
         Listeners.PatternScriptsWindow.windowClosing
@@ -319,20 +319,6 @@ def getAllTracks():
         trackList += location.getTracksByNameList(None)
 
     return trackList
-
-# def getAllTrackIds():
-#     """All track IDs for all locations.
-#         Used by:
-#         o2oSubroutine.Model.UpdateLocationsAndTracks
-#         """
-#
-#     trackIds = []
-#     for location in getAllLocationNames():
-#         trackList = LM.getLocationByName(location).getTracksList()
-#         for track in trackList:
-#             trackIds.append(track.getComment())
-#
-#     return trackIds
 
 def getSelectedTracks():
     """Gets the track objects checked in the Track Pattern Subroutine.
@@ -700,8 +686,7 @@ def logIndex():
 """Color Handling Methods"""
 
 def getGenericColor(colorName):
-    """Try/Except is a bit of protection against bad edits.
-        Used by:
+    """Used by:
         PSE.getCarColor
         PSE.getLocoColor
         PSE.getAlertColor
@@ -720,7 +705,8 @@ def getGenericColor(colorName):
 
 
 def getCarColor():
-    """Used by:
+    """Try/Except is a bit of protection against bad edits.
+        Used by:
         PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
         """
 
@@ -734,7 +720,8 @@ def getCarColor():
 
 
 def getLocoColor():
-    """Used by:
+    """Try/Except is a bit of protection against bad edits.
+        Used by:
         PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
         """
 
@@ -748,7 +735,8 @@ def getLocoColor():
 
 
 def getAlertColor():
-    """Used by:
+    """Try/Except is a bit of protection against bad edits.
+        Used by:
         PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
         """
 

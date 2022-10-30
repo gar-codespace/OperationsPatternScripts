@@ -118,7 +118,7 @@ class CreateSetCarsFormGui:
             the 'Set Cars Form for Track X' form.
             """
 
-        _psLog.info(MOUSE_CLICKED)
+        _psLog.debug(MOUSE_CLICKED)
 
         if not self.quickCheck():
             return

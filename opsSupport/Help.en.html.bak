@@ -132,16 +132,15 @@ In other cases, if a mistake is made editing the PatternConfig.json file, the pl
         "R": 240
       }
     },
-    "locoColor": <font color="green">"FADED"</font>, <font color="blue">No color can be specified with ""</font>
+    "locoColor": <font color="green">"FADED"</font>, "" specifies no color will be used</font>
     "carColor": <font color="green">"DUST"</font>,
     "alertColor": <font color="green">"PETAL"</font>
   },
 </pre>
 <h4><font color="blue">Control Panel</font></h4>
 <pre>
-  <font color="blue">Do not edit these</font>
   "CP" : {
-    "TS" : { <font color="blue">Translation Services</font>
+    "TS" : { Translation Services
       "UD" : "useDeepL",
       "UX" : "Some Other Translation Service"
     },
@@ -151,16 +150,17 @@ In other cases, if a mistake is made editing the PatternConfig.json file, the pl
     "SE" : "utf-8", <font color="blue">Default encoding</font>
     "SI": [ <font color="blue">Script Includes</font>
       {
-        "PatternTracksSubroutine": true <font color="blue">Include this subroutine in the Control Panel</font>
+        "PatternTracksSubroutine": true <font color="green">Include this subroutine in the Control Panel</font>
       },
       {
-        "o2oSubroutine": false <font color="blue">Include this subroutine in the Control Panel</font>
+        "o2oSubroutine": false <font color="green">Include this subroutine in the Control Panel</font>
       }
     ],
     "PH" : 220, <font color="blue">Default panel height</font>
     "PW" : 1500, <font color="blue">Default panel width</font>
-    "PX" : 0, <font color="blue">Not Implemented</font>
-    "PY" : 0, <font color="blue">Not Implemented</font>
+    "PX" : 0, <font color="blue">Plugin X location</font>
+    "PY" : 0, <font color="blue">Plugin Y location</font>
+    "OC" : true, <font color="green">Open System Console Window</font>
     "RV" : 20220205 <font color="blue">Revision control</font>
   },
 </pre>
