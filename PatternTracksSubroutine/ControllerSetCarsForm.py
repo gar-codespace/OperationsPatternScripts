@@ -8,7 +8,7 @@ from opsEntities import Listeners
 from PatternTracksSubroutine import Model
 from PatternTracksSubroutine import ModelSetCarsForm
 from PatternTracksSubroutine import ViewSetCarsForm
-from o2oSubroutine import ModelWorkEvents
+from o2oSubroutine import Controller as o2oController
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ControllerSetCarsForm'
 SCRIPT_REV = 20220101
@@ -138,9 +138,7 @@ class CreateSetCarsFormGui:
         return
 
     def o2oButton(self, MOUSE_CLICKED):
-        """Accumulate switch lists into the o2o-Work-Events switch list.
-            List is reset when set cars button on Track Pattern Sub is pressed.
-            """
+        """Creates the o2oSetCarsForm data and sends it to o2o for processing."""
 
         _psLog.info(MOUSE_CLICKED)
 
@@ -149,21 +147,9 @@ class CreateSetCarsFormGui:
 
         MOUSE_CLICKED.getSource().setBackground(PSE.JAVA_AWT.Color.GREEN)
 
-    # Format for display and replace Set_To for the setCarsForm
-        ptSetCarsForm = ViewSetCarsForm.o2oButton(self.setCarsForm, self.buttonDict['textBoxEntry'])
-    # Append the ptSetCarsForm to the o2oSwitchList
-        ModelSetCarsForm.o2oButton(ptSetCarsForm)
-    # Convert the o2o switch list to the format used by o2oSubroutine
-        o2o = ModelWorkEvents.o2oSwitchListConversion()
-        o2o.o2oSwitchListGetter()
-        o2o.thinTheHerd()
-        o2o.o2oSwitchListUpdater()
-        o2oSwitchList = o2o.getO2oSwitchList()
-    # Common post processor for o2oButton and BuiltTrainExport.o2oWorkEventsBuilder.handle
-        o2o = ModelWorkEvents.o2oWorkEvents(o2oSwitchList)
-        o2o.o2oHeader()
-        o2o.o2oLocations()
-        o2o.saveList()
+        o2oSetCarsForm = ViewSetCarsForm.makeO2oSetCarsForm(self.setCarsForm, self.buttonDict['textBoxEntry'])
+
+        o2oController.o2oSwitchList(o2oSetCarsForm)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

@@ -11,6 +11,18 @@ SCRIPT_REV = 20220101
 
 _psLog = PSE.LOGGING.getLogger('OPS.PT.ViewSetCarsForm')
 
+
+def makeO2oSetCarsForm(setCarsForm, buttonDict):
+    """Used by:
+        ControllerSetCarsForm.CreateSetCarsFormGui.o2oButton
+        """
+
+    inputList = ViewEntities.makeUserInputList(buttonDict)
+    mergedForm = ViewEntities.merge(setCarsForm, inputList)
+    mergedForm = ViewEntities.modifyTrackPatternReport(mergedForm)
+
+    return mergedForm
+
 def switchListAsCsv(textBoxEntry):
     """Track Pattern Report json is written as a CSV file
         Used by:
@@ -35,8 +47,7 @@ def switchListAsCsv(textBoxEntry):
     return
 
 def switchListButton(textBoxEntry):
-    """Mini controller when the Switch List button is pressed.
-        Formats and displays the Switch List for Track report.
+    """Formats and displays the Switch List for Track report.
         Used by:
         ControllerSetCarsForm.CreateSetCarsFormGui.switchListButton
         """
@@ -65,28 +76,20 @@ def switchListButton(textBoxEntry):
 
     return
 
-def o2oButton(ptSetCarsForm, textBoxEntry):
 
-# Replace Set To with a track name, reformat for display
-    userInputList = ViewEntities.makeUserInputList(textBoxEntry)
-    o2oSwitchList = ViewEntities.merge(ptSetCarsForm, userInputList)
-    o2oSwitchList = ViewEntities.modifyTrackPatternReport(o2oSwitchList)
-
-    return o2oSwitchList
-
-class SetCarsFrame(PSE.JMRI.util.JmriJFrame):
-
-    def __init__(self, setCarsForTrackForm):
-
-        self.setCarsForTrackForm = setCarsForTrackForm
-
-        return
-
-    def addSetCarsForm(self):
-
-        self.add(self.setCarsForTrackForm)
-
-        return self
+# class SetCarsFrame(PSE.JMRI.util.JmriJFrame):
+#
+#     def __init__(self, setCarsForTrackForm):
+#
+#         self.setCarsForTrackForm = setCarsForTrackForm
+#
+#         return
+#
+#     def addSetCarsForm(self):
+#
+#         self.add(self.setCarsForTrackForm)
+#
+#         return self
 
 
 def setCarsForTrackWindow(setCarsForTrackForm):

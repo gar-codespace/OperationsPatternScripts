@@ -6,6 +6,7 @@
 from opsEntities import PSE
 from o2oSubroutine import Model
 from o2oSubroutine import ModelImport
+from o2oSubroutine import ModelWorkEvents
 from o2oSubroutine import View
 from PatternTracksSubroutine import Controller as PtController
 
@@ -14,6 +15,24 @@ SCRIPT_REV = 20220101
 
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.Controller')
 
+
+def o2oSwitchList(ptSetCarsForm):
+    """Make the JMRI Report - o2o Work Events.csv file"""
+
+    ModelWorkEvents.appendSetCarsForm(ptSetCarsForm)
+# Convert the o2o Work Events file to the format used by TrainPlayer
+    o2o = ModelWorkEvents.o2oSwitchListConversion()
+    o2o.o2oSwitchListGetter()
+    o2o.thinTheHerd()
+    o2o.o2oSwitchListUpdater()
+    o2oSwitchList = o2o.getO2oSwitchList()
+# Common post processor for o2oButton and BuiltTrainExport.o2oWorkEventsBuilder.handle
+    o2o = ModelWorkEvents.o2oWorkEvents(o2oSwitchList)
+    o2o.o2oHeader()
+    o2o.o2oLocations()
+    o2o.saveList()
+
+    return
 
 def updateO2oSubroutine(parent):
     """Allows other subroutines to update and restart the o2o Sub.

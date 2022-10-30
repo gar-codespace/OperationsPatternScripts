@@ -11,6 +11,34 @@ SCRIPT_REV = 20220101
 
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.ModelWorkEvents')
 
+
+def appendSetCarsForm(ptSetCarsForm):
+    """Prepend the ptSetCarsForm to o2o Work Events.json.
+        Used by:
+        o2oSubroutine.Controller.o2oSwitchList
+        """
+
+    reportTitle = PSE.BUNDLE['o2o Work Events']
+    fileName = reportTitle + '.json'
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+# Load the existing o2o switch list
+    o2oSwitchList = PSE.genericReadReport(targetPath)
+    o2oSwitchList = PSE.loadJson(o2oSwitchList)
+# Append cars and locos from ptSetCarsForm
+    o2oSwitchListCars = o2oSwitchList['locations'][0]['tracks'][0]['cars']
+    ptSetCarsFormCars = ptSetCarsForm['locations'][0]['tracks'][0]['cars']
+    o2oSwitchList['locations'][0]['tracks'][0]['cars'] = o2oSwitchListCars + ptSetCarsFormCars
+#
+    o2oSwitchListLocos = o2oSwitchList['locations'][0]['tracks'][0]['locos']
+    ptSetCarsFormLocos = ptSetCarsForm['locations'][0]['tracks'][0]['locos']
+    o2oSwitchList['locations'][0]['tracks'][0]['locos'] = o2oSwitchListLocos + ptSetCarsFormLocos
+# Write the appended file
+    o2oSwitchList = PSE.dumpJson(o2oSwitchList)
+    PSE.genericWriteReport(targetPath, o2oSwitchList)
+
+    return
+
+
 class o2oSwitchListConversion:
     """Converts the appended o2o switchlist for use by o2oWorkEvents"""
 

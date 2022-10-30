@@ -131,6 +131,7 @@ def modifyTrackPatternReport(trackPattern):
         View.trackPatternButton
         View.setRsButton
         ViewSetCarsForm.switchListButton
+        ViewSetCarsForm.makeO2oSetCarsForm
         """
 
     standins = PSE.readConfigFile('RM')
@@ -240,6 +241,7 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
 def makeUserInputList(textBoxEntry):
     """Used by:
         ViewSetCarsForm.switchListButton
+        ViewSetCarsForm.makeO2oSetCarsForm
         """
 
     userInputList = []
@@ -252,6 +254,7 @@ def merge(switchList, userInputList):
     """Merge the values in textBoxEntry into the ['Set_To'] field of switchList.
         Used by:
         ViewSetCarsForm.switchListButton
+        ViewSetCarsForm.makeO2oSetCarsForm
         """
 
     longestTrackString = findLongestTrackString()
