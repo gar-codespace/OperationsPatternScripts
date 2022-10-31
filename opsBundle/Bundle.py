@@ -49,9 +49,9 @@ def getAllTextBundles():
     textBundles = PSE.genericReadReport(targetPath)
 
     listOfSubroutines = []
-    subroutine = PSE.readConfigFile('CP')['SI']
-    for item in subroutine:
-        listOfSubroutines.append(''.join(item.keys()))
+    subroutineInclude = PSE.readConfigFile('CP')['SI']
+    for subroutine in subroutineInclude:
+        listOfSubroutines.append(''.join(subroutine.keys()))
 
     for subroutine in listOfSubroutines:
         targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, subroutine, 'bundle.txt')
@@ -66,10 +66,10 @@ def makePluginBundle(textBundle):
     fileName = 'plugin.' + PSE.psLocale()[:2] + '.json'
     targetFile = PSE.OS_PATH.join(PSE.BUNDLE_DIR, fileName)
 
-    if PSE.JAVA_IO.File(targetFile).isFile():
-        _psLog.info('Translated bundle already exists')
+    # if PSE.JAVA_IO.File(targetFile).isFile():
+    #     _psLog.info('Translated bundle already exists')
 
-        return
+        # return
 
     translation = baseTranslator(textBundle)
     PSE.genericWriteReport(targetFile, translation)
@@ -169,7 +169,8 @@ class Translator:
     def __init__(self, bundleFile, scratchFile):
 
         self.bundleFile = bundleFile
-        self.translationDict = {u'version' : SCRIPT_REV}
+        self.translationDict = {}
+        # self.translationDict = {u'version' : SCRIPT_REV}
         self.tempResult = []
         self.scratchFile = scratchFile
 

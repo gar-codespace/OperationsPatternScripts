@@ -16,3 +16,5 @@ Tools
 Translate Plugin
 View Log File
 Window Help...
+FAIL: bundle length mismatch.
+Please wait while the bundle file is rebuilt.
