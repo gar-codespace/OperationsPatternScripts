@@ -26,22 +26,6 @@ def trackPatternButton():
 
     return
 
-def setRsButton():
-    """Mini controller when the Set cars button is pressed
-        Creates a new o2o Work Events.json file
-        Used by:
-        Controller.StartUp.setRsButton
-        """
-
-    fileName = PSE.BUNDLE['o2o Work Events'] + '.json'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
-
-    newHeader = ModelEntities.makeGenericHeader()
-    newHeaderReport = PSE.dumpJson(newHeader)
-    PSE.genericWriteReport(targetPath, newHeaderReport)
-
-    return
-
 def updatePatternLocation(selectedItem=None):
     """Catches user edits of locations
         Used by:

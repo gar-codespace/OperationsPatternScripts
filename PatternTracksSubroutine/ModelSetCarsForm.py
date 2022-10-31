@@ -11,6 +11,19 @@ SCRIPT_REV = 20220101
 
 _psLog = PSE.LOGGING.getLogger('OPS.PT.ModelSetCarsForm')
 
+
+def makeMergedForm(setCarsForm, buttonDict):
+    """Used by:
+        ControllerSetCarsForm.CreateSetCarsFormGui.o2oButton
+        switchListButton
+        """
+
+    inputList = ModelEntities.makeUserInputList(buttonDict)
+    mergedForm = ModelEntities.merge(setCarsForm, inputList)
+    mergedForm = ModelEntities.modifyTrackPatternReport(mergedForm)
+
+    return mergedForm
+
 def writeToJson(setCarsForm):
     """Mini controller that writes the set cars form to json.
         Used by:

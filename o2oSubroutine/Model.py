@@ -4,8 +4,8 @@
 """From tpRailroadData.json, a new rr is created and the xml files are seeded."""
 
 from opsEntities import PSE
-from PatternTracksSubroutine import Model
 from o2oSubroutine import ModelEntities
+from PatternTracksSubroutine import ModelEntities as ptModelEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.Model'
 SCRIPT_REV = 20220101
@@ -13,6 +13,22 @@ SCRIPT_REV = 20220101
 FILE_LIST = ['OperationsTrainRoster.xml', 'OperationsRouteRoster.xml']
 
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.Model')
+
+
+def o2oWorkEventReset():
+    """Creates a new o2o Work Events.json file
+        Used by:
+        PT Sub Controller.StartUp.setRsButton
+        """
+
+    fileName = PSE.BUNDLE['o2o Work Events'] + '.json'
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+
+    newHeader = ptModelEntities.makeGenericHeader()
+    newHeader = PSE.dumpJson(newHeader)
+    PSE.genericWriteReport(targetPath, newHeader)
+
+    return
 
 def newJmriRailroad():
     """Mini controller to make a new JMRI railroad.
@@ -54,7 +70,7 @@ def newJmriRailroad():
     newLocations.newLocations()
 
     ModelEntities.newSchedules()
-    
+
     newLocations.newTracks()
 
     ModelEntities.setTrackLength()

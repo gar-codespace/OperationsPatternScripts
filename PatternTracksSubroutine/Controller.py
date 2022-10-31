@@ -5,6 +5,7 @@ from opsEntities import PSE
 from opsEntities import Listeners
 from PatternTracksSubroutine import View
 from PatternTracksSubroutine import Model
+from o2oSubroutine import Model as o2oModel
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.Controller'
 SCRIPT_REV = 20220101
@@ -146,11 +147,11 @@ class StartUp:
             _psLog.warning('Track not found, re-select the location')
             return
 
+        o2oModel.o2oWorkEventReset()
+
         PSE.REPORT_ITEM_WIDTH_MATRIX = PSE.makeReportItemWidthMatrix()
 
         View.setRsButton()
-    # Reset the o2o switchlist
-        Model.setRsButton()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

@@ -1,6 +1,7 @@
 Todo:
   How to publish DeepL?
   Maybe move o2o model FILE_LIST to configFile.json?
+  Check that ViewEntities.makeTrackPatternCsv still works.
 
 Comments:
   Schedule does not prevent setting a car to a track.

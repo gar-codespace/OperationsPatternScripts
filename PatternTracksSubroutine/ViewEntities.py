@@ -122,53 +122,6 @@ class TrackPatternPanel:
 
         return tpPanel
 
-def modifyTrackPatternReport(trackPattern):
-    """Make adjustments to the way the reports display here.
-        The undeflying json is not changed.
-        Replaces blank Dest and FD with standins.
-        Replaces load type with short load type.
-        Used by:
-        View.trackPatternButton
-        View.setRsButton
-        ViewSetCarsForm.switchListButton
-        ViewSetCarsForm.makeO2oSetCarsForm
-        """
-
-    standins = PSE.readConfigFile('RM')
-
-    tracks = trackPattern['locations'][0]['tracks']
-    for track in tracks:
-        for loco in track['locos']:
-            destStandin, fdStandin = getStandins(loco, standins)
-            loco.update({'Destination': destStandin})
-
-        for car in track['cars']:
-            destStandin, fdStandin = getStandins(car, standins)
-            car.update({'Destination': destStandin})
-            car.update({'Final Dest': fdStandin})
-            shortLoadType = PSE.getShortLoadType(car)
-            car.update({'Load Type': shortLoadType})
-
-    return trackPattern
-
-def getStandins(car, standins):
-    """Replaces null destination and fd with the standin from the config file
-        Used by:
-        modifyTrackPatternReport
-        """
-
-    destStandin = car['Destination']
-    if not car['Destination']:
-        destStandin = standins['DS']
-
-    try: # No FD for locos
-        fdStandin = car['Final Dest']
-        if not car['Final Dest']:
-            fdStandin = standins['FD']
-    except:
-        fdStandin = ''
-
-    return destStandin, fdStandin
 
 def makeTextReportHeader(textWorkEventList):
     """Makes the header for generic text reports
@@ -237,68 +190,6 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
             reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
 
     return reportSwitchList
-
-def makeUserInputList(textBoxEntry):
-    """Used by:
-        ViewSetCarsForm.switchListButton
-        ViewSetCarsForm.makeO2oSetCarsForm
-        """
-
-    userInputList = []
-    for userInput in textBoxEntry:
-        userInputList.append(unicode(userInput.getText(), PSE.ENCODING))
-
-    return userInputList
-
-def merge(switchList, userInputList):
-    """Merge the values in textBoxEntry into the ['Set_To'] field of switchList.
-        Used by:
-        ViewSetCarsForm.switchListButton
-        ViewSetCarsForm.makeO2oSetCarsForm
-        """
-
-    longestTrackString = findLongestTrackString()
-    allTracksAtLoc = PSE.getTracksNamesByLocation(None)
-
-    i = 0
-    locos = switchList['locations'][0]['tracks'][0]['locos']
-    for loco in locos:
-        setTrack = switchList['locations'][0]['tracks'][0]['trackName']
-        setTrack = PSE.formatText('[' + setTrack + ']', longestTrackString + 2)
-        loco.update({'Set_To': setTrack})
-
-        userInput = unicode(userInputList[i], PSE.ENCODING)
-        if userInput in allTracksAtLoc:
-            setTrack = PSE.formatText('[' + userInput + ']', longestTrackString + 2)
-            loco.update({'Set_To': setTrack})
-        i += 1
-
-    cars = switchList['locations'][0]['tracks'][0]['cars']
-    for car in cars:
-        setTrack = switchList['locations'][0]['tracks'][0]['trackName']
-        setTrack = PSE.formatText('[' + setTrack + ']', longestTrackString + 2)
-        car.update({'Set_To': setTrack})
-
-        userInput = unicode(userInputList[i], PSE.ENCODING)
-        if userInput in allTracksAtLoc:
-            setTrack = PSE.formatText('[' + userInput + ']', longestTrackString + 2)
-            car.update({'Set_To': setTrack})
-
-        i += 1
-
-    return switchList
-
-def findLongestTrackString():
-    """Used by:
-        merge
-        """
-
-    longestTrackString = 6 # 6 is the length of [Hold]
-    for track in PSE.readConfigFile('PT')['PT']: # Pattern Tracks
-        if len(track) > longestTrackString:
-            longestTrackString = len(track)
-
-    return longestTrackString
 
 def loopThroughRs(type, rsAttribs):
     """Creates a line containing the attrs in get * MessageFormat

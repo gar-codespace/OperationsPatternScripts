@@ -147,7 +147,7 @@ class CreateSetCarsFormGui:
 
         MOUSE_CLICKED.getSource().setBackground(PSE.JAVA_AWT.Color.GREEN)
 
-        o2oSetCarsForm = ViewSetCarsForm.makeO2oSetCarsForm(self.setCarsForm, self.buttonDict['textBoxEntry'])
+        o2oSetCarsForm = ModelSetCarsForm.makeMergedForm(self.setCarsForm, self.buttonDict['textBoxEntry'])
 
         o2oController.o2oSwitchList(o2oSetCarsForm)
 

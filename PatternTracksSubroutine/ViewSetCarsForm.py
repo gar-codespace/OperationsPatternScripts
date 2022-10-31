@@ -5,23 +5,13 @@
 
 from opsEntities import PSE
 from PatternTracksSubroutine import ViewEntities
+from PatternTracksSubroutine import ModelSetCarsForm
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ViewSetCarsForm'
 SCRIPT_REV = 20220101
 
 _psLog = PSE.LOGGING.getLogger('OPS.PT.ViewSetCarsForm')
 
-
-def makeO2oSetCarsForm(setCarsForm, buttonDict):
-    """Used by:
-        ControllerSetCarsForm.CreateSetCarsFormGui.o2oButton
-        """
-
-    inputList = ViewEntities.makeUserInputList(buttonDict)
-    mergedForm = ViewEntities.merge(setCarsForm, inputList)
-    mergedForm = ViewEntities.modifyTrackPatternReport(mergedForm)
-
-    return mergedForm
 
 def switchListAsCsv(textBoxEntry):
     """Track Pattern Report json is written as a CSV file
@@ -36,8 +26,10 @@ def switchListAsCsv(textBoxEntry):
     trackPattern = PSE.genericReadReport(targetPath)
     trackPattern = PSE.loadJson(trackPattern)
 # Process json data into CSV
-    userInputList = ViewEntities.makeUserInputList(textBoxEntry)
-    trackPattern = ViewEntities.merge(trackPattern, userInputList)
+    # userInputList = ModelEntities.makeUserInputList(textBoxEntry)
+    # trackPattern = ModelEntities.merge(trackPattern, userInputList)
+
+    trackPattern = ModelSetCarsForm.makeMergedForm(trackPattern, textBoxEntry)
     trackPatternCsv = ViewEntities.makeTrackPatternCsv(trackPattern)
 # Write CSV data
     fileName = PSE.BUNDLE['Switch List for Track'] + '.csv'
@@ -61,9 +53,7 @@ def switchListButton(textBoxEntry):
     switchList = PSE.genericReadReport(targetPath)
     switchList = PSE.loadJson(switchList)
 # Replace Set To with a track name, reformat for display
-    userInputList = ViewEntities.makeUserInputList(textBoxEntry)
-    switchList = ViewEntities.merge(switchList, userInputList)
-    switchList = ViewEntities.modifyTrackPatternReport(switchList)
+    switchList = ModelSetCarsForm.makeMergedForm(switchList, textBoxEntry)
 # Make switch list for print
     reportHeader = ViewEntities.makeTextReportHeader(switchList)
     reportLocations = ViewEntities.makeTextReportLocations(switchList, trackTotals=False)
