@@ -29,6 +29,7 @@ TRACK_NAME_CLICKED_ON = ''
 # Dealers choice, both work OK:
 J_BUNDLE = JMRI.jmrit.operations.setup.Setup()
 # SB = JMRI.jmrit.operations.setup.Bundle()
+# SB.handleGetMessage('Road')
 
 SCRIPT_NAME = 'OperationsPatternScripts.opsEntities.PSE'
 SCRIPT_REV = 20220101
@@ -191,10 +192,13 @@ def openOutputPanel(message):
         https://groups.io/g/jmriusers/message/33747
         """
 
-    if not JMRI.util.JmriJFrame.getFrame("Script Output"):
+    bundle = JMRI.jmrit.jython.Bundle()
+    frameName = bundle.handleGetMessage('TitleOutputFrame')
+
+    if not JMRI.util.JmriJFrame.getFrame(frameName):
         JMRI.jmrit.jython.JythonWindow().actionPerformed(None)
 
-    window = JMRI.util.JmriJFrame.getFrame("Script Output")
+    window = JMRI.util.JmriJFrame.getFrame(frameName)
     scrollpane = window.getContentPane().getComponents()[0]
     viewport = scrollpane.getComponents()[0]
     textarea = viewport.getComponents()[0]
@@ -204,8 +208,11 @@ def openOutputPanel(message):
 
 def closeOutputPanel():
 
+    bundle = JMRI.jmrit.jython.Bundle()
+    frameName = bundle.handleGetMessage('TitleOutputFrame')
+
     try:
-        outputPanel = JMRI.util.JmriJFrame.getFrame("Script Output")
+        outputPanel = JMRI.util.JmriJFrame.getFrame(frameName)
         outputPanel.setVisible(False)
         outputPanel.dispose()
     except:

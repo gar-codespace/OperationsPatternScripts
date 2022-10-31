@@ -65,7 +65,7 @@
   ">The ops to ops (o2o) subroutine is a group of utilities that are designed to be the glue that allows JMRI Operations Pro to be the operations engine for TrainPlayer\u00a9.": ">La sous-routine ops to ops (o2o) est un groupe d'utilitaires con\u00e7us pour \u00eatre la colle qui permet \u00e0 JMRI Operations Pro d'\u00eatre le moteur d'op\u00e9rations de TrainPlayer\u00a9.", 
   ">The pattern reports and TrainPlayer\u00a9 exports all start with the creation of a JSON file.": ">Les rapports de mod\u00e8le et les exportations TrainPlayer\u00a9 commencent tous par la cr\u00e9ation d'un fichier JSON.", 
   ">These videos are recorded in the English language.": ">Ces vid\u00e9os sont enregistr\u00e9es en langue anglaise.", 
-  ">Track Pattern Subroutine - Demonstration at a yard</A>": ">Subroutine de mod\u00e8le de piste - D\u00e9monstration sur un chantier</A>", 
+  ">Track Pattern Subroutine - Demonstration at a yard</A>": ">Subroutine de tra\u00e7age - D\u00e9monstration sur un chantier</A>", 
   ">Track Pattern Subroutine - Demonstration at industry</A>": ">Subroutine Track Pattern - D\u00e9monstration \u00e0 l'industrie</A>", 
   ">TrainPlayer Include flag (set by user, written by this plugin)": ">TrainPlayer Include flag (d\u00e9fini par l'utilisateur, \u00e9crit par ce plugin)", 
   ">Translation Choice": ">Translation Choice", 

@@ -39,7 +39,9 @@ SCRIPT_REV = 20220101
 PSE.ENCODING = PSE.readConfigFile('CP')['SE']
 
 Bundle.BUNDLE_DIR = OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle')
-PSE.BUNDLE = Bundle.getBundleForLocale()
+# Bundle.validatePluginBundle()
+# PSE.BUNDLE = Bundle.getBundleForLocale()
+PSE.BUNDLE = {}
 
 
 class Model:
@@ -631,32 +633,16 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         return
 
-    def validateBundle(self):
-        """If the length of BUNDLE and getAllTextBundles are not the same,
-            translate the plugin."""
-
-        allBundles = Bundle.getAllTextBundles()
-        testBundles = allBundles.split('\n')
-        testBundles = list(set(testBundles)) # Remove duplicates.
-        textBundleLength = len(testBundles) - 1 # Remove the blank line at the end.
-
-        pluginBundleLength = len(PSE.BUNDLE)
-
-        if pluginBundleLength != textBundleLength:
-            PSE.openOutputPanel('FAIL: bundle length mismatch.')
-            PSE.openOutputPanel('Please wait while the bundle file is rebuilt.')
-            self.psLog.critical('FAIL: bundle length mismatch, rebuilding bundle file.')
-            Bundle.makePluginBundle(allBundles)
-
-        return
-
     def handle(self):
 
         startTime = PSE.TIME.time()
         self.psLog = PSE.LOGGING.getLogger('OPS.Main.Controller')
         self.logger.initialLogMessage(self.psLog)
 
-        self.validateBundle()
+        Bundle.validatePluginBundle()
+        PSE.BUNDLE = Bundle.getBundleForLocale()
+        Bundle.validateHelpBundle()
+
         PSE.closeOutputPanel()
         PSE.makeReportFolders()
         self.model.validatePatternConfig()
