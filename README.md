@@ -44,9 +44,6 @@ How to add this plugin to JMRI
 [How to modify this plugin](https://youtu.be/DK6O9AQmqXo)  
 [o2o, the ops to ops subroutine for TrainPlayer©](https://youtu.be/rlUfoSesnQo)  
 
-Disclaimer:
-There are many people on YouTube who are good at making demo videos. I am not one of them.  
-
 ### Web sites
 [TrainPlayer](http://trainplayer.com/)  
 [JMRI Operations Pro](https://www.jmri.org/help/en/package/jmri/jmrit/operations/Operations.shtml)  
