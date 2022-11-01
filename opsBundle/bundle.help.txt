@@ -32,6 +32,7 @@ In other cases, if a mistake is made editing the PatternConfig.json file, the pl
 >How to add this plugin to JMRI
 >How to modify this plugin
 >How to set up this plugin</A>
+>How to translate this plugin
 >Ignore Track Length flag (set by user, written by this plugin)
 >Include this subroutine in the Control Panel
 >Introduction
@@ -57,7 +58,6 @@ In other cases, if a mistake is made editing the PatternConfig.json file, the pl
 >Revision control
 >Row Multiplier
 >Script Includes
->Selecting subroutines
 >Sort Cars
 >Sort Locomotives
 >The description of each element is in blue

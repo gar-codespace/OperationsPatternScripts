@@ -40,10 +40,10 @@
 <p>The Pattern Scripts plugin for JMRI is a suite of subroutines for JMRI Operations Pro.  The use of this plugin is documented in the following list of videos.</p>
 <h3>Video Documentation</h3>
 <p>These videos are recorded in the English language.</p>
-<p>How to add this plugin to JMRI</p>
+<p><A HREF="https://youtu.be/Sl9yBQaRpeY">How to add this plugin to JMRI</A></p>
+<p><A HREF="https://youtu.be/6G7xkRJTczo">How to translate this plugin</A></p>
 <p><A HREF="https://youtu.be/GjPtXk3oKmc">How to set up this plugin</A></p>
 <p><A HREF="https://youtu.be/DK6O9AQmqXo">How to modify this plugin</A></p>
-<p>Selecting subroutines</p>
 <p><A HREF="https://youtu.be/IdXvxyo-E3Y">Track Pattern Subroutine - Demonstration at a yard</A></p>
 <p><A HREF="https://youtu.be/2Tv6sUMDD_Y">Track Pattern Subroutine - Demonstration at industry</A></p>
 <p><A HREF="https://youtu.be/rlUfoSesnQo">o2o, the ops to ops subroutine for TrainPlayer©</A></p>
