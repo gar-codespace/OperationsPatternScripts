@@ -47,6 +47,11 @@ How to add this plugin to JMRI
 Disclaimer:
 There are many people on YouTube who are good at making demo videos. I am not one of them.  
 
+### Web sites
+[TrainPlayer](http://trainplayer.com/)  
+[JMRI Operations Pro](https://www.jmri.org/help/en/package/jmri/jmrit/operations/Operations.shtml)  
+[Quick Keys for TraipPlayer](https://github.com/GregRitacco/QuickKeys-for-TrainPlayer)  
+
 ## Testing
 This plugin has been tested with:
 * JMRI 4.25.4 with Java 8u301, JMRI 4.26 with Java 8u311, Windows 10 Pro and Home  
