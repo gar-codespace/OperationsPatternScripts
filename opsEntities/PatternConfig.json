@@ -71,7 +71,7 @@
         "PatternTracksSubroutine": true
       },
       {
-        "o2oSubroutine": true
+        "o2oSubroutine": false
       },
       {
         "GenericSubroutine": false
@@ -82,7 +82,7 @@
     "PX" : 0,
     "PY" : 0,
     "OC" : true,
-    "RV" : 20221009
+    "RV" : 20221010
   },
   "RM" : {
     "DS" : "No Waybill",

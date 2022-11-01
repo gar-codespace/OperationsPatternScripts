@@ -34,7 +34,7 @@ from opsEntities import Listeners
 from opsBundle import Bundle
 
 SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
-SCRIPT_REV = 20220101
+SCRIPT_REV = 20221010
 
 PSE.ENCODING = PSE.readConfigFile('CP')['SE']
 

@@ -3,7 +3,7 @@
 from opsEntities import PSE
 
 SCRIPT_NAME = 'OperationsPatternScripts.opsEntities.Listeners'
-SCRIPT_REV = 20220101
+SCRIPT_REV = 20221010
 
 _psLog = PSE.LOGGING.getLogger('OPS.OE.Listeners')
 

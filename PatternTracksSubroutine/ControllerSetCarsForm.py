@@ -11,7 +11,7 @@ from PatternTracksSubroutine import ViewSetCarsForm
 from o2oSubroutine import Controller as o2oController
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ControllerSetCarsForm'
-SCRIPT_REV = 20220101
+SCRIPT_REV = 20221010
 
 _psLog = PSE.LOGGING.getLogger('OPS.PT.ControllerSetCarsForm')
 

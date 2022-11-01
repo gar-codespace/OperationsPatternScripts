@@ -6,7 +6,7 @@
 from opsEntities import PSE
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ViewEntities'
-SCRIPT_REV = 20220101
+SCRIPT_REV = 20221010
 
 class O2oSubroutinePanel:
 

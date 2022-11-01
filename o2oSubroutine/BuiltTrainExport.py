@@ -7,7 +7,7 @@ import jmri
 import time
 
 SCRIPT_NAME ='OperationsPatternScripts.o2oSubroutine.BuiltTrainExport'
-SCRIPT_REV = 20220101
+SCRIPT_REV = 20221010
 
 # SCRIPT_DIR = 'OperationsPatternScripts'
 SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b1'
@@ -91,7 +91,6 @@ class o2oWorkEventsBuilder(jmri.jmrit.automat.AbstractAutomaton):
     def init(self):
 
         self.SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.BuiltTrainExport.o2oWorkEventsBuilder'
-        self.SCRIPT_REV = 20220101
 
         self.standAloneLogging = StandAloneLogging()
         self.o2oLog = PSE.LOGGING.getLogger('TP.o2oWorkEventsBuilder')
@@ -139,7 +138,7 @@ class o2oWorkEventsBuilder(jmri.jmrit.automat.AbstractAutomaton):
         runTime = time.time() - startTime
         self.o2oLog.info('Manifest export (sec): ' + str(round(runTime, 4)))
 
-        print(self.SCRIPT_NAME + ' ' + str(self.SCRIPT_REV))
+        print(self.SCRIPT_NAME + ' ' + str(SCRIPT_REV))
         print('Manifest export (sec): ' + str(round(runTime, 4)))
 
         self.standAloneLogging.stopLogging()
