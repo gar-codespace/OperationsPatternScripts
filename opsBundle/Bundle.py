@@ -9,7 +9,7 @@ from opsEntities import PSE
 from opsBundle import Translators
 
 SCRIPT_NAME = 'OperationsPatternScripts.opsBundle.Bundle'
-SCRIPT_REV = 20220101
+SCRIPT_REV = 20221010
 
 PSE.BUNDLE_DIR = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle')
 

@@ -7,7 +7,7 @@ import jmri.jmrit
 import jmri.util.swing
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelEntities'
-SCRIPT_REV = 20220101
+SCRIPT_REV = 20221010
 
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.ModelEntities')
 

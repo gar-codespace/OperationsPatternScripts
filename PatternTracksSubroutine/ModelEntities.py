@@ -4,7 +4,7 @@
 from opsEntities import PSE
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ModelEntities'
-SCRIPT_REV = 20220101
+SCRIPT_REV = 20221010
 
 
 def makeUserInputList(textBoxEntry):

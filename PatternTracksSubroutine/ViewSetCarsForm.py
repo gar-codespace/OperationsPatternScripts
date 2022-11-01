@@ -8,7 +8,7 @@ from PatternTracksSubroutine import ViewEntities
 from PatternTracksSubroutine import ModelSetCarsForm
 
 SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ViewSetCarsForm'
-SCRIPT_REV = 20220101
+SCRIPT_REV = 20221010
 
 _psLog = PSE.LOGGING.getLogger('OPS.PT.ViewSetCarsForm')
 
@@ -65,22 +65,6 @@ def switchListButton(textBoxEntry):
     PSE.genericDisplayReport(targetPath)
 
     return
-
-
-# class SetCarsFrame(PSE.JMRI.util.JmriJFrame):
-#
-#     def __init__(self, setCarsForTrackForm):
-#
-#         self.setCarsForTrackForm = setCarsForTrackForm
-#
-#         return
-#
-#     def addSetCarsForm(self):
-#
-#         self.add(self.setCarsForTrackForm)
-#
-#         return self
-
 
 def setCarsForTrackWindow(setCarsForTrackForm):
     """Used by:
@@ -258,7 +242,6 @@ class MakeSetCarsEqptRows():
     def __init__(self, setCarsFormData):
 
         self.SCRIPT_NAME = 'OperationsPatternScripts.MakeSetCarsEqptRows'
-        self.SCRIPT_REV = 20220101
 
         self.reportWidth = PSE.REPORT_ITEM_WIDTH_MATRIX
         fontSize = PSE.PM.getFontSize()

@@ -32,7 +32,7 @@ J_BUNDLE = JMRI.jmrit.operations.setup.Setup()
 # SB.handleGetMessage('Road')
 
 SCRIPT_NAME = 'OperationsPatternScripts.opsEntities.PSE'
-SCRIPT_REV = 20220101
+SCRIPT_REV = 20221010
 
 OM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.OperationsManager)
 PM = JMRI.InstanceManager.getDefault(JMRI.util.gui.GuiLafPreferencesManager)

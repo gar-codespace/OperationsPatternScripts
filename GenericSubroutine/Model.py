@@ -6,6 +6,6 @@
 from opsEntities import PSE
 
 SCRIPT_NAME = 'OperationsPatternScripts.GenericSubroutine.Model'
-SCRIPT_REV = 20220101
+SCRIPT_REV = 20221010
 
 _psLog = PSE.LOGGING.getLogger('OPS.GS.Model')

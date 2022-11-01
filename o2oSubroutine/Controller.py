@@ -11,7 +11,7 @@ from o2oSubroutine import View
 from PatternTracksSubroutine import Controller as PtController
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.Controller'
-SCRIPT_REV = 20220101
+SCRIPT_REV = 20221010
 
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.Controller')
 

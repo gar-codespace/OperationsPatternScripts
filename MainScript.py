@@ -15,8 +15,8 @@ import time
 from sys import path as sysPath
 from os import path as OS_PATH
 
-SCRIPT_DIR = 'OperationsPatternScripts'
-# SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b1'
+# SCRIPT_DIR = 'OperationsPatternScripts'
+SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b1'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b2'
 
 PLUGIN_ROOT = OS_PATH.join(jmri.util.FileUtil.getPreferencesPath(), SCRIPT_DIR)
@@ -34,7 +34,7 @@ from opsEntities import Listeners
 from opsBundle import Bundle
 
 SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
-SCRIPT_REV = 20220101
+SCRIPT_REV = 20221010
 
 PSE.ENCODING = PSE.readConfigFile('CP')['SE']
 

@@ -8,7 +8,7 @@ from GenericSubroutine import Model
 from GenericSubroutine import View
 
 SCRIPT_NAME = 'OperationsPatternScripts.GenericSubroutine.Controller'
-SCRIPT_REV = 20220101
+SCRIPT_REV = 20221010
 
 _psLog = PSE.LOGGING.getLogger('OPS.GS.Controller')
 

@@ -6,7 +6,7 @@
 from opsEntities import PSE
 
 SCRIPT_NAME = 'OperationsPatternScripts.GenericSubroutine.ViewEntities'
-SCRIPT_REV = 20220101
+SCRIPT_REV = 20221010
 
 class GenericSubroutinePanel:
 

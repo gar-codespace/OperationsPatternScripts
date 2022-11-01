@@ -8,7 +8,7 @@ from o2oSubroutine import ModelEntities
 from PatternTracksSubroutine import ModelEntities as ptModelEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.Model'
-SCRIPT_REV = 20220101
+SCRIPT_REV = 20221010
 
 FILE_LIST = ['OperationsTrainRoster.xml', 'OperationsRouteRoster.xml']
 
