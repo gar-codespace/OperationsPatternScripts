@@ -32,7 +32,7 @@ If none of the above, a car moved from a spur will toggle default load/empty des
 ## Use with TrainPlayer© software
 This plugin also contains a subroutine so that JMRI can be used as the Ops engine for TrainPlayer's Advanced Ops module. The TrainPlayer side scripts can be found [here](https://github.com/GregRitacco/QuickKeys).  
 
-## How To Use This Plugin
+## "In this video..." YouTube video series
 The following are YouTube videos covering the use of this plugin:  
 
 How to add this plugin to JMRI  
