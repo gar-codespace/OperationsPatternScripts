@@ -35,7 +35,7 @@ This plugin also contains a subroutine so that JMRI can be used as the Ops engin
 ## "In this video..." YouTube video series
 The following are YouTube videos covering the use of this plugin:  
 
-How to add this plugin to JMRI  
+[How to add this plugin to JMRI](https://youtu.be/Sl9yBQaRpeY)    
 [How to set up this plugin](https://youtu.be/GjPtXk3oKmc)  
 [How to modify this plugin](https://youtu.be/DK6O9AQmqXo)  
 [Selecting subroutines]  
