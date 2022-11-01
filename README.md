@@ -55,7 +55,8 @@ This plugin has been tested with:
 
 ## License
 The scripts included in this plugin are © 2021, 2022 Greg Ritacco.  
-Other then that, there are no restrictions on use.
+Other then that, there are no restrictions on use.  
+The name TrainPlayer is copyright Jim Dill and is used with permission.  
 
 
 ![GitHub repo file count](https://img.shields.io/github/directory-file-count/GregRitacco/JMRI-Operations---Pattern-Scripts?style=flat-square)
