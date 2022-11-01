@@ -44,8 +44,10 @@ How to add this plugin to JMRI
 [How to modify this plugin](https://youtu.be/DK6O9AQmqXo)  
 [o2o, the ops to ops subroutine for TrainPlayer©](https://youtu.be/rlUfoSesnQo)  
 
-Disclaimer:
-There are many people on YouTube who are good at making demo videos. I am not one of them.  
+### Web sites
+[TrainPlayer](http://trainplayer.com/)  
+[JMRI Operations Pro](https://www.jmri.org/help/en/package/jmri/jmrit/operations/Operations.shtml)  
+[Quick Keys for TraipPlayer](https://github.com/GregRitacco/QuickKeys-for-TrainPlayer)  
 
 ## Testing
 This plugin has been tested with:
@@ -53,7 +55,8 @@ This plugin has been tested with:
 
 ## License
 The scripts included in this plugin are © 2021, 2022 Greg Ritacco.  
-Other then that, there are no restrictions on use.
+Other then that, there are no restrictions on use.  
+The name TrainPlayer is copyright Jim Dill and is used with permission.  
 
 
 ![GitHub repo file count](https://img.shields.io/github/directory-file-count/GregRitacco/JMRI-Operations---Pattern-Scripts?style=flat-square)
