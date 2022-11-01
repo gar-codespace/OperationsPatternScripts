@@ -97,7 +97,7 @@ class CreateStubFile:
 
     def __init__(self):
 
-        self.stubLocation = OS_PATH.join(JMRI.util.FileUtil.getPreferencesPath(), 'jmrihelp')
+        self.stubLocation = OS_PATH.join(JMRI.util.FileUtil.getPreferencesPath(), 'jmrihelp', psLocale()[:2])
 
         self.helpFilePath = ''
         self.newStubFile = ''
@@ -106,7 +106,7 @@ class CreateStubFile:
 
     def validateStubLocation(self):
 
-        if JAVA_IO.File(self.stubLocation).mkdir():
+        if JAVA_IO.File(self.stubLocation).mkdirs():
             _psLog.info('Stub location created at: ' + self.stubLocation)
         else:
             _psLog.info('Stub location already exists')
@@ -115,7 +115,7 @@ class CreateStubFile:
 
     def getHelpFileURI(self):
 
-        helpFileName = 'help.' + psLocale() + '.html'
+        helpFileName = 'help.' + psLocale()[:2] + '.html'
         helpFilePath = OS_PATH.join(PLUGIN_ROOT, 'opsSupport', helpFileName)
 
         if not JAVA_IO.File(helpFilePath).isFile():

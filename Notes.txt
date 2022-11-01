@@ -33,6 +33,7 @@ Tested Items:
     Add a listener to monitor if a new train is created or deleted, builtTrain listeners updated accordingly.
     Mapped TP OC Class/XO reserved as JMRI spur, turn off train directions.
     ALERT messages open and display to the script output window OK.
+    Plugin and help bundles validate OK.
 
   Reports
     Test with really long location and spur names OK.

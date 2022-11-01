@@ -540,7 +540,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(OPEN_HELP_EVENT)
 
-        stubFileTarget = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getPreferencesPath(), 'jmrihelp', 'psStub.html')
+        stubFileTarget = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getPreferencesPath(), 'jmrihelp', PSE.psLocale()[:2], 'psStub.html')
         stubUri = PSE.JAVA_IO.File(stubFileTarget).toURI()
         # stubUri = JAVA_NET.URI(str(stubFileTarget)).create()
         if PSE.JAVA_IO.File(stubUri).isFile():
@@ -642,6 +642,8 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         Bundle.validatePluginBundle()
         PSE.BUNDLE = Bundle.getBundleForLocale()
         Bundle.validateHelpBundle()
+        PSE.CreateStubFile().make()
+        Bundle.makeHelpPage()
 
         PSE.closeOutputPanel()
         PSE.makeReportFolders()
