@@ -589,7 +589,7 @@ class UpdateLocationsAndTracks:
             track = location.getTrackByName(track, jmriTrackType)
             track.setName(newTrack)
             location.getTrackByName(newTrack, jmriTrackType).setTrackType(newJmriTrackType)
-            location.getTrackByName(newTrack, newJmriTrackType).setTrainDirections(15)
+            # location.getTrackByName(newTrack, newJmriTrackType).setTrainDirections(15)
 
             trackData = self.tpRailroadData['locales'][key]
             ModelEntities.setTrackAttribs(trackData)

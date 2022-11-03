@@ -15,43 +15,46 @@ def importTpRailroad():
     """Mini controller generates the tpRailroadData.json file"""
 
     trainPlayerImport = TrainPlayerImporter()
-# Import the three files
+# Import the three TrainPlayer export files
     if not trainPlayerImport.getTpReportFiles():
-        _psLog.critical('One or more missing files')
-        PSE.openOutputPanel(PSE.BUNDLE['ALERT: One or more TrainPlayer export files are missing.'])
-        PSE.openOutputPanel(PSE.BUNDLE['From TrainPlayer, export layout to JMRI.'])
-        PSE.openOutputPanel(PSE.BUNDLE['TrainPlayer layout not imported to JMRI.'])
-        PSE.openOutputPanel('')
+        boilerplateErrors()
         return False
-# Test the integrity of the files
-    try:
-        trainPlayerImport.processFileHeaders()
-        trainPlayerImport.getRrLocations()
-        trainPlayerImport.getRrLocales()
-        trainPlayerImport.getAllTpRoads()
-        trainPlayerImport.getAllTpIndustry()
-
-        trainPlayerImport.getAllTpCarAar()
-        trainPlayerImport.getAllTpCarLoads()
-        trainPlayerImport.getAllTpCarKernels()
-
-        trainPlayerImport.getAllTpLocoTypes()
-        trainPlayerImport.getAllTpLocoModels()
-        trainPlayerImport.getAllTpLocoConsists()
-
-        trainPlayerImport.writeTPLayoutData()
-
-        return True
-
-    except IndexError:
-        print('Error: files corrupted')
-        _psLog.critical('Error: One or more TrainPlayer export files are corrupted')
-        PSE.openOutputPanel(PSE.BUNDLE['ALERT: One or more TrainPlayer export files are corrupted.'])
-        PSE.openOutputPanel(PSE.BUNDLE['From TrainPlayer, export layout to JMRI.'])
-        PSE.openOutputPanel(PSE.BUNDLE['TrainPlayer layout not imported to JMRI.'])
-        PSE.openOutputPanel('')
+# Test the integrity of the locations file
+    if not trainPlayerImport.checkLocationsFile():
+        boilerplateErrors()
+        return False
+# Test the integrity of the Industries file
+    if not trainPlayerImport.checkIndustriesFile():
+        boilerplateErrors()
         return False
 
+    trainPlayerImport.processFileHeaders()
+    trainPlayerImport.getRrLocations()
+    trainPlayerImport.getRrLocales()
+
+    trainPlayerImport.getAllTpRoads()
+    trainPlayerImport.getAllTpIndustry()
+
+    trainPlayerImport.getAllTpCarAar()
+    trainPlayerImport.getAllTpCarLoads()
+    trainPlayerImport.getAllTpCarKernels()
+
+    trainPlayerImport.getAllTpLocoTypes()
+    trainPlayerImport.getAllTpLocoModels()
+    trainPlayerImport.getAllTpLocoConsists()
+
+    trainPlayerImport.writeTPLayoutData()
+
+    return True
+
+def boilerplateErrors():
+    _psLog.critical('Error: TrainPlayer export issue.')
+    PSE.openOutputPanel(PSE.BUNDLE['ALERT: TrainPlayer export issue.'])
+    PSE.openOutputPanel(PSE.BUNDLE['From TrainPlayer, re-export layout to JMRI.'])
+    PSE.openOutputPanel(PSE.BUNDLE['TrainPlayer layout not imported to JMRI.'])
+    PSE.openOutputPanel('')
+
+    return
 
 class TrainPlayerImporter:
 
@@ -76,6 +79,8 @@ class TrainPlayerImporter:
 
     def getTpReportFiles(self):
         """Returns true if all 3 files import ok."""
+
+        _psLog.debug('getTpReportFiles')
 
         fileCheck = True
 
@@ -110,14 +115,40 @@ class TrainPlayerImporter:
 
         return fileCheck
 
+    def checkLocationsFile(self):
+        """Each line in the locations file should have 5 semi colons."""
+
+        if [line.count(';') for line in self.tpLocations if line.count(';') != 5]:
+            _psLog.critical('Error: Locations file formatting error.')
+            PSE.openOutputPanel(PSE.BUNDLE['Check TrainPlayer-Advanced Ops-Locales for semi colon.'])
+            print('Error: Locations file formatting error')
+
+            return False
+
+        return True
+
+    def checkIndustriesFile(self):
+        """Each line in the industries file should have 9 semi colons."""
+
+        if [line.count(';') for line in self.tpIndustries if line.count(';') != 9]:
+            _psLog.critical('Error: Industries file formatting error.')
+            PSE.openOutputPanel(PSE.BUNDLE['Check TrainPlayer-Advanced Ops-Industries for errors.'])
+            print('Error: Industries file formatting error')
+
+            return False
+
+        return True
+
     def processFileHeaders(self):
-        """Process the header info from the TP report files"""
+        """Process the header info from the TP report files.
+            replace(';', '') removes the semi colons at the end of each header line.
+            """
 
         _psLog.debug('processFileHeaders')
 
-        self.rr[u'trainplayerDate'] = self.tpLocations.pop(0)
-        self.rr[u'railroadName'] = self.tpLocations.pop(0)
-        self.rr[u'railroadDescription'] = self.tpLocations.pop(0)
+        self.rr[u'trainplayerDate'] = self.tpLocations.pop(0).replace(';', '')
+        self.rr[u'railroadName'] = self.tpLocations.pop(0).replace(';', '')
+        self.rr[u'railroadDescription'] = self.tpLocations.pop(0).replace(';', '')
         self.rr[u'date'] = PSE.timeStamp()
         self.tpLocations.pop(0) # Remove key
 

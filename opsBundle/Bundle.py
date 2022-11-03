@@ -35,7 +35,7 @@ def validatePluginBundle():
     pluginBundleLength = len(getBundleForLocale())
 
     if pluginBundleLength != textBundleLength:
-        psLocale = 'plugin.' + PSE.psLocale() + '.json'
+        psLocale = 'plugin.' + PSE.psLocale()[:2] + '.json'
         oldFile = PSE.OS_PATH.join(PSE.BUNDLE_DIR, psLocale)
         PSE.JAVA_IO.File(oldFile).delete()
         makeDefaultPluginBundle()
@@ -75,11 +75,11 @@ def validateHelpBundle():
         helpBundleLength = 1
 
     if helpTextBundleLength != helpBundleLength:
-        fileName = 'help.' + PSE.psLocale() + '.json'
+        fileName = 'help.' + PSE.psLocale()[:2] + '.json'
         oldFile = PSE.OS_PATH.join(PSE.BUNDLE_DIR, fileName)
         PSE.JAVA_IO.File(oldFile).delete()
 
-        fileName = 'help.' + PSE.psLocale() + '.html'
+        fileName = 'help.' + PSE.psLocale()[:2] + '.html'
         oldFile = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsSupport', fileName)
         PSE.JAVA_IO.File(oldFile).delete()
 
@@ -96,7 +96,7 @@ def getBundleForLocale():
         BuiltTrainExport
         """
 
-    psLocale = 'plugin.' + PSE.psLocale() + '.json'
+    psLocale = 'plugin.' + PSE.psLocale()[:2] + '.json'
     fileList = PSE.JAVA_IO.File(PSE.BUNDLE_DIR).list()
 
     if psLocale in fileList:
@@ -232,7 +232,7 @@ def makeHelpPage():
     helpPageTemplatePath = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'help.html.txt')
     helpPageTemplate = PSE.genericReadReport(helpPageTemplatePath)
 
-    helpBundleName = 'help.' + PSE.psLocale() + '.json'
+    helpBundleName = 'help.' + PSE.psLocale()[:2] + '.json'
     helpBundlePath = PSE.OS_PATH.join(PSE.BUNDLE_DIR, helpBundleName)
     if not PSE.JAVA_IO.File(helpBundlePath).isFile():
         helpBundleName = 'help.en.json'
@@ -246,7 +246,7 @@ def makeHelpPage():
 
         helpPageTemplate = helpPageTemplate.replace(hKey, hValue)
 
-    helpPageName = 'help.' + PSE.psLocale() + '.html'
+    helpPageName = 'help.' + PSE.psLocale()[:2] + '.html'
     helpPagePath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsSupport', helpPageName)
     PSE.genericWriteReport(helpPagePath, helpPageTemplate)
 

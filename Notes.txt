@@ -1,17 +1,17 @@
 Todo:
-  How to publish DeepL?
-  Maybe move o2o model FILE_LIST to configFile.json?
-  Check that ViewEntities.makeTrackPatternCsv still works.
+  Add check locales to o2o U9 - TrainPlayer export. Check for 5 semi colons.
+  Add check industries to o2o U9 - TrainPlayer export. Check for 9 semi colons.
 
 Comments:
+  How to publish DeepL?
   Schedule does not prevent setting a car to a track.
-  Setting JmriJFrame(True, True) has no effect, size and position is manually saved.
+  Setting JmriJFrame(True, True) has no effect, size and position are manually saved.
   Moved ENCODING value into the config file.
   Move config file master copy into psEntities to shield it from accidental edit.
   os.path.join() is used to make all paths for better OS compatibility.
   Plugin is Javafied as much as possible.
   _trackNameClickedOn moved to PSE.TRACK_NAME_CLICKED_ON
-  o2o importTpRailroad rolled into New JMRI Railroad and Update Rolling Stock.
+  o2o importTpRailroad rolled into New JMRI Railroad and Update JMRI Railroad.
 
 Tested Items:
   Plugin
@@ -111,6 +111,7 @@ Catches Items:
   Catches missing or corrupt TrainPlayer layout export files OK.
 
 Version 3 ideas:
+  Maybe move o2o model FILE_LIST to configFile.json?
   020.ModelWorkEvents.*.parsePtRs and o2o.ModelWorkEvents.*.parseRS do the same things in a different way, can they be merged?
   Harden up Bundle against web errors, untranslated items.
   How to use locale modifier, IE en-GB.

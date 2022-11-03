@@ -44,6 +44,7 @@ In other cases, if a mistake is made editing the PatternConfig.json file, the pl
 >No color can be specified with ""
 >Not Implemented
 >o2o Subroutine, ops 2 ops
+>Open System Console Window
 >Organization
 >Pattern Height
 >Pattern Location (written by this plugin)
