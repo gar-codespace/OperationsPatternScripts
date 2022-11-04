@@ -128,9 +128,9 @@ class TrainPlayerImporter:
         return True
 
     def checkIndustriesFile(self):
-        """Each line in the industries file should have 9 semi colons."""
+        """Each line in the industries file should have 10 semi colons."""
 
-        if [line.count(';') for line in self.tpIndustries if line.count(';') != 9]:
+        if [line.count(';') for line in self.tpIndustries if line.count(';') != 10]:
             _psLog.critical('Error: Industries file formatting error.')
             PSE.openOutputPanel(PSE.BUNDLE['Check TrainPlayer-Advanced Ops-Industries for errors.'])
             print('Error: Industries file formatting error')
