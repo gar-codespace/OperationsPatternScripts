@@ -471,7 +471,8 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
             patternConfig['CP']['SI'][1].update({'o2oSubroutine': False})
             O2O_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Enable o2o subroutine'])
 
-            self.trainsTableModel.removeTableModelListener(self.trainsTableListener)
+            # self.trainsTableModel.removeTableModelListener(self.trainsTableListener)
+            self.removeTrainsTableListener()
             self.removeBuiltTrainListener()
 
             self.psLog.info('o2o subroutine deactivated')
@@ -480,7 +481,8 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
             patternConfig['CP']['SI'][1].update({'o2oSubroutine': True})
             O2O_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Disable o2o subroutine'])
 
-            self.trainsTableModel.addTableModelListener(self.trainsTableListener)
+            # self.trainsTableModel.addTableModelListener(self.trainsTableListener)
+            self.addTrainsTableListener()
             self.addBuiltTrainListener()
 
             self.psLog.info('o2o subroutine activated')
@@ -529,7 +531,6 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.shutdownPlugin()
         self.startupPlugin()
-        # RESTART_PLUGIN_EVENT.getSource().firePropertyChange('psWindowClosing', False, True)
 
         self.psLog.info('Pattern Scripts plugin restarted')
 
@@ -612,8 +613,8 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
             ooItemSelected
             """
 
-        self.removeTrainsTableListener()
-        self.removeBuiltTrainListener()
+        # self.removeTrainsTableListener()
+        # self.removeBuiltTrainListener()
         self.closePsWindow()
 
         return

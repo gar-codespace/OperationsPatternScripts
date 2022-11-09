@@ -41,11 +41,13 @@ class StandAloneLogging():
 
 
 class FindTrain:
-    """Called when this script is used by itself"""
+    """ """
 
     def __init__(self):
 
         self.o2oLog = PSE.LOGGING.getLogger('TP.FindTrain')
+
+        self.builtTrainList = []
 
         return
 
@@ -71,12 +73,18 @@ class FindTrain:
 
         self.o2oLog.debug('getBuiltTrains')
 
-        builtTrainList = []
         for train in PSE.TM.getTrainsByStatusList():
             if train.isBuilt():
-                builtTrainList.append(train)
+                self.builtTrainList.append(train)
 
-        return builtTrainList
+        return self.builtTrainList
+
+    def resetBuildTrains(self):
+
+        for train in self.builtTrainList:
+            train.reset()
+
+        return
 
     def getTrainBuiltDate(self, train):
 

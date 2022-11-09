@@ -303,9 +303,14 @@ def closeTroublesomeWindows():
         o2oSubroutine.Model.newJmriRailroad
         o2oSubroutine.Model.updateJmriRailroad
         """
-
+    frameList = ['JMRI System Console', 'PanelPro', 'Pattern Scripts', 'Routes', 'Trains']
     for frameName in PSE.JMRI.util.JmriJFrame.getFrameList():
-        if not 'JmriJFrame' in frameName.__str__():
+        if frameName.getTitle() in frameList:
+            continue
+        else:
             frameName.dispose()
+            
+        # if not 'JmriJFrame' in frameName.__str__():
+        #     frameName.dispose()
 
     return

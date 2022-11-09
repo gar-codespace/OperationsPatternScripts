@@ -78,7 +78,7 @@ class o2oSwitchListConversion:
         return
 
     def parsePtRs(self, rs):
-        """The load field ie either Load(car) or Model(loco).
+        """The load field is either Load(car) or Model(loco).
             Pattern scripts have only one location,
             so Location and Destination are the same.
             How to combine this with parseRs?
@@ -180,11 +180,11 @@ class jmriManifestConversion:
 
             locos = []
             for loco in location['engines']['add']:
-                parsedRS = self.parseRS(car)
+                parsedRS = self.parseRS(loco)
                 parsedRS['PUSO'] = u'PL'
                 locos.append(parsedRS)
-            for loco in location['engines']['add']:
-                parsedRS = self.parseRS(car)
+            for loco in location['engines']['remove']:
+                parsedRS = self.parseRS(loco)
                 parsedRS['PUSO'] = u'SL'
                 locos.append(parsedRS)
 

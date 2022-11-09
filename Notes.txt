@@ -95,6 +95,7 @@ Tested Items:
     Update RR moves an existing track to a different existing location OK.
     Update RR resolves staging/non-staging tracks at same location OK.
     Update RR works with making new location and adding existing track to it OK.
+    Resets built trains on Update RR and Update RS OK.
 
 Catches Items:
   Catches pattern report button press no tracks selected OK.

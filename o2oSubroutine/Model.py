@@ -5,6 +5,7 @@
 
 from opsEntities import PSE
 from o2oSubroutine import ModelEntities
+from o2oSubroutine import BuiltTrainExport
 from PatternTracksSubroutine import ModelEntities as ptModelEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.Model'
@@ -55,7 +56,9 @@ def newJmriRailroad():
     PSE.EM.dispose()
 
     jmriRailroad = SetupXML()
+    jmriRailroad.setRailroadName()
     jmriRailroad.tweakOperationsXml()
+    jmriRailroad.setReportMessageFormat()
 
     allRsRosters = AddRsAttributes()
     allRsRosters.addRoads()
@@ -104,11 +107,18 @@ def updateJmriRailroad():
     if not tpLocaleData.isValid():
         return False
 
+    restTrains = BuiltTrainExport.FindTrain()
+    restTrains.getBuiltTrains()
+    restTrains.resetBuildTrains()
+
     ModelEntities.closeTroublesomeWindows()
 
     PSE.SM.dispose()
     PSE.CM.dispose()
     PSE.EM.dispose()
+
+    jmriRailroad = SetupXML()
+    jmriRailroad.setRailroadName()
 
     allRsRosters = AddRsAttributes()
     allRsRosters.addRoads()
@@ -158,6 +168,10 @@ def updateJmriRollingingStock():
         Controller.Startup.updateJmriRollingingStock
         """
 
+    restTrains = BuiltTrainExport.FindTrain()
+    restTrains.getBuiltTrains()
+    restTrains.resetBuildTrains()
+
     try:
         ModelEntities.closeTroublesomeWindows()
 
@@ -196,10 +210,21 @@ class SetupXML:
 
         self.scriptName = SCRIPT_NAME + '.SetupXML'
 
+        self.OSU = PSE.JMRI.jmrit.operations.setup
+
         self.o2oConfig =  PSE.readConfigFile('o2o')
         self.TpRailroad = ModelEntities.getTpRailroadData()
 
         print(self.scriptName + ' ' + str(SCRIPT_REV))
+
+        return
+
+    def setRailroadName(self):
+
+        _psLog.debug('setRailroadName')
+
+        self.OSU.Setup.setRailroadName(self.TpRailroad['railroadName'])
+        self.OSU.Setup.setComment(self.TpRailroad['railroadDescription'])
 
         return
 
@@ -208,23 +233,24 @@ class SetupXML:
 
         _psLog.debug('tweakOperationsXml')
 
-        OSU = PSE.JMRI.jmrit.operations.setup
-        OSU.Setup.setRailroadName(self.TpRailroad['railroadName'])
-        OSU.Setup.setComment(self.TpRailroad['railroadDescription'])
+        self.OSU.Setup.setMainMenuEnabled(self.o2oConfig['TO']['SME'])
+        self.OSU.Setup.setCloseWindowOnSaveEnabled(self.o2oConfig['TO']['CWS'])
+        self.OSU.Setup.setBuildAggressive(self.o2oConfig['TO']['SBA'])
+        self.OSU.Setup.setStagingTrackImmediatelyAvail(self.o2oConfig['TO']['SIA'])
+        self.OSU.Setup.setCarTypes(self.o2oConfig['TO']['SCT'])
+        self.OSU.Setup.setStagingTryNormalBuildEnabled(self.o2oConfig['TO']['TNB'])
+        self.OSU.Setup.setManifestEditorEnabled(self.o2oConfig['TO']['SME'])
 
-        OSU.Setup.setMainMenuEnabled(self.o2oConfig['TO']['SME'])
-        OSU.Setup.setCloseWindowOnSaveEnabled(self.o2oConfig['TO']['CWS'])
-        OSU.Setup.setBuildAggressive(self.o2oConfig['TO']['SBA'])
-        OSU.Setup.setStagingTrackImmediatelyAvail(self.o2oConfig['TO']['SIA'])
-        OSU.Setup.setCarTypes(self.o2oConfig['TO']['SCT'])
-        OSU.Setup.setStagingTryNormalBuildEnabled(self.o2oConfig['TO']['TNB'])
-        OSU.Setup.setManifestEditorEnabled(self.o2oConfig['TO']['SME'])
+        return
 
-        OSU.Setup.setPickupManifestMessageFormat(self.o2oConfig['TO']['PUC'])
-        OSU.Setup.setDropManifestMessageFormat(self.o2oConfig['TO']['SOC'])
-        OSU.Setup.setLocalManifestMessageFormat(self.o2oConfig['TO']['MC'])
-        OSU.Setup.setPickupEngineMessageFormat(self.o2oConfig['TO']['PUL'])
-        OSU.Setup.setDropEngineMessageFormat(self.o2oConfig['TO']['SOL'])
+    def setReportMessageFormat(self):
+        """Sets the default message format as defined in the configFile."""
+
+        self.OSU.Setup.setPickupManifestMessageFormat(self.o2oConfig['TO']['PUC'])
+        self.OSU.Setup.setDropManifestMessageFormat(self.o2oConfig['TO']['SOC'])
+        self.OSU.Setup.setLocalManifestMessageFormat(self.o2oConfig['TO']['MC'])
+        self.OSU.Setup.setPickupEngineMessageFormat(self.o2oConfig['TO']['PUL'])
+        self.OSU.Setup.setDropEngineMessageFormat(self.o2oConfig['TO']['SOL'])
 
         return
 
@@ -651,6 +677,8 @@ class NewLocationsAndTracks:
 
         for location in self.tpRailroadData['locations']:
             newLocation = PSE.LM.newLocation(location)
+            if newLocation.getName() == 'Unknown':
+                newLocation.setTrainDirections(0)
 
         return
 
