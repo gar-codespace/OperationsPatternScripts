@@ -400,10 +400,14 @@ def makeGenericHeader():
     location = PSE.LM.getLocationByName(patternLocation)
 
     listHeader = {}
-    listHeader['railroad'] = unicode(OSU.Setup.getRailroadName(), PSE.ENCODING)
-    listHeader['trainName'] = unicode(OSU.Setup.getComment(), PSE.ENCODING)
+    listHeader['railroadParent'] = 'Railroad Parent'
+    listHeader['railroadName'] = unicode(OSU.Setup.getRailroadName(), PSE.ENCODING)
+    listHeader['railroadDescription'] = 'Railroad Description'
+    listHeader['railroadLocation'] = 'Railroad Location'
+
+    listHeader['trainName'] = 'Train Name'
     listHeader['trainDescription'] = PSE.BUNDLE['Pattern Report for Tracks']
-    listHeader['trainComment'] = location.getComment()
+    listHeader['trainComment'] = 'Train Comment'
     listHeader['date'] = unicode(PSE.timeStamp(), PSE.ENCODING)
     listHeader['locations'] = [{'locationName': patternLocation, 'tracks': [{'cars': [], 'locos': []}]}]
 

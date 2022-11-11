@@ -56,7 +56,8 @@ def switchListButton(textBoxEntry):
     switchList = ModelSetCarsForm.makeMergedForm(switchList, textBoxEntry)
 # Make switch list for print
     reportHeader = ViewEntities.makeTextReportHeader(switchList)
-    reportLocations = ViewEntities.makeTextReportLocations(switchList, trackTotals=False)
+    reportLocations = PSE.BUNDLE['Switch List for Track'] + '\n\n'
+    reportLocations += ViewEntities.makeTextReportLocations(switchList, trackTotals=False)
 # Save formatted data
     fileName = PSE.BUNDLE['Switch List for Track'] + '.txt'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'patternReports', fileName)
@@ -186,7 +187,7 @@ def makeSetCarsFormHeader(setCarsFormData):
     combinedHeader.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
     combinedHeader.border = PSE.JAVX_SWING.BorderFactory.createEmptyBorder(10,0,10,0)
 
-    headerRRLabel = PSE.JAVX_SWING.JLabel(setCarsFormData['railroad'])
+    headerRRLabel = PSE.JAVX_SWING.JLabel(setCarsFormData['railroadName'])
     headerRRLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
     headerRRBox = makeSwingBox(100, configFile['PH'])
     headerRRBox.add(headerRRLabel)

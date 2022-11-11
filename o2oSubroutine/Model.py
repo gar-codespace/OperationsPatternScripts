@@ -48,6 +48,9 @@ def newJmriRailroad():
 
     ModelEntities.closeTroublesomeWindows()
 
+    PSE.TMX.makeBackupFile('operations/OperationsTrainRoster.xml')
+    PSE.TMX.makeBackupFile('operations/OperationsRouteRoster.xml')
+
     PSE.TM.dispose()
     PSE.RM.dispose()
     PSE.LM.dispose()
@@ -70,6 +73,7 @@ def newJmriRailroad():
     allRsRosters.addLocoConsist()
 
     newLocations = NewLocationsAndTracks()
+    newLocations.newDivisions()
     newLocations.newLocations()
 
     ModelEntities.newSchedules()
@@ -106,6 +110,11 @@ def updateJmriRailroad():
     tpLocaleData.make()
     if not tpLocaleData.isValid():
         return False
+
+    # if tpLocaleData.isValid():
+    #     tpLocaleData.write()
+    # else:
+    #     return False
 
     restTrains = BuiltTrainExport.FindTrain()
     restTrains.getBuiltTrains()
@@ -159,6 +168,7 @@ def updateJmriRailroad():
 
     PSE.CMX.save()
     PSE.EMX.save()
+    PSE.OMX.save()
 
     return True
 
@@ -224,7 +234,8 @@ class SetupXML:
         _psLog.debug('setRailroadName')
 
         self.OSU.Setup.setRailroadName(self.TpRailroad['railroadName'])
-        self.OSU.Setup.setComment(self.TpRailroad['railroadDescription'])
+        # self.OSU.Setup.setComment(self.TpRailroad['railroadDescription'])
+        # self.OSU.Setup.setYearModeled(self.TpRailroad['railroadYear'])
 
         return
 
@@ -594,13 +605,13 @@ class UpdateLocationsAndTracks:
         """For tracks that have not changed locations, update:
             name
             track type
-            train diretions (keep this?)
             track attributes
             """
 
         _psLog.debug('recastTracks')
 
         for key in self.continuingKeys:
+
             location = self.updatedLocale['tracks'][key][0]
 
             track = self.currentLocale['tracks'][key][1]
@@ -615,7 +626,6 @@ class UpdateLocationsAndTracks:
             track = location.getTrackByName(track, jmriTrackType)
             track.setName(newTrack)
             location.getTrackByName(newTrack, jmriTrackType).setTrackType(newJmriTrackType)
-            # location.getTrackByName(newTrack, newJmriTrackType).setTrainDirections(15)
 
             trackData = self.tpRailroadData['locales'][key]
             ModelEntities.setTrackAttribs(trackData)
@@ -634,13 +644,8 @@ class UpdateLocationsAndTracks:
 
     def deleteOldTracks(self):
 
-        # print(self.oldKeys)
-
         for key in self.oldKeys:
             cTrackData = self.currentLocale['tracks'][key]
-
-            # print(cTrackData)
-
             trackType = self.o2oConfig['TR'][cTrackData[2]]
             location = PSE.LM.getLocationByName(cTrackData[0])
             track = location.getTrackByName(cTrackData[1], trackType)
@@ -668,6 +673,11 @@ class NewLocationsAndTracks:
         self.tpRailroadData = ModelEntities.getTpRailroadData()
 
         print(self.scriptName + ' ' + str(SCRIPT_REV))
+
+        return
+
+    def newDivisions(self):
+        """Implement in v3"""
 
         return
 

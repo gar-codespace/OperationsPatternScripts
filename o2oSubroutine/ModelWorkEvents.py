@@ -123,6 +123,7 @@ class o2oSwitchListConversion:
 
         return self.o2oSwitchList
 
+
 class jmriManifestConversion:
     """Converts the JMRI generated manifest for use by o2oWorkEvents"""
 
@@ -152,6 +153,7 @@ class jmriManifestConversion:
         _psLog.debug('jmriManifestConversion.convertHeader')
 
         self.o2oWorkEvents['railroad'] = PSE.HTML_PARSER().unescape(self.jmriManifest['railroad'])
+        self.o2oWorkEvents['railroadDescription'] = PSE.JMRI.jmrit.operations.setup.Setup.getComment()
         self.o2oWorkEvents['trainName'] = PSE.HTML_PARSER().unescape(self.jmriManifest['userName'])
         self.o2oWorkEvents['trainDescription'] = PSE.HTML_PARSER().unescape(self.jmriManifest['description'])
         self.o2oWorkEvents['trainComment'] = PSE.HTML_PARSER().unescape(self.jmriManifest['description'])
@@ -247,6 +249,7 @@ class o2oWorkEvents:
         _psLog.debug('o2oWorkEvents.o2oHeader')
 
         self.o2oList = 'HN,' + self.workEvents['railroad'] + '\n'
+        self.o2oList += 'ZZ,' + self.workEvents['railroadDescription'] + '\n'
         self.o2oList += 'HT,' + self.workEvents['trainName'] + '\n'
         self.o2oList += 'HD,' + self.workEvents['trainDescription'] + '\n'
         self.o2oList += 'HC,' + self.workEvents['trainComment'] + '\n'

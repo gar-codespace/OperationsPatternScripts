@@ -39,6 +39,7 @@ PM = JMRI.InstanceManager.getDefault(JMRI.util.gui.GuiLafPreferencesManager)
 TM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.trains.TrainManager)
 RM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.routes.RouteManager)
 LM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.LocationManager)
+DM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.divisions.DivisionManager)
 CM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.cars.CarManager)
 KM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.rollingstock.cars.KernelManager)
 SM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.locations.schedules.ScheduleManager)
@@ -364,6 +365,7 @@ def timeStamp(epochTime=0):
         PatternTracksSubroutine.ModelEntities.makeGenericHeader
         """
 
+    year = '1914'
     if epochTime == 0:
         epochTime = time.time()
     if time.localtime(epochTime).tm_isdst and time.daylight: # If local dst and dst are both 1
@@ -371,7 +373,8 @@ def timeStamp(epochTime=0):
     else:
         timeOffset = time.timezone # in seconds
 
-    return time.strftime('%a %b %d %Y %I:%M %p %Z', time.gmtime(epochTime - timeOffset))
+    # return time.strftime('%a %b %d %Y %I:%M %p %Z', time.gmtime(epochTime - timeOffset))
+    return time.strftime('%b %d, ' + year + ' %I:%M %p %Z', time.gmtime(epochTime - timeOffset))
 
 def convertJmriDateToEpoch(jmriTime):
     """Example: 2022-02-26T17:16:17.807+0000

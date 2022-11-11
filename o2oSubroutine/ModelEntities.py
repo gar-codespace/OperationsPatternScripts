@@ -167,7 +167,7 @@ def setTrackAttribs(trackData):
 def setTrackTypeIndustry(trackData):
     """Settings for TP 'industry' track types.
         Used by:
-        makeNewTrack
+        setTrackAttribs
         """
 
     location = PSE.LM.getLocationByName(trackData['location'])
@@ -181,7 +181,7 @@ def setTrackTypeInterchange(trackData):
     """Settings for TP 'interchange' track types.
         Select all car and loco types.
         Used by:
-        makeNewTrack
+        setTrackAttribs
         """
 
     location = PSE.LM.getLocationByName(trackData['location'])
@@ -194,7 +194,7 @@ def setTrackTypeInterchange(trackData):
 def setTrackTypeStaging(trackData):
     """Settings for TP 'staging' track types.
         Used by:
-        makeNewTrack
+        setTrackAttribs
         """
 
     o2oConfig =  PSE.readConfigFile('o2o')
@@ -211,7 +211,7 @@ def setTrackTypeStaging(trackData):
 def setTrackTypeClassYard(trackData):
     """Settings for TP 'class yard' track types.
         Used by:
-        makeNewTrack
+        setTrackAttribs
         """
 
     return
@@ -221,7 +221,7 @@ def setTrackTypeXoReserved(trackData):
         XO tracks are spurs with all train directions turned off.
         All car types are selected.
         Used by:
-        makeNewTrack
+        setTrackAttribs
         """
 
     track = setTrackTypeIndustry(trackData)
@@ -309,7 +309,7 @@ def closeTroublesomeWindows():
             continue
         else:
             frameName.dispose()
-            
+
         # if not 'JmriJFrame' in frameName.__str__():
         #     frameName.dispose()
 

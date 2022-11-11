@@ -61,7 +61,8 @@ def trackPatternButton():
 # Modify the report for display
     trackPattern = ModelEntities.modifyTrackPatternReport(trackPattern)
     reportHeader = ViewEntities.makeTextReportHeader(trackPattern)
-    reportLocations = ViewEntities.makeTextReportLocations(trackPattern, trackTotals=True)
+    reportLocations = PSE.BUNDLE['Pattern Report for Tracks'] + '\n\n'
+    reportLocations += ViewEntities.makeTextReportLocations(trackPattern, trackTotals=True)
 # Save the modified report
     fileName = reportName + '.txt'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'patternReports', fileName)
