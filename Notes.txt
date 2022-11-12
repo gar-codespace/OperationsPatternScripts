@@ -1,6 +1,6 @@
 Todo:
   How to publish DeepL?
-  Add division name to reports.
+  Have the layout year be the report year.
 
 Comments:
   Schedule does not prevent setting a car to a track.

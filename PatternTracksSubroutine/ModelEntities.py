@@ -391,7 +391,7 @@ def getDetailsForCar(carObject, kernelTally):
 
 def makeGenericHeader():
     """Used by:
-        Model.makeTrackPatternReport
+        makeTrackPatternReport
         Controller.StartUp.setRsButton
         """
 
@@ -400,18 +400,39 @@ def makeGenericHeader():
     location = PSE.LM.getLocationByName(patternLocation)
 
     listHeader = {}
-    listHeader['railroadParent'] = 'Railroad Parent'
     listHeader['railroadName'] = unicode(OSU.Setup.getRailroadName(), PSE.ENCODING)
-    listHeader['railroadDescription'] = 'Railroad Description'
-    listHeader['railroadLocation'] = 'Railroad Location'
 
-    listHeader['trainName'] = 'Train Name'
-    listHeader['trainDescription'] = PSE.BUNDLE['Pattern Report for Tracks']
-    listHeader['trainComment'] = 'Train Comment'
+    # listHeader['trainName'] = 'Train Name'
+    # listHeader['trainDescription'] = PSE.BUNDLE['Pattern Report for Tracks']
+    # listHeader['trainComment'] = 'Train Comment'
     listHeader['date'] = unicode(PSE.timeStamp(), PSE.ENCODING)
     listHeader['locations'] = [{'locationName': patternLocation, 'tracks': [{'cars': [], 'locos': []}]}]
 
     return listHeader
+
+# def makeTrainPlayerHeader():
+#     """Used by:
+#         makeTrackPatternReport
+#         Controller.StartUp.setRsButton
+#         """
+#
+#     OSU = PSE.JMRI.jmrit.operations.setup
+#     patternLocation = PSE.readConfigFile('PT')['PL']
+#     location = PSE.LM.getLocationByName(patternLocation)
+#
+#     listHeader = {}
+#     listHeader['railroadParent'] = 'Railroad Parent'
+#     listHeader['railroadName'] = unicode(OSU.Setup.getRailroadName(), PSE.ENCODING)
+#     listHeader['railroadDescription'] = 'Railroad Description'
+#     listHeader['railroadLocation'] = 'Railroad Location'
+#
+#     listHeader['trainName'] = 'Train Name'
+#     listHeader['trainDescription'] = PSE.BUNDLE['Pattern Report for Tracks']
+#     listHeader['trainComment'] = 'Train Comment'
+#     listHeader['date'] = unicode(PSE.timeStamp(), PSE.ENCODING)
+#     listHeader['locations'] = [{'locationName': patternLocation, 'tracks': [{'cars': [], 'locos': []}]}]
+#
+#     return listHeader
 
 def makeInitialTrackList(location):
     """Used by:

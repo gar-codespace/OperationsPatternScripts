@@ -151,10 +151,9 @@ class TrainPlayerImporter:
         rrData = self.tpLocations.pop(0).split(';')
         self.rr[u'railroadName'] = rrData[0]
         self.rr[u'railroadParent'] = rrData[1]
-        self.rr[u'railroadLocation'] = rrData[2]
+        self.rr[u'railroadDescription'] = rrData[2]
         self.rr[u'railroadYear'] = rrData[3]
 
-        self.rr[u'railroadDescription'] = rrData[1] + ', ' + rrData[2]
         self.rr[u'date'] = PSE.timeStamp()
         self.tpLocations.pop(0) # Remove key
 

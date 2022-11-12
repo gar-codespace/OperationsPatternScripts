@@ -365,7 +365,8 @@ def timeStamp(epochTime=0):
         PatternTracksSubroutine.ModelEntities.makeGenericHeader
         """
 
-    year = '1914'
+    year = getYear()
+
     if epochTime == 0:
         epochTime = time.time()
     if time.localtime(epochTime).tm_isdst and time.daylight: # If local dst and dst are both 1
@@ -375,6 +376,15 @@ def timeStamp(epochTime=0):
 
     # return time.strftime('%a %b %d %Y %I:%M %p %Z', time.gmtime(epochTime - timeOffset))
     return time.strftime('%b %d, ' + year + ' %I:%M %p %Z', time.gmtime(epochTime - timeOffset))
+
+def getYear():
+    """Either the current year or the entry in settings: year modeled."""
+
+    railroadYear = JMRI.jmrit.operations.setup.Setup.getYearModeled()
+    if railroadYear:
+        return railroadYear
+    else:
+        return time.strftime('%Y', time.gmtime(time.time()))
 
 def convertJmriDateToEpoch(jmriTime):
     """Example: 2022-02-26T17:16:17.807+0000
