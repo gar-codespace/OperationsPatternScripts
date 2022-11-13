@@ -59,7 +59,7 @@ def newJmriRailroad():
     PSE.EM.dispose()
 
     jmriRailroad = SetupXML()
-    jmriRailroad.setRailroadName()
+    jmriRailroad.setRailroadDetails()
     jmriRailroad.tweakOperationsXml()
     jmriRailroad.setReportMessageFormat()
 
@@ -127,7 +127,7 @@ def updateJmriRailroad():
     PSE.EM.dispose()
 
     jmriRailroad = SetupXML()
-    jmriRailroad.setRailroadName()
+    jmriRailroad.setRailroadDetails()
 
     allRsRosters = AddRsAttributes()
     allRsRosters.addRoads()
@@ -229,13 +229,24 @@ class SetupXML:
 
         return
 
-    def setRailroadName(self):
+    def setRailroadDetails(self):
 
-        _psLog.debug('setRailroadName')
+        _psLog.debug('setRailroadDetails')
 
-        self.OSU.Setup.setRailroadName(self.TpRailroad['railroadName'])
-        # self.OSU.Setup.setComment(self.TpRailroad['railroadDescription'])
-        # self.OSU.Setup.setYearModeled(self.TpRailroad['railroadYear'])
+    # Set the name
+        self.OSU.Setup.setRailroadName(self.o2oConfig['RD']['RN'])
+    # Set the year
+        rrYear = self.o2oConfig['RD']['RY']
+        if rrYear:
+            self.OSU.Setup.setYearModeled(rrYear)
+    # Set Division 1
+        rrDivision = self.o2oConfig['RD']['D1']
+        if rrDivision:
+            PSE.DM.newDivision(rrDivision)
+    # Set Division 2
+        rrDivision = self.o2oConfig['RD']['D2']
+        if rrDivision:
+            PSE.DM.newDivision(rrDivision)
 
         return
 

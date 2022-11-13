@@ -60,11 +60,7 @@ class TrainPlayerImporter:
 
     def __init__(self):
 
-        o2oConfig =  PSE.readConfigFile('o2o')
-
-        self.tpLocationsFile = o2oConfig['RF']['TRL']
-        self.tpIndustriesFile = o2oConfig['RF']['TRI']
-        self.tpRollingStockFile = o2oConfig['RF']['TRR']
+        self.o2oConfig =  PSE.readConfigFile()
 
         self.tpLocations = []
         self.tpIndustries = []
@@ -84,33 +80,33 @@ class TrainPlayerImporter:
 
         fileCheck = True
 
-        self.tpLocations = ModelEntities.getTpExport(self.tpLocationsFile)
+        self.tpLocations = ModelEntities.getTpExport(self.o2oConfig['o2o']['RF']['TRL'])
         if self.tpLocations:
             _psLog.info('TrainPlayer Locations file OK')
         else:
             _psLog.critical('TrainPlayer Locations file not found')
             PSE.openOutputPanel(PSE.BUNDLE['ALERT: TrainPlayer Locations file not found.'])
-            print('Not found: ' + self.tpLocationsFile)
+            print('Not found: ' + self.o2oConfig['o2o']['RF']['TRL'])
             fileCheck = False
 
 
-        self.tpIndustries = ModelEntities.getTpExport(self.tpIndustriesFile)
+        self.tpIndustries = ModelEntities.getTpExport(self.o2oConfig['o2o']['RF']['TRI'])
         if self.tpIndustries:
             _psLog.info('TrainPlayer Industries file OK')
         else:
             _psLog.critical('TrainPlayer Industries file not found')
             PSE.openOutputPanel(PSE.BUNDLE['ALERT: TrainPlayer Industries file not found.'])
-            print('Not found: ' + self.tpIndustriesFile)
+            print('Not found: ' + self.o2oConfig['o2o']['RF']['TRI'])
             fileCheck = False
 
 
-        self.tpInventory = ModelEntities.getTpExport(self.tpRollingStockFile)
+        self.tpInventory = ModelEntities.getTpExport(self.o2oConfig['o2o']['RF']['TRR'])
         if self.tpInventory:
             _psLog.info('TrainPlayer Inventory file OK')
         else:
             _psLog.critical('TrainPlayer Inventory file not found')
             PSE.openOutputPanel(PSE.BUNDLE['ALERT: TrainPlayer Inventory file not found.'])
-            print('Not found: ' + self.tpRollingStockFile)
+            print('Not found: ' + self.o2oConfig['o2o']['RF']['TRR'])
             fileCheck = False
 
         return fileCheck
@@ -146,16 +142,17 @@ class TrainPlayerImporter:
 
         _psLog.debug('processFileHeaders')
 
-        self.rr[u'trainplayerDate'] = self.tpLocations.pop(0).replace(';', '')
+        self.o2oConfig['o2o']['RD'].update({'RD':self.tpLocations.pop(0).replace(';', '')}) # Pop off the date
 
-        rrData = self.tpLocations.pop(0).split(';')
-        self.rr[u'railroadName'] = rrData[0]
-        self.rr[u'railroadParent'] = rrData[1]
-        self.rr[u'railroadDescription'] = rrData[2]
-        self.rr[u'railroadYear'] = rrData[3]
-
-        self.rr[u'date'] = PSE.timeStamp()
-        self.tpLocations.pop(0) # Remove key
+        rrData = self.tpLocations.pop(0).split(';') # Pop off the details line
+        self.o2oConfig['o2o']['RD'].update({'RN':rrData[0]})
+        self.o2oConfig['o2o']['RD'].update({'RP':rrData[1]})
+        self.o2oConfig['o2o']['RD'].update({'RL':rrData[2]})
+        self.o2oConfig['o2o']['RD'].update({'RY':rrData[3]})
+        self.o2oConfig['o2o']['RD'].update({'D1':rrData[4]})
+        self.o2oConfig['o2o']['RD'].update({'D2':rrData[5]})
+        self.tpLocations.pop(0) # Pop off the key
+        PSE.writeConfigFile(self.o2oConfig)
 
         self.tpIndustries.pop(0) # Remove date
         self.tpIndustries.pop(0) # Remove key
