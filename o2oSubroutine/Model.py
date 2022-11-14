@@ -53,6 +53,7 @@ def newJmriRailroad():
 
     PSE.TM.dispose()
     PSE.RM.dispose()
+    PSE.DM.dispose()
     PSE.LM.dispose()
     PSE.SM.dispose()
     PSE.CM.dispose()
@@ -125,6 +126,7 @@ def updateJmriRailroad():
     PSE.SM.dispose()
     PSE.CM.dispose()
     PSE.EM.dispose()
+    PSE.DM.dispose()
 
     jmriRailroad = SetupXML()
     jmriRailroad.setRailroadDetails()
@@ -138,6 +140,9 @@ def updateJmriRailroad():
     allRsRosters.addLocoTypes()
     allRsRosters.addLocoConsist()
 
+    newLocations = NewLocationsAndTracks()
+    newLocations.newDivisions()
+    
     updatedLocations = UpdateLocationsAndTracks()
     updatedLocations.getCurrent()
     tpLocaleData.write()
@@ -222,7 +227,7 @@ class SetupXML:
 
         self.OSU = PSE.JMRI.jmrit.operations.setup
 
-        self.o2oConfig =  PSE.readConfigFile('o2o')
+        self.o2oConfig =  PSE.readConfigFile()
         self.TpRailroad = ModelEntities.getTpRailroadData()
 
         print(self.scriptName + ' ' + str(SCRIPT_REV))
@@ -234,19 +239,11 @@ class SetupXML:
         _psLog.debug('setRailroadDetails')
 
     # Set the name
-        self.OSU.Setup.setRailroadName(self.o2oConfig['RD']['RN'])
+        self.OSU.Setup.setRailroadName(self.o2oConfig['RD']['OP'])
     # Set the year
-        rrYear = self.o2oConfig['RD']['RY']
+        rrYear = self.o2oConfig['RD']['YR']
         if rrYear:
             self.OSU.Setup.setYearModeled(rrYear)
-    # Set Division 1
-        rrDivision = self.o2oConfig['RD']['D1']
-        if rrDivision:
-            PSE.DM.newDivision(rrDivision)
-    # Set Division 2
-        rrDivision = self.o2oConfig['RD']['D2']
-        if rrDivision:
-            PSE.DM.newDivision(rrDivision)
 
         return
 
@@ -255,24 +252,24 @@ class SetupXML:
 
         _psLog.debug('tweakOperationsXml')
 
-        self.OSU.Setup.setMainMenuEnabled(self.o2oConfig['TO']['SME'])
-        self.OSU.Setup.setCloseWindowOnSaveEnabled(self.o2oConfig['TO']['CWS'])
-        self.OSU.Setup.setBuildAggressive(self.o2oConfig['TO']['SBA'])
-        self.OSU.Setup.setStagingTrackImmediatelyAvail(self.o2oConfig['TO']['SIA'])
-        self.OSU.Setup.setCarTypes(self.o2oConfig['TO']['SCT'])
-        self.OSU.Setup.setStagingTryNormalBuildEnabled(self.o2oConfig['TO']['TNB'])
-        self.OSU.Setup.setManifestEditorEnabled(self.o2oConfig['TO']['SME'])
+        self.OSU.Setup.setMainMenuEnabled(self.o2oConfig['o2o']['TO']['SME'])
+        self.OSU.Setup.setCloseWindowOnSaveEnabled(self.o2oConfig['o2o']['TO']['CWS'])
+        self.OSU.Setup.setBuildAggressive(self.o2oConfig['o2o']['TO']['SBA'])
+        self.OSU.Setup.setStagingTrackImmediatelyAvail(self.o2oConfig['o2o']['TO']['SIA'])
+        self.OSU.Setup.setCarTypes(self.o2oConfig['o2o']['TO']['SCT'])
+        self.OSU.Setup.setStagingTryNormalBuildEnabled(self.o2oConfig['o2o']['TO']['TNB'])
+        self.OSU.Setup.setManifestEditorEnabled(self.o2oConfig['o2o']['TO']['SME'])
 
         return
 
     def setReportMessageFormat(self):
         """Sets the default message format as defined in the configFile."""
 
-        self.OSU.Setup.setPickupManifestMessageFormat(self.o2oConfig['TO']['PUC'])
-        self.OSU.Setup.setDropManifestMessageFormat(self.o2oConfig['TO']['SOC'])
-        self.OSU.Setup.setLocalManifestMessageFormat(self.o2oConfig['TO']['MC'])
-        self.OSU.Setup.setPickupEngineMessageFormat(self.o2oConfig['TO']['PUL'])
-        self.OSU.Setup.setDropEngineMessageFormat(self.o2oConfig['TO']['SOL'])
+        self.OSU.Setup.setPickupManifestMessageFormat(self.o2oConfig['o2o']['TO']['PUC'])
+        self.OSU.Setup.setDropManifestMessageFormat(self.o2oConfig['o2o']['TO']['SOC'])
+        self.OSU.Setup.setLocalManifestMessageFormat(self.o2oConfig['o2o']['TO']['MC'])
+        self.OSU.Setup.setPickupEngineMessageFormat(self.o2oConfig['o2o']['TO']['PUL'])
+        self.OSU.Setup.setDropEngineMessageFormat(self.o2oConfig['o2o']['TO']['SOL'])
 
         return
 
@@ -688,7 +685,14 @@ class NewLocationsAndTracks:
         return
 
     def newDivisions(self):
-        """Implement in v3"""
+        """ """
+
+        divisionList = PSE.readConfigFile('RD')['DV']
+
+        for division in divisionList:
+            if not division:
+                continue
+            PSE.DM.newDivision(division)
 
         return
 

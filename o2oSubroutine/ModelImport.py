@@ -137,22 +137,21 @@ class TrainPlayerImporter:
 
     def processFileHeaders(self):
         """Process the header info from the TP report files.
-            replace(';', '') removes the semi colons at the end of each header line.
             """
 
         _psLog.debug('processFileHeaders')
 
-        self.o2oConfig['o2o']['RD'].update({'RD':self.tpLocations.pop(0).replace(';', '')}) # Pop off the date
+        self.tpLocations.pop(0) # Pop off the date
 
         rrData = self.tpLocations.pop(0).split(';') # Pop off the details line
-        self.o2oConfig['o2o']['RD'].update({'RN':rrData[0]})
-        self.o2oConfig['o2o']['RD'].update({'RP':rrData[1]})
-        self.o2oConfig['o2o']['RD'].update({'RL':rrData[2]})
-        self.o2oConfig['o2o']['RD'].update({'RY':rrData[3]})
-        self.o2oConfig['o2o']['RD'].update({'D1':rrData[4]})
-        self.o2oConfig['o2o']['RD'].update({'D2':rrData[5]})
-        self.tpLocations.pop(0) # Pop off the key
+        self.o2oConfig['RD'].update({'RR':rrData[0]})
+        self.o2oConfig['RD'].update({'OP':rrData[1]})
+        self.o2oConfig['RD'].update({'LO':rrData[2]})
+        self.o2oConfig['RD'].update({'YR':rrData[3]})
+        self.o2oConfig['RD'].update({'DV':rrData[4].split(',')})
         PSE.writeConfigFile(self.o2oConfig)
+
+        self.tpLocations.pop(0) # Pop off the key
 
         self.tpIndustries.pop(0) # Remove date
         self.tpIndustries.pop(0) # Remove key

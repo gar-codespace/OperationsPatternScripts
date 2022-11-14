@@ -79,16 +79,17 @@ class StartUp:
 
     def activateWidgets(self):
 
-        self.widgets[0].addActionListener(Listeners.LocationComboBox(self.subroutineFrame))
-        self.widgets[1].actionPerformed = self.yardTrackOnlyCheckBox
-        self.widgets[4].actionPerformed = self.trackPatternButton
-        self.widgets[5].actionPerformed = self.setRsButton
+        self.widgets[0].addActionListener(Listeners.GenericComboBox(self.subroutineFrame))
+        self.widgets[1].addActionListener(Listeners.LocationComboBox(self.subroutineFrame))
+        self.widgets[2].actionPerformed = self.yardTrackOnlyCheckBox
+        self.widgets[5].actionPerformed = self.trackPatternButton
+        self.widgets[6].actionPerformed = self.setRsButton
 
         return
 
     def yardTrackOnlyCheckBox(self, EVENT):
 
-        if self.widgets[1].selected:
+        if self.widgets[2].selected:
             allTracksAtLoc = PSE.getTracksNamesByLocation('Yard')
         else:
             allTracksAtLoc = PSE.getTracksNamesByLocation(None)
@@ -96,8 +97,8 @@ class StartUp:
         configFile = PSE.readConfigFile()
         trackDict = Model.updatePatternTracks(allTracksAtLoc)
         configFile['PT'].update({'PT': trackDict})
-        configFile['PT'].update({'PA': self.widgets[1].selected})
-        configFile['PT'].update({'PI': self.widgets[2].selected})
+        configFile['PT'].update({'PA': self.widgets[2].selected})
+        configFile['PT'].update({'PI': self.widgets[3].selected})
         PSE.writeConfigFile(configFile)
 
         subroutinePanel = StartUp(self.subroutineFrame).makeSubroutinePanel()

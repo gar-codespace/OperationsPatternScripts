@@ -26,8 +26,9 @@ def trackPatternButton():
 
     return
 
-def updatePatternLocation(selectedItem=None):
+def updatePatternLocation(comboBox):
     """Catches user edits of locations
+        A method is defined for each comboBox, the method name is the comboBox name.
         Used by:
         PTSub.Controller.LocationComboBox.actionPerformed
         o2oSub.Model.updatePatternTracksSubroutine
@@ -35,20 +36,67 @@ def updatePatternLocation(selectedItem=None):
 
     _psLog.debug('updatePatternLocation')
 
+
+
+    getattr(PSE.sys.modules[__name__], comboBox.getName())(comboBox)
+
+
+    # newLocation = ModelEntities.testSelectedItem(selectedItem)
+    # newDivisionList = PSE.getAllDivisionNames()
+    # newLocationList = PSE.getAllLocationNames()
+    # newLocationTrackDict = ModelEntities.getAllTracksForLocation(newLocation)
+    # configFile['PT'].update({'PA': False})
+    # configFile['PT'].update({'PI': False})
+    # configFile['PT'].update({'PL': newLocation})
+    # configFile['PT'].update({'AD': newDivisionList})
+    # configFile['PT'].update({'AL': newLocationList})
+    # configFile['PT'].update({'PT': newLocationTrackDict})
+
+
+    # _psLog.info('The track list for location ' + newLocation + ' has been created')
+
+    return
+
+def jDivision(comboBox):
+
     configFile = PSE.readConfigFile()
-    newLocation = ModelEntities.testSelectedItem(selectedItem)
-    newLocationList = PSE.getAllLocationNames()
-    newLocationTrackDict = ModelEntities.getAllTracksForLocation(newLocation)
-    configFile['PT'].update({'PA': False})
-    configFile['PT'].update({'PI': False})
-    configFile['PT'].update({'PL': newLocation})
-    configFile['PT'].update({'AL': newLocationList})
-    configFile['PT'].update({'PT': newLocationTrackDict})
-
+    newDivisionList = PSE.getAllDivisionNames()
+    configFile['PT'].update({'AD': newDivisionList})
+    configFile['PT'].update({'PD': comboBox.getSelectedItem()})
     PSE.writeConfigFile(configFile)
-    _psLog.info('The track list for location ' + newLocation + ' has been created')
 
-    return newLocation
+    return
+
+def jLocations(comboBox):
+
+    return
+
+# def updatePatternLocation(selectedItem=None):
+#     """Catches user edits of locations
+#         Used by:
+#         PTSub.Controller.LocationComboBox.actionPerformed
+#         o2oSub.Model.updatePatternTracksSubroutine
+#         """
+#
+#     _psLog.debug('updatePatternLocation')
+#
+#     configFile = PSE.readConfigFile()
+#     newLocation = ModelEntities.testSelectedItem(selectedItem)
+#     newDivisionList = PSE.getAllDivisionNames()
+#     newLocationList = PSE.getAllLocationNames()
+#     newLocationTrackDict = ModelEntities.getAllTracksForLocation(newLocation)
+#     configFile['PT'].update({'PA': False})
+#     configFile['PT'].update({'PI': False})
+#     configFile['PT'].update({'PL': newLocation})
+#     configFile['PT'].update({'AD': newDivisionList})
+#     configFile['PT'].update({'AL': newLocationList})
+#     configFile['PT'].update({'PT': newLocationTrackDict})
+#
+#     PSE.writeConfigFile(configFile)
+#     _psLog.info('The track list for location ' + newLocation + ' has been created')
+#
+#     return newLocation
+
 
 def updatePatternTracks(trackList):
     """Creates a new list of tracks and their default include flag
@@ -78,10 +126,10 @@ def updateConfigFile(controls):
     _psLog.debug('updateConfigFile')
 
     focusOn = PSE.readConfigFile('PT')
-    focusOn.update({"PL": controls[0].getSelectedItem()})
-    focusOn.update({"PA": controls[1].selected})
-    focusOn.update({"PI": controls[2].selected})
-    focusOn.update({"PT": ModelEntities.updateTrackCheckBoxes(controls[3])})
+    focusOn.update({"PL": controls[1].getSelectedItem()})
+    focusOn.update({"PA": controls[2].selected})
+    focusOn.update({"PI": controls[3].selected})
+    focusOn.update({"PT": ModelEntities.updateTrackCheckBoxes(controls[4])})
 
     newConfigFile = PSE.readConfigFile()
     newConfigFile.update({"PT": focusOn})

@@ -168,6 +168,8 @@ In other cases, if a mistake is made editing the PatternConfig.json file, the pl
 <pre>
   <font color="blue">Do not edit these</font>
   "PT" : {
+    "AD" : [ <font color="blue">All Divisions (written by this plugin)</font>
+    ],
     "AL" : [ <font color="blue">All Locations (written by this plugin)</font>
     ],
     "PL" : "", <font color="blue">Pattern Location (written by this plugin)</font>
@@ -234,6 +236,14 @@ In other cases, if a mistake is made editing the PatternConfig.json file, the pl
   while also eleminating the tedium of keeping two databases synchronised.</p>
 <h4><font color="green">o2o Subroutine Settings</font></h4>
 <pre>
+  "RD" :{  <font color="blue">Railroad Details, optional part of the TrainPlayer layout.</font>
+    "RR" : "", <font color="blue">Parent railroad, the one that owns the tracks.</font>
+    "OP" : "", <font color="blue">Name of the particular operation being modeled.</font>
+    "LO" : "", <font color="blue">Location of the prototype.</font>
+    "YR" : "", <font color="blue">Calendar year being modeled.</font>
+    "DV" : [], <font color="blue">List of railroad divisions for this layout, comma seperated.</font>
+    "SC" : "" <font color="blue">Model railroad scale.</font>
+  },
   "o2o" : {
     "PC": [  <font color="blue">List of TrainPlayer car codes for passenger cars.</font>
       "B",

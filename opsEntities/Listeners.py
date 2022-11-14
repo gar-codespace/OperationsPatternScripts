@@ -8,6 +8,29 @@ SCRIPT_REV = 20221010
 _psLog = PSE.LOGGING.getLogger('OPS.OE.Listeners')
 
 
+class GenericComboBox(PSE.JAVA_AWT.event.ActionListener):
+    """Event triggered from any combobox use.
+        Be sure to set the name of the combobox using this.
+        """
+
+    def __init__(self, subroutineFrame):
+
+        self.subroutineFrame = subroutineFrame
+
+        return
+
+    def actionPerformed(self, EVENT):
+
+        xModule = __import__('PatternTracksSubroutine', globals(), locals(), ['Controller', 'Model'], 0)
+
+        xModule.Model.updatePatternLocation(EVENT.getSource())
+        xModule.Controller.restartSubroutine(self.subroutineFrame)
+
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+        return
+
+
 class LocationComboBox(PSE.JAVA_AWT.event.ActionListener):
     """Event triggered from location combobox use."""
 

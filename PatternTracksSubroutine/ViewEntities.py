@@ -38,21 +38,30 @@ class TrackPatternPanel:
         return
 
     def makeLocationRow(self):
-        """Make widget row containing: 'Loaction:', combo box, 'Yard Tracks Only', 'Ignore Track Length'.
+        """Make widget row containing: 'Divisions:', combo box, 'Loaction:', combo box, 'Yard Tracks Only', 'Ignore Track Length'.
             PSE.LM.getComboBox() includes box.addItem(null); which is unwanted
             """
-
-        patternLabel = PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Location:'])
-        locationList = self.configFile['AL']
-
-        self.locationComboBox = PSE.JAVX_SWING.JComboBox(locationList)
-        self.locationComboBox.setName('locationComboBox')
-        self.locationComboBox.setSelectedItem(self.configFile['PL'])
 
         patternComboBox = PSE.JAVX_SWING.JPanel()
         patternComboBox.setAlignmentX(PSE.JAVX_SWING.JPanel.CENTER_ALIGNMENT)
 
-        patternComboBox.add(patternLabel)
+        divisionLabel = PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Divisions:'])
+        divisionList = self.configFile['AD']
+        self.divisionComboBox = PSE.JAVX_SWING.JComboBox(divisionList)
+        self.divisionComboBox.setName('jDivision')
+
+        locationLabel = PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Location:'])
+        locationList = self.configFile['AL']
+
+        self.locationComboBox = PSE.JAVX_SWING.JComboBox(locationList)
+        self.locationComboBox.setName('jLocations')
+        self.locationComboBox.setSelectedItem(self.configFile['PL'])
+
+        patternComboBox.add(divisionLabel)
+        patternComboBox.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
+        patternComboBox.add(self.divisionComboBox)
+        patternComboBox.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
+        patternComboBox.add(locationLabel)
         patternComboBox.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
         patternComboBox.add(self.locationComboBox)
         patternComboBox.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
@@ -99,6 +108,7 @@ class TrackPatternPanel:
         """A list of the widgets created by this class"""
 
         panelWidgets = []
+        panelWidgets.append(self.divisionComboBox)
         panelWidgets.append(self.locationComboBox)
         panelWidgets.append(self.yardTracksOnly)
         panelWidgets.append(self.ignoreTrackLength)
