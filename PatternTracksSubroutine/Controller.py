@@ -19,7 +19,7 @@ def updatePatternTracksSubroutine(parent):
     if not parent:
         return
 
-    Model.updatePatternLocation()
+    Model.resetPatternLocation()
 
     for component in parent.getComponents():
         if component.getName() == 'PatternTracksSubroutine':
@@ -67,8 +67,7 @@ class StartUp:
             Change this to call widgets by name
             """
 
-        if not PSE.readConfigFile('PT')['AL']:
-            Model.updateLocations()
+        Model.updateLocations()
 
         self.subroutinePanel, self.widgets = View.ManageGui().makeSubroutinePanel()
         self.activateWidgets()
@@ -80,7 +79,8 @@ class StartUp:
     def activateWidgets(self):
 
         self.widgets[0].addActionListener(Listeners.GenericComboBox(self.subroutineFrame))
-        self.widgets[1].addActionListener(Listeners.LocationComboBox(self.subroutineFrame))
+        self.widgets[1].addActionListener(Listeners.GenericComboBox(self.subroutineFrame))
+        # self.widgets[1].addActionListener(Listeners.LocationComboBox(self.subroutineFrame))
         self.widgets[2].actionPerformed = self.yardTrackOnlyCheckBox
         self.widgets[5].actionPerformed = self.trackPatternButton
         self.widgets[6].actionPerformed = self.setRsButton

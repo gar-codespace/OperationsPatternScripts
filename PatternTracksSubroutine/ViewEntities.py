@@ -38,21 +38,21 @@ class TrackPatternPanel:
         return
 
     def makeLocationRow(self):
-        """Make widget row containing: 'Divisions:', combo box, 'Loaction:', combo box, 'Yard Tracks Only', 'Ignore Track Length'.
+        """Make widget row containing: 'Division:', combo box, 'Loaction:', combo box, 'Yard Tracks Only', 'Ignore Track Length'.
             PSE.LM.getComboBox() includes box.addItem(null); which is unwanted
             """
 
         patternComboBox = PSE.JAVX_SWING.JPanel()
         patternComboBox.setAlignmentX(PSE.JAVX_SWING.JPanel.CENTER_ALIGNMENT)
 
-        divisionLabel = PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Divisions:'])
+        divisionLabel = PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Division:'])
         divisionList = self.configFile['AD']
         self.divisionComboBox = PSE.JAVX_SWING.JComboBox(divisionList)
         self.divisionComboBox.setName('jDivision')
+        self.divisionComboBox.setSelectedItem(self.configFile['PD'])
 
         locationLabel = PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Location:'])
         locationList = self.configFile['AL']
-
         self.locationComboBox = PSE.JAVX_SWING.JComboBox(locationList)
         self.locationComboBox.setName('jLocations')
         self.locationComboBox.setSelectedItem(self.configFile['PL'])
@@ -89,7 +89,7 @@ class TrackPatternPanel:
         else:
             self.ypButton.setEnabled(False)
             self.scButton.setEnabled(False)
-            rowLabel.text = PSE.BUNDLE['There are no yard tracks for this location']
+            rowLabel.text = PSE.BUNDLE['There are no tracks for this selection']
 
         return tracksPanel
 

@@ -12,7 +12,7 @@ import java.awt
 import javax.swing
 import time
 
-from sys import path as sysPath
+import sys
 from os import path as OS_PATH
 
 SCRIPT_DIR = 'OperationsPatternScripts'
@@ -21,13 +21,14 @@ SCRIPT_DIR = 'OperationsPatternScripts'
 
 PLUGIN_ROOT = OS_PATH.join(jmri.util.FileUtil.getPreferencesPath(), SCRIPT_DIR)
 
-sysPath.append(PLUGIN_ROOT)
+sys.path.append(PLUGIN_ROOT)
 from opsEntities import PSE
 
 PSE.JMRI = jmri
 PSE.JAVA_AWT = java.awt
 PSE.JAVX_SWING = javax.swing
 PSE.TIME = time
+PSE.SYS = sys
 PSE.PLUGIN_ROOT = PLUGIN_ROOT
 
 from opsEntities import Listeners

@@ -18,7 +18,6 @@ import time
 from json import loads as jsonLoadS, dumps as jsonDumpS
 from codecs import open as codecsOpen
 import apps
-import sys
 
 PLUGIN_ROOT = ''
 PROFILE_PATH = JMRI.util.FileUtil.getProfilePath()
@@ -299,7 +298,8 @@ def occuranceTally(listOfOccurances):
     return dict
 
 def getAllDivisionNames():
-    """"Used by:
+    """JMRI sorts the list.
+        Used by:
         Model.updatePatternLocation
         """
 
@@ -308,6 +308,16 @@ def getAllDivisionNames():
         divisionNames.append(unicode(item.getName(), ENCODING))
 
     return divisionNames
+
+def getLocationsByDivision(division):
+
+    locationsByDivision = []
+
+    for location in getAllLocationNames():
+        if LM.getLocationByName(location).getDivisionName() == division:
+            locationsByDivision.append(location)
+
+    return locationsByDivision
 
 def getAllLocationNames():
     """JMRI sorts the list, returns list of location names.

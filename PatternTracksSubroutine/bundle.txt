@@ -2,7 +2,7 @@ Action
 at
 Available:
 Cars at
-Divisions:
+Division:
 empty
 Eqpt. Length:
 Hazardous
@@ -33,6 +33,7 @@ Switch List
 Switch List for Selected Tracks
 Switch List for Track
 There are no yard tracks for this location
+There are no tracks for this selection
 Total Cars:
 Track Length:
 Track List:
@@ -42,6 +43,7 @@ Track Totals for Cars:
 Track:
 Tracks at
 unknown
+Unaffiliated
 Update Inventory Error Report
 Update Locations
 Work Event List for TrainPlayer©

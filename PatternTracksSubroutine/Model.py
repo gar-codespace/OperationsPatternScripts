@@ -26,77 +26,72 @@ def trackPatternButton():
 
     return
 
+def resetPatternLocation():
+    """Used by:
+        Controller.updatePatternTracksSubroutine
+        """
+
+    selectedItem = PSE.getAllDivisionNames()[0]
+    jDivision(selectedItem)
+
+    return
+
 def updatePatternLocation(comboBox):
-    """Catches user edits of locations
+    """Clearinghouse that routes the combo box action to the appropriate method.
+        Catches user edits of locations
         A method is defined for each comboBox, the method name is the comboBox name.
         Used by:
         PTSub.Controller.LocationComboBox.actionPerformed
         o2oSub.Model.updatePatternTracksSubroutine
         """
 
-    _psLog.debug('updatePatternLocation')
-
-
-
-    getattr(PSE.sys.modules[__name__], comboBox.getName())(comboBox)
-
-
-    # newLocation = ModelEntities.testSelectedItem(selectedItem)
-    # newDivisionList = PSE.getAllDivisionNames()
-    # newLocationList = PSE.getAllLocationNames()
-    # newLocationTrackDict = ModelEntities.getAllTracksForLocation(newLocation)
-    # configFile['PT'].update({'PA': False})
-    # configFile['PT'].update({'PI': False})
-    # configFile['PT'].update({'PL': newLocation})
-    # configFile['PT'].update({'AD': newDivisionList})
-    # configFile['PT'].update({'AL': newLocationList})
-    # configFile['PT'].update({'PT': newLocationTrackDict})
-
-
-    # _psLog.info('The track list for location ' + newLocation + ' has been created')
+    selectedItem = comboBox.getSelectedItem()
+    getattr(PSE.SYS.modules[__name__], comboBox.getName())(selectedItem)
 
     return
 
-def jDivision(comboBox):
+def jDivision(selectedItem):
+    """Updates the Division: combo box and ripples the changes."""
+
+    _psLog.debug('jDivision')
 
     configFile = PSE.readConfigFile()
     newDivisionList = PSE.getAllDivisionNames()
+    newLocationList = PSE.getLocationsByDivision(selectedItem)
+    if newLocationList:
+        newLocationTrackDict = ModelEntities.getAllTracksForLocation(newLocationList[0])
+    else:
+        newLocationTrackDict = {}
+
     configFile['PT'].update({'AD': newDivisionList})
-    configFile['PT'].update({'PD': comboBox.getSelectedItem()})
+    configFile['PT'].update({'PD': selectedItem})
+    configFile['PT'].update({'AL': newLocationList})
+    configFile['PT'].update({'PT': newLocationTrackDict})
+    configFile['PT'].update({'PA': False})
+    configFile['PT'].update({'PI': False})
+    PSE.writeConfigFile(configFile)
+
+    _psLog.info('The track list for division ' + selectedItem + ' has been created')
+
+    return
+
+def jLocations(selectedItem):
+    """Updates the Locations combobox and ripples the changes."""
+
+    _psLog.debug('jLocations')
+
+    configFile = PSE.readConfigFile()
+    newLocation = ModelEntities.testSelectedItem(selectedItem)
+    newLocationList = PSE.getAllLocationNames()
+    newLocationTrackDict = ModelEntities.getAllTracksForLocation(newLocation)
+
+    configFile['PT'].update({'PA': False})
+    configFile['PT'].update({'PI': False})
+    configFile['PT'].update({'PL': newLocation})
+    configFile['PT'].update({'PT': newLocationTrackDict})
     PSE.writeConfigFile(configFile)
 
     return
-
-def jLocations(comboBox):
-
-    return
-
-# def updatePatternLocation(selectedItem=None):
-#     """Catches user edits of locations
-#         Used by:
-#         PTSub.Controller.LocationComboBox.actionPerformed
-#         o2oSub.Model.updatePatternTracksSubroutine
-#         """
-#
-#     _psLog.debug('updatePatternLocation')
-#
-#     configFile = PSE.readConfigFile()
-#     newLocation = ModelEntities.testSelectedItem(selectedItem)
-#     newDivisionList = PSE.getAllDivisionNames()
-#     newLocationList = PSE.getAllLocationNames()
-#     newLocationTrackDict = ModelEntities.getAllTracksForLocation(newLocation)
-#     configFile['PT'].update({'PA': False})
-#     configFile['PT'].update({'PI': False})
-#     configFile['PT'].update({'PL': newLocation})
-#     configFile['PT'].update({'AD': newDivisionList})
-#     configFile['PT'].update({'AL': newLocationList})
-#     configFile['PT'].update({'PT': newLocationTrackDict})
-#
-#     PSE.writeConfigFile(configFile)
-#     _psLog.info('The track list for location ' + newLocation + ' has been created')
-#
-#     return newLocation
-
 
 def updatePatternTracks(trackList):
     """Creates a new list of tracks and their default include flag
@@ -112,7 +107,7 @@ def updatePatternTracks(trackList):
     if trackDict:
         _psLog.warning('The track list for this location has changed')
     else:
-        _psLog.warning('There are no yard tracks for this location')
+        _psLog.warning('There are no tracks for this selection')
 
     return trackDict
 
@@ -163,7 +158,7 @@ def verifySelectedTracks():
     return validStatus
 
 def updateLocations():
-    """Updates the config file with a list of all locations for this profile
+    """Updates the config file with a list of all divisions and locations for this profile.
         Used by:
         Controller.StartUp.makeSubroutinePanel
         """
@@ -173,16 +168,21 @@ def updateLocations():
     newConfigFile = PSE.readConfigFile()
     subConfigfile = newConfigFile['PT']
 
+    allDivisions = PSE.getAllDivisionNames()
+    if not subConfigfile['AD']: # when this sub is used for the first time
+        subConfigfile.update({'AD': allDivisions})
+        subConfigfile.update({'PD': allDivisions[0]})
+
     allLocations = PSE.getAllLocationNames()
     if not allLocations:
         _psLog.warning('There are no locations for this profile')
         return
 
-    if not (subConfigfile['AL']): # when this sub is used for the first time
-        subConfigfile.update({'PL': allLocations[0]})
-        subConfigfile.update({'PT': ModelEntities.makeInitialTrackList(allLocations[0])})
+    # if not subConfigfile['AL']: # when this sub is used for the first time
+    #     subConfigfile.update({'PL': allLocations[0]})
+    #     subConfigfile.update({'PT': ModelEntities.makeInitialTrackList(allLocations[0])})
 
-    subConfigfile.update({'AL': allLocations})
+    # subConfigfile.update({'AL': allLocations})
     newConfigFile.update({'PT': subConfigfile})
     PSE.writeConfigFile(newConfigFile)
 
