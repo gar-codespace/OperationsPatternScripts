@@ -149,6 +149,7 @@ class TrainPlayerImporter:
         self.o2oConfig['RD'].update({'LO':rrData[2]})
         self.o2oConfig['RD'].update({'YR':rrData[3]})
         self.o2oConfig['RD'].update({'DV':rrData[4].split(',')})
+        self.o2oConfig['RD'].update({'SC':rrData[5]})
         PSE.writeConfigFile(self.o2oConfig)
 
         self.tpLocations.pop(0) # Pop off the key

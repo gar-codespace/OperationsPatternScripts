@@ -142,7 +142,7 @@ def updateJmriRailroad():
 
     newLocations = NewLocationsAndTracks()
     newLocations.newDivisions()
-    
+
     updatedLocations = UpdateLocationsAndTracks()
     updatedLocations.getCurrent()
     tpLocaleData.write()
@@ -244,6 +244,10 @@ class SetupXML:
         rrYear = self.o2oConfig['RD']['YR']
         if rrYear:
             self.OSU.Setup.setYearModeled(rrYear)
+
+        rrScale = self.o2oConfig['RD']['SC']
+        if rrScale:
+            self.OSU.Setup.setScale(self.o2oConfig['o2o']['SR'][rrScale.upper()])
 
         return
 

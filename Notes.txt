@@ -1,6 +1,8 @@
 Todo:
   How to publish DeepL?
   Have the layout year be the report year.
+  If there is only one division, add all locations to it.
+  Conform JMRI and TP date format.
 
 Comments:
   Schedule does not prevent setting a car to a track.
