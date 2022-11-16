@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<title>Pattern Scripts Help</title>
+<meta charset="utf-8">
+<meta name="AUTHOR" content="Greg Ritacco">
+<meta name="PROJECT" content="Pattern scripts for JMRI">
+<meta name="VERSION" content="2.0.0">
+<style>
+  html * {
+    font-family: verdana;
+  }
+  h1 {
+    margin-left: 10px;
+  }
+  h2 {
+    margin-left: 10px;
+  }
+  h3 {
+    margin-left: 20px;
+  }
+  h4 {
+    margin-left: 30px;
+  }
+  p {
+    margin-left: 30px;
+  }
+  img {
+    margin-left: 30px;
+  }
+  pre {
+    margin-left: 30px;
+  }
+</style>
+</head>
+
+<body>
+
+<h1>Help Page - Pattern Scripts plugin for JMRI</h1>
+<p>The Pattern Scripts plugin for JMRI is a suite of subroutines for JMRI Operations Pro.  The use of this plugin is documented in the following list of videos.</p>
+<h3>Video Documentation</h3>
+<p>These videos are recorded in the English language.</p>
+<p><A HREF="https://youtu.be/Sl9yBQaRpeY">How to add this plugin to JMRI</A></p>
+<p><A HREF="https://youtu.be/6G7xkRJTczo">How to translate this plugin</A></p>
+<p><A HREF="https://youtu.be/GjPtXk3oKmc">How to set up this plugin</A></p>
+<p><A HREF="https://youtu.be/DK6O9AQmqXo">How to modify this plugin</A></p>
+<p><A HREF="https://youtu.be/IdXvxyo-E3Y">Track Pattern Subroutine - Demonstration at a yard</A></p>
+<p><A HREF="https://youtu.be/2Tv6sUMDD_Y">Track Pattern Subroutine - Demonstration at industry</A></p>
+<p><A HREF="https://youtu.be/rlUfoSesnQo">o2o, the ops to ops subroutine for TrainPlayer©</A></p>
+<h2>Track Pattern Subroutine</h2>
+<h3>Introduction</h3>
+<p>The Track Pattern subroutine can generate pattern reports for tracks at a single location.
+  Additionally, cars can be moved from track to track within a location,
+  and optionally, if a car is moved onto a spur, the schedule for that spur can be applied.</p>
+
+<h3>Organization</h3>
+<p>The following chart shows the code structure of this plugin.</P>
+<img src="FlowChart1.png" alt="<Flow Chart Image>">
+
+<h3>Plugin Layout</h3>
+<p>OperationsPatternScripts.MainScript.View.makePatternScriptsWindow()</p>
+<img src="PluginLayout1.png" alt="<Plugin Layout Image>">
+
+<h3>Pattern Scripts Subroutine</h3>
+<p>OperationsPatternScripts.PatternTracksSubroutine.Controller.makeSubroutinePanel()</p>
+<img src="PatternScriptsSubroutine1.png" alt="<Pattern Scripts Window Image>">
+
+<h3>Pattern Report for Track Window</h3>
+<p>OperationsPatternScripts.ControllerSetCarsForm.CreatePatternReportGui.makeFrame()</p>
+<img src="PatternReportForTrackWindow1.png" alt="<Pattern Report for Track Window Image>">
+
+<h3>Track Pattern and Switch List JSON format</h3>
+<p>The pattern reports and TrainPlayer© exports all start with the creation of a JSON file.
+The file is created by this plugin and in the case of TrainPlayer© manifest exports the JSON is created by modifying the JMRI generated manifest JSON.
+All the JSON files are written to the jsonManifests folder. They follow the illustrated format:</p>
+<img src="ReportFileFormat1.png" alt="<JSON format for reports>">
+
+<h3>Key – PatternConfig.json</h3>
+<p>Each JMRI profile gets its own configuration file, which is named PatternConfig.json.
+It is found in the operations folder, and is used to provide custom settings for each profile and record user inputs.
+<br><font color="blue">The description of each element is in blue</font>
+<br><font color="green">User editable keys are described in green</font>
+<br>Guard rails of sorts have been put up around the values marked in green, but even so this plugin is not able to catch every type of mistake.
+In some cases the plugin might crash. If that happens, press the 'Restart from PatternConfig Backup" button and the plugin will use the last good PatternConfig.json file as a new starting off point.
+In other cases, if a mistake is made editing the PatternConfig.json file, the plugin will replace it with the default file, and the user will have to start over.
+<br>Worst case, simply delete the Pattern Config.json file and the plugin will create a new one.</p>
+
+<h4><font color="green">Color Definitions</font></h4>
+<pre>
+  "CD": {
+    "CP": { <font color="blue">Color Palett</font>
+      "<font color="green">BLANCH</font>": { <font color="blue">Any of these colors can be changed</font>
+        "A": <font color="green">255</font>, <font color="blue">Alpha value</font>
+        "B": <font color="green">225</font>, <font color="blue">Blue value</font>
+        "D": <font color="green">Light grey</font>, <font color="blue">Vague Description</font>
+        "G": <font color="green">225</font>, <font color="blue">Green value</font>
+        "R": <font color="green">225</font> <font color="blue">Red value</font>
+      },
+      "DUST": {
+        "A": 255,
+        "B": 218,
+        "D": "Light tan",
+        "G": 242,
+        "R": 252
+      },
+      "FADED": {
+        "A": 255,
+        "B": 245,
+        "D": "Light purple",
+        "G": 225,
+        "R": 237
+      },
+      "LICHEN": {
+        "A": 255,
+        "B": 244,
+        "D": "Light green",
+        "G": 255,
+        "R": 236
+      },
+      "PALE": {
+        "A": 255,
+        "B": 250,
+        "D": "Light blue",
+        "G": 243,
+        "R": 237
+      },
+      "PETAL": {
+        "A": 255,
+        "B": 224,
+        "D": "Light red",
+        "G": 208,
+        "R": 240
+      }
+    },
+    "locoColor": <font color="green">"FADED"</font>, "" specifies no color will be used</font>
+    "carColor": <font color="green">"DUST"</font>,
+    "alertColor": <font color="green">"PETAL"</font>
+  },
+</pre>
+<h4><font color="blue">Control Panel</font></h4>
+<pre>
+  "CP" : {
+    "TS" : { Translation Services
+      "UD" : "useDeepL",
+      "UX" : "Some Other Translation Service"
+    },
+    "TC" : "UD", <font color="blue">Translation Choice</font>
+    "BT" : ["Plugin", "Help"], <font color="blue">Bundle Targets, base name for each bundle</font>
+    "AP" : true, <font color="blue">Add button to Panel Pro frame, plugin is not displayed but still enabled</font>
+    "SE" : "utf-8", <font color="blue">Default encoding</font>
+    "SI": [ <font color="blue">Script Includes</font>
+      {
+        "PatternTracksSubroutine": true <font color="green">Include this subroutine in the Control Panel</font>
+      },
+      {
+        "o2oSubroutine": false <font color="green">Include this subroutine in the Control Panel</font>
+      }
+    ],
+    "PH" : 220, <font color="blue">Default panel height</font>
+    "PW" : 1500, <font color="blue">Default panel width</font>
+    "PX" : 0, <font color="blue">Plugin X location</font>
+    "PY" : 0, <font color="blue">Plugin Y location</font>
+    "OC" : true, <font color="green">Open System Console Window</font>
+    "RV" : 20220205 <font color="blue">Revision control</font>
+  },
+</pre>
+<h4><font color="blue">Pattern Tracks</font></h4>
+<pre>
+  <font color="blue">Do not edit these</font>
+  "PT" : {
+    "AD" : [ <font color="blue">All Divisions (written by this plugin)</font>
+    ],
+    "AL" : [ <font color="blue">All Locations (written by this plugin)</font>
+    ],
+    "PL" : "", <font color="blue">Pattern Location (written by this plugin)</font>
+    "PT" : { <font color="blue">Pattern-Tracks (written by this plugin)</font>
+    },
+    "PA" : false, <font color="blue">Yard Tracks Only flag (set by user, written by this plugin)</font>
+    "PI" : false, <font color="blue">Ignore Track Length flag (set by user, written by this plugin)</font>
+    "AS" : true, <font color="blue">Apply Schedule flag (set by user, written by this plugin)</font>
+    "TI" : false, <font color="blue">TrainPlayer Include flag (set by user, written by this plugin)</font>
+    "PW" : 260, <font color="blue">Pattern Width</font>
+    "PH" : 16, <font color="blue">Pattern Height</font>
+    "RM": 8, <font color="blue">Row Multiplier</font>
+</pre>
+<h4><font color="green">Report Modifiers</font></h4>
+<pre>
+  "RM" : {
+    "DS" : "<font color="green">*No Waybill</font>", <font color="blue">Destination designator</font>
+    "DT" : "<font color="green">*Not Consigned</font>", <font color="blue">Destination Track designator</font>
+    "FD" : "<font color="green">*Via Staging</font>", <font color="blue">Final Destination designator</font>
+    "FT" : "<font color="green">*Any Line</font>", <font color="blue">Final destination Track designator</font>
+    "SL": [ <font color="blue">Sort Locomotives</font>
+      "<font color="green">Model</font>"
+    ],
+    "SC": [ <font color="blue">Sort Cars</font>
+      "<font color="green">Load Type</font>",
+      "<font color="green">FD&Track</font>"
+    ],
+    "AW": { <font color="blue">Attribute Width</font>
+      "Input": <font color="green">6</font>,
+      "Model": <font color="green">5</font>,
+      "Road" : <font color="green">5</font>,
+      "Number" : <font color="green">7</font>,
+      "Type" : <font color="green">6</font>,
+      "Length" : <font color="green">7</font>,
+      "Weight" : <font color="green">7</font>,
+      "Load" : <font color="green">6</font>,
+      "Load Type" : <font color="green">5</font>,
+      "Loco Type" : <font color="green">18</font>,
+      "Owner" : <font color="green">20</font>,
+      "Consist" : <font color="green">8</font>,
+      "Hazardous" : <font color="green">10</font>,
+      "Color" : <font color="green">6</font>,
+      "Kernel" : <font color="green">7</font>,
+      "Kernel Size" : <font color="green">12</font>,
+      "Owner" : <font color="green">6</font>,
+      "Track" : <font color="green">6</font>,
+      "Location" : <font color="green">9</font>,
+      "Destination" : <font color="green">15</font>,
+      "Dest&Track" : <font color="green">30</font>,
+      "Final Dest" : <font color="green">11</font>,
+      "FD&Track" : <font color="green">21</font>,
+      "Comment" : <font color="green">15</font>,
+      "SetOut Msg" : <font color="green">12</font>,
+      "PickUp Msg" : <font color="green">12</font>,
+      "RWE" : <font color="green">10</font>,
+      " " : 0
+    }
+  },
+</pre>
+<h2>o2o Subroutine, ops 2 ops</h2>
+<h3>Introduction</h3>
+<p>The ops to ops (o2o) subroutine is a group of utilities that are designed to be the glue that allows JMRI Operations Pro to be the operations engine for TrainPlayer©.
+  The idea is to expand the capability of TrainPlayer©'s Advanced Ops feature to include the operational flexibility of Operations Pro,
+  while also eleminating the tedium of keeping two databases synchronised.</p>
+<h4><font color="green">o2o Subroutine Settings</font></h4>
+<pre>
+  "RD" :{  <font color="blue">Railroad Details, optional part of the TrainPlayer layout.</font>
+    "RR" : "", <font color="blue">Parent railroad, the one that owns the tracks.</font>
+    "OP" : "", <font color="blue">Name of the particular operation being modeled.</font>
+    "LO" : "", <font color="blue">Location of the prototype.</font>
+    "YR" : "", <font color="blue">Calendar year being modeled.</font>
+    "DV" : [], <font color="blue">List of railroad divisions for this layout, comma seperated.</font>
+    "SC" : "" <font color="blue">Model railroad scale.</font>
+  },
+  "o2o" : {
+    "PC": [  <font color="blue">List of TrainPlayer car codes for passenger cars.</font>
+      "B",
+      "BE",
+      "BH",
+      "BM",
+      "BMR",
+      "BMT",
+      "BP",
+      "BR",
+      "BX",
+      "CA",
+      "CS",
+      "D",
+      "DA",
+      "DB",
+      "DC",
+      "DL",
+      "DO",
+      "DP",
+      "DPA",
+      "MA",
+      "MB",
+      "MR",
+      "P",
+      "PA",
+      "PAS",
+      "PB",
+      "PBC",
+      "PBO",
+      "PC",
+      "PL",
+      "PO",
+      "PS",
+      "PSA"
+    ],
+    "CC" : [  <font color="blue">List of TrainPlayer caboose car codes.</font>
+      "N",
+      "NM",
+      "NE"
+    ],
+    "CFL" : [  <font color="blue">Core File List</font>
+      "OperationsCarRoster",
+      "OperationsEngineRoster",
+      "OperationsLocationRoster"
+    ],
+    "SR" : {  <font color="blue">Scale Rubric</font> JMRI Model Railroad scale.
+      "Z" : 1,
+      "N" : 2,
+      "TT" : 3,
+      "HOn3" : 4,
+      "OO" : 5,
+      "HO" : 6,
+      "Sn3" : 7,
+      "S" : 8,
+      "On3" : 9,
+      "O" : 10,
+      "G" : 11
+    },
+    "RF" : { <font color="blue">Report Files</font> Names of the TrainPlayer layout export files.
+      "TRL" : <font color="blue">"TrainPlayer Report - Locations.txt"</font>,
+      "TRI" : <font color="blue">"TrainPlayer Report - Industries.txt"</font>,
+      "TRR" : <font color="blue">"TrainPlayer Report - Rolling Stock.txt"</font>
+    },
+    "TO" : { <font color="blue">Tweek Operations</font> Adjustments to operations settings.
+      "SME" : <font color="green">true</font>,  setMainMenuEnabled
+      "CWS" : <font color="green">true</font>,  setCloseWindowOnSaveEnabled
+      "SBA" : <font color="green">true</font>,  setBuildAggressive
+      "SIA" : <font color="green">true</font>,  setStagingTrackImmediatelyAvail
+      "SCT" : <font color="green">"ARR Codes"</font>,  setCarTypes
+      "TNB" : <font color="green">true</font>,  setStagingTryNormalBuildEnabled
+      "SME" : <font color="green">true</font>,  setManifestEditorEnabled
+      "PUC" : <font color="green">"Road", "Number", "Type", "Load Type", "Load", "Destination"</font>,  setPickupManifestMessageFormat
+      "SOC" : <font color="green">"Road", "Number", "Type", "Load Type", "Load", "Destination"</font>,  setDropManifestMessageFormat
+      "MC" : <font color="green">"Road", "Number", "Type", "Load Type", "Load", "Final Dest"</font>,  setLocalManifestMessageFormat
+      "PUL" : <font color="green">"Road", "Number", "Model", "Consist", "Destination"</font>,  setPickupEngineMessageFormat
+      "SOL" : <font color="green">"Road", "Number", "Model", "Consist", "Destination"</font>,  setDropEngineMessageFormat
+      },
+    "SM" : {
+      "SCL" : <font color="green">true</font>,  setAddCustomLoadsAnySpurEnabled
+      "RCL" : <font color="green">true</font>,  setRemoveCustomLoadsEnabled
+      "LEE" : <font color="green">true</font>,  setLoadEmptyEnabled
+    },
+    "TR" : {  <font color="blue">Type Rubric</font> Align TrainPlayer and JMRI track types.
+      "industry": "Spur",
+      "interchange": "Interchange",
+      "staging": "Staging",
+      "class yard": "Yard",
+      "XO reserved": "Spur"
+    }
+
+</pre>
+</body>
+
+</html>

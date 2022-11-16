@@ -385,6 +385,7 @@ def timeStamp(epochTime=0):
         o2oSubroutine.ModelImport.TrainPlayerImporter.processFileHeaders
         o2oSubroutine.ModelWorkEvents.jmriManifestConversion.convertHeader
         PatternTracksSubroutine.ModelEntities.makeGenericHeader
+        Nov 15, 2022 11:53 AM PST vs Valid 11/15/2022 11:54
         """
 
     year = getYear()
@@ -396,8 +397,10 @@ def timeStamp(epochTime=0):
     else:
         timeOffset = time.timezone # in seconds
 
+
+    return time.strftime('%m/%d/%Y %I:%M', time.gmtime(epochTime - timeOffset))
     # return time.strftime('%a %b %d %Y %I:%M %p %Z', time.gmtime(epochTime - timeOffset))
-    return time.strftime('%b %d, ' + year + ' %I:%M %p %Z', time.gmtime(epochTime - timeOffset))
+    # return time.strftime('%b %d, ' + year + ' %I:%M %p %Z', time.gmtime(epochTime - timeOffset))
 
 def getYear():
     """Either the current year or the entry in settings: year modeled."""
