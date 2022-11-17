@@ -397,8 +397,13 @@ def timeStamp(epochTime=0):
     else:
         timeOffset = time.timezone # in seconds
 
+    if JMRI.jmrit.operations.setup.Setup.is12hrFormatEnabled():
+        return time.strftime('Valid %b %d, ' + year + ', %I:%M %p', time.gmtime(epochTime - timeOffset))
+    else:
+        return time.strftime('Valid %b %d, ' + year + ', %H:%M', time.gmtime(epochTime - timeOffset))
 
-    return time.strftime('%m/%d/%Y %I:%M', time.gmtime(epochTime - timeOffset))
+
+    # return time.strftime('%m/%d/%Y %I:%M', time.gmtime(epochTime - timeOffset))
     # return time.strftime('%a %b %d %Y %I:%M %p %Z', time.gmtime(epochTime - timeOffset))
     # return time.strftime('%b %d, ' + year + ' %I:%M %p %Z', time.gmtime(epochTime - timeOffset))
 

@@ -1,8 +1,8 @@
 Todo:
   How to publish DeepL?
-  Have the layout year be the report year.
   Add update divisions to o2o update railroad.
-  Conform JMRI and TP date format.
+  Conform JMRI and TP date format?
+  Change Unknown to Unreported?
 
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -100,6 +100,7 @@ Tested Items:
     Update RR works with making new location and adding existing track to it OK.
     Resets built trains on Update RR and Update RS OK.
     New RR adds Divisions OK.
+    The layout year is the report year OK.
 
 Catches Items:
   Catches pattern report button press no tracks selected OK.

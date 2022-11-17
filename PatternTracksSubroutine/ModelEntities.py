@@ -396,43 +396,35 @@ def makeGenericHeader():
         """
 
     OSU = PSE.JMRI.jmrit.operations.setup
-    patternLocation = PSE.readConfigFile('PT')['PL']
-    location = PSE.LM.getLocationByName(patternLocation)
+    configFile = PSE.readConfigFile()
 
     listHeader = {}
-    listHeader['railroadName'] = unicode(OSU.Setup.getRailroadName(), PSE.ENCODING)
+    if configFile['CP']['DR']: # Replace with Railroad Details Subroutine
+        listHeader['railroadName'] = makeDetailedHeader(configFile['RD'])
+    else:
+        listHeader['railroadName'] = unicode(OSU.Setup.getRailroadName(), PSE.ENCODING)
 
-    # listHeader['trainName'] = 'Train Name'
-    # listHeader['trainDescription'] = PSE.BUNDLE['Pattern Report for Tracks']
-    # listHeader['trainComment'] = 'Train Comment'
     listHeader['date'] = unicode(PSE.timeStamp(), PSE.ENCODING)
-    listHeader['locations'] = [{'locationName': patternLocation, 'tracks': [{'cars': [], 'locos': []}]}]
+    listHeader['locations'] = [{'locationName': configFile['PT']['PL'], 'tracks': [{'cars': [], 'locos': []}]}]
 
     return listHeader
 
-# def makeTrainPlayerHeader():
-#     """Used by:
-#         makeTrackPatternReport
-#         Controller.StartUp.setRsButton
-#         """
-#
-#     OSU = PSE.JMRI.jmrit.operations.setup
-#     patternLocation = PSE.readConfigFile('PT')['PL']
-#     location = PSE.LM.getLocationByName(patternLocation)
-#
-#     listHeader = {}
-#     listHeader['railroadParent'] = 'Railroad Parent'
-#     listHeader['railroadName'] = unicode(OSU.Setup.getRailroadName(), PSE.ENCODING)
-#     listHeader['railroadDescription'] = 'Railroad Description'
-#     listHeader['railroadLocation'] = 'Railroad Location'
-#
-#     listHeader['trainName'] = 'Train Name'
-#     listHeader['trainDescription'] = PSE.BUNDLE['Pattern Report for Tracks']
-#     listHeader['trainComment'] = 'Train Comment'
-#     listHeader['date'] = unicode(PSE.timeStamp(), PSE.ENCODING)
-#     listHeader['locations'] = [{'locationName': patternLocation, 'tracks': [{'cars': [], 'locos': []}]}]
-#
-#     return listHeader
+def makeDetailedHeader(railroadDetails):
+    """Used by:
+        makeGenericHeader
+        """
+
+    detailedHeader = ''
+    if railroadDetails['OR']:
+        detailedHeader += railroadDetails['OR']
+
+    if railroadDetails['TR']:
+        detailedHeader += '\n' + railroadDetails['TR']
+
+    if railroadDetails['LO']:
+        detailedHeader += '\n' + railroadDetails['LO']
+
+    return detailedHeader
 
 def makeInitialTrackList(location):
     """Used by:

@@ -60,6 +60,7 @@ def newJmriRailroad():
     PSE.EM.dispose()
 
     jmriRailroad = SetupXML()
+    jmriRailroad.addDetailsToConFig()
     jmriRailroad.setRailroadDetails()
     jmriRailroad.tweakOperationsXml()
     jmriRailroad.setReportMessageFormat()
@@ -130,6 +131,7 @@ def updateJmriRailroad():
     PSE.DM.dispose()
 
     jmriRailroad = SetupXML()
+    jmriRailroad.addDetailsToConFig()
     jmriRailroad.setRailroadDetails()
 
     allRsRosters = AddRsAttributes()
@@ -236,12 +238,27 @@ class SetupXML:
 
         return
 
+    def addDetailsToConFig(self):
+        """The optional railroad details from the TP Master Script are addad."""
+
+        self.o2oConfig['RD'].update({'OR':self.TpRailroad['operatingRoad']})
+        self.o2oConfig['RD'].update({'TR':self.TpRailroad['territory']})
+        self.o2oConfig['RD'].update({'LO':self.TpRailroad['location']})
+        self.o2oConfig['RD'].update({'YR':self.TpRailroad['year']})
+        self.o2oConfig['RD'].update({'SC':self.TpRailroad['scale']})
+
+        PSE.writeConfigFile(self.o2oConfig)
+        self.o2oConfig =  PSE.readConfigFile()
+
+        return
+
     def setRailroadDetails(self):
 
         _psLog.debug('setRailroadDetails')
 
     # Set the name
-        self.OSU.Setup.setRailroadName(self.o2oConfig['RD']['OP'])
+        railroadName = self.o2oConfig['RD']['OR'] + ', ' + self.o2oConfig['RD']['TR']
+        self.OSU.Setup.setRailroadName(railroadName)
     # Set the year
         rrYear = self.o2oConfig['RD']['YR']
         if rrYear:

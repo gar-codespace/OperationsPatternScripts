@@ -1,10 +1,9 @@
 {
   "RD" :{
-    "RR" : "",
-    "OP" : "",
+    "OR" : "",
+    "TR" : "",
     "LO" : "",
     "YR" : "",
-    "DV" : [],
     "SC" : ""
   },
   "GS" : {
@@ -72,6 +71,7 @@
       "UX" : "UseSomethingElse"
     },
     "TC" : "UD",
+    "DR" : true,
     "AP" : true,
     "SE" : "utf-8",
     "SI": [
@@ -90,7 +90,7 @@
     "PX" : 0,
     "PY" : 0,
     "OC" : true,
-    "RV" : 20221107
+    "RV" : 20221109
   },
   "RM" : {
     "DS" : "No Waybill",
