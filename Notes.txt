@@ -1,9 +1,8 @@
 Todo:
   How to publish DeepL?
   Have the layout year be the report year.
-  If there is only one division, add all locations to it.
+  Add update divisions to o2o update railroad.
   Conform JMRI and TP date format.
-  Location called 'Unknown' should be added to the bundle?
 
 Comments:
   Schedule does not prevent setting a car to a track.

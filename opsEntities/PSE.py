@@ -303,7 +303,7 @@ def getAllDivisionNames():
         Model.updatePatternLocation
         """
 
-    divisionNames = ['']
+    divisionNames = []
     for item in DM.getDivisionsByNameList():
         divisionNames.append(unicode(item.getName(), ENCODING))
 

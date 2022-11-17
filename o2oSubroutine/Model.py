@@ -143,6 +143,7 @@ def updateJmriRailroad():
 
     newLocations = NewLocationsAndTracks()
     newLocations.newDivisions()
+    newLocations.addDivisionToLocation()
 
     updatedLocations = UpdateLocationsAndTracks()
     updatedLocations.getCurrent()
