@@ -16,8 +16,3 @@ From TrainPlayer, re-export layout to JMRI.
 JMRI does not allow staging and non-staging track types at the same location.
 Check TrainPlayer-Advanced Ops-Locales for semi colon.
 Check TrainPlayer-Advanced Ops-Industries for errors.
-e
-r
-t
-y
-u

@@ -85,15 +85,10 @@
   "Work Location:": "Work Location:", 
   "Yard tracks only": "Yard tracks only", 
   "at": "at", 
-  "e": "e", 
   "empty": "empty", 
   "load": "load", 
   "o2o Subroutine": "o2o Subroutine", 
   "o2o Work Events": "o2o Work Events", 
   "occupied": "occupied", 
-  "r": "r", 
-  "t": "t", 
-  "u": "u", 
-  "unknown": "unknown", 
-  "y": "y"
+  "unknown": "unknown"
 }

@@ -3,6 +3,7 @@ Todo:
   Have the layout year be the report year.
   If there is only one division, add all locations to it.
   Conform JMRI and TP date format.
+  Location called 'Unknown' should be added to the bundle?
 
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -99,6 +100,7 @@ Tested Items:
     Update RR resolves staging/non-staging tracks at same location OK.
     Update RR works with making new location and adding existing track to it OK.
     Resets built trains on Update RR and Update RS OK.
+    New RR adds Divisions OK.
 
 Catches Items:
   Catches pattern report button press no tracks selected OK.

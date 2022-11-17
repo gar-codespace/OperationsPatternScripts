@@ -76,6 +76,7 @@ def newJmriRailroad():
     newLocations = NewLocationsAndTracks()
     newLocations.newDivisions()
     newLocations.newLocations()
+    newLocations.addDivisionToLocation()
 
     ModelEntities.newSchedules()
 
@@ -691,12 +692,27 @@ class NewLocationsAndTracks:
     def newDivisions(self):
         """ """
 
-        divisionList = PSE.readConfigFile('RD')['DV']
+        divisionList = self.tpRailroadData['divisions']
+
+        if len(divisionList[0]) == 0:
+            return
 
         for division in divisionList:
-            if not division:
-                continue
             PSE.DM.newDivision(division)
+
+        return
+
+    def addDivisionToLocation(self):
+        """If there is only one division, add all locations to it, except Unknown."""
+
+        divisions = PSE.DM.getList()
+
+        if len(divisions) != 1:
+            return
+
+        for location in PSE.LM.getList():
+            if location.getName() != 'Unknown':
+                location.setDivision(divisions[0])
 
         return
 
