@@ -25,6 +25,7 @@ ENCODING = ''
 BUNDLE = {}
 REPORT_ITEM_WIDTH_MATRIX = {}
 TRACK_NAME_CLICKED_ON = ''
+INCLUDES = {}
 
 # Dealers choice, both work OK:
 J_BUNDLE = JMRI.jmrit.operations.setup.Setup()

@@ -369,7 +369,7 @@ def MakeSetCarsFooter():
     o2oButton = PSE.JAVX_SWING.JButton(
         unicode(PSE.BUNDLE['o2o Work Events'], PSE.ENCODING)
         )
-    if not PSE.readConfigFile()['CP']['SI'][1]['o2oSubroutine']:
+    if not PSE.readConfigFile()['CP']['o2oSubroutine']:
         o2oButton.setVisible(False)
 
     makeWorkPanel.add(PSE.JAVX_SWING.Box.createRigidArea(

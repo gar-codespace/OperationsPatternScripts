@@ -127,12 +127,9 @@ def getAllTextBundles():
     targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle', 'bundle.txt')
     textBundles = PSE.genericReadReport(targetPath)
 
-    listOfSubroutines = []
-    subroutineInclude = PSE.readConfigFile('CP')['SI']
-    for subroutine in subroutineInclude:
-        listOfSubroutines.append(''.join(subroutine.keys()))
+    includeList = PSE.readConfigFile('CP')['IL']
 
-    for subroutine in listOfSubroutines:
+    for subroutine in includeList:
         targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, subroutine, 'bundle.txt')
         bundle = PSE.genericReadReport(targetPath)
         textBundles += bundle

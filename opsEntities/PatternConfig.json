@@ -76,23 +76,22 @@
     "DR" : true,
     "AP" : true,
     "SE" : "utf-8",
-    "SI": [
-      {
-        "PatternTracksSubroutine": true
-      },
-      {
-        "o2oSubroutine": false
-      },
-      {
-        "GenericSubroutine": false
-      }
+    "IL" : [
+      "jPlusSubroutine",
+      "PatternTracksSubroutine",
+      "o2oSubroutine",
+      "GenericSubroutine"
     ],
+    "jPlusSubroutine" : false,
+    "PatternTracksSubroutine" : true,
+    "o2oSubroutine" : false,
+    "GenericSubroutine" : false,
     "PH" : 280,
     "PW" : 1100,
     "PX" : 0,
     "PY" : 0,
     "OC" : true,
-    "RV" : 20221110
+    "RV" : 20221115
   },
   "RM" : {
     "DS" : "No Waybill",

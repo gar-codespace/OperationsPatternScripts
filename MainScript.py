@@ -73,21 +73,31 @@ class Model:
         return pluginPanel
 
     def makeSubroutineList(self):
-        """for x, y in *.items() sorts the list, but that's a bad thing.
-            This oddball way does not sort the list,
-            so the subroutines display in the order listed in the config file.
-            """
+        """            """
 
         subroutineList = []
         controlPanelConfig = PSE.readConfigFile('CP')
-        for item in controlPanelConfig['SI']:
-            for subroutine, include in item.items(): # The list is sorted, but there is only 1 item
-                if include:
-                    xModule = __import__(subroutine, fromlist=['Controller'])
-                    startUp = xModule.Controller.StartUp()
-                    subroutineFrame = startUp.makeSubroutineFrame()
-                    subroutineList.append(subroutineFrame)
-                    self.psLog.info(subroutine + ' subroutine added to control panel')
+        for include in controlPanelConfig['IL']:
+            if controlPanelConfig[include]:
+                xModule = __import__(include, fromlist=['Controller'])
+                startUp = xModule.Controller.StartUp()
+                subroutineFrame = startUp.makeSubroutineFrame()
+                subroutineList.append(subroutineFrame)
+                self.psLog.info(include + ' subroutine added to control panel')
+
+
+
+
+
+
+        # for item in controlPanelConfig['SI']:
+        #     for subroutine, include in item.items(): # The list is sorted, but there is only 1 item
+        #         if include:
+        #             xModule = __import__(subroutine, fromlist=['Controller'])
+        #             startUp = xModule.Controller.StartUp()
+        #             subroutineFrame = startUp.makeSubroutineFrame()
+        #             subroutineList.append(subroutineFrame)
+        #             self.psLog.info(subroutine + ' subroutine added to control panel')
 
         return subroutineList
 
@@ -215,7 +225,7 @@ class View:
         """itemMethod - Set the drop down text per the config file PatternTracksSubroutine Include flag ['CP']['SI']"""
 
         patternConfig = PSE.readConfigFile('CP')
-        if patternConfig['SI'][0]['PatternTracksSubroutine']:
+        if patternConfig['PatternTracksSubroutine']:
             menuText = PSE.BUNDLE[u'Disable Track Pattern subroutine']
         else:
             menuText = PSE.BUNDLE[u'Enable Track Pattern subroutine']
@@ -226,7 +236,7 @@ class View:
         """itemMethod - Set the drop down text per the config file o2oSubroutine Include flag ['CP']['SI']"""
 
         patternConfig = PSE.readConfigFile('CP')
-        if patternConfig['SI'][1]['o2oSubroutine']:
+        if patternConfig['o2oSubroutine']:
             menuText = PSE.BUNDLE[u'Disable o2o subroutine']
         else:
             menuText = PSE.BUNDLE[u'Enable o2o subroutine']
@@ -237,7 +247,7 @@ class View:
         """itemMethod - Set the drop down text per the config file Subroutine Include flag ['CP']['SI']"""
 
         patternConfig = PSE.readConfigFile('CP')
-        if patternConfig['SI'][2]['GenericSubroutine']:
+        if patternConfig['GenericSubroutine']:
             menuText = PSE.BUNDLE[u'Disable generic subroutine']
         else:
             menuText = PSE.BUNDLE[u'Enable generic subroutine']
@@ -443,14 +453,14 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         self.psLog.debug(TP_ACTIVATE_EVENT)
         patternConfig = PSE.readConfigFile()
 
-        if patternConfig['CP']['SI'][0]['PatternTracksSubroutine']: # If enabled, turn it off
-            patternConfig['CP']['SI'][0].update({'PatternTracksSubroutine': False})
+        if patternConfig['CP']['PatternTracksSubroutine']: # If enabled, turn it off
+            patternConfig['CP']['PatternTracksSubroutine'] = False
             TP_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Enable Track Pattern subroutine'])
 
             self.psLog.info('Track Pattern support deactivated')
             print('Track Pattern support deactivated')
         else:
-            patternConfig['CP']['SI'][0].update({'PatternTracksSubroutine': True})
+            patternConfig['CP']['PatternTracksSubroutine'] = True
             TP_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Disable Track Pattern subroutine'])
 
             self.psLog.info('Track Pattern support activated')
@@ -468,21 +478,19 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         self.psLog.debug(O2O_ACTIVATE_EVENT)
         patternConfig = PSE.readConfigFile()
 
-        if patternConfig['CP']['SI'][1]['o2oSubroutine']: # If enabled, turn it off
-            patternConfig['CP']['SI'][1].update({'o2oSubroutine': False})
+        if patternConfig['CP']['o2oSubroutine']: # If enabled, turn it off
+            patternConfig['CP']['o2oSubroutine'] = False
             O2O_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Enable o2o subroutine'])
 
-            # self.trainsTableModel.removeTableModelListener(self.trainsTableListener)
             self.removeTrainsTableListener()
             self.removeBuiltTrainListener()
 
             self.psLog.info('o2o subroutine deactivated')
             print('o2o subroutine deactivated')
         else:
-            patternConfig['CP']['SI'][1].update({'o2oSubroutine': True})
+            patternConfig['CP']['o2oSubroutine'] = True
             O2O_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Disable o2o subroutine'])
 
-            # self.trainsTableModel.addTableModelListener(self.trainsTableListener)
             self.addTrainsTableListener()
             self.addBuiltTrainListener()
 
@@ -496,12 +504,16 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         return
 
     def gsItemSelected(GS_ACTIVATE_EVENT):
-        """menu item-Tools/Enable Generic Subroutine.
-            Put stuff here that the subroutine does.
-            """
+        """menu item-Tools/Enable Generic Subroutine."""
 
         self.psLog.debug(GS_ACTIVATE_EVENT)
+        patternConfig = PSE.readConfigFile()
 
+        # Put stuff here that the subroutine does.
+        
+        PSE.writeConfigFile(patternConfig)
+        self.shutdownPlugin()
+        self.startupPlugin()
         return
 
     def ptItemSelected(self, TRANSLATE_PLUGIN_EVENT):
@@ -544,7 +556,6 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         stubFileTarget = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getPreferencesPath(), 'jmrihelp', PSE.psLocale()[:2], 'psStub.html')
         stubUri = PSE.JAVA_IO.File(stubFileTarget).toURI()
-        # stubUri = JAVA_NET.URI(str(stubFileTarget)).create()
         if PSE.JAVA_IO.File(stubUri).isFile():
             PSE.JAVA_AWT.Desktop.getDesktop().browse(stubUri)
         else:
@@ -614,8 +625,6 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
             ooItemSelected
             """
 
-        # self.removeTrainsTableListener()
-        # self.removeBuiltTrainListener()
         self.closePsWindow()
 
         return
@@ -651,7 +660,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         PSE.makeReportFolders()
         self.model.validatePatternConfig()
         PSE.CreateStubFile().make()
-        if PSE.readConfigFile()['CP']['SI'][1]['o2oSubroutine']:
+        if PSE.readConfigFile()['CP']['o2oSubroutine']:
             self.o2oSubroutineListeners()
         if PSE.readConfigFile()['CP']['AP']:
             self.addPatternScriptsButton()
