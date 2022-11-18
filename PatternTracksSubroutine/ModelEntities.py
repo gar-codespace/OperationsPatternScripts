@@ -400,7 +400,7 @@ def makeGenericHeader():
 
     listHeader = {}
     if configFile['CP']['DR']: # Replace with Railroad Details Subroutine
-        listHeader['railroadName'] = makeDetailedHeader(configFile['RD'])
+        listHeader['railroadName'] = makeDetailedHeader(configFile['JP'])
     else:
         listHeader['railroadName'] = unicode(OSU.Setup.getRailroadName(), PSE.ENCODING)
 

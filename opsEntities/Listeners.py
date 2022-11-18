@@ -31,25 +31,25 @@ class GenericComboBox(PSE.JAVA_AWT.event.ActionListener):
         return
 
 
-class LocationComboBox(PSE.JAVA_AWT.event.ActionListener):
-    """Event triggered from location combobox use."""
-
-    def __init__(self, subroutineFrame):
-
-        self.subroutineFrame = subroutineFrame
-
-        return
-
-    def actionPerformed(self, EVENT):
-
-        xModule = __import__('PatternTracksSubroutine', globals(), locals(), ['Controller', 'Model'], 0)
-
-        xModule.Model.updatePatternLocation(EVENT.getSource().getSelectedItem())
-        xModule.Controller.restartSubroutine(self.subroutineFrame)
-
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-
-        return
+# class LocationComboBox(PSE.JAVA_AWT.event.ActionListener):
+#     """Event triggered from location combobox use."""
+#
+#     def __init__(self, subroutineFrame):
+#
+#         self.subroutineFrame = subroutineFrame
+#
+#         return
+#
+#     def actionPerformed(self, EVENT):
+#
+#         xModule = __import__('PatternTracksSubroutine', globals(), locals(), ['Controller', 'Model'], 0)
+#
+#         xModule.Model.updatePatternLocation(EVENT.getSource().getSelectedItem())
+#         xModule.Controller.restartSubroutine(self.subroutineFrame)
+#
+#         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+#
+#         return
 
 
 class TextBoxEntry(PSE.JAVA_AWT.event.MouseAdapter):

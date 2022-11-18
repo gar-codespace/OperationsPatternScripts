@@ -13,15 +13,13 @@ SCRIPT_REV = 20221010
 _psLog = PSE.LOGGING.getLogger('OPS.JP.Controller')
 
 
-def updatejPlusSubroutine(parent):
+def updateSubroutine(parent):
     """Allows other subroutines to update and restart the jPlus Sub.
         Not implemented.
         """
 
     if not parent:
         return
-
-    # Do stuff here.
 
     for component in parent.getComponents():
         if component.getName() == 'jPlusSubroutine':
@@ -32,6 +30,7 @@ def updatejPlusSubroutine(parent):
 def restartSubroutine(subroutineFrame):
     """Subroutine restarter.
         Used by:
+        updateSubroutine
         """
 
     subroutinePanel = StartUp(subroutineFrame).makeSubroutinePanel()
@@ -80,8 +79,8 @@ class StartUp:
 
         return
 
-    def button(self, EVENT):
-        '''Whatever it is this button does.'''
+    def update(self, EVENT):
+        '''Writes the text box entries to the configFile'''
 
         _psLog.debug(EVENT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

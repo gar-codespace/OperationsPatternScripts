@@ -241,13 +241,13 @@ class SetupXML:
     def addDetailsToConFig(self):
         """The optional railroad details from the TP Master Script are addad."""
 
-        self.o2oConfig['RD'].update({'OR':self.TpRailroad['operatingRoad']})
-        self.o2oConfig['RD'].update({'TR':self.TpRailroad['territory']})
-        self.o2oConfig['RD'].update({'LO':self.TpRailroad['location']})
-        self.o2oConfig['RD'].update({'YR':self.TpRailroad['year']})
-        self.o2oConfig['RD'].update({'SC':self.TpRailroad['scale']})
-        self.o2oConfig['RD'].update({'LN':self.TpRailroad['layoutName']})
-        self.o2oConfig['RD'].update({'BD':self.TpRailroad['buildDate']})
+        self.o2oConfig['JP'].update({'OR':self.TpRailroad['operatingRoad']})
+        self.o2oConfig['JP'].update({'TR':self.TpRailroad['territory']})
+        self.o2oConfig['JP'].update({'LO':self.TpRailroad['location']})
+        self.o2oConfig['JP'].update({'YR':self.TpRailroad['year']})
+        self.o2oConfig['JP'].update({'SC':self.TpRailroad['scale']})
+        self.o2oConfig['JP'].update({'LN':self.TpRailroad['layoutName']})
+        self.o2oConfig['JP'].update({'BD':self.TpRailroad['buildDate']})
 
         PSE.writeConfigFile(self.o2oConfig)
         self.o2oConfig =  PSE.readConfigFile()
@@ -259,14 +259,14 @@ class SetupXML:
         _psLog.debug('setRailroadDetails')
 
     # Set the name
-        layoutName = self.o2oConfig['RD']['LN']
+        layoutName = self.o2oConfig['JP']['LN']
         self.OSU.Setup.setRailroadName(layoutName)
     # Set the year
-        rrYear = self.o2oConfig['RD']['YR']
+        rrYear = self.o2oConfig['JP']['YR']
         if rrYear:
             self.OSU.Setup.setYearModeled(rrYear)
 
-        rrScale = self.o2oConfig['RD']['SC']
+        rrScale = self.o2oConfig['JP']['SC']
         if rrScale:
             self.OSU.Setup.setScale(self.o2oConfig['o2o']['SR'][rrScale.upper()])
 

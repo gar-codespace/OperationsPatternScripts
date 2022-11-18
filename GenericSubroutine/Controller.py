@@ -13,7 +13,7 @@ SCRIPT_REV = 20221010
 _psLog = PSE.LOGGING.getLogger('OPS.GS.Controller')
 
 
-def updateGenericSubroutine(parent):
+def updateSubroutine(parent):
     """Allows other subroutines to update and restart the Generic Sub.
         Not implemented.
         """
@@ -32,6 +32,7 @@ def updateGenericSubroutine(parent):
 def restartSubroutine(subroutineFrame):
     """Subroutine restarter.
         Used by:
+        updateSubroutine
         """
 
     subroutinePanel = StartUp(subroutineFrame).makeSubroutinePanel()

@@ -9,22 +9,22 @@ from jPlusSubroutine import ViewEntities
 SCRIPT_NAME = 'OperationsPatternScripts.jPlusSubroutine.View'
 SCRIPT_REV = 20221010
 
-_psLog = PSE.LOGGING.getLogger('OPS.GS.View')
+_psLog = PSE.LOGGING.getLogger('OPS.JP.View')
 
 class ManageGui:
 
     def __init__(self):
 
-        self.configFile = PSE.readConfigFile('GS')
+        self.configFile = PSE.readConfigFile()
 
         return
 
     def makeSubroutineFrame(self):
-        """Make the frame that all the o2o controls are added to"""
+        """Make the frame that all the jPlus controls are added to"""
 
         subroutineFrame = PSE.JAVX_SWING.JPanel() # the track pattern panel
-        subroutineFrame.setName(u'jPlus')
-        subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE[u'jPlus Subroutine'])
+        subroutineFrame.setName(u'jPlusSubroutine')
+        subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE[u'j Plus Subroutine'])
 
         return subroutineFrame
 
@@ -34,7 +34,11 @@ class ManageGui:
         _psLog.debug('makeSubroutinePanel')
 
         jPlusSubroutinePanel = ViewEntities.jPlusSubroutinePanel()
-        subroutinesPanel = jPlusSubroutinePanel.jPlusPanelMaker()
+        if self.configFile['CP']['o2oSubroutine']:
+            subroutinesPanel = jPlusSubroutinePanel.jPlusPanelFixed()
+        else:
+            subroutinesPanel = jPlusSubroutinePanel.jPlusPanelEditable()
+
         subroutinePanelWidgets = jPlusSubroutinePanel.JPWidgetGetter()
 
         return subroutinesPanel, subroutinePanelWidgets

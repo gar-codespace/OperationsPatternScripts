@@ -9,6 +9,7 @@ from o2oSubroutine import ModelImport
 from o2oSubroutine import ModelWorkEvents
 from o2oSubroutine import View
 from PatternTracksSubroutine import Controller as PtController
+from jPlusSubroutine import Controller as JpController
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.Controller'
 SCRIPT_REV = 20221010
@@ -34,7 +35,7 @@ def o2oSwitchList(ptSetCarsForm):
 
     return
 
-def updateO2oSubroutine(parent):
+def updateSubroutine(parent):
     """Allows other subroutines to update and restart the o2o Sub.
         Not implemented.
         """
@@ -53,6 +54,7 @@ def updateO2oSubroutine(parent):
 def restartSubroutine(subroutineFrame):
     """Subroutine restarter.
         Used by:
+        updateSubroutine
         """
 
     subroutinePanel = StartUp(subroutineFrame).makeSubroutinePanel()
@@ -118,7 +120,9 @@ class StartUp:
 
         if Model.newJmriRailroad():
             parent = PSE.findPluginPanel(EVENT.getSource())
-            PtController.updatePatternTracksSubroutine(parent)
+            PtController.updateSubroutine(parent)
+            JpController.updateSubroutine(parent)
+
             print('New JMRI railroad built from TrainPlayer data')
             _psLog.info('New JMRI railroad built from TrainPlayer data')
         else:
@@ -147,7 +151,9 @@ class StartUp:
         if Model.updateJmriRailroad():
             # parent = EVENT.getSource().getParent().getParent().getParent().getParent()
             parent = PSE.findPluginPanel(EVENT.getSource())
-            PtController.updatePatternTracksSubroutine(parent)
+            PtController.updateSubroutine(parent)
+            JpController.updateSubroutine(parent)
+
             print('JMRI railroad updated from TrainPlayer data')
             _psLog.info('JMRI railroad updated from TrainPlayer data')
         else:

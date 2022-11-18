@@ -73,7 +73,7 @@ class Model:
         return pluginPanel
 
     def makeSubroutineList(self):
-        """            """
+        """Add a subroutine if its ['CP']['I*'] = true."""
 
         subroutineList = []
         controlPanelConfig = PSE.readConfigFile('CP')
@@ -84,20 +84,6 @@ class Model:
                 subroutineFrame = startUp.makeSubroutineFrame()
                 subroutineList.append(subroutineFrame)
                 self.psLog.info(include + ' subroutine added to control panel')
-
-
-
-
-
-
-        # for item in controlPanelConfig['SI']:
-        #     for subroutine, include in item.items(): # The list is sorted, but there is only 1 item
-        #         if include:
-        #             xModule = __import__(subroutine, fromlist=['Controller'])
-        #             startUp = xModule.Controller.StartUp()
-        #             subroutineFrame = startUp.makeSubroutineFrame()
-        #             subroutineList.append(subroutineFrame)
-        #             self.psLog.info(subroutine + ' subroutine added to control panel')
 
         return subroutineList
 
@@ -149,6 +135,7 @@ class View:
         uniqueWindow = PSE.JMRI.util.JmriJFrame()
 
         asMenuItem = self.makeMenuItem(self.setAsDropDownText())
+        jpMenuItem = self.makeMenuItem(self.setJpDropDownText())
         tpMenuItem = self.makeMenuItem(self.setTpDropDownText())
         o2oMenuItem = self.makeMenuItem(self.setOoDropDownText())
         gsMenuItem = self.makeMenuItem(self.setGsDropDownText()) # Generic subroutine menu item
@@ -167,6 +154,7 @@ class View:
         toolsMenu.add(PSE.JMRI.jmrit.operations.setup.PrintOptionAction())
         toolsMenu.add(PSE.JMRI.jmrit.operations.setup.BuildReportOptionAction())
         toolsMenu.add(asMenuItem)
+        toolsMenu.add(jpMenuItem)
         toolsMenu.add(tpMenuItem)
         toolsMenu.add(o2oMenuItem)
         # toolsMenu.add(gsMenuItem)
@@ -221,8 +209,19 @@ class View:
 
         return menuText, 'asItemSelected'
 
+    def setJpDropDownText(self):
+        """itemMethod - Set the drop down text per the config file PatternTracksSubroutine Include flag ['CP']['IJ']"""
+
+        patternConfig = PSE.readConfigFile('CP')
+        if patternConfig['jPlusSubroutine']:
+            menuText = PSE.BUNDLE[u'Disable j Plus subroutine']
+        else:
+            menuText = PSE.BUNDLE[u'Enable j Plus subroutine']
+
+        return menuText, 'jpItemSelected'
+
     def setTpDropDownText(self):
-        """itemMethod - Set the drop down text per the config file PatternTracksSubroutine Include flag ['CP']['SI']"""
+        """itemMethod - Set the drop down text per the config file PatternTracksSubroutine Include flag ['CP']['IT']"""
 
         patternConfig = PSE.readConfigFile('CP')
         if patternConfig['PatternTracksSubroutine']:
@@ -233,7 +232,7 @@ class View:
         return menuText, 'tpItemSelected'
 
     def setOoDropDownText(self):
-        """itemMethod - Set the drop down text per the config file o2oSubroutine Include flag ['CP']['SI']"""
+        """itemMethod - Set the drop down text per the config file o2oSubroutine Include flag ['CP']['IO']"""
 
         patternConfig = PSE.readConfigFile('CP')
         if patternConfig['o2oSubroutine']:
@@ -244,7 +243,7 @@ class View:
         return menuText, 'ooItemSelected'
 
     def setGsDropDownText(self):
-        """itemMethod - Set the drop down text per the config file Subroutine Include flag ['CP']['SI']"""
+        """itemMethod - Set the drop down text per the config file Subroutine Include flag ['CP']['IG']"""
 
         patternConfig = PSE.readConfigFile('CP')
         if patternConfig['GenericSubroutine']:
@@ -416,7 +415,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
     def addMenuItemListeners(self):
         """Use the pull down item names as the attribute to set the
-            listener: asItemSelected, tpItemSelected, ooItemSelected, logItemSelected, helpItemSelected, Etc.
+            listener: asItemSelected, jpItemSelected, tpItemSelected, ooItemSelected, logItemSelected, helpItemSelected, Etc.
             Used by:
             buildThePlugin
             """
@@ -445,6 +444,30 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         PSE.writeConfigFile(patternConfig)
 
+        return
+
+    def jpItemSelected(self, JP_ACTIVATE_EVENT):
+        """menu item-Tools/Enable j Plus Subroutine."""
+
+        self.psLog.debug(JP_ACTIVATE_EVENT)
+        patternConfig = PSE.readConfigFile()
+
+        if patternConfig['CP']['jPlusSubroutine']: # If enabled, turn it off
+            patternConfig['CP']['jPlusSubroutine'] = False
+            JP_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Enable j Plus subroutine'])
+
+            self.psLog.info('j Plus support deactivated')
+            print('j Plus support deactivated')
+        else:
+            patternConfig['CP']['jPlusSubroutine'] = True
+            JP_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Disable j Plus subroutine'])
+
+            self.psLog.info('j Plus support activated')
+            print('j Plus support activated')
+
+        PSE.writeConfigFile(patternConfig)
+        self.shutdownPlugin()
+        self.startupPlugin()
         return
 
     def tpItemSelected(self, TP_ACTIVATE_EVENT):
@@ -503,14 +526,14 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         return
 
-    def gsItemSelected(GS_ACTIVATE_EVENT):
+    def gsItemSelected(self, GS_ACTIVATE_EVENT):
         """menu item-Tools/Enable Generic Subroutine."""
 
         self.psLog.debug(GS_ACTIVATE_EVENT)
         patternConfig = PSE.readConfigFile()
 
         # Put stuff here that the subroutine does.
-        
+
         PSE.writeConfigFile(patternConfig)
         self.shutdownPlugin()
         self.startupPlugin()

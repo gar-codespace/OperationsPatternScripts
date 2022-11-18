@@ -13,7 +13,7 @@ SCRIPT_REV = 20221010
 _psLog = PSE.LOGGING.getLogger('OPS.PT.Controller')
 
 
-def updatePatternTracksSubroutine(parent):
+def updateSubroutine(parent):
     """Allows other subroutines to update and restart the PT Subroutine."""
 
     if not parent:
@@ -31,7 +31,7 @@ def restartSubroutine(subroutineFrame):
     """Subroutine restarter.
         Used by:
         opsEntities.Listeners.LocationComboBox.actionPerformed
-        updatePatternTracksSubroutine
+        updateSubroutine
         """
 
     subroutinePanel = StartUp(subroutineFrame).makeSubroutinePanel()
