@@ -141,7 +141,9 @@ class TrainPlayerImporter:
 
         _psLog.debug('processFileHeaders')
 
-        self.tpLocations.pop(0) # Pop off the date
+        rrData = self.tpLocations.pop(0).split(';') # Pop off the date and layout name
+        self.rr['buildDate'] = rrData[0]
+        self.rr['layoutName'] = rrData[1]
 
         rrData = self.tpLocations.pop(0).split(';') # Pop off the details line
         self.rr['operatingRoad'] = rrData[0]

@@ -4,7 +4,9 @@
     "TR" : "",
     "LO" : "",
     "YR" : "",
-    "SC" : ""
+    "SC" : "",
+    "LN" : "",
+    "BD" : ""
   },
   "GS" : {
     "Generic Subroutine": "Template"
@@ -90,7 +92,7 @@
     "PX" : 0,
     "PY" : 0,
     "OC" : true,
-    "RV" : 20221109
+    "RV" : 20221110
   },
   "RM" : {
     "DS" : "No Waybill",

@@ -246,6 +246,8 @@ class SetupXML:
         self.o2oConfig['RD'].update({'LO':self.TpRailroad['location']})
         self.o2oConfig['RD'].update({'YR':self.TpRailroad['year']})
         self.o2oConfig['RD'].update({'SC':self.TpRailroad['scale']})
+        self.o2oConfig['RD'].update({'LN':self.TpRailroad['layoutName']})
+        self.o2oConfig['RD'].update({'BD':self.TpRailroad['buildDate']})
 
         PSE.writeConfigFile(self.o2oConfig)
         self.o2oConfig =  PSE.readConfigFile()
@@ -257,8 +259,8 @@ class SetupXML:
         _psLog.debug('setRailroadDetails')
 
     # Set the name
-        railroadName = self.o2oConfig['RD']['OR'] + ', ' + self.o2oConfig['RD']['TR']
-        self.OSU.Setup.setRailroadName(railroadName)
+        layoutName = self.o2oConfig['RD']['LN']
+        self.OSU.Setup.setRailroadName(layoutName)
     # Set the year
         rrYear = self.o2oConfig['RD']['YR']
         if rrYear:

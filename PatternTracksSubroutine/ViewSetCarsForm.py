@@ -178,37 +178,31 @@ def makeSetCarsFormHeader(setCarsFormData):
 
     _psLog.debug('makeSetCarsFormHeader')
 
-    configFile = PSE.readConfigFile('PT')
+    splitName = setCarsFormData['railroadName'].split('\n')
+    trackName = setCarsFormData['locations'][0]['tracks'][0]['trackName'] # There's only one track
+    locationName = setCarsFormData['locations'][0]['locationName'] # There's only one location
+    validDate = setCarsFormData['date']
+
+    headerTrackLabel = PSE.JAVX_SWING.JLabel()
+    headerTrackLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
+    headerTrackLabel.setText(PSE.BUNDLE['Set Rolling Stock for track:'] + ' ' + trackName + ' ' + PSE.BUNDLE['at'] + ' ' + locationName)
+
+    headerValidLabel = PSE.JAVX_SWING.JLabel()
+    headerValidLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
+    headerValidLabel.setText(validDate)
 
     combinedHeader = PSE.JAVX_SWING.JPanel()
-    combinedHeader.setLayout(PSE.JAVX_SWING.BoxLayout(
-        combinedHeader, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS)
-        )
+    combinedHeader.setLayout(PSE.JAVX_SWING.BoxLayout(combinedHeader, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
     combinedHeader.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
     combinedHeader.border = PSE.JAVX_SWING.BorderFactory.createEmptyBorder(10,0,10,0)
 
-    headerRRLabel = PSE.JAVX_SWING.JLabel(setCarsFormData['railroadName'])
-    headerRRLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
-    headerRRBox = makeSwingBox(100, configFile['PH'])
-    headerRRBox.add(headerRRLabel)
-
-    headerYTLabel = PSE.JAVX_SWING.JLabel()
-    headerYTLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
-    trackName = setCarsFormData['locations'][0]['tracks'][0]['trackName'] # There's only one track
-    locationName = setCarsFormData['locations'][0]['locationName'] # There's only one location
-    headerYTLabel.setText(PSE.BUNDLE['Set Rolling Stock for track:'] \
-                + ' ' + trackName + ' ' + PSE.BUNDLE['at'] + ' ' + locationName)
-
-    headerYTBox = makeSwingBox(100, configFile['PH'])
-    headerYTBox.add(headerYTLabel)
-
-    headerValidLabel = PSE.JAVX_SWING.JLabel(setCarsFormData['date'])
-    headerValidLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
-    headerValidBox = makeSwingBox(100, configFile['PH'])
-    headerValidBox.add(headerValidLabel)
-
-    combinedHeader.add(headerRRLabel)
-    combinedHeader.add(headerYTLabel)
+    for item in splitName:
+        headerDetailLabel = PSE.JAVX_SWING.JLabel()
+        headerDetailLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
+        headerDetailLabel.setText(item)
+        combinedHeader.add(headerDetailLabel)
+    combinedHeader.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,10)))
+    combinedHeader.add(headerTrackLabel)
     combinedHeader.add(headerValidLabel)
 
     return combinedHeader
