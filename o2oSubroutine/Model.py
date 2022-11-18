@@ -723,7 +723,7 @@ class NewLocationsAndTracks:
         return
 
     def addDivisionToLocation(self):
-        """If there is only one division, add all locations to it, except Unknown."""
+        """If there is only one division, add all locations to it, except Unreported."""
 
         divisions = PSE.DM.getList()
 
@@ -731,7 +731,7 @@ class NewLocationsAndTracks:
             return
 
         for location in PSE.LM.getList():
-            if location.getName() != 'Unknown':
+            if location.getName() != PSE.BUNDLE['Unreported']:
                 location.setDivision(divisions[0])
 
         return
@@ -742,7 +742,7 @@ class NewLocationsAndTracks:
 
         for location in self.tpRailroadData['locations']:
             newLocation = PSE.LM.newLocation(location)
-            if newLocation.getName() == 'Unknown':
+            if newLocation.getName() == PSE.BUNDLE['Unreported']:
                 newLocation.setTrainDirections(0)
 
         return
