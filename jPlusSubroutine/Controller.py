@@ -71,18 +71,31 @@ class StartUp:
 
     def activateWidgets(self):
         """The widget.getName() value is the name of the action for the widget.
-            IE 'button'
+            IE 'update'
             """
 
-        for widget in self.widgets:
-            widget.actionPerformed = getattr(self, widget.getName())
+        widget = self.widgets['control']['UP']
+        name = widget.getName()
+
+        widget.actionPerformed = getattr(self, name)
 
         return
 
     def update(self, EVENT):
-        '''Writes the text box entries to the configFile'''
+        '''Writes the text box entries to the configFile.'''
 
         _psLog.debug(EVENT)
+
+        configFile = PSE.readConfigFile()
+
+        for id, widget in self.widgets['panel'].items():
+            configFile['JP'].update({id:widget.getText()})
+
+        OSU = PSE.JMRI.jmrit.operations.setup
+        OSU.Setup.setYearModeled(configFile['JP']['YR'])
+
+        PSE.writeConfigFile(configFile)
+
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return

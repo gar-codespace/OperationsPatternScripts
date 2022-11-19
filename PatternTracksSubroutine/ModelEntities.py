@@ -399,7 +399,7 @@ def makeGenericHeader():
     configFile = PSE.readConfigFile()
 
     listHeader = {}
-    if configFile['CP']['DR']: # Replace with Railroad Details Subroutine
+    if configFile['CP']['jPlusSubroutine']: # Replace with Railroad Details Subroutine
         listHeader['railroadName'] = makeDetailedHeader(configFile['JP'])
     else:
         listHeader['railroadName'] = unicode(OSU.Setup.getRailroadName(), PSE.ENCODING)

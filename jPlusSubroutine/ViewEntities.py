@@ -15,24 +15,77 @@ class jPlusSubroutinePanel:
 
         self.configFile = PSE.readConfigFile()
 
-        self.nrButton = PSE.JAVX_SWING.JButton()
-        self.nrButton.setText(PSE.BUNDLE[u'Update'])
-        self.nrButton.setName('update')
+        self.upButton = PSE.JAVX_SWING.JButton()
+        # self.upButton.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
+        self.upButton.setText(PSE.BUNDLE[u'Update'])
+        self.upButton.setName('update')
 
-        self.controlWidgets = []
+        self.controlWidgets = {}
+        self.controlWidgets['UP'] = self.upButton
+        self.panelWidgets = {}
 
         return
 
     def jPlusPanelEditable(self):
         """User can edit the rr details."""
 
-        tpPanel = PSE.JAVX_SWING.JPanel()
+        configFile = PSE.readConfigFile()
 
+        combinedHeader = PSE.JAVX_SWING.JPanel()
+        combinedHeader.setLayout(PSE.JAVX_SWING.BoxLayout(combinedHeader, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
+        combinedHeader.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
+        # combinedHeader.border = PSE.JAVX_SWING.BorderFactory.createEmptyBorder(10,0,10,0)
 
-        tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
-        tpPanel.add(self.nrButton)
+        panel = PSE.JAVX_SWING.JPanel()
+        # panel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
+        panel.add(PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Operating Railroad Name']))
+        panel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8 ,0)))
+        inputText = PSE.JAVX_SWING.JTextField(configFile['JP']['OR'])
+        inputText.setColumns(40)
+        panel.add(inputText)
+        self.panelWidgets['OR'] = inputText
+        combinedHeader.add(panel)
 
-        return tpPanel
+        combinedHeader.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0 ,3)))
+
+        panel = PSE.JAVX_SWING.JPanel()
+        panel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
+        panel.add(PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Operational Territory']))
+        panel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8 ,0)))
+        inputText = PSE.JAVX_SWING.JTextField(configFile['JP']['TR'])
+        inputText.setColumns(40)
+        panel.add(inputText)
+        self.panelWidgets['TR'] = inputText
+        combinedHeader.add(panel)
+
+        combinedHeader.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0 ,3)))
+
+        panel = PSE.JAVX_SWING.JPanel()
+        panel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
+        panel.add(PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Location']))
+        panel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8 ,0)))
+        inputText = PSE.JAVX_SWING.JTextField(configFile['JP']['LO'])
+        inputText.setColumns(40)
+        panel.add(inputText)
+        self.panelWidgets['LO'] = inputText
+        combinedHeader.add(panel)
+
+        combinedHeader.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0 ,3)))
+
+        panel = PSE.JAVX_SWING.JPanel()
+        panel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
+        panel.add(PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Year Modeled']))
+        panel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(5 ,0)))
+        inputText = PSE.JAVX_SWING.JTextField(configFile['JP']['YR'])
+        inputText.setColumns(5)
+        panel.add(inputText)
+        self.panelWidgets['YR'] = inputText
+        combinedHeader.add(panel)
+
+        combinedHeader.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,15)))
+        combinedHeader.add(self.upButton)
+
+        return combinedHeader
 
     def jPlusPanelFixed(self):
         """If using o2o, the rr details are adde from TrainPlayer.
@@ -90,9 +143,10 @@ class jPlusSubroutinePanel:
 
         return combinedHeader
 
-    def JPWidgetGetter(self):
+    def jPlusWidgets(self):
 
+        allWidgets = {}
+        allWidgets['control'] = self.controlWidgets
+        allWidgets['panel'] = self.panelWidgets
 
-        self.controlWidgets.append(self.nrButton)
-
-        return self.controlWidgets
+        return allWidgets

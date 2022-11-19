@@ -39,7 +39,7 @@ class ManageGui:
         else:
             subroutinesPanel = jPlusSubroutinePanel.jPlusPanelEditable()
 
-        subroutinePanelWidgets = jPlusSubroutinePanel.JPWidgetGetter()
+        subroutinePanelWidgets = jPlusSubroutinePanel.jPlusWidgets()
 
         return subroutinesPanel, subroutinePanelWidgets
 
