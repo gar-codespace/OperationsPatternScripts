@@ -95,21 +95,19 @@ class jPlusSubroutinePanel:
         combinedHeader = PSE.JAVX_SWING.JPanel()
         combinedHeader.setLayout(PSE.JAVX_SWING.BoxLayout(combinedHeader, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
         combinedHeader.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
-        combinedHeader.border = PSE.JAVX_SWING.BorderFactory.createEmptyBorder(10,0,10,0)
+        # combinedHeader.border = PSE.JAVX_SWING.BorderFactory.createEmptyBorder(10,0,10,0)
 
         reportName = 'tpRailroadData'
         fileName = reportName + '.json'
         targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
 
-        try:
-            PSE.JAVA_IO.File(targetPath).isFile()
-        except:
+        if not PSE.JAVA_IO.File(targetPath).isFile():
             headerDetailLabel = PSE.JAVX_SWING.JLabel()
             headerDetailLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
             headerDetailLabel.setText(PSE.BUNDLE[u'Not found: incomplete o2o import'])
             combinedHeader.add(headerDetailLabel)
             combinedHeader.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
-            return
+            return combinedHeader
 
         report = PSE.genericReadReport(targetPath)
         tpRailroad = PSE.loadJson(report)

@@ -31,8 +31,11 @@ def resetPatternLocation():
         Controller.updatePatternTracksSubroutine
         """
 
-    selectedItem = PSE.getAllDivisionNames()[0]
-    jDivision(selectedItem)
+    selectedItem = PSE.getAllDivisionNames()
+    try:
+        jDivision(selectedItem[0])
+    except:
+        jDivision(selectedItem)
 
     return
 
@@ -58,20 +61,24 @@ def jDivision(selectedItem):
     configFile = PSE.readConfigFile()
     newDivisionList = PSE.getAllDivisionNames()
     newLocationList = PSE.getLocationsByDivision(selectedItem)
-    if newLocationList:
-        newLocationTrackDict = ModelEntities.getAllTracksForLocation(newLocationList[0])
-    else:
-        newLocationTrackDict = {}
+    if not newLocationList:
+        newLocationList = PSE.getAllLocationNames()
+
+    newLocationTrackDict = ModelEntities.getAllTracksForLocation(newLocationList[0])
 
     configFile['PT'].update({'AD': newDivisionList})
     configFile['PT'].update({'PD': selectedItem})
+
     configFile['PT'].update({'AL': newLocationList})
+    configFile['PT'].update({'PL': newLocationList[0]})
     configFile['PT'].update({'PT': newLocationTrackDict})
+
     configFile['PT'].update({'PA': False})
     configFile['PT'].update({'PI': False})
+
     PSE.writeConfigFile(configFile)
 
-    _psLog.info('The track list for division ' + selectedItem + ' has been created')
+    _psLog.info('The track list for division ' + str(selectedItem) + ' has been created')
 
     return
 
@@ -85,10 +92,12 @@ def jLocations(selectedItem):
     newLocationList = PSE.getAllLocationNames()
     newLocationTrackDict = ModelEntities.getAllTracksForLocation(newLocation)
 
-    configFile['PT'].update({'PA': False})
-    configFile['PT'].update({'PI': False})
     configFile['PT'].update({'PL': newLocation})
     configFile['PT'].update({'PT': newLocationTrackDict})
+
+    configFile['PT'].update({'PA': False})
+    configFile['PT'].update({'PI': False})
+    
     PSE.writeConfigFile(configFile)
 
     return
@@ -165,25 +174,23 @@ def updateLocations():
 
     _psLog.debug('updateLocations')
 
-    newConfigFile = PSE.readConfigFile()
-    subConfigfile = newConfigFile['PT']
+    configfile = PSE.readConfigFile()
 
     allDivisions = PSE.getAllDivisionNames()
-    if not subConfigfile['AD']: # when this sub is used for the first time
-        subConfigfile.update({'AD': allDivisions})
-        subConfigfile.update({'PD': allDivisions[0]})
+    configfile['PT'].update({'AD': allDivisions})
+    if allDivisions and not configfile['PT']['PD']: # when this sub is used for the first time
+        configfile['PT'].update({'PD': allDivisions[0]})
+    else:
+        _psLog.info('There are no divisions for this profile')
 
     allLocations = PSE.getAllLocationNames()
-    if not allLocations:
+    configfile['PT'].update({'AL': allLocations})
+    if allLocations and not configfile['PT']['PL']: # when this sub is used for the first time
+        configfile['PT'].update({'PL': allLocations[0]})
+        configfile['PT'].update({'PT': ModelEntities.makeInitialTrackList(allLocations[0])})
+    else:
         _psLog.warning('There are no locations for this profile')
-        return
 
-    # if not subConfigfile['AL']: # when this sub is used for the first time
-    #     subConfigfile.update({'PL': allLocations[0]})
-    #     subConfigfile.update({'PT': ModelEntities.makeInitialTrackList(allLocations[0])})
+    PSE.writeConfigFile(configfile)
 
-    # subConfigfile.update({'AL': allLocations})
-    newConfigFile.update({'PT': subConfigfile})
-    PSE.writeConfigFile(newConfigFile)
-
-    return newConfigFile
+    return

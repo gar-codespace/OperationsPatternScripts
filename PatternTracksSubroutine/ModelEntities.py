@@ -141,6 +141,8 @@ def makeTrackPatternReport(trackPattern):
         """
 
     trackPatternReport = makeGenericHeader()
+    parseName = trackPatternReport['railroadName'].replace(';', '\n')
+    trackPatternReport.update({'railroadName':parseName})
 # put in as a list to maintain compatability with JSON File Format/JMRI manifest export.
     trackPatternReport['locations'] = [trackPattern]
 
@@ -400,31 +402,20 @@ def makeGenericHeader():
 
     listHeader = {}
     if configFile['CP']['jPlusSubroutine']: # Replace with Railroad Details Subroutine
-        listHeader['railroadName'] = makeDetailedHeader(configFile['JP'])
+        listHeader['railroadName'] = PSE.jPlusHeader()
     else:
         listHeader['railroadName'] = unicode(OSU.Setup.getRailroadName(), PSE.ENCODING)
+
+    listHeader['railroadDescription'] = ''
+    listHeader['trainName'] = ''
+    listHeader['trainDescription'] = ''
+    listHeader['trainComment'] = ''
+
 
     listHeader['date'] = unicode(PSE.timeStamp(), PSE.ENCODING)
     listHeader['locations'] = [{'locationName': configFile['PT']['PL'], 'tracks': [{'cars': [], 'locos': []}]}]
 
     return listHeader
-
-def makeDetailedHeader(railroadDetails):
-    """Used by:
-        makeGenericHeader
-        """
-
-    detailedHeader = ''
-    if railroadDetails['OR']:
-        detailedHeader += railroadDetails['OR']
-
-    if railroadDetails['TR']:
-        detailedHeader += '\n' + railroadDetails['TR']
-
-    if railroadDetails['LO']:
-        detailedHeader += '\n' + railroadDetails['LO']
-
-    return detailedHeader
 
 def makeInitialTrackList(location):
     """Used by:

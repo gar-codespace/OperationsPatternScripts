@@ -298,6 +298,33 @@ def occuranceTally(listOfOccurances):
 
     return dict
 
+def jPlusHeader():
+    """Used by:
+        makeGenericHeader
+        """
+
+    configFile = readConfigFile()
+    detailedHeader = ''
+
+    operatingRoad = configFile['JP']['OR']
+    if not operatingRoad:
+        OSU = JMRI.jmrit.operations.setup
+        operatingRoad = unicode(OSU.Setup.getRailroadName(), ENCODING)
+
+    patternDivision = configFile['PT']['PD']
+    if patternDivision:
+        detailedHeader += operatingRoad + ' - ' + patternDivision
+    else:
+        detailedHeader += operatingRoad
+
+    if configFile['JP']['TR']:
+        detailedHeader += ';' + configFile['JP']['TR']
+
+    if configFile['JP']['LO']:
+        detailedHeader += ';' + configFile['JP']['LO']
+
+    return detailedHeader
+
 def getAllDivisionNames():
     """JMRI sorts the list.
         Used by:
