@@ -451,16 +451,24 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(JP_ACTIVATE_EVENT)
         patternConfig = PSE.readConfigFile()
+        self.OSU = PSE.JMRI.jmrit.operations.setup
+
 
         if patternConfig['CP']['jPlusSubroutine']: # If enabled, turn it off
             patternConfig['CP']['jPlusSubroutine'] = False
             JP_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Enable j Plus subroutine'])
+
+            self.OSU.Setup.setRailroadName(patternConfig['CP']['LN'])
 
             self.psLog.info('j Plus support deactivated')
             print('j Plus support deactivated')
         else:
             patternConfig['CP']['jPlusSubroutine'] = True
             JP_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Disable j Plus subroutine'])
+
+            patternConfig['CP']['LN'] = self.OSU.Setup.getRailroadName()
+            jPlusHeader = PSE.jPlusHeader().replace(';', '\n')
+            self.OSU.Setup.setRailroadName(jPlusHeader)
 
             self.psLog.info('j Plus support activated')
             print('j Plus support activated')
@@ -672,6 +680,8 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         startTime = PSE.TIME.time()
         self.psLog = PSE.LOGGING.getLogger('OPS.Main.Controller')
         self.logger.initialLogMessage(self.psLog)
+        
+        self.model.validatePatternConfig()
 
         Bundle.validatePluginBundle()
         PSE.BUNDLE = Bundle.getBundleForLocale()
@@ -681,7 +691,6 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         PSE.closeOutputPanel()
         PSE.makeReportFolders()
-        self.model.validatePatternConfig()
         PSE.CreateStubFile().make()
         if PSE.readConfigFile()['CP']['o2oSubroutine']:
             self.o2oSubroutineListeners()

@@ -112,31 +112,35 @@ class jPlusSubroutinePanel:
         report = PSE.genericReadReport(targetPath)
         tpRailroad = PSE.loadJson(report)
 
-        if tpRailroad['operatingRoad']:
+        if self.configFile['JP']['OR']:
             headerDetailLabel = PSE.JAVX_SWING.JLabel()
             headerDetailLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
-            headerDetailLabel.setText(tpRailroad['operatingRoad'])
+            headerDetailLabel.setText(self.configFile['JP']['OR'])
+            # headerDetailLabel.setText(tpRailroad['operatingRoad'])
             combinedHeader.add(headerDetailLabel)
             combinedHeader.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
 
-        if tpRailroad['territory']:
+        if self.configFile['JP']['TR']:
             headerDetailLabel = PSE.JAVX_SWING.JLabel()
             headerDetailLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
-            headerDetailLabel.setText(tpRailroad['territory'])
+            headerDetailLabel.setText(self.configFile['JP']['TR'])
+            # headerDetailLabel.setText(tpRailroad['territory'])
             combinedHeader.add(headerDetailLabel)
             combinedHeader.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
 
-        if tpRailroad['location']:
+        if self.configFile['JP']['LO']:
             headerDetailLabel = PSE.JAVX_SWING.JLabel()
             headerDetailLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
-            headerDetailLabel.setText(tpRailroad['location'])
+            headerDetailLabel.setText(self.configFile['JP']['LO'])
+            # headerDetailLabel.setText(tpRailroad['location'])
             combinedHeader.add(headerDetailLabel)
             combinedHeader.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
 
-        if tpRailroad['year']:
+        if self.configFile['JP']['YR']:
             headerDetailLabel = PSE.JAVX_SWING.JLabel()
             headerDetailLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
-            headerDetailLabel.setText(tpRailroad['year'])
+            headerDetailLabel.setText(self.configFile['JP']['YR'])
+            # headerDetailLabel.setText(tpRailroad['year'])
             combinedHeader.add(headerDetailLabel)
 
         return combinedHeader

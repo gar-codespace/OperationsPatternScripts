@@ -73,6 +73,7 @@
       "UX" : "UseSomethingElse"
     },
     "TC" : "UD",
+    "LN" : "",
     "DR" : true,
     "AP" : true,
     "SE" : "utf-8",
@@ -91,7 +92,7 @@
     "PX" : 0,
     "PY" : 0,
     "OC" : true,
-    "RV" : 20221117
+    "RV" : 20221119
   },
   "RM" : {
     "DS" : "No Waybill",

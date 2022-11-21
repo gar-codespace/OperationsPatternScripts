@@ -64,6 +64,7 @@ class StartUp:
     def makeSubroutinePanel(self):
         """Makes the control panel that sits inside the frame"""
 
+        Model.jPanelSetup()
         self.subroutinePanel, self.widgets = View.ManageGui().makeSubroutinePanel()
         self.activateWidgets()
 
@@ -95,6 +96,9 @@ class StartUp:
         OSU.Setup.setYearModeled(configFile['JP']['YR'])
 
         PSE.writeConfigFile(configFile)
+
+        jPlusHeader = PSE.jPlusHeader().replace(';', '\n')
+        OSU.Setup.setRailroadName(jPlusHeader)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
