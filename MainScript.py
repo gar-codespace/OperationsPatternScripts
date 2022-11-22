@@ -134,7 +134,7 @@ class View:
 
         uniqueWindow = PSE.JMRI.util.JmriJFrame()
 
-        asMenuItem = self.makeMenuItem(self.setAsDropDownText())
+        # asMenuItem = self.makeMenuItem(self.setAsDropDownText())
         jpMenuItem = self.makeMenuItem(self.setJpDropDownText())
         tpMenuItem = self.makeMenuItem(self.setTpDropDownText())
         o2oMenuItem = self.makeMenuItem(self.setOoDropDownText())
@@ -152,7 +152,7 @@ class View:
         toolsMenu.add(PSE.JMRI.jmrit.operations.setup.OptionAction())
         toolsMenu.add(PSE.JMRI.jmrit.operations.setup.PrintOptionAction())
         toolsMenu.add(PSE.JMRI.jmrit.operations.setup.BuildReportOptionAction())
-        toolsMenu.add(asMenuItem)
+        # toolsMenu.add(asMenuItem)
         toolsMenu.add(jpMenuItem)
         toolsMenu.add(tpMenuItem)
         toolsMenu.add(o2oMenuItem)
@@ -196,17 +196,6 @@ class View:
         self.psPluginMenuItems.append(menuItem)
 
         return menuItem
-
-    def setAsDropDownText(self):
-        """itemMethod - Set the drop down text per the Apply Schedule flag."""
-
-        patternConfig = PSE.readConfigFile('PT')
-        if patternConfig['AS']:
-            menuText = PSE.BUNDLE[u'Do Not Apply Schedule']
-        else:
-            menuText = PSE.BUNDLE[u'Apply Schedule']
-
-        return menuText, 'asItemSelected'
 
     def setJpDropDownText(self):
         """itemMethod - Set the drop down text per the config file PatternTracksSubroutine Include flag ['CP']['IJ']"""
@@ -410,27 +399,6 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         for menuItem in self.menuItemList:
             menuItem.addActionListener(getattr(self, menuItem.getName()))
-
-        return
-
-    def asItemSelected(self, AS_ACTIVATE_EVENT):
-        """menu item-Tools/Apply Schedule"""
-
-        self.psLog.debug(AS_ACTIVATE_EVENT)
-        patternConfig = PSE.readConfigFile()
-
-        if patternConfig['PT']['AS']:
-            patternConfig['PT'].update({'AS': False})
-            AS_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Apply Schedule'])
-            self.psLog.info('Apply Schedule turned off')
-            print('Apply Schedule turned off')
-        else:
-            patternConfig['PT'].update({'AS': True})
-            AS_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Do Not Apply Schedule'])
-            self.psLog.info('Apply Schedule turned on')
-            print('Apply Schedule turned on')
-
-        PSE.writeConfigFile(patternConfig)
 
         return
 
