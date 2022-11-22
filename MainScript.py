@@ -138,7 +138,6 @@ class View:
         jpMenuItem = self.makeMenuItem(self.setJpDropDownText())
         tpMenuItem = self.makeMenuItem(self.setTpDropDownText())
         o2oMenuItem = self.makeMenuItem(self.setOoDropDownText())
-        gsMenuItem = self.makeMenuItem(self.setGsDropDownText()) # Generic subroutine menu item
         ptMenuItem = self.makeMenuItem(self.setPtDropDownText())
         if not self.isKeyFile:
             ptMenuItem.setEnabled(False)
@@ -241,17 +240,6 @@ class View:
             menuText = PSE.BUNDLE[u'Enable o2o subroutine']
 
         return menuText, 'ooItemSelected'
-
-    def setGsDropDownText(self):
-        """itemMethod - Set the drop down text per the config file Subroutine Include flag ['CP']['IG']"""
-
-        patternConfig = PSE.readConfigFile('CP')
-        if patternConfig['GenericSubroutine']:
-            menuText = PSE.BUNDLE[u'Disable generic subroutine']
-        else:
-            menuText = PSE.BUNDLE[u'Enable generic subroutine']
-
-        return menuText, 'gsItemSelected'
 
     def setPtDropDownText(self):
         """itemMethod - Set the drop down text for the Translate Plugin item."""
@@ -534,19 +522,6 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         return
 
-    def gsItemSelected(self, GS_ACTIVATE_EVENT):
-        """menu item-Tools/Enable Generic Subroutine."""
-
-        self.psLog.debug(GS_ACTIVATE_EVENT)
-        patternConfig = PSE.readConfigFile()
-
-        # Put stuff here that the subroutine does.
-
-        PSE.writeConfigFile(patternConfig)
-        self.shutdownPlugin()
-        self.startupPlugin()
-        return
-
     def ptItemSelected(self, TRANSLATE_PLUGIN_EVENT):
         """menu item-Tools/Translate Plugin"""
 
@@ -615,7 +590,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(OPEN_GH_EVENT)
 
-        ghURL = 'https://github.com//GregRitacco//OperationsPatternScripts'
+        ghURL = 'https://github.com/gar-codespace/OperationsPatternScripts'
         PSE.JMRI.util.HelpUtil.openWebPage(ghURL)
 
         return
@@ -680,7 +655,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         startTime = PSE.TIME.time()
         self.psLog = PSE.LOGGING.getLogger('OPS.Main.Controller')
         self.logger.initialLogMessage(self.psLog)
-        
+
         self.model.validatePatternConfig()
 
         Bundle.validatePluginBundle()

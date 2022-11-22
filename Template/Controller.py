@@ -13,6 +13,39 @@ SCRIPT_REV = 20221010
 _psLog = PSE.LOGGING.getLogger('OPS.GS.Controller')
 
 
+
+
+
+    def setGsDropDownText(self):
+        """itemMethod - Set the drop down text per the config file Subroutine Include flag ['CP']['IG']"""
+
+        patternConfig = PSE.readConfigFile('CP')
+        if patternConfig['GenericSubroutine']:
+            menuText = PSE.BUNDLE[u'Disable generic subroutine']
+        else:
+            menuText = PSE.BUNDLE[u'Enable generic subroutine']
+
+        return menuText, 'gsItemSelected
+
+
+
+
+
+            def gsItemSelected(self, GS_ACTIVATE_EVENT):
+                """menu item-Tools/Enable Generic Subroutine."""
+
+                self.psLog.debug(GS_ACTIVATE_EVENT)
+                patternConfig = PSE.readConfigFile()
+
+                # Put stuff here that the subroutine does.
+
+                PSE.writeConfigFile(patternConfig)
+                self.shutdownPlugin()
+                self.startupPlugin()
+                return
+
+                
+
 def updateSubroutine(parent):
     """Allows other subroutines to update and restart the Generic Sub.
         Not implemented.

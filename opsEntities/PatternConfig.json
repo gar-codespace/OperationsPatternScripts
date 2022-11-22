@@ -80,19 +80,17 @@
     "IL" : [
       "jPlusSubroutine",
       "PatternTracksSubroutine",
-      "o2oSubroutine",
-      "GenericSubroutine"
+      "o2oSubroutine"
     ],
     "jPlusSubroutine" : false,
     "PatternTracksSubroutine" : true,
     "o2oSubroutine" : false,
-    "GenericSubroutine" : false,
     "PH" : 280,
     "PW" : 1100,
     "PX" : 0,
     "PY" : 0,
     "OC" : true,
-    "RV" : 20221119
+    "RV" : 20221120
   },
   "RM" : {
     "DS" : "No Waybill",
