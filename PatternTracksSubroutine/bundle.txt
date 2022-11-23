@@ -51,3 +51,7 @@ Work Location:
 Yard tracks only
 FAIL: CreateSetCarsFormGui.quickCheck.testValidityOfForm
 FAIL: Mismatched input list and car roster lengths
+Disable Track Pattern subroutine
+Enable Track Pattern subroutine
+Apply Schedule
+Do Not Apply Schedule

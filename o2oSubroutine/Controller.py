@@ -64,6 +64,48 @@ def restartSubroutine(subroutineFrame):
 
     return
 
+def setDropDownText():
+    """itemMethod - Set the drop down text per the config file o2oSubroutine Include flag ['CP']['IO']"""
+
+    patternConfig = PSE.readConfigFile('CP')
+    if patternConfig['o2oSubroutine']:
+        menuText = PSE.BUNDLE[u'Disable o2o subroutine']
+    else:
+        menuText = PSE.BUNDLE[u'Enable o2o subroutine']
+
+    return menuText, 'ooItemSelected'
+
+def actionListener(EVENT):
+    """menu item-Tools/Enable o2o subroutine"""
+
+    _psLog.debug(EVENT)
+    patternConfig = PSE.readConfigFile()
+
+    if patternConfig['CP']['o2oSubroutine']: # If enabled, turn it off
+        patternConfig['CP']['o2oSubroutine'] = False
+        EVENT.getSource().setText(PSE.BUNDLE[u'Enable o2o subroutine'])
+
+        # self.removeTrainsTableListener()
+        # self.removeBuiltTrainListener()
+
+        _psLog.info('o2o subroutine deactivated')
+        print('o2o subroutine deactivated')
+    else:
+        patternConfig['CP']['o2oSubroutine'] = True
+        EVENT.getSource().setText(PSE.BUNDLE[u'Disable o2o subroutine'])
+
+        # self.addTrainsTableListener()
+        # self.addBuiltTrainListener()
+
+        _psLog.info('o2o subroutine activated')
+        print('o2o subroutine activated')
+
+    PSE.writeConfigFile(patternConfig)
+    # self.shutdownPlugin()
+    # self.startupPlugin()
+
+    return
+
 
 class StartUp:
     """Start the o2o subroutine"""

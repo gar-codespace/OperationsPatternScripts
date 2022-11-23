@@ -45,59 +45,28 @@ Bundle.BUNDLE_DIR = OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle')
 PSE.BUNDLE = {}
 
 
-class Model:
+def validatePatternConfig():
+    """To be reworked when mergeConfigFiles() is implemented."""
 
-    def __init__(self):
+    if not PSE.validateConfigFileVersion():
+        PSE.mergeConfigFiles()
+        self.psLog.info('Previous PatternConfig.json merged with new')
+        PSE.writeNewConfigFile()
+        self.psLog.warning('New PatternConfig.json file created for this profile')
 
-        self.psLog = PSE.LOGGING.getLogger('OPS.Main.Model')
+    return
 
-        return
-
-    def validatePatternConfig(self):
-        """To be reworked when mergeConfigFiles() is implemented."""
-
-        if not PSE.validateConfigFileVersion():
-            PSE.mergeConfigFiles()
-            self.psLog.info('Previous PatternConfig.json merged with new')
-            PSE.writeNewConfigFile()
-            self.psLog.warning('New PatternConfig.json file created for this profile')
-
-        return
-
-    def makePatternScriptsPanel(self, pluginPanel):
-
-        for subroutine in self.makeSubroutineList():
-            pluginPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,10)))
-            pluginPanel.add(subroutine)
-            pluginPanel.setName('OPS Plugin Panel')
-        return pluginPanel
-
-    def makeSubroutineList(self):
-        """Add a subroutine if its ['CP']['I*'] = true."""
-
-        subroutineList = []
-        controlPanelConfig = PSE.readConfigFile('CP')
-        for include in controlPanelConfig['IL']:
-            if controlPanelConfig[include]:
-                xModule = __import__(include, fromlist=['Controller'])
-                startUp = xModule.Controller.StartUp()
-                subroutineFrame = startUp.makeSubroutineFrame()
-                subroutineList.append(subroutineFrame)
-                self.psLog.info(include + ' subroutine added to control panel')
-
-        return subroutineList
 
 class View:
 
-    def __init__(self, scrollPanel):
+    def __init__(self):
 
         self.psLog = PSE.LOGGING.getLogger('OPS.Main.View')
 
         self.cpSettings = PSE.readConfigFile('CP')
 
-        self.controlPanel = scrollPanel
         self.psPluginMenuItems = []
-        self.isKeyFile = Bundle.validateKeyFile()
+        self.subroutineMenuItems = []
 
         return
 
@@ -117,6 +86,33 @@ class View:
 
         return pluginPanel
 
+    def makePatternScriptsPanel(self, pluginPanel):
+
+        for subroutine in self.makeSubroutineList():
+            pluginPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,10)))
+            pluginPanel.add(subroutine)
+            pluginPanel.setName('OPS Plugin Panel')
+        return pluginPanel
+
+    def makeSubroutineList(self):
+        """Add all the subroutines in ['CP']['IL'], activate if ['CP']['*Subroutine'] is true."""
+
+        subroutineList = []
+        controlPanelConfig = PSE.readConfigFile('CP')
+        for include in controlPanelConfig['IL']:
+            xModule = __import__(include, fromlist=['Controller'])
+            menuText, itemName = xModule.Controller.setDropDownText()
+            menuItem = self.makeMenuItem(menuText, itemName)
+            menuItem.addActionListener(xModule.Controller.actionListener)
+            self.subroutineMenuItems.append(menuItem)
+            if controlPanelConfig[include]:
+                startUp = xModule.Controller.StartUp()
+                subroutineFrame = startUp.makeSubroutineFrame()
+                subroutineList.append(subroutineFrame)
+                self.psLog.info(include + ' subroutine added to control panel')
+
+        return subroutineList
+
     def makeScrollPanel(self, pluginPanel):
 
         scrollPanel = PSE.JAVX_SWING.JScrollPane(pluginPanel)
@@ -128,43 +124,57 @@ class View:
 
         return self.psPluginMenuItems
 
-    def makePatternScriptsWindow(self):
+    def makePatternScriptsWindow(self, scrollPanel):
 
         self.psLog.debug('makePatternScriptsWindow')
 
         uniqueWindow = PSE.JMRI.util.JmriJFrame()
 
-        # asMenuItem = self.makeMenuItem(self.setAsDropDownText())
-        jpMenuItem = self.makeMenuItem(self.setJpDropDownText())
-        tpMenuItem = self.makeMenuItem(self.setTpDropDownText())
-        o2oMenuItem = self.makeMenuItem(self.setOoDropDownText())
-        ptMenuItem = self.makeMenuItem(self.setPtDropDownText())
-        if not self.isKeyFile:
-            ptMenuItem.setEnabled(False)
-        rsMenuItem = self.makeMenuItem(self.setRsDropDownText())
-        helpMenuItem = self.makeMenuItem(self.setHmDropDownText())
-        gitHubMenuItem = self.makeMenuItem(self.setGhDropDownText())
-        opsFolderMenuItem = self.makeMenuItem(self.setOfDropDownText())
-        logMenuItem = self.makeMenuItem(self.setLmDropDownText())
-        editConfigMenuItem = self.makeMenuItem(self.setEcDropDownText())
-
         toolsMenu = PSE.JAVX_SWING.JMenu(PSE.BUNDLE[u'Tools'])
         toolsMenu.add(PSE.JMRI.jmrit.operations.setup.OptionAction())
         toolsMenu.add(PSE.JMRI.jmrit.operations.setup.PrintOptionAction())
         toolsMenu.add(PSE.JMRI.jmrit.operations.setup.BuildReportOptionAction())
-        # toolsMenu.add(asMenuItem)
-        toolsMenu.add(jpMenuItem)
-        toolsMenu.add(tpMenuItem)
-        toolsMenu.add(o2oMenuItem)
-        # toolsMenu.add(gsMenuItem)
-        toolsMenu.add(editConfigMenuItem)
+
+        for menuItem in self.subroutineMenuItems:
+            toolsMenu.add(menuItem)
+
+        itemText, itemName = self.setPtDropDownText()
+        ptMenuItem = self.makeMenuItem(itemText, itemName)
+        self.psPluginMenuItems.append(ptMenuItem)
         toolsMenu.add(ptMenuItem)
+        if not Bundle.validateKeyFile():
+            ptMenuItem.setEnabled(False)
+
+        itemText, itemName = self.setEcDropDownText()
+        editConfigMenuItem = self.makeMenuItem(itemText, itemName)
+        self.psPluginMenuItems.append(editConfigMenuItem)
+        toolsMenu.add(editConfigMenuItem)
+
+        itemText, itemName = self.setRsDropDownText()
+        rsMenuItem = self.makeMenuItem(itemText, itemName)
+        self.psPluginMenuItems.append(rsMenuItem)
         toolsMenu.add(rsMenuItem)
 
         helpMenu = PSE.JAVX_SWING.JMenu(PSE.BUNDLE[u'Help'])
+
+        itemText, itemName = self.setHmDropDownText()
+        helpMenuItem = self.makeMenuItem(itemText, itemName)
+        self.psPluginMenuItems.append(helpMenuItem)
         helpMenu.add(helpMenuItem)
+
+        itemText, itemName = self.setGhDropDownText()
+        gitHubMenuItem = self.makeMenuItem(itemText, itemName)
+        self.psPluginMenuItems.append(gitHubMenuItem)
         helpMenu.add(gitHubMenuItem)
+
+        itemText, itemName = self.setOfDropDownText()
+        opsFolderMenuItem = self.makeMenuItem(itemText, itemName)
+        self.psPluginMenuItems.append(opsFolderMenuItem)
         helpMenu.add(opsFolderMenuItem)
+
+        itemText, itemName = self.setLmDropDownText()
+        logMenuItem = self.makeMenuItem(itemText, itemName)
+        self.psPluginMenuItems.append(logMenuItem)
         helpMenu.add(logMenuItem)
 
         psMenuBar = PSE.JAVX_SWING.JMenuBar()
@@ -178,7 +188,7 @@ class View:
         uniqueWindow.setTitle(PSE.BUNDLE[u'Pattern Scripts'])
         uniqueWindow.addWindowListener(Listeners.PatternScriptsWindow())
         uniqueWindow.setJMenuBar(psMenuBar)
-        uniqueWindow.add(self.controlPanel)
+        uniqueWindow.add(scrollPanel)
         # uniqueWindow.pack()
         uniqueWindow.setSize(configPanel['PW'], configPanel['PH'])
         uniqueWindow.setLocation(configPanel['PX'], configPanel['PY'])
@@ -186,49 +196,13 @@ class View:
 
         return
 
-    def makeMenuItem(self, itemMethod):
+    def makeMenuItem(self, itemText, itemName):
         """Makes all the items for the custom drop down menus."""
-
-        itemText, itemName = itemMethod
 
         menuItem = PSE.JAVX_SWING.JMenuItem(itemText)
         menuItem.setName(itemName)
-        self.psPluginMenuItems.append(menuItem)
 
         return menuItem
-
-    def setJpDropDownText(self):
-        """itemMethod - Set the drop down text per the config file PatternTracksSubroutine Include flag ['CP']['IJ']"""
-
-        patternConfig = PSE.readConfigFile('CP')
-        if patternConfig['jPlusSubroutine']:
-            menuText = PSE.BUNDLE[u'Disable j Plus subroutine']
-        else:
-            menuText = PSE.BUNDLE[u'Enable j Plus subroutine']
-
-        return menuText, 'jpItemSelected'
-
-    def setTpDropDownText(self):
-        """itemMethod - Set the drop down text per the config file PatternTracksSubroutine Include flag ['CP']['IT']"""
-
-        patternConfig = PSE.readConfigFile('CP')
-        if patternConfig['PatternTracksSubroutine']:
-            menuText = PSE.BUNDLE[u'Disable Track Pattern subroutine']
-        else:
-            menuText = PSE.BUNDLE[u'Enable Track Pattern subroutine']
-
-        return menuText, 'tpItemSelected'
-
-    def setOoDropDownText(self):
-        """itemMethod - Set the drop down text per the config file o2oSubroutine Include flag ['CP']['IO']"""
-
-        patternConfig = PSE.readConfigFile('CP')
-        if patternConfig['o2oSubroutine']:
-            menuText = PSE.BUNDLE[u'Disable o2o subroutine']
-        else:
-            menuText = PSE.BUNDLE[u'Enable o2o subroutine']
-
-        return menuText, 'ooItemSelected'
 
     def setPtDropDownText(self):
         """itemMethod - Set the drop down text for the Translate Plugin item."""
@@ -291,8 +265,6 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         self.logger = PSE.Logger(logFileTarget)
         self.logger.startLogger('OPS')
 
-        self.model = Model()
-
         self.trainsTableModel = PSE.JMRI.jmrit.operations.trains.TrainsTableModel()
         self.builtTrainListener = Listeners.BuiltTrain()
         self.trainsTableListener = Listeners.TrainsTable(self.builtTrainListener)
@@ -304,7 +276,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
     def addPatternScriptsButton(self):
         """The Pattern Scripts button on the PanelPro frame."""
 
-        self.patternScriptsButton = View(None).makePsButton()
+        self.patternScriptsButton = View().makePsButton()
         self.patternScriptsButton.actionPerformed = self.patternScriptsButtonAction
         PSE.APPS.buttonSpace().add(self.patternScriptsButton)
         PSE.APPS.buttonSpace().revalidate()
@@ -370,14 +342,12 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
             patternScriptsButtonAction
             """
 
-        view = View(None)
+        view = View()
         emptyPluginPanel = view.makePluginPanel()
-        populatedPluginPanel = self.model.makePatternScriptsPanel(emptyPluginPanel)
-
+        populatedPluginPanel = view.makePatternScriptsPanel(emptyPluginPanel)
         scrollPanel = view.makeScrollPanel(populatedPluginPanel)
-        patternScriptsWindow = View(scrollPanel)
-        patternScriptsWindow.makePatternScriptsWindow()
-        self.menuItemList = patternScriptsWindow.getPsPluginMenuItems()
+        view.makePatternScriptsWindow(scrollPanel)
+        self.menuItemList = view.getPsPluginMenuItems()
 
         self.addMenuItemListeners()
 
@@ -392,101 +362,13 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
     def addMenuItemListeners(self):
         """Use the pull down item names as the attribute to set the
-            listener: asItemSelected, jpItemSelected, tpItemSelected, ooItemSelected, logItemSelected, helpItemSelected, Etc.
+            listener: ptItemSelected, rsItemSelected, logItemSelected, helpItemSelected, Etc.
             Used by:
             buildThePlugin
             """
 
         for menuItem in self.menuItemList:
             menuItem.addActionListener(getattr(self, menuItem.getName()))
-
-        return
-
-    def jpItemSelected(self, JP_ACTIVATE_EVENT):
-        """menu item-Tools/Enable j Plus Subroutine."""
-
-        self.psLog.debug(JP_ACTIVATE_EVENT)
-        patternConfig = PSE.readConfigFile()
-        self.OSU = PSE.JMRI.jmrit.operations.setup
-
-
-        if patternConfig['CP']['jPlusSubroutine']: # If enabled, turn it off
-            patternConfig['CP']['jPlusSubroutine'] = False
-            JP_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Enable j Plus subroutine'])
-
-            self.OSU.Setup.setRailroadName(patternConfig['CP']['LN'])
-
-            self.psLog.info('j Plus support deactivated')
-            print('j Plus support deactivated')
-        else:
-            patternConfig['CP']['jPlusSubroutine'] = True
-            JP_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Disable j Plus subroutine'])
-
-            patternConfig['CP']['LN'] = self.OSU.Setup.getRailroadName()
-            jPlusHeader = PSE.jPlusHeader().replace(';', '\n')
-            self.OSU.Setup.setRailroadName(jPlusHeader)
-
-            self.psLog.info('j Plus support activated')
-            print('j Plus support activated')
-
-        PSE.writeConfigFile(patternConfig)
-        self.shutdownPlugin()
-        self.startupPlugin()
-        return
-
-    def tpItemSelected(self, TP_ACTIVATE_EVENT):
-        """menu item-Tools/Enable Track Pattern subroutine"""
-
-        self.psLog.debug(TP_ACTIVATE_EVENT)
-        patternConfig = PSE.readConfigFile()
-
-        if patternConfig['CP']['PatternTracksSubroutine']: # If enabled, turn it off
-            patternConfig['CP']['PatternTracksSubroutine'] = False
-            TP_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Enable Track Pattern subroutine'])
-
-            self.psLog.info('Track Pattern support deactivated')
-            print('Track Pattern support deactivated')
-        else:
-            patternConfig['CP']['PatternTracksSubroutine'] = True
-            TP_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Disable Track Pattern subroutine'])
-
-            self.psLog.info('Track Pattern support activated')
-            print('Track Pattern support activated')
-
-        PSE.writeConfigFile(patternConfig)
-        self.closePsWindow()
-        self.buildThePlugin()
-
-        return
-
-    def ooItemSelected(self, O2O_ACTIVATE_EVENT):
-        """menu item-Tools/Enable o2o subroutine"""
-
-        self.psLog.debug(O2O_ACTIVATE_EVENT)
-        patternConfig = PSE.readConfigFile()
-
-        if patternConfig['CP']['o2oSubroutine']: # If enabled, turn it off
-            patternConfig['CP']['o2oSubroutine'] = False
-            O2O_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Enable o2o subroutine'])
-
-            self.removeTrainsTableListener()
-            self.removeBuiltTrainListener()
-
-            self.psLog.info('o2o subroutine deactivated')
-            print('o2o subroutine deactivated')
-        else:
-            patternConfig['CP']['o2oSubroutine'] = True
-            O2O_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Disable o2o subroutine'])
-
-            self.addTrainsTableListener()
-            self.addBuiltTrainListener()
-
-            self.psLog.info('o2o subroutine activated')
-            print('o2o subroutine activated')
-
-        PSE.writeConfigFile(patternConfig)
-        self.shutdownPlugin()
-        self.startupPlugin()
 
         return
 
@@ -624,7 +506,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         self.psLog = PSE.LOGGING.getLogger('OPS.Main.Controller')
         self.logger.initialLogMessage(self.psLog)
 
-        self.model.validatePatternConfig()
+        validatePatternConfig()
 
         Bundle.validatePluginBundle()
         PSE.BUNDLE = Bundle.getBundleForLocale()

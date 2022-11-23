@@ -13,7 +13,7 @@ SCRIPT_REV = 20221010
 _psLog = PSE.LOGGING.getLogger('OPS.PT.Controller')
 
 
-
+#
 # def setAsDropDownText(self):
 #     """itemMethod - Set the drop down text per the Apply Schedule flag."""
 #
@@ -24,10 +24,10 @@ _psLog = PSE.LOGGING.getLogger('OPS.PT.Controller')
 #         menuText = PSE.BUNDLE[u'Apply Schedule']
 #
 #     return menuText, 'asItemSelected'
-
-
-
-
+#
+#
+#
+#
 # def asItemSelected(self, AS_ACTIVATE_EVENT):
 #     """menu item-Tools/Apply Schedule"""
 #
@@ -80,6 +80,42 @@ def restartSubroutine(subroutineFrame):
     subroutineFrame.removeAll()
     subroutineFrame.add(subroutinePanel)
     subroutineFrame.revalidate()
+
+    return
+
+def setDropDownText():
+    """itemMethod - Set the drop down text per the config file PatternTracksSubroutine Include flag ['CP']['IT']"""
+
+    patternConfig = PSE.readConfigFile('CP')
+    if patternConfig['PatternTracksSubroutine']:
+        menuText = PSE.BUNDLE[u'Disable Track Pattern subroutine']
+    else:
+        menuText = PSE.BUNDLE[u'Enable Track Pattern subroutine']
+
+    return menuText, 'tpItemSelected'
+
+def actionListener(EVENT):
+    """menu item-Tools/Enable Track Pattern subroutine"""
+
+    _psLog.debug(EVENT)
+    patternConfig = PSE.readConfigFile()
+
+    if patternConfig['CP']['PatternTracksSubroutine']: # If enabled, turn it off
+        patternConfig['CP']['PatternTracksSubroutine'] = False
+        EVENT.getSource().setText(PSE.BUNDLE[u'Enable Track Pattern subroutine'])
+
+        _psLog.info('Track Pattern support deactivated')
+        print('Track Pattern support deactivated')
+    else:
+        patternConfig['CP']['PatternTracksSubroutine'] = True
+        EVENT.getSource().setText(PSE.BUNDLE[u'Disable Track Pattern subroutine'])
+
+        _psLog.info('Track Pattern support activated')
+        print('Track Pattern support activated')
+
+    PSE.writeConfigFile(patternConfig)
+    # self.closePsWindow()
+    # self.buildThePlugin()
 
     return
 

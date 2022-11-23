@@ -17,3 +17,5 @@ TrainPlayer layout not imported to JMRI.
 Update Current Railroad
 Update JMRI Railroad
 Unreported
+Disable o2o subroutine
+Enable o2o subroutine
