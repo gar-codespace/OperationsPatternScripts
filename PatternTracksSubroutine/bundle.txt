@@ -1,10 +1,16 @@
 Action
+Apply Schedule
 at
 Available:
 Cars at
+Disable Track Pattern subroutine
 Division:
+Do Not Apply Schedule
+Enable Track Pattern subroutine
 empty
 Eqpt. Length:
+FAIL: CreateSetCarsFormGui.quickCheck.testValidityOfForm
+FAIL: Mismatched input list and car roster lengths
 Hazardous
 Hold
 Ignore track length
@@ -49,9 +55,3 @@ Update Locations
 Work Event List for TrainPlayer©
 Work Location:
 Yard tracks only
-FAIL: CreateSetCarsFormGui.quickCheck.testValidityOfForm
-FAIL: Mismatched input list and car roster lengths
-Disable Track Pattern subroutine
-Enable Track Pattern subroutine
-Apply Schedule
-Do Not Apply Schedule

@@ -146,7 +146,7 @@ def makeSetCarsForTrackForm(setCarsFormData):
 
     setCarsSchedule, scheduleButton = makeSetCarsScheduleRow(setCarsFormData)
     buttonDict['scheduleButton'] = []
-    if setCarsSchedule and PSE.readConfigFile('PT')['AS']:
+    if setCarsSchedule:
         setCarsForm.add(setCarsSchedule)
         buttonDict['scheduleButton'] = scheduleButton
         setCarsForm.add(PSE.JAVX_SWING.JSeparator())
@@ -346,6 +346,13 @@ def makeSetCarsScheduleRow(setCarsFormData):
         scheduleList.append(scheduleButton)
         schedulePanel.add(PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Schedule:'] + ' '))
         schedulePanel.add(scheduleButton)
+
+        applySchedule = PSE.JAVX_SWING.JCheckBox()
+        applySchedule.setText(PSE.BUNDLE['Apply Schedule'])
+        applySchedule.setSelected(True)
+        applySchedule.setName('asCheckBox')
+        scheduleList.append(applySchedule)
+        schedulePanel.add(applySchedule)
 
     return schedulePanel, scheduleList
 

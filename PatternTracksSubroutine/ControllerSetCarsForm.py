@@ -51,6 +51,7 @@ class CreateSetCarsFormGui:
 
         try:
             self.buttonDict['scheduleButton'][0].actionPerformed = self.scheduleButton
+            self.buttonDict['scheduleButton'][1].actionPerformed = self.applySchedule
         except IndexError:
             pass
 
@@ -92,6 +93,20 @@ class CreateSetCarsFormGui:
 
         return
 
+    def applySchedule(self, EVENT):
+
+        configFile = PSE.readConfigFile()
+
+        isSelected = EVENT.getSource().selected
+        if isSelected:
+            configFile['PT'].update({'AS':True})
+        else:
+            configFile['PT'].update({'AS':False})
+
+        PSE.writeConfigFile(configFile)
+
+        return
+        
     def switchListButton(self, MOUSE_CLICKED):
         """Makes a Set Cars (SC) switch list for the active 'Set Rolling Stock for Track X' window"""
 

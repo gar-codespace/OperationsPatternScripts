@@ -13,48 +13,6 @@ SCRIPT_REV = 20221010
 _psLog = PSE.LOGGING.getLogger('OPS.PT.Controller')
 
 
-#
-# def setAsDropDownText(self):
-#     """itemMethod - Set the drop down text per the Apply Schedule flag."""
-#
-#     patternConfig = PSE.readConfigFile('PT')
-#     if patternConfig['AS']:
-#         menuText = PSE.BUNDLE[u'Do Not Apply Schedule']
-#     else:
-#         menuText = PSE.BUNDLE[u'Apply Schedule']
-#
-#     return menuText, 'asItemSelected'
-#
-#
-#
-#
-# def asItemSelected(self, AS_ACTIVATE_EVENT):
-#     """menu item-Tools/Apply Schedule"""
-#
-#     self.psLog.debug(AS_ACTIVATE_EVENT)
-#     patternConfig = PSE.readConfigFile()
-#
-#     if patternConfig['PT']['AS']:
-#         patternConfig['PT'].update({'AS': False})
-#         AS_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Apply Schedule'])
-#         self.psLog.info('Apply Schedule turned off')
-#         print('Apply Schedule turned off')
-#     else:
-#         patternConfig['PT'].update({'AS': True})
-#         AS_ACTIVATE_EVENT.getSource().setText(PSE.BUNDLE[u'Do Not Apply Schedule'])
-#         self.psLog.info('Apply Schedule turned on')
-#         print('Apply Schedule turned on')
-#
-#     PSE.writeConfigFile(patternConfig)
-#
-#     return
-
-
-
-
-
-
-
 def updateSubroutine(parent):
     """Allows other subroutines to update and restart the PT Subroutine."""
 

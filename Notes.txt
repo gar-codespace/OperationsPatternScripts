@@ -2,8 +2,7 @@ Todo:
   How to publish DeepL?
   Add update divisions to o2o update railroad.
   Conform JMRI and TP date format?
-  Restart jPlus sub on o2o new and update.
-  Add apply schedule to set cars window.
+  Make a Listeners.py for each subroutine and move the listeners there.
 
 Comments:
   Schedule does not prevent setting a car to a track.
