@@ -113,7 +113,7 @@ def addTrainsTableListener():
     trainsTableModel = PSE.JMRI.jmrit.operations.trains.TrainsTableModel()
     trainsTableModel.addTableModelListener(trainsTableListener)
 
-    addBuiltTrainListener()
+    # addBuiltTrainListener()
 
     return
 
@@ -130,22 +130,22 @@ def removeTrainsTableListener():
 
     return
 
-# def addBuiltTrainListener():
-#
-#     trainList = PSE.TM.getTrainsByIdList()
-#     for train in trainList:
-#         train.addPropertyChangeListener(Listeners.BuiltTrain())
-#     return
-#
-# def removeBuiltTrainListener():
-#
-#     trainList = PSE.TM.getTrainsByIdList()
-#     for train in trainList:
-#         for listener in train.getPropertyChangeListeners():
-#             if listener.getClass() == Listeners.BuiltTrain:
-#                 train.removePropertyChangeListener(listener)
-#
-#     return
+def addBuiltTrainListener():
+
+    trainList = PSE.TM.getTrainsByIdList()
+    for train in trainList:
+        train.addPropertyChangeListener(Listeners.BuiltTrain())
+    return
+
+def removeBuiltTrainListener():
+
+    trainList = PSE.TM.getTrainsByIdList()
+    for train in trainList:
+        for listener in train.getPropertyChangeListeners():
+            if listener.getClass() == Listeners.BuiltTrain:
+                train.removePropertyChangeListener(listener)
+
+    return
 
 
 class StartUp:
