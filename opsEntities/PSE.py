@@ -11,21 +11,30 @@ from java import io as JAVA_IO
 import java.nio.file as JAVA_NIO
 import java.beans as JAVA_BEANS
 from HTMLParser import HTMLParser as HTML_PARSER
-# from os import path as OS_PATH
 from apps import Apps as APPS
 
-import time
 from json import loads as jsonLoadS, dumps as jsonDumpS
 from codecs import open as codecsOpen
 import apps
 
-PLUGIN_ROOT = ''
+"""
+Ghost imports from MainScript:
+    PSE.PLUGIN_ROOT = PLUGIN_ROOT
+    PSE.JMRI = jmri
+    PSE.SYS = sys
+    PSE.OS_PATH = OS_PATH
+    PSE.JAVA_AWT = java.awt
+    PSE.JAVX_SWING = javax.swing
+    PSE.TIME = time
+    PSE.ENCODING = PSE.readConfigFile('CP')['SE']
+Ghost imports from PSE
+    buildThePlugin().BUNDLE = mainScript.Bundle.getBundleForLocale()
+"""
+
 PROFILE_PATH = JMRI.util.FileUtil.getProfilePath()
-ENCODING = ''
 BUNDLE = {}
 REPORT_ITEM_WIDTH_MATRIX = {}
 TRACK_NAME_CLICKED_ON = ''
-# INCLUDES = {}
 
 # Dealers choice, both work OK:
 J_BUNDLE = JMRI.jmrit.operations.setup.Setup()
@@ -471,20 +480,20 @@ def timeStamp(epochTime=0):
 
     if epochTime == 0:
         epochTime = TIME.time()
-    if time.localtime(epochTime).tm_isdst and time.daylight: # If local dst and dst are both 1
-        timeOffset = time.altzone
+    if TIME.localtime(epochTime).tm_isdst and TIME.daylight: # If local dst and dst are both 1
+        timeOffset = TIME.altzone
     else:
-        timeOffset = time.timezone # in seconds
+        timeOffset = TIME.timezone # in seconds
 
     if JMRI.jmrit.operations.setup.Setup.is12hrFormatEnabled():
-        return time.strftime('Valid %b %d, ' + year + ', %I:%M %p', time.gmtime(epochTime - timeOffset))
+        return TIME.strftime('Valid %b %d, ' + year + ', %I:%M %p', TIME.gmtime(epochTime - timeOffset))
     else:
-        return time.strftime('Valid %b %d, ' + year + ', %H:%M', time.gmtime(epochTime - timeOffset))
+        return TIME.strftime('Valid %b %d, ' + year + ', %H:%M', TIME.gmtime(epochTime - timeOffset))
 
 
-    # return time.strftime('%m/%d/%Y %I:%M', time.gmtime(epochTime - timeOffset))
-    # return time.strftime('%a %b %d %Y %I:%M %p %Z', time.gmtime(epochTime - timeOffset))
-    # return time.strftime('%b %d, ' + year + ' %I:%M %p %Z', time.gmtime(epochTime - timeOffset))
+    # return TIME.strftime('%m/%d/%Y %I:%M', TIME.gmtime(epochTime - timeOffset))
+    # return TIME.strftime('%a %b %d %Y %I:%M %p %Z', TIME.gmtime(epochTime - timeOffset))
+    # return TIME.strftime('%b %d, ' + year + ' %I:%M %p %Z', TIME.gmtime(epochTime - timeOffset))
 
 def getYear():
     """Either the current year or the entry in settings: year modeled."""
@@ -493,7 +502,7 @@ def getYear():
     if railroadYear:
         return railroadYear
     else:
-        return time.strftime('%Y', time.gmtime(time.time()))
+        return TIME.strftime('%Y', TIME.gmtime(TIME.time()))
 
 def convertJmriDateToEpoch(jmriTime):
     """Example: 2022-02-26T17:16:17.807+0000
@@ -501,12 +510,12 @@ def convertJmriDateToEpoch(jmriTime):
         o2oSubroutine.ModelWorkEvents.jmriManifestConversion.convertHeader
         """
 
-    epochTime = time.mktime(time.strptime(jmriTime, "%Y-%m-%dT%H:%M:%S.%f+0000"))
+    epochTime = TIME.mktime(TIME.strptime(jmriTime, "%Y-%m-%dT%H:%M:%S.%f+0000"))
 
-    if time.localtime(epochTime).tm_isdst and time.daylight: # If local dst and dst are both 1
-        epochTime -= time.altzone
+    if TIME.localtime(epochTime).tm_isdst and TIME.daylight: # If local dst and dst are both 1
+        epochTime -= TIME.altzone
     else:
-        epochTime -= time.timezone # in seconds
+        epochTime -= TIME.timezone # in seconds
 
     return epochTime
 

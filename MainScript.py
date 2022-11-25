@@ -269,7 +269,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         PSE.APPS.buttonSpace().revalidate()
 
         return
-        
+
     def handle(self):
 
         startTime = PSE.TIME.time()
