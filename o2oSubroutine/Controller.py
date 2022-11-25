@@ -4,6 +4,7 @@
 """The o2o Subroutine."""
 
 from opsEntities import PSE
+from opsEntities import Listeners
 from o2oSubroutine import Model
 from o2oSubroutine import ModelImport
 from o2oSubroutine import ModelWorkEvents
@@ -85,8 +86,7 @@ def actionListener(EVENT):
         patternConfig['CP']['o2oSubroutine'] = False
         EVENT.getSource().setText(PSE.BUNDLE[u'Enable o2o subroutine'])
 
-        # self.removeTrainsTableListener()
-        # self.removeBuiltTrainListener()
+        removeTrainsTableListener()
 
         _psLog.info('o2o subroutine deactivated')
         print('o2o subroutine deactivated')
@@ -94,17 +94,58 @@ def actionListener(EVENT):
         patternConfig['CP']['o2oSubroutine'] = True
         EVENT.getSource().setText(PSE.BUNDLE[u'Disable o2o subroutine'])
 
-        # self.addTrainsTableListener()
-        # self.addBuiltTrainListener()
+        addTrainsTableListener()
 
         _psLog.info('o2o subroutine activated')
         print('o2o subroutine activated')
 
     PSE.writeConfigFile(patternConfig)
-    # self.shutdownPlugin()
-    # self.startupPlugin()
+    PSE.closePsWindow()
+    PSE.buildThePlugin()
 
     return
+
+def addTrainsTableListener():
+
+    builtTrainListener = Listeners.BuiltTrain()
+    trainsTableListener = Listeners.TrainsTable(builtTrainListener)
+
+    trainsTableModel = PSE.JMRI.jmrit.operations.trains.TrainsTableModel()
+    trainsTableModel.addTableModelListener(trainsTableListener)
+
+    addBuiltTrainListener()
+
+    return
+
+def removeTrainsTableListener():
+
+
+    trainsTableModel = PSE.JMRI.jmrit.operations.trains.TrainsTableModel()
+    try:
+        trainsTableModel.removeTableModelListener(trainsTableListener)
+    except:
+        pass
+
+    removeBuiltTrainListener()
+
+    return
+
+# def addBuiltTrainListener():
+#
+#     trainList = PSE.TM.getTrainsByIdList()
+#     for train in trainList:
+#         train.addPropertyChangeListener(Listeners.BuiltTrain())
+#     return
+#
+# def removeBuiltTrainListener():
+#
+#     trainList = PSE.TM.getTrainsByIdList()
+#     for train in trainList:
+#         for listener in train.getPropertyChangeListeners():
+#             if listener.getClass() == Listeners.BuiltTrain:
+#                 train.removePropertyChangeListener(listener)
+#
+#     return
 
 
 class StartUp:
@@ -131,9 +172,17 @@ class StartUp:
         """Makes the control panel that sits inside the frame"""
 
         self.subroutinePanel, self.widgets = View.ManageGui().makeSubroutinePanel()
+        self.activateListeners()
         self.activateWidgets()
 
         return self.subroutinePanel
+
+    def activateListeners(self):
+
+        if PSE.readConfigFile('CP')['o2oSubroutine']:
+            addBuiltTrainListener()
+
+        return
 
     def activateWidgets(self):
         """The *.getName value is the name of the action for the widget.

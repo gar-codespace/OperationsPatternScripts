@@ -114,8 +114,8 @@ def actionListener(EVENT):
         print('Track Pattern support activated')
 
     PSE.writeConfigFile(patternConfig)
-    # self.closePsWindow()
-    # self.buildThePlugin()
+    PSE.closePsWindow()
+    PSE.buildThePlugin()
 
     return
 

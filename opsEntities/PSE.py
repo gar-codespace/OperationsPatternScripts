@@ -11,7 +11,7 @@ from java import io as JAVA_IO
 import java.nio.file as JAVA_NIO
 import java.beans as JAVA_BEANS
 from HTMLParser import HTMLParser as HTML_PARSER
-from os import path as OS_PATH
+# from os import path as OS_PATH
 from apps import Apps as APPS
 
 import time
@@ -25,7 +25,7 @@ ENCODING = ''
 BUNDLE = {}
 REPORT_ITEM_WIDTH_MATRIX = {}
 TRACK_NAME_CLICKED_ON = ''
-INCLUDES = {}
+# INCLUDES = {}
 
 # Dealers choice, both work OK:
 J_BUNDLE = JMRI.jmrit.operations.setup.Setup()
@@ -165,6 +165,53 @@ class CreateStubFile:
 
 """GUI Methods"""
 
+
+def closePsWindow():
+    """Used by:
+
+        """
+
+    for frame in JMRI.util.JmriJFrame.getFrameList():
+        if frame.getName() == 'patternScriptsWindow':
+            updateWindowParams(frame)
+            closeSetCarsWindows()
+
+            frame.setVisible(False)
+            frame.dispose()
+
+    return
+
+def buildThePlugin():
+    """Used by:
+        patternScriptsButtonAction
+        PatternTracksSubroutine.Controller
+        o2oSubroutine.controller
+        jPlusSubroutine.controller
+
+
+
+        """
+
+    # mainScript = __import__('MainScript')
+    mainScript = __import__('MainScript', globals(), locals(), [], 0)
+
+    BUNDLE = mainScript.Bundle.getBundleForLocale()
+
+    CreateStubFile().make()
+    mainScript.Bundle.makeHelpPage()
+
+    view = mainScript.View()
+    emptyPluginPanel = view.makePluginPanel()
+    populatedPluginPanel = view.makePatternScriptsPanel(emptyPluginPanel)
+    scrollPanel = view.makeScrollPanel(populatedPluginPanel)
+    view.makePatternScriptsWindow(scrollPanel)
+    menuItemList = view.getPsPluginMenuItems()
+
+    for menuItem in menuItemList:
+        menuItem.addActionListener(getattr(mainScript.Listeners, menuItem.getName()))
+
+    return
+
 def findPluginPanel(source):
     """For components in frames, find the plugin panel.
         The components in the plugin panel are the subroutines.
@@ -266,7 +313,9 @@ def updateWindowParams(window):
 
     return
 
+
 """Utility Methods"""
+
 
 def psLocale():
     """Dealers choice, both work.
@@ -405,7 +454,9 @@ def getTracksNamesByLocation(trackType):
     except AttributeError:
         return allTracksAtLoc
 
+
 """Formatting Methods"""
+
 
 def timeStamp(epochTime=0):
     """Valid Time, get local time adjusted for time zone and dst.
@@ -419,7 +470,7 @@ def timeStamp(epochTime=0):
     year = getYear()
 
     if epochTime == 0:
-        epochTime = time.time()
+        epochTime = TIME.time()
     if time.localtime(epochTime).tm_isdst and time.daylight: # If local dst and dst are both 1
         timeOffset = time.altzone
     else:
@@ -519,7 +570,9 @@ def getShortLoadType(car):
 
     return lt
 
+
 """File Handling Methods"""
+
 
 def makeBuildStatusFolder():
     """The buildStatus folder is created first so the log file can be written.
@@ -607,7 +660,9 @@ def dumpJson(file):
 
     return jsonDumpS(file, indent=2, sort_keys=True)
 
+
 """Configuration File Methods"""
+
 
 def validateConfigFileVersion():
     """Checks that the config file is the current version.
@@ -719,7 +774,9 @@ def deleteConfigFile():
 
     return
 
+
 """Logging Methods"""
+
 
 def makePatternLog():
     """creates a pattern log for display based on the log level, as set by getBuildReportLevel.
@@ -761,7 +818,9 @@ def logIndex():
 
     return loggingIndex
 
+
 """Color Handling Methods"""
+
 
 def getGenericColor(colorName):
     """Used by:
@@ -780,8 +839,6 @@ def getGenericColor(colorName):
 
     return JAVA_AWT.Color(r, g, b, a)
 
-
-
 def getCarColor():
     """Try/Except is a bit of protection against bad edits.
         Used by:
@@ -796,7 +853,6 @@ def getCarColor():
         _psLog.warning('Car color definition not found in PatternConfig.json')
         return JAVA_AWT.Color(0, 0, 0, 0)
 
-
 def getLocoColor():
     """Try/Except is a bit of protection against bad edits.
         Used by:
@@ -810,7 +866,6 @@ def getLocoColor():
     except:
         _psLog.warning('Engine color definition not found in PatternConfig.json')
         return JAVA_AWT.Color(0, 0, 0, 0)
-
 
 def getAlertColor():
     """Try/Except is a bit of protection against bad edits.
@@ -828,6 +883,7 @@ def getAlertColor():
 
 
 """Translation Methods"""
+
 
 def translateMessageFormat():
     """The messageFormat is in the locale's language, it has to be hashed to the plugin fields.

@@ -1,6 +1,12 @@
-"""Keep all the listeners in one place."""
+"""
+All the listeners for the:
+MainScript
+PatternTracksSubroutine
+are here.
+"""
 
 from opsEntities import PSE
+from opsBundle import Bundle
 
 SCRIPT_NAME = 'OperationsPatternScripts.opsEntities.Listeners'
 SCRIPT_REV = 20221010
@@ -8,9 +14,121 @@ SCRIPT_REV = 20221010
 _psLog = PSE.LOGGING.getLogger('OPS.OE.Listeners')
 
 
+def patternScriptsButtonAction(MOUSE_CLICKED):
+    """The Pattern Scripts button on the Panel Pro frame."""
+
+    _psLog.debug(MOUSE_CLICKED)
+
+    PSE.buildThePlugin()
+
+    return
+
+def ptItemSelected(TRANSLATE_PLUGIN_EVENT):
+    """menu item-Tools/Translate Plugin"""
+
+    _psLog.debug(TRANSLATE_PLUGIN_EVENT)
+
+    textBundles = Bundle.getAllTextBundles()
+    Bundle.makePluginBundle(textBundles)
+
+    Bundle.makeHelpBundle()
+    Bundle.makeHelpPage()
+
+    PSE.closePsWindow()
+    PSE.buildThePlugin()
+
+    _psLog.info('Pattern Scripts plugin translated')
+    _psLog.info('Pattern Scripts plugin restarted')
+
+    return
+
+def rsItemSelected(RESTART_PLUGIN_EVENT):
+    """menu item-Tools/Restart Plugin"""
+
+    _psLog.debug(RESTART_PLUGIN_EVENT)
+
+    PSE.deleteConfigFile()
+
+    PSE.closePsWindow()
+    PSE.buildThePlugin()
+
+    _psLog.info('Pattern Scripts plugin restarted')
+
+    return
+
+def helpItemSelected(OPEN_HELP_EVENT):
+    """menu item-Help/Window help..."""
+
+    _psLog.debug(OPEN_HELP_EVENT)
+
+    stubFileTarget = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getPreferencesPath(), 'jmrihelp', PSE.psLocale()[:2], 'psStub.html')
+    stubUri = PSE.JAVA_IO.File(stubFileTarget).toURI()
+    if PSE.JAVA_IO.File(stubUri).isFile():
+        PSE.JAVA_AWT.Desktop.getDesktop().browse(stubUri)
+    else:
+        _psLog.warning('Help file not found')
+
+    return
+
+def logItemSelected(OPEN_LOG_EVENT):
+    """menu item-Help/View Log"""
+
+    _psLog.debug(OPEN_LOG_EVENT)
+
+    patternLog = PSE.makePatternLog()
+
+    logFileTarget = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'buildstatus', 'PatternScriptsLog_temp.txt')
+
+    PSE.genericWriteReport(logFileTarget, patternLog)
+    PSE.genericDisplayReport(logFileTarget)
+
+    print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+    return
+
+def ghItemSelected(OPEN_GH_EVENT):
+    """menu item-Help/GitHub Page"""
+
+    _psLog.debug(OPEN_GH_EVENT)
+
+    ghURL = 'https://github.com/gar-codespace/OperationsPatternScripts'
+    PSE.JMRI.util.HelpUtil.openWebPage(ghURL)
+
+    return
+
+def ecItemSelected(OPEN_EC_EVENT):
+    """menu item-Help/Edit Config File"""
+
+    _psLog.debug(OPEN_EC_EVENT)
+
+    configTarget = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'PatternConfig.json')
+
+    if PSE.JAVA_IO.File(configTarget).isFile():
+        PSE.genericDisplayReport(configTarget)
+    else:
+        _psLog.warning('Not found: ' + configTarget)
+
+    return
+
+def ofItemSelected(OPEN_OF_EVENT):
+    """menu item-Help/Operations Folder"""
+
+    _psLog.debug(OPEN_OF_EVENT)
+
+    opsFolderPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations')
+
+    opsFolder = PSE.JAVA_IO.File(opsFolderPath)
+    if opsFolder.exists():
+        PSE.JAVA_AWT.Desktop.getDesktop().open(opsFolder)
+    else:
+        _psLog.warning('Not found: ' + opsFolderPath)
+
+    return
+
+
 class GenericComboBox(PSE.JAVA_AWT.event.ActionListener):
     """Event triggered from any combobox use.
-        Be sure to set the name of the combobox using this.
+        Be sure to set the name of the combobox that uses this class.
         """
 
     def __init__(self, subroutineFrame):
@@ -29,27 +147,6 @@ class GenericComboBox(PSE.JAVA_AWT.event.ActionListener):
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
-
-
-# class LocationComboBox(PSE.JAVA_AWT.event.ActionListener):
-#     """Event triggered from location combobox use."""
-#
-#     def __init__(self, subroutineFrame):
-#
-#         self.subroutineFrame = subroutineFrame
-#
-#         return
-#
-#     def actionPerformed(self, EVENT):
-#
-#         xModule = __import__('PatternTracksSubroutine', globals(), locals(), ['Controller', 'Model'], 0)
-#
-#         xModule.Model.updatePatternLocation(EVENT.getSource().getSelectedItem())
-#         xModule.Controller.restartSubroutine(self.subroutineFrame)
-#
-#         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-#
-#         return
 
 
 class TextBoxEntry(PSE.JAVA_AWT.event.MouseAdapter):
@@ -106,7 +203,7 @@ class BuiltTrain(PSE.JAVA_BEANS.PropertyChangeListener):
 
 class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
     """Listener to respond to the plugin window operations.
-        May be expanded in v3.
+        Might be expanded in v3.
         """
 
     def __init__(self):

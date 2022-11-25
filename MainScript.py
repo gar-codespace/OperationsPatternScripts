@@ -1,17 +1,11 @@
-# © 2021, 2022 Greg Ritacco
-
 """
 Pattern Scripts plugin for JMRI Operations Pro
 OPS = Operations Pattern Scripts
-© 2021, 2022 Greg Ritacco
+Copyright 2021, 2022 Greg Ritacco
 No restrictions on use, but I would appreciate the reference.
 """
 
 import jmri
-import java.awt
-import javax.swing
-import time
-
 import sys
 from os import path as OS_PATH
 
@@ -24,12 +18,17 @@ PLUGIN_ROOT = OS_PATH.join(jmri.util.FileUtil.getPreferencesPath(), SCRIPT_DIR)
 sys.path.append(PLUGIN_ROOT)
 from opsEntities import PSE
 
+PSE.PLUGIN_ROOT = PLUGIN_ROOT
 PSE.JMRI = jmri
+PSE.SYS = sys
+PSE.OS_PATH = OS_PATH
+
+import java.awt
+import javax.swing
+import time
 PSE.JAVA_AWT = java.awt
 PSE.JAVX_SWING = javax.swing
 PSE.TIME = time
-PSE.SYS = sys
-PSE.PLUGIN_ROOT = PLUGIN_ROOT
 
 from opsEntities import Listeners
 from opsBundle import Bundle
@@ -40,9 +39,6 @@ SCRIPT_REV = 20221010
 PSE.ENCODING = PSE.readConfigFile('CP')['SE']
 
 Bundle.BUNDLE_DIR = OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle')
-# Bundle.validatePluginBundle()
-# PSE.BUNDLE = Bundle.getBundleForLocale()
-PSE.BUNDLE = {}
 
 
 def validatePatternConfig():
@@ -69,14 +65,6 @@ class View:
         self.subroutineMenuItems = []
 
         return
-
-    def makePsButton(self):
-
-        psButton = PSE.JAVX_SWING.JButton()
-        psButton.setText(PSE.BUNDLE[u'Pattern Scripts'])
-        psButton.setName('psButton')
-
-        return psButton
 
     def makePluginPanel(self):
         """Dealers choice, jPanel or Box."""
@@ -265,10 +253,6 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         self.logger = PSE.Logger(logFileTarget)
         self.logger.startLogger('OPS')
 
-        self.trainsTableModel = PSE.JMRI.jmrit.operations.trains.TrainsTableModel()
-        self.builtTrainListener = Listeners.BuiltTrain()
-        self.trainsTableListener = Listeners.TrainsTable(self.builtTrainListener)
-
         self.menuItemList = []
 
         return
@@ -276,230 +260,16 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
     def addPatternScriptsButton(self):
         """The Pattern Scripts button on the PanelPro frame."""
 
-        self.patternScriptsButton = View().makePsButton()
-        self.patternScriptsButton.actionPerformed = self.patternScriptsButtonAction
-        PSE.APPS.buttonSpace().add(self.patternScriptsButton)
+        psButton = PSE.JAVX_SWING.JButton()
+        psButton.setText(PSE.BUNDLE[u'Pattern Scripts'])
+        psButton.setName('psButton')
+
+        psButton.actionPerformed = Listeners.patternScriptsButtonAction
+        PSE.APPS.buttonSpace().add(psButton)
         PSE.APPS.buttonSpace().revalidate()
 
         return
-
-    def addTrainsTableListener(self):
-
-        self.trainsTableModel.addTableModelListener(self.trainsTableListener)
-
-        return
-
-    def removeTrainsTableListener(self):
-
-        self.trainsTableModel.removeTableModelListener(self.trainsTableListener)
-
-        return
-
-    def addBuiltTrainListener(self):
-
-        trainList = PSE.TM.getTrainsByIdList()
-        for train in trainList:
-            train.addPropertyChangeListener(self.builtTrainListener)
-
-        return
-
-    def removeBuiltTrainListener(self):
-
-        trainList = PSE.TM.getTrainsByIdList()
-        for train in trainList:
-            train.removePropertyChangeListener(self.builtTrainListener)
-
-        return
-
-    def patternScriptsButtonAction(self, MOUSE_CLICKED):
-
-        self.psLog.debug(MOUSE_CLICKED)
-
-        self.buildThePlugin()
-
-        return
-
-    def closePsWindow(self):
-        """Used by:
-            tpItemSelected
-            shutdownPlugin
-            """
-
-        for frame in PSE.JMRI.util.JmriJFrame.getFrameList():
-            if frame.getName() == 'patternScriptsWindow':
-                PSE.updateWindowParams(frame)
-                PSE.closeSetCarsWindows()
-
-                frame.setVisible(False)
-                frame.dispose()
-
-        return
-
-    def buildThePlugin(self):
-        """Used by:
-            tpItemSelected
-            startupPlugin
-            patternScriptsButtonAction
-            """
-
-        view = View()
-        emptyPluginPanel = view.makePluginPanel()
-        populatedPluginPanel = view.makePatternScriptsPanel(emptyPluginPanel)
-        scrollPanel = view.makeScrollPanel(populatedPluginPanel)
-        view.makePatternScriptsWindow(scrollPanel)
-        self.menuItemList = view.getPsPluginMenuItems()
-
-        self.addMenuItemListeners()
-
-        return
-
-    def o2oSubroutineListeners(self):
-
-        self.addTrainsTableListener()
-        self.addBuiltTrainListener()
-
-        return
-
-    def addMenuItemListeners(self):
-        """Use the pull down item names as the attribute to set the
-            listener: ptItemSelected, rsItemSelected, logItemSelected, helpItemSelected, Etc.
-            Used by:
-            buildThePlugin
-            """
-
-        for menuItem in self.menuItemList:
-            menuItem.addActionListener(getattr(self, menuItem.getName()))
-
-        return
-
-    def ptItemSelected(self, TRANSLATE_PLUGIN_EVENT):
-        """menu item-Tools/Translate Plugin"""
-
-        self.psLog.debug(TRANSLATE_PLUGIN_EVENT)
-
-        textBundles = Bundle.getAllTextBundles()
-        Bundle.makePluginBundle(textBundles)
-
-        Bundle.makeHelpBundle()
-        Bundle.makeHelpPage()
-
-        self.shutdownPlugin()
-        self.startupPlugin()
-
-        self.psLog.info('Pattern Scripts plugin translated')
-        self.psLog.info('Pattern Scripts plugin restarted')
-
-        return
-
-    def rsItemSelected(self, RESTART_PLUGIN_EVENT):
-        """menu item-Tools/Restart Plugin"""
-
-        self.psLog.debug(RESTART_PLUGIN_EVENT)
-
-        PSE.deleteConfigFile()
-
-        self.shutdownPlugin()
-        self.startupPlugin()
-
-        self.psLog.info('Pattern Scripts plugin restarted')
-
-        return
-
-    def helpItemSelected(self, OPEN_HELP_EVENT):
-        """menu item-Help/Window help..."""
-
-        self.psLog.debug(OPEN_HELP_EVENT)
-
-        stubFileTarget = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getPreferencesPath(), 'jmrihelp', PSE.psLocale()[:2], 'psStub.html')
-        stubUri = PSE.JAVA_IO.File(stubFileTarget).toURI()
-        if PSE.JAVA_IO.File(stubUri).isFile():
-            PSE.JAVA_AWT.Desktop.getDesktop().browse(stubUri)
-        else:
-            self.psLog.warning('Help file not found')
-
-        return
-
-    def logItemSelected(self, OPEN_LOG_EVENT):
-        """menu item-Help/View Log"""
-
-        self.psLog.debug(OPEN_LOG_EVENT)
-
-        patternLog = PSE.makePatternLog()
-
-        logFileTarget = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'buildstatus', 'PatternScriptsLog_temp.txt')
-
-        PSE.genericWriteReport(logFileTarget, patternLog)
-        PSE.genericDisplayReport(logFileTarget)
-
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-
-        return
-
-    def ghItemSelected(self, OPEN_GH_EVENT):
-        """menu item-Help/GitHub Page"""
-
-        self.psLog.debug(OPEN_GH_EVENT)
-
-        ghURL = 'https://github.com/gar-codespace/OperationsPatternScripts'
-        PSE.JMRI.util.HelpUtil.openWebPage(ghURL)
-
-        return
-
-    def ecItemSelected(self, OPEN_EC_EVENT):
-        """menu item-Help/Edit Config File"""
-
-        self.psLog.debug(OPEN_EC_EVENT)
-
-        configTarget = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'PatternConfig.json')
-
-        if PSE.JAVA_IO.File(configTarget).isFile():
-            PSE.genericDisplayReport(configTarget)
-        else:
-            self.psLog.warning('Not found: ' + configTarget)
-
-        return
-
-    def ofItemSelected(self, OPEN_OF_EVENT):
-        """menu item-Help/Operations Folder"""
-
-        self.psLog.debug(OPEN_OF_EVENT)
-
-        opsFolderPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations')
-
-        opsFolder = PSE.JAVA_IO.File(opsFolderPath)
-        if opsFolder.exists():
-            PSE.JAVA_AWT.Desktop.getDesktop().open(opsFolder)
-        else:
-            self.psLog.warning('Not found: ' + opsFolderPath)
-
-        return
-
-    def shutdownPlugin(self):
-        """Used by:
-            ptItemSelected
-            rsItemSelected
-            ooItemSelected
-            """
-
-        self.closePsWindow()
-
-        return
-
-    def startupPlugin(self):
-        """Used by:
-            ptItemSelected
-            rsItemSelected
-            ooItemSelected
-            """
-
-        PSE.BUNDLE = Bundle.getBundleForLocale()
-        PSE.CreateStubFile().make()
-        Bundle.makeHelpPage()
-
-        self.buildThePlugin()
-
-        return
-
+        
     def handle(self):
 
         startTime = PSE.TIME.time()
@@ -517,8 +287,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         PSE.closeOutputPanel()
         PSE.makeReportFolders()
         PSE.CreateStubFile().make()
-        if PSE.readConfigFile()['CP']['o2oSubroutine']:
-            self.o2oSubroutineListeners()
+
         if PSE.readConfigFile()['CP']['AP']:
             self.addPatternScriptsButton()
 
@@ -532,4 +301,5 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         return False
 
-Controller().start()
+if __name__ == "__builtin__":
+    Controller().start()

@@ -4,6 +4,7 @@
 """This template serves as the framework for additional subroutines."""
 
 from opsEntities import PSE
+# from opsBundle import Bundle
 from jPlusSubroutine import Model
 from jPlusSubroutine import View
 
@@ -58,7 +59,6 @@ def actionListener(EVENT):
     patternConfig = PSE.readConfigFile()
     OSU = PSE.JMRI.jmrit.operations.setup
 
-
     if patternConfig['CP']['jPlusSubroutine']: # If enabled, turn it off
         patternConfig['CP']['jPlusSubroutine'] = False
         EVENT.getSource().setText(PSE.BUNDLE[u'Enable j Plus subroutine'])
@@ -79,8 +79,9 @@ def actionListener(EVENT):
         print('j Plus support activated')
 
     PSE.writeConfigFile(patternConfig)
-    # self.shutdownPlugin()
-    # self.startupPlugin()
+    PSE.closePsWindow()
+    PSE.buildThePlugin()
+
     return
 
 

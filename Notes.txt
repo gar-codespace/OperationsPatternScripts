@@ -3,6 +3,7 @@ Todo:
   Add update divisions to o2o update railroad.
   Conform JMRI and TP date format?
   Restart jPlus sub on o2o new and update.
+  Add apply schedule to set cars window.
 
 Comments:
   Schedule does not prevent setting a car to a track.
