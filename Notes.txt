@@ -1,8 +1,8 @@
 Todo:
   How to publish DeepL?
   Add update divisions to o2o update railroad.
-  Conform JMRI and TP date format?
-  Make a Listeners.py for each subroutine and move the listeners there.
+  Revisit try/except pass.
+  Check all log entries.
 
 Comments:
   Schedule does not prevent setting a car to a track.

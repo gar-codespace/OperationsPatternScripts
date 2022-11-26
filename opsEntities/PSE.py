@@ -1,9 +1,10 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""PSE is an abbreviation for Pattern Script Entities.
-    Support methods and package constants for all Pattern Script subroutines.
-    """
+"""
+PSE is an abbreviation for Pattern Script Entities.
+Support methods and package constants for all Pattern Script subroutines.
+"""
 
 import jmri as JMRI
 import logging as LOGGING

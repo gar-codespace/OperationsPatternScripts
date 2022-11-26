@@ -8,7 +8,6 @@
   "Action": "Action", 
   "Apply Schedule": "Apply Schedule", 
   "Available:": "Available:", 
-  "Button": "Button", 
   "Cars at": "Cars at", 
   "Check TrainPlayer-Advanced Ops-Industries for errors.": "Check TrainPlayer-Advanced Ops-Industries for errors.", 
   "Check TrainPlayer-Advanced Ops-Locales for semi colon.": "Check TrainPlayer-Advanced Ops-Locales for semi colon.", 
@@ -16,14 +15,12 @@
   "Disable Track Pattern subroutine": "Disable Track Pattern subroutine", 
   "Disable j Plus subroutine": "Disable j Plus subroutine", 
   "Disable o2o subroutine": "Disable o2o subroutine", 
-  "Disable xxx subroutine": "Disable xxx subroutine", 
   "Division:": "Division:", 
   "Do Not Apply Schedule": "Do Not Apply Schedule", 
   "Edit Config File": "Edit Config File", 
   "Enable Track Pattern subroutine": "Enable Track Pattern subroutine", 
   "Enable j Plus subroutine": "Enable j Plus subroutine", 
   "Enable o2o subroutine": "Enable o2o subroutine", 
-  "Enable xxx subroutine": "Enable xxx subroutine", 
   "Eqpt. Length:": "Eqpt. Length:", 
   "FAIL: CreateSetCarsFormGui.quickCheck.testValidityOfForm": "FAIL: CreateSetCarsFormGui.quickCheck.testValidityOfForm", 
   "FAIL: Mismatched input list and car roster lengths": "FAIL: Mismatched input list and car roster lengths", 
@@ -100,6 +97,5 @@
   "o2o Subroutine": "o2o Subroutine", 
   "o2o Work Events": "o2o Work Events", 
   "occupied": "occupied", 
-  "unknown": "unknown", 
-  "xxx Subroutine": "xxx Subroutine"
+  "unknown": "unknown"
 }

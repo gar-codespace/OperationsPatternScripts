@@ -97,7 +97,7 @@ def jLocations(selectedItem):
 
     configFile['PT'].update({'PA': False})
     configFile['PT'].update({'PI': False})
-    
+
     PSE.writeConfigFile(configFile)
 
     return
@@ -180,16 +180,14 @@ def updateLocations():
     configfile['PT'].update({'AD': allDivisions})
     if allDivisions and not configfile['PT']['PD']: # when this sub is used for the first time
         configfile['PT'].update({'PD': allDivisions[0]})
-    else:
-        _psLog.info('There are no divisions for this profile')
+        _psLog.info('Make initial divisions list')
 
     allLocations = PSE.getAllLocationNames()
     configfile['PT'].update({'AL': allLocations})
     if allLocations and not configfile['PT']['PL']: # when this sub is used for the first time
         configfile['PT'].update({'PL': allLocations[0]})
         configfile['PT'].update({'PT': ModelEntities.makeInitialTrackList(allLocations[0])})
-    else:
-        _psLog.warning('There are no locations for this profile')
+        _psLog.info('Make initial locations list')
 
     PSE.writeConfigFile(configfile)
 
