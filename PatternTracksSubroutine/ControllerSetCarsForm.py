@@ -4,7 +4,7 @@
 """Makes a 'Set Cars Form for Track X' form for each selected track"""
 
 from opsEntities import PSE
-from opsEntities import Listeners
+from PatternTracksSubroutine import Listeners
 from PatternTracksSubroutine import Model
 from PatternTracksSubroutine import ModelSetCarsForm
 from PatternTracksSubroutine import ViewSetCarsForm
@@ -106,7 +106,7 @@ class CreateSetCarsFormGui:
         PSE.writeConfigFile(configFile)
 
         return
-        
+
     def switchListButton(self, MOUSE_CLICKED):
         """Makes a Set Cars (SC) switch list for the active 'Set Rolling Stock for Track X' window"""
 

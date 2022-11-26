@@ -2,7 +2,7 @@
 # © 2021, 2022 Greg Ritacco
 
 from opsEntities import PSE
-from opsEntities import Listeners
+from PatternTracksSubroutine import Listeners
 from PatternTracksSubroutine import View
 from PatternTracksSubroutine import Model
 from o2oSubroutine import Model as o2oModel
@@ -52,30 +52,30 @@ def setDropDownText():
 
     return menuText, 'tpItemSelected'
 
-def actionListener(EVENT):
-    """menu item-Tools/Enable Track Pattern subroutine"""
-
-    _psLog.debug(EVENT)
-    patternConfig = PSE.readConfigFile()
-
-    if patternConfig['CP']['PatternTracksSubroutine']: # If enabled, turn it off
-        patternConfig['CP']['PatternTracksSubroutine'] = False
-        EVENT.getSource().setText(PSE.BUNDLE[u'Enable Track Pattern subroutine'])
-
-        _psLog.info('Track Pattern support deactivated')
-        print('Track Pattern support deactivated')
-    else:
-        patternConfig['CP']['PatternTracksSubroutine'] = True
-        EVENT.getSource().setText(PSE.BUNDLE[u'Disable Track Pattern subroutine'])
-
-        _psLog.info('Track Pattern support activated')
-        print('Track Pattern support activated')
-
-    PSE.writeConfigFile(patternConfig)
-    PSE.closePsWindow()
-    PSE.buildThePlugin()
-
-    return
+# def actionListener(EVENT):
+#     """menu item-Tools/Enable Track Pattern subroutine"""
+#
+#     _psLog.debug(EVENT)
+#     patternConfig = PSE.readConfigFile()
+#
+#     if patternConfig['CP']['PatternTracksSubroutine']: # If enabled, turn it off
+#         patternConfig['CP']['PatternTracksSubroutine'] = False
+#         EVENT.getSource().setText(PSE.BUNDLE[u'Enable Track Pattern subroutine'])
+#
+#         _psLog.info('Track Pattern support deactivated')
+#         print('Track Pattern support deactivated')
+#     else:
+#         patternConfig['CP']['PatternTracksSubroutine'] = True
+#         EVENT.getSource().setText(PSE.BUNDLE[u'Disable Track Pattern subroutine'])
+#
+#         _psLog.info('Track Pattern support activated')
+#         print('Track Pattern support activated')
+#
+#     PSE.writeConfigFile(patternConfig)
+#     PSE.closePsWindow()
+#     PSE.buildThePlugin()
+#
+#     return
 
 
 class StartUp:

@@ -1,63 +1,30 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""This template serves as the framework for additional subroutines."""
+"""
+Template
+"""
 
 from opsEntities import PSE
-from GenericSubroutine import Model
-from GenericSubroutine import View
+from TemplateSubroutine import Model
+from TemplateSubroutine import View
 
-SCRIPT_NAME = 'OperationsPatternScripts.GenericSubroutine.Controller'
+SCRIPT_NAME = 'OperationsPatternScripts.TemplateSubroutine.Controller'
 SCRIPT_REV = 20221010
 
-_psLog = PSE.LOGGING.getLogger('OPS.GS.Controller')
+_psLog = PSE.LOGGING.getLogger('OPS.xxx.Controller')
 
-
-
-
-
-    def setGsDropDownText(self):
-        """itemMethod - Set the drop down text per the config file Subroutine Include flag ['CP']['IG']"""
-
-        patternConfig = PSE.readConfigFile('CP')
-        if patternConfig['GenericSubroutine']:
-            menuText = PSE.BUNDLE[u'Disable generic subroutine']
-        else:
-            menuText = PSE.BUNDLE[u'Enable generic subroutine']
-
-        return menuText, 'gsItemSelected
-
-
-
-
-
-            def gsItemSelected(self, GS_ACTIVATE_EVENT):
-                """menu item-Tools/Enable Generic Subroutine."""
-
-                self.psLog.debug(GS_ACTIVATE_EVENT)
-                patternConfig = PSE.readConfigFile()
-
-                # Put stuff here that the subroutine does.
-
-                PSE.writeConfigFile(patternConfig)
-                self.shutdownPlugin()
-                self.startupPlugin()
-                return
-
-                
 
 def updateSubroutine(parent):
-    """Allows other subroutines to update and restart the Generic Sub.
+    """Allows other subroutines to update and restart the jPlus Sub.
         Not implemented.
         """
 
     if not parent:
         return
 
-    # Do stuff here.
-
     for component in parent.getComponents():
-        if component.getName() == 'genericSubroutine':
+        if component.getName() == 'TemplateSubroutine':
             restartSubroutine(component.getComponents()[0])
 
     return
@@ -65,7 +32,7 @@ def updateSubroutine(parent):
 def restartSubroutine(subroutineFrame):
     """Subroutine restarter.
         Used by:
-        updateSubroutine
+
         """
 
     subroutinePanel = StartUp(subroutineFrame).makeSubroutinePanel()
@@ -75,9 +42,21 @@ def restartSubroutine(subroutineFrame):
 
     return
 
+def setDropDownText():
+    """itemMethod - Set the drop down text per the config file PatternTracksSubroutine Include flag ['CP']['IJ']"""
+
+    patternConfig = PSE.readConfigFile('CP')
+
+    if patternConfig['TemplateSubroutine']:
+        menuText = PSE.BUNDLE[u'Disable xxx subroutine']
+    else:
+        menuText = PSE.BUNDLE[u'Enable xxx subroutine']
+
+    return menuText, 'xxxItemSelected'
+
 
 class StartUp:
-    """Start the o2o subroutine"""
+    """Start the xxx subroutine"""
 
     def __init__(self, subroutineFrame=None):
 
@@ -92,7 +71,7 @@ class StartUp:
         subroutinePanel = self.makeSubroutinePanel()
         self.subroutineFrame.add(subroutinePanel)
 
-        _psLog.info('GenericSubroutine makeFrame completed')
+        _psLog.info('xxxSubroutine makeFrame completed')
 
         return self.subroutineFrame
 

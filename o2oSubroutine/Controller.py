@@ -4,7 +4,7 @@
 """The o2o Subroutine."""
 
 from opsEntities import PSE
-from opsEntities import Listeners
+from o2oSubroutine import Listeners
 from o2oSubroutine import Model
 from o2oSubroutine import ModelImport
 from o2oSubroutine import ModelWorkEvents
@@ -76,77 +76,6 @@ def setDropDownText():
 
     return menuText, 'ooItemSelected'
 
-def actionListener(EVENT):
-    """menu item-Tools/Enable o2o subroutine"""
-
-    _psLog.debug(EVENT)
-    patternConfig = PSE.readConfigFile()
-
-    if patternConfig['CP']['o2oSubroutine']: # If enabled, turn it off
-        patternConfig['CP']['o2oSubroutine'] = False
-        EVENT.getSource().setText(PSE.BUNDLE[u'Enable o2o subroutine'])
-
-        removeTrainsTableListener()
-
-        _psLog.info('o2o subroutine deactivated')
-        print('o2o subroutine deactivated')
-    else:
-        patternConfig['CP']['o2oSubroutine'] = True
-        EVENT.getSource().setText(PSE.BUNDLE[u'Disable o2o subroutine'])
-
-        addTrainsTableListener()
-
-        _psLog.info('o2o subroutine activated')
-        print('o2o subroutine activated')
-
-    PSE.writeConfigFile(patternConfig)
-    PSE.closePsWindow()
-    PSE.buildThePlugin()
-
-    return
-
-def addTrainsTableListener():
-
-    builtTrainListener = Listeners.BuiltTrain()
-    trainsTableListener = Listeners.TrainsTable(builtTrainListener)
-
-    trainsTableModel = PSE.JMRI.jmrit.operations.trains.TrainsTableModel()
-    trainsTableModel.addTableModelListener(trainsTableListener)
-
-    # addBuiltTrainListener()
-
-    return
-
-def removeTrainsTableListener():
-
-
-    trainsTableModel = PSE.JMRI.jmrit.operations.trains.TrainsTableModel()
-    try:
-        trainsTableModel.removeTableModelListener(trainsTableListener)
-    except:
-        pass
-
-    removeBuiltTrainListener()
-
-    return
-
-def addBuiltTrainListener():
-
-    trainList = PSE.TM.getTrainsByIdList()
-    for train in trainList:
-        train.addPropertyChangeListener(Listeners.BuiltTrain())
-    return
-
-def removeBuiltTrainListener():
-
-    trainList = PSE.TM.getTrainsByIdList()
-    for train in trainList:
-        for listener in train.getPropertyChangeListeners():
-            if listener.getClass() == Listeners.BuiltTrain:
-                train.removePropertyChangeListener(listener)
-
-    return
-
 
 class StartUp:
     """Start the o2o subroutine"""
@@ -180,7 +109,7 @@ class StartUp:
     def activateListeners(self):
 
         if PSE.readConfigFile('CP')['o2oSubroutine']:
-            addBuiltTrainListener()
+            Listeners.addBuiltTrainListener()
 
         return
 

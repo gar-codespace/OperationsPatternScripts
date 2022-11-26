@@ -1,14 +1,16 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""Template."""
+"""
+Template
+"""
 
 from opsEntities import PSE
 
-SCRIPT_NAME = 'OperationsPatternScripts.GenericSubroutine.ViewEntities'
+SCRIPT_NAME = 'OperationsPatternScripts.xxxSubroutine.ViewEntities'
 SCRIPT_REV = 20221010
 
-class GenericSubroutinePanel:
+class xxxSubroutinePanel:
 
     def __init__(self):
         """The *.setName value is the name of the action for the widget"""
@@ -21,7 +23,7 @@ class GenericSubroutinePanel:
 
         return
 
-    def genericPanelMaker(self):
+    def xxxPanelMaker(self):
 
         tpPanel = PSE.JAVX_SWING.JPanel()
 
@@ -31,7 +33,7 @@ class GenericSubroutinePanel:
 
         return tpPanel
 
-    def genericWidgetGetter(self):
+    def xxxWidgetGetter(self):
 
         self.controlWidgets.append(self.nrButton)
         self.controlWidgets.append(self.nrButton)

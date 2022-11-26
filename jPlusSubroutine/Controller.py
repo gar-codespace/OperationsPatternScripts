@@ -1,10 +1,13 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""This template serves as the framework for additional subroutines."""
+"""
+
+"""
 
 from opsEntities import PSE
 # from opsBundle import Bundle
+from jPlusSubroutine import Listeners
 from jPlusSubroutine import Model
 from jPlusSubroutine import View
 
@@ -51,38 +54,6 @@ def setDropDownText():
         menuText = PSE.BUNDLE[u'Enable j Plus subroutine']
 
     return menuText, 'jpItemSelected'
-
-def actionListener(EVENT):
-    """menu item-Tools/Enable j Plus Subroutine."""
-
-    _psLog.debug(EVENT)
-    patternConfig = PSE.readConfigFile()
-    OSU = PSE.JMRI.jmrit.operations.setup
-
-    if patternConfig['CP']['jPlusSubroutine']: # If enabled, turn it off
-        patternConfig['CP']['jPlusSubroutine'] = False
-        EVENT.getSource().setText(PSE.BUNDLE[u'Enable j Plus subroutine'])
-
-        OSU.Setup.setRailroadName(patternConfig['CP']['LN'])
-
-        _psLog.info('j Plus support deactivated')
-        print('j Plus support deactivated')
-    else:
-        patternConfig['CP']['jPlusSubroutine'] = True
-        EVENT.getSource().setText(PSE.BUNDLE[u'Disable j Plus subroutine'])
-
-        patternConfig['CP']['LN'] = OSU.Setup.getRailroadName()
-        jPlusHeader = PSE.jPlusHeader().replace(';', '\n')
-        OSU.Setup.setRailroadName(jPlusHeader)
-
-        _psLog.info('j Plus support activated')
-        print('j Plus support activated')
-
-    PSE.writeConfigFile(patternConfig)
-    PSE.closePsWindow()
-    PSE.buildThePlugin()
-
-    return
 
 
 class StartUp:

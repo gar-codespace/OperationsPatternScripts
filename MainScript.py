@@ -88,10 +88,10 @@ class View:
         subroutineList = []
         controlPanelConfig = PSE.readConfigFile('CP')
         for include in controlPanelConfig['IL']:
-            xModule = __import__(include, fromlist=['Controller'])
+            xModule = __import__(include, fromlist=['Controller', 'Listeners'])
             menuText, itemName = xModule.Controller.setDropDownText()
             menuItem = self.makeMenuItem(menuText, itemName)
-            menuItem.addActionListener(xModule.Controller.actionListener)
+            menuItem.addActionListener(xModule.Listeners.actionListener)
             self.subroutineMenuItems.append(menuItem)
             if controlPanelConfig[include]:
                 startUp = xModule.Controller.StartUp()

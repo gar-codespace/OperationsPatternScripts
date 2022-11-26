@@ -8,9 +8,6 @@
     "LN" : "",
     "BD" : ""
   },
-  "GS" : {
-    "Generic Subroutine": "Template"
-  },
   "CD": {
     "CP": {
       "BLANCH": {
@@ -90,7 +87,7 @@
     "PX" : 0,
     "PY" : 0,
     "OC" : true,
-    "RV" : 20221120
+    "RV" : 20221122
   },
   "RM" : {
     "DS" : "No Waybill",
