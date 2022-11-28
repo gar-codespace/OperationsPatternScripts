@@ -584,6 +584,28 @@ def getShortLoadType(car):
 """File Handling Methods"""
 
 
+def getTpRailroadJson(reportName):
+    """Any of the TP exports imported into JMRI as a json file:
+        tpRailroadData
+        tpRollingStockData
+        tpLocaleData
+        """
+
+    fileName = reportName + '.json'
+    targetPath = OS_PATH.join(PROFILE_PATH, 'operations', fileName)
+
+    try:
+        JAVA_IO.File(targetPath).isFile()
+        _psLog.info(fileName + '.json: OK')
+    except:
+        _psLog.warning(fileName + '.json not found')
+        return
+
+    report = genericReadReport(targetPath)
+    tpRailroad = loadJson(report)
+
+    return tpRailroad
+
 def makeBuildStatusFolder():
     """The buildStatus folder is created first so the log file can be written.
         Used by:

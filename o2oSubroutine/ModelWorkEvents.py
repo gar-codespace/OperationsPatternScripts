@@ -240,12 +240,14 @@ class o2oWorkEvents:
 
     def __init__(self, workEvents):
 
-        reportName = 'tpRollingStockData'
-        fileName = reportName + '.json'
-        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
+        # reportName = 'tpRollingStockData'
+        # fileName = reportName + '.json'
+        # targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
+        #
+        # tpRollingStockData = PSE.genericReadReport(targetPath)
+        # self.tpRollingStockData = PSE.loadJson(tpRollingStockData)
 
-        tpRollingStockData = PSE.genericReadReport(targetPath)
-        self.tpRollingStockData = PSE.loadJson(tpRollingStockData)
+        self.tpRollingStockData = PSE.getTpRailroadJson('tpRollingStockData')
 
         self.workEvents = workEvents
         self.o2oList = ''

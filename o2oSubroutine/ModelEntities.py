@@ -57,7 +57,7 @@ def setTrackLength():
     _psLog.debug('setTrackLength')
 
     o2oConfig = PSE.readConfigFile('o2o')
-    tpRailroadData = getTpRailroadData()
+    tpRailroadData = PSE.getTpRailroadJson('tpRailroadData')
 
     for id, trackData in tpRailroadData['locales'].items():
         location = PSE.LM.getLocationByName(trackData['location'])
@@ -69,27 +69,6 @@ def setTrackLength():
 
     return
 
-def getTpRailroadData():
-    """Add error handling"""
-
-    tpRailroad = []
-
-    reportName = 'tpRailroadData'
-    fileName = reportName + '.json'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
-
-    try:
-        PSE.JAVA_IO.File(targetPath).isFile()
-        _psLog.info('tpRailroadData.json OK')
-    except:
-        _psLog.warning('tpRailroadData.json not found')
-        return
-
-    report = PSE.genericReadReport(targetPath)
-    tpRailroad = PSE.loadJson(report)
-
-    return tpRailroad
-
 def newSchedules():
     """Creates new schedules from tpRailroadData.json [industries].
         The schedule name is the TP track label.
@@ -100,7 +79,7 @@ def newSchedules():
 
     _psLog.debug('newSchedules')
 
-    for id, industry in getTpRailroadData()['industries'].items():
+    for id, industry in PSE.getTpRailroadJson('tpRailroadData')['industries'].items():
         scheduleLineItem = industry['schedule']
         schedule = PSE.SM.newSchedule(scheduleLineItem[0])
         scheduleItem = schedule.addItem(scheduleLineItem[1])
@@ -114,7 +93,7 @@ def addCarTypesToSpurs():
 
     _psLog.debug('addCarTypesToSpurs')
 
-    industries = getTpRailroadData()['industries']
+    industries = PSE.getTpRailroadJson('tpRailroadData')['industries']
     selectCarTypes(industries)
 
     return

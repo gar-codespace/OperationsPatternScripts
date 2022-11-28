@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""Template."""
+"""Creates either version of the j Plus panel."""
 
 from opsEntities import PSE
 
@@ -26,9 +26,7 @@ class jPlusSubroutinePanel:
         return
 
     def jPlusPanelEditable(self):
-        """User can edit the rr details."""
-
-        configFile = PSE.readConfigFile()
+        """User can edit the railroad details."""
 
         jPlusPanel = PSE.JAVX_SWING.JPanel()
         jPlusPanel.setLayout(PSE.JAVX_SWING.BoxLayout(jPlusPanel, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
@@ -45,19 +43,19 @@ class jPlusSubroutinePanel:
 
         a7 = PSE.JAVA_AWT.Label(PSE.BUNDLE['Year Modeled'], PSE.JAVA_AWT.Label.RIGHT)
 
-        a2 = PSE.JAVX_SWING.JTextField(configFile['JP']['OR'], PSE.JAVA_AWT.Label.LEFT)
+        a2 = PSE.JAVX_SWING.JTextField(self.configFile['JP']['OR'], PSE.JAVA_AWT.Label.LEFT)
         a2.setColumns(25)
         self.panelWidgets['OR'] = a2
 
-        a4 = PSE.JAVX_SWING.JTextField(configFile['JP']['TR'], PSE.JAVA_AWT.Label.LEFT)
+        a4 = PSE.JAVX_SWING.JTextField(self.configFile['JP']['TR'], PSE.JAVA_AWT.Label.LEFT)
         a4.setColumns(25)
         self.panelWidgets['TR'] = a4
 
-        a6 = PSE.JAVX_SWING.JTextField(configFile['JP']['LO'], PSE.JAVA_AWT.Label.LEFT)
+        a6 = PSE.JAVX_SWING.JTextField(self.configFile['JP']['LO'], PSE.JAVA_AWT.Label.LEFT)
         a6.setColumns(25)
         self.panelWidgets['LO'] = a6
 
-        a8 = PSE.JAVX_SWING.JTextField(configFile['JP']['YR'], PSE.JAVA_AWT.Label.LEFT)
+        a8 = PSE.JAVX_SWING.JTextField(self.configFile['JP']['YR'], PSE.JAVA_AWT.Label.LEFT)
         a8.setColumns(25)
         self.panelWidgets['YR'] = a8
 
@@ -77,27 +75,21 @@ class jPlusSubroutinePanel:
         return jPlusPanel
 
     def jPlusPanelFixed(self):
-        """If using o2o, the rr details are adde from TrainPlayer.
-            This is a duplicate of o2o.ModelEntities.getTpRailroadData():"""
-
+        """If using o2o, the railroad details are added from tpRailroadData.json."""
 
         jPlusPanel = PSE.JAVX_SWING.JPanel()
         jPlusPanel.setLayout(PSE.JAVX_SWING.BoxLayout(jPlusPanel, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
         jPlusPanel.border = PSE.JAVX_SWING.BorderFactory.createEmptyBorder(10,0,10,0)
 
-        reportName = 'tpRailroadData'
-        fileName = reportName + '.json'
-        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
+        tpRailroadData = PSE.getTpRailroadJson('tpRailroadData')
 
-        if not PSE.JAVA_IO.File(targetPath).isFile():
+        if not tpRailroadData:
             headerDetailLabel = PSE.JAVX_SWING.JLabel()
             headerDetailLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
             headerDetailLabel.setText(PSE.BUNDLE[u'Not found: incomplete o2o import'])
             jPlusPanel.add(headerDetailLabel)
             jPlusPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
             return jPlusPanel
-
-        report = PSE.genericReadReport(targetPath)
 
         if self.configFile['JP']['OR']:
             headerDetailLabel = PSE.JAVX_SWING.JLabel()
