@@ -16,7 +16,6 @@ class jPlusSubroutinePanel:
         self.configFile = PSE.readConfigFile()
 
         self.upButton = PSE.JAVX_SWING.JButton()
-        # self.upButton.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
         self.upButton.setText(PSE.BUNDLE[u'Update'])
         self.upButton.setName('update')
 
@@ -31,71 +30,60 @@ class jPlusSubroutinePanel:
 
         configFile = PSE.readConfigFile()
 
-        combinedHeader = PSE.JAVX_SWING.JPanel()
-        combinedHeader.setLayout(PSE.JAVX_SWING.BoxLayout(combinedHeader, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
-        combinedHeader.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
-        # combinedHeader.border = PSE.JAVX_SWING.BorderFactory.createEmptyBorder(10,0,10,0)
+        jPlusPanel = PSE.JAVX_SWING.JPanel()
+        jPlusPanel.setLayout(PSE.JAVX_SWING.BoxLayout(jPlusPanel, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
+        jPlusPanel.border = PSE.JAVX_SWING.BorderFactory.createEmptyBorder(10,0,10,0)
 
-        panel = PSE.JAVX_SWING.JPanel()
-        # panel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
-        panel.add(PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Operating Railroad Name']))
-        panel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8 ,0)))
-        inputText = PSE.JAVX_SWING.JTextField(configFile['JP']['OR'])
-        inputText.setColumns(40)
-        panel.add(inputText)
-        self.panelWidgets['OR'] = inputText
-        combinedHeader.add(panel)
+        inputGrid = PSE.JAVX_SWING.JPanel()
+        inputGrid.setLayout(PSE.JAVA_AWT.GridLayout(4, 2, 10, 4))
 
-        combinedHeader.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0 ,3)))
+        a1 = PSE.JAVA_AWT.Label(PSE.BUNDLE['Operating Railroad Name'], PSE.JAVA_AWT.Label.RIGHT)
 
-        panel = PSE.JAVX_SWING.JPanel()
-        panel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
-        panel.add(PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Operational Territory']))
-        panel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8 ,0)))
-        inputText = PSE.JAVX_SWING.JTextField(configFile['JP']['TR'])
-        inputText.setColumns(40)
-        panel.add(inputText)
-        self.panelWidgets['TR'] = inputText
-        combinedHeader.add(panel)
+        a3 = PSE.JAVA_AWT.Label(PSE.BUNDLE['Operational Territory'], PSE.JAVA_AWT.Label.RIGHT)
 
-        combinedHeader.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0 ,3)))
+        a5 = PSE.JAVA_AWT.Label(PSE.BUNDLE['Location'], PSE.JAVA_AWT.Label.RIGHT)
 
-        panel = PSE.JAVX_SWING.JPanel()
-        panel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
-        panel.add(PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Location']))
-        panel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8 ,0)))
-        inputText = PSE.JAVX_SWING.JTextField(configFile['JP']['LO'])
-        inputText.setColumns(40)
-        panel.add(inputText)
-        self.panelWidgets['LO'] = inputText
-        combinedHeader.add(panel)
+        a7 = PSE.JAVA_AWT.Label(PSE.BUNDLE['Year Modeled'], PSE.JAVA_AWT.Label.RIGHT)
 
-        combinedHeader.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0 ,3)))
+        a2 = PSE.JAVX_SWING.JTextField(configFile['JP']['OR'], PSE.JAVA_AWT.Label.LEFT)
+        a2.setColumns(25)
+        self.panelWidgets['OR'] = a2
 
-        panel = PSE.JAVX_SWING.JPanel()
-        panel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
-        panel.add(PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Year Modeled']))
-        panel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(5 ,0)))
-        inputText = PSE.JAVX_SWING.JTextField(configFile['JP']['YR'])
-        inputText.setColumns(5)
-        panel.add(inputText)
-        self.panelWidgets['YR'] = inputText
-        combinedHeader.add(panel)
+        a4 = PSE.JAVX_SWING.JTextField(configFile['JP']['TR'], PSE.JAVA_AWT.Label.LEFT)
+        a4.setColumns(25)
+        self.panelWidgets['TR'] = a4
 
-        combinedHeader.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,15)))
-        combinedHeader.add(self.upButton)
+        a6 = PSE.JAVX_SWING.JTextField(configFile['JP']['LO'], PSE.JAVA_AWT.Label.LEFT)
+        a6.setColumns(25)
+        self.panelWidgets['LO'] = a6
 
-        return combinedHeader
+        a8 = PSE.JAVX_SWING.JTextField(configFile['JP']['YR'], PSE.JAVA_AWT.Label.LEFT)
+        a8.setColumns(25)
+        self.panelWidgets['YR'] = a8
+
+        inputGrid.add(a1)
+        inputGrid.add(a2)
+        inputGrid.add(a3)
+        inputGrid.add(a4)
+        inputGrid.add(a5)
+        inputGrid.add(a6)
+        inputGrid.add(a7)
+        inputGrid.add(a8)
+
+        jPlusPanel.add(inputGrid)
+        jPlusPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,20)))
+        jPlusPanel.add(self.upButton)
+
+        return jPlusPanel
 
     def jPlusPanelFixed(self):
         """If using o2o, the rr details are adde from TrainPlayer.
             This is a duplicate of o2o.ModelEntities.getTpRailroadData():"""
 
 
-        combinedHeader = PSE.JAVX_SWING.JPanel()
-        combinedHeader.setLayout(PSE.JAVX_SWING.BoxLayout(combinedHeader, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
-        combinedHeader.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
-        # combinedHeader.border = PSE.JAVX_SWING.BorderFactory.createEmptyBorder(10,0,10,0)
+        jPlusPanel = PSE.JAVX_SWING.JPanel()
+        jPlusPanel.setLayout(PSE.JAVX_SWING.BoxLayout(jPlusPanel, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
+        jPlusPanel.border = PSE.JAVX_SWING.BorderFactory.createEmptyBorder(10,0,10,0)
 
         reportName = 'tpRailroadData'
         fileName = reportName + '.json'
@@ -105,45 +93,40 @@ class jPlusSubroutinePanel:
             headerDetailLabel = PSE.JAVX_SWING.JLabel()
             headerDetailLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
             headerDetailLabel.setText(PSE.BUNDLE[u'Not found: incomplete o2o import'])
-            combinedHeader.add(headerDetailLabel)
-            combinedHeader.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
-            return combinedHeader
+            jPlusPanel.add(headerDetailLabel)
+            jPlusPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
+            return jPlusPanel
 
         report = PSE.genericReadReport(targetPath)
-        tpRailroad = PSE.loadJson(report)
 
         if self.configFile['JP']['OR']:
             headerDetailLabel = PSE.JAVX_SWING.JLabel()
             headerDetailLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
             headerDetailLabel.setText(self.configFile['JP']['OR'])
-            # headerDetailLabel.setText(tpRailroad['operatingRoad'])
-            combinedHeader.add(headerDetailLabel)
-            combinedHeader.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
+            jPlusPanel.add(headerDetailLabel)
+            jPlusPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
 
         if self.configFile['JP']['TR']:
             headerDetailLabel = PSE.JAVX_SWING.JLabel()
             headerDetailLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
             headerDetailLabel.setText(self.configFile['JP']['TR'])
-            # headerDetailLabel.setText(tpRailroad['territory'])
-            combinedHeader.add(headerDetailLabel)
-            combinedHeader.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
+            jPlusPanel.add(headerDetailLabel)
+            jPlusPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
 
         if self.configFile['JP']['LO']:
             headerDetailLabel = PSE.JAVX_SWING.JLabel()
             headerDetailLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
             headerDetailLabel.setText(self.configFile['JP']['LO'])
-            # headerDetailLabel.setText(tpRailroad['location'])
-            combinedHeader.add(headerDetailLabel)
-            combinedHeader.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
+            jPlusPanel.add(headerDetailLabel)
+            jPlusPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
 
         if self.configFile['JP']['YR']:
             headerDetailLabel = PSE.JAVX_SWING.JLabel()
             headerDetailLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
             headerDetailLabel.setText(self.configFile['JP']['YR'])
-            # headerDetailLabel.setText(tpRailroad['year'])
-            combinedHeader.add(headerDetailLabel)
+            jPlusPanel.add(headerDetailLabel)
 
-        return combinedHeader
+        return jPlusPanel
 
     def jPlusWidgets(self):
 
