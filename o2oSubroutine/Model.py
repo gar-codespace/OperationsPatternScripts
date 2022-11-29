@@ -114,11 +114,6 @@ def updateJmriRailroad():
     if not tpLocaleData.isValid():
         return False
 
-    # if tpLocaleData.isValid():
-    #     tpLocaleData.write()
-    # else:
-    #     return False
-
     restTrains = BuiltTrainExport.FindTrain()
     restTrains.getBuiltTrains()
     restTrains.resetBuildTrains()
@@ -232,7 +227,7 @@ class SetupXML:
         self.OSU = PSE.JMRI.jmrit.operations.setup
 
         self.o2oConfig =  PSE.readConfigFile()
-        self.TpRailroad = ModelEntities.getTpRailroadData()
+        self.TpRailroad = PSE.getTpRailroadJson('tpRailroadData')
 
         print(self.scriptName + ' ' + str(SCRIPT_REV))
 
@@ -317,9 +312,11 @@ class MakeTpLocaleData:
 
     def getTpRrData(self):
 
-        fileName = 'tpRailroadData.json'
-        filePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
-        self.sourceData = PSE.loadJson(PSE.genericReadReport(filePath))
+        # fileName = 'tpRailroadData.json'
+        # filePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
+        # self.sourceData = PSE.loadJson(PSE.genericReadReport(filePath))
+
+        self.sourceData = PSE.getTpRailroadJson('tpRailroadData')
 
         return
 
@@ -416,7 +413,7 @@ class AddRsAttributes:
 
         self.scriptName = SCRIPT_NAME + '.AddRsAttributes'
 
-        self.tpRailroadData = ModelEntities.getTpRailroadData()
+        self.tpRailroadData = PSE.getTpRailroadJson('tpRailroadData')
 
         print(self.scriptName + ' ' + str(SCRIPT_REV))
 
@@ -531,7 +528,7 @@ class UpdateLocationsAndTracks:
         self.scriptName = SCRIPT_NAME + '.UpdateLocationsAndTracks'
 
         self.o2oConfig = PSE.readConfigFile('o2o')
-        self.tpRailroadData = ModelEntities.getTpRailroadData()
+        self.tpRailroadData = PSE.getTpRailroadJson('tpRailroadData')
 
         self.currentLocale = {}
         self.updatedLocale = {}
@@ -703,7 +700,7 @@ class NewLocationsAndTracks:
     def __init__(self):
 
         self.scriptName = SCRIPT_NAME + '.NewLocationsAndTracks'
-        self.tpRailroadData = ModelEntities.getTpRailroadData()
+        self.tpRailroadData = PSE.getTpRailroadJson('tpRailroadData')
 
         print(self.scriptName + ' ' + str(SCRIPT_REV))
 
