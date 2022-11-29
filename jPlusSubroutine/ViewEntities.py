@@ -11,52 +11,53 @@ SCRIPT_REV = 20221010
 class jPlusSubroutinePanel:
 
     def __init__(self):
-        """The *.setName value is the name of the action for the widget"""
 
         self.configFile = PSE.readConfigFile()
 
-        self.upButton = PSE.JAVX_SWING.JButton()
-        self.upButton.setText(PSE.BUNDLE[u'Update'])
-        self.upButton.setName('update')
-
         self.controlWidgets = {}
-        self.controlWidgets['UP'] = self.upButton
         self.panelWidgets = {}
 
         return
+
+    def updateButton(self):
+        """The *.setName value is the name of the action for the widget"""
+
+        upButton = PSE.JAVX_SWING.JButton()
+        upButton.setText(PSE.BUNDLE[u'Update'])
+        upButton.setName('update')
+
+        return upButton
 
     def jPlusPanelEditable(self):
         """User can edit the railroad details."""
 
         jPlusPanel = PSE.JAVX_SWING.JPanel()
         jPlusPanel.setLayout(PSE.JAVX_SWING.BoxLayout(jPlusPanel, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
-        jPlusPanel.border = PSE.JAVX_SWING.BorderFactory.createEmptyBorder(10,0,10,0)
+        jPlusPanel.border = PSE.JAVX_SWING.BorderFactory.createEmptyBorder(5,0,5,0)
 
         inputGrid = PSE.JAVX_SWING.JPanel()
         inputGrid.setLayout(PSE.JAVA_AWT.GridLayout(4, 2, 10, 4))
 
-        a1 = PSE.JAVA_AWT.Label(PSE.BUNDLE['Operating Railroad Name'], PSE.JAVA_AWT.Label.RIGHT)
+        a1 = PSE.JAVA_AWT.Label(PSE.BUNDLE['Operating Railroad Name'])
+        a1.setAlignment(PSE.JAVA_AWT.Label.RIGHT) # One wy of doing it
 
-        a3 = PSE.JAVA_AWT.Label(PSE.BUNDLE['Operational Territory'], PSE.JAVA_AWT.Label.RIGHT)
+        a3 = PSE.JAVA_AWT.Label(PSE.BUNDLE['Operational Territory'], 2) # Another way
 
-        a5 = PSE.JAVA_AWT.Label(PSE.BUNDLE['Location'], PSE.JAVA_AWT.Label.RIGHT)
+        a5 = PSE.JAVA_AWT.Label(PSE.BUNDLE['Location'], PSE.JAVA_AWT.Label.RIGHT) # Yet another way
 
         a7 = PSE.JAVA_AWT.Label(PSE.BUNDLE['Year Modeled'], PSE.JAVA_AWT.Label.RIGHT)
 
         a2 = PSE.JAVX_SWING.JTextField(self.configFile['JP']['OR'], PSE.JAVA_AWT.Label.LEFT)
-        a2.setColumns(25)
+        a2.setColumns(25) # sets the width for all text fields
         self.panelWidgets['OR'] = a2
 
         a4 = PSE.JAVX_SWING.JTextField(self.configFile['JP']['TR'], PSE.JAVA_AWT.Label.LEFT)
-        a4.setColumns(25)
         self.panelWidgets['TR'] = a4
 
         a6 = PSE.JAVX_SWING.JTextField(self.configFile['JP']['LO'], PSE.JAVA_AWT.Label.LEFT)
-        a6.setColumns(25)
         self.panelWidgets['LO'] = a6
 
         a8 = PSE.JAVX_SWING.JTextField(self.configFile['JP']['YR'], PSE.JAVA_AWT.Label.LEFT)
-        a8.setColumns(25)
         self.panelWidgets['YR'] = a8
 
         inputGrid.add(a1)
@@ -70,7 +71,10 @@ class jPlusSubroutinePanel:
 
         jPlusPanel.add(inputGrid)
         jPlusPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,20)))
-        jPlusPanel.add(self.upButton)
+        
+        upButton = self.updateButton()
+        self.controlWidgets['UP'] = upButton
+        jPlusPanel.add(upButton)
 
         return jPlusPanel
 
@@ -79,7 +83,7 @@ class jPlusSubroutinePanel:
 
         jPlusPanel = PSE.JAVX_SWING.JPanel()
         jPlusPanel.setLayout(PSE.JAVX_SWING.BoxLayout(jPlusPanel, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
-        jPlusPanel.border = PSE.JAVX_SWING.BorderFactory.createEmptyBorder(10,0,10,0)
+        jPlusPanel.border = PSE.JAVX_SWING.BorderFactory.createEmptyBorder(5,0,5,0)
 
         tpRailroadData = PSE.getTpRailroadJson('tpRailroadData')
 
@@ -89,6 +93,7 @@ class jPlusSubroutinePanel:
             headerDetailLabel.setText(PSE.BUNDLE[u'Not found: incomplete o2o import'])
             jPlusPanel.add(headerDetailLabel)
             jPlusPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
+
             return jPlusPanel
 
         if self.configFile['JP']['OR']:
@@ -117,6 +122,8 @@ class jPlusSubroutinePanel:
             headerDetailLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
             headerDetailLabel.setText(self.configFile['JP']['YR'])
             jPlusPanel.add(headerDetailLabel)
+
+        self.controlWidgets['UP'] = self.updateButton()
 
         return jPlusPanel
 

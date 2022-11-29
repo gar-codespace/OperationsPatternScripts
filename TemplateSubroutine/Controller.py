@@ -43,7 +43,7 @@ def restartSubroutine(subroutineFrame):
     return
 
 def setDropDownText():
-    """itemMethod - Set the drop down text per the config file PatternTracksSubroutine Include flag ['CP']['IJ']"""
+    """Pattern Scripts/Tools/itemMethod - Set the drop down text per the config file PatternTracksSubroutine Include flag ['CP']['IJ']"""
 
     patternConfig = PSE.readConfigFile('CP')
 

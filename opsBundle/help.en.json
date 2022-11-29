@@ -76,6 +76,7 @@
   ">Video Documentation": ">Video Documentation", 
   ">Worst case, simply delete the Pattern Config.json file and the plugin will create a new one.": ">Worst case, simply delete the Pattern Config.json file and the plugin will create a new one.", 
   ">Yard Tracks Only flag (set by user, written by this plugin)": ">Yard Tracks Only flag (set by user, written by this plugin)", 
+  ">j Plus Subroutine": ">j Plus Subroutine", 
   ">o2o Subroutine, ops 2 ops": ">o2o Subroutine, ops 2 ops", 
   ">o2o, the ops to ops subroutine for TrainPlayer\u00a9": ">o2o, the ops to ops subroutine for TrainPlayer\u00a9", 
   "All the JSON files are written to the jsonManifests folder. They follow the illustrated format:": "All the JSON files are written to the jsonManifests folder. They follow the illustrated format:", 

@@ -21,7 +21,7 @@ def patternScriptsButtonAction(MOUSE_CLICKED):
     return
 
 def ptItemSelected(TRANSLATE_PLUGIN_EVENT):
-    """menu item-Tools/Translate Plugin"""
+    """Pattern Scripts/Tools/Translate Plugin"""
 
     _psLog.debug(TRANSLATE_PLUGIN_EVENT)
 
@@ -40,7 +40,7 @@ def ptItemSelected(TRANSLATE_PLUGIN_EVENT):
     return
 
 def rsItemSelected(RESTART_PLUGIN_EVENT):
-    """menu item-Tools/Restart Plugin"""
+    """Pattern Scripts/Tools/Restart Plugin"""
 
     _psLog.debug(RESTART_PLUGIN_EVENT)
 
@@ -54,7 +54,7 @@ def rsItemSelected(RESTART_PLUGIN_EVENT):
     return
 
 def helpItemSelected(OPEN_HELP_EVENT):
-    """menu item-Help/Window help..."""
+    """Pattern Scripts/Help/Window help..."""
 
     _psLog.debug(OPEN_HELP_EVENT)
 
@@ -68,7 +68,7 @@ def helpItemSelected(OPEN_HELP_EVENT):
     return
 
 def logItemSelected(OPEN_LOG_EVENT):
-    """menu item-Help/View Log"""
+    """Pattern Scripts/Help/View Log"""
 
     _psLog.debug(OPEN_LOG_EVENT)
 
@@ -84,7 +84,7 @@ def logItemSelected(OPEN_LOG_EVENT):
     return
 
 def ghItemSelected(OPEN_GH_EVENT):
-    """menu item-Help/GitHub Page"""
+    """Pattern Scripts/Help/GitHub Page"""
 
     _psLog.debug(OPEN_GH_EVENT)
 
@@ -94,7 +94,7 @@ def ghItemSelected(OPEN_GH_EVENT):
     return
 
 def ecItemSelected(OPEN_EC_EVENT):
-    """menu item-Help/Edit Config File"""
+    """Pattern Scripts/Help/Edit Config File"""
 
     _psLog.debug(OPEN_EC_EVENT)
 
@@ -108,7 +108,7 @@ def ecItemSelected(OPEN_EC_EVENT):
     return
 
 def ofItemSelected(OPEN_OF_EVENT):
-    """menu item-Help/Operations Folder"""
+    """Pattern Scripts/Help/Operations Folder"""
 
     _psLog.debug(OPEN_OF_EVENT)
 
@@ -154,11 +154,16 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
 
         return
 
+    def windowActivated(self, WINDOW_ACTIVATED):
+
+        PSE.updateYearModeled()
+
+        return
+
     def windowIconified(self, WINDOW_ICONIFIED):
         return
     def windowDeiconified(self, WINDOW_DEICONIFIED):
         return
-    def windowActivated(self, WINDOW_ACTIVATED):
-        return
+
     def windowDeactivated(self, WINDOW_DEACTIVATED):
         return

@@ -1,9 +1,7 @@
 Todo:
   How to publish DeepL?
-  Add update divisions to o2o update railroad.
   Revisit try/except pass.
   Check all log entries.
-  Test.
 
 Comments:
   Schedule does not prevent setting a car to a track.

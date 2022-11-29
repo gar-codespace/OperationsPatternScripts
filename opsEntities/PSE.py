@@ -178,7 +178,8 @@ class CreateStubFile:
 
 def closePsWindow():
     """Used by:
-
+        Listeners.ptItemSelected
+        Listeners.rsItemSelected
         """
 
     for frame in JMRI.util.JmriJFrame.getFrameList():
@@ -188,6 +189,21 @@ def closePsWindow():
 
             frame.setVisible(False)
             frame.dispose()
+
+    return
+
+def updateYearModeled():
+    """Used by:
+        Listeners.PatternScriptsWindow
+        """
+
+    configFile = readConfigFile()
+
+    OSU = JMRI.jmrit.operations.setup
+    yr = OSU.Setup.getYearModeled()
+    
+    configFile['JP'].update({'YR':yr})
+    writeConfigFile(configFile)
 
     return
 

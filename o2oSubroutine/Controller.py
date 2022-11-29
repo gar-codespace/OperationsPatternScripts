@@ -66,7 +66,7 @@ def restartSubroutine(subroutineFrame):
     return
 
 def setDropDownText():
-    """itemMethod - Set the drop down text per the config file o2oSubroutine Include flag ['CP']['IO']"""
+    """Pattern Scripts/Tools/itemMethod - Set the drop down text per the config file o2oSubroutine Include flag ['CP']['IO']"""
 
     patternConfig = PSE.readConfigFile('CP')
     if patternConfig['o2oSubroutine']:

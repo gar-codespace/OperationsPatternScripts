@@ -14,7 +14,11 @@ _psLog = PSE.LOGGING.getLogger('OPS.PT.Controller')
 
 
 def updateSubroutine(parent):
-    """Allows other subroutines to update and restart the PT Subroutine."""
+    """Allows other subroutines to update and restart the PT Subroutine.
+        Used by:
+    def newJmriRailroad(self, EVENT):
+        o2oController.StartUp.newJmriRailroad
+        """
 
     if not parent:
         return
@@ -30,7 +34,7 @@ def updateSubroutine(parent):
 def restartSubroutine(subroutineFrame):
     """Subroutine restarter.
         Used by:
-        opsEntities.Listeners.LocationComboBox.actionPerformed
+        opsEntities.Listeners.GenericComboBox.actionPerformed
         updateSubroutine
         """
 
@@ -42,7 +46,7 @@ def restartSubroutine(subroutineFrame):
     return
 
 def setDropDownText():
-    """itemMethod - Set the drop down text per the config file PatternTracksSubroutine Include flag ['CP']['IT']"""
+    """Pattern Scripts/Tools/itemMethod - Set the drop down text per the config file PatternTracksSubroutine Include flag ['CP']['IT']"""
 
     patternConfig = PSE.readConfigFile('CP')
     if patternConfig['PatternTracksSubroutine']:
@@ -51,31 +55,6 @@ def setDropDownText():
         menuText = PSE.BUNDLE[u'Enable Track Pattern subroutine']
 
     return menuText, 'tpItemSelected'
-
-# def actionListener(EVENT):
-#     """menu item-Tools/Enable Track Pattern subroutine"""
-#
-#     _psLog.debug(EVENT)
-#     patternConfig = PSE.readConfigFile()
-#
-#     if patternConfig['CP']['PatternTracksSubroutine']: # If enabled, turn it off
-#         patternConfig['CP']['PatternTracksSubroutine'] = False
-#         EVENT.getSource().setText(PSE.BUNDLE[u'Enable Track Pattern subroutine'])
-#
-#         _psLog.info('Track Pattern support deactivated')
-#         print('Track Pattern support deactivated')
-#     else:
-#         patternConfig['CP']['PatternTracksSubroutine'] = True
-#         EVENT.getSource().setText(PSE.BUNDLE[u'Disable Track Pattern subroutine'])
-#
-#         _psLog.info('Track Pattern support activated')
-#         print('Track Pattern support activated')
-#
-#     PSE.writeConfigFile(patternConfig)
-#     PSE.closePsWindow()
-#     PSE.buildThePlugin()
-#
-#     return
 
 
 class StartUp:
