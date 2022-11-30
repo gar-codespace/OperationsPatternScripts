@@ -38,8 +38,8 @@ class jPlusSubroutinePanel:
         inputGrid = PSE.JAVX_SWING.JPanel()
         inputGrid.setLayout(PSE.JAVA_AWT.GridLayout(4, 2, 10, 4))
 
-        a1 = PSE.JAVA_AWT.Label(PSE.BUNDLE['Operating Railroad Name'])
-        a1.setAlignment(PSE.JAVA_AWT.Label.RIGHT) # One wy of doing it
+        a1 = PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Operating Railroad Name'])
+        a1.setAlignmentX(PSE.JAVA_AWT.Component.RIGHT_ALIGNMENT) # One wy of doing it
 
         a3 = PSE.JAVA_AWT.Label(PSE.BUNDLE['Operational Territory'], 2) # Another way
 

@@ -157,6 +157,7 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
     def windowActivated(self, WINDOW_ACTIVATED):
 
         PSE.updateYearModeled()
+        PSE.updateSubroutine('jPlusSubroutine')
 
         return
 
@@ -164,6 +165,5 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         return
     def windowDeiconified(self, WINDOW_DEICONIFIED):
         return
-
     def windowDeactivated(self, WINDOW_DEACTIVATED):
         return

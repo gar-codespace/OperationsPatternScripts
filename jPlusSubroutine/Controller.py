@@ -18,7 +18,7 @@ _psLog = PSE.LOGGING.getLogger('OPS.JP.Controller')
 
 def updateSubroutine(parent):
     """Allows other subroutines to update and restart the jPlus Sub.
-        Not implemented.
+        Used by:
         """
 
     if not parent:
@@ -33,6 +33,7 @@ def updateSubroutine(parent):
 def restartSubroutine(subroutineFrame):
     """Subroutine restarter.
         Used by:
+        Listeners.PatternScriptsWindow.windowActivated
         updateSubroutine
         """
 
