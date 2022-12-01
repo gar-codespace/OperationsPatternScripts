@@ -238,57 +238,67 @@ def buildThePlugin():
 
     return
 
-def updateSubroutine(subRoutineName):
+def restartSubroutineByName(subRoutineName):
     """Finds the named subroutine in the plugin and restarts it."""
 
-    reStart = __import__(subRoutineName, globals(), locals(), ['Controller'], 0)
-
     frame = drillDown(subRoutineName)
-
-    reStart.Controller.restartSubroutine(frame)
-
+    if frame:
+        frame = frame.getComponents()[0] 
+        reStart = __import__(subRoutineName, globals(), locals(), ['Controller'], 0)
+        reStart.Controller.restartSubroutine(frame)
+    else:
+        print('Not currently active: : ' + subRoutineName)
     return
 
 def drillDown(subRoutineName):
     """Drills down into the plugin to find a particular subroutine panel.
         Changes to the plugin structure will break this.
+        Rewrite this as a loop.
         """
 
     for frame0 in JMRI.util.JmriJFrame.getFrameList():
         if frame0.getName() == 'patternScriptsWindow':
             break
 
-    # print(subRoutineName)
-    # for frame1 in frame0.getComponents():
-    #     for frame2 in frame1.getComponents():
-    #         for frame3 in frame2.getComponents():
-    #             for frame4 in frame3.getComponents():
-    #                 for frame5 in frame4.getComponents():
-    #                     for frame6 in frame5.getComponents():
-    #                         for frame7 in frame6.getComponents():
-    #                             if frame7.getName() == subRoutineName:
-    #                                 return frame7.getComponents()[0]
+    for frame in frame0.getComponents():
+        if frame.getName() == subRoutineName:
+            return frame
+    frame0 = frame0.getComponents()[0]
 
+    for frame in frame0.getComponents():
+        if frame.getName() == subRoutineName:
+            return frame
+    frame0 = frame0.getComponents()[1]
 
+    for frame in frame0.getComponents():
+        if frame.getName() == subRoutineName:
+            return frame
+    frame0 = frame0.getComponents()[0]
 
+    for frame in frame0.getComponents():
+        if frame.getName() == subRoutineName:
+            return frame
+    frame0 = frame0.getComponents()[0]
 
+    for frame in frame0.getComponents():
+        if frame.getName() == subRoutineName:
+            return frame
+    frame0 = frame0.getComponents()[0]
 
-    frame1 = frame0.getComponents()[0]
-    frame2 = frame1.getComponents()[1]
-    frame3 = frame2.getComponents()[0]
-    frame4 = frame3.getComponents()[0]
-    frame5 = frame4.getComponents()[0]
-    frame6 = frame5.getComponents()[0]
-    for frame7 in frame6.getComponents():
-        if frame7.getName() == subRoutineName:
-            return frame7.getComponents()[0]
+    for frame in frame0.getComponents():
+        if frame.getName() == subRoutineName:
+            return frame
+    frame0 = frame0.getComponents()[0]
 
-    return
+    for frame in frame0.getComponents():
+        if frame.getName() == subRoutineName:
+            return frame
+
+    return None
             
-def findPluginPanel(source):
-    """For components in frames, find the plugin panel.
-        The components in the plugin panel are the subroutines.
-        It's a lot easier to bubble up than to drill down.
+def bubbleUp(source):
+    """Opposite of drillDown.
+        Bubbles up from a component to find a subroutine.
         """
 
     parent = source.getParent()

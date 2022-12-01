@@ -38,26 +38,25 @@ class jPlusSubroutinePanel:
         inputGrid = PSE.JAVX_SWING.JPanel()
         inputGrid.setLayout(PSE.JAVA_AWT.GridLayout(4, 2, 10, 4))
 
-        a1 = PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Operating Railroad Name'])
-        a1.setAlignmentX(PSE.JAVA_AWT.Component.RIGHT_ALIGNMENT) # One wy of doing it
+        a1 = PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Operating Railroad Name'], PSE.JAVX_SWING.JLabel.RIGHT)
 
-        a3 = PSE.JAVA_AWT.Label(PSE.BUNDLE['Operational Territory'], 2) # Another way
+        a3 = PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Operational Territory'], PSE.JAVX_SWING.JLabel.RIGHT)
+        
+        a5 = PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Location'], PSE.JAVX_SWING.JLabel.RIGHT)
 
-        a5 = PSE.JAVA_AWT.Label(PSE.BUNDLE['Location'], PSE.JAVA_AWT.Label.RIGHT) # Yet another way
+        a7 = PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Year Modeled'], PSE.JAVX_SWING.JLabel.RIGHT)
 
-        a7 = PSE.JAVA_AWT.Label(PSE.BUNDLE['Year Modeled'], PSE.JAVA_AWT.Label.RIGHT)
-
-        a2 = PSE.JAVX_SWING.JTextField(self.configFile['JP']['OR'], PSE.JAVA_AWT.Label.LEFT)
+        a2 = PSE.JAVX_SWING.JTextField(self.configFile['JP']['OR'])
         a2.setColumns(25) # sets the width for all text fields
         self.panelWidgets['OR'] = a2
 
-        a4 = PSE.JAVX_SWING.JTextField(self.configFile['JP']['TR'], PSE.JAVA_AWT.Label.LEFT)
+        a4 = PSE.JAVX_SWING.JTextField(self.configFile['JP']['TR'])
         self.panelWidgets['TR'] = a4
 
-        a6 = PSE.JAVX_SWING.JTextField(self.configFile['JP']['LO'], PSE.JAVA_AWT.Label.LEFT)
+        a6 = PSE.JAVX_SWING.JTextField(self.configFile['JP']['LO'])
         self.panelWidgets['LO'] = a6
 
-        a8 = PSE.JAVX_SWING.JTextField(self.configFile['JP']['YR'], PSE.JAVA_AWT.Label.LEFT)
+        a8 = PSE.JAVX_SWING.JTextField(self.configFile['JP']['YR'])
         self.panelWidgets['YR'] = a8
 
         inputGrid.add(a1)

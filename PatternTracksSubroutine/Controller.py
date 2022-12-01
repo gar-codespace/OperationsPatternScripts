@@ -13,29 +13,10 @@ SCRIPT_REV = 20221010
 _psLog = PSE.LOGGING.getLogger('OPS.PT.Controller')
 
 
-def updateSubroutine(parent):
-    """Allows other subroutines to update and restart the PT Subroutine.
-        Used by:
-    def newJmriRailroad(self, EVENT):
-        o2oController.StartUp.newJmriRailroad
-        """
-
-    if not parent:
-        return
-
-    Model.resetPatternLocation()
-
-    for component in parent.getComponents():
-        if component.getName() == 'PatternTracksSubroutine':
-            restartSubroutine(component.getComponents()[0])
-
-    return
-
 def restartSubroutine(subroutineFrame):
-    """Subroutine restarter.
+    """Allows other subroutines to restart this subroutine.
         Used by:
-        opsEntities.Listeners.GenericComboBox.actionPerformed
-        updateSubroutine
+        PSE.restartSubroutineByName()
         """
 
     subroutinePanel = StartUp(subroutineFrame).makeSubroutinePanel()

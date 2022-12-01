@@ -157,7 +157,7 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
     def windowActivated(self, WINDOW_ACTIVATED):
 
         PSE.updateYearModeled()
-        PSE.updateSubroutine('jPlusSubroutine')
+        PSE.restartSubroutineByName('jPlusSubroutine')
 
         return
 

@@ -16,25 +16,10 @@ SCRIPT_REV = 20221010
 _psLog = PSE.LOGGING.getLogger('OPS.JP.Controller')
 
 
-def updateSubroutine(parent):
-    """Allows other subroutines to update and restart the jPlus Sub.
-        Used by:
-        """
-
-    if not parent:
-        return
-
-    for component in parent.getComponents():
-        if component.getName() == 'jPlusSubroutine':
-            restartSubroutine(component.getComponents()[0])
-
-    return
-
 def restartSubroutine(subroutineFrame):
-    """Subroutine restarter.
+    """Allows other subroutines to restart this subroutine.
         Used by:
-        Listeners.PatternScriptsWindow.windowActivated
-        updateSubroutine
+        PSE.restartSubroutineByName()
         """
 
     subroutinePanel = StartUp(subroutineFrame).makeSubroutinePanel()

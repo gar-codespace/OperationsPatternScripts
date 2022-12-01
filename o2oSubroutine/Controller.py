@@ -36,26 +36,10 @@ def o2oSwitchList(ptSetCarsForm):
 
     return
 
-def updateSubroutine(parent):
-    """Allows other subroutines to update and restart the o2o Sub.
-        Not implemented.
-        """
-
-    if not parent:
-        return
-
-    # Do stuff here.
-
-    for component in parent.getComponents():
-        if component.getName() == 'o2oSubroutine':
-            restartSubroutine(component.getComponents()[0])
-
-    return
-
 def restartSubroutine(subroutineFrame):
-    """Subroutine restarter.
+    """Allows other subroutines to restart this subroutine.
         Used by:
-        updateSubroutine
+        PSE.restartSubroutineByName()
         """
 
     subroutinePanel = StartUp(subroutineFrame).makeSubroutinePanel()
@@ -139,9 +123,12 @@ class StartUp:
             return
 
         if Model.newJmriRailroad():
-            parent = PSE.findPluginPanel(EVENT.getSource())
-            PtController.updateSubroutine(parent)
-            JpController.updateSubroutine(parent)
+            PSE.restartSubroutineByName('PatternTracksSubroutine')
+            PSE.restartSubroutineByName('jPlusSubroutine')
+
+            # parent = PSE.bubbleUp(EVENT.getSource())
+            # PtController.updateSubroutine(parent)
+            # JpController.updateSubroutine(parent)
 
             print('New JMRI railroad built from TrainPlayer data')
             _psLog.info('New JMRI railroad built from TrainPlayer data')
@@ -169,10 +156,12 @@ class StartUp:
             return
 
         if Model.updateJmriRailroad():
-            # parent = EVENT.getSource().getParent().getParent().getParent().getParent()
-            parent = PSE.findPluginPanel(EVENT.getSource())
-            PtController.updateSubroutine(parent)
-            JpController.updateSubroutine(parent)
+            PSE.restartSubroutineByName('PatternTracksSubroutine')
+            PSE.restartSubroutineByName('jPlusSubroutine')
+
+            # parent = PSE.bubbleUp(EVENT.getSource())
+            # PtController.updateSubroutine(parent)
+            # JpController.updateSubroutine(parent)
 
             print('JMRI railroad updated from TrainPlayer data')
             _psLog.info('JMRI railroad updated from TrainPlayer data')
