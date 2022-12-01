@@ -8,7 +8,7 @@ SCRIPT_REV = 20221010
 
 
 def makeUserInputList(textBoxEntry):
-    """Used by:
+    """Called by:
         ModelSetCarsForm.makeMergedForm
         """
 
@@ -20,7 +20,7 @@ def makeUserInputList(textBoxEntry):
 
 def merge(switchList, userInputList):
     """Merge the values in textBoxEntry into the ['Set_To'] field of switchList.
-        Used by:
+        Called by:
         ModelSetCarsForm.makeMergedForm
         """
 
@@ -56,7 +56,7 @@ def merge(switchList, userInputList):
     return switchList
 
 def findLongestTrackString():
-    """Used by:
+    """Called by:
         merge
         """
 
@@ -72,7 +72,7 @@ def modifyTrackPatternReport(trackPattern):
         The undeflying json is not changed.
         Replaces blank Dest and FD with standins.
         Replaces load type with short load type.
-        Used by:
+        Called by:
         View.trackPatternButton
         View.setRsButton
         ModelSetCarsForm.makeMergedForm
@@ -97,7 +97,7 @@ def modifyTrackPatternReport(trackPattern):
 
 def getStandins(car, standins):
     """Replaces null destination and fd with the standin from the config file
-        Used by:
+        Called by:
         modifyTrackPatternReport
         """
 
@@ -115,7 +115,7 @@ def getStandins(car, standins):
     return destStandin, fdStandin
 
 def makeTrackPattern(trackList=None):
-    """Used by:
+    """Called by:
         Model.trackPatternButton
         View.setRsButton
         """
@@ -135,7 +135,7 @@ def makeTrackPattern(trackList=None):
     return trackPattern
 
 def makeTrackPatternReport(trackPattern):
-    """Used by:
+    """Called by:
         Model.trackPatternButton
         View.setRsButton
         """
@@ -150,7 +150,7 @@ def makeTrackPatternReport(trackPattern):
 
 def testSelectedItem(selectedItem=None):
     """Catches user edit of locations
-        Used by:
+        Called by:
         Model.updatePatternLocation
         """
 
@@ -162,7 +162,7 @@ def testSelectedItem(selectedItem=None):
 
 def getAllTracksForLocation(location):
     """Sets all tracks to false
-        Used by:
+        Called by:
         Model.updatePatternLocation
         """
 
@@ -175,7 +175,7 @@ def getAllTracksForLocation(location):
 
 def updateTrackCheckBoxes(trackCheckBoxes):
     """Returns a dictionary of track names and their check box status
-        Used by:
+        Called by:
         Model.updateConfigFile
         """
 
@@ -187,7 +187,7 @@ def updateTrackCheckBoxes(trackCheckBoxes):
 
 def getGenericTrackDetails(locationName, trackName):
     """The loco and car lists are sorted at this level, used to make the Track Pattern Report.json file
-        Used by:
+        Called by:
         makeTrackPattern
         """
 
@@ -202,7 +202,7 @@ def getGenericTrackDetails(locationName, trackName):
 def sortLocoList(locoList):
     """Try/Except protects against bad edit of config file
         Sort order of PSE.readConfigFile('RM')['SL'] is top down
-        Used by:
+        Called by:
         getGenericTrackDetails
         """
 
@@ -218,7 +218,7 @@ def sortLocoList(locoList):
 
 def getRsOnTrains():
     """Make a list of all rolling stock that are on built trains
-        Used by:
+        Called by:
         getDetailsForLoco
         getDetailsForCar
         """
@@ -237,7 +237,7 @@ def getRsOnTrains():
 
 def getLocoListForTrack(track):
     """Creates a generic locomotive list for a track
-        Used by:
+        Called by:
         getGenericTrackDetails
         """
 
@@ -247,7 +247,7 @@ def getLocoListForTrack(track):
     return [getDetailsForLoco(loco) for loco in locoList]
 
 def getLocoObjects(location, track):
-    """Used by:
+    """Called by:
         getLocoListForTrack
         """
 
@@ -258,7 +258,7 @@ def getLocoObjects(location, track):
 
 def getDetailsForLoco(locoObject):
     """Mimics jmri.jmrit.operations.setup.Setup.getEngineAttributes()
-        Used by:
+        Called by:
         getLocoListForTrack
         """
 
@@ -293,7 +293,7 @@ def getDetailsForLoco(locoObject):
 def sortCarList(carList):
     """Try/Except protects against bad edit of config file
         Sort order of PSE.readConfigFile('RM')['SC'] is top down
-        Used by:
+        Called by:
         getGenericTrackDetails
         """
 
@@ -309,7 +309,7 @@ def sortCarList(carList):
 
 def getCarListForTrack(track):
     """A list of car attributes as a dictionary
-        Used by:
+        Called by:
         getGenericTrackDetails
         """
 
@@ -322,7 +322,7 @@ def getCarListForTrack(track):
     return carDetails
 
 def getCarObjects(location, track):
-    """Used by:
+    """Called by:
         getCarListForTrack
         """
 
@@ -331,7 +331,7 @@ def getCarObjects(location, track):
     return [car for car in allCars if car.getLocationName() == location and car.getTrackName() == track]
 
 def getKernelTally():
-    """Used by:
+    """Called by:
         getCarListForTrack
         """
 
@@ -347,7 +347,7 @@ def getKernelTally():
 
 def getDetailsForCar(carObject, kernelTally):
     """Mimics jmri.jmrit.operations.setup.Setup.getCarAttributes()
-        Used by:
+        Called by:
         getCarListForTrack
         """
 
@@ -392,7 +392,7 @@ def getDetailsForCar(carObject, kernelTally):
     return carDetailDict
 
 def makeGenericHeader():
-    """Used by:
+    """Called by:
         makeTrackPatternReport
         Controller.StartUp.setRsButton
         """
@@ -419,7 +419,7 @@ def makeGenericHeader():
 
 def makeInitialTrackDict(location):
     """Sets all the track flags to false for an initial list of tracks.
-        Used by:
+        Called by:
         updateLocations
         """
 

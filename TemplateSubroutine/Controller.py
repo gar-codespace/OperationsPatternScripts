@@ -17,7 +17,7 @@ _psLog = PSE.LOGGING.getLogger('OPS.xxx.Controller')
 
 def restartSubroutine(subroutineFrame):
     """Allows other subroutines to restart this subroutine.
-        Used by:
+        Called by:
         PSE.restartSubroutineByName()
         """
 

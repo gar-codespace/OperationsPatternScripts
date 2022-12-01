@@ -18,7 +18,7 @@ _psLog = PSE.LOGGING.getLogger('OPS.o2o.Model')
 
 def o2oWorkEventReset():
     """Creates a new o2o Work Events.json file
-        Used by:
+        Called by:
         PT Sub Controller.StartUp.setRsButton
         """
 
@@ -35,7 +35,7 @@ def newJmriRailroad():
     """Mini controller to make a new JMRI railroad.
         tpRailroadData.json and TrainPlayer Report - Rolling Stock.txt
         are used as source files.
-        Used by:
+        Called by:
         Controller.StartUp.newJmriRailroad
         """
 
@@ -105,7 +105,7 @@ def updateJmriRailroad():
         Does not change Trains and Routes.
         Cars, engines and schedules are rewritten from scratch.
         Locations uses LM to update everything.
-        Used by:
+        Called by:
         Controller.StartUp.updateJmriRailroad
         """
 
@@ -178,7 +178,7 @@ def updateJmriRailroad():
 
 def updateJmriRollingingStock():
     """Mini controller to update only the rolling stock.
-        Used by:
+        Called by:
         Controller.Startup.updateJmriRollingingStock
         """
 

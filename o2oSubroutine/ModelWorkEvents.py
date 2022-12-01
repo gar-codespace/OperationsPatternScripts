@@ -14,7 +14,7 @@ _psLog = PSE.LOGGING.getLogger('OPS.o2o.ModelWorkEvents')
 
 def appendSetCarsForm(ptSetCarsForm):
     """Prepend the ptSetCarsForm to o2o Work Events.json.
-        Used by:
+        Called by:
         o2oSubroutine.Controller.o2oSwitchList
         """
 
@@ -103,7 +103,7 @@ class o2oSwitchListConversion:
         return parsedRS
 
     def parseSetTo(self, setTo):
-        """Used by:
+        """Called by:
             parsePtRs
             """
 

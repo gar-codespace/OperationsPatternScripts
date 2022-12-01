@@ -15,7 +15,7 @@ _psLog = PSE.LOGGING.getLogger('OPS.PT.ViewSetCarsForm')
 
 def switchListAsCsv(textBoxEntry):
     """Track Pattern Report json is written as a CSV file
-        Used by:
+        Called by:
         ControllerSetCarsForm.CreateSetCarsFormGui.switchListButton
         """
 
@@ -40,7 +40,7 @@ def switchListAsCsv(textBoxEntry):
 
 def switchListButton(textBoxEntry):
     """Formats and displays the Switch List for Track report.
-        Used by:
+        Called by:
         ControllerSetCarsForm.CreateSetCarsFormGui.switchListButton
         """
 
@@ -68,7 +68,7 @@ def switchListButton(textBoxEntry):
     return
 
 def setCarsForTrackWindow(setCarsForTrackForm):
-    """Used by:
+    """Called by:
         ControllerSetCarsForm.CreateSetCarsFormGui.makeFrame
         """
 
@@ -79,7 +79,7 @@ def setCarsForTrackWindow(setCarsForTrackForm):
 
 def makeSetCarsForTrackForm(setCarsFormData):
     """Creates and populates the 'Set Cars Form for Track X' form
-        Used by:
+        Called by:
         ControllerSetCarsForm.CreateSetCarsFormGui.makeFrame
         """
 
@@ -159,7 +159,7 @@ def makeSetCarsForTrackForm(setCarsFormData):
 
 def makeSwingBox(xWidth, yHeight):
     """Makes a swing box to the desired size
-        Used by:
+        Called by:
         makeSetCarsFormHeader
         makeSetCarsCarRows
         makeSetCarsLocoRows
@@ -172,7 +172,7 @@ def makeSwingBox(xWidth, yHeight):
 
 def makeSetCarsFormHeader(setCarsFormData):
     """Creates the 'Set Cars Form for Track X' forms header
-        Used by:
+        Called by:
         makeSetCarsForTrackForm
         """
 
@@ -208,7 +208,7 @@ def makeSetCarsFormHeader(setCarsFormData):
     return combinedHeader
 
 def makeSetCarsTrackButtons():
-    """Used by:
+    """Called by:
         makeSetCarsForTrackForm
         """
 
@@ -230,7 +230,7 @@ def makeSetCarsTrackButtons():
 
 
 class MakeSetCarsEqptRows():
-    """Used by:
+    """Called by:
         makeSetCarsForTrackForm
         """
 

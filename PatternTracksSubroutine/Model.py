@@ -12,7 +12,7 @@ _psLog = PSE.LOGGING.getLogger('OPS.PT.Model')
 def trackPatternButton():
     """Mini controller when the Track Pattern Report button is pressed
         Creates the Track Pattern data
-        Used by:
+        Called by:
         Controller.StartUp.trackPatternButton
         """
 
@@ -27,7 +27,7 @@ def trackPatternButton():
     return
 
 def resetPatternLocation():
-    """Used by:
+    """Called by:
         Controller.updatePatternTracksSubroutine
         """
 
@@ -43,7 +43,7 @@ def updatePatternLocation(comboBox):
     """Clearinghouse that routes the combo box action to the appropriate method.
         Catches user edits of locations
         A method is defined for each comboBox, the method name is the comboBox name.
-        Used by:
+        Called by:
         PTSub.Controller.LocationComboBox.actionPerformed
         o2oSub.Model.updatePatternTracksSubroutine
         """
@@ -106,7 +106,7 @@ def jLocations(selectedItem):
 
 def updatePatternTracks(trackList):
     """Creates a new list of tracks and their default include flag
-        Used by:
+        Called by:
         Controller.StartUp.yardTrackOnlyCheckBox
         """
 
@@ -124,7 +124,7 @@ def updatePatternTracks(trackList):
 
 def updateConfigFile(controls):
     """Updates the pattern tracks part of the config file
-        Used by:
+        Called by:
         Controller.StartUp.trackPatternButton
         Controller.StartUp.setCarsButton
         """
@@ -147,7 +147,7 @@ def updateConfigFile(controls):
 
 def verifySelectedTracks():
     """Catches on the fly user edit of JMRI track names
-        Used by:
+        Called by:
         Controller.StartUp.trackPatternButton
         Controller.StartUp.setCarsButton
         """
@@ -172,7 +172,7 @@ def updateLocations():
     """Updates the PT section of the configFile..
         If entries are missing, makes new PT entries using initial values.
         The configFile is updated if initial values are used.
-        Used by:
+        Called by:
         Controller.StartUp.makeSubroutinePanel
         """
 

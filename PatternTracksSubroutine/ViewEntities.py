@@ -8,7 +8,7 @@ SCRIPT_REV = 20221010
 
 class TrackPatternPanel:
     """Makes the pattern tracks subroutine panel
-        Used by:
+        Called by:
         View.ManageGui.makeSubroutinePanel"""
 
     def __init__(self):
@@ -136,7 +136,7 @@ class TrackPatternPanel:
 
 def makeTextReportHeader(textWorkEventList):
     """Makes the header for generic text reports
-        Used by:
+        Called by:
         View.ManageGui.trackPatternButton'
         ViewSetCarsForm.switchListButton
         """
@@ -151,7 +151,7 @@ def makeTextReportHeader(textWorkEventList):
 
 def makeTextReportLocations(textWorkEventList, trackTotals):
     """Makes the body for generic text reports
-        Used by:
+        Called by:
         View.ManageGui.trackPatternButton'
         ViewSetCarsForm.switchListButton
         """
@@ -202,7 +202,7 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
 
 def loopThroughRs(type, rsAttribs):
     """Creates a line containing the attrs in get * MessageFormat
-        Used by:
+        Called by:
         makeTextReportLocations
         """
 
@@ -228,7 +228,7 @@ def loopThroughRs(type, rsAttribs):
 
 def makeTrackPatternCsv(trackPattern):
     """CSV writer does not support utf-8
-        Used by:
+        Called by:
         Model.writeTrackPatternCsv
         """
 

@@ -177,7 +177,7 @@ class CreateStubFile:
 
 
 def closePsWindow():
-    """Used by:
+    """Called by:
         Listeners.ptItemSelected
         Listeners.rsItemSelected
         """
@@ -193,7 +193,7 @@ def closePsWindow():
     return
 
 def updateYearModeled():
-    """Used by:
+    """Called by:
         Listeners.PatternScriptsWindow
         """
 
@@ -208,7 +208,7 @@ def updateYearModeled():
     return
 
 def buildThePlugin():
-    """Used by:
+    """Called by:
         patternScriptsButtonAction
         PatternTracksSubroutine.Controller
         o2oSubroutine.controller
@@ -354,7 +354,7 @@ def closeOutputPanel():
 
 def getPsButton():
     """Gets the Pattern Scripts button on the PanelPro frame.
-        Used by:
+        Called by:
         Listeners.PatternScriptsWindow.windowClosed
         Listeners.PatternScriptsWindow.windowOpened
         """
@@ -368,7 +368,7 @@ def getPsButton():
 
 def closeSetCarsWindows():
     """Close all the Set Cars windows when the Pattern Scripts window is closed.
-        Used by:
+        Called by:
         MainScript.Controller.closePsWindow
         Listeners.PatternScriptsWindow.windowClosing
         """
@@ -382,7 +382,7 @@ def closeSetCarsWindows():
 
 def updateWindowParams(window):
     """Setting JmriJFrame(True, True) has no effect that I can figure.
-        Used by:
+        Called by:
         MainScript.Controller.closePsWindow
         Listeners.PatternScriptsWindow.windowClosing
         """
@@ -402,7 +402,7 @@ def updateWindowParams(window):
 
 def psLocale():
     """Dealers choice, both work.
-        Used by:
+        Called by:
         Bundle
         Translaters
         """
@@ -413,7 +413,7 @@ def psLocale():
 def occuranceTally(listOfOccurances):
     """Tally the occurances of a word in a list and return a dictionary.
         Home grown version of collections.Counter.
-        Used by:
+        Called by:
         ModelEntities.getKernelTally
         ViewEntities.makeTextReportLocations
         """
@@ -431,7 +431,7 @@ def occuranceTally(listOfOccurances):
     return dict
 
 def jPlusHeader():
-    """Used by:
+    """Called by:
         makeGenericHeader
         """
 
@@ -459,7 +459,7 @@ def jPlusHeader():
 
 def getAllDivisionNames():
     """JMRI sorts the list.
-        Used by:
+        Called by:
         Model.updatePatternLocation
         """
 
@@ -481,7 +481,7 @@ def getLocationNamesByDivision(divisionName):
 
 def getAllLocationNames():
     """JMRI sorts the list, returns list of location names.
-        Used by:
+        Called by:
         o2o.Model.UpdateLocationsAndTracks
         PSE.getAllTrackIds
         Model.updatePatternLocation
@@ -498,7 +498,7 @@ def getAllLocationNames():
 
 def getAllTracks():
     """All track objects for all locations.
-        Used by:
+        Called by:
         Model.UpdateLocationsAndTracks
         ModelEntities.setNonSpurTrackLength
         Model.updatePatternLocation
@@ -512,7 +512,7 @@ def getAllTracks():
 
 def getSelectedTracks():
     """Gets the track objects checked in the Track Pattern Subroutine.
-        Used by:
+        Called by:
         Controller.StartUp.trackPatternButton
         ModelEntities.makeTrackPattern
         View.setRsButton
@@ -523,7 +523,7 @@ def getSelectedTracks():
     return [track for track, include in sorted(patternTracks.items()) if include]
 
 def getTracksNamesByLocation(trackType):
-    """Used by:
+    """Called by:
         Model.verifySelectedTracks
         ViewEntities.merge
         """
@@ -543,7 +543,7 @@ def getTracksNamesByLocation(trackType):
 
 def timeStamp(epochTime=0):
     """Valid Time, get local time adjusted for time zone and dst.
-        Used by:
+        Called by:
         o2oSubroutine.ModelImport.TrainPlayerImporter.processFileHeaders
         o2oSubroutine.ModelWorkEvents.jmriManifestConversion.convertHeader
         PatternTracksSubroutine.ModelEntities.makeGenericHeader
@@ -580,7 +580,7 @@ def getYear():
 
 def convertJmriDateToEpoch(jmriTime):
     """Example: 2022-02-26T17:16:17.807+0000
-        Used by:
+        Called by:
         o2oSubroutine.ModelWorkEvents.jmriManifestConversion.convertHeader
         """
 
@@ -595,7 +595,7 @@ def convertJmriDateToEpoch(jmriTime):
 
 def formatText(item, length):
     """Truncate each item to its defined length in PatternConfig.json and add a space at the end.
-        Used by:
+        Called by:
         PatternTracksSubroutine.ViewEntities.merge
         PatternTracksSubroutine.ViewEntities.loopThroughRs
         """
@@ -611,7 +611,7 @@ def formatText(item, length):
 
 def makeReportItemWidthMatrix():
     """The attribute widths (AW) for each of the rolling stock attributes is defined in the report matrix (RM) of the config file.
-        Used by:
+        Called by:
         PatternTracksSubroutine.Controller.StartUp.trackPatternButton
         PatternTracksSubroutine.Controller.StartUp.setRsButton
         PatternTracksSubroutine.ControllerSetCarsForm.CreateSetCarsFormGui.switchListButton
@@ -630,7 +630,7 @@ def getShortLoadType(car):
     """Replaces empty and load with E, L, or O for occupied.
         JMRI defines custom load type as empty but default load type as Empty, hence the 'or' statement.
         Load, Empty, Occupied and Unknown are translated by the bundle.
-        Used by:
+        Called by:
         ViewEntities.modifyTrackPatternReport
         ModelWorkEvent.o2oSwitchListConversion.parsePtRs
         ModelWorkEvents.jmriManifestConversion.parseRS
@@ -681,7 +681,7 @@ def getTpRailroadJson(reportName):
 
 def makeBuildStatusFolder():
     """The buildStatus folder is created first so the log file can be written.
-        Used by:
+        Called by:
         MainScript.Controller
         """
 
@@ -716,7 +716,7 @@ def makeReportFolders():
 
 def genericReadReport(filePath):
     """try/except catches initial read of config file.
-        Used by:
+        Called by:
         Everything
         """
 
@@ -731,7 +731,7 @@ def genericReadReport(filePath):
     return genericReport
 
 def genericWriteReport(filePath, genericReport):
-    """Used by:
+    """Called by:
         Everything"""
 
     with codecsOpen(filePath, 'wb', encoding=ENCODING) as textWorkFile:
@@ -741,7 +741,7 @@ def genericWriteReport(filePath, genericReport):
 
 def genericDisplayReport(genericReportPath):
     """Dealer's choice, the JMRI or Java version.
-        Used by:
+        Called by:
         MainScript.Controller.logItemSelected
         MainScript.Controller.ecItemSelected
         PatternTracksSubroutine.View.trackPatternButton
@@ -754,13 +754,13 @@ def genericDisplayReport(genericReportPath):
     return
 
 def loadJson(file):
-    """Used by:
+    """Called by:
         Everything"""
 
     return jsonLoadS(file)
 
 def dumpJson(file):
-    """Used by:
+    """Called by:
         Everything"""
 
     return jsonDumpS(file, indent=2, sort_keys=True)
@@ -771,7 +771,7 @@ def dumpJson(file):
 
 def validateConfigFileVersion():
     """Checks that the config file is the current version.
-        Used by:
+        Called by:
         OperationsPatternScripts.MainScript.Model
         """
 
@@ -792,7 +792,7 @@ def mergeConfigFiles():
 
 def readConfigFile(subConfig=None):
     """tryConfigFile will return the config file if it's ok or a new one otherwise.
-        Used by:
+        Called by:
         Everything
         """
 
@@ -805,7 +805,7 @@ def readConfigFile(subConfig=None):
 
 def tryConfigFile():
     """Try/except catches some user edit mistakes.
-        Used by:
+        Called by:
         PSE.readConfigFile
         """
 
@@ -823,7 +823,7 @@ def tryConfigFile():
     return configFile
 
 def getConfigFile():
-    """Used by:
+    """Called by:
         tryConfigFile
         """
 
@@ -833,7 +833,7 @@ def getConfigFile():
     return loadJson(genericReadReport(targetPath))
 
 def writeConfigFile(configFile):
-    """Used by:
+    """Called by:
         MainScript.Controller
         PSE.updateWindowParams
         PatternTracksSubroutine.Controller.StartUp.yardTrackOnlyCheckBox
@@ -848,7 +848,7 @@ def writeConfigFile(configFile):
     return
 
 def writeNewConfigFile():
-    """Used by:
+    """Called by:
         MainScript.Model.validatePatternConfig
         PSE.tryConfigFile
         """
@@ -869,7 +869,7 @@ def writeNewConfigFile():
     return
 
 def deleteConfigFile():
-    """Used by:
+    """Called by:
         MainScript.Controller.rsItemSelected
         """
 
@@ -885,7 +885,7 @@ def deleteConfigFile():
 
 def makePatternLog():
     """creates a pattern log for display based on the log level, as set by getBuildReportLevel.
-        Used by:
+        Called by:
         MainScript.Controller.logItemSelected
         """
 
@@ -915,7 +915,7 @@ def makePatternLog():
 
 def logIndex():
     """Moved here but may be put back into configFile.
-        Used by:
+        Called by:
         PSE.makePatternLog
         """
 
@@ -928,7 +928,7 @@ def logIndex():
 
 
 def getGenericColor(colorName):
-    """Used by:
+    """Called by:
         PSE.getCarColor
         PSE.getLocoColor
         PSE.getAlertColor
@@ -946,7 +946,7 @@ def getGenericColor(colorName):
 
 def getCarColor():
     """Try/Except is a bit of protection against bad edits.
-        Used by:
+        Called by:
         PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
         """
 
@@ -960,7 +960,7 @@ def getCarColor():
 
 def getLocoColor():
     """Try/Except is a bit of protection against bad edits.
-        Used by:
+        Called by:
         PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
         """
 
@@ -974,7 +974,7 @@ def getLocoColor():
 
 def getAlertColor():
     """Try/Except is a bit of protection against bad edits.
-        Used by:
+        Called by:
         PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
         """
 
@@ -993,7 +993,7 @@ def getAlertColor():
 def translateMessageFormat():
     """The messageFormat is in the locale's language, it has to be hashed to the plugin fields.
         Dealers choice, J_BUNDLE.ROAD or SB.handleGetMessage('Road').
-        Used by:
+        Called by:
         PatternTracksSubroutine.ViewEntities.loopThroughRs
         PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
         """

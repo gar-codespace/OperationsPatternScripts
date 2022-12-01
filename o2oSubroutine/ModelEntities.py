@@ -27,7 +27,7 @@ def tpDirectoryExists():
 def selectCarTypes(industries):
     """For each track in industries, first deselect all the RS types,
         then select just the RS types used by that track, leaving unused types  deselected.
-        Used by:
+        Called by:
         Model.NewLocationsAndTracks.addCarTypesToSpurs
         Model.UpdateLocationsAndTracks.addCarTypesToSpurs
         """
@@ -72,7 +72,7 @@ def setTrackLength():
 def newSchedules():
     """Creates new schedules from tpRailroadData.json [industries].
         The schedule name is the TP track label.
-        Used by:
+        Called by:
         Model.newJmriRailroad
         Model.updateJmriRailroad
         """
@@ -101,7 +101,7 @@ def addCarTypesToSpurs():
 def makeNewTrack(trackId, trackData):
     """Set spur length to 'spaces' from TP.
         Deselect all types for spur tracks.
-        Used by:
+        Called by:
         Model.NewLocationsAndTracks.newLocations
         Model.UpdateLocationsAndTracks.addNewTracks
         """
@@ -121,7 +121,7 @@ def makeNewTrack(trackId, trackData):
 def setTrackAttribs(trackData):
     """Mini controller to set the attributes for each track,
         based on TrainPlayer track type.
-        Used by:
+        Called by:
         makeNewTrack
         Model.UpdateLocationsAndTracks.updateTrackParams
         """
@@ -145,7 +145,7 @@ def setTrackAttribs(trackData):
 
 def setTrackTypeIndustry(trackData):
     """Settings for TP 'industry' track types.
-        Used by:
+        Called by:
         setTrackAttribs
         """
 
@@ -159,7 +159,7 @@ def setTrackTypeIndustry(trackData):
 def setTrackTypeInterchange(trackData):
     """Settings for TP 'interchange' track types.
         Select all car and loco types.
-        Used by:
+        Called by:
         setTrackAttribs
         """
 
@@ -172,7 +172,7 @@ def setTrackTypeInterchange(trackData):
 
 def setTrackTypeStaging(trackData):
     """Settings for TP 'staging' track types.
-        Used by:
+        Called by:
         setTrackAttribs
         """
 
@@ -189,7 +189,7 @@ def setTrackTypeStaging(trackData):
 
 def setTrackTypeClassYard(trackData):
     """Settings for TP 'class yard' track types.
-        Used by:
+        Called by:
         setTrackAttribs
         """
 
@@ -199,7 +199,7 @@ def setTrackTypeXoReserved(trackData):
     """Settings for TP 'XO reserved' track types.
         XO tracks are spurs with all train directions turned off.
         All car types are selected.
-        Used by:
+        Called by:
         setTrackAttribs
         """
 
@@ -212,7 +212,7 @@ def setTrackTypeXoReserved(trackData):
 
 def getWorkEvents():
     """Gets the o2o work events file
-        Used by:
+        Called by:
         ModelWorkEvents.ConvertPtMergedForm.getWorkEvents
         ModelWorkEvents.o2oWorkEvents.getWorkEvents
         """
@@ -228,7 +228,7 @@ def getWorkEvents():
 
 def getTpExport(fileName):
     """Generic file getter, fileName includes .txt
-        Used by:
+        Called by:
         ModelImport.TrainPlayerImporter.getTpReportFiles
         """
 
@@ -242,7 +242,7 @@ def getTpExport(fileName):
 
 def parseCarId(carId):
     """Splits a TP car id into a JMRI road name and number
-        Used by:
+        Called by:
         ModelImport.TrainPlayerImporter.getAllTpRoads
         ModelNew.NewRollingStock.makeTpRollingStockData
         ModelNew.NewRollingStock.newCars
@@ -263,7 +263,7 @@ def parseCarId(carId):
     return rsRoad, rsNumber
 
 def getSetToLocationAndTrack(locationName, trackName):
-    """Used by:
+    """Called by:
         ModelNew.NewRollingStock.newCars
         ModelNew.NewRollingStock.newLocos
         """
@@ -278,7 +278,7 @@ def getSetToLocationAndTrack(locationName, trackName):
 
 def closeTroublesomeWindows():
     """Close all the 'Troublesome' windows when the New JMRI Railroad button is pressed.
-        Used by:
+        Called by:
         o2oSubroutine.Model.newJmriRailroad
         o2oSubroutine.Model.updateJmriRailroad
         """

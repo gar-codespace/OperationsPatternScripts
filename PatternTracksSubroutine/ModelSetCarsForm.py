@@ -13,7 +13,7 @@ _psLog = PSE.LOGGING.getLogger('OPS.PT.ModelSetCarsForm')
 
 
 def makeMergedForm(setCarsForm, buttonDict):
-    """Used by:
+    """Called by:
         ControllerSetCarsForm.CreateSetCarsFormGui.o2oButton
         switchListButton
         """
@@ -26,7 +26,7 @@ def makeMergedForm(setCarsForm, buttonDict):
 
 def writeToJson(setCarsForm):
     """Mini controller that writes the set cars form to json.
-        Used by:
+        Called by:
         ControllerSetCarsForm.CreateSetCarsFormGui.switchListButton
         ControllerSetCarsForm.CreateSetCarsFormGui.setRsButton
         """
@@ -43,7 +43,7 @@ def writeToJson(setCarsForm):
 def setRsButton(textBoxEntry):
     """Mini controller that moves the selected RS to the selected track.
         Subject to track length and RS type restrictions.
-        Used by:
+        Called by:
         ControllerSetCarsForm.CreateSetCarsFormGui.setRsButton
         """
 
@@ -62,7 +62,7 @@ def setRsButton(textBoxEntry):
 
 def o2oButton(ptSetCarsForm):
     """Mini controller that appends the ptSetCarsForm to o2o Work Events.json.
-        Used by:
+        Called by:
         ControllerptSetCarsForm.CreateptSetCarsFormGui.o2oButton
         """
     reportTitle = PSE.BUNDLE['o2o Work Events']
@@ -147,7 +147,7 @@ def moveRollingStock(switchList, textBoxEntry):
     return
 
 def rsUpdate(toTrack, rollingStock):
-    """Used by:
+    """Called by:
         moveRollingStock
         """
 
@@ -162,7 +162,7 @@ def rsUpdate(toTrack, rollingStock):
 def scheduleUpdate(toTrack, rollingStock):
     """If the to-track is a spur, try to set the load/empty requirement for the track
         Honors apply schedule flag. Toggles default L/E for spurs.
-        Used by:
+        Called by:
         moveRollingStock
         """
 
@@ -180,7 +180,7 @@ def scheduleUpdate(toTrack, rollingStock):
 
 def testValidityOfForm(setCarsForm, textBoxEntry):
     """Checks that both submitted forms are the same length
-        Used by:
+        Called by:
         ControllerSetCarsForm.CreateSetCarsFormGui.quickCheck
         """
 

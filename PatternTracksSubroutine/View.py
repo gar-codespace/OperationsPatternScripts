@@ -46,7 +46,7 @@ class ManageGui:
 def trackPatternButton():
     """Mini controller when the Track Pattern Report button is pressed.
         Reformats and displays the Track Pattern Report.
-        Used by:
+        Called by:
         Controller.StartUp.trackPatternButton
         """
 
@@ -107,7 +107,7 @@ def setRsButton():
 
 def trackPatternAsCsv():
     """Track Pattern Report json is written as a CSV file
-        Used by:
+        Called by:
         Controller.StartUp.trackPatternButton
         """
 

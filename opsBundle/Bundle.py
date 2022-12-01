@@ -90,7 +90,7 @@ def validateHelpBundle():
 
 def getBundleForLocale():
     """Gets the bundle json for the current locale if it exists, otherwise english.
-        Used by:
+        Called by:
         Main.Controller.buildThePlugin
         Main.Controller.ptItemSelected
         BuiltTrainExport
@@ -221,7 +221,7 @@ def baseTranslator(textBundle):
 def makeHelpPage():
     """Makes the help page for the current locale.
         Defaults to english on errors.
-        Used by:
+        Called by:
         Main.Controller.rsItemSelected
         Main.Controller.ptItemSelected
         """
@@ -251,7 +251,7 @@ def makeHelpPage():
 
 def validateKeyFile():
     """Checks that the keys.py file exists
-        Used by:
+        Called by:
         Main.View
         """
 
