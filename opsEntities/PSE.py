@@ -469,13 +469,13 @@ def getAllDivisionNames():
 
     return divisionNames
 
-def getLocationsByDivision(division):
+def getLocationNamesByDivision(divisionName):
 
     locationsByDivision = []
 
-    for location in getAllLocationNames():
-        if LM.getLocationByName(location).getDivisionName() == division:
-            locationsByDivision.append(location)
+    for locationName in getAllLocationNames():
+        if LM.getLocationByName(locationName).getDivisionName() == divisionName:
+            locationsByDivision.append(locationName)
 
     return locationsByDivision
 

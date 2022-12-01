@@ -714,23 +714,37 @@ class NewLocationsAndTracks:
         if len(divisionList[0]) == 0:
             return
 
+        PSE.DM.newDivision(PSE.BUNDLE['Unknown'])
+
         for division in divisionList:
             PSE.DM.newDivision(division)
 
         return
 
     def addDivisionToLocation(self):
-        """If there is only one division, add all locations to it, except Unreported."""
+        """If there is only one division, add all locations to it, 
+            otherwise divisions are set by the user.
+            """
 
-        divisions = PSE.DM.getList()
+        soleDivision = PSE.DM.getList()
+        unknownDivision = PSE.DM.getList()
 
-        if len(divisions) != 1:
+        if len(unknownDivision) != 2: # one named division and Unknown
             return
 
-        for location in PSE.LM.getList():
-            if location.getName() != PSE.BUNDLE['Unreported']:
-                location.setDivision(divisions[0])
+        if unknownDivision[0].getName() == 'Unknown':
+            unknownDivision.pop(1)
+            soleDivision.pop(0)
+        else:
+            unknownDivision.pop(0)
+            soleDivision.pop(1)
 
+        for location in PSE.LM.getList():
+            if location.getName() == PSE.BUNDLE['Unreported']:
+                location.setDivision(unknownDivision[0])
+            else:
+                location.setDivision(soleDivision[0])
+                
         return
 
     def newLocations(self):

@@ -123,12 +123,14 @@ class StartUp:
             return
 
         if Model.newJmriRailroad():
+
+            configfile = PSE.readConfigFile()
+            configfile['PT'].update({'PD': ''})
+            configfile['PT'].update({'PL': ''})
+            PSE.writeConfigFile(configfile)
+            
             PSE.restartSubroutineByName('PatternTracksSubroutine')
             PSE.restartSubroutineByName('jPlusSubroutine')
-
-            # parent = PSE.bubbleUp(EVENT.getSource())
-            # PtController.updateSubroutine(parent)
-            # JpController.updateSubroutine(parent)
 
             print('New JMRI railroad built from TrainPlayer data')
             _psLog.info('New JMRI railroad built from TrainPlayer data')
@@ -156,12 +158,14 @@ class StartUp:
             return
 
         if Model.updateJmriRailroad():
+
+            configfile = PSE.readConfigFile()
+            configfile['PT'].update({'PD': ''})
+            configfile['PT'].update({'PL': ''})
+            PSE.writeConfigFile(configfile)
+
             PSE.restartSubroutineByName('PatternTracksSubroutine')
             PSE.restartSubroutineByName('jPlusSubroutine')
-
-            # parent = PSE.bubbleUp(EVENT.getSource())
-            # PtController.updateSubroutine(parent)
-            # JpController.updateSubroutine(parent)
 
             print('JMRI railroad updated from TrainPlayer data')
             _psLog.info('JMRI railroad updated from TrainPlayer data')

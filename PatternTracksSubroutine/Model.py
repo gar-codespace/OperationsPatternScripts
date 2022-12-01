@@ -60,7 +60,9 @@ def jDivision(selectedItem):
 
     configFile = PSE.readConfigFile()
     newDivisionList = PSE.getAllDivisionNames()
-    newLocationList = PSE.getLocationsByDivision(selectedItem)
+
+    newLocationList = PSE.getLocationNamesByDivision(selectedItem)
+    
     if not newLocationList:
         newLocationList = PSE.getAllLocationNames()
 
@@ -83,7 +85,7 @@ def jDivision(selectedItem):
     return
 
 def jLocations(selectedItem):
-    """Updates the Locations combobox and ripples the changes."""
+    """Updates the Locations: combobox and ripples the changes."""
 
     _psLog.debug('jLocations')
 
@@ -167,7 +169,9 @@ def verifySelectedTracks():
     return validStatus
 
 def updateLocations():
-    """Updates the config file with a list of all divisions and locations for this profile.
+    """Updates the PT section of the configFile..
+        If entries are missing, makes new PT entries using initial values.
+        The configFile is updated if initial values are used.
         Used by:
         Controller.StartUp.makeSubroutinePanel
         """
@@ -175,19 +179,28 @@ def updateLocations():
     _psLog.debug('updateLocations')
 
     configfile = PSE.readConfigFile()
-
     allDivisions = PSE.getAllDivisionNames()
-    configfile['PT'].update({'AD': allDivisions})
-    if allDivisions and not configfile['PT']['PD']: # when this sub is used for the first time
-        configfile['PT'].update({'PD': allDivisions[0]})
-        _psLog.info('Make initial divisions list')
+    locations = []
 
-    allLocations = PSE.getAllLocationNames()
-    configfile['PT'].update({'AL': allLocations})
-    if allLocations and not configfile['PT']['PL']: # when this sub is used for the first time
-        configfile['PT'].update({'PL': allLocations[0]})
-        configfile['PT'].update({'PT': ModelEntities.makeInitialTrackList(allLocations[0])})
-        _psLog.info('Make initial locations list')
+    configfile['PT'].update({'AD': allDivisions})
+
+    if len(allDivisions) != 0 and not configfile['PT']['PD']: # when this sub is initialized
+        configfile['PT'].update({'PD': allDivisions[0]})
+
+        _psLog.info('Set initial division')
+
+    if not configfile['PT']['PL']: # when this sub is initialised
+
+        division = configfile['PT']['PD']
+        locations = PSE.getLocationNamesByDivision(division)
+        if not locations:
+            locations = PSE.getAllLocationNames()
+
+        configfile['PT'].update({'PL': locations[0]})
+        configfile['PT'].update({'AL': locations})
+        configfile['PT'].update({'PT': ModelEntities.makeInitialTrackDict(locations[0])})
+
+        _psLog.info('Set initial location and tracks')
 
     PSE.writeConfigFile(configfile)
 

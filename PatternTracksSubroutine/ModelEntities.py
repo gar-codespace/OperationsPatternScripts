@@ -417,8 +417,9 @@ def makeGenericHeader():
 
     return listHeader
 
-def makeInitialTrackList(location):
-    """Used by:
+def makeInitialTrackDict(location):
+    """Sets all the track flags to false for an initial list of tracks.
+        Used by:
         updateLocations
         """
 

@@ -47,7 +47,7 @@ class TrackPatternPanel:
 
         divisionLabel = PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Division:'])
         divisionList = self.configFile['AD']
-        divisionList.insert(0, '') # This is how JMRI does it.
+        # divisionList.insert(0, '') # This is how JMRI does it.
         self.divisionComboBox = PSE.JAVX_SWING.JComboBox(divisionList)
         self.divisionComboBox.setName('jDivision')
         self.divisionComboBox.setSelectedItem(self.configFile['PD'])

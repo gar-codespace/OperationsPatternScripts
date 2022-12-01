@@ -150,7 +150,13 @@ class TrainPlayerImporter:
         self.rr['territory'] = rrData[1]
         self.rr['location'] = rrData[2]
         self.rr['year'] = rrData[3]
+
+        # divisions = rrData[4].split(',')
+        # divisions.append('Unknown')
+        # self.rr['divisions'] = divisions
+
         self.rr['divisions'] = rrData[4].split(',')
+
         self.rr['scale'] = rrData[5]
 
         self.tpLocations.pop(0) # Pop off the key

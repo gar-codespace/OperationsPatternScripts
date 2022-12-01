@@ -76,7 +76,6 @@ class StartUp:
 
         self.widgets[0].addActionListener(Listeners.GenericComboBox(self.subroutineFrame))
         self.widgets[1].addActionListener(Listeners.GenericComboBox(self.subroutineFrame))
-        # self.widgets[1].addActionListener(Listeners.LocationComboBox(self.subroutineFrame))
         self.widgets[2].actionPerformed = self.yardTrackOnlyCheckBox
         self.widgets[5].actionPerformed = self.trackPatternButton
         self.widgets[6].actionPerformed = self.setRsButton
