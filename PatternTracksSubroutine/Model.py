@@ -196,9 +196,12 @@ def updateLocations():
         if not locations:
             locations = PSE.getAllLocationNames()
 
-        configfile['PT'].update({'PL': locations[0]})
-        configfile['PT'].update({'AL': locations})
-        configfile['PT'].update({'PT': ModelEntities.makeInitialTrackDict(locations[0])})
+        try:
+            configfile['PT'].update({'PL': locations[0]})
+            configfile['PT'].update({'AL': locations})
+            configfile['PT'].update({'PT': ModelEntities.makeInitialTrackDict(locations[0])})
+        except:
+            pass
 
         _psLog.info('Set initial location and tracks')
 

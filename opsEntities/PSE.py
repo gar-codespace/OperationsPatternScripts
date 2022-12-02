@@ -250,6 +250,25 @@ def restartSubroutineByName(subRoutineName):
         print('Not currently active: : ' + subRoutineName)
     return
 
+
+
+XYZZY = []
+def getComponentByName(frame, name):
+
+    cList = []
+
+    for component in frame.getComponents():
+        # print(component.getName())
+        if component.getName() == name:
+            XYZZY.append(component)
+
+        getComponentByName(component, name)
+
+    print(cList)
+    return
+
+
+
 def drillDown(subRoutineName):
     """Drills down into the plugin to find a particular subroutine panel.
         Changes to the plugin structure will break this.
@@ -259,6 +278,10 @@ def drillDown(subRoutineName):
     for frame0 in JMRI.util.JmriJFrame.getFrameList():
         if frame0.getName() == 'patternScriptsWindow':
             break
+
+    x = getComponentByName(frame0, 'jPlusSubroutine')
+
+
 
     for frame in frame0.getComponents():
         if frame.getName() == subRoutineName:
