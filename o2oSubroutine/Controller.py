@@ -130,7 +130,6 @@ class StartUp:
             PSE.writeConfigFile(configfile)
 
             PSE.restartSubroutineByName('PatternTracksSubroutine')
-            print(configfile['CP']['jPlusSubroutine'])
             PSE.restartSubroutineByName('jPlusSubroutine')
 
             print('New JMRI railroad built from TrainPlayer data')

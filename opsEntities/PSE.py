@@ -210,13 +210,12 @@ def updateYearModeled():
 
 def buildThePlugin():
     """Called by:
-        patternScriptsButtonAction
-        PatternTracksSubroutine.Controller
-        o2oSubroutine.controller
-        jPlusSubroutine.controller
-
-
-
+        jPlusSubroutine.Listeners
+        o2oSubroutine.Listeners
+        opsEntities.Listeners.patternScriptsButtonAction
+        opsEntities.Listeners.ptItemSelected
+        opsEntities.Listeners.rsItemSelected
+        PatternTracksSubroutine.Listeners
         """
 
     # mainScript = __import__('MainScript')
@@ -242,7 +241,7 @@ def buildThePlugin():
 def restartSubroutineByName(subRoutineName):
     """Finds the named subroutine in the plugin and restarts it."""
 
-    frame = getComponentByName('patternScriptsWindow', 'jPlusSubroutine')
+    frame = getComponentByName('patternScriptsWindow', subRoutineName)
     if frame:
         frame = frame.getComponents()[0] 
         reStart = __import__(subRoutineName, globals(), locals(), ['Controller'], 0)
