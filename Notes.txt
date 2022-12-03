@@ -3,7 +3,9 @@ Todo:
   Revisit try/except pass.
   Check all log entries.
   Update help to include j Plus.
-  Reduce the number of console messages.
+  Translating the plugin did not auto switch to the new language. PSE.buildThePlugin
+  Remove all the 'entities' modules console output?
+  CSV reports and j Plus
 
 Comments:
   Schedule does not prevent setting a car to a track.

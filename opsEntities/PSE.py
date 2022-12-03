@@ -392,7 +392,7 @@ def occuranceTally(listOfOccurances):
         occurance = listOfOccurances[-1]
         tally = 0
         for i in xrange(len(listOfOccurances) - 1, -1, -1): # run list from bottom up
-            if (listOfOccurances[i] == occurance):
+            if listOfOccurances[i] == occurance:
                 tally += 1
                 listOfOccurances.pop(i)
         dict[occurance] = tally
