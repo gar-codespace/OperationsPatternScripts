@@ -36,6 +36,7 @@ PROFILE_PATH = JMRI.util.FileUtil.getProfilePath()
 BUNDLE = {}
 REPORT_ITEM_WIDTH_MATRIX = {}
 TRACK_NAME_CLICKED_ON = ''
+CRAWLER = []
 
 # Dealers choice, both work OK:
 J_BUNDLE = JMRI.jmrit.operations.setup.Setup()
@@ -241,7 +242,7 @@ def buildThePlugin():
 def restartSubroutineByName(subRoutineName):
     """Finds the named subroutine in the plugin and restarts it."""
 
-    frame = drillDown(subRoutineName)
+    frame = getComponentByName('patternScriptsWindow', 'jPlusSubroutine')
     if frame:
         frame = frame.getComponents()[0] 
         reStart = __import__(subRoutineName, globals(), locals(), ['Controller'], 0)
@@ -250,89 +251,35 @@ def restartSubroutineByName(subRoutineName):
         print('Not currently active: : ' + subRoutineName)
     return
 
+def getComponentByName(frameName, componentName):
+    """Uses crawler() to find a component in a frame."""
 
+    for frame in JMRI.util.JmriJFrame.getFrameList():
+        if frame.getName() == frameName:
+            break
 
-XYZZY = []
-def getComponentByName(frame, name):
+    crawler(frame)
 
-    cList = []
+    for component in CRAWLER:
+        if component.getName() == componentName:
+            return component
+            global CRAWLER
+            CRAWLER = []
 
-    for component in frame.getComponents():
-        # print(component.getName())
-        if component.getName() == name:
-            XYZZY.append(component)
+    print(componentName + ' not found in ' + frameName)
 
-        getComponentByName(component, name)
-
-    print(cList)
     return
 
 
+def crawler(frame):
+    """Recursively returns all the components in a frame."""
 
-def drillDown(subRoutineName):
-    """Drills down into the plugin to find a particular subroutine panel.
-        Changes to the plugin structure will break this.
-        Rewrite this as a loop.
-        """
+    for component in frame.getComponents():
+        CRAWLER.append(component)
 
-    for frame0 in JMRI.util.JmriJFrame.getFrameList():
-        if frame0.getName() == 'patternScriptsWindow':
-            break
+        crawler(component)
 
-    x = getComponentByName(frame0, 'jPlusSubroutine')
-
-
-
-    for frame in frame0.getComponents():
-        if frame.getName() == subRoutineName:
-            return frame
-    frame0 = frame0.getComponents()[0]
-
-    for frame in frame0.getComponents():
-        if frame.getName() == subRoutineName:
-            return frame
-    frame0 = frame0.getComponents()[1]
-
-    for frame in frame0.getComponents():
-        if frame.getName() == subRoutineName:
-            return frame
-    frame0 = frame0.getComponents()[0]
-
-    for frame in frame0.getComponents():
-        if frame.getName() == subRoutineName:
-            return frame
-    frame0 = frame0.getComponents()[0]
-
-    for frame in frame0.getComponents():
-        if frame.getName() == subRoutineName:
-            return frame
-    frame0 = frame0.getComponents()[0]
-
-    for frame in frame0.getComponents():
-        if frame.getName() == subRoutineName:
-            return frame
-    frame0 = frame0.getComponents()[0]
-
-    for frame in frame0.getComponents():
-        if frame.getName() == subRoutineName:
-            return frame
-
-    return None
-            
-def bubbleUp(source):
-    """Opposite of drillDown.
-        Bubbles up from a component to find a subroutine.
-        """
-
-    parent = source.getParent()
-    while True:
-        if not parent:
-            print('Top level frame not found')
-            return
-        if parent.getName() == 'OPS Plugin Panel':
-            return parent
-        else:
-            parent = parent.getParent()
+    return
 
 def openSystemConsole():
 

@@ -2,7 +2,6 @@ Todo:
   How to publish DeepL?
   Revisit try/except pass.
   Check all log entries.
-  Can PSE.drillDown be rewritten as a loop?
   Update help to include j Plus.
   Reduce the number of console messages.
 

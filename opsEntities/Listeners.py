@@ -129,7 +129,8 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         """
 
     def __init__(self):
-
+        
+        self.configFile = PSE.readConfigFile()
         return
 
     def windowClosed(self, WINDOW_CLOSED):
@@ -157,7 +158,8 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
     def windowActivated(self, WINDOW_ACTIVATED):
 
         PSE.updateYearModeled()
-        PSE.restartSubroutineByName('jPlusSubroutine')
+        if self.configFile['CP']['jPlusSubroutine'] and not self.configFile['CP']['o2oSubroutine']:
+            PSE.restartSubroutineByName('jPlusSubroutine')
 
         return
 
