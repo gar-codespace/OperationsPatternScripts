@@ -4,7 +4,6 @@ Todo:
   Check all log entries.
   Update help to include j Plus.
   Translating the plugin did not auto switch to the new language. PSE.buildThePlugin
-  Remove all the 'entities' modules console output?
   CSV reports and j Plus
 
 Comments:
@@ -18,6 +17,7 @@ Comments:
   o2o importTpRailroad rolled into New JMRI Railroad and Update JMRI Railroad.
   On TrainPlayer side, a check is added to validate locale is in format 'location;track'.
   On TrainPlayer side, a check is added to validate industries has a locale entry.'.
+  Generalized built train listeners into opsEntities.Listeners.
 
 Tested Items:
   Plugin

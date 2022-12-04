@@ -144,6 +144,9 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
 
         PSE.updateWindowParams(WINDOW_CLOSING.getSource())
         PSE.closeSetCarsWindows()
+        removeTrainsTableListener()
+        # removeBuiltTrainListener()
+        print('xyzzy')
         WINDOW_CLOSING.getSource().dispose()
 
         return
@@ -169,3 +172,84 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         return
     def windowDeactivated(self, WINDOW_DEACTIVATED):
         return
+
+class TrainsTable(PSE.JAVX_SWING.event.TableModelListener):
+    """Catches user add or remove train while o2oSubroutine is enabled."""
+
+    def __init__(self, builtTrainListener):
+
+        self.builtTrainListener = builtTrainListener
+
+        return
+
+    def tableChanged(self, TABLE_CHANGE):
+
+        trainList = PSE.TM.getTrainsByIdList()
+        for train in trainList:
+        # Does not throw error if there is no listener to remove :)
+            train.removePropertyChangeListener(self.builtTrainListener)
+            train.addPropertyChangeListener(self.builtTrainListener)
+
+        return
+
+
+class BuiltTrain(PSE.JAVA_BEANS.PropertyChangeListener):
+    """Starts o2oWorkEventsBuilder on trainBuilt."""
+
+    def propertyChange(self, TRAIN_BUILT):
+
+        configFile = PSE.readConfigFile('CP')
+
+        if TRAIN_BUILT.propertyName != 'TrainBuilt':
+            return
+
+        if configFile['o2oSubroutine'] and TRAIN_BUILT.newValue == True:
+            xModule = __import__('o2oSubroutine', globals(), locals(), ['BuiltTrainExport'], 0)
+            o2oWorkEvents = xModule.BuiltTrainExport.o2oWorkEventsBuilder()
+            o2oWorkEvents.passInTrain(TRAIN_BUILT.getSource())
+            o2oWorkEvents.start()
+
+        if configFile['jPlusSubroutine'] and TRAIN_BUILT.newValue == True:
+            trainManifest = 'train (' + TRAIN_BUILT.getSource().getName() + ').txt'
+
+        return
+
+
+def addTrainsTableListener():
+
+    builtTrainListener = BuiltTrain()
+    trainsTableListener = TrainsTable(builtTrainListener)
+
+    trainsTableModel = PSE.JMRI.jmrit.operations.trains.TrainsTableModel()
+    trainsTableModel.addTableModelListener(trainsTableListener)
+
+    return
+
+def removeTrainsTableListener():
+
+    trainsTableModel = PSE.JMRI.jmrit.operations.trains.TrainsTableModel()
+    try:
+        trainsTableModel.removeTableModelListener(trainsTableListener)
+    except:
+        pass
+
+    removeBuiltTrainListener()
+
+    return
+
+def addBuiltTrainListener():
+
+    trainList = PSE.TM.getTrainsByIdList()
+    for train in trainList:
+        train.addPropertyChangeListener(BuiltTrain())
+    return
+
+def removeBuiltTrainListener():
+
+    trainList = PSE.TM.getTrainsByIdList()
+    for train in trainList:
+        for listener in train.getPropertyChangeListeners():
+            if listener.getClass() == BuiltTrain:
+                train.removePropertyChangeListener(listener)
+
+    return

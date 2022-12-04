@@ -4,7 +4,7 @@
 """The o2o Subroutine."""
 
 from opsEntities import PSE
-from o2oSubroutine import Listeners
+from opsEntities import Listeners
 from o2oSubroutine import Model
 from o2oSubroutine import ModelImport
 from o2oSubroutine import ModelWorkEvents

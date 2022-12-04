@@ -412,12 +412,13 @@ def jPlusHeader():
         OSU = JMRI.jmrit.operations.setup
         operatingRoad = unicode(OSU.Setup.getRailroadName(), ENCODING)
 
-    patternDivision = configFile['PT']['PD']
-    if patternDivision:
-        detailedHeader += operatingRoad + ' - ' + patternDivision
-    else:
-        detailedHeader += operatingRoad
+    # patternDivision = configFile['PT']['PD']
+    # if patternDivision:
+    #     detailedHeader += operatingRoad + ' - ' + patternDivision
+    # else:
+    #     detailedHeader += operatingRoad
 
+    detailedHeader += operatingRoad
     if configFile['JP']['TR']:
         detailedHeader += ';' + configFile['JP']['TR']
 

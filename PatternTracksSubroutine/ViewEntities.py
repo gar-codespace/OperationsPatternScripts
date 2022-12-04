@@ -129,8 +129,6 @@ class TrackPatternPanel:
         tpPanel.add(self.makeTracksRow())
         tpPanel.add(self.makeButtonsRow())
 
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-
         return tpPanel
 
 
