@@ -46,7 +46,7 @@ def newJmriRailroad():
     else:
         return False
 
-    ModelEntities.closeTroublesomeWindows()
+    PSE.closeTroublesomeWindows()
 
     PSE.TMX.makeBackupFile('operations/OperationsTrainRoster.xml')
     PSE.TMX.makeBackupFile('operations/OperationsRouteRoster.xml')
@@ -118,7 +118,7 @@ def updateJmriRailroad():
     restTrains.getBuiltTrains()
     restTrains.resetBuildTrains()
 
-    ModelEntities.closeTroublesomeWindows()
+    PSE.closeTroublesomeWindows()
 
     PSE.SM.dispose()
     PSE.CM.dispose()
@@ -187,7 +187,7 @@ def updateJmriRollingingStock():
     restTrains.resetBuildTrains()
 
     try:
-        ModelEntities.closeTroublesomeWindows()
+        PSE.closeTroublesomeWindows()
 
         PSE.CM.dispose()
         PSE.EM.dispose()

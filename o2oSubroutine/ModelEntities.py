@@ -2,9 +2,9 @@
 # © 2021, 2022 Greg Ritacco
 
 from opsEntities import PSE
-import apps
-import jmri.jmrit
-import jmri.util.swing
+# import apps
+# import jmri.jmrit
+# import jmri.util.swing
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelEntities'
 SCRIPT_REV = 20221010
@@ -276,20 +276,25 @@ def getSetToLocationAndTrack(locationName, trackName):
         print('Location and track not found: ', locationName, trackName)
         return None, None
 
-def closeTroublesomeWindows():
-    """Close all the 'Troublesome' windows when the New JMRI Railroad button is pressed.
-        Called by:
-        o2oSubroutine.Model.newJmriRailroad
-        o2oSubroutine.Model.updateJmriRailroad
-        """
-    frameList = ['JMRI System Console', 'PanelPro', 'Pattern Scripts', 'Routes', 'Trains']
-    for frameName in PSE.JMRI.util.JmriJFrame.getFrameList():
-        if frameName.getTitle() in frameList:
-            continue
-        else:
-            frameName.dispose()
+# def closeTroublesomeWindows():
+#     """Close all the 'Troublesome' windows when the New JMRI Railroad button is pressed.
+#         Called by:
+#         o2oSubroutine.Model.newJmriRailroad
+#         o2oSubroutine.Model.updateJmriRailroad
+#         """
 
-        # if not 'JmriJFrame' in frameName.__str__():
-        #     frameName.dispose()
+#     console = PSE.APPS.Bundle().handleGetMessage('TitleConsole')
+#     patternScripts = PSE.BUNDLE['Pattern Scripts']
+#     trainsTable = PSE.JMRI.jmrit.operations.trains.Bundle().handleGetMessage('TitleTrainsTable')
+#     routesTable = PSE.JMRI.jmrit.operations.routes.Bundle().handleGetMessage('TitleRoutesTable')
 
-    return
+#     doNotCloseThisWindow = [console, 'PanelPro', patternScripts, routesTable, trainsTable]
+    
+#     for frameName in PSE.JMRI.util.JmriJFrame.getFrameList():
+#         print(frameName.getTitle())
+#         if frameName.getTitle() in doNotCloseThisWindow:
+#             continue
+#         else:
+#             frameName.dispose()
+
+#     return

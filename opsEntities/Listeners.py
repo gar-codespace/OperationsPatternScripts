@@ -146,7 +146,6 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         PSE.closeSetCarsWindows()
         removeTrainsTableListener()
         # removeBuiltTrainListener()
-        print('xyzzy')
         WINDOW_CLOSING.getSource().dispose()
 
         return

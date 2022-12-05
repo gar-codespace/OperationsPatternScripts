@@ -12,11 +12,10 @@ from java import io as JAVA_IO
 import java.nio.file as JAVA_NIO
 import java.beans as JAVA_BEANS
 from HTMLParser import HTMLParser as HTML_PARSER
-from apps import Apps as APPS
+import apps as APPS
 
 from json import loads as jsonLoadS, dumps as jsonDumpS
 from codecs import open as codecsOpen
-import apps
 
 """
 Ghost imports from MainScript:
@@ -221,6 +220,7 @@ def buildThePlugin():
     # mainScript = __import__('MainScript')
     mainScript = __import__('MainScript', globals(), locals(), [], 0)
 
+    global BUNDLE
     BUNDLE = mainScript.Bundle.getBundleForLocale()
 
     CreateStubFile().make()
@@ -246,8 +246,9 @@ def restartSubroutineByName(subRoutineName):
         frame = frame.getComponents()[0] 
         reStart = __import__(subRoutineName, globals(), locals(), ['Controller'], 0)
         reStart.Controller.restartSubroutine(frame)
+        print('Restarted: ' + subRoutineName)
     else:
-        print('Not currently active: : ' + subRoutineName)
+        print('Not currently active: ' + subRoutineName)
     return
 
 def getComponentByName(frameName, componentName):
@@ -265,7 +266,7 @@ def getComponentByName(frameName, componentName):
             global CRAWLER
             CRAWLER = []
 
-    print(componentName + ' not found in ' + frameName)
+    # print(componentName + ' not found in ' + frameName)
 
     return
 
@@ -282,7 +283,7 @@ def crawler(frame):
 
 def openSystemConsole():
 
-    console = apps.SystemConsole.getConsole()
+    console = APPS.SystemConsole.getConsole()
     console.setVisible(readConfigFile()['CP']['OC'])
 
     return
@@ -294,7 +295,7 @@ def openOutputPanel(message):
         """
 
     bundle = JMRI.jmrit.jython.Bundle()
-    frameName = bundle.handleGetMessage('TitleOutputFrame')
+    frameName = bundle.handleGetMessage('TitleConsole')
 
     if not JMRI.util.JmriJFrame.getFrame(frameName):
         JMRI.jmrit.jython.JythonWindow().actionPerformed(None)
@@ -321,6 +322,28 @@ def closeOutputPanel():
 
     return
 
+def closeTroublesomeWindows():
+    """Close all the 'Troublesome' windows when the New JMRI Railroad button is pressed.
+        Called by:
+        o2oSubroutine.Model.newJmriRailroad
+        o2oSubroutine.Model.updateJmriRailroad
+        """
+
+    console = APPS.Bundle().handleGetMessage('TitleConsole')
+    patternScripts = BUNDLE['Pattern Scripts']
+    trainsTable = JMRI.jmrit.operations.trains.Bundle().handleGetMessage('TitleTrainsTable')
+    routesTable = JMRI.jmrit.operations.routes.Bundle().handleGetMessage('TitleRoutesTable')
+
+    doNotCloseThisWindow = [console, 'PanelPro', patternScripts, routesTable, trainsTable]
+    
+    for frameName in JMRI.util.JmriJFrame.getFrameList():
+        if frameName.getTitle() in doNotCloseThisWindow:
+            continue
+        else:
+            frameName.dispose()
+
+    return
+
 def getPsButton():
     """Gets the Pattern Scripts button on the PanelPro frame.
         Called by:
@@ -328,7 +351,7 @@ def getPsButton():
         Listeners.PatternScriptsWindow.windowOpened
         """
 
-    buttonSpaceComponents = APPS.buttonSpace().getComponents()
+    buttonSpaceComponents = APPS.Apps.buttonSpace().getComponents()
     for component in buttonSpaceComponents:
         if component.getName() == 'psButton':
             return component

@@ -264,8 +264,8 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         psButton.setName('psButton')
 
         psButton.actionPerformed = Listeners.patternScriptsButtonAction
-        PSE.APPS.buttonSpace().add(psButton)
-        PSE.APPS.buttonSpace().revalidate()
+        PSE.APPS.Apps.buttonSpace().add(psButton)
+        PSE.APPS.Apps.buttonSpace().revalidate()
 
         return
 

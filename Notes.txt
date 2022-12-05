@@ -3,7 +3,6 @@ Todo:
   Revisit try/except pass.
   Check all log entries.
   Update help to include j Plus.
-  Translating the plugin did not auto switch to the new language. PSE.buildThePlugin
   CSV reports and j Plus
 
 Comments:
