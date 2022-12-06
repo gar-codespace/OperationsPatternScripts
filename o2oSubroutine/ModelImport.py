@@ -19,31 +19,31 @@ def importTpRailroad():
     if not trainPlayerImport.getTpReportFiles():
         boilerplateErrors()
         return False
-# Test the integrity of the locations file
-    if not trainPlayerImport.checkLocationsFile():
-        boilerplateErrors()
-        return False
-# Test the integrity of the Industries file
-    if not trainPlayerImport.checkIndustriesFile():
-        boilerplateErrors()
-        return False
+# # Test the integrity of the locations file
+#     if not trainPlayerImport.checkLocationsFile():
+#         boilerplateErrors()
+#         return False
+# # Test the integrity of the Industries file
+#     if not trainPlayerImport.checkIndustriesFile():
+#         boilerplateErrors()
+#         return False
 
-    trainPlayerImport.processFileHeaders()
-    trainPlayerImport.getRrLocations()
-    trainPlayerImport.getRrLocales()
+#     trainPlayerImport.processFileHeaders()
+#     trainPlayerImport.getRrLocations()
+#     trainPlayerImport.getRrLocales()
 
-    trainPlayerImport.getAllTpRoads()
-    trainPlayerImport.getAllTpIndustry()
+#     trainPlayerImport.getAllTpRoads()
+#     trainPlayerImport.getAllTpIndustry()
 
-    trainPlayerImport.getAllTpCarAar()
-    trainPlayerImport.getAllTpCarLoads()
-    trainPlayerImport.getAllTpCarKernels()
+#     trainPlayerImport.getAllTpCarAar()
+#     trainPlayerImport.getAllTpCarLoads()
+#     trainPlayerImport.getAllTpCarKernels()
 
-    trainPlayerImport.getAllTpLocoTypes()
-    trainPlayerImport.getAllTpLocoModels()
-    trainPlayerImport.getAllTpLocoConsists()
+#     trainPlayerImport.getAllTpLocoTypes()
+#     trainPlayerImport.getAllTpLocoModels()
+#     trainPlayerImport.getAllTpLocoConsists()
 
-    trainPlayerImport.writeTPLayoutData()
+#     trainPlayerImport.writeTPLayoutData()
 
     return True
 

@@ -295,7 +295,7 @@ def openOutputPanel(message):
         """
 
     bundle = JMRI.jmrit.jython.Bundle()
-    frameName = bundle.handleGetMessage('TitleConsole')
+    frameName = bundle.handleGetMessage('TitleOutputFrame')
 
     if not JMRI.util.JmriJFrame.getFrame(frameName):
         JMRI.jmrit.jython.JythonWindow().actionPerformed(None)
@@ -313,12 +313,13 @@ def closeOutputPanel():
     bundle = JMRI.jmrit.jython.Bundle()
     frameName = bundle.handleGetMessage('TitleOutputFrame')
 
-    outputPanel = JMRI.util.JmriJFrame.getFrame(frameName)
-    if not outputPanel:
-        return
+    try:
+        outputPanel = JMRI.util.JmriJFrame.getFrame(frameName)
+        outputPanel.setVisible(False)
+        outputPanel.dispose()
+    except:
+        pass
 
-    outputPanel.setVisible(False)
-    outputPanel.dispose()
 
     return
 
@@ -340,6 +341,7 @@ def closeTroublesomeWindows():
         if frameName.getTitle() in doNotCloseThisWindow:
             continue
         else:
+            # frameName.setVisible(False)
             frameName.dispose()
 
     return
