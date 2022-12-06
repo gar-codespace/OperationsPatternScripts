@@ -212,7 +212,7 @@ def sortLocoList(locoList):
             translatedkey = (sortKey)
             locoList.sort(key=lambda row: row[translatedkey])
         except:
-            print('Loco lst not sorted')
+            print('Loco list not sorted')
 
     return locoList
 

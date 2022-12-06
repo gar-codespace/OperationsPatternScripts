@@ -114,9 +114,9 @@ def updateJmriRailroad():
     if not tpLocaleData.isValid():
         return False
 
-    restTrains = BuiltTrainExport.FindTrain()
-    restTrains.getBuiltTrains()
-    restTrains.resetBuildTrains()
+    resetTrains = BuiltTrainExport.FindTrain()
+    resetTrains.getBuiltTrains()
+    resetTrains.resetBuildTrains()
 
     PSE.closeTroublesomeWindows()
 
@@ -182,9 +182,9 @@ def updateJmriRollingingStock():
         Controller.Startup.updateJmriRollingingStock
         """
 
-    restTrains = BuiltTrainExport.FindTrain()
-    restTrains.getBuiltTrains()
-    restTrains.resetBuildTrains()
+    resetTrains = BuiltTrainExport.FindTrain()
+    resetTrains.getBuiltTrains()
+    resetTrains.resetBuildTrains()
 
     try:
         PSE.closeTroublesomeWindows()
@@ -214,6 +214,7 @@ def updateJmriRollingingStock():
         return True
 
     except:
+        _psLog.warning('TrainPlayer Inventory file not found')
         return False
 
 

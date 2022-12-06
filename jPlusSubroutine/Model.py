@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""Template."""
+""" """
 
 from opsEntities import PSE
 
@@ -18,20 +18,19 @@ def jPanelSetup():
     if not configFile['CP']['o2oSubroutine']:
         return
 
-    try:
-        fileName = 'tpRailroadData.json'
-        filePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
-        sourceData = PSE.loadJson(PSE.genericReadReport(filePath))
-    except:
-        pass
 
-    try:
-        configFile['JP'].update({'OR':sourceData['operatingRoad']})
-        configFile['JP'].update({'TR':sourceData['territory']})
-        configFile['JP'].update({'LO':sourceData['location']})
-        configFile['JP'].update({'YR':sourceData['year']})
-    except:
-        pass
+    fileName = 'tpRailroadData.json'
+    filePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
+
+    if PSE.JAVA_IO.File(filePath).isFile():
+        sourceData = PSE.loadJson(PSE.genericReadReport(filePath))
+    else:
+        return
+
+    configFile['JP'].update({'OR':sourceData['operatingRoad']})
+    configFile['JP'].update({'TR':sourceData['territory']})
+    configFile['JP'].update({'LO':sourceData['location']})
+    configFile['JP'].update({'YR':sourceData['year']})
 
     OSU = PSE.JMRI.jmrit.operations.setup
     OSU.Setup.setYearModeled(configFile['JP']['YR'])

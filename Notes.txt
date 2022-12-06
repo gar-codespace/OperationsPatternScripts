@@ -1,9 +1,9 @@
 Todo:
   How to publish DeepL?
-  Revisit try/except pass.
   Check all log entries.
   Update help to include j Plus.
   CSV reports and j Plus
+  closeOutputPanel is called on start up.
 
 Comments:
   Schedule does not prevent setting a car to a track.

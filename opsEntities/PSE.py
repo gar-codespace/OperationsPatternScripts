@@ -313,12 +313,12 @@ def closeOutputPanel():
     bundle = JMRI.jmrit.jython.Bundle()
     frameName = bundle.handleGetMessage('TitleOutputFrame')
 
-    try:
-        outputPanel = JMRI.util.JmriJFrame.getFrame(frameName)
-        outputPanel.setVisible(False)
-        outputPanel.dispose()
-    except:
-        pass
+    outputPanel = JMRI.util.JmriJFrame.getFrame(frameName)
+    if not outputPanel:
+        return
+
+    outputPanel.setVisible(False)
+    outputPanel.dispose()
 
     return
 

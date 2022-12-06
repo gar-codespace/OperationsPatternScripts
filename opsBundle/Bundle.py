@@ -106,13 +106,15 @@ def getBundleForLocale():
 
     try:
         bundleFile = PSE.loadJson(PSE.genericReadReport(bundleFileLocation))
+        return bundleFile
     except:
-        oldFile = PSE.OS_PATH.join(PSE.BUNDLE_DIR, psLocale)
-        PSE.JAVA_IO.File(oldFile).delete()
-        makeDefaultPluginBundle()
-        bundleFileLocation = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'plugin.en.json')
-        bundleFile = PSE.loadJson(PSE.genericReadReport(bundleFileLocation))
         _psLog.warning('FAIL: plugin bundle file missing or damaged. Using default plugin bundle.')
+        
+    oldFile = PSE.OS_PATH.join(PSE.BUNDLE_DIR, psLocale)
+    PSE.JAVA_IO.File(oldFile).delete()
+    makeDefaultPluginBundle()
+    bundleFileLocation = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'plugin.en.json')
+    bundleFile = PSE.loadJson(PSE.genericReadReport(bundleFileLocation))
 
     return bundleFile
 

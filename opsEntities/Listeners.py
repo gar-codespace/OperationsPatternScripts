@@ -229,8 +229,8 @@ def removeTrainsTableListener():
     trainsTableModel = PSE.JMRI.jmrit.operations.trains.TrainsTableModel()
     try:
         trainsTableModel.removeTableModelListener(trainsTableListener)
-    except:
-        pass
+    except NameError:
+        print('No Trains Table listener to remove')
 
     removeBuiltTrainListener()
 

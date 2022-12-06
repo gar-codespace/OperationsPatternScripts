@@ -187,7 +187,7 @@ def updateLocations():
     if len(allDivisions) != 0 and not configfile['PT']['PD']: # when this sub is initialized
         configfile['PT'].update({'PD': allDivisions[0]})
 
-        _psLog.info('Set initial division')
+        _psLog.info('Set initial division in config file')
 
     if not configfile['PT']['PL']: # when this sub is initialised
 
@@ -201,9 +201,9 @@ def updateLocations():
             configfile['PT'].update({'AL': locations})
             configfile['PT'].update({'PT': ModelEntities.makeInitialTrackDict(locations[0])})
         except:
-            pass
+            _psLog.warning('Initial location and tracks not set in config file')
 
-        _psLog.info('Set initial location and tracks')
+        _psLog.info('Set initial location and tracks in config file')
 
     PSE.writeConfigFile(configfile)
 

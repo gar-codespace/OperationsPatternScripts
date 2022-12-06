@@ -275,26 +275,4 @@ def getSetToLocationAndTrack(locationName, trackName):
     except:
         print('Location and track not found: ', locationName, trackName)
         return None, None
-
-# def closeTroublesomeWindows():
-#     """Close all the 'Troublesome' windows when the New JMRI Railroad button is pressed.
-#         Called by:
-#         o2oSubroutine.Model.newJmriRailroad
-#         o2oSubroutine.Model.updateJmriRailroad
-#         """
-
-#     console = PSE.APPS.Bundle().handleGetMessage('TitleConsole')
-#     patternScripts = PSE.BUNDLE['Pattern Scripts']
-#     trainsTable = PSE.JMRI.jmrit.operations.trains.Bundle().handleGetMessage('TitleTrainsTable')
-#     routesTable = PSE.JMRI.jmrit.operations.routes.Bundle().handleGetMessage('TitleRoutesTable')
-
-#     doNotCloseThisWindow = [console, 'PanelPro', patternScripts, routesTable, trainsTable]
-    
-#     for frameName in PSE.JMRI.util.JmriJFrame.getFrameList():
-#         print(frameName.getTitle())
-#         if frameName.getTitle() in doNotCloseThisWindow:
-#             continue
-#         else:
-#             frameName.dispose()
-
-#     return
+        
