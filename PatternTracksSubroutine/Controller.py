@@ -106,7 +106,7 @@ class StartUp:
     def trackPatternButton(self, EVENT):
         """Makes a pattern tracks report based on the config file (PR)"""
 
-        _psLog.debug('trackPatternButton')
+        _psLog.debug(EVENT)
 
         Model.updateConfigFile(self.widgets)
 
@@ -135,7 +135,7 @@ class StartUp:
             Resets the o2o switchlist with a new header
             """
 
-        _psLog.debug('setRsButton')
+        _psLog.debug(EVENT)
 
         Model.updateConfigFile(self.widgets)
 

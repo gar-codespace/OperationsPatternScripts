@@ -320,7 +320,6 @@ def closeOutputPanel():
     except:
         pass
 
-
     return
 
 def closeTroublesomeWindows():
@@ -341,7 +340,6 @@ def closeTroublesomeWindows():
         if frameName.getTitle() in doNotCloseThisWindow:
             continue
         else:
-            # frameName.setVisible(False)
             frameName.dispose()
 
     return

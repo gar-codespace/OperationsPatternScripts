@@ -33,7 +33,7 @@ class ManageGui:
     def makeSubroutinePanel(self):
         """Make the xxx controls"""
 
-        _psLog.debug('makeSubroutinePanel')
+        _psLog.debug('TemplateSubroutine.View.makeSubroutinePanel')
 
         xxxSubroutinePanel = ViewEntities.xxxSubroutinePanel()
         subroutinesPanel = xxxSubroutinePanel.xxxPanelMaker()

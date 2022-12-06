@@ -214,7 +214,7 @@ def updateJmriRollingingStock():
         return True
 
     except:
-        _psLog.warning('TrainPlayer Inventory file not found')
+        _psLog.warning('TrainPlayer data file(s) not found')
         return False
 
 
@@ -380,8 +380,6 @@ class MakeTpLocaleData:
             PSE.openOutputPanel(PSE.BUNDLE['JMRI does not allow staging and non-staging track types at the same location.'])
             PSE.openOutputPanel(PSE.BUNDLE['No changes were made to your JMRI layout.'])
             PSE.openOutputPanel('')
-            _psLog.critical('ALERT: Staging and non-staging tracks at same location: ' + str(result))
-            _psLog.critical('ALERT: Staging and non-staging tracks at same location: ' + str(result))
             _psLog.critical('ALERT: Staging and non-staging tracks at same location: ' + str(result))
 
             return False
@@ -592,7 +590,7 @@ class UpdateLocationsAndTracks:
 
     def processLocations(self):
 
-        _psLog.debug('renameLocations')
+        _psLog.debug('processLocations')
 
         for item in self.renameLocations:
             PSE.LM.getLocationByName(item[0]).setName(item[1])

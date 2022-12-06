@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""Template."""
+""" """
 
 from opsEntities import PSE
 from jPlusSubroutine import ViewEntities
@@ -31,7 +31,7 @@ class ManageGui:
     def makeSubroutinePanel(self):
         """Make the jPlus controls"""
 
-        _psLog.debug('makeSubroutinePanel')
+        _psLog.debug('jPlusSubroutine.View.makeSubroutinePanel')
 
         jPlusSubroutinePanel = ViewEntities.jPlusSubroutinePanel()
         if self.configFile['CP']['o2oSubroutine']:

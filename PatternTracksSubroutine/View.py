@@ -33,7 +33,7 @@ class ManageGui:
     def makeSubroutinePanel(self):
         """Make the Track Pattern controls"""
 
-        _psLog.debug('makeSubroutinePanel')
+        _psLog.debug('PatternTracksSubroutine.View.makeSubroutinePanel')
 
         trackPatternPanel = ViewEntities.TrackPatternPanel()
         subroutinesPanel = trackPatternPanel.makeTrackPatternPanel()

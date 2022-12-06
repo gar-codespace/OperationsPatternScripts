@@ -260,16 +260,7 @@ class o2oWorkEvents:
     def o2oHeader(self):
 
         _psLog.debug('o2oWorkEvents.o2oHeader')
-
-
-
-        # print(self.workEvents)
-
-
-
-
-
-
+        
         self.o2oList = 'HN,' + self.workEvents['railroadName'] + '\n'
         self.o2oList += 'HT,' + self.workEvents['trainName'] + '\n'
         self.o2oList += 'HD,' + self.workEvents['trainDescription'] + '\n'

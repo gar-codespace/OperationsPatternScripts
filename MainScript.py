@@ -283,7 +283,6 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         PSE.CreateStubFile().make()
         Bundle.makeHelpPage()
 
-        PSE.closeOutputPanel()
         PSE.makeReportFolders()
         PSE.CreateStubFile().make()
 

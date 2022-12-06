@@ -13,6 +13,8 @@ _psLog = PSE.LOGGING.getLogger('OPS.JP.Model')
 def jPanelSetup():
     """Copy the jPanel data from tpRailroadData.json into the JP fields of the config file."""
 
+    _psLog.debug('jPanelSetup')
+
     configFile = PSE.readConfigFile()
 
     if not configFile['CP']['o2oSubroutine']:

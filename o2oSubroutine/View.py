@@ -30,7 +30,7 @@ class ManageGui:
     def makeSubroutinePanel(self):
         """Make the o2o controls"""
 
-        _psLog.debug('makeSubroutinePanel')
+        _psLog.debug('o2oSubroutine.View.makeSubroutinePanel')
 
         o2oSubroutinePanel = ViewEntities.O2oSubroutinePanel()
         subroutinesPanel = o2oSubroutinePanel.o2oPanelMaker()
