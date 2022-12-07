@@ -112,7 +112,7 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        PSE.closeOutputPanel()
+        PSE.closeOutputFrame()
 
         if ModelImport.importTpRailroad():
             print('TrainPlayer railroad data imported OK')
@@ -147,7 +147,7 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        PSE.closeOutputPanel()
+        PSE.closeOutputFrame()
 
         if ModelImport.importTpRailroad():
             print('TrainPlayer railroad data imported OK')
@@ -182,7 +182,7 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        PSE.closeOutputPanel()
+        PSE.closeOutputFrame()
 
         if ModelImport.importTpRailroad():
             print('TrainPlayer railroad data imported OK')

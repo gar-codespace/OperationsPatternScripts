@@ -298,16 +298,16 @@ def openOutputFrame(message):
 
     bundle = JMRI.jmrit.jython.Bundle()
     frameName = bundle.handleGetMessage('TitleOutputFrame')
-    window = JMRI.util.JmriJFrame.getFrame(frameName)
+    frame = JMRI.util.JmriJFrame.getFrame(frameName)
 
-    if not window:
+    if not frame:
         JMRI.jmrit.jython.JythonWindow().actionPerformed(None)
 
-    window = JMRI.util.JmriJFrame.getFrame(frameName)
+    frame = JMRI.util.JmriJFrame.getFrame(frameName)
 
     global CRAWLER
     CRAWLER = []
-    crawler(window)
+    crawler(frame)
     for component in CRAWLER:
         if component.getClass() == JAVX_SWING.JTextArea:
            component.text += message + '\n'
@@ -315,15 +315,15 @@ def openOutputFrame(message):
 
     return
 
-def closeOutputPanel():
+def closeOutputFrame():
 
     bundle = JMRI.jmrit.jython.Bundle()
     frameName = bundle.handleGetMessage('TitleOutputFrame')
-    window = JMRI.util.JmriJFrame.getFrame(frameName)
+    frame = JMRI.util.JmriJFrame.getFrame(frameName)
 
-    if window:
-        window.setVisible(False)
-        window.dispose()
+    if frame:
+        frame.setVisible(False)
+        frame.dispose()
 
     return
 
@@ -795,12 +795,27 @@ def readConfigFile(subConfig=None):
         Everything
         """
 
-    configFile = tryConfigFile()
+    configFile = checkConfigFile()
 
     if not subConfig:
         return configFile
     else:
         return configFile[subConfig]
+
+def checkConfigFile():
+
+    fileName = 'PatternConfig.json'
+    targetPath = OS_PATH.join(PROFILE_PATH, 'operations', fileName)
+
+    try:
+        loadJson(genericReadReport(targetPath))
+    except:
+        writeNewConfigFile()
+        print('Defective config file')
+
+    return loadJson(genericReadReport(targetPath))
+
+
 
 def tryConfigFile():
     """Try/except catches some user edit mistakes.
