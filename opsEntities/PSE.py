@@ -182,13 +182,15 @@ def closePsWindow():
         Listeners.rsItemSelected
         """
 
-    for frame in JMRI.util.JmriJFrame.getFrameList():
-        if frame.getName() == 'patternScriptsWindow':
-            updateWindowParams(frame)
-            closeSetCarsWindows()
+    frameName = BUNDLE['Pattern Scripts']
+    window = JMRI.util.JmriJFrame.getFrame(frameName)
 
-            frame.setVisible(False)
-            frame.dispose()
+    if window:
+        updateWindowParams(window)
+        window.setVisible(False)
+        window.dispose()
+
+    closeSetCarsWindows()
 
     return
 
@@ -241,7 +243,8 @@ def buildThePlugin():
 def restartSubroutineByName(subRoutineName):
     """Finds the named subroutine in the plugin and restarts it."""
 
-    frame = getComponentByName('patternScriptsWindow', subRoutineName)
+    frameName = BUNDLE['Pattern Scripts']
+    frame = getComponentByName(frameName, subRoutineName)
     if frame:
         frame = frame.getComponents()[0] 
         reStart = __import__(subRoutineName, globals(), locals(), ['Controller'], 0)
@@ -253,12 +256,14 @@ def restartSubroutineByName(subRoutineName):
 
 def getComponentByName(frameName, componentName):
     """Uses crawler() to find a component in a frame."""
-
-    for frame in JMRI.util.JmriJFrame.getFrameList():
-        if frame.getName() == frameName:
-            break
+ 
+    frame = JMRI.util.JmriJFrame.getFrame(frameName)
 
     crawler(frame)
+
+    if len(CRAWLER) == 0:
+        print(componentName + ' not found in ' + frameName)
+        return
 
     for component in CRAWLER:
         if component.getName() == componentName:
@@ -266,10 +271,7 @@ def getComponentByName(frameName, componentName):
             global CRAWLER
             CRAWLER = []
 
-    # print(componentName + ' not found in ' + frameName)
-
     return
-
 
 def crawler(frame):
     """Recursively returns all the components in a frame."""
@@ -288,7 +290,7 @@ def openSystemConsole():
 
     return
 
-def openOutputPanel(message):
+def openOutputFrame(message):
     """Adds the message to the Script Output window.
         https://groups.io/g/jmriusers/message/33745
         https://groups.io/g/jmriusers/message/33747
@@ -296,15 +298,20 @@ def openOutputPanel(message):
 
     bundle = JMRI.jmrit.jython.Bundle()
     frameName = bundle.handleGetMessage('TitleOutputFrame')
+    window = JMRI.util.JmriJFrame.getFrame(frameName)
 
-    if not JMRI.util.JmriJFrame.getFrame(frameName):
+    if not window:
         JMRI.jmrit.jython.JythonWindow().actionPerformed(None)
 
     window = JMRI.util.JmriJFrame.getFrame(frameName)
-    scrollpane = window.getContentPane().getComponents()[0]
-    viewport = scrollpane.getComponents()[0]
-    textarea = viewport.getComponents()[0]
-    textarea.text += message + '\n'
+
+    global CRAWLER
+    CRAWLER = []
+    crawler(window)
+    for component in CRAWLER:
+        if component.getClass() == JAVX_SWING.JTextArea:
+           component.text += message + '\n'
+           break
 
     return
 
@@ -312,13 +319,11 @@ def closeOutputPanel():
 
     bundle = JMRI.jmrit.jython.Bundle()
     frameName = bundle.handleGetMessage('TitleOutputFrame')
+    window = JMRI.util.JmriJFrame.getFrame(frameName)
 
-    try:
-        outputPanel = JMRI.util.JmriJFrame.getFrame(frameName)
-        outputPanel.setVisible(False)
-        outputPanel.dispose()
-    except:
-        pass
+    if window:
+        window.setVisible(False)
+        window.dispose()
 
     return
 
@@ -334,13 +339,14 @@ def closeTroublesomeWindows():
     trainsTable = JMRI.jmrit.operations.trains.Bundle().handleGetMessage('TitleTrainsTable')
     routesTable = JMRI.jmrit.operations.routes.Bundle().handleGetMessage('TitleRoutesTable')
 
-    doNotCloseThisWindow = [console, 'PanelPro', patternScripts, routesTable, trainsTable]
+    keepTheeseWindows = [console, 'PanelPro', patternScripts, routesTable, trainsTable]
     
-    for frameName in JMRI.util.JmriJFrame.getFrameList():
-        if frameName.getTitle() in doNotCloseThisWindow:
+    for frame in JMRI.util.JmriJFrame.getFrameList():
+        if frame.getTitle() in keepTheeseWindows:
             continue
         else:
-            frameName.dispose()
+            frame.setVisible(False)
+            frame.dispose()
 
     return
 

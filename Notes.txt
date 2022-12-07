@@ -1,6 +1,5 @@
 Todo:
   How to publish DeepL?
-  Check all log entries again.
   Update help to include j Plus.
   CSV reports and j Plus
 

@@ -376,10 +376,11 @@ class MakeTpLocaleData:
             _psLog.info('tpLocaleData file OK, no location/track conflicts')
             return True
         else:
-            PSE.openOutputPanel(PSE.BUNDLE['ALERT: Staging and non-staging tracks at same location: '] + str(result))
-            PSE.openOutputPanel(PSE.BUNDLE['JMRI does not allow staging and non-staging track types at the same location.'])
-            PSE.openOutputPanel(PSE.BUNDLE['No changes were made to your JMRI layout.'])
-            PSE.openOutputPanel('')
+            a = PSE.BUNDLE['ALERT: Staging and non-staging tracks at same location: '] + str(result)
+            b = PSE.BUNDLE['JMRI does not allow staging and non-staging track types at the same location.']
+            c = PSE.BUNDLE['No changes were made to your JMRI layout.']
+            message = a + '\n' + b + '\n' + c + '\n'
+
             _psLog.critical('ALERT: Staging and non-staging tracks at same location: ' + str(result))
 
             return False
