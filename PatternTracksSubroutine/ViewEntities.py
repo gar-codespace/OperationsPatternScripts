@@ -225,14 +225,16 @@ def loopThroughRs(type, rsAttribs):
     return switchListRow
 
 def makeTrackPatternCsv(trackPattern):
-    """CSV writer does not support utf-8
+    """Notice that I added a double quote for the railroadName entry.
+        The csv import keeps the j Pluse extended data in thr csv RN field.
+        CSV writer does not support utf-8
         Called by:
         Model.writeTrackPatternCsv
         """
 
     trackPatternCsv = u'Operator,Description,Parameters\n' \
                     u'RT,Report Type,' + trackPattern['trainDescription'] + '\n' \
-                    u'RN,Railroad Name,' + trackPattern['railroad'] + '\n' \
+                    u'RN,Railroad Name,"' + trackPattern['railroadName'] + '"\n' \
                     u'LN,Location Name,' + trackPattern['locations'][0]['locationName'] + '\n' \
                     u'PRNTR,Printer Name,\n' \
                     u'YPC,Yard Pattern Comment,' + trackPattern['trainComment'] + '\n' \

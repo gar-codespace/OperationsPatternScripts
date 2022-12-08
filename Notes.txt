@@ -1,6 +1,5 @@
 Todo:
   How to publish DeepL?
-  Update help to include j Plus.
   CSV reports and j Plus
 
 Comments:
@@ -58,6 +57,8 @@ Tested Items:
     Locos in report follow jmri.jmrit.operations.setup.Setup.getDropEngineMessageFormat OK.
     Cars in report follow jmri.jmrit.operations.setup.Setup.getLocalCarMessageFormat OK.
     Reports ignore Tab,Tab2, Tab3 OK.
+    JMRI and j Plus output to text and csv manifest and switch list OK.
+    OPS and j Plus output to text and csv manifest and switch list OK.
 
   Actions
     Caboose and passenger move OK.
@@ -118,7 +119,6 @@ Catches Items:
   Catches missing or corrupt TrainPlayer layout export files OK.
 
 Version 3 ideas:
-  Work in divisions.
   Add check for updates.
   Maybe move o2o model FILE_LIST to configFile.json?
   020.ModelWorkEvents.*.parsePtRs and o2o.ModelWorkEvents.*.parseRS do the same things in a different way, can they be merged?
