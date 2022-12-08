@@ -2,7 +2,8 @@
 # © 2021, 2022 Greg Ritacco
 
 """
-
+A simple subroutine to add extra info about a railroad to JMRI.
+The info can be input directly or imported from TrainPlayer.
 """
 
 from opsEntities import PSE

@@ -64,10 +64,12 @@ class View:
 
     def makePatternScriptsPanel(self, pluginPanel):
 
+        pluginPanel.setName('OPS Plugin Panel')
+
         for subroutine in self.makeSubroutineList():
             pluginPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,10)))
             pluginPanel.add(subroutine)
-            pluginPanel.setName('OPS Plugin Panel')
+
         return pluginPanel
 
     def makeSubroutineList(self):
@@ -284,7 +286,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         Bundle.makeHelpPage()
 
         PSE.makeReportFolders()
-        PSE.CreateStubFile().make()
+        # PSE.CreateStubFile().make()
 
         if PSE.readConfigFile()['CP']['AP']:
             self.addPatternScriptsButton()
