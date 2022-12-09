@@ -85,7 +85,7 @@ Worst case the plugin may crash. If </p>
       "UD" : "UseDeepL",
       "UX" : "UseSomethingElse"
     },
-    "TC" : "UD", <font color="blue">Translation Choice</font>
+    "TC" : "UD", <font color="blue">Translation choice</font>
     "LN" : "", <font color="blue">Layout Name from JMRI Settings</font>
     "DR" : true, <font color="blue">Reserved</font>
     "AP" : true, <font color="blue">Add button to Panel Pro frame, plugin is not displayed but still enabled</font>
@@ -100,8 +100,8 @@ Worst case the plugin may crash. If </p>
     "o2oSubroutine" : false, <font color="blue">Activation status</font>
     "PH" : 280, <font color="blue">Default panel height</font>
     "PW" : 1100, <font color="blue">Default panel width</font>
-    "PX" : 0, <font color="blue">Plugin X location</font>
-    "PY" : 0, <font color="blue">Plugin Y location</font>
+    "PX" : 0, <font color="blue">Plugin location, X axis</font>
+    "PY" : 0, <font color="blue">Plugin location, Y axis</font>
     "OC" : true, <font color="green">Open System Console Window on starting plugin</font>
     "RV" : 20221122 <font color="blue">Revision control</font>
   },
@@ -149,7 +149,7 @@ Worst case the plugin may crash. If </p>
         "G": 208,
         "R": 240
       },
-    "locoColor": <font color="green">"FADED"</font>, Specify no color with ""
+    "locoColor": <font color="green">"FADED"</font> Specify no color with ""
     "carColor": <font color="green">"DUST"</font>,
     "alertColor": <font color="green">"PETAL"</font>
   },
@@ -209,8 +209,8 @@ Worst case the plugin may crash. If </p>
 <h2>Track Pattern Subroutine</h2>
 <h3>Introduction</h3>
 <p>The Track Pattern subroutine can generate pattern reports for tracks at a single location.
-  Additionally, cars can be moved from track to track within a location,
-  and optionally, if a car is moved onto a spur, the schedule for that spur can be applied.</p>
+  Additionally, cars can be moved from track to track within a location.
+  Optionally, if a car is moved onto a spur, the schedule for that spur can be applied.</p>
 
 <h3>Subroutine Panel</h3>
 <p>OperationsPatternScripts.PatternTracksSubroutine.Controller.makeSubroutinePanel()</p>
@@ -229,9 +229,9 @@ All the JSON files are written to the jsonManifests folder. They follow the illu
 <h4>Track Pattern Subroutine Settings in PatternConfig.json</h4>
 <pre>
   "PT" : { <font color="blue">Pattern Tracks</font>
-    "AD" : [ <font color="blue">All Divisions (written by this plugin)</font>
+    "AD" : [ <font color="blue">All divisions (written by this plugin)</font>
     ],
-    "AL" : [ <font color="blue">All Locations (written by this plugin)</font>
+    "AL" : [ <font color="blue">All locations (written by this plugin)</font>
     ],
     "PL" : "", <font color="blue">Pattern Location (written by this plugin)</font>
     "PT" : { <font color="blue">Pattern-Tracks (written by this plugin)</font>

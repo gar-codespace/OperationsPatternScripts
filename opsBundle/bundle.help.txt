@@ -1,7 +1,7 @@
 >Add button to Panel Pro frame, plugin is not displayed but still enabled
 > Adjustments to operations settings.
 > Align TrainPlayer and JMRI track types.
->All Locations (written by this plugin)
+>All locations (written by this plugin)
 >Alpha value
 >Any of these colors can be changed
 >Apply Schedule flag (set by user, written by this plugin)
@@ -66,10 +66,11 @@ The file is created by this plugin and in the case of TrainPlayer© manifest exp
 All the JSON files are written to the jsonManifests folder. They follow the illustrated format:
 >These videos are recorded in the English language.
 >The Track Pattern subroutine can generate pattern reports for tracks at a single location.
-  Additionally, cars can be moved from track to track within a location,
-  and optionally, if a car is moved onto a spur, the schedule for that spur can be applied.>Track Pattern and Switch List JSON format
+Additionally, cars can be moved from track to track within a location.
+Optionally, if a car is moved onto a spur, the schedule for that spur can be applied.
+>Track Pattern and Switch List JSON format
 >TrainPlayer Include flag (set by user, written by this plugin)
->Translation Choice
+>Translation choice
 >Translation Services
 >o2o, the ops to ops subroutine for TrainPlayer©
 >User editable keys are described in green
@@ -120,8 +121,17 @@ Although the subroutines are somewhat interdependent, they may be activated or d
 >Control Panel
 >Reserved
 >Color Definitions
-, Specify no color with ""
+Specify no color with ""
 >Tweek Operations, adjustments to operations settings
 >Subroutine Panel
 >Who Does What
 >The table below shows which program manages which elements
+Plugin location, X axis
+Plugin location, Y axis
+All divisions (written by this plugin)
+>Introduction
+>Subroutine Panel
+>Railroad Details, optional part of the TrainPlayer layout.
+>Parent railroad, the one that owns the tracks.
+>List of railroad divisions for this layout, comma seperated.
+>Model railroad scale.

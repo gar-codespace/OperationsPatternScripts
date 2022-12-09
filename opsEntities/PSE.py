@@ -1016,6 +1016,12 @@ def translateMessageFormat():
 #Common
     rosetta[J_BUNDLE.ROAD] = 'Road'
     rosetta[J_BUNDLE.NUMBER] = 'Number'
+
+
+    # rosetta[SB.handleGetMessage('Road')] = 'Road'
+    # rosetta[SB.handleGetMessage('Number')] = 'Number'
+
+
     rosetta[J_BUNDLE.TYPE] = 'Type'
     rosetta[J_BUNDLE.LENGTH] = 'Length'
     rosetta[J_BUNDLE.WEIGHT] = 'Weight'
