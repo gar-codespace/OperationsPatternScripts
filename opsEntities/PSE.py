@@ -675,7 +675,7 @@ def getTpRailroadJson(reportName):
     report = genericReadReport(targetPath)
     tpReport = loadJson(report)
 
-    _psLog.info(fileName + '.json: OK')
+    _psLog.info(fileName + ': OK')
 
     return tpReport
 

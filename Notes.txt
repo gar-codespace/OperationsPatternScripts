@@ -1,5 +1,8 @@
 Todo:
   How to publish DeepL?
+  Add train description back to JMRI manifest export.
+  Starting the plugin with j Plus enabled does not add enhanced header to manifest.
+  Add daemon capability to MainScript.
 
 Comments:
   Schedule does not prevent setting a car to a track.
