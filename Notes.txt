@@ -1,6 +1,6 @@
 Todo:
   How to publish DeepL?
-  Why is PSE.CreateStubFile().make() in Main.handle twice?
+  TrainsTable listener is not working.
 
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -103,6 +103,8 @@ Tested Items:
     New RR adds Divisions OK.
     Update RR updates divisions OK.
     The layout year is the report year OK.
+    Tries to set a new cars load from schedule OK.
+    o2o Model deleteOldTracks(self): only deletes leftover tracks from unchanged locations.
 
 Catches Items:
   Catches pattern report button press no tracks selected OK.
@@ -117,6 +119,7 @@ Catches Items:
   Catches user add/remove train while TP export is enabled.
   Catches user edit train while TP export is enabled.
   Catches missing or corrupt TrainPlayer layout export files OK.
+  Catches new JMRI RR with o2o and j Plus active OK.
 
 Version 3 ideas:
   Add check for updates.

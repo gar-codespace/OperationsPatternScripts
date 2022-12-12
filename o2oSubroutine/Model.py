@@ -245,6 +245,8 @@ class SetupXML:
         self.o2oConfig['JP'].update({'LN':self.TpRailroad['layoutName']})
         self.o2oConfig['JP'].update({'BD':self.TpRailroad['buildDate']})
 
+        self.o2oConfig['CP'].update({'LN':self.TpRailroad['layoutName']})
+
         PSE.writeConfigFile(self.o2oConfig)
         self.o2oConfig =  PSE.readConfigFile()
 
@@ -256,6 +258,7 @@ class SetupXML:
 
     # Set the name
         layoutName = self.o2oConfig['JP']['LN']
+
         self.OSU.Setup.setRailroadName(layoutName)
     # Set the year
         rrYear = self.o2oConfig['JP']['YR']
@@ -673,15 +676,18 @@ class UpdateLocationsAndTracks:
         return
 
     def deleteOldTracks(self):
+        """Deletes leftover tracks from unchanged locations."""
 
         for key in self.oldKeys:
             cTrackData = self.currentLocale['tracks'][key]
             trackType = self.o2oConfig['TR'][cTrackData[2]]
             location = PSE.LM.getLocationByName(cTrackData[0])
-            track = location.getTrackByName(cTrackData[1], trackType)
-            location.deleteTrack(track)
-            track.dispose()
-
+            try:
+                track = location.getTrackByName(cTrackData[1], trackType)
+                location.deleteTrack(track)
+                track.dispose()
+            except:
+                print('Not found: ' + cTrackData[0] + ' ' + cTrackData[1])
         return
 
     def deleteOldLocations(self):
@@ -859,14 +865,17 @@ class NewRollingStock:
                 continue
             updatedCar.setLocation(xLocation, xTrack, True)
             updatedCar.setTypeName(attribs['aar'])
-            if attribs['aar'].startswith('N'):
+            if attribs['aar'] in self.o2oConfig['CC']:
                 updatedCar.setCaboose(True)
             if attribs['aar'] in self.o2oConfig['PC']:
                 updatedCar.setPassenger(True)
             updatedCar.setLength('40')
             updatedCar.setWeight('2')
             updatedCar.setColor('Red')
-            updatedCar.setLoadName(attribs['load'])
+
+            shipLoadName = self.getLoadFromSchedule(attribs)
+            updatedCar.setLoadName(shipLoadName)
+            
             try:
                 if xTrack.getTrackTypeName() == 'staging':
                     updatedCar.setLoadName('E')
@@ -896,3 +905,16 @@ class NewRollingStock:
             updatedLoco.setConsist(PSE.ZM.getConsistByName(attribs['consist']))
 
         return
+
+    def getLoadFromSchedule(self, attribs):
+
+        location = PSE.LM.getLocationByName(attribs['location'])
+        track = location.getTrackByName(attribs['track'], 'Spur')
+
+        try:
+            jSchedule = track.getSchedule()
+            jItem = jSchedule.getItemByType(attribs['aar'])
+            return jItem.getShipLoadName()
+        except:
+            return attribs['load']
+  

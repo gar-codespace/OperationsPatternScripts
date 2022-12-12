@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<title>Pattern Scripts Help</title>
+<meta charset="utf-8">
+<meta name="AUTHOR" content="Greg Ritacco">
+<meta name="PROJECT" content="Pattern scripts for JMRI">
+<meta name="VERSION" content="2.0.0">
+<style>
+  html * {
+    font-family: verdana;
+  }
+  h1 {
+    margin-left: 10px;
+  }
+  h2 {
+    margin-left: 10px;
+  }
+  h3 {
+    margin-left: 20px;
+  }
+  h4 {
+    margin-left: 30px;
+  }
+  p {
+    margin-left: 30px;
+  }
+  img {
+    margin-left: 30px;
+  }
+  pre {
+    margin-left: 30px;
+  }
+</style>
+</head>
+
+<body>
+
+<h1>Hjælpsside - Pattern Scripts plugin til JMRI</h1>
+<p>Mønsterscripts-plugin til JMRI er en række underrutiner til JMRI Operations Pro.
+Brugen af dette plugin er dokumenteret i følgende liste over videoer.
+The videos are recorded in the English language.</p>
+
+<h3>Pattern Scripts plugin - Videodokumentation</h3>
+
+<p>Oversigt over dette plugin</p>
+<p><A HREF="https://youtu.be/Sl9yBQaRpeY">Sådan tilføjer du dette plugin til JMRI</A></p>
+<p><A HREF="https://youtu.be/6G7xkRJTczo">Hvordan man oversætter dette plugin</A></p>
+<p><A HREF="https://youtu.be/GjPtXk3oKmc">Sådan konfigurerer du dette plugin</A></p>
+<p><A HREF="https://youtu.be/DK6O9AQmqXo">Sådan ændrer du dette plugin</A></p>
+<h3>Subrutiner - Videodokumentation</h3>
+<p>Underrutinen j Plus</A></p>
+<p><A HREF="https://youtu.be/IdXvxyo-E3Y">Spormønsterunderrutine - Demonstration på en værft</A></p>
+<p><A HREF="https://youtu.be/2Tv6sUMDD_Y">Spormønsterunderrutine - Demonstration i industrien</A></p>
+<p><A HREF="https://youtu.be/rlUfoSesnQo">o2o, underrutinen ops til ops for TrainPlayer©</A></p>
+
+<h2>Pattern Scripts plugin</h2>
+<h3>Introduktion</h3>
+<p>Pluginprogrammet Pattern Scripts kan betragtes som en ramme for hosting af underrutiner til JMRI Operations Pro, der kræver en brugergrænseflade.
+Dette plugin leveres med tre underrutiner; j Plus, Pattern Tracks og o2o.
+Der medfølger også en skabelon, som kan tjene som stillads for dem, der ønsker at tilføje deres egen underrutine.
+Selv om underprogrammerne er indbyrdes afhængige, kan de aktiveres eller deaktiveres individuelt efter behov.</p>
+
+<h3>Organisation</h3>
+<p>Den følgende oversigt viser kodestrukturen for dette plugin.</P>
+<img src="Code_Structure.png" alt="<Code Structure Image>">
+
+<h3>Plugin-layout</h3>
+<p>OperationsPatternScripts.MainScript.View.makePatternScriptsWindow()</p>
+<img src="Plugin_Layout.png" alt="<Plugin Layout Image>">
+
+<h3>PatternConfig.json</h3>
+<p>Hver JMRI-profil får sin egen konfigurationsfil, som hedder PatternConfig.json.
+Den findes i mappen "Operationer" og bruges til at angive brugerdefinerede indstillinger for hver profil og registrere brugerinput.
+<br><font color="blue">Beskrivelsen af hvert element er med blå skrift</font>
+<br><font color="green">Nøgler, der kan redigeres af brugeren, er beskrevet med grønt</font>
+<br>Select Tools/Edit Config File.
+If a mistake is made editing the PatternConfig.json file, the plugin will delete the file and provide a new one to start over with.
+Worst case the plugin may crash. If </p>
+
+<h4>Mønster Scripts plugin-indstillinger i PatternConfig.json</h4>
+<pre>
+  "CP" : { <font color="blue">Kontrolpanel</font>
+    "TS" : { <font color="blue">Oversættelsestjenester</font>
+      "UD" : "UseDeepL",
+      "UX" : "UseSomethingElse"
+    },
+    "TC" : "UD", <font color="blue">Opgaveoversættelse</font>
+    "LN" : "", <font color="blue">Layoutnavn fra JMRI-indstillinger</font>
+    "DR" : true, <font color="blue">Reserveret</font>
+    "AP" : true, <font color="blue"> Tilføj knap til Panel Pro-rammen, plugin vises ikke, men er stadig aktiveret</font>
+    "SE" : "utf-8", <font color="blue"> Standardkodning</font>
+    "IL" : [ <font color="blue">Inkluderer liste, underprogrammer inkluderes i denne rækkefølge</font>
+      "jPlusSubroutine",
+      "PatternTracksSubroutine",
+      "o2oSubroutine"
+    ],
+    "jPlusSubroutine" : false, <font color="blue">Aktiveringsstatus</font>
+    "PatternTracksSubroutine" : true, <font color="blue">Aktiveringsstatus</font>
+    "o2oSubroutine" : false, <font color="blue">Aktiveringsstatus</font>
+    "PH" : 280, <font color="blue">Standardhøjde for panelet</font>
+    "PW" : 1100, <font color="blue"> Standardpanelets bredde</font>
+    "PX" : 0, <font color="blue">Plugin placering, X-akse</font>
+    "PY" : 0, <font color="blue">Plugin placering, Y-akse</font>
+    "OC" : true, <font color="green">Åbne systemkonsolvindue ved start af plugin</font>
+    "RV" : 20221122 <font color="blue">Revisionskontrol</font>
+  },
+  "CD": { <font color="blue">Farvedefinitioner</font>
+    "CP": { <font color="blue">Farvepalet</font>
+      "<font color="green">BLANCH</font>": { <font color="blue">Alle disse farver kan ændres</font>
+        "A": <font color="green">255</font>, <font color="blue">Alpha-værdi</font>
+        "B": <font color="green">225</font>, <font color="blue">Blå værdi</font>
+        "D": <font color="green">Light grey</font>, <font color="blue">Vag beskrivelse</font>
+        "G": <font color="green">225</font>, <font color="blue">Grøn værdi</font>
+        "R": <font color="green">225</font> <font color="blue">Rød værdi</font>
+      },
+      "DUST": {
+        "A": 255,
+        "B": 218,
+        "D": "Light tan",
+        "G": 242,
+        "R": 252
+      },
+      "FADED": {
+        "A": 255,
+        "B": 245,
+        "D": "Light purple",
+        "G": 225,
+        "R": 237
+      },
+      "LICHEN": {
+        "A": 255,
+        "B": 244,
+        "D": "Light green",
+        "G": 255,
+        "R": 236
+      },
+      "PALE": {
+        "A": 255,
+        "B": 250,
+        "D": "Light blue",
+        "G": 243,
+        "R": 237
+      },
+      "PETAL": {
+        "A": 255,
+        "B": 224,
+        "D": "Light red",
+        "G": 208,
+        "R": 240
+      },
+    "locoColor": <font color="green">"FADED"</font> Angiv ingen farve med ""
+    "carColor": <font color="green">"DUST"</font>,
+    "alertColor": <font color="green">"PETAL"</font>
+  },
+  "TO" : { <font color="blue">Tweek Drift, justeringer af driftsindstillinger</font>
+    "SME" : <font color="green">true</font>,  setMainMenuEnabled
+    "CWS" : <font color="green">true</font>,  setCloseWindowOnSaveEnabled
+    "SBA" : <font color="green">true</font>,  setBuildAggressive
+    "SIA" : <font color="green">true</font>,  setStagingTrackImmediatelyAvail
+    "SCT" : <font color="green">"ARR Codes"</font>,  setCarTypes
+    "TNB" : <font color="green">true</font>,  setStagingTryNormalBuildEnabled
+    "SME" : <font color="green">true</font>,  setManifestEditorEnabled
+    "PUC" : <font color="green">"Road", "Number", "Type", "Load Type", "Load", "Destination"</font>,  setPickupManifestMessageFormat
+    "SOC" : <font color="green">"Road", "Number", "Type", "Load Type", "Load", "Destination"</font>,  setDropManifestMessageFormat
+    "MC" : <font color="green">"Road", "Number", "Type", "Load Type", "Load", "Final Dest"</font>,  setLocalManifestMessageFormat
+    "PUL" : <font color="green">"Road", "Number", "Model", "Consist", "Destination"</font>,  setPickupEngineMessageFormat
+    "SOL" : <font color="green">"Road", "Number", "Model", "Consist", "Destination"</font>,  setDropEngineMessageFormat
+    },
+  "SM" : { <font color="blue">Staging modifiers</font>
+    "SCL" : <font color="green">true</font>,  setAddCustomLoadsAnySpurEnabled
+    "RCL" : <font color="green">true</font>,  setRemoveCustomLoadsEnabled
+    "LEE" : <font color="green">true</font>,  setLoadEmptyEnabled
+  },
+</pre>
+
+<h2>j Plus underrutine</h2>
+<h3>Introduktion</h3>
+<p>Underrutinen j Plus tilføjer forbedrede jernbanedetaljer til rapporter, der genereres af både JMRI og dette plugin.</P>
+<p>Data til denne underrutine indtastes i tekstfelterne, eller hvis TrainPlayer-underrutinen er aktiveret, importeres de yderligere jernbanedetaljer fra TrainPlayer-layoutet.</P>
+<p>Det er ikke nødvendigt at udfylde alle felter.</P>
+<p>De forbedrede felter er som følger:</P>
+<h4> Navn på den fungerende jernbane</h4>
+<p>Dette er det jernbaneselskab, der ejer eller driver de spor, der modelleres. Der kan indtastes et hvilket som helst navn, f.eks. "PRR" eller "BN UPRR Joint" eller "G&D".</P>
+<h4>Operationelt område</h4>
+<p>Dette er jernbanens navn på den del, der skal modelleres, f.eks. "Long Beach Intermodal Terminal" eller "Salem Glass Works Branch".</P>
+<h4>Sted</h4>
+<p> Hvor jernbanen er placeret, f.eks. "The Great Divide" eller "The Bronx, New York".</P>
+<h4>Modelleret år</h4>
+<p> Hvilket år modeljernbanen er baseret på, dette er et spejl af "JMRI/OperationsPro/Settings/Year Modeled".</p>
+
+<h3>Panel med underrutiner</h3>
+<p>OperationsPatternScripts.jPlusSubroutine.Controller.makeSubroutinePanel()</p>
+<img src="j_Plus_Subroutine.png" alt="<j Plus Subroutine Image>">
+
+<h4>j Plus underrutine Settings in PatternConfig.json</h4>
+<pre>
+  "JP" :{  <font color="blue">j Plus Details.</font>
+    "OR" : "", <font color="green">Driftsførende jernbane, den, der ejer sporene.</font>
+    "TR" : "", <font color="green">Territorium: Navn på den særlige operation, der modelleres.</font>
+    "LO" : "", <font color="green">Stedet for prototypen.</font>
+    "YR" : "", <font color="green">Kalenderår, der er genstand for modelberegningen.</font>
+    "SC" : "", <font color="green">Modeljernbaneskala, fra indstillinger eller TrainPlayer.</font>
+    "LN" : "", <font color="green">Layoutnavn, fra indstillinger eller TrainPlayer.</font>
+    "BD" : "", <font color="blue">Bygningsdato fra TrainPlayer.</font>
+  },
+</pre>
+
+<h2>Track Pattern Subroutine</h2>
+<h3>Introduktion</h3>
+<p>Spormønsterunderrutinen kan generere mønsterrapporter for spor på et enkelt sted.
+  Desuden kan biler flyttes fra bane til bane inden for et sted.
+  Hvis en vogn flyttes til et spor, kan køreplanen for det pågældende spor eventuelt anvendes.</p>
+
+<h3>Panel med underrutiner</h3>
+<p>OperationsPatternScripts.PatternTracksSubroutine.Controller.makeSubroutinePanel()</p>
+<img src="Pattern_Scripts_Subroutine.png" alt="<Pattern Scripts Subroutine Image>">
+
+<h3>Mønsterrapport for sporvindue</h3>
+<p>OperationsPatternScripts.ControllerSetCarsForm.CreatePatternReportGui.makeFrame()</p>
+<img src="Pattern_Report_For_Track.png" alt="<Pattern Report for Track Window Image>">
+
+<h3>Spormønster og switchliste JSON-format</h3>
+<p>Mønsterrapporterne og TrainPlayer©-eksporten starter alle med oprettelsen af en JSON-fil.
+Filen oprettes af dette plugin, og i tilfælde af TrainPlayer©-manifesteksport oprettes JSON-filen ved at ændre den JMRI-genererede manifest-JSON.
+Alle JSON-filerne skrives til mappen jsonManifests og følger det illustrerede format:</p>
+<img src="Report_File_Format.png" alt="<JSON format for reports>">
+
+<h4>Spore mønster underrutineindstillinger i PatternConfig.json</h4>
+<pre>
+  "PT" : { <font color="blue">Mønsterspor</font>
+    "AD" : [ <font color="blue">Alle divisioner (skrevet af dette plugin)</font>
+    ],
+    "AL" : [ <font color="blue">Alle steder (skrevet af dette plugin)</font>
+    ],
+    "PL" : "", <font color="blue">Mønsterplacering (skrevet af dette plugin)</font>
+    "PT" : { <font color="blue">Pattern-Tracks (skrevet af dette plugin)</font>
+    },
+    "PA" : false, <font color="blue">Yard Tracks Only-flag (indstillet af brugeren, skrevet af dette plugin)</font>
+    "PI" : false, <font color="blue">Ignorer Track Length flag (indstillet af brugeren, skrevet af dette plugin)</font>
+    "AS" : true, <font color="blue">Apply Schedule-flag (indstillet af brugeren, skrevet af dette plugin)</font>
+    "TI" : false, <font color="blue">TrainPlayer Include-flag (indstillet af brugeren, skrevet af dette plugin)</font>
+    "PW" : 260, <font color="blue">Bredde af mønster</font>
+    "PH" : 16, <font color="blue">Mønsterhøjde</font>
+    "RM": 8, <font color="blue">Række-multiplikator</font>
+
+  "RM" : { <font color="blue">Rapportere modifikatorer</font></h4>
+    "DS" : "<font color="green">*No Waybill</font>", <font color="blue">Destinationskendetegn</font>
+    "DT" : "<font color="green">*Not Consigned</font>", <font color="blue">Destination Track-betegnelse</font>
+    "FD" : "<font color="green">*Via Staging</font>", <font color="blue">Angiver den endelige destination</font>
+    "FT" : "<font color="green">*Any Line</font>", <font color="blue">Endelig destination Sporbetegnelse</font>
+    "SL": [ <font color="blue">Sortere lokomotiver</font>
+      "<font color="green">Model</font>"
+    ],
+    "SC": [ <font color="blue">Sortere biler</font>
+      "<font color="green">Load Type</font>",
+      "<font color="green">FD&Track</font>"
+    ],
+    "AW": { <font color="blue">Bredde af attributter</font>
+      "Input": <font color="green">6</font>,
+      "Model": <font color="green">5</font>,
+      "Road" : <font color="green">5</font>,
+      "Number" : <font color="green">7</font>,
+      "Type" : <font color="green">6</font>,
+      "Length" : <font color="green">7</font>,
+      "Weight" : <font color="green">7</font>,
+      "Load" : <font color="green">6</font>,
+      "Load Type" : <font color="green">5</font>,
+      "Loco Type" : <font color="green">18</font>,
+      "Owner" : <font color="green">20</font>,
+      "Consist" : <font color="green">8</font>,
+      "Hazardous" : <font color="green">10</font>,
+      "Color" : <font color="green">6</font>,
+      "Kernel" : <font color="green">7</font>,
+      "Kernel Size" : <font color="green">12</font>,
+      "Owner" : <font color="green">6</font>,
+      "Track" : <font color="green">6</font>,
+      "Location" : <font color="green">9</font>,
+      "Destination" : <font color="green">15</font>,
+      "Dest&Track" : <font color="green">30</font>,
+      "Final Dest" : <font color="green">11</font>,
+      "FD&Track" : <font color="green">21</font>,
+      "Comment" : <font color="green">15</font>,
+      "SetOut Msg" : <font color="green">12</font>,
+      "PickUp Msg" : <font color="green">12</font>,
+      "RWE" : <font color="green">10</font>,
+      " " : 0
+    }
+  },
+</pre>
+<h2>o2o Underrutine, ops 2 ops</h2>
+<h3>Introduktion</h3>
+<p>Underrutinen ops to ops (o2o) er en gruppe af hjælpeprogrammer, der er designet til at være den lim, der gør det muligt for JMRI Operations Pro at være driftsmotor for TrainPlayer©.
+Ideen er at udvide TrainPlayer©'s Advanced Ops-funktion til at omfatte fleksibiliteten i Operations Pro,
+samtidig med, at det er slut med at holde to databaser synkroniserede.</p>
+
+<h3>Hvem gør hvad</h3>
+<p>Nedenstående tabel viser, hvilket program der administrerer hvilke elementer.</p>
+<img src="Who_Does_What.png" alt="<Who Does What Image>">
+
+<h3>Panel med underrutiner</h3>
+<p>OperationsPatternScripts.PatternTracksSubroutine.Controller.makeSubroutinePanel()</p>
+<img src="o2o_Subroutine.png" alt="<o2o Subroutine Image>">
+
+<h4>o2o Indstillinger for underrutiner i PatternConfig.json</h4>
+<pre>
+  "RD" :{  <font color="blue">Railroad Details, valgfri del af TrainPlayer-layoutet.</font>
+    "RR" : "", <font color="blue">Moderbaneselskab, det selskab, der ejer sporene.</font>
+    "OP" : "", <font color="blue">Name of the particular operation being modeled.</font>
+    "LO" : "", <font color="blue">Stedet for prototypen.</font>
+    "YR" : "", <font color="blue">Kalenderår, der er genstand for modelberegningen.</font>
+    "DV" : [], <font color="blue">Liste over jernbanedivisioner for dette layout, adskilt med kommaer.</font>
+    "SC" : "" <font color="blue">Modeljernbane skala.</font>
+  },
+  "o2o" : {
+    "PC": [  <font color="blue">Liste over TrainPlayer-bilkoder for personvogne.</font>
+      "B",
+      "BE",
+      "BH",
+      "BM",
+      "BMR",
+      "BMT",
+      "BP",
+      "BR",
+      "BX",
+      "CA",
+      "CS",
+      "D",
+      "DA",
+      "DB",
+      "DC",
+      "DL",
+      "DO",
+      "DP",
+      "DPA",
+      "MA",
+      "MB",
+      "MR",
+      "P",
+      "PA",
+      "PAS",
+      "PB",
+      "PBC",
+      "PBO",
+      "PC",
+      "PL",
+      "PO",
+      "PS",
+      "PSA"
+    ],
+    "CC" : [  <font color="blue">Liste over TrainPlayers koder for kupevogne.</font>
+      "N",
+      "NM",
+      "NE"
+    ],
+    "CFL" : [  <font color="blue">Core File List</font>
+      "OperationsCarRoster",
+      "OperationsEngineRoster",
+      "OperationsLocationRoster"
+    ],
+    "SR" : {  <font color="blue">Scale Rubric</font> JMRI Model Railroad skala.
+      "Z" : 1,
+      "N" : 2,
+      "TT" : 3,
+      "HOn3" : 4,
+      "OO" : 5,
+      "HO" : 6,
+      "Sn3" : 7,
+      "S" : 8,
+      "On3" : 9,
+      "O" : 10,
+      "G" : 11
+    },
+    "RF" : { <font color="blue">Report Files</font> Navne på TrainPlayer-layouteksportfilerne.
+      "TRL" : <font color="blue">"TrainPlayer Report - Locations.txt"</font>,
+      "TRI" : <font color="blue">"TrainPlayer Report - Industries.txt"</font>,
+      "TRR" : <font color="blue">"TrainPlayer Report - Rolling Stock.txt"</font>
+    },
+
+    "TR" : {  <font color="blue">Type Rubric</font> Juster TrainPlayer- og JMRI-sporetyper.
+      "industry": "Spur",
+      "interchange": "Interchange",
+      "staging": "Staging",
+      "class yard": "Yard",
+      "XO reserved": "Spur"
+    }
+</pre>
+
+</body>
+
+</html>

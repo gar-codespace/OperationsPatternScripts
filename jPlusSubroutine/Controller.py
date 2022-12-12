@@ -67,7 +67,11 @@ class StartUp:
 
         Model.jPanelSetup()
         self.subroutinePanel, self.widgets = View.ManageGui().makeSubroutinePanel()
-        self.activateWidgets()
+
+        try:
+            self.activateWidgets()
+        except:
+            print('j Plus Update button not added')
 
         return self.subroutinePanel
 

@@ -291,7 +291,8 @@ def openSystemConsole():
     return
 
 def openOutputFrame(message):
-    """Adds the message to the Script Output window.
+    """The Script Output Window is used to display critical errors.
+        Adds the message to the Script Output window.
         https://groups.io/g/jmriusers/message/33745
         https://groups.io/g/jmriusers/message/33747
         """
@@ -328,7 +329,7 @@ def closeOutputFrame():
     return
 
 def closeTroublesomeWindows():
-    """Close all the 'Troublesome' windows when the New JMRI Railroad button is pressed.
+    """Close all the 'Troublesome' windows when the o2o New JMRI Railroad button is pressed.
         Called by:
         o2oSubroutine.Model.newJmriRailroad
         o2oSubroutine.Model.updateJmriRailroad
@@ -339,10 +340,10 @@ def closeTroublesomeWindows():
     trainsTable = JMRI.jmrit.operations.trains.Bundle().handleGetMessage('TitleTrainsTable')
     routesTable = JMRI.jmrit.operations.routes.Bundle().handleGetMessage('TitleRoutesTable')
 
-    keepTheeseWindows = [console, 'PanelPro', patternScripts, routesTable, trainsTable]
+    keepTheseWindows = [console, 'PanelPro', patternScripts, routesTable, trainsTable]
     
     for frame in JMRI.util.JmriJFrame.getFrameList():
-        if frame.getTitle() in keepTheeseWindows:
+        if frame.getTitle() in keepTheseWindows:
             continue
         else:
             frame.setVisible(False)
@@ -666,17 +667,17 @@ def getTpRailroadJson(reportName):
     fileName = reportName + '.json'
     targetPath = OS_PATH.join(PROFILE_PATH, 'operations', fileName)
 
-    try:
-        JAVA_IO.File(targetPath).isFile()
-        _psLog.info(fileName + '.json: OK')
-    except:
-        _psLog.warning(fileName + '.json not found')
-        return
+    if not JAVA_IO.File(targetPath).isFile():
+        _psLog.info(fileName + '.json not found')
+        return {}
 
+    JAVA_IO.File(targetPath).isFile()
     report = genericReadReport(targetPath)
-    tpRailroad = loadJson(report)
+    tpReport = loadJson(report)
 
-    return tpRailroad
+    _psLog.info(fileName + '.json: OK')
+
+    return tpReport
 
 def makeBuildStatusFolder():
     """The buildStatus folder is created first so the log file can be written.
@@ -1014,14 +1015,11 @@ def translateMessageFormat():
 
     rosetta = {}
 #Common
-    rosetta[J_BUNDLE.ROAD] = 'Road'
-    rosetta[J_BUNDLE.NUMBER] = 'Number'
-
-
     # rosetta[SB.handleGetMessage('Road')] = 'Road'
     # rosetta[SB.handleGetMessage('Number')] = 'Number'
 
-
+    rosetta[J_BUNDLE.ROAD] = 'Road'
+    rosetta[J_BUNDLE.NUMBER] = 'Number'
     rosetta[J_BUNDLE.TYPE] = 'Type'
     rosetta[J_BUNDLE.LENGTH] = 'Length'
     rosetta[J_BUNDLE.WEIGHT] = 'Weight'

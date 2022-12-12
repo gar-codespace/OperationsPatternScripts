@@ -210,6 +210,7 @@ class BuiltTrain(PSE.JAVA_BEANS.PropertyChangeListener):
 
         if configFile['jPlusSubroutine'] and TRAIN_BUILT.newValue == True:
             trainManifest = 'train (' + TRAIN_BUILT.getSource().getName() + ').txt'
+            # Expand this later
 
         return
 
