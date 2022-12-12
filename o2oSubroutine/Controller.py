@@ -85,12 +85,12 @@ class StartUp:
         """Makes the control panel that sits inside the frame"""
 
         self.subroutinePanel, self.widgets = View.ManageGui().makeSubroutinePanel()
-        self.activateListeners()
         self.activateWidgets()
 
         return self.subroutinePanel
 
     def activateListeners(self):
+        """Not used."""
 
         if PSE.readConfigFile('CP')['o2oSubroutine']:
             Listeners.addBuiltTrainListener()

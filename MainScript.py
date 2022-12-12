@@ -293,6 +293,8 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         PSE.openSystemConsole()
 
+        Listeners.addTrainsTableListener()
+
         self.psLog.info('Current Pattern Scripts directory: ' + PLUGIN_ROOT)
         runTime = PSE.TIME.time() - startTime
         self.psLog.info('Main script run time (sec): ' + str(round(runTime, 4)))

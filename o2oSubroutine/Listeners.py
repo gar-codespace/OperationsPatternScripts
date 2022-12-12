@@ -22,7 +22,7 @@ def actionListener(EVENT):
         patternConfig['CP']['o2oSubroutine'] = False
         EVENT.getSource().setText(PSE.BUNDLE[u'Enable o2o subroutine'])
 
-        Listeners.removeTrainsTableListener()
+        Listeners.removeBuiltTrainListener()
 
         _psLog.info('o2o subroutine deactivated')
         print('o2o subroutine deactivated')
@@ -30,7 +30,7 @@ def actionListener(EVENT):
         patternConfig['CP']['o2oSubroutine'] = True
         EVENT.getSource().setText(PSE.BUNDLE[u'Disable o2o subroutine'])
 
-        Listeners.addTrainsTableListener()
+        Listeners.addBuiltTrainListener()
 
         _psLog.info('o2o subroutine activated')
         print('o2o subroutine activated')

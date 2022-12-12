@@ -1,6 +1,5 @@
 Todo:
   How to publish DeepL?
-  TrainsTable listener is not working.
 
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -83,6 +82,8 @@ Tested Items:
 
   o2o
     New JMRI Railroad working OK.
+    When active, exports JMRI manifest to TP OK.
+    When not active, does not export JMRI manifest to TP OK.
     TP import creates the track length OK.
     ExportToTrainPlayer.py works as module OK.
     ExportToTrainPlayer.py works as script OK.
