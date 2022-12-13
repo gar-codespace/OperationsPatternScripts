@@ -30,6 +30,31 @@ def restartSubroutine(subroutineFrame):
 
     return
 
+def startDaemons():
+    """Methods called when this subroutine is initialized by the Main Script.
+        These calls are not turned off.
+        """
+
+    return
+
+def activatedCalls():
+    """Methods called when this subroutine is activated."""
+
+    return
+
+def deActivatedCalls():
+    """Methods called when this subroutine is deactivated."""
+
+    return
+
+def refreshCalls():
+    """Methods called when the subroutine needs to be refreshed."""
+
+    PSE.updateYearModeled()
+    PSE.restartSubroutineByName('jPlusSubroutine')
+
+    return
+    
 def setDropDownText():
     """Pattern Scripts/Tools/itemMethod - Set the drop down text per the config file PatternTracksSubroutine Include flag ['CP']['IJ']"""
 

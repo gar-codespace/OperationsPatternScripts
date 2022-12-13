@@ -4,7 +4,7 @@
 """The o2o Subroutine."""
 
 from opsEntities import PSE
-from opsEntities import Listeners
+from o2oSubroutine import Listeners
 from o2oSubroutine import Model
 from o2oSubroutine import ModelImport
 from o2oSubroutine import ModelWorkEvents
@@ -49,6 +49,34 @@ def restartSubroutine(subroutineFrame):
 
     return
 
+def startDaemons():
+    """Methods called when this subroutine is initialized by the Main Script.
+        These calls are not turned off.
+        """
+
+    Listeners.addTrainsTableListener()
+
+    return
+
+def activatedCalls():
+    """Methods called when this subroutine is activated."""
+
+    Listeners.addBuiltTrainListener()
+
+    return
+
+def deActivatedCalls():
+    """Methods called when this subroutine is deactivated."""
+
+    Listeners.removeBuiltTrainListener()
+
+    return
+
+def refreshCalls():
+    """Methods called when the subroutine needs to be refreshed."""
+
+    return
+    
 def setDropDownText():
     """Pattern Scripts/Tools/itemMethod - Set the drop down text per the config file o2oSubroutine Include flag ['CP']['IO']"""
 
@@ -89,13 +117,7 @@ class StartUp:
 
         return self.subroutinePanel
 
-    def activateListeners(self):
-        """Not used."""
 
-        if PSE.readConfigFile('CP')['o2oSubroutine']:
-            Listeners.addBuiltTrainListener()
-
-        return
 
     def activateWidgets(self):
         """The *.getName value is the name of the action for the widget.

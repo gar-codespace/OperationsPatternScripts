@@ -79,14 +79,20 @@ class View:
         controlPanelConfig = PSE.readConfigFile('CP')
         for include in controlPanelConfig['IL']:
             xModule = __import__(include, fromlist=['Controller', 'Listeners'])
+
             menuText, itemName = xModule.Controller.setDropDownText()
             menuItem = self.makeMenuItem(menuText, itemName)
             menuItem.addActionListener(xModule.Listeners.actionListener)
+
             self.subroutineMenuItems.append(menuItem)
+
             if controlPanelConfig[include]:
                 startUp = xModule.Controller.StartUp()
                 subroutineFrame = startUp.makeSubroutineFrame()
+                
+
                 subroutineList.append(subroutineFrame)
+
                 self.psLog.info(include + ' subroutine added to control panel')
 
         return subroutineList
@@ -243,6 +249,8 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         self.logger = PSE.Logger(logFileTarget)
         self.logger.startLogger('OPS')
 
+        self.configFile = PSE.readConfigFile()
+
         self.menuItemList = []
 
         return
@@ -286,14 +294,15 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         Bundle.makeHelpPage()
 
         PSE.makeReportFolders()
-        # PSE.CreateStubFile().make()
+
+        for include in self.configFile['CP']['IL']:
+            xModule = __import__(include, fromlist=['Controller', 'Listeners'])
+            xModule.Controller.startDaemons()
 
         if PSE.readConfigFile()['CP']['AP']:
             self.addPatternScriptsButton()
 
         PSE.openSystemConsole()
-
-        Listeners.addTrainsTableListener()
 
         self.psLog.info('Current Pattern Scripts directory: ' + PLUGIN_ROOT)
         runTime = PSE.TIME.time() - startTime
