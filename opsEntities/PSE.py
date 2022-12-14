@@ -185,6 +185,14 @@ def closePsWindow():
     frameName = BUNDLE['Pattern Scripts']
     window = JMRI.util.JmriJFrame.getFrame(frameName)
 
+    try:
+        x = getComponentByName(frameName, 'jPlusSubroutine')
+        x.removeAll()
+        x.revalidate()
+        print(x.getName())
+    except:
+        pass
+
     if window:
         updateWindowParams(window)
         window.setVisible(False)
@@ -219,8 +227,8 @@ def buildThePlugin():
         PatternTracksSubroutine.Listeners
         """
 
-    # mainScript = __import__('MainScript')
-    mainScript = __import__('MainScript', globals(), locals(), [], 0)
+    mainScript = __import__('MainScript')
+    # mainScript = __import__('MainScript', globals(), locals(), [], 0)
 
     global BUNDLE
     BUNDLE = mainScript.Bundle.getBundleForLocale()
@@ -244,9 +252,9 @@ def restartSubroutineByName(subRoutineName):
     """Finds the named subroutine in the plugin and restarts it."""
 
     frameName = BUNDLE['Pattern Scripts']
-    frame = getComponentByName(frameName, subRoutineName)
-    if frame:
-        frame = frame.getComponents()[0] 
+    subroutine = getComponentByName(frameName, subRoutineName)
+    if subroutine:
+        frame = subroutine.getComponents()[0]
         reStart = __import__(subRoutineName, globals(), locals(), ['Controller'], 0)
         reStart.Controller.restartSubroutine(frame)
         print('Restarted: ' + subRoutineName)
@@ -812,7 +820,7 @@ def checkConfigFile():
         loadJson(genericReadReport(targetPath))
     except:
         writeNewConfigFile()
-        print('Defective config file')
+        print('Using new configFile')
 
     return loadJson(genericReadReport(targetPath))
 

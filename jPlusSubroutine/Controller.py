@@ -27,6 +27,7 @@ def restartSubroutine(subroutineFrame):
     subroutineFrame.removeAll()
     subroutineFrame.add(subroutinePanel)
     subroutineFrame.revalidate()
+    print('Restarted')
 
     return
 
@@ -50,7 +51,7 @@ def deActivatedCalls():
 def refreshCalls():
     """Methods called when the subroutine needs to be refreshed."""
 
-    PSE.updateYearModeled()
+    # PSE.updateYearModeled()
     PSE.restartSubroutineByName('jPlusSubroutine')
 
     return
@@ -113,7 +114,9 @@ class StartUp:
         return
 
     def update(self, EVENT):
-        '''Writes the text box entries to the configFile.'''
+        '''Update button.
+            Writes the text box entries to the configFile.
+            '''
 
         _psLog.debug(EVENT)
 

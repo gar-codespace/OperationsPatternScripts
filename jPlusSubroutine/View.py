@@ -23,8 +23,8 @@ class ManageGui:
         """Make the frame that all the jPlus controls are added to"""
 
         subroutineFrame = PSE.JAVX_SWING.JPanel() # the track pattern panel
-        subroutineFrame.setName(u'jPlusSubroutine')
-        subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE[u'j Plus Subroutine'])
+        subroutineFrame.setName('jPlusSubroutine')
+        subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE['j Plus Subroutine'])
 
         return subroutineFrame
 

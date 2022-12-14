@@ -143,6 +143,8 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
                 xModule = __import__(subroutine, fromlist=['Controller'])
                 xModule.Controller.deActivatedCalls()
 
+        # WINDOW_CLOSED.getSource().dispose()
+
         return
 
     def windowClosing(self, WINDOW_CLOSING):
@@ -150,7 +152,7 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         PSE.updateWindowParams(WINDOW_CLOSING.getSource())
         PSE.closeSetCarsWindows()
         
-        WINDOW_CLOSING.getSource().dispose()
+        # WINDOW_CLOSING.getSource().dispose()
 
         return
 

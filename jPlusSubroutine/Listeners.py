@@ -18,7 +18,7 @@ def actionListener(EVENT):
     OSU = PSE.JMRI.jmrit.operations.setup
 
     if patternConfig['CP']['jPlusSubroutine']: # If enabled, turn it off
-        patternConfig['CP']['jPlusSubroutine'] = False
+        patternConfig['CP'].update({'jPlusSubroutine':False})
         EVENT.getSource().setText(PSE.BUNDLE[u'Enable j Plus subroutine'])
 
         OSU.Setup.setRailroadName(patternConfig['CP']['LN'])
@@ -26,10 +26,10 @@ def actionListener(EVENT):
         _psLog.info('j Plus support deactivated')
         print('j Plus support deactivated')
     else:
-        patternConfig['CP']['jPlusSubroutine'] = True
+        patternConfig['CP'].update({'jPlusSubroutine':True})
         EVENT.getSource().setText(PSE.BUNDLE[u'Disable j Plus subroutine'])
 
-        patternConfig['CP']['LN'] = OSU.Setup.getRailroadName()
+        patternConfig['CP'].update({'LN':OSU.Setup.getRailroadName()})
         jPlusHeader = PSE.jPlusHeader().replace(';', '\n')
         OSU.Setup.setRailroadName(jPlusHeader)
 

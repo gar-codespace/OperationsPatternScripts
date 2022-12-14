@@ -32,6 +32,7 @@ class jPlusSubroutinePanel:
         """User can edit the railroad details."""
 
         jPlusPanel = PSE.JAVX_SWING.JPanel()
+        jPlusPanel.setName('jPlusPanel')
         jPlusPanel.setLayout(PSE.JAVX_SWING.BoxLayout(jPlusPanel, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
         jPlusPanel.border = PSE.JAVX_SWING.BorderFactory.createEmptyBorder(5,0,5,0)
 
@@ -56,7 +57,15 @@ class jPlusSubroutinePanel:
         a6 = PSE.JAVX_SWING.JTextField(self.configFile['JP']['LO'])
         self.panelWidgets['LO'] = a6
 
-        a8 = PSE.JAVX_SWING.JTextField(self.configFile['JP']['YR'])
+        # a8 = PSE.JAVX_SWING.JTextField(self.configFile['JP']['YR'])
+        a8 = PSE.JAVX_SWING.JTextField(PSE.JMRI.jmrit.operations.setup.Setup.getYearModeled())
+        # a8.setText(self.configFile['JP']['YR'])
+        # print(self.configFile['JP']['YR'])
+
+
+
+
+
         self.panelWidgets['YR'] = a8
 
         inputGrid.add(a1)
