@@ -5,5 +5,5 @@ Operating Railroad Name
 Operational Territory
 Update
 Year Modeled
-Disable j Plus subroutine
-Enable j Plus subroutine
+Disable jPlusSubroutine
+Enable jPlusSubroutine

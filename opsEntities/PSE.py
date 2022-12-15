@@ -35,7 +35,6 @@ PROFILE_PATH = JMRI.util.FileUtil.getProfilePath()
 BUNDLE = {}
 REPORT_ITEM_WIDTH_MATRIX = {}
 TRACK_NAME_CLICKED_ON = ''
-CRAWLER = []
 
 # Dealers choice, both work OK:
 J_BUNDLE = JMRI.jmrit.operations.setup.Setup()
@@ -217,37 +216,6 @@ def updateYearModeled():
 
     return
 
-def buildThePlugin():
-    """Called by:
-        jPlusSubroutine.Listeners
-        o2oSubroutine.Listeners
-        opsEntities.Listeners.patternScriptsButtonAction
-        opsEntities.Listeners.ptItemSelected
-        opsEntities.Listeners.rsItemSelected
-        PatternTracksSubroutine.Listeners
-        """
-
-    mainScript = __import__('MainScript')
-    # mainScript = __import__('MainScript', globals(), locals(), [], 0)
-
-    global BUNDLE
-    BUNDLE = mainScript.Bundle.getBundleForLocale()
-
-    CreateStubFile().make()
-    mainScript.Bundle.makeHelpPage()
-
-    view = mainScript.View()
-    emptyPluginPanel = view.makePluginPanel()
-    populatedPluginPanel = view.makePatternScriptsPanel(emptyPluginPanel)
-    scrollPanel = view.makeScrollPanel(populatedPluginPanel)
-    view.makePatternScriptsWindow(scrollPanel)
-    menuItemList = view.getPsPluginMenuItems()
-
-    for menuItem in menuItemList:
-        menuItem.addActionListener(getattr(mainScript.Listeners, menuItem.getName()))
-
-    return
-
 def restartSubroutineByName(subRoutineName):
     """Finds the named subroutine in the plugin and restarts it."""
 
@@ -262,22 +230,25 @@ def restartSubroutineByName(subRoutineName):
         print('Not currently active: ' + subRoutineName)
     return
 
-def getComponentByName(frameName, componentName):
-    """Uses crawler() to find a component in a frame."""
- 
-    frame = JMRI.util.JmriJFrame.getFrame(frameName)
+def getComponentByName(frameTitle, componentName):
+    """Gets a frame by title.
+        Searches a frame for a component by name.
+        Uses crawler() to find a component in a frame.
+        """
+
+    global CRAWLER
+    CRAWLER = []
+    frame = JMRI.util.JmriJFrame.getFrame(frameTitle)
 
     crawler(frame)
 
     if len(CRAWLER) == 0:
-        print(componentName + ' not found in ' + frameName)
+        print(componentName + ' not found in ' + frameTitle)
         return
 
     for component in CRAWLER:
         if component.getName() == componentName:
             return component
-            global CRAWLER
-            CRAWLER = []
 
     return
 
@@ -665,6 +636,25 @@ def getShortLoadType(car):
 """File Handling Methods"""
 
 
+def subroutineCalls(toggle):
+    """Set toggle to 'activate', 'deactivate', or 'refresh'
+        Runs whichever call toggle is set to.
+        """
+
+    configFile = readConfigFile()
+
+    for subroutine in configFile['CP']['IL']:
+        if configFile['CP'][subroutine]:
+            xModule = __import__(subroutine, fromlist=['Controller'])
+            if toggle == 'activate':
+                xModule.Controller.activatedCalls()
+            if toggle == 'deactivate':
+                xModule.Controller.deActivatedCalls()
+            if toggle == 'refresh':
+                xModule.Controller.refreshCalls()
+
+    return
+
 def getTpRailroadJson(reportName):
     """Any of the TP exports imported into JMRI as a json file:
         tpRailroadData
@@ -823,8 +813,6 @@ def checkConfigFile():
         print('Using new configFile')
 
     return loadJson(genericReadReport(targetPath))
-
-
 
 def tryConfigFile():
     """Try/except catches some user edit mistakes.

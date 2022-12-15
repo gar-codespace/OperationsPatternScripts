@@ -36,15 +36,19 @@ def startDaemons():
 def activatedCalls():
     """Methods called when this subroutine is activated."""
 
+    print('activatedCalls')
+
     return
 
 def deActivatedCalls():
     """Methods called when this subroutine is deactivated."""
+    print('deActivatedCalls')
 
     return
 
 def refreshCalls():
     """Methods called when the subroutine needs to be refreshed."""
+    print('refreshCalls')
 
     return
     

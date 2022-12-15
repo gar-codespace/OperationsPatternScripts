@@ -36,8 +36,7 @@ def actionListener(EVENT):
         print('o2o subroutine activated')
 
     PSE.writeConfigFile(patternConfig)
-    PSE.closePsWindow()
-    PSE.buildThePlugin()
+    
 
     return
 

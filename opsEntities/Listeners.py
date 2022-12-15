@@ -10,16 +10,6 @@ SCRIPT_REV = 20221010
 
 _psLog = PSE.LOGGING.getLogger('OPS.OE.Listeners')
 
-
-def patternScriptsButtonAction(MOUSE_CLICKED):
-    """The Pattern Scripts button on the Panel Pro frame."""
-
-    _psLog.debug(MOUSE_CLICKED)
-
-    PSE.buildThePlugin()
-
-    return
-
 def ptItemSelected(TRANSLATE_PLUGIN_EVENT):
     """Pattern Scripts/Tools/Translate Plugin"""
 
@@ -134,47 +124,39 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         return
 
     def windowClosed(self, WINDOW_CLOSED):
+        print('closed')
 
         button = PSE.getPsButton()
         button.setEnabled(True)
 
-        for subroutine in self.configFile['CP']['IL']:
-            if self.configFile['CP'][subroutine]:
-                xModule = __import__(subroutine, fromlist=['Controller'])
-                xModule.Controller.deActivatedCalls()
+        WINDOW_CLOSED.getSource().dispose()
 
-        # WINDOW_CLOSED.getSource().dispose()
+        PSE.subroutineCalls('deactivate')
 
         return
 
     def windowClosing(self, WINDOW_CLOSING):
+        print('closing')
 
         PSE.updateWindowParams(WINDOW_CLOSING.getSource())
         PSE.closeSetCarsWindows()
-        
         # WINDOW_CLOSING.getSource().dispose()
-
+        
         return
 
     def windowOpened(self, WINDOW_OPENED):
+        print('opened')
 
         button = PSE.getPsButton()
         button.setEnabled(False)
 
-        for subroutine in self.configFile['CP']['IL']:
-            if self.configFile['CP'][subroutine]:
-                xModule = __import__(subroutine, fromlist=['Controller'])
-                # xModule.Controller.deActivatedCalls()
-                xModule.Controller.activatedCalls()
+        PSE.subroutineCalls('activate')
 
         return
 
     def windowActivated(self, WINDOW_ACTIVATED):
 
-        for subroutine in self.configFile['CP']['IL']:
-            if self.configFile['CP'][subroutine]:
-                xModule = __import__(subroutine, fromlist=['Controller'])
-                xModule.Controller.refreshCalls()
+        # PSE.subroutineCalls('refresh')
 
         return
 

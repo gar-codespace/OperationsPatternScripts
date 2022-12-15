@@ -34,7 +34,5 @@ def actionListener(EVENT):
         print('xxx support activated')
 
     PSE.writeConfigFile(patternConfig)
-    PSE.closePsWindow()
-    PSE.buildThePlugin()
 
     return

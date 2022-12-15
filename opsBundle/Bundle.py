@@ -15,6 +15,16 @@ PSE.BUNDLE_DIR = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle')
 
 _psLog = PSE.LOGGING.getLogger('OPS.OB.Bundle')
 
+def setupBundle():
+    """Mini controller to set up the bundle."""
+
+    validatePluginBundle()
+    PSE.BUNDLE = getBundleForLocale()
+    validateHelpBundle()
+    PSE.CreateStubFile().make()
+    makeHelpPage()
+
+    return
 
 def validatePluginBundle():
     """If any files are damaged,
