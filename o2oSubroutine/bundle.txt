@@ -18,5 +18,3 @@ Update Current Railroad
 Update JMRI Railroad
 Unknown
 Unreported
-Disable o2o subroutine
-Enable o2o subroutine

@@ -82,9 +82,9 @@ def setDropDownText():
 
     patternConfig = PSE.readConfigFile('CP')
     if patternConfig['o2oSubroutine']:
-        menuText = PSE.BUNDLE[u'Disable o2o subroutine']
+        menuText = PSE.BUNDLE[u'Disable'] + ' ' + __package__
     else:
-        menuText = PSE.BUNDLE[u'Enable o2o subroutine']
+        menuText = PSE.BUNDLE[u'Enable'] + ' ' + __package__
 
     return menuText, 'ooItemSelected'
 

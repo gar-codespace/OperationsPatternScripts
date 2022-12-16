@@ -16,21 +16,41 @@ def actionListener(EVENT):
 
     _psLog.debug(EVENT)
     patternConfig = PSE.readConfigFile()
+    OSU = PSE.JMRI.jmrit.operations.setup
 
-    if patternConfig['CP']['PatternTracksSubroutine']: # If enabled, turn it off
-        patternConfig['CP']['PatternTracksSubroutine'] = False
-        EVENT.getSource().setText(PSE.BUNDLE[u'Enable Track Pattern subroutine'])
+    frameTitle = PSE.BUNDLE['Pattern Scripts']
+    targetPanel = PSE.getComponentByName(frameTitle, 'subroutinePanel')
+    targetSubroutine = PSE.getComponentByName(frameTitle, __package__)
 
-        _psLog.info('Track Pattern support deactivated')
-        print('Track Pattern support deactivated')
+    if patternConfig['CP'][__package__]: # If enabled, turn it off
+        EVENT.getSource().setText(PSE.BUNDLE[u'Enable'] + ' ' + __package__)
+
+    # Do stuff here
+
+        patternConfig['CP'].update({__package__:False})
+        PSE.writeConfigFile(patternConfig)
+
+        targetPanel.removeAll()
+        targetPanel = PSE.addActiveSubroutines(targetPanel)
+
+        _psLog.info('Pattern Tracks subroutine deactivated')
+        print('Pattern Tracks subroutine deactivated')
     else:
-        patternConfig['CP']['PatternTracksSubroutine'] = True
-        EVENT.getSource().setText(PSE.BUNDLE[u'Disable Track Pattern subroutine'])
+        EVENT.getSource().setText(PSE.BUNDLE[u'Disable'] + ' ' + __package__)
 
-        _psLog.info('Track Pattern support activated')
-        print('Track Pattern support activated')
+    # Do stuff here
 
-    PSE.writeConfigFile(patternConfig)
+        patternConfig['CP'].update({__package__:True})
+        PSE.writeConfigFile(patternConfig)
+
+        targetPanel.removeAll()
+        targetPanel = PSE.addActiveSubroutines(targetPanel)
+
+        _psLog.info('Pattern Tracks subroutine activated')
+        print('Pattern Tracks subroutine activated')
+
+    targetPanel.validate()
+    targetPanel.repaint()
 
     return
 

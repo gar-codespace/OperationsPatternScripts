@@ -62,10 +62,6 @@ class jPlusSubroutinePanel:
         # a8.setText(self.configFile['JP']['YR'])
         # print(self.configFile['JP']['YR'])
 
-
-
-
-
         self.panelWidgets['YR'] = a8
 
         inputGrid.add(a1)

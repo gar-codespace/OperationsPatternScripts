@@ -13,30 +13,44 @@ _psLog = PSE.LOGGING.getLogger('OPS.o2o.Listeners')
 
 
 def actionListener(EVENT):
-    """menu item-Tools/Enable o2o subroutine"""
+    """menu item-Tools/Enable o2oSubroutine."""
 
     _psLog.debug(EVENT)
     patternConfig = PSE.readConfigFile()
+    OSU = PSE.JMRI.jmrit.operations.setup
 
-    if patternConfig['CP']['o2oSubroutine']: # If enabled, turn it off
-        patternConfig['CP']['o2oSubroutine'] = False
-        EVENT.getSource().setText(PSE.BUNDLE[u'Enable o2o subroutine'])
+    frameTitle = PSE.BUNDLE['Pattern Scripts']
+    targetPanel = PSE.getComponentByName(frameTitle, 'subroutinePanel')
 
-        # removeBuiltTrainListener()
+    if patternConfig['CP'][__package__]: # If enabled, turn it off
+        EVENT.getSource().setText(PSE.BUNDLE[u'Enable'] + ' ' + __package__)
+
+    # Do stuff here
+
+        patternConfig['CP'].update({__package__:False})
+        PSE.writeConfigFile(patternConfig)
+
+        targetPanel.removeAll()
+        targetPanel = PSE.addActiveSubroutines(targetPanel)
 
         _psLog.info('o2o subroutine deactivated')
         print('o2o subroutine deactivated')
     else:
-        patternConfig['CP']['o2oSubroutine'] = True
-        EVENT.getSource().setText(PSE.BUNDLE[u'Disable o2o subroutine'])
+        EVENT.getSource().setText(PSE.BUNDLE[u'Disable'] + ' ' + __package__)
 
-        # addBuiltTrainListener()
+    # Do stuff here
+
+        patternConfig['CP'].update({__package__:True})
+        PSE.writeConfigFile(patternConfig)
+
+        targetPanel.removeAll()
+        targetPanel = PSE.addActiveSubroutines(targetPanel)
 
         _psLog.info('o2o subroutine activated')
         print('o2o subroutine activated')
 
-    PSE.writeConfigFile(patternConfig)
-    
+    targetPanel.validate()
+    targetPanel.repaint()
 
     return
 

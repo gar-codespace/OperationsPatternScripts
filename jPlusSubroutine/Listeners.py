@@ -4,7 +4,6 @@ JAVAX action performed methods are in Controller.
 """
 
 from opsEntities import PSE
-from jPlusSubroutine import Controller
 
 SCRIPT_NAME = 'OperationsPatternScripts.jPlusSubroutine.Listeners'
 SCRIPT_REV = 20221010
@@ -12,66 +11,47 @@ SCRIPT_REV = 20221010
 _psLog = PSE.LOGGING.getLogger('OPS.JP.Listeners')
 
 def actionListener(EVENT):
-    """menu item-Tools/Enable j Plus Subroutine."""
+    """menu item-Tools/Enable jPlusSubroutine."""
 
     _psLog.debug(EVENT)
     patternConfig = PSE.readConfigFile()
     OSU = PSE.JMRI.jmrit.operations.setup
 
-    thisSubroutine = __package__
-
     frameTitle = PSE.BUNDLE['Pattern Scripts']
     targetPanel = PSE.getComponentByName(frameTitle, 'subroutinePanel')
-    targetSubroutine = PSE.getComponentByName(frameTitle, thisSubroutine)
 
-    if patternConfig['CP']['jPlusSubroutine']: # If enabled, turn it off
-        patternConfig['CP'].update({thisSubroutine:False})
-        EVENT.getSource().setText(PSE.BUNDLE[u'Enable' + ' ' + thisSubroutine])
+    if patternConfig['CP'][__package__]: # If enabled, turn it off
+        EVENT.getSource().setText(PSE.BUNDLE[u'Enable'] + ' ' + __package__)
 
+    # Do stuff here
         OSU.Setup.setRailroadName(patternConfig['CP']['LN'])
 
-        targetPanel.remove(targetSubroutine)
+        patternConfig['CP'].update({__package__:False})
+        PSE.writeConfigFile(patternConfig)
+
+        targetPanel.removeAll()
+        targetPanel = PSE.addActiveSubroutines(targetPanel)
 
         _psLog.info('j Plus support deactivated')
         print('j Plus support deactivated')
     else:
-        patternConfig['CP'].update({thisSubroutine:True})
-        EVENT.getSource().setText(PSE.BUNDLE[u'Disable' + ' ' + thisSubroutine])
+        EVENT.getSource().setText(PSE.BUNDLE[u'Disable'] + ' ' + __package__)
 
+        patternConfig['CP'].update({__package__:True})
         patternConfig['CP'].update({'LN':OSU.Setup.getRailroadName()})
+        PSE.writeConfigFile(patternConfig)
+
+    # Do stuff here
         jPlusHeader = PSE.jPlusHeader().replace(';', '\n')
         OSU.Setup.setRailroadName(jPlusHeader)
 
-
-        for sub in patternConfig['CP']['IL']:
-            target = PSE.getComponentByName(frameTitle, sub)
-            try:
-                targetPanel.remove(target)
-            except:
-                pass
-
-
-
-
-
-
-
-
-
-        startUp = Controller.StartUp()
-        subroutineFrame = startUp.makeSubroutineFrame()
-        targetPanel.add(subroutineFrame)
-
-
-
-
+        targetPanel.removeAll()
+        targetPanel = PSE.addActiveSubroutines(targetPanel)
 
         _psLog.info('j Plus support activated')
         print('j Plus support activated')
 
-    PSE.writeConfigFile(patternConfig)
-
-    targetPanel.revalidate()
-
+    targetPanel.validate()
+    targetPanel.repaint()
 
     return

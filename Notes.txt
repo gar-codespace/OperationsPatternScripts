@@ -1,9 +1,9 @@
 Todo:
   How to publish DeepL?
   Add train description back to JMRI manifest export.
-  Starting the plugin with j Plus enabled does not add enhanced header to manifest.
-  Add daemon capability to MainScript.
   TrainsTableListener does not work properly when o2o is deactivated.
+  All the subroutine actionListener() are very similar. Can this duplication be eliminated?
+  MainScript.makeSubroutinePanel and PSE.addActiveSubroutines are possible duplicates.
 
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -28,7 +28,7 @@ Tested Items:
     PatternConfig.json version check OK.
     Bad edits of config file protected as much as possible. CBB
     On defective config file, plugin replaces the defective file with the master copy OK.
-    Pattern Scripts plugin hardened against errors  more or less. CBB
+    Pattern Scripts plugin hardened against errors more or less. CBB
     Plugin restarts OK.
     Handles JMRI load type Empty or empty OK.
     All SI items set to false works OK.

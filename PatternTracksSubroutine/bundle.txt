@@ -3,10 +3,8 @@ Apply Schedule
 at
 Available:
 Cars at
-Disable Track Pattern subroutine
 Division:
 Do Not Apply Schedule
-Enable Track Pattern subroutine
 empty
 Eqpt. Length:
 FAIL: CreateSetCarsFormGui.quickCheck.testValidityOfForm

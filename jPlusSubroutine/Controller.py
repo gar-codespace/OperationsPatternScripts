@@ -61,9 +61,9 @@ def setDropDownText():
 
     patternConfig = PSE.readConfigFile('CP')
     if patternConfig['jPlusSubroutine']:
-        menuText = PSE.BUNDLE[u'Disable' + ' ' + 'jPlusSubroutine']
+        menuText = PSE.BUNDLE[u'Disable'] + ' ' + __package__
     else:
-        menuText = PSE.BUNDLE[u'Enable' + ' ' + 'jPlusSubroutine']
+        menuText = PSE.BUNDLE[u'Enable'] + ' ' + __package__
 
     return menuText, 'jpItemSelected'
 

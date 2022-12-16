@@ -56,9 +56,9 @@ def setDropDownText():
     patternConfig = PSE.readConfigFile('CP')
 
     if patternConfig['TemplateSubroutine']:
-        menuText = PSE.BUNDLE[u'Disable xxx subroutine']
+        menuText = PSE.BUNDLE[u'Disable'] + ' ' + __package__
     else:
-        menuText = PSE.BUNDLE[u'Enable xxx subroutine']
+        menuText = PSE.BUNDLE[u'Enable'] + ' ' + __package__
 
     return menuText, 'xxxItemSelected'
 

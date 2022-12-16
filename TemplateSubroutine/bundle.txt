@@ -1,4 +1,2 @@
 Button
-xxx Subroutine
-Enable xxx subroutine
-Disable xxx subroutine
+xxx subroutine

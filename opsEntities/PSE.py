@@ -175,6 +175,39 @@ class CreateStubFile:
 """GUI Methods"""
 
 
+def removeAllSubroutines(targetPanel):
+    """Not used.
+        Removes all subroutines from subroutinePanel of Pattern Scripts.
+        """
+
+    frameTitle = BUNDLE['Pattern Scripts']
+    patternConfig = readConfigFile()
+
+    for subroutine in patternConfig['CP']['IL']:
+        target = getComponentByName(frameTitle, subroutine)
+        try:
+            targetPanel.remove(target)
+        except:
+            pass
+
+    return targetPanel
+
+def addActiveSubroutines(targetPanel):
+    """Adds the activated subroutines to the subroutinePanel of Pattern Scripts."""
+
+    patternConfig = readConfigFile()
+
+    for subroutine in patternConfig['CP']['IL']:
+        if patternConfig['CP'][subroutine]:
+            package = __import__(subroutine, fromlist=['Controller'])
+            startUp = package.Controller.StartUp()
+            subroutineFrame = startUp.makeSubroutineFrame()
+            targetPanel.add(JAVX_SWING.Box.createRigidArea(JAVA_AWT.Dimension(0,10)))
+            targetPanel.add(subroutineFrame)
+
+    return targetPanel
+
+
 def closePsWindow():
     """Called by:
         Listeners.ptItemSelected
