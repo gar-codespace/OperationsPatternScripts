@@ -3,6 +3,8 @@ Todo:
   Add train description back to JMRI manifest export.
   All the subroutine actionListener() are very similar. Can this duplication be eliminated?
   MainScript.makeSubroutinePanel and PSE.addActiveSubroutines are possible duplicates.
+  Check if o2oSwitchList belongs in o2oSub.Controller.
+  Move all restartSubroutine() from Controller to PSE.
 
 Comments:
   Schedule does not prevent setting a car to a track.

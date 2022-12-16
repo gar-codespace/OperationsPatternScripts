@@ -22,7 +22,9 @@ def restartSubroutine(subroutineFrame):
     subroutinePanel = StartUp(subroutineFrame).makeSubroutinePanel()
     subroutineFrame.removeAll()
     subroutineFrame.add(subroutinePanel)
-    subroutineFrame.revalidate()
+
+    subroutineFrame.validate()
+    subroutineFrame.repaint()
 
     return
 
@@ -36,19 +38,15 @@ def startDaemons():
 def activatedCalls():
     """Methods called when this subroutine is activated."""
 
-    print('activatedCalls')
-
     return
 
 def deActivatedCalls():
     """Methods called when this subroutine is deactivated."""
-    print('deActivatedCalls')
 
     return
 
 def refreshCalls():
     """Methods called when the subroutine needs to be refreshed."""
-    print('refreshCalls')
 
     return
     

@@ -45,7 +45,9 @@ def restartSubroutine(subroutineFrame):
     subroutinePanel = StartUp(subroutineFrame).makeSubroutinePanel()
     subroutineFrame.removeAll()
     subroutineFrame.add(subroutinePanel)
-    subroutineFrame.revalidate()
+
+    subroutineFrame.validate()
+    subroutineFrame.repaint()
 
     return
 

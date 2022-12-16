@@ -26,8 +26,9 @@ def restartSubroutine(subroutineFrame):
     subroutinePanel = StartUp(subroutineFrame).makeSubroutinePanel()
     subroutineFrame.removeAll()
     subroutineFrame.add(subroutinePanel)
-    subroutineFrame.revalidate()
-    print('Restarted')
+
+    subroutineFrame.validate()
+    subroutineFrame.repaint()
 
     return
 
@@ -51,8 +52,10 @@ def deActivatedCalls():
 def refreshCalls():
     """Methods called when the subroutine needs to be refreshed."""
 
-    # PSE.updateYearModeled()
+    PSE.updateYearModeled()
     PSE.restartSubroutineByName('jPlusSubroutine')
+
+    # print('refreshCalls')
 
     return
     
