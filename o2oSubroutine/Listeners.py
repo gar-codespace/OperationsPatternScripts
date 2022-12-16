@@ -26,6 +26,7 @@ def actionListener(EVENT):
         EVENT.getSource().setText(PSE.BUNDLE[u'Enable'] + ' ' + __package__)
 
     # Do stuff here
+        removeBuiltTrainListener()
 
         patternConfig['CP'].update({__package__:False})
         PSE.writeConfigFile(patternConfig)
@@ -39,6 +40,7 @@ def actionListener(EVENT):
         EVENT.getSource().setText(PSE.BUNDLE[u'Disable'] + ' ' + __package__)
 
     # Do stuff here
+        addBuiltTrainListener()
 
         patternConfig['CP'].update({__package__:True})
         PSE.writeConfigFile(patternConfig)
@@ -68,15 +70,8 @@ class TrainsTable(PSE.JAVX_SWING.event.TableModelListener):
 
         _psLog.debug(TABLE_CHANGE)
 
-        # removeBuiltTrainListener()
-        # addBuiltTrainListener()
-
-        # trainList = PSE.TM.getTrainsByIdList()
-        # for train in trainList:
-        # # Does not throw error if there is no listener to remove :)
-        #     print('removeBuiltTrainListener')
-        #     train.removePropertyChangeListener(self.builtTrainListener)
-        #     train.addPropertyChangeListener(self.builtTrainListener)
+        removeBuiltTrainListener()
+        addBuiltTrainListener()
 
         return
 
@@ -97,10 +92,6 @@ class BuiltTrain(PSE.JAVA_BEANS.PropertyChangeListener):
             o2oWorkEvents.passInTrain(TRAIN_BUILT.getSource())
             o2oWorkEvents.start()
 
-        # if configFile['jPlusSubroutine'] and TRAIN_BUILT.newValue == True:
-        #     trainManifest = 'train (' + TRAIN_BUILT.getSource().getName() + ').txt'
-        #     # Expand this later
-
         return
 
 
@@ -120,6 +111,8 @@ def addBuiltTrainListener():
         PatternScriptsWindow.windowOpened
         o2oSubroutine.Listeners.actionListener
         """
+
+    removeBuiltTrainListener()
 
     trainList = PSE.TM.getTrainsByIdList()
     for train in trainList:

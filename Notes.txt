@@ -1,7 +1,6 @@
 Todo:
   How to publish DeepL?
   Add train description back to JMRI manifest export.
-  TrainsTableListener does not work properly when o2o is deactivated.
   All the subroutine actionListener() are very similar. Can this duplication be eliminated?
   MainScript.makeSubroutinePanel and PSE.addActiveSubroutines are possible duplicates.
 
@@ -39,6 +38,7 @@ Tested Items:
     Mapped TP OC Class/XO reserved as JMRI spur, turn off train directions.
     ALERT messages open and display to the script output window OK.
     Plugin and help bundles validate OK.
+    Subroutines activate and deactivate OK.
 
   Reports
     Test with really long location and spur names OK.
