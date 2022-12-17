@@ -1,9 +1,7 @@
 Todo:
   How to publish DeepL?
-  Add train description back to JMRI manifest export.
   All the subroutine actionListener() are very similar. Can this duplication be eliminated?
   MainScript.makeSubroutinePanel and PSE.addActiveSubroutines are possible duplicates.
-  Check if o2oSwitchList belongs in o2oSub.Controller.
 
 Comments:
   Schedule does not prevent setting a car to a track.

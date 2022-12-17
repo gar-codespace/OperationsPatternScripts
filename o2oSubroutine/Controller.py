@@ -19,7 +19,9 @@ _psLog = PSE.LOGGING.getLogger('OPS.o2o.Controller')
 
 
 def o2oSwitchList(ptSetCarsForm):
-    """Make the JMRI Report - o2o Work Events.csv file"""
+    """Make the JMRI Report - o2o Work Events.csv file.
+        There is dependency with PatternTracksSubroutine.
+        """
 
     ModelWorkEvents.appendSetCarsForm(ptSetCarsForm)
 # Convert the o2o Work Events file to the format used by TrainPlayer

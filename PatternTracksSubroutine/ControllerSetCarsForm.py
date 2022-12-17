@@ -5,7 +5,7 @@
 
 from opsEntities import PSE
 from PatternTracksSubroutine import Listeners
-from PatternTracksSubroutine import Model
+# from PatternTracksSubroutine import Model
 from PatternTracksSubroutine import ModelSetCarsForm
 from PatternTracksSubroutine import ViewSetCarsForm
 from o2oSubroutine import Controller as o2oController

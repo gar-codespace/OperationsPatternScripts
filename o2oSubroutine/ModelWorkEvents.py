@@ -167,7 +167,7 @@ class jmriManifestConversion:
         # self.o2oWorkEvents['railroadDescription'] = PSE.JMRI.jmrit.operations.setup.Setup.getComment()
         self.o2oWorkEvents['trainName'] = PSE.HTML_PARSER().unescape(self.jmriManifest['userName'])
         self.o2oWorkEvents['trainDescription'] = PSE.HTML_PARSER().unescape(self.jmriManifest['description'])
-        self.o2oWorkEvents['trainComment'] = PSE.HTML_PARSER().unescape(self.jmriManifest['description'])
+        # self.o2oWorkEvents['trainComment'] = PSE.HTML_PARSER().unescape(self.jmriManifest['description'])
 
         epoch = PSE.convertJmriDateToEpoch(self.jmriManifest['date'])
         self.o2oWorkEvents['date'] = PSE.timeStamp(epoch)
@@ -264,7 +264,7 @@ class o2oWorkEvents:
         self.o2oList = 'HN,' + self.workEvents['railroadName'] + '\n'
         self.o2oList += 'HT,' + self.workEvents['trainName'] + '\n'
         self.o2oList += 'HD,' + self.workEvents['trainDescription'] + '\n'
-        self.o2oList += 'HC,' + self.workEvents['trainComment'] + '\n'
+        # self.o2oList += 'HC,' + self.workEvents['trainComment'] + '\n'
         self.o2oList += 'HV,' + self.workEvents['date'] + '\n'
 
         self.o2oList += 'WT,' + str(len(self.workEvents['locations'])) + '\n'

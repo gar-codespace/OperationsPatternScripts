@@ -55,25 +55,21 @@ def actionListener(EVENT):
     return
 
 
-class GenericComboBox(PSE.JAVA_AWT.event.ActionListener):
-    """Event triggered from any combobox use.
+class PTComboBox(PSE.JAVA_AWT.event.ActionListener):
+    """Event triggered from any pattern tracks combo box use.
         Be sure to set the name of the combobox that uses this class.
         """
 
-    def __init__(self, subroutineFrame):
-
-        self.subroutineFrame = subroutineFrame
+    def __init__(self):
 
         return
 
     def actionPerformed(self, EVENT):
 
-        xModule = __import__('PatternTracksSubroutine', globals(), locals(), ['Controller', 'Model'], 0)
-
+        xModule = __import__(__package__, globals(), locals(), ['Model'], 0)
         xModule.Model.updatePatternLocation(EVENT.getSource())
-        xModule.Controller.restartSubroutine(self.subroutineFrame)
 
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+        PSE.restartSubroutineByName(__package__)
 
         return
 
