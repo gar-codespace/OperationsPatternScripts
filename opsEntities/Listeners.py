@@ -4,44 +4,13 @@ Main script listeners.
 
 from opsEntities import PSE
 from opsBundle import Bundle
+import MainScript
 
 SCRIPT_NAME = 'OperationsPatternScripts.opsEntities.Listeners'
 SCRIPT_REV = 20221010
 
 _psLog = PSE.LOGGING.getLogger('OPS.OE.Listeners')
 
-def ptItemSelected(TRANSLATE_PLUGIN_EVENT):
-    """Pattern Scripts/Tools/Translate Plugin"""
-
-    _psLog.debug(TRANSLATE_PLUGIN_EVENT)
-
-    textBundles = Bundle.getAllTextBundles()
-    Bundle.makePluginBundle(textBundles)
-
-    Bundle.makeHelpBundle()
-    Bundle.makeHelpPage()
-
-    PSE.closePsWindow()
-    PSE.buildThePlugin()
-
-    _psLog.info('Pattern Scripts plugin translated')
-    _psLog.info('Pattern Scripts plugin restarted')
-
-    return
-
-def rsItemSelected(RESTART_PLUGIN_EVENT):
-    """Pattern Scripts/Tools/Restart Plugin"""
-
-    _psLog.debug(RESTART_PLUGIN_EVENT)
-
-    PSE.deleteConfigFile()
-
-    PSE.closePsWindow()
-    PSE.buildThePlugin()
-
-    _psLog.info('Pattern Scripts plugin restarted')
-
-    return
 
 def helpItemSelected(OPEN_HELP_EVENT):
     """Pattern Scripts/Help/Window help..."""
@@ -68,8 +37,6 @@ def logItemSelected(OPEN_LOG_EVENT):
 
     PSE.genericWriteReport(logFileTarget, patternLog)
     PSE.genericDisplayReport(logFileTarget)
-
-    print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
     return
 
@@ -125,6 +92,8 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
 
     def windowClosed(self, WINDOW_CLOSED):
 
+        _psLog.debug(WINDOW_CLOSED)
+
         button = PSE.getPsButton()
         button.setEnabled(True)
 
@@ -143,6 +112,8 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
 
     def windowOpened(self, WINDOW_OPENED):
 
+        _psLog.debug(WINDOW_OPENED)
+
         button = PSE.getPsButton()
         button.setEnabled(False)
 
@@ -151,6 +122,8 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         return
 
     def windowActivated(self, WINDOW_ACTIVATED):
+
+        _psLog.debug(WINDOW_ACTIVATED)
 
         PSE.subroutineCalls('refresh')
 

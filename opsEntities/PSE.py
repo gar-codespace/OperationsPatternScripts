@@ -232,27 +232,16 @@ def addActiveSubroutines(targetPanel):
 
 def closePsWindow():
     """Called by:
-        Listeners.ptItemSelected
-        Listeners.rsItemSelected
+    
         """
 
     frameName = BUNDLE['Pattern Scripts']
     window = JMRI.util.JmriJFrame.getFrame(frameName)
 
-    try:
-        x = getComponentByName(frameName, 'jPlusSubroutine')
-        x.removeAll()
-        x.revalidate()
-        print(x.getName())
-    except:
-        pass
-
     if window:
         updateWindowParams(window)
         window.setVisible(False)
         window.dispose()
-
-    closeSetCarsWindows()
 
     return
 

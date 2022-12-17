@@ -32,8 +32,8 @@ def actionListener(EVENT):
         targetPanel.removeAll()
         targetPanel = PSE.addActiveSubroutines(targetPanel)
 
-        _psLog.info('j Plus support deactivated')
-        print('j Plus support deactivated')
+        _psLog.info(__package__ + ' removed from pattern scripts frame')
+        print(__package__ + ' deactivated')
     else:
         EVENT.getSource().setText(PSE.BUNDLE[u'Disable'] + ' ' + __package__)
 
@@ -48,8 +48,8 @@ def actionListener(EVENT):
         targetPanel.removeAll()
         targetPanel = PSE.addActiveSubroutines(targetPanel)
 
-        _psLog.info('j Plus support activated')
-        print('j Plus support activated')
+        _psLog.info(__package__ + ' added to pattern scripts frame')
+        print(__package__ + ' activated')
 
     targetPanel.validate()
     targetPanel.repaint()

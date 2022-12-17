@@ -33,8 +33,8 @@ def actionListener(EVENT):
         targetPanel.removeAll()
         targetPanel = PSE.addActiveSubroutines(targetPanel)
 
-        _psLog.info('Pattern Tracks subroutine deactivated')
-        print('Pattern Tracks subroutine deactivated')
+        _psLog.info(__package__ + ' removed from pattern scripts frame')
+        print(__package__ + ' deactivated')
     else:
         EVENT.getSource().setText(PSE.BUNDLE[u'Disable'] + ' ' + __package__)
 
@@ -46,8 +46,8 @@ def actionListener(EVENT):
         targetPanel.removeAll()
         targetPanel = PSE.addActiveSubroutines(targetPanel)
 
-        _psLog.info('Pattern Tracks subroutine activated')
-        print('Pattern Tracks subroutine activated')
+        _psLog.info(__package__ + ' added to pattern scripts frame')
+        print(__package__ + ' activated')
 
     targetPanel.validate()
     targetPanel.repaint()

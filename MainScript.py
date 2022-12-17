@@ -47,7 +47,7 @@ class View:
 
         self.psLog = PSE.LOGGING.getLogger('OPS.Main.View')
 
-        self.cpSettings = PSE.readConfigFile('CP')
+        self.cpConfig = PSE.readConfigFile('CP')
 
         """Dealers choice, jPanel or Box."""
         # self.subroutinePanel = PSE.JAVX_SWING.JPanel()
@@ -70,27 +70,36 @@ class View:
         return
 
     def makeSubroutineList(self):
-        """Add all the subroutines in ['CP']['IL'], activate if ['CP']['*Subroutine'] is true."""
+        """Add all the subroutines in ['CP']['IL'] if ['CP']['*Subroutine'] is true."""
 
         subroutineList = []
-        controlPanelConfig = PSE.readConfigFile('CP')
-        for include in controlPanelConfig['IL']:
-            xModule = __import__(include, fromlist=['Controller', 'Listeners'])
 
-            menuText, itemName = xModule.Controller.setDropDownText()
-            menuItem = self.makeMenuItem(menuText, itemName)
-            menuItem.addActionListener(xModule.Listeners.actionListener)
-
-            self.subroutineMenuItems.append(menuItem)
-
-            if controlPanelConfig[include]:
-                startUp = xModule.Controller.StartUp()
+        for include in self.cpConfig['IL']:
+            if self.cpConfig[include]:
+                package = __import__(include, fromlist=['Controller'])
+                startUp = package.Controller.StartUp()
                 subroutineFrame = startUp.makeSubroutineFrame()
                 subroutineList.append(subroutineFrame)
 
-                self.psLog.info(include + ' subroutine added to control panel')
+                self.psLog.info(include + ' added to pattern scripts frame')
 
         return subroutineList
+
+    def makeSubroutineMenuItems(self):
+        """Add all the menu items for subroutines in ['CP']['IL']."""
+
+        menuItemList = []
+
+        for include in self.cpConfig['IL']:
+            package = __import__(include, fromlist=['Listeners'])
+
+            menuText, itemName = package.Controller.setDropDownText()
+            menuItem = self.makeMenuItem(menuText, itemName)
+            menuItem.addActionListener(package.Listeners.actionListener)
+
+            menuItemList.append(menuItem)
+
+        return menuItemList
 
     def makeScrollPanel(self):
 
@@ -104,14 +113,12 @@ class View:
 
         self.psLog.debug('makePatternScriptsWindow')
 
-        
-
         toolsMenu = PSE.JAVX_SWING.JMenu(PSE.BUNDLE[u'Tools'])
         toolsMenu.add(PSE.JMRI.jmrit.operations.setup.OptionAction())
         toolsMenu.add(PSE.JMRI.jmrit.operations.setup.PrintOptionAction())
         toolsMenu.add(PSE.JMRI.jmrit.operations.setup.BuildReportOptionAction())
 
-        for menuItem in self.subroutineMenuItems:
+        for menuItem in self.makeSubroutineMenuItems():
             toolsMenu.add(menuItem)
 
         itemText, itemName = self.setPtDropDownText()
@@ -282,9 +289,51 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.buildThePlugin()
 
-        self.psWindow.setVisible(True)
-
         self.psWindow = PSE.JMRI.util.JmriJFrame()
+
+        return
+
+    def ptItemSelected(self, TRANSLATE_PLUGIN_EVENT):
+        """Pattern Scripts/Tools/Translate Plugin"""
+
+        self.psLog.debug(TRANSLATE_PLUGIN_EVENT)
+
+        textBundles = Bundle.getAllTextBundles()
+        Bundle.makePluginBundle(textBundles)
+
+        Bundle.makeHelpBundle()
+        Bundle.makeHelpPage()
+
+        psButton = PSE.getPsButton()
+        psButton.setText(PSE.BUNDLE[u'Pattern Scripts'])
+        PSE.APPS.Apps.buttonSpace().revalidate()
+
+        self.restartThtPlugin()
+
+        self.psLog.info('Pattern Scripts plugin translated')
+
+        return
+
+    def rsItemSelected(self, RESTART_PLUGIN_EVENT):
+        """Pattern Scripts/Tools/Restart Plugin"""
+
+        self.psLog.debug(RESTART_PLUGIN_EVENT)
+
+        self.restartThtPlugin()
+
+        return
+
+    def restartThtPlugin(self):
+        """ """
+
+        PSE.deleteConfigFile()
+
+        PSE.closePsWindow()
+        PSE.closeSetCarsWindows()
+        self.buildThePlugin()
+        self.psWindow = PSE.JMRI.util.JmriJFrame()
+
+        self.psLog.info('Pattern Scripts plugin restarted')
 
         return
 
@@ -299,8 +348,14 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         self.psWindow = view.makePatternScriptsWindow(self.psWindow)
 
         for menuItem in view.getPsPluginMenuItems():
-            menuItem.removeActionListener(getattr(Listeners, menuItem.getName()))
-            menuItem.addActionListener(getattr(Listeners, menuItem.getName()))
+            try:
+                menuItem.removeActionListener(getattr(Listeners, menuItem.getName()))
+                menuItem.addActionListener(getattr(Listeners, menuItem.getName()))
+            except:
+                menuItem.removeActionListener(getattr(self, menuItem.getName()))
+                menuItem.addActionListener(getattr(self, menuItem.getName()))
+
+        self.psWindow.setVisible(True)
 
         return
 
