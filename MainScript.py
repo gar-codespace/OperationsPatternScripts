@@ -63,27 +63,9 @@ class View:
 
         self.subroutinePanel.setName('subroutinePanel')
 
-        for subroutine in self.makeSubroutineList():
-            self.subroutinePanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,10)))
-            self.subroutinePanel.add(subroutine)
+        self.subroutinePanel = PSE.addActiveSubroutines(self.subroutinePanel)
 
         return
-
-    def makeSubroutineList(self):
-        """Add all the subroutines in ['CP']['IL'] if ['CP']['*Subroutine'] is true."""
-
-        subroutineList = []
-
-        for include in self.cpConfig['IL']:
-            if self.cpConfig[include]:
-                package = __import__(include, fromlist=['Controller'])
-                startUp = package.Controller.StartUp()
-                subroutineFrame = startUp.makeSubroutineFrame()
-                subroutineList.append(subroutineFrame)
-
-                self.psLog.info(include + ' added to pattern scripts frame')
-
-        return subroutineList
 
     def makeSubroutineMenuItems(self):
         """Add all the menu items for subroutines in ['CP']['IL']."""
