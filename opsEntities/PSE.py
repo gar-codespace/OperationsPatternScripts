@@ -175,6 +175,28 @@ class CreateStubFile:
 """GUI Methods"""
 
 
+def restartSubroutineByName(subRoutineName):
+    """Finds the named subroutine in the plugin and restarts it."""
+
+    frameName = BUNDLE['Pattern Scripts']
+    subroutine = getComponentByName(frameName, subRoutineName)
+    if subroutine:
+
+        package = __import__(subRoutineName, globals(), locals(), ['Controller'], 0)
+        subroutinePanel = package.Controller.StartUp(subroutine).makeSubroutinePanel()
+
+        subroutine.removeAll()
+        subroutine.add(subroutinePanel)
+
+        subroutine.validate()
+        subroutine.repaint()
+
+        print('Restarted: ' + subRoutineName)
+    else:
+        print('Not currently active: ' + subRoutineName)
+        
+    return
+
 def removeAllSubroutines(targetPanel):
     """Not used.
         Removes all subroutines from subroutinePanel of Pattern Scripts.
@@ -247,20 +269,6 @@ def updateYearModeled():
     configFile['JP'].update({'YR':yr})
     writeConfigFile(configFile)
 
-    return
-
-def restartSubroutineByName(subRoutineName):
-    """Finds the named subroutine in the plugin and restarts it."""
-
-    frameName = BUNDLE['Pattern Scripts']
-    subroutine = getComponentByName(frameName, subRoutineName)
-    if subroutine:
-        frame = subroutine.getComponents()[0]
-        reStart = __import__(subRoutineName, globals(), locals(), ['Controller'], 0)
-        reStart.Controller.restartSubroutine(frame)
-        print('Restarted: ' + subRoutineName)
-    else:
-        print('Not currently active: ' + subRoutineName)
     return
 
 def getComponentByName(frameTitle, componentName):

@@ -4,7 +4,6 @@ Todo:
   All the subroutine actionListener() are very similar. Can this duplication be eliminated?
   MainScript.makeSubroutinePanel and PSE.addActiveSubroutines are possible duplicates.
   Check if o2oSwitchList belongs in o2oSub.Controller.
-  Move all restartSubroutine() from Controller to PSE.
 
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -41,6 +40,7 @@ Tested Items:
     ALERT messages open and display to the script output window OK.
     Plugin and help bundles validate OK.
     Subroutines activate and deactivate OK.
+    All subroutine restarters refactored as PSE.restartSubroutineByName OK.
 
   Reports
     Test with really long location and spur names OK.

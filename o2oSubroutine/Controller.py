@@ -36,21 +36,6 @@ def o2oSwitchList(ptSetCarsForm):
 
     return
 
-def restartSubroutine(subroutineFrame):
-    """Allows other subroutines to restart this subroutine.
-        Called by:
-        PSE.restartSubroutineByName()
-        """
-
-    subroutinePanel = StartUp(subroutineFrame).makeSubroutinePanel()
-    subroutineFrame.removeAll()
-    subroutineFrame.add(subroutinePanel)
-
-    subroutineFrame.validate()
-    subroutineFrame.repaint()
-
-    return
-
 def startDaemons():
     """Methods called when this subroutine is initialized by the Main Script.
         These calls are not turned off.
