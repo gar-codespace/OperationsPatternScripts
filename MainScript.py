@@ -256,11 +256,11 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         """The Pattern Scripts button on the PanelPro frame."""
 
         psButton = PSE.JAVX_SWING.JButton()
-        psButton.setText(PSE.BUNDLE[u'Pattern Scripts'])
-        psButton.setName('psButton')
-
         psButton.actionPerformed = self.patternScriptsButtonAction
+        psButton.setName('psButton')
         PSE.APPS.Apps.buttonSpace().add(psButton)
+
+        psButton.setText(PSE.BUNDLE[u'Pattern Scripts'])
         PSE.APPS.Apps.buttonSpace().revalidate()
 
         return
@@ -286,10 +286,6 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         Bundle.makeHelpBundle()
         Bundle.makeHelpPage()
 
-        psButton = PSE.getPsButton()
-        psButton.setText(PSE.BUNDLE[u'Pattern Scripts'])
-        PSE.APPS.Apps.buttonSpace().revalidate()
-
         self.restartThtPlugin()
 
         self.psLog.info('Pattern Scripts plugin translated')
@@ -301,6 +297,8 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(RESTART_PLUGIN_EVENT)
 
+        PSE.deleteConfigFile()
+
         self.restartThtPlugin()
 
         return
@@ -308,12 +306,17 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
     def restartThtPlugin(self):
         """ """
 
-        PSE.deleteConfigFile()
-
         PSE.closePsWindow()
         PSE.closeSetCarsWindows()
+
+        Bundle.setupBundle()
         self.buildThePlugin()
         self.psWindow = PSE.JMRI.util.JmriJFrame()
+
+        psButton = PSE.getPsButton()
+        
+        psButton.setText(PSE.BUNDLE[u'Pattern Scripts'])
+        PSE.APPS.Apps.buttonSpace().revalidate()
 
         self.psLog.info('Pattern Scripts plugin restarted')
 
