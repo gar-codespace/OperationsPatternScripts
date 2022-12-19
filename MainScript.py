@@ -41,6 +41,48 @@ PSE.ENCODING = PSE.readConfigFile('CP')['SE']
 Bundle.BUNDLE_DIR = OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle')
 
 
+def buildThePlugin():
+    """Mini controller to build and display the PS Plugin Window.
+        Called by:
+        restartThePlugin
+        patternScriptsButtonAction
+        """
+
+    view = View()
+    view.makeSubroutinePanel()
+    view.makeScrollPanel()
+    view.makePatternScriptsWindow()
+
+    for menuItem in view.getPsPluginMenuItems():
+        menuItem.removeActionListener(getattr(Listeners, menuItem.getName()))
+        menuItem.addActionListener(getattr(Listeners, menuItem.getName()))
+
+    view.OpenPatternScriptsWindow()
+
+    return
+
+def restartThePlugin():
+    """ """
+
+    _psLog = PSE.LOGGING.getLogger('OPS.Main.restartThePlugin')
+
+    PSE.closeSetCarsWindows()
+    PSE.closePsWindow()
+
+    PSE.deleteConfigFile()
+
+    Bundle.setupBundle()
+
+    buildThePlugin()
+
+    psButton = PSE.getPsButton()
+    psButton.setText(PSE.BUNDLE[u'Pattern Scripts'])
+    PSE.APPS.Apps.buttonSpace().revalidate()
+
+    _psLog.info('Pattern Scripts plugin restarted')
+
+    return
+
 class View:
 
     def __init__(self):
@@ -48,6 +90,8 @@ class View:
         self.psLog = PSE.LOGGING.getLogger('OPS.Main.View')
 
         self.cpConfig = PSE.readConfigFile('CP')
+
+        self.psWindow = PSE.JMRI.util.JmriJFrame()
 
         """Dealers choice, jPanel or Box."""
         # self.subroutinePanel = PSE.JAVX_SWING.JPanel()
@@ -91,7 +135,7 @@ class View:
 
         return
 
-    def makePatternScriptsWindow(self, psWindow):
+    def makePatternScriptsWindow(self):
 
         self.psLog.debug('makePatternScriptsWindow')
 
@@ -145,24 +189,30 @@ class View:
         psMenuBar = PSE.JAVX_SWING.JMenuBar()
         psMenuBar.add(toolsMenu)
         psMenuBar.add(PSE.JMRI.jmrit.operations.OperationsMenu())
-        psMenuBar.add(PSE.JMRI.util.WindowMenu(psWindow))
+        psMenuBar.add(PSE.JMRI.util.WindowMenu(self.psWindow))
         psMenuBar.add(helpMenu)
 
         configPanel = PSE.readConfigFile('CP')
-        psWindow.setName('patternScriptsWindow')
-        psWindow.setTitle(PSE.BUNDLE[u'Pattern Scripts'])
-        psWindow.addWindowListener(Listeners.PatternScriptsWindow())
-        psWindow.setJMenuBar(psMenuBar)
-        psWindow.add(self.scrollPanel)
-        # psWindow.pack()
-        psWindow.setSize(configPanel['PW'], configPanel['PH'])
-        psWindow.setLocation(configPanel['PX'], configPanel['PY'])
+        self.psWindow.setName('patternScriptsWindow')
+        self.psWindow.setTitle(PSE.BUNDLE[u'Pattern Scripts'])
+        self.psWindow.addWindowListener(Listeners.PatternScriptsWindow())
+        self.psWindow.setJMenuBar(psMenuBar)
+        self.psWindow.add(self.scrollPanel)
+        # self.psWindow.pack()
+        self.psWindow.setSize(configPanel['PW'], configPanel['PH'])
+        self.psWindow.setLocation(configPanel['PX'], configPanel['PY'])
 
-        return psWindow
+        return
+
+    def OpenPatternScriptsWindow(self):
+
+        self.psWindow.setVisible(True)
+
+        return
 
     def getPsPluginMenuItems(self):
 
-            return self.psPluginMenuItems
+        return self.psPluginMenuItems
 
     def makeMenuItem(self, itemText, itemName):
         """Makes all the items for the custom drop down menus."""
@@ -221,6 +271,7 @@ class View:
 
         return menuText, 'ofItemSelected'
 
+
 class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
     def init(self):
@@ -234,8 +285,6 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         self.logger.startLogger('OPS')
 
         self.configFile = PSE.readConfigFile()
-
-        self.psWindow = PSE.JMRI.util.JmriJFrame()
 
         self.menuItemList = []
 
@@ -269,86 +318,15 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(MOUSE_CLICKED)
 
-        self.buildThePlugin()
-
-        self.psWindow = PSE.JMRI.util.JmriJFrame()
-
-        return
-
-    def ptItemSelected(self, TRANSLATE_PLUGIN_EVENT):
-        """Pattern Scripts/Tools/Translate Plugin"""
-
-        self.psLog.debug(TRANSLATE_PLUGIN_EVENT)
-
-        textBundles = Bundle.getAllTextBundles()
-        Bundle.makePluginBundle(textBundles)
-
-        Bundle.makeHelpBundle()
-        Bundle.makeHelpPage()
-
-        self.restartThtPlugin()
-
-        self.psLog.info('Pattern Scripts plugin translated')
-
-        return
-
-    def rsItemSelected(self, RESTART_PLUGIN_EVENT):
-        """Pattern Scripts/Tools/Restart Plugin"""
-
-        self.psLog.debug(RESTART_PLUGIN_EVENT)
-
-        PSE.deleteConfigFile()
-
-        self.restartThtPlugin()
-
-        return
-
-    def restartThtPlugin(self):
-        """ """
-
-        PSE.closePsWindow()
-        PSE.closeSetCarsWindows()
-
-        Bundle.setupBundle()
-        self.buildThePlugin()
-        self.psWindow = PSE.JMRI.util.JmriJFrame()
-
-        psButton = PSE.getPsButton()
-        
-        psButton.setText(PSE.BUNDLE[u'Pattern Scripts'])
-        PSE.APPS.Apps.buttonSpace().revalidate()
-
-        self.psLog.info('Pattern Scripts plugin restarted')
-
-        return
-
-    def buildThePlugin(self):
-        """Called by:
-            patternScriptsButtonAction
-            """
-
-        view = View()
-        view.makeSubroutinePanel()
-        view.makeScrollPanel()
-        self.psWindow = view.makePatternScriptsWindow(self.psWindow)
-
-        for menuItem in view.getPsPluginMenuItems():
-            try:
-                menuItem.removeActionListener(getattr(Listeners, menuItem.getName()))
-                menuItem.addActionListener(getattr(Listeners, menuItem.getName()))
-            except:
-                menuItem.removeActionListener(getattr(self, menuItem.getName()))
-                menuItem.addActionListener(getattr(self, menuItem.getName()))
-
-        self.psWindow.setVisible(True)
+        buildThePlugin()
 
         return
 
     def startTheDaemons(self):
 
         for include in self.configFile['CP']['IL']:
-            xModule = __import__(include, fromlist=['Controller', 'Listeners'])
-            xModule.Controller.startDaemons()
+            package = __import__(include, fromlist=['Controller', 'Listeners'])
+            package.Controller.startDaemons()
 
         return
 

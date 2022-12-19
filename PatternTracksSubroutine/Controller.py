@@ -36,7 +36,7 @@ def refreshCalls():
     return
     
 def setDropDownText():
-    """Pattern Scripts/Tools/itemMethod - Set the drop down text per the config file PatternTracksSubroutine Include flag ['CP']['IT']"""
+    """Pattern Scripts/Tools/itemMethod - Set the drop down text per the config file PatternTracksSubroutine Include flag ['CP'][<subroutine name>]"""
 
     patternConfig = PSE.readConfigFile('CP')
     if patternConfig['PatternTracksSubroutine']:
@@ -76,8 +76,6 @@ class StartUp:
 
         self.subroutinePanel, self.widgets = View.ManageGui().makeSubroutinePanel()
         self.activateWidgets()
-
-        _psLog.info('pattern tracks panel completed')
 
         return self.subroutinePanel
 

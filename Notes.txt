@@ -1,6 +1,5 @@
 Todo:
   How to publish DeepL?
-  Some MainScript menu items are in MainScript, others in Listeners. Ugh!
   All the subroutine actionListener() are very similar. Can this duplication be eliminated?
 
 Comments:

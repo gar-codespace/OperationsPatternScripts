@@ -67,7 +67,7 @@ def refreshCalls():
     return
     
 def setDropDownText():
-    """Pattern Scripts/Tools/itemMethod - Set the drop down text per the config file o2oSubroutine Include flag ['CP']['IO']"""
+    """Pattern Scripts/Tools/itemMethod - Set the drop down text per the config file o2oSubroutine Include flag ['CP'][<subroutine name>]"""
 
     patternConfig = PSE.readConfigFile('CP')
     if patternConfig['o2oSubroutine']:

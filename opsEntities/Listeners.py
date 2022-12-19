@@ -12,41 +12,24 @@ SCRIPT_REV = 20221010
 _psLog = PSE.LOGGING.getLogger('OPS.OE.Listeners')
 
 
-def helpItemSelected(OPEN_HELP_EVENT):
-    """Pattern Scripts/Help/Window help..."""
+"""Tools menu items"""
 
-    _psLog.debug(OPEN_HELP_EVENT)
 
-    stubFileTarget = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getPreferencesPath(), 'jmrihelp', PSE.psLocale()[:2], 'psStub.html')
-    stubUri = PSE.JAVA_IO.File(stubFileTarget).toURI()
-    if PSE.JAVA_IO.File(stubUri).isFile():
-        PSE.JAVA_AWT.Desktop.getDesktop().browse(stubUri)
-    else:
-        _psLog.warning('Help file not found')
+def ptItemSelected(TRANSLATE_PLUGIN_EVENT):
+    """Pattern Scripts/Tools/Translate Plugin"""
 
-    return
+    _psLog.debug(TRANSLATE_PLUGIN_EVENT)
 
-def logItemSelected(OPEN_LOG_EVENT):
-    """Pattern Scripts/Help/View Log"""
+    textBundles = Bundle.getAllTextBundles()
+    Bundle.makePluginBundle(textBundles)
 
-    _psLog.debug(OPEN_LOG_EVENT)
+    Bundle.makeHelpBundle()
+    Bundle.makeHelpPage()
 
-    patternLog = PSE.makePatternLog()
+    xModule = __import__('MainScript')
+    xModule.restartThePlugin()
 
-    logFileTarget = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'buildstatus', 'PatternScriptsLog_temp.txt')
-
-    PSE.genericWriteReport(logFileTarget, patternLog)
-    PSE.genericDisplayReport(logFileTarget)
-
-    return
-
-def ghItemSelected(OPEN_GH_EVENT):
-    """Pattern Scripts/Help/GitHub Page"""
-
-    _psLog.debug(OPEN_GH_EVENT)
-
-    ghURL = 'https://github.com/gar-codespace/OperationsPatternScripts'
-    PSE.JMRI.util.HelpUtil.openWebPage(ghURL)
+    _psLog.info('Pattern Scripts plugin translated')
 
     return
 
@@ -61,6 +44,44 @@ def ecItemSelected(OPEN_EC_EVENT):
         PSE.genericDisplayReport(configTarget)
     else:
         _psLog.warning('Not found: ' + configTarget)
+
+    return
+
+def rsItemSelected(RESTART_PLUGIN_EVENT):
+    """Pattern Scripts/Tools/Restart From Default"""
+
+    _psLog.debug(RESTART_PLUGIN_EVENT)
+
+    xModule = __import__('MainScript')
+    xModule.restartThePlugin()
+
+    return
+
+
+"""Help menu items"""
+
+
+def helpItemSelected(OPEN_HELP_EVENT):
+    """Pattern Scripts/Help/Window help..."""
+
+    _psLog.debug(OPEN_HELP_EVENT)
+
+    stubFileTarget = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getPreferencesPath(), 'jmrihelp', PSE.psLocale()[:2], 'psStub.html')
+    stubUri = PSE.JAVA_IO.File(stubFileTarget).toURI()
+    if PSE.JAVA_IO.File(stubUri).isFile():
+        PSE.JAVA_AWT.Desktop.getDesktop().browse(stubUri)
+    else:
+        _psLog.warning('Help file not found')
+
+    return
+
+def ghItemSelected(OPEN_GH_EVENT):
+    """Pattern Scripts/Help/GitHub Page"""
+
+    _psLog.debug(OPEN_GH_EVENT)
+
+    ghURL = 'https://github.com/gar-codespace/OperationsPatternScripts'
+    PSE.JMRI.util.HelpUtil.openWebPage(ghURL)
 
     return
 
@@ -79,15 +100,28 @@ def ofItemSelected(OPEN_OF_EVENT):
 
     return
 
+def logItemSelected(OPEN_LOG_EVENT):
+    """Pattern Scripts/Help/View Log"""
+
+    _psLog.debug(OPEN_LOG_EVENT)
+
+    patternLog = PSE.makePatternLog()
+
+    logFileTarget = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'buildstatus', 'PatternScriptsLog_temp.txt')
+
+    PSE.genericWriteReport(logFileTarget, patternLog)
+    PSE.genericDisplayReport(logFileTarget)
+
+    return
+
 
 class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
-    """Listener to respond to the plugin window operations.
-        Might be expanded in v3.
-        """
+    """Listener to respond to the plugin window operations."""
 
     def __init__(self):
         
         self.configFile = PSE.readConfigFile()
+        
         return
 
     def windowClosed(self, WINDOW_CLOSED):

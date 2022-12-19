@@ -45,7 +45,7 @@ def refreshCalls():
     return
     
 def setDropDownText():
-    """Pattern Scripts/Tools/itemMethod - Set the drop down text per the config file PatternTracksSubroutine Include flag ['CP']['IJ']"""
+    """Pattern Scripts/Tools/itemMethod - Set the drop down text per the config file PatternTracksSubroutine Include flag ['CP'][<subroutine name>]"""
 
     patternConfig = PSE.readConfigFile('CP')
     if patternConfig['jPlusSubroutine']:
