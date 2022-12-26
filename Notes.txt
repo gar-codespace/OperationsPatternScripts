@@ -1,5 +1,6 @@
 Todo:
   How to publish DeepL?
+  o2o.Model break out divisions into its own class, add updateDivisions().
   All the subroutine actionListener() are very similar. Can this duplication be eliminated?
 
 Comments:

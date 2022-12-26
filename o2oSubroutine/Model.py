@@ -65,7 +65,7 @@ def newJmriRailroad():
     jmriRailroad.tweakOperationsXml()
     jmriRailroad.setReportMessageFormat()
 
-    allRsRosters = AddRsAttributes()
+    allRsRosters = RollingStockAttributes()
     allRsRosters.addRoads()
     allRsRosters.addCarAar()
     allRsRosters.addCarLoads()
@@ -74,10 +74,14 @@ def newJmriRailroad():
     allRsRosters.addLocoTypes()
     allRsRosters.addLocoConsist()
 
-    newLocations = NewLocationsAndTracks()
-    newLocations.newDivisions()
+    divisions = Divisionator()
+    divisions.parseDivisions()
+    divisions.addNewDivisions()
+
+    newLocations = Locationator()
     newLocations.newLocations()
-    newLocations.addDivisionToLocation()
+
+    divisions.addDivisionToLocations()
 
     ModelEntities.newSchedules()
 
@@ -86,7 +90,7 @@ def newJmriRailroad():
     ModelEntities.setTrackLength()
     ModelEntities.addCarTypesToSpurs()
 
-    newInventory = NewRollingStock()
+    newInventory = RollingStockonator()
     newInventory.getTpInventory()
     newInventory.splitTpList()
     newInventory.makeTpRollingStockData()
@@ -123,13 +127,12 @@ def updateJmriRailroad():
     PSE.SM.dispose()
     PSE.CM.dispose()
     PSE.EM.dispose()
-    PSE.DM.dispose()
 
     jmriRailroad = SetupXML()
     jmriRailroad.addDetailsToConFig()
     jmriRailroad.setRailroadDetails()
 
-    allRsRosters = AddRsAttributes()
+    allRsRosters = RollingStockAttributes()
     allRsRosters.addRoads()
     allRsRosters.addCarAar()
     allRsRosters.addCarLoads()
@@ -138,9 +141,15 @@ def updateJmriRailroad():
     allRsRosters.addLocoTypes()
     allRsRosters.addLocoConsist()
 
-    newLocations = NewLocationsAndTracks()
-    newLocations.newDivisions()
-    newLocations.addDivisionToLocation()
+    updateDivisions = Divisionator()
+    updateDivisions.parseDivisions()
+    updateDivisions.addNewDivisions()
+
+
+
+
+    newLocations = Locationator()
+    updateDivisions.addDivisionToLocations()
 
     updatedLocations = UpdateLocationsAndTracks()
     updatedLocations.getCurrent()
@@ -161,7 +170,7 @@ def updateJmriRailroad():
     ModelEntities.setTrackLength()
     ModelEntities.addCarTypesToSpurs()
 
-    newInventory = NewRollingStock()
+    newInventory = RollingStockonator()
     newInventory.getTpInventory()
     newInventory.splitTpList()
     newInventory.makeTpRollingStockData()
@@ -192,7 +201,7 @@ def updateJmriRollingingStock():
         PSE.CM.dispose()
         PSE.EM.dispose()
 
-        allRsRosters = AddRsAttributes()
+        allRsRosters = RollingStockAttributes()
         allRsRosters.addRoads()
         allRsRosters.addCarAar()
         allRsRosters.addCarLoads()
@@ -201,7 +210,7 @@ def updateJmriRollingingStock():
         allRsRosters.addLocoTypes()
         allRsRosters.addLocoConsist()
 
-        newInventory = NewRollingStock()
+        newInventory = RollingStockonator()
         newInventory.getTpInventory()
         newInventory.splitTpList()
         newInventory.makeTpRollingStockData()
@@ -407,14 +416,14 @@ class MakeTpLocaleData:
         return
 
 
-class AddRsAttributes:
+class RollingStockAttributes:
     """TCM - Temporary Context Manager.
         Nothing is removed from OperationsCarRoster.xml, only added to.
         """
 
     def __init__(self):
 
-        self.scriptName = SCRIPT_NAME + '.AddRsAttributes'
+        self.scriptName = SCRIPT_NAME + '.RollingStockAttributes'
 
         self.tpRailroadData = PSE.getTpRailroadJson('tpRailroadData')
 
@@ -574,7 +583,7 @@ class UpdateLocationsAndTracks:
 
         _psLog.debug('parseLocations')
 
-        currentLocations = PSE.getAllLocationNames()
+        # currentLocations = PSE.getAllLocationNames()
         updateLocations = [uLocation for uLocation, uIds in self.updatedLocale['locations'].items()]
 
         unchangedLocations = []
@@ -699,41 +708,53 @@ class UpdateLocationsAndTracks:
                 location.dispose()
 
         return
-
-
-class NewLocationsAndTracks:
+class Divisionator:
+    """All methods involving divisions."""
 
     def __init__(self):
 
-        self.scriptName = SCRIPT_NAME + '.NewLocationsAndTracks'
+        self.scriptName = SCRIPT_NAME + '.Divisionator'
         self.tpRailroadData = PSE.getTpRailroadJson('tpRailroadData')
+
+        self.tpDivisions = self.tpRailroadData['divisions'] # List of strings
+        self.jmriDivisions = [] # list of strings
+        for division in PSE.DM.getList():
+            self.jmriDivisions.append(division)
+
+        self.newDivisions = []
+        self.obsoleteDivisions = []
 
         print(self.scriptName + ' ' + str(SCRIPT_REV))
 
         return
 
-    def newDivisions(self):
+    def parseDivisions(self):
+
+        self.newDivisions = list(set(self.tpDivisions) - set(self.jmriDivisions))
+        self.obsoleteDivisions = list(set(self.jmriDivisions) - set(self.tpDivisions))
+
+        return
+
+    def addNewDivisions(self):
         """ """
 
-        divisionList = self.tpRailroadData['divisions']
-
-        if len(divisionList[0]) == 0:
+        if len(self.newDivisions) == 0:
             return
 
         PSE.DM.newDivision(PSE.BUNDLE['Unknown'])
 
-        for division in divisionList:
+        for division in self.newDivisions:
             PSE.DM.newDivision(division)
 
         return
 
-    def addDivisionToLocation(self):
+    def addDivisionToLocations(self):
         """If there is only one division, add all locations to it, 
             otherwise divisions are set by the user.
             """
 
-        soleDivision = PSE.DM.getList()
-        unknownDivision = PSE.DM.getList()
+        soleDivision = self.jmriDivisions
+        unknownDivision = self.jmriDivisions
 
         if len(unknownDivision) != 2: # one named division and Unknown
             return
@@ -752,6 +773,58 @@ class NewLocationsAndTracks:
                 location.setDivision(soleDivision[0])
                 
         return
+
+class Locationator:
+
+    def __init__(self):
+
+        self.scriptName = SCRIPT_NAME + '.Locationator'
+        self.tpRailroadData = PSE.getTpRailroadJson('tpRailroadData')
+
+        print(self.scriptName + ' ' + str(SCRIPT_REV))
+
+        return
+
+    # def addNewDivisions(self):
+    #     """ """
+
+    #     divisionList = self.tpRailroadData['divisions']
+
+    #     if len(divisionList[0]) == 0:
+    #         return
+
+    #     PSE.DM.newDivision(PSE.BUNDLE['Unknown'])
+
+    #     for division in divisionList:
+    #         PSE.DM.newDivision(division)
+
+    #     return
+
+    # def addDivisionToLocations(self):
+    #     """If there is only one division, add all locations to it, 
+    #         otherwise divisions are set by the user.
+    #         """
+
+    #     soleDivision = PSE.DM.getList()
+    #     unknownDivision = PSE.DM.getList()
+
+    #     if len(unknownDivision) != 2: # one named division and Unknown
+    #         return
+
+    #     if unknownDivision[0].getName() == 'Unknown':
+    #         unknownDivision.pop(1)
+    #         soleDivision.pop(0)
+    #     else:
+    #         unknownDivision.pop(0)
+    #         soleDivision.pop(1)
+
+    #     for location in PSE.LM.getList():
+    #         if location.getName() == PSE.BUNDLE['Unreported']:
+    #             location.setDivision(unknownDivision[0])
+    #         else:
+    #             location.setDivision(soleDivision[0])
+                
+    #     return
 
     def newLocations(self):
 
@@ -774,11 +847,11 @@ class NewLocationsAndTracks:
         return
 
 
-class NewRollingStock:
+class RollingStockonator:
 
     def __init__(self):
 
-        self.scriptName = SCRIPT_NAME + '.NewRollingStock'
+        self.scriptName = SCRIPT_NAME + '.RollingStockonator'
 
         self.o2oConfig = PSE.readConfigFile('o2o')
 

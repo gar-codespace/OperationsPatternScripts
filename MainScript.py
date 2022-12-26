@@ -41,14 +41,13 @@ PSE.ENCODING = PSE.readConfigFile('CP')['SE']
 Bundle.BUNDLE_DIR = OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle')
 
 
-def buildThePlugin():
+def buildThePlugin(view):
     """Mini controller to build and display the PS Plugin Window.
         Called by:
         restartThePlugin
         patternScriptsButtonAction
         """
 
-    view = View()
     view.makeSubroutinePanel()
     view.makeScrollPanel()
     view.makePatternScriptsWindow()
@@ -73,7 +72,7 @@ def restartThePlugin():
 
     Bundle.setupBundle()
 
-    buildThePlugin()
+    buildThePlugin(View())
 
     psButton = PSE.getPsButton()
     psButton.setText(PSE.BUNDLE[u'Pattern Scripts'])
@@ -95,6 +94,7 @@ class View:
 
         """Dealers choice, jPanel or Box."""
         # self.subroutinePanel = PSE.JAVX_SWING.JPanel()
+        # self.subroutinePanel.setLayout(PSE.JAVX_SWING.BoxLayout( self.subroutinePanel, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
         self.subroutinePanel = PSE.JAVX_SWING.Box(PSE.JAVX_SWING.BoxLayout.PAGE_AXIS)
 
         self.psPluginMenuItems = []
@@ -318,11 +318,12 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(MOUSE_CLICKED)
 
-        buildThePlugin()
+        buildThePlugin(View())
 
         return
 
     def startTheDaemons(self):
+        """Not sure what to call them so I'm calling them daemons."""
 
         for include in self.configFile['CP']['IL']:
             package = __import__(include, fromlist=['Controller', 'Listeners'])

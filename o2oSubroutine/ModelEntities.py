@@ -28,7 +28,7 @@ def selectCarTypes(industries):
     """For each track in industries, first deselect all the RS types,
         then select just the RS types used by that track, leaving unused types  deselected.
         Called by:
-        Model.NewLocationsAndTracks.addCarTypesToSpurs
+        Model.Locationator.addCarTypesToSpurs
         Model.UpdateLocationsAndTracks.addCarTypesToSpurs
         """
 # Deselect all type names for each industry track
@@ -102,7 +102,7 @@ def makeNewTrack(trackId, trackData):
     """Set spur length to 'spaces' from TP.
         Deselect all types for spur tracks.
         Called by:
-        Model.NewLocationsAndTracks.newLocations
+        Model.Locationator.newLocations
         Model.UpdateLocationsAndTracks.addNewTracks
         """
 
