@@ -59,13 +59,13 @@ def newJmriRailroad():
     PSE.CM.dispose()
     PSE.EM.dispose()
 
-    jmriRailroad = SetupXML()
+    jmriRailroad = Initiator()
     jmriRailroad.addDetailsToConFig()
     jmriRailroad.setRailroadDetails()
     jmriRailroad.tweakOperationsXml()
     jmriRailroad.setReportMessageFormat()
 
-    allRsRosters = RollingStockAttributes()
+    allRsRosters = Attributator()
     allRsRosters.addRoads()
     allRsRosters.addCarAar()
     allRsRosters.addCarLoads()
@@ -90,7 +90,7 @@ def newJmriRailroad():
     ModelEntities.setTrackLength()
     ModelEntities.addCarTypesToSpurs()
 
-    newInventory = RollingStockonator()
+    newInventory = RStockulator()
     newInventory.getTpInventory()
     newInventory.splitTpList()
     newInventory.makeTpRollingStockData()
@@ -128,11 +128,11 @@ def updateJmriRailroad():
     PSE.CM.dispose()
     PSE.EM.dispose()
 
-    jmriRailroad = SetupXML()
+    jmriRailroad = Initiator()
     jmriRailroad.addDetailsToConFig()
     jmriRailroad.setRailroadDetails()
 
-    allRsRosters = RollingStockAttributes()
+    allRsRosters = Attributator()
     allRsRosters.addRoads()
     allRsRosters.addCarAar()
     allRsRosters.addCarLoads()
@@ -170,7 +170,7 @@ def updateJmriRailroad():
     ModelEntities.setTrackLength()
     ModelEntities.addCarTypesToSpurs()
 
-    newInventory = RollingStockonator()
+    newInventory = RStockulator()
     newInventory.getTpInventory()
     newInventory.splitTpList()
     newInventory.makeTpRollingStockData()
@@ -201,7 +201,7 @@ def updateJmriRollingingStock():
         PSE.CM.dispose()
         PSE.EM.dispose()
 
-        allRsRosters = RollingStockAttributes()
+        allRsRosters = Attributator()
         allRsRosters.addRoads()
         allRsRosters.addCarAar()
         allRsRosters.addCarLoads()
@@ -210,7 +210,7 @@ def updateJmriRollingingStock():
         allRsRosters.addLocoTypes()
         allRsRosters.addLocoConsist()
 
-        newInventory = RollingStockonator()
+        newInventory = RStockulator()
         newInventory.getTpInventory()
         newInventory.splitTpList()
         newInventory.makeTpRollingStockData()
@@ -227,12 +227,12 @@ def updateJmriRollingingStock():
         return False
 
 
-class SetupXML:
+class Initiator:
     """Make tweeks to Operations.xml here."""
 
     def __init__(self):
 
-        self.scriptName = SCRIPT_NAME + '.SetupXML'
+        self.scriptName = SCRIPT_NAME + '.Initiator'
 
         self.OSU = PSE.JMRI.jmrit.operations.setup
 
@@ -416,14 +416,14 @@ class MakeTpLocaleData:
         return
 
 
-class RollingStockAttributes:
+class Attributator:
     """TCM - Temporary Context Manager.
         Nothing is removed from OperationsCarRoster.xml, only added to.
         """
 
     def __init__(self):
 
-        self.scriptName = SCRIPT_NAME + '.RollingStockAttributes'
+        self.scriptName = SCRIPT_NAME + '.Attributator'
 
         self.tpRailroadData = PSE.getTpRailroadJson('tpRailroadData')
 
@@ -735,6 +735,13 @@ class Divisionator:
 
         return
 
+    def removeObsoleteDivisions(self):
+
+        for division in self.obsoleteDivisions:
+            PSE.DM.getDivisionByName(division).dispose()
+
+        return
+
     def addNewDivisions(self):
         """ """
 
@@ -750,7 +757,7 @@ class Divisionator:
 
     def addDivisionToLocations(self):
         """If there is only one division, add all locations to it, 
-            otherwise divisions are set by the user.
+            except unkinown, otherwise divisions are set by the user.
             """
 
         soleDivision = self.jmriDivisions
@@ -847,11 +854,11 @@ class Locationator:
         return
 
 
-class RollingStockonator:
+class RStockulator:
 
     def __init__(self):
 
-        self.scriptName = SCRIPT_NAME + '.RollingStockonator'
+        self.scriptName = SCRIPT_NAME + '.RStockulator'
 
         self.o2oConfig = PSE.readConfigFile('o2o')
 
