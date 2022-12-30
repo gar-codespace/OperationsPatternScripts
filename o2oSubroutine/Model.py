@@ -290,7 +290,8 @@ class TpLocalculator:
         targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
 
         if not PSE.JAVA_IO.File(targetPath).isFile():
-            PSE.openOutputFrame('Alert: Create a new JMRI layout first.')
+            message = PSE.BUNDLE['Alert: Create a new JMRI layout first.']
+            PSE.openOutputFrame(message)
             _psLog.critical('Alert: Create a new JMRI layout first.')
 
             return False
