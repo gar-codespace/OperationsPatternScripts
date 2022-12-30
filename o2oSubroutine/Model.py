@@ -154,36 +154,34 @@ def updateJmriRailroad():
     tpLocaleData.write()
     updatedLocations.getUpdatedLocale()
 
-    # updatedLocations.parseLocations()
-    # updatedLocations.processLocations()
     updatedLocations.getNewLocations()
     updatedLocations.addNewLocations()
 
-    # updateDivisions.addDivisionToLocations()
-    # updateDivisions.addUnreportedToUnknown()
+    updateDivisions.addDivisionToLocations()
+    updateDivisions.addUnreportedToUnknown()
 
-    # ModelEntities.newSchedules()
+    ModelEntities.newSchedules()
 
-    # updatedLocations.parseTracks()
-    # updatedLocations.deleteOldTracks()
-    # updatedLocations.addNewTracks()
-    # updatedLocations.recastTracks()
+    updatedLocations.parseTracks()
+    updatedLocations.deleteOldTracks()
+    updatedLocations.addNewTracks()
+    updatedLocations.recastTracks()
 
-    # ModelEntities.setTrackLength()
-    # ModelEntities.addCarTypesToSpurs()
+    ModelEntities.setTrackLength()
+    ModelEntities.addCarTypesToSpurs()
 
-    # newInventory = RStockulator()
-    # newInventory.getTpInventory()
-    # newInventory.splitTpList()
-    # newInventory.makeTpRollingStockData()
-    # newInventory.newCars()
-    # newInventory.newLocos()
+    newInventory = RStockulator()
+    newInventory.getTpInventory()
+    newInventory.splitTpList()
+    newInventory.makeTpRollingStockData()
+    newInventory.newCars()
+    newInventory.newLocos()
 
     updatedLocations.deleteOldLocations()
 
-    # PSE.CMX.save()
-    # PSE.EMX.save()
-    # PSE.OMX.save()
+    PSE.CMX.save()
+    PSE.EMX.save()
+    PSE.OMX.save()
 
     return True
 
@@ -538,7 +536,7 @@ class Locationator:
 
     def __init__(self):
 
-        self.scriptName = SCRIPT_NAME + '.LocationUpdator'
+        self.scriptName = SCRIPT_NAME + '.Locationator'
 
         self.o2oConfig = PSE.readConfigFile('o2o')
         self.tpRailroadData = PSE.getTpRailroadJson('tpRailroadData')
@@ -590,16 +588,6 @@ class Locationator:
 
         return
 
-    # def getUnchangedLocations(self):
-    #     """A list of unchanged location names to be recast."""
-
-    #     for cLocation, cId in self.currentLocale['locations'].items():
-    #         for uLocation, uId in self.updatedLocale['locations'].items():
-    #             if cId == uId and cLocation == uLocation:
-    #                 self.unchangedLocations.append(cLocation)
-
-    #     return
-
     def getNewLocations(self):
         """A list of new location names to be added to JMRI."""
 
@@ -615,33 +603,6 @@ class Locationator:
 
         return
 
- 
-
-    # def parseLocations(self):
-    #     """Create x lists:
-    #         new locations
-    #         modified locations
-    #         obsolete locations"""
-
-    #     _psLog.debug('parseLocations')
-
-    #     updateLocations = [uLocation for uLocation, uIds in self.updatedLocale['locations'].items()]
-
-    #     unchangedLocations = []
-    #     modifiedLocations = []
-    #     for cLocation, cIds in self.currentLocale['locations'].items():
-    #         for uLocation, uIds in self.updatedLocale['locations'].items():
-    #             if cIds == uIds and cLocation == uLocation:
-    #                 unchangedLocations.append(cLocation)
-    #             if cIds == uIds and cLocation != uLocation:
-    #                 self.renameLocations.append((cLocation, uLocation))
-    #                 modifiedLocations.append(cLocation)
-    #                 modifiedLocations.append(uLocation)
-
-    #     self.newLocations = list(set(updateLocations) - set(unchangedLocations) - set(modifiedLocations))
-
-    #     return
-
     def processLocations(self):
 
         _psLog.debug('processLocations')
@@ -650,26 +611,6 @@ class Locationator:
             PSE.LM.getLocationByName(item[0]).setName(item[1])
 
         return
-
-    # def newLocations(self):
-
-    #     _psLog.debug('newLocations')
-
-    #     for location in self.tpRailroadData['locations']:
-    #         newLocation = PSE.LM.newLocation(location)
-    #         if newLocation.getName() == PSE.BUNDLE['Unreported']:
-    #             newLocation.setTrainDirections(0)
-
-    #     return
-
-    # def newTracks(self):
-
-    #     _psLog.debug('newTracks')
-
-    #     for trackId, trackData in self.tpRailroadData['locales'].items():
-    #         ModelEntities.makeNewTrack(trackId, trackData)
-
-    #     return
 
     def addNewLocations(self):
 
@@ -808,7 +749,6 @@ class Divisionator:
         for division in self.obsoleteDivisions:
             obsolete = PSE.DM.getDivisionByName(division)
             PSE.DM.deregister(obsolete)
-            obsolete.dispose()
 
         return
 
@@ -843,39 +783,6 @@ class Divisionator:
         location.setDivision(division)
 
         return
-
-
-# class Locationator:
-#     """JMRI considers tracks to be a component of a location."""
-
-#     def __init__(self):
-
-#         self.scriptName = SCRIPT_NAME + '.Locationator'
-#         self.tpRailroadData = PSE.getTpRailroadJson('tpRailroadData')
-
-#         print(self.scriptName + ' ' + str(SCRIPT_REV))
-
-#         return
-
-#     def newLocations(self):
-
-#         _psLog.debug('newLocations')
-
-#         for location in self.tpRailroadData['locations']:
-#             newLocation = PSE.LM.newLocation(location)
-#             if newLocation.getName() == PSE.BUNDLE['Unreported']:
-#                 newLocation.setTrainDirections(0)
-
-#         return
-
-#     def newTracks(self):
-
-#         _psLog.debug('newTracks')
-
-#         for trackId, trackData in self.tpRailroadData['locales'].items():
-#             ModelEntities.makeNewTrack(trackId, trackData)
-
-#         return
 
 
 class RStockulator:
