@@ -438,6 +438,32 @@ def occuranceTally(listOfOccurances):
 
     return dict
 
+def makeGenericHeader():
+    """Called by:
+        makeTrackPatternReport
+        Controller.StartUp.setRsButton
+        """
+
+    OSU = JMRI.jmrit.operations.setup
+    configFile = readConfigFile()
+
+    listHeader = {}
+    # if configFile['CP']['jPlusSubroutine']: # Replace with Railroad Details Subroutine
+    #     listHeader['railroadName'] = jPlusHeader()
+    # else:
+
+    listHeader['railroadName'] = unicode(OSU.Setup.getRailroadName(), ENCODING)
+    listHeader['railroadDescription'] = ''
+    listHeader['trainName'] = ''
+    listHeader['trainDescription'] = ''
+    listHeader['trainComment'] = ''
+
+
+    listHeader['date'] = unicode(timeStamp(), ENCODING)
+    listHeader['locations'] = [{'locationName': configFile['PT']['PL'], 'tracks': [{'cars': [], 'locos': []}]}]
+
+    return listHeader
+
 def jPlusHeader():
     """Called by:
         makeGenericHeader
