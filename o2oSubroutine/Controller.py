@@ -106,7 +106,10 @@ class StartUp:
 
         return self.subroutinePanel
 
+    def startUpTasks(self):
+        """Run these tasks when this subroutine is started."""
 
+        return
 
     def activateWidgets(self):
         """The *.getName value is the name of the action for the widget.
@@ -140,8 +143,7 @@ class StartUp:
             configfile['PT'].update({'PL': ''})
             PSE.writeConfigFile(configfile)
 
-            PSE.restartSubroutineByName('PatternTracksSubroutine')
-            PSE.restartSubroutineByName('jPlusSubroutine')
+            PSE.restartAllSubroutines()
 
             print('New JMRI railroad built from TrainPlayer data')
             _psLog.info('New JMRI railroad built from TrainPlayer data')
@@ -175,8 +177,7 @@ class StartUp:
             configfile['PT'].update({'PL': ''})
             PSE.writeConfigFile(configfile)
 
-            PSE.restartSubroutineByName('PatternTracksSubroutine')
-            PSE.restartSubroutineByName('jPlusSubroutine')
+            PSE.restartAllSubroutines()
 
             print('JMRI railroad updated from TrainPlayer data')
             _psLog.info('JMRI railroad updated from TrainPlayer data')

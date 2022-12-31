@@ -175,6 +175,16 @@ class CreateStubFile:
 """GUI Methods"""
 
 
+def restartAllSubroutines():
+
+    patternConfig = readConfigFile()
+
+    for subroutine in patternConfig['CP']['IL']:
+        if patternConfig['CP'][subroutine]:
+            restartSubroutineByName(subroutine)
+
+    return
+
 def restartSubroutineByName(subRoutineName):
     """Finds the named subroutine in the plugin and restarts it."""
 
@@ -183,7 +193,9 @@ def restartSubroutineByName(subRoutineName):
     if subroutine:
 
         package = __import__(subRoutineName, globals(), locals(), ['Controller'], 0)
-        subroutinePanel = package.Controller.StartUp(subroutine).makeSubroutinePanel()
+        restart = package.Controller.StartUp(subroutine)
+        subroutinePanel = restart.makeSubroutinePanel()
+        restart.startUpTasks()
 
         subroutine.removeAll()
         subroutine.add(subroutinePanel)
@@ -451,8 +463,8 @@ def makeGenericHeader():
     # if configFile['CP']['jPlusSubroutine']: # Replace with Railroad Details Subroutine
     #     listHeader['railroadName'] = jPlusHeader()
     # else:
-
     listHeader['railroadName'] = unicode(OSU.Setup.getRailroadName(), ENCODING)
+
     listHeader['railroadDescription'] = ''
     listHeader['trainName'] = ''
     listHeader['trainDescription'] = ''

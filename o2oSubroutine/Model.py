@@ -6,7 +6,6 @@
 from opsEntities import PSE
 from o2oSubroutine import ModelEntities
 from o2oSubroutine import BuiltTrainExport
-from PatternTracksSubroutine import ModelEntities as ptModelEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.Model'
 SCRIPT_REV = 20221010
@@ -39,7 +38,7 @@ def newJmriRailroad():
         Controller.StartUp.newJmriRailroad
         """
 
-    tpLocaleData = TpLocalculator()
+    tpLocaleData = TpLocaleculator()
     tpLocaleData.make()
     if tpLocaleData.isValid():
         tpLocaleData.write()
@@ -116,8 +115,18 @@ def updateJmriRailroad():
         Controller.StartUp.updateJmriRailroad
         """
 
-    tpLocaleData = TpLocalculator()
-    if not tpLocaleData.exists():
+    tpLocaleTest = TpLocaleculator()
+    tpLocaleTest.make()
+    if tpLocaleTest.isValid():
+        pass
+    else:
+        return False
+
+    tpLocaleData = TpLocaleculator()
+    tpLocaleData.make()
+    if tpLocaleData.exists():
+        pass
+    else:
         return False
 
     resetTrains = BuiltTrainExport.FindTrain()
@@ -182,6 +191,9 @@ def updateJmriRailroad():
     PSE.EMX.save()
     PSE.OMX.save()
 
+    # tpLocaleData.make()
+    # tpLocaleData.write()
+
     return True
 
 def updateJmriRollingingStock():
@@ -226,19 +238,17 @@ def updateJmriRollingingStock():
         return False
 
 
-class TpLocalculator:
+class TpLocaleculator:
     """Makes the tpLocaleData.json file."""
 
     def __init__(self):
 
-        self.scriptName = SCRIPT_NAME + '.TpLocalculator'
+        self.scriptName = SCRIPT_NAME + '.TpLocaleculator'
 
         self.sourceData = {}
         self.tpLocaleData = {}
 
         self.locationList = []
-
-        print(self.scriptName + ' ' + str(SCRIPT_REV))
 
         return
 
@@ -289,14 +299,15 @@ class TpLocalculator:
         fileName = 'tpLocaleData.json'
         targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
 
-        if not PSE.JAVA_IO.File(targetPath).isFile():
+        if PSE.JAVA_IO.File(targetPath).isFile():
+
+            return True
+        else:
             message = PSE.BUNDLE['Alert: Create a new JMRI layout first.']
             PSE.openOutputFrame(message)
             _psLog.critical('Alert: Create a new JMRI layout first.')
 
             return False
-
-        return 
 
     def isValid(self):
         """Catch  all user errors here.
@@ -342,6 +353,7 @@ class TpLocalculator:
         self.getLocations()
         self.makeLocationRubric()
         self.makeTrackIdRubric()
+        print(self.scriptName + ' ' + str(SCRIPT_REV))
 
         return
 

@@ -1,6 +1,5 @@
 Todo:
   How to publish DeepL?
-  Update RR does not update jPlus + o2o. Needs to automatically press jPlus 'Update' button.
   Add division to all Pattern Tracks reports?
   All the subroutine actionListener() are very similar. Can this duplication be eliminated?
 
