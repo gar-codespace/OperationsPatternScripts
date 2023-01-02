@@ -79,6 +79,11 @@ class StartUp:
 
         return self.subroutinePanel
 
+    def startUpTasks(self):
+        """Run these tasks when this subroutine is started."""
+
+        return
+
     def activateWidgets(self):
 
         self.widgets[0].addActionListener(Listeners.PTComboBox())

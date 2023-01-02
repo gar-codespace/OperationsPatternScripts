@@ -4,6 +4,7 @@ ALERT: TrainPlayer Industries file not found.
 ALERT: TrainPlayer Inventory file not found.
 ALERT: Staging and non-staging tracks at same location:
 ALERT: TrainPlayer export issue.
+Alert: Create a new JMRI layout first.
 Check TrainPlayer-Advanced Ops-Locales for semi colon.
 Check TrainPlayer-Advanced Ops-Industries for errors.
 Create New Railroad

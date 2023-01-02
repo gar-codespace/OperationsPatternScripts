@@ -7,7 +7,7 @@ The info can be input directly or imported from TrainPlayer.
 """
 
 from opsEntities import PSE
-from jPlusSubroutine import Listeners
+# from jPlusSubroutine import Listeners
 from jPlusSubroutine import Model
 from jPlusSubroutine import View
 
@@ -88,6 +88,13 @@ class StartUp:
             print('j Plus Update button not added')
 
         return self.subroutinePanel
+
+    def startUpTasks(self):
+        """Run these tasks when this subroutine is started."""
+
+        self.update('Restart: OperationsPatternScripts.jPlusSubroutine.Controller.StartUp')
+
+        return
 
     def activateWidgets(self):
         """The widget.getName() value is the name of the action for the widget.

@@ -78,6 +78,11 @@ class StartUp:
 
         return self.subroutinePanel
 
+    def startUpTasks(self):
+        """Run these tasks when this subroutine is started."""
+
+        return
+        
     def activateWidgets(self):
         """The widget.getName() value is the name of the action for the widget.
             IE 'button'

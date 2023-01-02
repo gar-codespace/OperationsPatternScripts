@@ -175,6 +175,16 @@ class CreateStubFile:
 """GUI Methods"""
 
 
+def restartAllSubroutines():
+
+    patternConfig = readConfigFile()
+
+    for subroutine in patternConfig['CP']['IL']:
+        if patternConfig['CP'][subroutine]:
+            restartSubroutineByName(subroutine)
+
+    return
+
 def restartSubroutineByName(subRoutineName):
     """Finds the named subroutine in the plugin and restarts it."""
 
@@ -183,7 +193,9 @@ def restartSubroutineByName(subRoutineName):
     if subroutine:
 
         package = __import__(subRoutineName, globals(), locals(), ['Controller'], 0)
-        subroutinePanel = package.Controller.StartUp(subroutine).makeSubroutinePanel()
+        restart = package.Controller.StartUp(subroutine)
+        subroutinePanel = restart.makeSubroutinePanel()
+        restart.startUpTasks()
 
         subroutine.removeAll()
         subroutine.add(subroutinePanel)
@@ -437,6 +449,32 @@ def occuranceTally(listOfOccurances):
         dict[occurance] = tally
 
     return dict
+
+def makeGenericHeader():
+    """Called by:
+        makeTrackPatternReport
+        Controller.StartUp.setRsButton
+        """
+
+    OSU = JMRI.jmrit.operations.setup
+    configFile = readConfigFile()
+
+    listHeader = {}
+    # if configFile['CP']['jPlusSubroutine']: # Replace with Railroad Details Subroutine
+    #     listHeader['railroadName'] = jPlusHeader()
+    # else:
+    listHeader['railroadName'] = unicode(OSU.Setup.getRailroadName(), ENCODING)
+
+    listHeader['railroadDescription'] = ''
+    listHeader['trainName'] = ''
+    listHeader['trainDescription'] = ''
+    listHeader['trainComment'] = ''
+
+
+    listHeader['date'] = unicode(timeStamp(), ENCODING)
+    listHeader['locations'] = [{'locationName': configFile['PT']['PL'], 'tracks': [{'cars': [], 'locos': []}]}]
+
+    return listHeader
 
 def jPlusHeader():
     """Called by:

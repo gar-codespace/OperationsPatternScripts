@@ -6,7 +6,6 @@
 from opsEntities import PSE
 from o2oSubroutine import ModelEntities
 from o2oSubroutine import BuiltTrainExport
-from PatternTracksSubroutine import ModelEntities as ptModelEntities
 
 SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.Model'
 SCRIPT_REV = 20221010
@@ -25,7 +24,7 @@ def o2oWorkEventReset():
     fileName = PSE.BUNDLE['o2o Work Events'] + '.json'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
 
-    newHeader = ptModelEntities.makeGenericHeader()
+    newHeader = PSE.makeGenericHeader()
     newHeader = PSE.dumpJson(newHeader)
     PSE.genericWriteReport(targetPath, newHeader)
 
@@ -39,7 +38,7 @@ def newJmriRailroad():
         Controller.StartUp.newJmriRailroad
         """
 
-    tpLocaleData = MakeTpLocaleData()
+    tpLocaleData = TpLocaleculator()
     tpLocaleData.make()
     if tpLocaleData.isValid():
         tpLocaleData.write()
@@ -116,9 +115,18 @@ def updateJmriRailroad():
         Controller.StartUp.updateJmriRailroad
         """
 
-    tpLocaleData = MakeTpLocaleData()
+    tpLocaleTest = TpLocaleculator()
+    tpLocaleTest.make()
+    if tpLocaleTest.isValid():
+        pass
+    else:
+        return False
+
+    tpLocaleData = TpLocaleculator()
     tpLocaleData.make()
-    if not tpLocaleData.isValid():
+    if tpLocaleData.exists():
+        pass
+    else:
         return False
 
     resetTrains = BuiltTrainExport.FindTrain()
@@ -154,36 +162,37 @@ def updateJmriRailroad():
     tpLocaleData.write()
     updatedLocations.getUpdatedLocale()
 
-    # updatedLocations.parseLocations()
-    # updatedLocations.processLocations()
     updatedLocations.getNewLocations()
     updatedLocations.addNewLocations()
 
-    # updateDivisions.addDivisionToLocations()
-    # updateDivisions.addUnreportedToUnknown()
+    updateDivisions.addDivisionToLocations()
+    updateDivisions.addUnreportedToUnknown()
 
-    # ModelEntities.newSchedules()
+    ModelEntities.newSchedules()
 
-    # updatedLocations.parseTracks()
-    # updatedLocations.deleteOldTracks()
-    # updatedLocations.addNewTracks()
-    # updatedLocations.recastTracks()
+    updatedLocations.parseTracks()
+    updatedLocations.deleteOldTracks()
+    updatedLocations.addNewTracks()
+    updatedLocations.recastTracks()
 
-    # ModelEntities.setTrackLength()
-    # ModelEntities.addCarTypesToSpurs()
+    ModelEntities.setTrackLength()
+    ModelEntities.addCarTypesToSpurs()
 
-    # newInventory = RStockulator()
-    # newInventory.getTpInventory()
-    # newInventory.splitTpList()
-    # newInventory.makeTpRollingStockData()
-    # newInventory.newCars()
-    # newInventory.newLocos()
+    newInventory = RStockulator()
+    newInventory.getTpInventory()
+    newInventory.splitTpList()
+    newInventory.makeTpRollingStockData()
+    newInventory.newCars()
+    newInventory.newLocos()
 
     updatedLocations.deleteOldLocations()
 
-    # PSE.CMX.save()
-    # PSE.EMX.save()
-    # PSE.OMX.save()
+    PSE.CMX.save()
+    PSE.EMX.save()
+    PSE.OMX.save()
+
+    # tpLocaleData.make()
+    # tpLocaleData.write()
 
     return True
 
@@ -227,6 +236,126 @@ def updateJmriRollingingStock():
     except:
         _psLog.warning('TrainPlayer data file(s) not found')
         return False
+
+
+class TpLocaleculator:
+    """Makes the tpLocaleData.json file."""
+
+    def __init__(self):
+
+        self.scriptName = SCRIPT_NAME + '.TpLocaleculator'
+
+        self.sourceData = {}
+        self.tpLocaleData = {}
+
+        self.locationList = []
+
+        return
+
+    def getTpRrData(self):
+
+        self.sourceData = PSE.getTpRailroadJson('tpRailroadData')
+
+        return
+
+    def getLocations(self):
+
+        for id, data in self.sourceData['locales'].items():
+            self.locationList.append(data['location'])
+
+        self.locationList = list(set(self.locationList))
+
+        return
+
+    def makeLocationRubric(self):
+
+        locationScratch = {}
+        for location in self.locationList:
+            idScratch = []
+            for id, data in self.sourceData['locales'].items():
+                if data['location'] == location:
+                    idScratch.append(id)
+
+            locationScratch[location] = idScratch
+
+        self.tpLocaleData['locations'] = locationScratch
+
+        return
+
+    def makeTrackIdRubric(self):
+
+        trackData = {}
+        for id, data in self.sourceData['locales'].items():
+            otherTrack = (data['location'], data['track'], data['type'])
+            trackData[id] = otherTrack
+
+        self.tpLocaleData['tracks'] = trackData
+
+        return
+
+    def exists(self):
+        """Catches press of Update button before New button."""
+
+        fileName = 'tpLocaleData.json'
+        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
+
+        if PSE.JAVA_IO.File(targetPath).isFile():
+
+            return True
+        else:
+            message = PSE.BUNDLE['Alert: Create a new JMRI layout first.']
+            PSE.openOutputFrame(message)
+            _psLog.critical('Alert: Create a new JMRI layout first.')
+
+            return False
+
+    def isValid(self):
+        """Catch  all user errors here.
+            Can't have staging and non-staging track types at the same location.
+            """ 
+
+        stagingLocations = []
+        nonstagingLocations = []
+
+        for id, trackData in self.tpLocaleData['tracks'].items():
+            if trackData[2] == 'staging':
+                stagingLocations.append(trackData[0])
+            else:
+                nonstagingLocations.append(trackData[0])
+
+        result = list(set(stagingLocations) & set(nonstagingLocations))
+        if len(result) == 0:
+            _psLog.info('tpLocaleData file OK, no location/track conflicts')
+            return True
+        else:
+            a = PSE.BUNDLE['ALERT: Staging and non-staging tracks at same location: '] + str(result)
+            b = PSE.BUNDLE['JMRI does not allow staging and non-staging track types at the same location.']
+            c = PSE.BUNDLE['No changes were made to your JMRI layout.']
+            message = a + '\n' + b + '\n' + c + '\n'
+            PSE.openOutputFrame(message)
+
+            _psLog.critical('ALERT: Staging and non-staging tracks at same location: ' + str(result))
+
+            return False
+
+    def write(self):
+
+        fileName = 'tpLocaleData.json'
+        filePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
+        PSE.genericWriteReport(filePath, PSE.dumpJson(self.tpLocaleData))
+
+        return
+
+    def make(self):
+        """Mini controller"""
+
+        self.getTpRrData()
+        self.getLocations()
+        self.makeLocationRubric()
+        self.makeTrackIdRubric()
+        print(self.scriptName + ' ' + str(SCRIPT_REV))
+
+        return
 
 
 class Initiator:
@@ -306,111 +435,6 @@ class Initiator:
         self.OSU.Setup.setLocalManifestMessageFormat(self.o2oConfig['o2o']['TO']['MC'])
         self.OSU.Setup.setPickupEngineMessageFormat(self.o2oConfig['o2o']['TO']['PUL'])
         self.OSU.Setup.setDropEngineMessageFormat(self.o2oConfig['o2o']['TO']['SOL'])
-
-        return
-
-
-class MakeTpLocaleData:
-    """Makes the tpLocaleData.json file."""
-
-    def __init__(self):
-
-        self.scriptName = SCRIPT_NAME + '.MakeTpLocaleData'
-
-        self.sourceData = {}
-        self.tpLocaleData = {}
-
-        self.locationList = []
-
-        print(self.scriptName + ' ' + str(SCRIPT_REV))
-
-        return
-
-    def getTpRrData(self):
-
-        self.sourceData = PSE.getTpRailroadJson('tpRailroadData')
-
-        return
-
-    def getLocations(self):
-
-        for id, data in self.sourceData['locales'].items():
-            self.locationList.append(data['location'])
-
-        self.locationList = list(set(self.locationList))
-
-        return
-
-    def makeLocationRubric(self):
-
-        locationScratch = {}
-        for location in self.locationList:
-            idScratch = []
-            for id, data in self.sourceData['locales'].items():
-                if data['location'] == location:
-                    idScratch.append(id)
-
-            locationScratch[location] = idScratch
-
-        self.tpLocaleData['locations'] = locationScratch
-
-        return
-
-    def makeTrackIdRubric(self):
-
-        trackScratch = {}
-        trackData = {}
-        for id, data in self.sourceData['locales'].items():
-            otherTrack = (data['location'], data['track'], data['type'])
-            trackData[id] = otherTrack
-
-        self.tpLocaleData['tracks'] = trackData
-
-        return
-
-    def isValid(self):
-        """Catch  all user errors here.
-            Can't have staging and non-staging track types at the same location.
-            """
-
-        stagingLocations = []
-        nonstagingLocations = []
-
-        for id, trackData in self.tpLocaleData['tracks'].items():
-            if trackData[2] == 'staging':
-                stagingLocations.append(trackData[0])
-            else:
-                nonstagingLocations.append(trackData[0])
-
-        result = list(set(stagingLocations) & set(nonstagingLocations))
-        if len(result) == 0:
-            _psLog.info('tpLocaleData file OK, no location/track conflicts')
-            return True
-        else:
-            a = PSE.BUNDLE['ALERT: Staging and non-staging tracks at same location: '] + str(result)
-            b = PSE.BUNDLE['JMRI does not allow staging and non-staging track types at the same location.']
-            c = PSE.BUNDLE['No changes were made to your JMRI layout.']
-            message = a + '\n' + b + '\n' + c + '\n'
-
-            _psLog.critical('ALERT: Staging and non-staging tracks at same location: ' + str(result))
-
-            return False
-
-    def write(self):
-
-        fileName = 'tpLocaleData.json'
-        filePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
-        PSE.genericWriteReport(filePath, PSE.dumpJson(self.tpLocaleData))
-
-        return
-
-    def make(self):
-        """Mini controller"""
-
-        self.getTpRrData()
-        self.getLocations()
-        self.makeLocationRubric()
-        self.makeTrackIdRubric()
 
         return
 
@@ -538,7 +562,7 @@ class Locationator:
 
     def __init__(self):
 
-        self.scriptName = SCRIPT_NAME + '.LocationUpdator'
+        self.scriptName = SCRIPT_NAME + '.Locationator'
 
         self.o2oConfig = PSE.readConfigFile('o2o')
         self.tpRailroadData = PSE.getTpRailroadJson('tpRailroadData')
@@ -590,16 +614,6 @@ class Locationator:
 
         return
 
-    # def getUnchangedLocations(self):
-    #     """A list of unchanged location names to be recast."""
-
-    #     for cLocation, cId in self.currentLocale['locations'].items():
-    #         for uLocation, uId in self.updatedLocale['locations'].items():
-    #             if cId == uId and cLocation == uLocation:
-    #                 self.unchangedLocations.append(cLocation)
-
-    #     return
-
     def getNewLocations(self):
         """A list of new location names to be added to JMRI."""
 
@@ -615,33 +629,6 @@ class Locationator:
 
         return
 
- 
-
-    # def parseLocations(self):
-    #     """Create x lists:
-    #         new locations
-    #         modified locations
-    #         obsolete locations"""
-
-    #     _psLog.debug('parseLocations')
-
-    #     updateLocations = [uLocation for uLocation, uIds in self.updatedLocale['locations'].items()]
-
-    #     unchangedLocations = []
-    #     modifiedLocations = []
-    #     for cLocation, cIds in self.currentLocale['locations'].items():
-    #         for uLocation, uIds in self.updatedLocale['locations'].items():
-    #             if cIds == uIds and cLocation == uLocation:
-    #                 unchangedLocations.append(cLocation)
-    #             if cIds == uIds and cLocation != uLocation:
-    #                 self.renameLocations.append((cLocation, uLocation))
-    #                 modifiedLocations.append(cLocation)
-    #                 modifiedLocations.append(uLocation)
-
-    #     self.newLocations = list(set(updateLocations) - set(unchangedLocations) - set(modifiedLocations))
-
-    #     return
-
     def processLocations(self):
 
         _psLog.debug('processLocations')
@@ -650,26 +637,6 @@ class Locationator:
             PSE.LM.getLocationByName(item[0]).setName(item[1])
 
         return
-
-    # def newLocations(self):
-
-    #     _psLog.debug('newLocations')
-
-    #     for location in self.tpRailroadData['locations']:
-    #         newLocation = PSE.LM.newLocation(location)
-    #         if newLocation.getName() == PSE.BUNDLE['Unreported']:
-    #             newLocation.setTrainDirections(0)
-
-    #     return
-
-    # def newTracks(self):
-
-    #     _psLog.debug('newTracks')
-
-    #     for trackId, trackData in self.tpRailroadData['locales'].items():
-    #         ModelEntities.makeNewTrack(trackId, trackData)
-
-    #     return
 
     def addNewLocations(self):
 
@@ -808,7 +775,6 @@ class Divisionator:
         for division in self.obsoleteDivisions:
             obsolete = PSE.DM.getDivisionByName(division)
             PSE.DM.deregister(obsolete)
-            obsolete.dispose()
 
         return
 
@@ -843,39 +809,6 @@ class Divisionator:
         location.setDivision(division)
 
         return
-
-
-# class Locationator:
-#     """JMRI considers tracks to be a component of a location."""
-
-#     def __init__(self):
-
-#         self.scriptName = SCRIPT_NAME + '.Locationator'
-#         self.tpRailroadData = PSE.getTpRailroadJson('tpRailroadData')
-
-#         print(self.scriptName + ' ' + str(SCRIPT_REV))
-
-#         return
-
-#     def newLocations(self):
-
-#         _psLog.debug('newLocations')
-
-#         for location in self.tpRailroadData['locations']:
-#             newLocation = PSE.LM.newLocation(location)
-#             if newLocation.getName() == PSE.BUNDLE['Unreported']:
-#                 newLocation.setTrainDirections(0)
-
-#         return
-
-#     def newTracks(self):
-
-#         _psLog.debug('newTracks')
-
-#         for trackId, trackData in self.tpRailroadData['locales'].items():
-#             ModelEntities.makeNewTrack(trackId, trackData)
-
-#         return
 
 
 class RStockulator:
