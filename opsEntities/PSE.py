@@ -587,6 +587,19 @@ def getYear():
     else:
         return TIME.strftime('%Y', TIME.gmtime(TIME.time()))
 
+def throwback():
+    """Returns the time in format: YYYY-MO-DY-24:MN"""
+
+    epochTime = TIME.time()
+    if TIME.localtime(epochTime).tm_isdst and TIME.daylight: # If local dst and dst are both 1
+        timeOffset = TIME.altzone
+    else:
+        timeOffset = TIME.timezone # in seconds
+
+    tb = TIME.strftime('%Y-%m-%d-%H:%M', TIME.gmtime(epochTime - timeOffset))
+
+    return tb
+
 def convertJmriDateToEpoch(jmriTime):
     """Example: 2022-02-26T17:16:17.807+0000
         Called by:

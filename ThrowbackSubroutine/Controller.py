@@ -6,13 +6,13 @@ Template to serve as scaffolding for additional subroutines.
 """
 
 from opsEntities import PSE
-from TemplateSubroutine import Model
-from TemplateSubroutine import View
+from ThrowbackSubroutine import Model
+from ThrowbackSubroutine import View
 
-SCRIPT_NAME = 'OperationsPatternScripts.TemplateSubroutine.Controller'
+SCRIPT_NAME = 'OperationsPatternScripts.ThrowbackSubroutine.Controller'
 SCRIPT_REV = 20221010
 
-_psLog = PSE.LOGGING.getLogger('OPS.xxx.Controller')
+_psLog = PSE.LOGGING.getLogger('OPS.TB.Controller')
 
 
 def startDaemons():
@@ -42,12 +42,12 @@ def setDropDownText():
 
     patternConfig = PSE.readConfigFile('CP')
 
-    if patternConfig['TemplateSubroutine']:
+    if patternConfig['ThrowbackSubroutine']:
         menuText = PSE.BUNDLE[u'Disable'] + ' ' + __package__
     else:
         menuText = PSE.BUNDLE[u'Enable'] + ' ' + __package__
 
-    return menuText, 'xxxItemSelected'
+    return menuText, 'tbItemSelected'
 
 
 class StartUp:
@@ -66,7 +66,7 @@ class StartUp:
         subroutinePanel = self.makeSubroutinePanel()
         self.subroutineFrame.add(subroutinePanel)
 
-        _psLog.info('xxxSubroutine makeFrame completed')
+        _psLog.info('ThrowbackSubroutine makeFrame completed')
 
         return self.subroutineFrame
 
@@ -88,8 +88,33 @@ class StartUp:
 
         return
 
-    def button(self, EVENT):
-        """Whatever it is this button does."""
+    def snapShot(self, EVENT):
+        """Makes a throwback set point."""
+
+        _psLog.debug(EVENT)
+
+        print(PSE.throwback())
+
+        return
+
+    def previous(self, EVENT):
+        """Move to the previous snapshot."""
+
+        _psLog.debug(EVENT)
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+        return
+
+    def next(self, EVENT):
+        """Move to the next snapshot."""
+
+        _psLog.debug(EVENT)
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+        return
+
+    def throwback(self, EVENT):
+        """Execute a throwback."""
 
         _psLog.debug(EVENT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

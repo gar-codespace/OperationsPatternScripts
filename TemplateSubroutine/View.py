@@ -17,12 +17,13 @@ class ManageGui:
 
     def __init__(self):
 
-        self.configFile = PSE.readConfigFile('GS')
+        self.configFile = PSE.readConfigFile('XX')
+        # Add an XX section to the PatternConfig.json
 
         return
 
     def makeSubroutineFrame(self):
-        """Make the frame that all the o2o controls are added to"""
+        """Make the frame that all the template controls are added to"""
 
         subroutineFrame = PSE.JAVX_SWING.JPanel() # the track pattern panel
         subroutineFrame.setName(u'xxx')
