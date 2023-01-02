@@ -391,32 +391,6 @@ def getDetailsForCar(carObject, kernelTally):
 
     return carDetailDict
 
-# def makeGenericHeader():
-#     """Called by:
-#         makeTrackPatternReport
-#         Controller.StartUp.setRsButton
-#         """
-
-#     OSU = PSE.JMRI.jmrit.operations.setup
-#     configFile = PSE.readConfigFile()
-
-#     listHeader = {}
-#     if configFile['CP']['jPlusSubroutine']: # Replace with Railroad Details Subroutine
-#         listHeader['railroadName'] = PSE.jPlusHeader()
-#     else:
-#         listHeader['railroadName'] = unicode(OSU.Setup.getRailroadName(), PSE.ENCODING)
-
-#     listHeader['railroadDescription'] = ''
-#     listHeader['trainName'] = ''
-#     listHeader['trainDescription'] = ''
-#     listHeader['trainComment'] = ''
-
-
-#     listHeader['date'] = unicode(PSE.timeStamp(), PSE.ENCODING)
-#     listHeader['locations'] = [{'locationName': configFile['PT']['PL'], 'tracks': [{'cars': [], 'locos': []}]}]
-
-#     return listHeader
-
 def makeInitialTrackDict(location):
     """Sets all the track flags to false for an initial list of tracks.
         Called by:

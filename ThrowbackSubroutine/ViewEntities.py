@@ -33,6 +33,10 @@ class tbSubroutinePanel:
         pvButton.setName('previous')
         self.controlWidgets.append(pvButton)
 
+        timeStampLabel = PSE.JAVX_SWING.JLabel(PSE.timeStamp())
+
+        inputText = PSE.JAVX_SWING.JTextField(20)
+
         nxButton = PSE.JAVX_SWING.JButton()
         nxButton.setText(PSE.BUNDLE[u'Next'])
         nxButton.setName('next')
@@ -43,13 +47,30 @@ class tbSubroutinePanel:
         tbButton.setName('throwback')
         self.controlWidgets.append(tbButton)
 
+        rsButton = PSE.JAVX_SWING.JButton()
+        rsButton.setText(PSE.BUNDLE[u'Reset'])
+        rsButton.setName('reset')
+        self.controlWidgets.append(rsButton)
+
         tpPanel.add(ssButton)
         tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(40,0)))
+
         tpPanel.add(pvButton)
         tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
+
+        tpPanel.add(timeStampLabel)
+        tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
+
+        tpPanel.add(inputText)
+        tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
+
         tpPanel.add(nxButton)
         tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(40,0)))
+
         tpPanel.add(tbButton)
+        tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(50,0)))
+        
+        tpPanel.add(rsButton)
 
         return tpPanel
 

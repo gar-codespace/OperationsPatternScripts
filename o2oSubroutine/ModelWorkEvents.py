@@ -170,7 +170,7 @@ class jmriManifestConversion:
         # self.o2oWorkEvents['trainComment'] = PSE.HTML_PARSER().unescape(self.jmriManifest['description'])
 
         epoch = PSE.convertJmriDateToEpoch(self.jmriManifest['date'])
-        self.o2oWorkEvents['date'] = PSE.timeStamp(epoch)
+        self.o2oWorkEvents['date'] = PSE.validTime(epoch)
         self.o2oWorkEvents['locations'] = []
 
         return

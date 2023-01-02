@@ -93,7 +93,7 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        print(PSE.throwback())
+        print(PSE.timeStamp())
 
         return
 
@@ -115,6 +115,14 @@ class StartUp:
 
     def throwback(self, EVENT):
         """Execute a throwback."""
+
+        _psLog.debug(EVENT)
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+        return
+
+    def reset(self, EVENT):
+        """Reset throwback."""
 
         _psLog.debug(EVENT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
