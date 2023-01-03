@@ -450,7 +450,7 @@ def occuranceTally(listOfOccurances):
 
     return dict
 
-def makeGenericHeader():
+def initializeReportHeader():
     """Called by:
         makeTrackPatternReport
         Controller.StartUp.setRsButton
@@ -460,17 +460,13 @@ def makeGenericHeader():
     configFile = readConfigFile()
 
     listHeader = {}
-    # if configFile['CP']['jPlusSubroutine']: # Replace with Railroad Details Subroutine
-    #     listHeader['railroadName'] = jPlusHeader()
-    # else:
     listHeader['railroadName'] = unicode(OSU.Setup.getRailroadName(), ENCODING)
 
     listHeader['railroadDescription'] = ''
     listHeader['trainName'] = ''
     listHeader['trainDescription'] = ''
     listHeader['trainComment'] = ''
-
-
+    listHeader['division'] = ''
     listHeader['date'] = unicode(validTime(), ENCODING)
     listHeader['locations'] = [{'locationName': configFile['PT']['PL'], 'tracks': [{'cars': [], 'locos': []}]}]
 
@@ -478,7 +474,6 @@ def makeGenericHeader():
 
 def jPlusHeader():
     """Called by:
-        makeGenericHeader
         """
 
     configFile = readConfigFile()
@@ -525,6 +520,13 @@ def getLocationNamesByDivision(divisionName):
             locationsByDivision.append(locationName)
 
     return locationsByDivision
+
+def getDivisionForLocation(locationName):
+
+    location = LM.getLocationByName(locationName)
+    division = location.getDivision()
+
+    return division.getName()
 
 def getAllLocationNames():
     """JMRI sorts the list, returns list of location names.
@@ -593,7 +595,7 @@ def getTracksNamesByLocation(trackType):
 #         Called by:
 #         o2oSubroutine.ModelImport.TrainPlayerImporter.processFileHeaders
 #         o2oSubroutine.ModelWorkEvents.jmriManifestConversion.convertHeader
-#         PatternTracksSubroutine.ModelEntities.makeGenericHeader
+#         PatternTracksSubroutine.ModelEntities.initializeReportHeader
 #         Nov 15, 2022 11:53 AM PST vs Valid 11/15/2022 11:54
 #         """
 
@@ -621,7 +623,7 @@ def validTime(epochTime=0):
         Called by:
         o2oSubroutine.ModelImport.TrainPlayerImporter.processFileHeaders
         o2oSubroutine.ModelWorkEvents.jmriManifestConversion.convertHeader
-        PatternTracksSubroutine.ModelEntities.makeGenericHeader
+        PatternTracksSubroutine.ModelEntities.initializeReportHeader
         Nov 15, 2022 11:53 AM PST vs Valid 11/15/2022 11:54
         """
 

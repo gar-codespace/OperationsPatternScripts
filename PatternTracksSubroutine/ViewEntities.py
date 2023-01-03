@@ -141,7 +141,8 @@ def makeTextReportHeader(textWorkEventList):
 
     headerNames = PSE.readConfigFile('PT')
 
-    textReportHeader    = textWorkEventList['railroadName'] + '\n\n' \
+    textReportHeader    = textWorkEventList['railroadName'] + '\n' \
+                        + textWorkEventList['division'] + '\n\n' \
                         + PSE.BUNDLE['Work Location:'] + ' ' + headerNames['PL'] + '\n' \
                         + textWorkEventList['date'] + '\n\n'
 

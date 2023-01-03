@@ -24,7 +24,7 @@ def o2oWorkEventReset():
     fileName = PSE.BUNDLE['o2o Work Events'] + '.json'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
 
-    newHeader = PSE.makeGenericHeader()
+    newHeader = PSE.initializeReportHeader()
     newHeader = PSE.dumpJson(newHeader)
     PSE.genericWriteReport(targetPath, newHeader)
 
