@@ -1,5 +1,3 @@
-Disable
-Enable
 Throwback Subroutine
 Throwback
 Selection
@@ -8,8 +6,3 @@ Snap Shot
 Previous
 Next
 Reset
-Ab
-Bb
-B
-B
-Z

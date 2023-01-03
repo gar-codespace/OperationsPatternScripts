@@ -1,4 +1,2 @@
-Disable
-Enable
 Template Subroutine
 xyzzy
