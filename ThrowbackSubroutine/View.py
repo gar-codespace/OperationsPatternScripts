@@ -8,7 +8,7 @@ Template
 from opsEntities import PSE
 from ThrowbackSubroutine import ViewEntities
 
-SCRIPT_NAME = 'OperationsPatternScripts.ThrowbackSubroutine.View'
+SCRIPT_NAME = 'OperationsPatternScripts.' + __package__ + '.View'
 SCRIPT_REV = 20221010
 
 _psLog = PSE.LOGGING.getLogger('OPS.TB.View')
@@ -25,8 +25,8 @@ class ManageGui:
         """Make the frame that all the throwback controls are added to"""
 
         subroutineFrame = PSE.JAVX_SWING.JPanel() # the track pattern panel
-        subroutineFrame.setName(u'throwbackSubroutine')
-        subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE[u'Throwback Subroutine'])
+        subroutineFrame.setName(__package__)
+        subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE['Throwback Subroutine'])
 
         return subroutineFrame
 

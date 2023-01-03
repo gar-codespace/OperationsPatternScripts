@@ -5,10 +5,10 @@ JAVAX action performed methods are in Controller.
 
 from opsEntities import PSE
 
-SCRIPT_NAME = 'OperationsPatternScripts.TemplateSubroutine.Listeners'
+SCRIPT_NAME = 'OperationsPatternScripts.' + __package__ + '.View'
 SCRIPT_REV = 20221010
 
-_psLog = PSE.LOGGING.getLogger('OPS.xxx.Listeners')
+_psLog = PSE.LOGGING.getLogger('OPS.XX.Listeners')
 
 
 def actionListener(EVENT):

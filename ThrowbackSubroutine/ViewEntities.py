@@ -2,12 +2,12 @@
 # © 2021, 2022 Greg Ritacco
 
 """
-Template
+
 """
 
 from opsEntities import PSE
 
-SCRIPT_NAME = 'OperationsPatternScripts.ThrowbackSubroutine.ViewEntities'
+SCRIPT_NAME = 'OperationsPatternScripts.' + __package__ + '.View'
 SCRIPT_REV = 20221010
 
 class tbSubroutinePanel:
@@ -23,6 +23,14 @@ class tbSubroutinePanel:
 
         tpPanel = PSE.JAVX_SWING.JPanel()
 
+        selectionFrame = PSE.JAVX_SWING.JPanel() # the track pattern panel
+        selectionFrame.setName('selectionFrame')
+        selectionFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE[u'Selection'])
+
+        actionFrame = PSE.JAVX_SWING.JPanel() # the track pattern panel
+        actionFrame.setName('actionFrame')
+        actionFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE[u'Action'])
+
         ssButton = PSE.JAVX_SWING.JButton()
         ssButton.setText(PSE.BUNDLE[u'Snap Shot'])
         ssButton.setName('snapShot')
@@ -34,8 +42,11 @@ class tbSubroutinePanel:
         self.controlWidgets.append(pvButton)
 
         timeStampLabel = PSE.JAVX_SWING.JLabel(PSE.timeStamp())
+        timeStampLabel.setName('timeStamp')
 
-        inputText = PSE.JAVX_SWING.JTextField(20)
+        tbText = PSE.JAVX_SWING.JTextField(20)
+        tbText.setName('tbText')
+        self.controlWidgets.append(tbText)
 
         nxButton = PSE.JAVX_SWING.JButton()
         nxButton.setText(PSE.BUNDLE[u'Next'])
@@ -52,25 +63,23 @@ class tbSubroutinePanel:
         rsButton.setName('reset')
         self.controlWidgets.append(rsButton)
 
-        tpPanel.add(ssButton)
+        selectionFrame.add(pvButton)
+        selectionFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
+        selectionFrame.add(timeStampLabel)
+        selectionFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(10,0)))
+        selectionFrame.add(tbText)
+        selectionFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
+        selectionFrame.add(nxButton)
+
+        actionFrame.add(ssButton)
+        actionFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(10,0)))
+        actionFrame.add(tbButton)
+        actionFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(10,0)))
+        actionFrame.add(rsButton)
+
+        tpPanel.add(selectionFrame)
         tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(40,0)))
-
-        tpPanel.add(pvButton)
-        tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
-
-        tpPanel.add(timeStampLabel)
-        tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
-
-        tpPanel.add(inputText)
-        tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
-
-        tpPanel.add(nxButton)
-        tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(40,0)))
-
-        tpPanel.add(tbButton)
-        tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(50,0)))
-        
-        tpPanel.add(rsButton)
+        tpPanel.add(actionFrame)
 
         return tpPanel
 

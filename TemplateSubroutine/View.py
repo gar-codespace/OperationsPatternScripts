@@ -8,10 +8,10 @@ Template
 from opsEntities import PSE
 from TemplateSubroutine import ViewEntities
 
-SCRIPT_NAME = 'OperationsPatternScripts.TemplateSubroutine.View'
+SCRIPT_NAME = 'OperationsPatternScripts.' + __package__ + '.View'
 SCRIPT_REV = 20221010
 
-_psLog = PSE.LOGGING.getLogger('OPS.xxx.View')
+_psLog = PSE.LOGGING.getLogger('OPS.XX.View')
 
 class ManageGui:
 
@@ -26,19 +26,19 @@ class ManageGui:
         """Make the frame that all the template controls are added to"""
 
         subroutineFrame = PSE.JAVX_SWING.JPanel() # the track pattern panel
-        subroutineFrame.setName(u'xxx')
-        subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE[u'xxx Subroutine'])
+        subroutineFrame.setName(__package__)
+        subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE['Template Subroutine'])
 
         return subroutineFrame
 
     def makeSubroutinePanel(self):
-        """Make the xxx controls"""
+        """Make the controls."""
 
         _psLog.debug('TemplateSubroutine.View.makeSubroutinePanel')
 
-        xxxSubroutinePanel = ViewEntities.xxxSubroutinePanel()
-        subroutinesPanel = xxxSubroutinePanel.xxxPanelMaker()
-        subroutinePanelWidgets = xxxSubroutinePanel.xxxWidgetGetter()
+        xxSubroutinePanel = ViewEntities.xxSubroutinePanel()
+        subroutinesPanel = xxSubroutinePanel.xxPanelMaker()
+        subroutinePanelWidgets = xxSubroutinePanel.xxWidgetGetter()
 
         return subroutinesPanel, subroutinePanelWidgets
 

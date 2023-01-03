@@ -9,7 +9,7 @@ from opsEntities import PSE
 from ThrowbackSubroutine import Model
 from ThrowbackSubroutine import View
 
-SCRIPT_NAME = 'OperationsPatternScripts.ThrowbackSubroutine.Controller'
+SCRIPT_NAME = 'OperationsPatternScripts.' + __package__ + '.View'
 SCRIPT_REV = 20221010
 
 _psLog = PSE.LOGGING.getLogger('OPS.TB.Controller')
@@ -42,7 +42,7 @@ def setDropDownText():
 
     patternConfig = PSE.readConfigFile('CP')
 
-    if patternConfig['ThrowbackSubroutine']:
+    if patternConfig[__package__]:
         menuText = PSE.BUNDLE[u'Disable'] + ' ' + __package__
     else:
         menuText = PSE.BUNDLE[u'Enable'] + ' ' + __package__
@@ -51,7 +51,7 @@ def setDropDownText():
 
 
 class StartUp:
-    """Start the xxx subroutine"""
+    """Start the subroutine."""
 
     def __init__(self, subroutineFrame=None):
 
@@ -66,7 +66,7 @@ class StartUp:
         subroutinePanel = self.makeSubroutinePanel()
         self.subroutineFrame.add(subroutinePanel)
 
-        _psLog.info('ThrowbackSubroutine makeFrame completed')
+        _psLog.info(__package__ + ' makeFrame completed')
 
         return self.subroutineFrame
 
@@ -78,9 +78,14 @@ class StartUp:
 
         return self.subroutinePanel
 
+    def startUpTasks(self):
+        """Run these tasks when this subroutine is started."""
+
+        return
+
     def activateWidgets(self):
         """The widget.getName() value is the name of the action for the widget.
-            IE 'button'
+            IE 'snapShot'
             """
 
         for widget in self.widgets:
@@ -116,12 +121,22 @@ class StartUp:
     def throwback(self, EVENT):
         """Execute a throwback."""
 
+        PSE.restartSubroutineByName(__package__)
+
         _psLog.debug(EVENT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 
     def reset(self, EVENT):
+        """Reset throwback."""
+
+        _psLog.debug(EVENT)
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+        return
+
+    def tbText(self, EVENT):
         """Reset throwback."""
 
         _psLog.debug(EVENT)

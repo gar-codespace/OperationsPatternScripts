@@ -3,16 +3,19 @@
 
 """
 Template to serve as scaffolding for additional subroutines.
+Replace all XX with uppercase two letter abbreviation for this subroutine.
+Replace all xx with lowercase two letter abbreviation for this subroutine.
+Replace XX in the config file with uppercase two letter abbreviation for this subroutine.
 """
 
 from opsEntities import PSE
 from TemplateSubroutine import Model
 from TemplateSubroutine import View
 
-SCRIPT_NAME = 'OperationsPatternScripts.TemplateSubroutine.Controller'
+SCRIPT_NAME = 'OperationsPatternScripts.' + __package__ + '.View'
 SCRIPT_REV = 20221010
 
-_psLog = PSE.LOGGING.getLogger('OPS.xxx.Controller')
+_psLog = PSE.LOGGING.getLogger('OPS.XX.Controller')
 
 
 def startDaemons():
@@ -42,16 +45,16 @@ def setDropDownText():
 
     patternConfig = PSE.readConfigFile('CP')
 
-    if patternConfig['TemplateSubroutine']:
+    if patternConfig[__package__]:
         menuText = PSE.BUNDLE[u'Disable'] + ' ' + __package__
     else:
         menuText = PSE.BUNDLE[u'Enable'] + ' ' + __package__
 
-    return menuText, 'xxxItemSelected'
+    return menuText, 'xxItemSelected'
 
 
 class StartUp:
-    """Start the xxx subroutine"""
+    """Start the subroutine."""
 
     def __init__(self, subroutineFrame=None):
 
@@ -66,7 +69,7 @@ class StartUp:
         subroutinePanel = self.makeSubroutinePanel()
         self.subroutineFrame.add(subroutinePanel)
 
-        _psLog.info('xxxSubroutine makeFrame completed')
+        _psLog.info(__package__ + ' makeFrame completed')
 
         return self.subroutineFrame
 
@@ -95,6 +98,8 @@ class StartUp:
 
     def button(self, EVENT):
         """Whatever it is this button does."""
+
+        PSE.restartSubroutineByName(__package__)
 
         _psLog.debug(EVENT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

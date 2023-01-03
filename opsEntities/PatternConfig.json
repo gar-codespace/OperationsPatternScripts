@@ -1,4 +1,7 @@
 {
+  "XX" :{
+
+  },
   "TB" :{
     "SS" : [
 
@@ -90,11 +93,11 @@
     "o2oSubroutine" : false,
     "ThrowbackSubroutine" : true,
     "PH" : 280,
-    "PW" : 1100,
+    "PW" : 1000,
     "PX" : 0,
     "PY" : 0,
     "OC" : true,
-    "RV" : 20230101
+    "RV" : 20230103
   },
   "RM" : {
     "DS" : "No Waybill",
