@@ -8,7 +8,7 @@ from urllib2 import urlopen
 from opsEntities import PSE
 from opsBundle import Translators
 
-SCRIPT_NAME = 'OperationsPatternScripts.opsBundle.Bundle'
+SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230101
 
 PSE.BUNDLE_DIR = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle')

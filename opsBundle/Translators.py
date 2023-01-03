@@ -14,6 +14,9 @@ try:
 except:
     pass
 
+SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
+SCRIPT_REV = 20230101
+
 class UseDeepL:
     """Specifics for using DeepL"""
 
