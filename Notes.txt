@@ -1,6 +1,7 @@
 Todo:
   How to publish DeepL?
-  Add division to all Pattern Tracks reports?
+  Check that schedule is applied.
+  Get csv manifest/switch list up to speed with divisions.
   All the subroutine actionListener() are very similar. Can this duplication be eliminated?
 
 Comments:

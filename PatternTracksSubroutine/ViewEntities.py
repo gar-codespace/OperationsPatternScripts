@@ -139,11 +139,16 @@ def makeTextReportHeader(textWorkEventList):
         ViewSetCarsForm.switchListButton
         """
 
-    headerNames = PSE.readConfigFile('PT')
+    patternLocation = PSE.readConfigFile('PT')['PL']
+    divisionName = textWorkEventList['division']
+    workLocation = ''
+    if divisionName:
+        workLocation = divisionName + ' - ' + patternLocation
+    else:
+        workLocation = patternLocation
 
-    textReportHeader    = textWorkEventList['railroadName'] + '\n' \
-                        + textWorkEventList['division'] + '\n\n' \
-                        + PSE.BUNDLE['Work Location:'] + ' ' + headerNames['PL'] + '\n' \
+    textReportHeader    = textWorkEventList['railroadName'] + '\n\n' \
+                        + PSE.BUNDLE['Work Location:'] + ' ' + workLocation + '\n' \
                         + textWorkEventList['date'] + '\n\n'
 
     return textReportHeader

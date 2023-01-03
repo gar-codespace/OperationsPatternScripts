@@ -590,34 +590,6 @@ def getTracksNamesByLocation(trackType):
 """Formatting Methods"""
 
 
-# def validTime(epochTime=0):
-#     """Valid Time, get local time adjusted for time zone and dst.
-#         Called by:
-#         o2oSubroutine.ModelImport.TrainPlayerImporter.processFileHeaders
-#         o2oSubroutine.ModelWorkEvents.jmriManifestConversion.convertHeader
-#         PatternTracksSubroutine.ModelEntities.initializeReportHeader
-#         Nov 15, 2022 11:53 AM PST vs Valid 11/15/2022 11:54
-#         """
-
-#     year = getYear()
-
-#     if epochTime == 0:
-#         epochTime = TIME.time()
-#     if TIME.localtime(epochTime).tm_isdst and TIME.daylight: # If local dst and dst are both 1
-#         timeOffset = TIME.altzone
-#     else:
-#         timeOffset = TIME.timezone # in seconds
-
-#     if JMRI.jmrit.operations.setup.Setup.is12hrFormatEnabled():
-#         return TIME.strftime('Valid %b %d, ' + year + ', %I:%M %p', TIME.gmtime(epochTime - timeOffset))
-#     else:
-#         return TIME.strftime('Valid %b %d, ' + year + ', %H:%M', TIME.gmtime(epochTime - timeOffset))
-
-
-#     # return TIME.strftime('%m/%d/%Y %I:%M', TIME.gmtime(epochTime - timeOffset))
-#     # return TIME.strftime('%a %b %d %Y %I:%M %p %Z', TIME.gmtime(epochTime - timeOffset))
-#     # return TIME.strftime('%b %d, ' + year + ' %I:%M %p %Z', TIME.gmtime(epochTime - timeOffset))
-
 def validTime(epochTime=0):
     """Valid Time, get local time adjusted for time zone and dst.
         Called by:
@@ -639,6 +611,11 @@ def validTime(epochTime=0):
     # return TIME.strftime('%a %b %d %Y %I:%M %p %Z', TIME.gmtime(epochTime - timeOffset))
     # return TIME.strftime('%b %d, ' + year + ' %I:%M %p %Z', TIME.gmtime(epochTime - timeOffset))
 
+def timeStamp():
+    """Returns the time in format: YYYY-MO-DY-24:MN"""
+
+    return TIME.strftime('%Y-%m-%d-%H:%M', getTime())
+
 def getTime(epochTime=0):
 
     if epochTime == 0:
@@ -659,11 +636,6 @@ def getYear():
         return railroadYear
     else:
         return TIME.strftime('%Y', TIME.gmtime(TIME.time()))
-
-def timeStamp():
-    """Returns the time in format: YYYY-MO-DY-24:MN"""
-
-    return TIME.strftime('%Y-%m-%d-%H:%M', getTime())
 
 def convertJmriDateToEpoch(jmriTime):
     """Example: 2022-02-26T17:16:17.807+0000

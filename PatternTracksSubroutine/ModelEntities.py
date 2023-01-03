@@ -144,13 +144,8 @@ def makeTrackPatternReport(trackPattern):
     parseName = trackPatternReport['railroadName'].replace(';', '\n')
     trackPatternReport.update({'railroadName':parseName})
 
-
-
-
     division = PSE.getDivisionForLocation(trackPatternReport['locations'][0]['locationName'])
-    if division:
-        trackPatternReport.update({'division':division})
-
+    trackPatternReport.update({'division':division})
 
 # put in as a list to maintain compatability with JSON File Format/JMRI manifest export.
     trackPatternReport['locations'] = [trackPattern]
