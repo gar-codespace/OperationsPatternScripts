@@ -12,8 +12,8 @@ from o2oSubroutine import View
 from PatternTracksSubroutine import Controller as PtController
 from jPlusSubroutine import Controller as JpController
 
-SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.Controller'
-SCRIPT_REV = 20221010
+SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
+SCRIPT_REV = 20230101
 
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.Controller')
 

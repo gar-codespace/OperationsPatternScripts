@@ -6,8 +6,8 @@
 from opsEntities import PSE
 from o2oSubroutine import ModelEntities
 
-SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.ModelImport'
-SCRIPT_REV = 20221010
+SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
+SCRIPT_REV = 20230101
 
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.ModelImport')
 

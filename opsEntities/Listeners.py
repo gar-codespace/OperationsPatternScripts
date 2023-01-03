@@ -7,7 +7,7 @@ from opsBundle import Bundle
 import MainScript
 
 SCRIPT_NAME = 'OperationsPatternScripts.opsEntities.Listeners'
-SCRIPT_REV = 20221010
+SCRIPT_REV = 20230101
 
 _psLog = PSE.LOGGING.getLogger('OPS.OE.Listeners')
 

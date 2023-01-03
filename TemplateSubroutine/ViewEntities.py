@@ -7,8 +7,8 @@ Template
 
 from opsEntities import PSE
 
-SCRIPT_NAME = 'OperationsPatternScripts.' + __package__ + '.ViewEntities'
-SCRIPT_REV = 20221010
+SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
+SCRIPT_REV = 20230101
 
 class xxSubroutinePanel:
 

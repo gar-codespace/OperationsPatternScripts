@@ -7,7 +7,7 @@ import jmri
 import time
 
 SCRIPT_NAME ='OperationsPatternScripts.o2oSubroutine.BuiltTrainExport'
-SCRIPT_REV = 20221010
+SCRIPT_REV = 20230101
 
 SCRIPT_DIR = 'OperationsPatternScripts'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b1'

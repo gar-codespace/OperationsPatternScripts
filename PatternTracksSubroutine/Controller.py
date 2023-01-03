@@ -7,8 +7,8 @@ from PatternTracksSubroutine import View
 from PatternTracksSubroutine import Model
 from o2oSubroutine import Model as o2oModel
 
-SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.Controller'
-SCRIPT_REV = 20221010
+SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
+SCRIPT_REV = 20230101
 
 _psLog = PSE.LOGGING.getLogger('OPS.PT.Controller')
 

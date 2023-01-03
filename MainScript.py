@@ -19,6 +19,7 @@ sys.path.append(PLUGIN_ROOT)
 from opsEntities import PSE
 
 PSE.PLUGIN_ROOT = PLUGIN_ROOT
+PSE.SCRIPT_DIR = SCRIPT_DIR
 PSE.JMRI = jmri
 PSE.SYS = sys
 PSE.OS_PATH = OS_PATH
@@ -34,7 +35,7 @@ from opsEntities import Listeners
 from opsBundle import Bundle
 
 SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
-SCRIPT_REV = 20221010
+SCRIPT_REV = 20230101
 
 PSE.ENCODING = PSE.readConfigFile('CP')['SE']
 

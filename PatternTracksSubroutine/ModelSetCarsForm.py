@@ -6,8 +6,8 @@
 from opsEntities import PSE
 from PatternTracksSubroutine import ModelEntities
 
-SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.ModelSetCarsForm'
-SCRIPT_REV = 20221010
+SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
+SCRIPT_REV = 20230101
 
 _psLog = PSE.LOGGING.getLogger('OPS.PT.ModelSetCarsForm')
 

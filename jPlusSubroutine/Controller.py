@@ -11,8 +11,8 @@ from opsEntities import PSE
 from jPlusSubroutine import Model
 from jPlusSubroutine import View
 
-SCRIPT_NAME = 'OperationsPatternScripts.jPlusSubroutine.Controller'
-SCRIPT_REV = 20221010
+SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
+SCRIPT_REV = 20230101
 
 _psLog = PSE.LOGGING.getLogger('OPS.JP.Controller')
 

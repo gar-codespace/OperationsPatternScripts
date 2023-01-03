@@ -5,8 +5,8 @@ JAVAX action performed methods are in Controller.
 
 from opsEntities import PSE
 
-SCRIPT_NAME = 'OperationsPatternScripts.jPlusSubroutine.Listeners'
-SCRIPT_REV = 20221010
+SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
+SCRIPT_REV = 20230101
 
 _psLog = PSE.LOGGING.getLogger('OPS.JP.Listeners')
 

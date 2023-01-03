@@ -7,8 +7,8 @@ from opsEntities import PSE
 from o2oSubroutine import ModelEntities
 from o2oSubroutine import BuiltTrainExport
 
-SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.Model'
-SCRIPT_REV = 20221010
+SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
+SCRIPT_REV = 20230101
 
 FILE_LIST = ['OperationsTrainRoster.xml', 'OperationsRouteRoster.xml']
 

@@ -6,8 +6,8 @@ from PatternTracksSubroutine import ModelEntities
 from PatternTracksSubroutine import ViewEntities
 from PatternTracksSubroutine import ControllerSetCarsForm
 
-SCRIPT_NAME = 'OperationsPatternScripts.PatternTracksSubroutine.View'
-SCRIPT_REV = 20221010
+SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
+SCRIPT_REV = 20230101
 
 _psLog = PSE.LOGGING.getLogger('OPS.PT.View')
 
