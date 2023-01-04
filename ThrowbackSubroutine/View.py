@@ -37,8 +37,8 @@ class ManageGui:
 
         tbSubroutinePanel = ViewEntities.tbSubroutinePanel()
         subroutinesPanel = tbSubroutinePanel.tbPanelMaker()
-        subroutinePanelWidgets = tbSubroutinePanel.tbWidgetGetter()
+        subroutinePanelWidgets, subroutineDisplayWidgets = tbSubroutinePanel.tbWidgetGetter()
 
-        return subroutinesPanel, subroutinePanelWidgets
+        return subroutinesPanel, subroutinePanelWidgets, subroutineDisplayWidgets
 
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

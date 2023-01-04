@@ -20,6 +20,8 @@ def startDaemons():
         These calls are not turned off.
         """
 
+    Model.createFolder()
+
     return
 
 def activatedCalls():
@@ -73,13 +75,15 @@ class StartUp:
     def makeSubroutinePanel(self):
         """Makes the control panel that sits inside the frame"""
 
-        self.subroutinePanel, self.widgets = View.ManageGui().makeSubroutinePanel()
+        self.subroutinePanel, self.controlWidgets, self.displayWidgets = View.ManageGui().makeSubroutinePanel()
         self.activateWidgets()
 
         return self.subroutinePanel
 
     def startUpTasks(self):
         """Run these tasks when this subroutine is started."""
+
+        Model.countSnapShots()
 
         return
 
@@ -88,17 +92,28 @@ class StartUp:
             IE 'snapShot'
             """
 
-        for widget in self.widgets:
+        for widget in self.controlWidgets:
             widget.actionPerformed = getattr(self, widget.getName())
 
         return
 
-    def snapShot(self, EVENT):
+    def commit(self, EVENT):
         """Makes a throwback set point."""
 
         _psLog.debug(EVENT)
 
-        print(PSE.timeStamp())
+
+        Model.takeSnapShot(self.displayWidgets)
+        Model.countSnapShots()
+        lastSS = PSE.readConfigFile('TB')['SS']
+
+        for widget in self.displayWidgets:
+            if widget.getName() == 'timeStamp':
+                widget.setText(lastSS[-1][0])
+            if widget.getName() == 'tbText':
+                widget.setText(lastSS[-1][1])
+    
+        PSE.restartSubroutineByName(__package__)
 
         return
 
@@ -106,7 +121,14 @@ class StartUp:
         """Move to the previous snapshot."""
 
         _psLog.debug(EVENT)
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+        previousSS = Model.previousSnapShot()
+
+        for widget in self.displayWidgets:
+            if widget.getName() == 'timeStamp':
+                widget.setText(previousSS[0])
+            if widget.getName() == 'tbText':
+                widget.setText(previousSS[1])
 
         return
 
@@ -114,16 +136,24 @@ class StartUp:
         """Move to the next snapshot."""
 
         _psLog.debug(EVENT)
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+        nextSS = Model.nextSnapShot()
+
+        for widget in self.displayWidgets:
+            if widget.getName() == 'timeStamp':
+                widget.setText(nextSS[0])
+            if widget.getName() == 'tbText':
+                widget.setText(nextSS[1])
 
         return
 
     def throwback(self, EVENT):
         """Execute a throwback."""
 
-        PSE.restartSubroutineByName(__package__)
-
         _psLog.debug(EVENT)
+
+        Model.throwbackSnapShot()
+
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
@@ -132,14 +162,11 @@ class StartUp:
         """Reset throwback."""
 
         _psLog.debug(EVENT)
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+        
+        Model.resetThrowBack()
+        
+        PSE.restartSubroutineByName(__package__)
 
-        return
-
-    def tbText(self, EVENT):
-        """Reset throwback."""
-
-        _psLog.debug(EVENT)
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+        print('Reset Throwback')
 
         return

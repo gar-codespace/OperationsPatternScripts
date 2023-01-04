@@ -236,6 +236,7 @@ def addActiveSubroutines(targetPanel):
             package = __import__(subroutine, fromlist=['Controller'])
             startUp = package.Controller.StartUp()
             subroutineFrame = startUp.makeSubroutineFrame()
+            startUp.startUpTasks()
             targetPanel.add(JAVX_SWING.Box.createRigidArea(JAVA_AWT.Dimension(0,10)))
             targetPanel.add(subroutineFrame)
 
@@ -612,9 +613,9 @@ def validTime(epochTime=0):
     # return TIME.strftime('%b %d, ' + year + ' %I:%M %p %Z', TIME.gmtime(epochTime - timeOffset))
 
 def timeStamp():
-    """Returns the time in format: YYYY-MO-DY-24:MN"""
+    """Returns the time in format: YYYY.MO.DY.24.MN.SC"""
 
-    return TIME.strftime('%Y-%m-%d-%H:%M', getTime())
+    return TIME.strftime('%Y.%m.%d.%H.%M.%S', getTime())
 
 def getTime(epochTime=0):
 

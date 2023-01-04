@@ -1,8 +1,9 @@
 Throwback Subroutine
 Throwback
-Selection
 Action
 Snap Shot
 Previous
 Next
 Reset
+Commit
+Total Commits

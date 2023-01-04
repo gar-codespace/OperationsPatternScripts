@@ -16,24 +16,30 @@ class tbSubroutinePanel:
         """The *.setName value is the name of the action for the widget"""
 
         self.controlWidgets = []
+        self.displayWidgets = []
+        self.configFile = PSE.readConfigFile()
 
         return
 
     def tbPanelMaker(self):
 
+        snapShot = self.configFile['TB']['SS']
+
+        lastSnapShot = snapShot[-1]
+
         tpPanel = PSE.JAVX_SWING.JPanel()
 
         selectionFrame = PSE.JAVX_SWING.JPanel() # the track pattern panel
         selectionFrame.setName('selectionFrame')
-        selectionFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE[u'Selection'])
+        selectionFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE[u'Total Commits'] + u' - ' + str(len(snapShot) - 1))
 
         actionFrame = PSE.JAVX_SWING.JPanel() # the track pattern panel
         actionFrame.setName('actionFrame')
         actionFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE[u'Action'])
 
         ssButton = PSE.JAVX_SWING.JButton()
-        ssButton.setText(PSE.BUNDLE[u'Snap Shot'])
-        ssButton.setName('snapShot')
+        ssButton.setText(PSE.BUNDLE[u'Commit'])
+        ssButton.setName('commit')
         self.controlWidgets.append(ssButton)
 
         pvButton = PSE.JAVX_SWING.JButton()
@@ -41,12 +47,14 @@ class tbSubroutinePanel:
         pvButton.setName('previous')
         self.controlWidgets.append(pvButton)
 
-        timeStampLabel = PSE.JAVX_SWING.JLabel(PSE.timeStamp())
+        timeStampLabel = PSE.JAVX_SWING.JLabel(lastSnapShot[0])
         timeStampLabel.setName('timeStamp')
+        self.displayWidgets.append(timeStampLabel)
 
         tbText = PSE.JAVX_SWING.JTextField(20)
+        tbText.setText(lastSnapShot[1])
         tbText.setName('tbText')
-        self.controlWidgets.append(tbText)
+        self.displayWidgets.append(tbText)
 
         nxButton = PSE.JAVX_SWING.JButton()
         nxButton.setText(PSE.BUNDLE[u'Next'])
@@ -85,4 +93,8 @@ class tbSubroutinePanel:
 
     def tbWidgetGetter(self):
 
-        return self.controlWidgets
+        return self.controlWidgets, self.displayWidgets
+
+    # def getLastSnapShot(self):
+
+    #     lastSnapShot = self.configFile['TB']['SS'][-1]
