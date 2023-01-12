@@ -572,7 +572,7 @@ def getSelectedTracks():
 
     return [track for track, include in sorted(patternTracks.items()) if include]
 
-def getTracksNamesByLocation(trackType):
+def getTrackNamesByLocation(trackType):
     """Called by:
         Model.verifySelectedTracks
         ViewEntities.merge

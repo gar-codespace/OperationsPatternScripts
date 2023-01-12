@@ -1,8 +1,12 @@
 Action
 Apply Schedule
+Apply Schedule and Ignore Track Length
+Apply destination track schedule
 at
 Available:
 Cars at
+Cancel
+Continue
 Division:
 Do Not Apply Schedule
 empty

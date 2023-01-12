@@ -94,6 +94,7 @@ class CreateSetCarsFormGui:
         return
 
     def applySchedule(self, EVENT):
+        """The Apply Schedule check box."""
 
         configFile = PSE.readConfigFile()
 
@@ -138,17 +139,80 @@ class CreateSetCarsFormGui:
         if not self.quickCheck():
             return
 
-        PSE.REPORT_ITEM_WIDTH_MATRIX = PSE.makeReportItemWidthMatrix()
+
+        popupFrame, popupWidgets = ViewSetCarsForm.applySchedulePopUp()
+        popupFrame.setLocation(MOUSE_CLICKED.getSource().getParent().getLocationOnScreen())
+        popupFrame.setVisible(True)
+
+        # self.buttonDict['footerButtons'][1].actionPerformed = self.setRsButton
+        # menuItem.removeActionListener(getattr(Listeners, menuItem.getName()))
+
+        for widget in popupWidgets:
+            widget.actionPerformed = getattr(self, widget.getName())
+
+        # PSE.REPORT_ITEM_WIDTH_MATRIX = PSE.makeReportItemWidthMatrix()
+
+        # ModelSetCarsForm.writeToJson(self.setCarsForm)
+    # Set the cars to the selected tracks
+        # ModelSetCarsForm.setRsButton(self.buttonDict['textBoxEntry'])
+
+        self.setCarsWindow = MOUSE_CLICKED.getSource().getTopLevelAncestor()
+        # setCarsWindow.setVisible(False)
+        # setCarsWindow.dispose()
+
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+        return
+
+    def asCheckBox(self, EVENT):
+        """The Apply Schedule check box."""
+
+        configFile = PSE.readConfigFile()
+
+        if EVENT.getSource().selected:
+            configFile['PT'].update({'AS':True})
+        else:
+            configFile['PT'].update({'AS':False})
+
+        PSE.writeConfigFile(configFile)
+
+        return
+
+    def itlCheckBox(self,EVENT):
+        """The Ignore Track Length checkbox."""
+
+        configFile = PSE.readConfigFile()
+
+        if EVENT.getSource().selected:
+            configFile['PT'].update({'PI':True})
+        else:
+            configFile['PT'].update({'PI':False})
+
+        PSE.writeConfigFile(configFile)
+        return
+
+    def continueButton(self, MOUSE_CLICKED):
+
+        # PSE.REPORT_ITEM_WIDTH_MATRIX = PSE.makeReportItemWidthMatrix()
 
         ModelSetCarsForm.writeToJson(self.setCarsForm)
     # Set the cars to the selected tracks
         ModelSetCarsForm.setRsButton(self.buttonDict['textBoxEntry'])
 
-        setCarsWindow = MOUSE_CLICKED.getSource().getTopLevelAncestor()
-        setCarsWindow.setVisible(False)
-        setCarsWindow.dispose()
+        popupWindow = MOUSE_CLICKED.getSource().getTopLevelAncestor()
+        popupWindow.setVisible(False)
+        popupWindow.dispose()
 
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+        self.setCarsWindow.setVisible(False)
+        self.setCarsWindow.dispose()
+
+        return
+
+    def cancelButton(self, MOUSE_CLICKED):
+
+        popupWindow = MOUSE_CLICKED.getSource().getTopLevelAncestor()
+        popupWindow.setVisible(False)
+        popupWindow.dispose()
 
         return
 

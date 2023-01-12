@@ -67,6 +67,76 @@ def switchListButton(textBoxEntry):
 
     return
 
+def applySchedulePopUp():
+    """When the Set Rollingstock For Track: Window/Set Rollingstock to Track button is pressed
+        this popup is displayed to select apply schedule and ignore track length
+        on a per track basis.
+        """
+
+    configFile = PSE.readConfigFile('PT')
+    widgets = []
+
+    popupFrame = PSE.JMRI.util.JmriJFrame()
+    popupFrame.setTitle(PSE.BUNDLE['Apply Schedule and Ignore Track Length'])
+    
+    popupPanel = PSE.JAVX_SWING.JPanel()
+    popupPanel.setName('popupPanel')
+    popupPanel.setLayout(PSE.JAVX_SWING.BoxLayout(popupPanel, PSE.JAVX_SWING.BoxLayout.Y_AXIS))
+    # popupPanel.setAlignmentY(PSE.JAVX_SWING.JPanel.CENTER_ALIGNMENT)
+# Check box items
+    checkBoxPanel = PSE.JAVX_SWING.JPanel()
+    checkBoxPanel.setLayout(PSE.JAVX_SWING.BoxLayout(checkBoxPanel, PSE.JAVX_SWING.BoxLayout.Y_AXIS))
+    checkBoxPanel.setAlignmentX(PSE.JAVX_SWING.JPanel.CENTER_ALIGNMENT)
+    checkBoxPanel.setName('checkBoxPanel')
+
+    applySchedule = PSE.JAVX_SWING.JCheckBox()
+    applySchedule.setText(PSE.BUNDLE['Apply destination track schedule'])
+    applySchedule.setSelected(configFile['AS'])
+    applySchedule.setName('asCheckBox')
+    widgets.append(applySchedule)
+    
+    ignoreTrackLength = PSE.JAVX_SWING.JCheckBox()
+    ignoreTrackLength.setText(PSE.BUNDLE['Ignore track length'])
+    ignoreTrackLength.setSelected(configFile['PI'])
+    ignoreTrackLength.setName('itlCheckBox')
+    widgets.append(ignoreTrackLength)
+
+    checkBoxPanel.add(applySchedule)
+    checkBoxPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(10,0)))
+    checkBoxPanel.add(ignoreTrackLength)
+# Buttons
+    buttonRow = PSE.JAVX_SWING.JPanel()
+    buttonRow.setName('buttonRow')
+
+    continueButton = PSE.JAVX_SWING.JButton()
+    continueButton.setText(PSE.BUNDLE['Continue'])
+    continueButton.setName('continueButton')
+    widgets.append(continueButton)
+
+    cancelButton = PSE.JAVX_SWING.JButton()
+    cancelButton.setText(PSE.BUNDLE['Cancel'])
+    cancelButton.setName('cancelButton')
+    widgets.append(cancelButton)
+
+    buttonRow.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(30,0)))
+    buttonRow.add(continueButton)
+    buttonRow.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(30,0)))
+    buttonRow.add(cancelButton)
+    buttonRow.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(30,0)))
+# Build the panel
+    popupPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,20)))
+    popupPanel.add(checkBoxPanel)
+    popupPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,20)))
+    popupPanel.add(PSE.JAVX_SWING.JSeparator())
+    popupPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,20)))
+    popupPanel.add(buttonRow)
+    popupPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,20)))
+
+    popupFrame.add(popupPanel)
+    popupFrame.pack()
+
+    return popupFrame, widgets
+
 def setCarsForTrackWindow(setCarsForTrackForm):
     """Called by:
         ControllerSetCarsForm.CreateSetCarsFormGui.makeFrame
@@ -347,12 +417,13 @@ def makeSetCarsScheduleRow(setCarsFormData):
         schedulePanel.add(PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Schedule:'] + ' '))
         schedulePanel.add(scheduleButton)
 
-        applySchedule = PSE.JAVX_SWING.JCheckBox()
-        applySchedule.setText(PSE.BUNDLE['Apply Schedule'])
-        applySchedule.setSelected(True)
-        applySchedule.setName('asCheckBox')
-        scheduleList.append(applySchedule)
-        schedulePanel.add(applySchedule)
+        # applySchedule = PSE.JAVX_SWING.JCheckBox()
+        # applySchedule.setText(PSE.BUNDLE['Apply destination track schedule'])
+        # applySchedule.setSelected(PSE.readConfigFile('PT')['AS'])
+        # applySchedule.setName('asCheckBox')
+        # scheduleList.append(applySchedule)
+        # schedulePanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
+        # schedulePanel.add(applySchedule)
 
     return schedulePanel, scheduleList
 

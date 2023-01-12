@@ -97,9 +97,9 @@ class StartUp:
     def yardTrackOnlyCheckBox(self, EVENT):
 
         if self.widgets[2].selected:
-            allTracksAtLoc = PSE.getTracksNamesByLocation('Yard')
+            allTracksAtLoc = PSE.getTrackNamesByLocation('Yard')
         else:
-            allTracksAtLoc = PSE.getTracksNamesByLocation(None)
+            allTracksAtLoc = PSE.getTrackNamesByLocation(None)
 
         configFile = PSE.readConfigFile()
         trackDict = Model.updatePatternTracks(allTracksAtLoc)

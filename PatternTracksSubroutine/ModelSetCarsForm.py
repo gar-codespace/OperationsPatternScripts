@@ -91,56 +91,59 @@ def moveRollingStock(switchList, textBoxEntry):
         """
 
     setCount = 0
-    i = 0
+    i = -1
 
     ignoreTrackLength = PSE.readConfigFile('PT')['PI']
 
-    allTracksAtLoc = PSE.getTracksNamesByLocation(None)
+    allTracksAtLoc = PSE.getTrackNamesByLocation(None)
 
     location = PSE.readConfigFile('PT')['PL']
     toLocation = PSE.LM.getLocationByName(unicode(location, PSE.ENCODING))
 
     locos = switchList['locations'][0]['tracks'][0]['locos']
     for loco in locos:
-        setTrack = switchList['locations'][0]['tracks'][0]['trackName']
+        i += 1
+        rollingStock = PSE.EM.getByRoadAndNumber(loco['Road'], loco['Number'])
+        if not rollingStock:
+            _psLog.warning('Not found; ' + car['Road'] + car['Number'])
+            continue
+
         userInput = unicode(textBoxEntry[i].getText(), PSE.ENCODING)
-        if userInput in allTracksAtLoc:
-            setTrack = userInput
+        if not userInput or userInput not in allTracksAtLoc:
+            continue
 
         toTrack = toLocation.getTrackByName(setTrack, None)
 
-        rollingStock = PSE.EM.getByRoadAndNumber(loco['Road'], loco['Number'])
         setResult = rollingStock.setLocation(toLocation, toTrack)
         if ignoreTrackLength and toTrack.isTypeNameAccepted(loco['Type']):
             setResult = rollingStock.setLocation(toLocation, toTrack, True)
 
         if setResult == 'okay':
             setCount += 1
-        i += 1
+        
 
     cars = switchList['locations'][0]['tracks'][0]['cars']
     for car in cars:
+        i += 1
         rollingStock = PSE.CM.getByRoadAndNumber(car['Road'], car['Number'])
-        if rollingStock:
-            setTrack = switchList['locations'][0]['tracks'][0]['trackName']
-            userInput = unicode(textBoxEntry[i].getText(), PSE.ENCODING)
-            if userInput in allTracksAtLoc:
-                setTrack = userInput
-
-            toTrack = toLocation.getTrackByName(setTrack, None)
-
-            setResult = rollingStock.setLocation(toLocation, toTrack)
-            setResult = ''
-            if ignoreTrackLength and toTrack.isTypeNameAccepted(car['Type']):
-                setResult = rollingStock.setLocation(toLocation, toTrack, True)
-
-            if setResult == 'okay':
-                rsUpdate(toTrack, rollingStock)
-                scheduleUpdate(toTrack, rollingStock)
-                setCount += 1
-            i += 1
-        else:
+        if not rollingStock:
             _psLog.warning('Not found; ' + car['Road'] + car['Number'])
+            continue
+
+        userInput = unicode(textBoxEntry[i].getText(), PSE.ENCODING)
+        if not userInput or userInput not in allTracksAtLoc:
+            continue
+
+        toTrack = toLocation.getTrackByName(userInput, None)
+
+        setResult = rollingStock.setLocation(toLocation, toTrack)
+        if ignoreTrackLength and toTrack.isTypeNameAccepted(car['Type']):
+            setResult = rollingStock.setLocation(toLocation, toTrack, True)
+
+        if setResult == 'okay':
+            rsUpdate(toTrack, rollingStock)
+            scheduleUpdate(toTrack, rollingStock)
+            setCount += 1
 
     _psLog.info('Rolling stock count: ' + str(setCount) + ', processed.')
 
