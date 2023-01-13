@@ -139,26 +139,16 @@ class CreateSetCarsFormGui:
         if not self.quickCheck():
             return
 
+        PSE.closeOpsWindows('popupFrame')
 
-        popupFrame, popupWidgets = ViewSetCarsForm.applySchedulePopUp()
+        popupFrame, popupWidgets = ViewSetCarsForm.setCarsPopup()
         popupFrame.setLocation(MOUSE_CLICKED.getSource().getParent().getLocationOnScreen())
-        popupFrame.setVisible(True)
-
-        # self.buttonDict['footerButtons'][1].actionPerformed = self.setRsButton
-        # menuItem.removeActionListener(getattr(Listeners, menuItem.getName()))
+        popupFrame.setVisible(True)        
 
         for widget in popupWidgets:
             widget.actionPerformed = getattr(self, widget.getName())
 
-        # PSE.REPORT_ITEM_WIDTH_MATRIX = PSE.makeReportItemWidthMatrix()
-
-        # ModelSetCarsForm.writeToJson(self.setCarsForm)
-    # Set the cars to the selected tracks
-        # ModelSetCarsForm.setRsButton(self.buttonDict['textBoxEntry'])
-
         self.setCarsWindow = MOUSE_CLICKED.getSource().getTopLevelAncestor()
-        # setCarsWindow.setVisible(False)
-        # setCarsWindow.dispose()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

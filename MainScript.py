@@ -65,9 +65,9 @@ def restartThePlugin():
     """ """
 
     _psLog = PSE.LOGGING.getLogger('OPS.Main.restartThePlugin')
-
-    PSE.closeSetCarsWindows()
-    PSE.closePsWindow()
+    
+    PSE.deactivateAllSubroutines()
+    PSE.closeOpsWindows('patternScriptsWindow')
 
     PSE.deleteConfigFile()
 

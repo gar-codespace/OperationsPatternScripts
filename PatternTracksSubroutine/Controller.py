@@ -28,6 +28,9 @@ def activatedCalls():
 def deActivatedCalls():
     """Methods called when this subroutine is deactivated."""
 
+    PSE.closeOpsWindows('popupFrame')
+    PSE.closeOpsWindows('setCarsWindow')
+    
     return
 
 def refreshCalls():
@@ -89,8 +92,8 @@ class StartUp:
         self.widgets[0].addActionListener(Listeners.PTComboBox())
         self.widgets[1].addActionListener(Listeners.PTComboBox())
         self.widgets[2].actionPerformed = self.yardTrackOnlyCheckBox
-        self.widgets[5].actionPerformed = self.trackPatternButton
-        self.widgets[6].actionPerformed = self.setRsButton
+        self.widgets[4].actionPerformed = self.trackPatternButton
+        self.widgets[5].actionPerformed = self.setRsButton
 
         return
 
@@ -105,7 +108,6 @@ class StartUp:
         trackDict = Model.updatePatternTracks(allTracksAtLoc)
         configFile['PT'].update({'PT': trackDict})
         configFile['PT'].update({'PA': self.widgets[2].selected})
-        configFile['PT'].update({'PI': self.widgets[3].selected})
         PSE.writeConfigFile(configFile)
 
         subroutinePanel = StartUp(self.subroutineFrame).makeSubroutinePanel()

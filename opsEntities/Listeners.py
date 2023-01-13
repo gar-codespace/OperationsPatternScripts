@@ -140,7 +140,7 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
     def windowClosing(self, WINDOW_CLOSING):
 
         PSE.updateWindowParams(WINDOW_CLOSING.getSource())
-        PSE.closeSetCarsWindows()
+        PSE.deactivateAllSubroutines()
         
         return
 

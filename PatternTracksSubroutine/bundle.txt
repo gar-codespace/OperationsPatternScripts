@@ -1,7 +1,7 @@
 Action
+Additional Choices
 Apply Schedule
-Apply Schedule and Ignore Track Length
-Apply destination track schedule
+Apply the destination tracks schedule
 at
 Available:
 Cars at

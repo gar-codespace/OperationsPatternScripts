@@ -209,6 +209,16 @@ def restartSubroutineByName(subRoutineName):
         
     return
 
+def deactivateAllSubroutines():
+    """Runs the deActivatedCalls() method on all subroutines."""
+
+
+    for include in readConfigFile('CP')['IL']:
+        package = __import__(include, fromlist=['Controller'])
+        package.Controller.deActivatedCalls()
+
+    return
+
 def removeAllSubroutines(targetPanel):
     """Not used.
         Removes all subroutines from subroutinePanel of Pattern Scripts.
@@ -396,6 +406,21 @@ def closeSetCarsWindows():
 
     for frame in JMRI.util.JmriJFrame.getFrameList():
         if frame.getName() == 'setCarsWindow':
+            frame.setVisible(False)
+            frame.dispose()
+
+    return
+
+def closeOpsWindows(windowName):
+    """Close all the windows of a certain name.
+        Called by:
+        MainScript.Controller.closePsWindow
+        Listeners.PatternScriptsWindow.windowClosing
+        controllerSetCarsForm.setRsButton
+        """
+
+    for frame in JMRI.util.JmriJFrame.getFrameList():
+        if frame.getName() == windowName:
             frame.setVisible(False)
             frame.dispose()
 

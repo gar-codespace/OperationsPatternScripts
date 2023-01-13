@@ -20,11 +20,6 @@ class TrackPatternPanel:
         self.yardTracksOnly.setSelected(self.configFile['PA'])
         self.yardTracksOnly.setName('ytoCheckBox')
 
-        self.ignoreTrackLength = PSE.JAVX_SWING.JCheckBox()
-        self.ignoreTrackLength.setText(PSE.BUNDLE['Ignore track length'] + ' ')
-        self.ignoreTrackLength.setSelected(self.configFile['PI'])
-        self.ignoreTrackLength.setName('itlCheckBox')
-
         self.ypButton = PSE.JAVX_SWING.JButton()
         self.ypButton.setText(PSE.BUNDLE['Track Pattern Report'])
         self.ypButton.setName('ypButton')
@@ -67,7 +62,6 @@ class TrackPatternPanel:
         patternComboBox.add(self.locationComboBox)
         patternComboBox.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
         patternComboBox.add(self.yardTracksOnly)
-        patternComboBox.add(self.ignoreTrackLength)
 
         return patternComboBox
 
@@ -112,7 +106,6 @@ class TrackPatternPanel:
         panelWidgets.append(self.divisionComboBox)
         panelWidgets.append(self.locationComboBox)
         panelWidgets.append(self.yardTracksOnly)
-        panelWidgets.append(self.ignoreTrackLength)
         panelWidgets.append(self.trackCheckBoxes)
         panelWidgets.append(self.ypButton)
         panelWidgets.append(self.scButton)

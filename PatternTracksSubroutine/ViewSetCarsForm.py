@@ -67,7 +67,7 @@ def switchListButton(textBoxEntry):
 
     return
 
-def applySchedulePopUp():
+def setCarsPopup():
     """When the Set Rollingstock For Track: Window/Set Rollingstock to Track button is pressed
         this popup is displayed to select apply schedule and ignore track length
         on a per track basis.
@@ -77,7 +77,8 @@ def applySchedulePopUp():
     widgets = []
 
     popupFrame = PSE.JMRI.util.JmriJFrame()
-    popupFrame.setTitle(PSE.BUNDLE['Apply Schedule and Ignore Track Length'])
+    popupFrame.setName('popupFrame')
+    popupFrame.setTitle(PSE.BUNDLE['Additional Choices'])
     
     popupPanel = PSE.JAVX_SWING.JPanel()
     popupPanel.setName('popupPanel')
@@ -90,7 +91,7 @@ def applySchedulePopUp():
     checkBoxPanel.setName('checkBoxPanel')
 
     applySchedule = PSE.JAVX_SWING.JCheckBox()
-    applySchedule.setText(PSE.BUNDLE['Apply destination track schedule'])
+    applySchedule.setText(PSE.BUNDLE['Apply the destination tracks schedule'])
     applySchedule.setSelected(configFile['AS'])
     applySchedule.setName('asCheckBox')
     widgets.append(applySchedule)

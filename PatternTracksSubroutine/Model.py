@@ -134,8 +134,7 @@ def updateConfigFile(controls):
     focusOn = PSE.readConfigFile('PT')
     focusOn.update({"PL": controls[1].getSelectedItem()})
     focusOn.update({"PA": controls[2].selected})
-    focusOn.update({"PI": controls[3].selected})
-    focusOn.update({"PT": ModelEntities.updateTrackCheckBoxes(controls[4])})
+    focusOn.update({"PT": ModelEntities.updateTrackCheckBoxes(controls[3])})
 
     newConfigFile = PSE.readConfigFile()
     newConfigFile.update({"PT": focusOn})
