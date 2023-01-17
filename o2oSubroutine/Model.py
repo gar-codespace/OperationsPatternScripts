@@ -99,7 +99,6 @@ def newJmriRailroad():
     newInventory.makeNewTpRollingStockData()
     newInventory.parseTpRollingStock()
     newInventory.newJmriRs()
-    newInventory.setLoadTypeAtStaging()
 
     # PSE.CMX.save()
     # PSE.EMX.save()
@@ -137,7 +136,7 @@ def updateJmriRailroad():
 
     PSE.closeTroublesomeWindows()
 
-    # PSE.SM.dispose()
+    PSE.SM.dispose()
     # PSE.CM.dispose()
     # PSE.EM.dispose()
 
@@ -185,7 +184,6 @@ def updateJmriRailroad():
     newInventory.makeNewTpRollingStockData()
     newInventory.parseTpRollingStock()
     newInventory.updateJmriRs()
-    newInventory.setLoadTypeAtStaging()
     newInventory.deregisterOldRs()
 
     updatedLocations.deleteOldLocations()
@@ -228,7 +226,6 @@ def updateJmriRollingingStock():
         newInventory.updateJmriRs()
         newInventory.deregisterOldRs()
         newInventory.newJmriRs()
-        newInventory.setLoadTypeAtStaging()
 
         # PSE.CMX.save()
         # PSE.EMX.save()
@@ -938,13 +935,17 @@ class RStockulator:
             newJmriId = self.newRsData[id]
             rsRoad, rsNumber = ModelEntities.parseCarId(newJmriId)
 
-            newAar = ''
             try:
                 self.tpCars[id]['aar']
                 PSE.CM.newRS(rsRoad, rsNumber)
             except:
+                pass
+
+            try:
                 self.tpLocos[id]['aar']
                 PSE.EM.newRS(rsRoad, rsNumber)
+            except:
+                pass
 
         self.currentRsData = self.newRsData
         self.setGenericRsAttribs(self.newTpIds)
@@ -968,13 +969,11 @@ class RStockulator:
 
             elif PSE.CM.getById(currentJmriId):
                 newRsAttribs = self.tpCars[id]
-                shipLoadName = self.getLoadFromSchedule(newRsAttribs)
                 rs = PSE.CM.getById(currentJmriId)
-                rs.setLoadName(shipLoadName)
+                shipLoadName = self.getLoadFromSchedule(newRsAttribs)
+                if shipLoadName:
+                    rs.setLoadName(shipLoadName)
                 rs.setKernel(PSE.KM.getKernelByName(newRsAttribs['kernel']))
-
-            else:
-                print('Not found: ' + currentJmriId)
 
             rsRoad, rsNumber = ModelEntities.parseCarId(newRsAttribs['id'])
             xLocation, xTrack = ModelEntities.getSetToLocationAndTrack(newRsAttribs['location'], newRsAttribs['track'])
@@ -1017,31 +1016,25 @@ class RStockulator:
                 newCar.setColor('Red')
 
             else:
-                print('Not found: ' + currentJmriId)
+                print('Exclude rolling stock: ' + currentJmriId)
 
         return
 
     def getLoadFromSchedule(self, attribs):
 
         location = PSE.LM.getLocationByName(attribs['location'])
-        track = location.getTrackByName(attribs['track'], 'Spur')
+        track = location.getTrackByName(attribs['track'], None)
+
+        if location.isStaging():
+            return 'E'
 
         try:
             jSchedule = track.getSchedule()
             jItem = jSchedule.getItemByType(attribs['aar'])
             return jItem.getShipLoadName()
+            
         except:
-            return attribs['load']
-
-    def setLoadTypeAtStaging(self):
-
-        allCars = PSE.CM.getList()
-        for car in allCars:
-            location = car.getLocation()
-            if location.isStaging():
-                car.setLoadName('E')
-
-        return
+             return
 
     def deregisterOldRs(self):
 
