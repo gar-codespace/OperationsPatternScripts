@@ -157,8 +157,8 @@ def rsUpdate(toTrack, rollingStock):
     if toTrack.getTrackType() == 'Spur':
         rollingStock.setMoves(rollingStock.getMoves() + 1)
 
-    rollingStock.setFinalDestinationTrack(None)
-    rollingStock.setFinalDestination(None)
+    # rollingStock.setFinalDestinationTrack(None)
+    # rollingStock.setFinalDestination(None)
 
     return
 

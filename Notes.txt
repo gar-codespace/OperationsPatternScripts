@@ -1,7 +1,5 @@
 Todo:
   How to publish DeepL?
-  Check that schedule is applied on Pattern Tracks move.
-  One tp data json file?
   Make a JMRI rs data json to restore details on update rr and update rs.
   Add o2o restore button to possibly restore trains, routes, rs details json?
   Get csv manifest/switch list up to speed with divisions.
@@ -114,6 +112,7 @@ Tested Items:
     The layout year is the report year OK.
     Tries to set a new cars load from schedule OK.
     o2o Model deleteOldTracks(self): only deletes leftover tracks from unchanged locations.
+    Update Rolling Stock only updates Name, Number, Location, Load, Consist/Kernal, Type OK.
 
 Catches Items:
   Catches pattern report button press no tracks selected OK.

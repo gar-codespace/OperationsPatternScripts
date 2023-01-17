@@ -248,6 +248,8 @@ class o2oWorkEvents:
         # self.tpRollingStockData = PSE.loadJson(tpRollingStockData)
 
         self.tpRollingStockData = PSE.getTpRailroadJson('tpRollingStockData')
+        self.inverseTpRollingStockData = {v:k for k,v in self.tpRollingStockData.items()}
+        # https://stackoverflow.com/questions/2568673/inverse-dictionary-lookup-in-python
 
         self.workEvents = workEvents
         self.o2oList = ''
@@ -297,7 +299,7 @@ class o2oWorkEvents:
             """
 
         ID = rs['Road'] + rs['Number']
-        tpID = self.tpRollingStockData[ID]
+        tpID = self.inverseTpRollingStockData[ID]
         load = ''
         try:
             load = rs['Load']

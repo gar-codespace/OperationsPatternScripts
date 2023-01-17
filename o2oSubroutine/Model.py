@@ -73,6 +73,9 @@ def newJmriRailroad():
     allRsRosters.addLocoTypes()
     allRsRosters.addLocoConsist()
 
+    PSE.CMX.save()
+    PSE.EMX.save()
+
     newLocations = Locationator()
     newLocations.getUpdatedLocale()
     newLocations.getNewLocations()
@@ -93,14 +96,13 @@ def newJmriRailroad():
     ModelEntities.addCarTypesToSpurs()
 
     newInventory = RStockulator()
-    newInventory.getTpInventory()
-    newInventory.splitTpList()
-    newInventory.makeTpRollingStockData()
-    newInventory.newCars()
-    newInventory.newLocos()
+    newInventory.makeNewTpRollingStockData()
+    newInventory.parseTpRollingStock()
+    newInventory.newJmriRs()
+    newInventory.setLoadTypeAtStaging()
 
-    PSE.CMX.save()
-    PSE.EMX.save()
+    # PSE.CMX.save()
+    # PSE.EMX.save()
     PSE.LMX.save()
     PSE.OMX.save()
 
@@ -135,9 +137,9 @@ def updateJmriRailroad():
 
     PSE.closeTroublesomeWindows()
 
-    PSE.SM.dispose()
-    PSE.CM.dispose()
-    PSE.EM.dispose()
+    # PSE.SM.dispose()
+    # PSE.CM.dispose()
+    # PSE.EM.dispose()
 
     jmriRailroad = Initiator()
     jmriRailroad.o2oDetailsToConFig()
@@ -179,16 +181,17 @@ def updateJmriRailroad():
     ModelEntities.addCarTypesToSpurs()
 
     newInventory = RStockulator()
-    newInventory.getTpInventory()
-    newInventory.splitTpList()
-    newInventory.makeTpRollingStockData()
-    newInventory.newCars()
-    newInventory.newLocos()
+    newInventory.getcurrentTpRsData()
+    newInventory.makeNewTpRollingStockData()
+    newInventory.parseTpRollingStock()
+    newInventory.updateJmriRs()
+    newInventory.setLoadTypeAtStaging()
+    newInventory.deregisterOldRs()
 
     updatedLocations.deleteOldLocations()
 
-    PSE.CMX.save()
-    PSE.EMX.save()
+    # PSE.CMX.save()
+    # PSE.EMX.save()
     PSE.OMX.save()
 
     # tpLocaleData.make()
@@ -209,9 +212,6 @@ def updateJmriRollingingStock():
     try:
         PSE.closeTroublesomeWindows()
 
-        PSE.CM.dispose()
-        PSE.EM.dispose()
-
         allRsRosters = Attributator()
         allRsRosters.addRoads()
         allRsRosters.addCarAar()
@@ -222,14 +222,16 @@ def updateJmriRollingingStock():
         allRsRosters.addLocoConsist()
 
         newInventory = RStockulator()
-        newInventory.getTpInventory()
-        newInventory.splitTpList()
-        newInventory.makeTpRollingStockData()
-        newInventory.newCars()
-        newInventory.newLocos()
+        newInventory.getcurrentTpRsData()
+        newInventory.makeNewTpRollingStockData()
+        newInventory.parseTpRollingStock()
+        newInventory.updateJmriRs()
+        newInventory.deregisterOldRs()
+        newInventory.newJmriRs()
+        newInventory.setLoadTypeAtStaging()
 
-        PSE.CMX.save()
-        PSE.EMX.save()
+        # PSE.CMX.save()
+        # PSE.EMX.save()
 
         return True
 
@@ -510,7 +512,6 @@ class Attributator:
 
         _psLog.debug('addCarKernels')
 
-        nameList = PSE.KM.getNameList()
         for xName in self.tpRailroadData['carKernel']:
             PSE.KM.newKernel(xName)
 
@@ -549,7 +550,6 @@ class Attributator:
 
         _psLog.debug('addLocoConsist')
 
-        nameList = PSE.ZM.getNameList()
         for xName in self.tpRailroadData['locoConsists']:
             PSE.ZM.newConsist(xName)
 
@@ -827,7 +827,49 @@ class RStockulator:
         self.jmriCars = PSE.CM.getList()
         self.jmriLocos = PSE.EM.getList()
 
+        self.currentRsData = {}
+        self.newRsData = {}
+
+        self.newTpIds = []
+        self.oldTpIds = []
+        self.continuingTpIds = []
+
         print(self.scriptName + ' ' + str(SCRIPT_REV))
+
+        return
+
+    def getcurrentTpRsData(self):
+
+        fileName = 'tpRollingStockData.json'
+        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
+
+        self.currentRsData = PSE.loadJson(PSE.genericReadReport(targetPath))
+
+        return
+
+    def makeNewTpRollingStockData(self):
+        """Makes a json LUT: TP road + TP Number : TP ID"""
+
+        _psLog.debug('makeNewTpRollingStockData')
+
+        self.getTpInventory()
+        self.splitTpList()
+
+        for item in self.tpInventory:
+            try:
+                line = item.split(';')
+                name, number = ModelEntities.parseCarId(line[0])
+                # self.newRsData[name + number] = line[7]
+                self.newRsData[line[7]] = name + number
+            except:
+                _psLog.warning('Line not parsed: ' + item)
+                pass
+
+        fileName = 'tpRollingStockData.json'
+        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
+
+        formattedRsFile = PSE.dumpJson(self.newRsData)
+        PSE.genericWriteReport(targetPath, formattedRsFile)
 
         return
 
@@ -845,11 +887,11 @@ class RStockulator:
 
     def splitTpList(self):
         """self.tpInventory string format:
-            TP Car ; TP Type ; TP AAR; JMRI Location; JMRI Track; TP Load; TP Kernel
-            TP Loco; TP Model; TP AAR; JMRI Location; JMRI Track; TP Load; TP Consist
+            TP Car ; TP Type ; TP AAR; JMRI Location; JMRI Track; TP Load; TP Kernel, TP ID
+            TP Loco; TP Model; TP AAR; JMRI Location; JMRI Track; TP Load; TP Consist, TP ID
 
-            self.tpCars  dictionary format: {JMRI ID :  {type: TP Collection, aar: TP AAR, location: JMRI Location, track: JMRI Track, load: TP Load, kernel: TP Kernel}}
-            self.tpLocos dictionary format: {JMRI ID :  [Model, AAR, JMRI Location, JMRI Track, 'unloadable', Consist]}
+            self.tpCars  dictionary format: {TP ID :  {type: TP Collection, aar: TP AAR, location: JMRI Location, track: JMRI Track, load: TP Load, kernel: TP Kernel, id: JMRI ID}}
+            self.tpLocos dictionary format: {TP ID :  [Model, AAR, JMRI Location, JMRI Track, 'unloadable', Consist, JMRI ID]}
             """
 
         _psLog.debug('splitTpList')
@@ -859,87 +901,123 @@ class RStockulator:
             if line[2].startswith('ET'):
                 continue
             if line[2].startswith('E'):
-                self.tpLocos[line[0]] = {'model': line[1], 'aar': line[2], 'location': line[3], 'track': line[4], 'load': line[5], 'consist': line[6]}
+                # self.tpLocos[line[0].replace(" ", "")] = {'model': line[1], 'aar': line[2], 'location': line[3], 'track': line[4], 'load': line[5], 'consist': line[6]}
+                self.tpLocos[line[7]] = {'model': line[1], 'aar': line[2], 'location': line[3], 'track': line[4], 'load': line[5], 'consist': line[6], 'id': line[0]}
             else:
-                self.tpCars[line[0]] = {'type': line[1], 'aar': line[2], 'location': line[3], 'track': line[4], 'load': line[5], 'kernel': line[6]}
+                # self.tpCars[line[0].replace(" ", "")] = {'type': line[1], 'aar': line[2], 'location': line[3], 'track': line[4], 'load': line[5], 'kernel': line[6]}
+                self.tpCars[line[7]] = {'type': line[1], 'aar': line[2], 'location': line[3], 'track': line[4], 'load': line[5], 'kernel': line[6], 'id': line[0]}
 
         return
 
-    def makeTpRollingStockData(self):
-        """Makes a json LUT: TP road + TP Number : TP ID"""
+    def parseTpRollingStock(self):
+        """Makes 3 lists, continnuing, new and old rolling stock."""
 
-        _psLog.debug('makeTpRollingStockData')
+        currentRsIds = []
+        for id in self.currentRsData:
+            currentRsIds.append(id)
 
-        rsData = {}
-        for item in self.tpInventory:
+        newRsIds = []
+        for id in self.newRsData:
+            newRsIds.append(id)
+
+        self.continuingTpIds = list(set(currentRsIds).intersection(set(newRsIds)))
+        self.newTpIds = list(set(newRsIds).difference(set(currentRsIds)))
+        self.oldTpIds = list(set(currentRsIds).difference(set(newRsIds)))
+
+        return
+
+    def updateJmriRs(self):
+
+        self.setGenericRsAttribs(self.continuingTpIds)
+
+        return
+
+    def newJmriRs(self):
+
+        for id in self.newTpIds:
+            newJmriId = self.newRsData[id]
+            rsRoad, rsNumber = ModelEntities.parseCarId(newJmriId)
+
+            newAar = ''
             try:
-                line = item.split(';')
-                name, number = ModelEntities.parseCarId(line[0])
-                rsData[name + number] = line[7]
+                self.tpCars[id]['aar']
+                PSE.CM.newRS(rsRoad, rsNumber)
             except:
-                _psLog.warning('Line not parsed: ' + item)
-                pass
+                self.tpLocos[id]['aar']
+                PSE.EM.newRS(rsRoad, rsNumber)
 
-        fileName = 'tpRollingStockData.json'
-        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
-
-        formattedRsFile = PSE.dumpJson(rsData)
-        PSE.genericWriteReport(targetPath, formattedRsFile)
+        self.currentRsData = self.newRsData
+        self.setGenericRsAttribs(self.newTpIds)
+        self.setSpecificRsAttribs(self.newTpIds)
 
         return
 
-    def newCars(self):
-        """'kernel': u'', 'type': u'box x23 prr', 'aar': u'XM', 'load': u'Empty', 'location': u'City', 'track': u'701'}"""
+    def setGenericRsAttribs(self, idList):
+        """Used when updating rolling stock.
+            Sets only the road name, number, kernal/consist, location, track and load.
+            """
 
-        _psLog.debug('newCars')
+        _psLog.debug('setGenericRsAttribs')
 
-        for id, attribs in self.tpCars.items():
-            rsRoad, rsNumber = ModelEntities.parseCarId(id)
-            updatedCar = PSE.CM.newRS(rsRoad, rsNumber)
-            xLocation, xTrack = ModelEntities.getSetToLocationAndTrack(attribs['location'], attribs['track'])
-            if not xLocation:
-                _psLog.warning(id + 'not set at: ' + attribs['location'], attribs['track'])
-                continue
-            updatedCar.setLocation(xLocation, xTrack, True)
-            updatedCar.setTypeName(attribs['aar'])
-            if attribs['aar'] in self.o2oConfig['CC']:
-                updatedCar.setCaboose(True)
-            if attribs['aar'] in self.o2oConfig['PC']:
-                updatedCar.setPassenger(True)
-            updatedCar.setLength('40')
-            updatedCar.setWeight('2')
-            updatedCar.setColor('Red')
+        for id in idList:
+            currentJmriId = self.currentRsData[id]
+            if PSE.EM.getById(currentJmriId):
+                newRsAttribs = self.tpLocos[id]
+                rs = PSE.EM.getById(currentJmriId)
+                rs.setConsist(PSE.ZM.getConsistByName(newRsAttribs['consist']))
 
-            shipLoadName = self.getLoadFromSchedule(attribs)
-            updatedCar.setLoadName(shipLoadName)
-            
-            try:
-                if xTrack.getTrackTypeName() == 'staging':
-                    updatedCar.setLoadName('E')
-            except:
-                print('Not found', xTrack, updatedCar.getId())
-            updatedCar.setKernel(PSE.KM.getKernelByName(attribs['kernel']))
+            elif PSE.CM.getById(currentJmriId):
+                newRsAttribs = self.tpCars[id]
+                shipLoadName = self.getLoadFromSchedule(newRsAttribs)
+                rs = PSE.CM.getById(currentJmriId)
+                rs.setLoadName(shipLoadName)
+                rs.setKernel(PSE.KM.getKernelByName(newRsAttribs['kernel']))
+
+            else:
+                print('Not found: ' + currentJmriId)
+
+            rsRoad, rsNumber = ModelEntities.parseCarId(newRsAttribs['id'])
+            xLocation, xTrack = ModelEntities.getSetToLocationAndTrack(newRsAttribs['location'], newRsAttribs['track'])
+
+            rs.setRoadName(rsRoad)
+            rs.setNumber(rsNumber)
+            rs.setLocation(xLocation, xTrack, True)
+            rs.setTypeName(newRsAttribs['aar'])
 
         return
 
-    def newLocos(self):
+    def setSpecificRsAttribs(self, idList):
+        """Used when adding new rolling stock.
+            TP ID  : {'kernel': u'', 'type': u'box x23 prr', 'aar': u'XM', 'load': u'Empty', 'location': u'City', 'track': u'701'}
+            """
 
-        _psLog.debug('newLocos')
+        _psLog.debug('setSpecificRsAttribs')
 
-        for id, attribs in self.tpLocos.items():
-            rsRoad, rsNumber = ModelEntities.parseCarId(id)
-            updatedLoco = PSE.EM.newRS(rsRoad, rsNumber)
-            location, track = ModelEntities.getSetToLocationAndTrack(attribs['location'], attribs['track'])
-            if not location:
-                _psLog.warning(id + 'not set at: ' + attribs['location'], attribs['track'])
-                continue
-            updatedLoco.setLocation(location, track, True)
-            updatedLoco.setLength('40')
-            updatedLoco.setModel(attribs['model'][0:11])
-        # Setting the model will automatically set the type
-            updatedLoco.setWeight('2')
-            updatedLoco.setColor('Black')
-            updatedLoco.setConsist(PSE.ZM.getConsistByName(attribs['consist']))
+        for id in idList:
+            currentJmriId = self.currentRsData[id]
+            if PSE.EM.getById(currentJmriId):
+                newRsAttribs = self.tpLocos[id]
+                newLoco = PSE.EM.getById(currentJmriId)
+                newLoco.setLength('40')
+                newLoco.setModel(newRsAttribs['model'][0:11])
+            # Setting the model will automatically set the type
+                newLoco.setWeight('2')
+                newLoco.setColor('Black')
+                newLoco.setConsist(PSE.ZM.getConsistByName(newRsAttribs['consist']))
+
+            elif PSE.CM.getById(currentJmriId):
+                newRsAttribs = self.tpCars[id]
+                newCar = PSE.CM.getById(currentJmriId)
+                if newRsAttribs['aar'] in self.o2oConfig['CC']:
+                    newCar.setCaboose(True)
+                if newRsAttribs['aar'] in self.o2oConfig['PC']:
+                    newCar.setPassenger(True)
+                newCar.setLength('40')
+                newCar.setWeight('2')
+                newCar.setColor('Red')
+
+            else:
+                print('Not found: ' + currentJmriId)
 
         return
 
@@ -954,4 +1032,24 @@ class RStockulator:
             return jItem.getShipLoadName()
         except:
             return attribs['load']
-  
+
+    def setLoadTypeAtStaging(self):
+
+        allCars = PSE.CM.getList()
+        for car in allCars:
+            location = car.getLocation()
+            if location.isStaging():
+                car.setLoadName('E')
+
+        return
+
+    def deregisterOldRs(self):
+
+        for id in self.oldTpIds:
+            disposeJmriId = self.currentRsData[id]
+            try:
+                PSE.EM.deregister(PSE.EM.getById(disposeJmriId))
+            except:
+                PSE.CM.deregister(PSE.CM.getById(disposeJmriId))            
+
+        return
