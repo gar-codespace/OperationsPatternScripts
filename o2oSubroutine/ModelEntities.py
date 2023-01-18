@@ -24,30 +24,31 @@ def tpDirectoryExists():
         print('TrainPlayer Reports destination directory not found')
         return
 
-def selectCarTypes(industries):
-    """For each track in industries, first deselect all the RS types,
-        then select just the RS types used by that track, leaving unused types  deselected.
+def deselectCarTypes(industries):
+    """For each track in industries, deselect all the RS types,
         Called by:
-        Model.Locationator.addCarTypesToSpurs
         Model.UpdateLocationsAndTracks.addCarTypesToSpurs
         """
-# Deselect all type names for each industry track
-    locationList = []
-    for id, industry in industries.items():
-        locationList.append(industry['location'] + ';' + industry['track'])
 
-    locationList = list(set(locationList))
-    for location in locationList:
-        locTrack = location.split(';')
-        location = PSE.LM.getLocationByName(locTrack[0])
-        track = location.getTrackByName(locTrack[1], None)
+    for id, industry in industries.items():
+        location = PSE.LM.getLocationByName(industry['a-location'])
+        track = location.getTrackByName(industry['b-track'], None)
         for typeName in track.getTypeNames():
             track.deleteTypeName(typeName)
 
-# Select only those types used at the industry.
+    return
+
+def selectCarTypes(industries):
+    """Select just the RS types used by that track, leaving unused types deselected.
+        Called by:
+        Model.UpdateLocationsAndTracks.addCarTypesToSpurs
+        """
+
     for id, industry in industries.items():
-        track = PSE.LM.getLocationByName(industry['location']).getTrackByName(industry['track'], None)
-        track.addTypeName(industry['type'])
+        track = PSE.LM.getLocationByName(industry['a-location']).getTrackByName(industry['b-track'], None)
+        for schedule, details in industry['c-schedule'].items():
+            for detail in details:
+                track.addTypeName(detail[0])
 
     return
 
@@ -71,6 +72,7 @@ def setTrackLength():
 
 def newSchedules():
     """Creates new schedules from tpRailroadData.json [industries].
+        {trackLabel:[(aarName[0], rs[1], stagingName[2], viaIn[3], viaOut[4])]}
         The schedule name is the TP track label.
         Called by:
         Model.newJmriRailroad
@@ -80,11 +82,14 @@ def newSchedules():
     _psLog.debug('newSchedules')
 
     for id, industry in PSE.getTpRailroadJson('tpRailroadData')['industries'].items():
-        scheduleLineItem = industry['schedule']
-        schedule = PSE.SM.newSchedule(scheduleLineItem[0])
-        scheduleItem = schedule.addItem(scheduleLineItem[1])
-        scheduleItem.setReceiveLoadName(scheduleLineItem[2])
-        scheduleItem.setShipLoadName(scheduleLineItem[3])
+        allSchedules = industry['c-schedule']
+        for scheduleName, scheduleItems in allSchedules.items():
+            schedule = PSE.SM.newSchedule(scheduleName)
+            for lineItem in scheduleItems:
+                scheduleItem = schedule.addItem(lineItem[0])
+                scheduleItem.setReceiveLoadName(lineItem[1][0])
+                scheduleItem.setShipLoadName(lineItem[1][1])
+                scheduleItem.setDestination(PSE.LM.getLocationByName(lineItem[2]))
 
     return
 
@@ -94,6 +99,7 @@ def addCarTypesToSpurs():
     _psLog.debug('addCarTypesToSpurs')
 
     industries = PSE.getTpRailroadJson('tpRailroadData')['industries']
+    deselectCarTypes(industries)
     selectCarTypes(industries)
 
     return

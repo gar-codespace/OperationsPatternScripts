@@ -551,8 +551,12 @@ def getDivisionForLocation(locationName):
 
     location = LM.getLocationByName(locationName)
     division = location.getDivision()
+    if division:
+        divisionName = division.getName()
+    else:
+        divisionName = ''
 
-    return division.getName()
+    return divisionName
 
 def getAllLocationNames():
     """JMRI sorts the list, returns list of location names.

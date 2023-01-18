@@ -167,6 +167,7 @@ class TrainPlayerImporter:
 
         self.tpIndustries.pop(0) # Remove date
         self.tpIndustries.pop(0) # Remove key
+        self.tpIndustries.sort()
 
         self.tpInventory.pop(0) # Remove date
         self.tpInventory.pop(0) # Remove key
@@ -209,28 +210,60 @@ class TrainPlayerImporter:
         return
 
     def getAllTpIndustry(self):
-        """self.tpIndustryList format: ID, JMRI Location Name, JMRI Track Name, Industry, AAR, S/R, Load, Staging, ViaIn
+        """self.tpIndustryList format: JMRI Location Name[0], JMRI Track Name[1], Track Label[2], AAR[3], S/R[4], Load Name[5], Staging[6], ViaIn[7], ViaOut[8], TP ID[9]
             Makes a list of tuples of the industries and their data.
-            industry format: [JMRI Location Name, {ID, JMRI Track Name, Industry, AAR, schedule(label, aar, receive, ship), Staging, ViaIn, ViaOut}]
+            industry format: [JMRI Location Name, {ID, JMRI Track Name, Industry, AAR, schedule(label, aar, [receive, ship]), Staging, ViaIn, ViaOut}]
             """
 
         _psLog.debug('getAllTpIndustry')
 
-        industryDict = {}
-        receive = ''
-        ship = ''
-        for lineItem in self.tpIndustries:
-            splitLine = lineItem.split(';')
-            if splitLine[5] == 'S':
-                receive = 'Empty'
-                ship = splitLine[6]
-            else:
-                receive = splitLine[6]
-                ship = 'Empty'
-            schedule = (splitLine[3], splitLine[4], receive, ship)
-            industryDict[splitLine[0]] = {u'location': splitLine[1], u'track': splitLine[2], u'label': splitLine[3], u'type': splitLine[4], u'schedule': schedule, u'staging': splitLine[7], u'viaIn': splitLine[8], u'viaOut': splitLine[9]}
+        tpBackup = self.tpIndustries[:]
 
+        industryDict = {}
+        locale = ''
+        while self.tpIndustries:
+            line = self.tpIndustries.pop(0).split(';')
+            
+            if line[0] + line[1] == locale:
+            # Add to existing
+                trackLabel = line[2]
+                aarName = line[3]
+                sr = line[4]
+                loadName = line[5]
+                if sr == 'S':
+                    rs = ['Empty', loadName]
+                else:
+                    rs = [loadName, 'Empty']
+                stagingName = line[6]
+                viaIn = line[7]
+                viaOut = line[8]
+                scheduleItem = (aarName, rs, stagingName, viaIn, viaOut)
+                industryDict[tpId]['c-schedule'][trackLabel].append(scheduleItem)
+            else:
+            # Start a new one
+                locationName = line[0]
+                trackName = line[1]
+                trackLabel = line[2]
+                aarName = line[3]
+                sr = line[4]
+                loadName = line[5]
+                if sr == 'S':
+                    rs = ['Empty', loadName]
+                else:
+                    rs = [loadName, 'Empty']
+                stagingName = line[6]
+                viaIn = line[7]
+                viaOut = line[8]
+                tpId = line[9]
+                scheduleItem = (aarName, rs, stagingName, viaIn, viaOut)
+                schedule = {trackLabel:[scheduleItem]}
+                industryDict[tpId] = {u'a-location': locationName, u'b-track': trackName, u'c-schedule': schedule}
+
+            locale = line[0] + line[1]
+            
         self.rr['industries'] = industryDict
+
+        self.tpIndustries = tpBackup[:]
 
         return
 
@@ -269,16 +302,19 @@ class TrainPlayerImporter:
         _psLog.debug('getAllTpCarLoads')
 
         carLoads = {}
-        xList = []
-        for lineItem in self.tpIndustries:
-            splitLine = lineItem.split(';')
-            xList.append((splitLine[4], splitLine[6]))
+        aarNameLoadNameList = []
+        for industry in self.tpIndustries:
+            splitLine = industry.split(';')
+            aarNameLoadNameList.append((splitLine[3], splitLine[5]))
+
+        aarNameLoadNameList = list(set(aarNameLoadNameList))
 
         for aar in self.rr['carAAR']:
             loadList = []
-            for item in xList:
+            for item in aarNameLoadNameList:
                 if item[0] == aar:
                     loadList.append(item[1])
+
             carLoads[aar] = list(set(loadList))
 
         self.rr['carLoads'] = carLoads
