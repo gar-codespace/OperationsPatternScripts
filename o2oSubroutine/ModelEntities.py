@@ -71,27 +71,59 @@ def setTrackLength():
     return
 
 def newSchedules():
-    """Creates new schedules from tpRailroadData.json [industries].
-        {trackLabel:[(aarName[0], rs[1], stagingName[2], viaIn[3], viaOut[4])]}
-        The schedule name is the TP track label.
-        Called by:
-        Model.newJmriRailroad
-        Model.updateJmriRailroad
+    """Write the industry schedules.
+        viaIn and viaOut are not being used.
         """
 
-    _psLog.debug('newSchedules')
+    tpIndustries = PSE.getTpRailroadJson('tpRailroadData')['industries']
 
-    for id, industry in PSE.getTpRailroadJson('tpRailroadData')['industries'].items():
-        allSchedules = industry['c-schedule']
-        for scheduleName, scheduleItems in allSchedules.items():
+    for id, industry in tpIndustries.items():
+        schedulesPerIndustry = industry['c-schedule']
+        for scheduleName, scheduleItems in schedulesPerIndustry.items():
             schedule = PSE.SM.newSchedule(scheduleName)
-            for lineItem in scheduleItems:
-                scheduleItem = schedule.addItem(lineItem[0])
-                scheduleItem.setReceiveLoadName(lineItem[1][0])
-                scheduleItem.setShipLoadName(lineItem[1][1])
-                scheduleItem.setDestination(PSE.LM.getLocationByName(lineItem[2]))
+            for parsedItem in parseSchedules(scheduleItems):
+                scheduleItem = schedule.addItem(parsedItem[0])
+                scheduleItem.setReceiveLoadName(parsedItem[1])
+                scheduleItem.setShipLoadName(parsedItem[2])
+                scheduleItem.setDestination(PSE.LM.getLocationByName(parsedItem[3]))
 
     return
+
+def parseSchedules(scheduleItems):
+    """For all schedules, replace Null with Empty,
+        A duplicate is two TP/Industries rows with the same aar and the same ship/recieve.
+        scheduleItem: aarName[0], receiveLoad[1], shipload[2], stagingName[3], viaIn[4], viaOut[5]
+        """
+
+    parsedItems = []
+# Find ship/receive duplicates
+    dupes = []
+    for item in scheduleItems:
+        rAar = item[0]
+        rLoad = item[1]
+        sLoad = item[2]
+        for lookUp in scheduleItems:
+            if rAar == lookUp[0] and rLoad == lookUp[2] and sLoad == lookUp[1]:
+                dupes.append(item)
+
+# Merge duplicates
+    merged = [item for item in dupes if not item[1]]
+
+# Add duplicates to the schedule
+    for item in merged:
+        parsedItems.append([item[0], item[2], item[2], item[3], item[4], item[5]])
+
+# Find the singles
+    singles = [item for item in scheduleItems if item not in dupes]
+
+# Add singles to the schedule
+    for item in singles:
+        if not item[1]:
+            parsedItems.append([item[0], 'Empty', item[2], item[3], item[4], item[5]])
+        else:
+            parsedItems.append([item[0], item[1], 'Empty', item[3], item[4], item[5]])
+
+    return parsedItems
 
 def addCarTypesToSpurs():
     """Checks the car types check box for car types used at each spur"""

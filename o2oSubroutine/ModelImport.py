@@ -167,7 +167,7 @@ class TrainPlayerImporter:
 
         self.tpIndustries.pop(0) # Remove date
         self.tpIndustries.pop(0) # Remove key
-        self.tpIndustries.sort()
+        # self.tpIndustries.sort()
 
         self.tpInventory.pop(0) # Remove date
         self.tpInventory.pop(0) # Remove key
@@ -231,13 +231,15 @@ class TrainPlayerImporter:
                 sr = line[4]
                 loadName = line[5]
                 if sr == 'S':
-                    rs = ['Empty', loadName]
+                    receiveLoad = ''
+                    shipload = loadName
                 else:
-                    rs = [loadName, 'Empty']
+                    receiveLoad =  loadName
+                    shipload = ''
                 stagingName = line[6]
                 viaIn = line[7]
                 viaOut = line[8]
-                scheduleItem = (aarName, rs, stagingName, viaIn, viaOut)
+                scheduleItem = (aarName, receiveLoad, shipload, stagingName, viaIn, viaOut)
                 industryDict[tpId]['c-schedule'][trackLabel].append(scheduleItem)
             else:
             # Start a new one
@@ -248,14 +250,16 @@ class TrainPlayerImporter:
                 sr = line[4]
                 loadName = line[5]
                 if sr == 'S':
-                    rs = ['Empty', loadName]
+                    receiveLoad = ''
+                    shipload = loadName
                 else:
-                    rs = [loadName, 'Empty']
+                    receiveLoad =  loadName
+                    shipload = ''
                 stagingName = line[6]
                 viaIn = line[7]
                 viaOut = line[8]
                 tpId = line[9]
-                scheduleItem = (aarName, rs, stagingName, viaIn, viaOut)
+                scheduleItem = (aarName, receiveLoad, shipload, stagingName, viaIn, viaOut)
                 schedule = {trackLabel:[scheduleItem]}
                 industryDict[tpId] = {u'a-location': locationName, u'b-track': trackName, u'c-schedule': schedule}
 
