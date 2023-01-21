@@ -402,12 +402,12 @@ class Initiator:
         self.OSU.Setup.setRailroadName(layoutName)
     # Set the year
         rrYear = self.o2oConfig['JP']['YR']
-        # if rrYear:
-        self.OSU.Setup.setYearModeled(rrYear)
+        if rrYear:
+            self.OSU.Setup.setYearModeled(rrYear)
 
         rrScale = self.o2oConfig['JP']['SC']
-        # if rrScale:
-        self.OSU.Setup.setScale(self.o2oConfig['o2o']['SR'][rrScale.upper()])
+        if rrScale:
+            self.OSU.Setup.setScale(self.o2oConfig['o2o']['SR'][rrScale.upper()])
 
         return
 

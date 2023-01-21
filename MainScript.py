@@ -37,7 +37,8 @@ from opsBundle import Bundle
 SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
 SCRIPT_REV = 20230101
 
-PSE.ENCODING = PSE.readConfigFile('CP')['SE']
+PSE.validateConfigFile()
+PSE.ENCODING = PSE.readConfigFile('Main Script')['CP']['SE']
 
 Bundle.BUNDLE_DIR = OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle')
 
@@ -285,22 +286,14 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         self.logger = PSE.Logger(logFileTarget)
         self.logger.startLogger('OPS')
 
+
         self.configFile = PSE.readConfigFile()
 
         self.menuItemList = []
 
         return
 
-    def validatePatternConfig(self):
-        """To be reworked when mergeConfigFiles() is implemented."""
 
-        if not PSE.validateConfigFileVersion():
-            PSE.mergeConfigFiles()
-            # self.psLog.info('Previous PatternConfig.json merged with new')
-            PSE.writeNewConfigFile()
-            self.psLog.warning('New PatternConfig.json file created for this profile')
-
-        return
 
     def addPatternScriptsButton(self):
         """The Pattern Scripts button on the PanelPro frame."""
@@ -338,15 +331,13 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         self.psLog = PSE.LOGGING.getLogger('OPS.Main.Controller')
         self.logger.initialLogMessage(self.psLog)
 
-        self.validatePatternConfig()
+        # PSE.makeReportFolders()
 
-        PSE.makeReportFolders()
+        # Bundle.setupBundle()
 
-        Bundle.setupBundle()
+        # self.startTheDaemons()
 
-        self.startTheDaemons()
-
-        self.addPatternScriptsButton()
+        # self.addPatternScriptsButton()
 
         PSE.openSystemConsole()
 

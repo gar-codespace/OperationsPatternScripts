@@ -167,7 +167,7 @@ class TrainPlayerImporter:
 
         self.tpIndustries.pop(0) # Remove date
         self.tpIndustries.pop(0) # Remove key
-        # self.tpIndustries.sort()
+        self.tpIndustries.sort()
 
         self.tpInventory.pop(0) # Remove date
         self.tpInventory.pop(0) # Remove key

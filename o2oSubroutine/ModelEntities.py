@@ -92,6 +92,7 @@ def newSchedules():
 def parseSchedules(scheduleItems):
     """For all schedules, replace Null with Empty,
         A duplicate is two TP/Industries rows with the same aar and the same ship/recieve.
+        ModelImport.TrainPlayerImporter.processFileHeaders.self.tpIndustries.sort() or this won't work.
         scheduleItem: aarName[0], receiveLoad[1], shipload[2], stagingName[3], viaIn[4], viaOut[5]
         """
 

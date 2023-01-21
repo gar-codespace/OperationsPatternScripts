@@ -318,7 +318,7 @@ def crawler(frame):
 def openSystemConsole():
 
     console = APPS.SystemConsole.getConsole()
-    console.setVisible(readConfigFile()['CP']['OC'])
+    console.setVisible(readConfigFile('Main Script')['CP']['OC'])
 
     return
 
@@ -842,6 +842,11 @@ def genericWriteReport(filePath, genericReport):
     """Called by:
         Everything"""
 
+    try:
+        ENCODING
+    except UnboundLocalError:
+        ENCODING = 'utf-8'
+
     with codecsOpen(filePath, 'wb', encoding=ENCODING) as textWorkFile:
         textWorkFile.write(genericReport)
 
@@ -877,26 +882,52 @@ def dumpJson(file):
 """Configuration File Methods"""
 
 
+def validateConfigFile():
+
+    configFile = OS_PATH.join(PROFILE_PATH, 'operations', 'PatternConfig.json')
+
+    if not JAVA_IO.File(configFile).isFile():
+        makeNewConfigFile()
+
+    validateConfigFileVersion()
+
+    return
+
 def validateConfigFileVersion():
     """Checks that the config file is the current version.
         Called by:
         OperationsPatternScripts.MainScript.Model
         """
 
-    fileName = 'PatternConfig.json'
+    fileName = 'OPS.json'
     targetPath = OS_PATH.join(PLUGIN_ROOT, 'opsEntities', fileName)
     validPatternConfig = loadJson(genericReadReport(targetPath))
+    print(validPatternConfig['Main Script']['CP']['RV'])
+    readConfigFile()
 
-    if validPatternConfig['CP']['RV'] == readConfigFile('CP')['RV']:
-        _psLog.info('The PatternConfig.json file is the correct version')
-        return True
-    else:
-        _psLog.warning('PatternConfig.json version mismatch')
-        return False
+    # if validPatternConfig('Main Script')['CP']['RV'] == readConfigFile('Main Script')['CP']['RV']:
+    #     _psLog.info('The PatternConfig.json file is the correct version')
+    #     return True
+    # else:
+    #     _psLog.warning('PatternConfig.json version mismatch')
+    #     return False
+
+
+
+def getSubroutineDirs():
+    """Returns a list of subroutine names in the Subroutines directory."""
+
+    subroutinePath = OS_PATH.join(PLUGIN_ROOT, 'Subroutines')
+    subroutines = JAVA_IO.File(subroutinePath).list()
+
+    return subroutines
+
 
 def mergeConfigFiles():
     """Implemented in v3"""
     return
+
+
 
 def readConfigFile(subConfig=None):
     """tryConfigFile will return the config file if it's ok or a new one otherwise.
@@ -919,10 +950,34 @@ def checkConfigFile():
     try:
         loadJson(genericReadReport(targetPath))
     except:
-        writeNewConfigFile()
+        # writeNewConfigFile()
+        makeNewConfigFile()
         print('Using new configFile')
 
     return loadJson(genericReadReport(targetPath))
+
+def makeNewConfigFile():
+    """Makes a composit ConfigFile.json from OPS.json and each of the subroutine json files."""
+
+    fileName = 'OPS.json'
+    targetPath = OS_PATH.join(PLUGIN_ROOT, 'opsEntities', fileName)
+    configFile = loadJson(genericReadReport(targetPath))
+
+    print('Yipee')
+    subroutines = getSubroutineDirs()
+    for subroutine in subroutines:
+        dirPath = OS_PATH.join(PLUGIN_ROOT, 'Subroutines', subroutine)
+        if JAVA_IO.File(dirPath).isDirectory():
+            chunkPath = OS_PATH.join(PLUGIN_ROOT, 'Subroutines', subroutine, subroutine + '.json')
+            configChunk = loadJson(genericReadReport(chunkPath))
+            configFile.update(configChunk)
+
+    fileName = 'PatternConfig.json'
+    targetPath = OS_PATH.join(PROFILE_PATH, 'operations', fileName)
+    targetFile = dumpJson(configFile)
+    genericWriteReport(targetPath, targetFile)
+
+    return
 
 def tryConfigFile():
     """Try/except catches some user edit mistakes.
