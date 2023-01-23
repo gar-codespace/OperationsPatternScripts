@@ -1,0 +1,60 @@
+Pattern Tracks
+Action
+Additional Choices
+Apply Schedule
+Apply the destination tracks schedule
+at
+Available:
+Cars at
+Cancel
+Continue
+Division:
+Do Not Apply Schedule
+empty
+Eqpt. Length:
+FAIL: CreateSetCarsFormGui.quickCheck.testValidityOfForm
+FAIL: Mismatched input list and car roster lengths
+Hazardous
+Hold
+Ignore track length
+Import TrainPlayer© Railroad
+load
+Location Comment
+Location:
+Locomotives at
+Make Work
+No FD track
+No final destination
+occupied
+On Train
+Pattern Report for Tracks
+Report Totals for Cars:
+Report Work
+Restart with default settings
+Schedule for
+Schedule:
+Set Rolling Stock for track:
+Set Rolling Stock to Track
+Set to
+Set to Track
+Single
+Switch List
+Switch List for Selected Tracks
+Switch List for Track
+There are no yard tracks for this location
+There are no tracks for this selection
+Total Cars:
+Track Length:
+Track List:
+Track Pattern Report
+Track Pattern Subroutine
+Track Totals for Cars:
+Track:
+Tracks at
+unknown
+Unaffiliated
+Update Inventory Error Report
+Update Locations
+Work Event List for TrainPlayer©
+Work Location:
+Yard tracks only

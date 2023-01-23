@@ -4,7 +4,7 @@ Main script listeners.
 
 from opsEntities import PSE
 from opsBundle import Bundle
-import MainScript
+# import MainScript
 
 SCRIPT_NAME = 'OperationsPatternScripts.opsEntities.Listeners'
 SCRIPT_REV = 20230101

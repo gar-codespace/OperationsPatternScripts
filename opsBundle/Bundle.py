@@ -15,43 +15,95 @@ PSE.BUNDLE_DIR = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle')
 
 _psLog = PSE.LOGGING.getLogger('OPS.OB.Bundle')
 
+
+"""Plugin and subroutine bundle methods"""
+
 def setupBundle():
     """Mini controller to set up the bundle."""
 
-    validatePluginBundle()
+    allBundles = getAllBundles()
+
+    makeDefaultPluginBundle(allBundles)
+
     PSE.BUNDLE = getBundleForLocale()
+
     validateHelpBundle()
     PSE.CreateStubFile().make()
     makeHelpPage()
 
     return
 
-def validatePluginBundle():
-    """If any files are damaged,
-        if the length of BUNDLE and getAllTextBundles are not the same,
-        if plugin.en.json is missing:
-        make the default plugin bundle."""
+def getAllBundles():
 
-    defaultBundle = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'plugin.en.json')
-    if not PSE.JAVA_IO.File(defaultBundle).isFile():
-        _psLog.warning('FAIL: default plugin bundle file missing. New file created.')
-        makeDefaultPluginBundle()
+    targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle', 'bundle.txt')
+    pluginBundle = PSE.genericReadReport(targetPath)
 
-    allBundles = getAllTextBundles()
-    testBundles = allBundles.splitlines()
-    testBundles = list(set(testBundles)) # Remove duplicates.
-    textBundleLength = len(testBundles)
+    allSubs = PSE.getSubroutineDirs()
+    for sub in allSubs:
+        targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'Subroutines', sub, 'bundle.txt')
+        subroutineBundle = PSE.genericReadReport(targetPath)
+        pluginBundle += subroutineBundle
 
-    pluginBundleLength = len(getBundleForLocale())
+    return pluginBundle
 
-    if pluginBundleLength != textBundleLength:
-        psLocale = 'plugin.' + PSE.psLocale()[:2] + '.json'
-        oldFile = PSE.OS_PATH.join(PSE.BUNDLE_DIR, psLocale)
-        PSE.JAVA_IO.File(oldFile).delete()
-        makeDefaultPluginBundle()
-        _psLog.warning('FAIL: plugin bundle length mismatch, rebuilding plugin bundle file.')
+def makeDefaultPluginBundle(allBundles):
+    """Makes the default english plugin bundle without using the translator."""
+
+    defaultBundle = {}
+    bundleFileLocation = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'plugin.en.json')
+
+    allBundles = allBundles.splitlines()
+    for bundleItem in allBundles:
+        defaultBundle[bundleItem] = bundleItem
+
+    defaultBundle = PSE.dumpJson(defaultBundle)
+    PSE.genericWriteReport(bundleFileLocation, defaultBundle)
 
     return
+
+def getBundleForLocale():
+    """Gets the bundle json for the current locale if it exists, otherwise english.
+        Called by:
+        Main.Controller.buildThePlugin
+        Main.Controller.ptItemSelected
+        BuiltTrainExport
+        """
+
+    bundleFileLocation = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'plugin.en.json')
+    defaultBundle = PSE.loadJson(PSE.genericReadReport(bundleFileLocation))
+    if PSE.psLocale()[:2] == 'en':
+        return defaultBundle
+
+    psLocale = 'plugin.' + PSE.psLocale()[:2] + '.json'
+    bundleFileLocation = PSE.OS_PATH.join(PSE.BUNDLE_DIR, psLocale)
+    if not PSE.JAVA_IO.File(bundleFileLocation).isFile():
+        return defaultBundle
+# For partially translated bundles mashup the translated bundle with the missing english items
+    compositeBundle = {}
+    localeBundle = PSE.loadJson(PSE.genericReadReport(bundleFileLocation))
+    for item, translation in defaultBundle.items():
+        try:
+            compositeBundle[item] = localeBundle[item]
+        except:
+            compositeBundle[item] = translation
+
+    return compositeBundle
+
+
+
+
+    # fileList = PSE.JAVA_IO.File(PSE.BUNDLE_DIR).list()
+    # if psLocale in fileList:
+    #     bundleFileLocation = PSE.OS_PATH.join(PSE.BUNDLE_DIR, psLocale)
+
+    # localeBundle = PSE.loadJson(PSE.genericReadReport(bundleFileLocation))
+    # if len(localeBundle) == len(defaultBundle):
+    #     return localeBundle
+    # else:
+    #     return defaultBundle
+
+
+"""Help file methods"""
 
 def validateHelpBundle():
     """If any files are damaged,
@@ -98,82 +150,6 @@ def validateHelpBundle():
 
     return
 
-def getBundleForLocale():
-    """Gets the bundle json for the current locale if it exists, otherwise english.
-        Called by:
-        Main.Controller.buildThePlugin
-        Main.Controller.ptItemSelected
-        BuiltTrainExport
-        """
-
-    psLocale = 'plugin.' + PSE.psLocale()[:2] + '.json'
-    fileList = PSE.JAVA_IO.File(PSE.BUNDLE_DIR).list()
-
-    if psLocale in fileList:
-        bundleFileLocation = PSE.OS_PATH.join(PSE.BUNDLE_DIR, psLocale)
-    else:
-        bundleFileLocation = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'plugin.en.json')
-
-    try:
-        bundleFile = PSE.loadJson(PSE.genericReadReport(bundleFileLocation))
-        return bundleFile
-    except:
-        _psLog.warning('FAIL: plugin bundle file missing or damaged. Using default plugin bundle.')
-        
-    oldFile = PSE.OS_PATH.join(PSE.BUNDLE_DIR, psLocale)
-    PSE.JAVA_IO.File(oldFile).delete()
-    makeDefaultPluginBundle()
-    bundleFileLocation = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'plugin.en.json')
-    bundleFile = PSE.loadJson(PSE.genericReadReport(bundleFileLocation))
-
-    return bundleFile
-
-def getAllTextBundles():
-    """Combines the plugin bundle.txt file with all the bundle.txt files
-        for each subroutine listed in configFile("CP")["SI"].
-        Each bundle.txt file ends with a <CR>.
-        """
-
-    _psLog.debug('getAllTextBundles')
-
-    targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle', 'bundle.txt')
-    textBundles = PSE.genericReadReport(targetPath)
-
-    includeList = PSE.readConfigFile('CP')['IL']
-
-    for subroutine in includeList:
-        targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, subroutine, 'bundle.txt')
-        bundle = PSE.genericReadReport(targetPath)
-        textBundles += bundle
-
-    return textBundles
-
-def makeDefaultPluginBundle():
-    """Makes the default english plugin bundle without using the translator."""
-
-    defaultBundle = {}
-    bundleFileLocation = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'plugin.en.json')
-    allBundles = getAllTextBundles().splitlines()
-    for bundleItem in allBundles:
-        defaultBundle[bundleItem] = bundleItem
-
-    defaultBundle = PSE.dumpJson(defaultBundle)
-    PSE.genericWriteReport(bundleFileLocation, defaultBundle)
-
-    return
-
-def makePluginBundle(textBundle):
-    """Makes the plugin.<locale>.json file from getAllTextBundles()"""
-
-    fileName = 'plugin.' + PSE.psLocale()[:2] + '.json'
-    targetFile = PSE.OS_PATH.join(PSE.BUNDLE_DIR, fileName)
-
-    if not PSE.JAVA_IO.File(targetFile).isFile():
-        translation = baseTranslator(textBundle)
-        PSE.genericWriteReport(targetFile, translation)
-
-    return
-
 def makeDefaultHelpBundle():
     """Makes the default english help bundle without using the translator."""
 
@@ -204,6 +180,9 @@ def makeHelpBundle():
         PSE.genericWriteReport(targetFile, translation)
 
     return
+
+
+"""Bundle translation methods"""
 
 def baseTranslator(textBundle):
     """Mini controller translates each item in the bundleFile,

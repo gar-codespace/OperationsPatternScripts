@@ -1,0 +1,22 @@
+o2o
+ALERT: One or more TrainPlayer export files are missing.
+ALERT: TrainPlayer Locations file not found.
+ALERT: TrainPlayer Industries file not found.
+ALERT: TrainPlayer Inventory file not found.
+ALERT: Staging and non-staging tracks at same location:
+ALERT: TrainPlayer export issue.
+Alert: Create a new JMRI layout first.
+Check TrainPlayer-Advanced Ops-Locales for semi colon.
+Check TrainPlayer-Advanced Ops-Industries for errors.
+Create New Railroad
+From TrainPlayer, re-export layout to JMRI.
+JMRI does not allow staging and non-staging track types at the same location.
+New JMRI Railroad
+No changes were made to your JMRI layout.
+o2o Subroutine
+o2o Work Events
+TrainPlayer layout not imported to JMRI.
+Update Current Railroad
+Update JMRI Railroad
+Unknown
+Unreported

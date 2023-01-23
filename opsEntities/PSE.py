@@ -883,13 +883,16 @@ def dumpJson(file):
 
 
 def validateConfigFile():
+    print('validateConfigFile')
 
     configFile = OS_PATH.join(PROFILE_PATH, 'operations', 'PatternConfig.json')
-
+# Does one exist?
     if not JAVA_IO.File(configFile).isFile():
         makeNewConfigFile()
-
+# Is it the right version?
     validateConfigFileVersion()
+# Does it have all the needed components?
+    validateConfigFileComponents()
 
     return
 
@@ -902,26 +905,47 @@ def validateConfigFileVersion():
     fileName = 'OPS.json'
     targetPath = OS_PATH.join(PLUGIN_ROOT, 'opsEntities', fileName)
     validPatternConfig = loadJson(genericReadReport(targetPath))
-    print(validPatternConfig['Main Script']['CP']['RV'])
-    readConfigFile()
+    validVersion = validPatternConfig['Main Script']['CP']['RV']
+    currentVersion = readConfigFile('Main Script')['CP']['RV']
 
-    # if validPatternConfig('Main Script')['CP']['RV'] == readConfigFile('Main Script')['CP']['RV']:
-    #     _psLog.info('The PatternConfig.json file is the correct version')
-    #     return True
-    # else:
-    #     _psLog.warning('PatternConfig.json version mismatch')
-    #     return False
+    if currentVersion == validVersion:
+        _psLog.info('The PatternConfig.json file is the correct version')
+        return True
+    else:
+        makeNewConfigFile()
 
+        _psLog.warning('PatternConfig.json version mismatch')
+        return False
 
+def validateConfigFileComponents():
+    """Checks that each active subroutine has a config file entry."""
+
+    allSubs = getSubroutineDirs()
+    allKeys = readConfigFile().keys()
+    dirLength = len(allSubs)
+    for sub in allSubs:
+        if not sub in allKeys:
+            dirLength -= 1
+            _psLog.info(sub + ' subroutine will be added to the config file')
+
+    if dirLength != len(allSubs):
+        makeNewConfigFile()
+
+    return
 
 def getSubroutineDirs():
     """Returns a list of subroutine names in the Subroutines directory."""
 
+    subroutines = []
+
     subroutinePath = OS_PATH.join(PLUGIN_ROOT, 'Subroutines')
-    subroutines = JAVA_IO.File(subroutinePath).list()
+    dirContents = JAVA_IO.File(subroutinePath).list()
+    for item in dirContents:
+        dirPath = OS_PATH.join(PLUGIN_ROOT, 'Subroutines', item)
+        if JAVA_IO.File(dirPath).isDirectory():
+            subroutines.append(item)
 
     return subroutines
-
 
 def mergeConfigFiles():
     """Implemented in v3"""
@@ -963,7 +987,6 @@ def makeNewConfigFile():
     targetPath = OS_PATH.join(PLUGIN_ROOT, 'opsEntities', fileName)
     configFile = loadJson(genericReadReport(targetPath))
 
-    print('Yipee')
     subroutines = getSubroutineDirs()
     for subroutine in subroutines:
         dirPath = OS_PATH.join(PLUGIN_ROOT, 'Subroutines', subroutine)

@@ -31,8 +31,12 @@ PSE.JAVA_AWT = java.awt
 PSE.JAVX_SWING = javax.swing
 PSE.TIME = time
 
-from opsEntities import Listeners
+# from opsEntities import Listeners
 from opsBundle import Bundle
+
+# from Subroutines.o2o import Controller as oc
+
+
 
 SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
 SCRIPT_REV = 20230101
@@ -43,235 +47,235 @@ PSE.ENCODING = PSE.readConfigFile('Main Script')['CP']['SE']
 Bundle.BUNDLE_DIR = OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle')
 
 
-def buildThePlugin(view):
-    """Mini controller to build and display the PS Plugin Window.
-        Called by:
-        restartThePlugin
-        patternScriptsButtonAction
-        """
+# def buildThePlugin(view):
+#     """Mini controller to build and display the PS Plugin Window.
+#         Called by:
+#         restartThePlugin
+#         patternScriptsButtonAction
+#         """
 
-    view.makeSubroutinePanel()
-    view.makeScrollPanel()
-    view.makePatternScriptsWindow()
+#     view.makeSubroutinePanel()
+#     view.makeScrollPanel()
+#     view.makePatternScriptsWindow()
 
-    for menuItem in view.getPsPluginMenuItems():
-        menuItem.removeActionListener(getattr(Listeners, menuItem.getName()))
-        menuItem.addActionListener(getattr(Listeners, menuItem.getName()))
+#     for menuItem in view.getPsPluginMenuItems():
+#         menuItem.removeActionListener(getattr(Listeners, menuItem.getName()))
+#         menuItem.addActionListener(getattr(Listeners, menuItem.getName()))
 
-    view.OpenPatternScriptsWindow()
+#     view.OpenPatternScriptsWindow()
 
-    return
+#     return
 
-def restartThePlugin():
-    """ """
+# def restartThePlugin():
+#     """ """
 
-    _psLog = PSE.LOGGING.getLogger('OPS.Main.restartThePlugin')
+#     _psLog = PSE.LOGGING.getLogger('OPS.Main.restartThePlugin')
     
-    PSE.deactivateAllSubroutines()
-    PSE.closeOpsWindows('patternScriptsWindow')
+#     PSE.deactivateAllSubroutines()
+#     PSE.closeOpsWindows('patternScriptsWindow')
 
-    PSE.deleteConfigFile()
+#     PSE.deleteConfigFile()
 
-    Bundle.setupBundle()
+#     Bundle.setupBundle()
 
-    buildThePlugin(View())
+#     buildThePlugin(View())
 
-    psButton = PSE.getPsButton()
-    psButton.setText(PSE.BUNDLE[u'Pattern Scripts'])
-    PSE.APPS.Apps.buttonSpace().revalidate()
+#     psButton = PSE.getPsButton()
+#     psButton.setText(PSE.BUNDLE[u'Pattern Scripts'])
+#     PSE.APPS.Apps.buttonSpace().revalidate()
 
-    _psLog.info('Pattern Scripts plugin restarted')
+#     _psLog.info('Pattern Scripts plugin restarted')
 
-    return
+#     return
 
-class View:
+# class View:
 
-    def __init__(self):
+#     def __init__(self):
 
-        self.psLog = PSE.LOGGING.getLogger('OPS.Main.View')
+#         self.psLog = PSE.LOGGING.getLogger('OPS.Main.View')
 
-        self.cpConfig = PSE.readConfigFile('CP')
+#         self.cpConfig = PSE.readConfigFile('CP')
 
-        self.psWindow = PSE.JMRI.util.JmriJFrame()
+#         self.psWindow = PSE.JMRI.util.JmriJFrame()
 
-        """Dealers choice, jPanel or Box."""
-        # self.subroutinePanel = PSE.JAVX_SWING.JPanel()
-        # self.subroutinePanel.setLayout(PSE.JAVX_SWING.BoxLayout( self.subroutinePanel, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
-        self.subroutinePanel = PSE.JAVX_SWING.Box(PSE.JAVX_SWING.BoxLayout.PAGE_AXIS)
+#         """Dealers choice, jPanel or Box."""
+#         # self.subroutinePanel = PSE.JAVX_SWING.JPanel()
+#         # self.subroutinePanel.setLayout(PSE.JAVX_SWING.BoxLayout( self.subroutinePanel, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
+#         self.subroutinePanel = PSE.JAVX_SWING.Box(PSE.JAVX_SWING.BoxLayout.PAGE_AXIS)
 
-        self.psPluginMenuItems = []
-        self.subroutineMenuItems = []
+#         self.psPluginMenuItems = []
+#         self.subroutineMenuItems = []
 
-        return
+#         return
 
-    def makeSubroutinePanel(self):
-        """Add the subroutines to this."""
+#     def makeSubroutinePanel(self):
+#         """Add the subroutines to this."""
 
-        self.subroutinePanel.setName('subroutinePanel')
+#         self.subroutinePanel.setName('subroutinePanel')
 
-        self.subroutinePanel = PSE.addActiveSubroutines(self.subroutinePanel)
+#         self.subroutinePanel = PSE.addActiveSubroutines(self.subroutinePanel)
 
-        return
+#         return
 
-    def makeSubroutineMenuItems(self):
-        """Add all the menu items for subroutines in ['CP']['IL']."""
+#     def makeSubroutineMenuItems(self):
+#         """Add all the menu items for subroutines in ['CP']['IL']."""
 
-        menuItemList = []
+#         menuItemList = []
 
-        for include in self.cpConfig['IL']:
-            package = __import__(include, fromlist=['Listeners'])
+#         for include in self.cpConfig['IL']:
+#             package = __import__(include, fromlist=['Listeners'])
 
-            menuText, itemName = package.Controller.setDropDownText()
-            menuItem = self.makeMenuItem(menuText, itemName)
-            menuItem.addActionListener(package.Listeners.actionListener)
+#             menuText, itemName = package.Controller.setDropDownText()
+#             menuItem = self.makeMenuItem(menuText, itemName)
+#             menuItem.addActionListener(package.Listeners.actionListener)
 
-            menuItemList.append(menuItem)
+#             menuItemList.append(menuItem)
 
-        return menuItemList
+#         return menuItemList
 
-    def makeScrollPanel(self):
+#     def makeScrollPanel(self):
 
-        self.scrollPanel = PSE.JAVX_SWING.JScrollPane(self.subroutinePanel)
-        self.scrollPanel.border = PSE.JAVX_SWING.BorderFactory.createLineBorder(PSE.JAVA_AWT.Color.GRAY)
-        self.scrollPanel.setName('scrollPanel')
+#         self.scrollPanel = PSE.JAVX_SWING.JScrollPane(self.subroutinePanel)
+#         self.scrollPanel.border = PSE.JAVX_SWING.BorderFactory.createLineBorder(PSE.JAVA_AWT.Color.GRAY)
+#         self.scrollPanel.setName('scrollPanel')
 
-        return
+#         return
 
-    def makePatternScriptsWindow(self):
+#     def makePatternScriptsWindow(self):
 
-        self.psLog.debug('makePatternScriptsWindow')
+#         self.psLog.debug('makePatternScriptsWindow')
 
-        toolsMenu = PSE.JAVX_SWING.JMenu(PSE.BUNDLE[u'Tools'])
-        toolsMenu.add(PSE.JMRI.jmrit.operations.setup.OptionAction())
-        toolsMenu.add(PSE.JMRI.jmrit.operations.setup.PrintOptionAction())
-        toolsMenu.add(PSE.JMRI.jmrit.operations.setup.BuildReportOptionAction())
+#         toolsMenu = PSE.JAVX_SWING.JMenu(PSE.BUNDLE[u'Tools'])
+#         toolsMenu.add(PSE.JMRI.jmrit.operations.setup.OptionAction())
+#         toolsMenu.add(PSE.JMRI.jmrit.operations.setup.PrintOptionAction())
+#         toolsMenu.add(PSE.JMRI.jmrit.operations.setup.BuildReportOptionAction())
 
-        for menuItem in self.makeSubroutineMenuItems():
-            toolsMenu.add(menuItem)
+#         for menuItem in self.makeSubroutineMenuItems():
+#             toolsMenu.add(menuItem)
 
-        itemText, itemName = self.setPtDropDownText()
-        ptMenuItem = self.makeMenuItem(itemText, itemName)
-        self.psPluginMenuItems.append(ptMenuItem)
-        toolsMenu.add(ptMenuItem)
-        if not Bundle.validateKeyFile():
-            ptMenuItem.setEnabled(False)
+#         itemText, itemName = self.setPtDropDownText()
+#         ptMenuItem = self.makeMenuItem(itemText, itemName)
+#         self.psPluginMenuItems.append(ptMenuItem)
+#         toolsMenu.add(ptMenuItem)
+#         if not Bundle.validateKeyFile():
+#             ptMenuItem.setEnabled(False)
 
-        itemText, itemName = self.setEcDropDownText()
-        editConfigMenuItem = self.makeMenuItem(itemText, itemName)
-        self.psPluginMenuItems.append(editConfigMenuItem)
-        toolsMenu.add(editConfigMenuItem)
+#         itemText, itemName = self.setEcDropDownText()
+#         editConfigMenuItem = self.makeMenuItem(itemText, itemName)
+#         self.psPluginMenuItems.append(editConfigMenuItem)
+#         toolsMenu.add(editConfigMenuItem)
 
-        itemText, itemName = self.setRsDropDownText()
-        rsMenuItem = self.makeMenuItem(itemText, itemName)
-        self.psPluginMenuItems.append(rsMenuItem)
-        toolsMenu.add(rsMenuItem)
+#         itemText, itemName = self.setRsDropDownText()
+#         rsMenuItem = self.makeMenuItem(itemText, itemName)
+#         self.psPluginMenuItems.append(rsMenuItem)
+#         toolsMenu.add(rsMenuItem)
 
-        helpMenu = PSE.JAVX_SWING.JMenu(PSE.BUNDLE[u'Help'])
+#         helpMenu = PSE.JAVX_SWING.JMenu(PSE.BUNDLE[u'Help'])
 
-        itemText, itemName = self.setHmDropDownText()
-        helpMenuItem = self.makeMenuItem(itemText, itemName)
-        self.psPluginMenuItems.append(helpMenuItem)
-        helpMenu.add(helpMenuItem)
+#         itemText, itemName = self.setHmDropDownText()
+#         helpMenuItem = self.makeMenuItem(itemText, itemName)
+#         self.psPluginMenuItems.append(helpMenuItem)
+#         helpMenu.add(helpMenuItem)
 
-        itemText, itemName = self.setGhDropDownText()
-        gitHubMenuItem = self.makeMenuItem(itemText, itemName)
-        self.psPluginMenuItems.append(gitHubMenuItem)
-        helpMenu.add(gitHubMenuItem)
+#         itemText, itemName = self.setGhDropDownText()
+#         gitHubMenuItem = self.makeMenuItem(itemText, itemName)
+#         self.psPluginMenuItems.append(gitHubMenuItem)
+#         helpMenu.add(gitHubMenuItem)
 
-        itemText, itemName = self.setOfDropDownText()
-        opsFolderMenuItem = self.makeMenuItem(itemText, itemName)
-        self.psPluginMenuItems.append(opsFolderMenuItem)
-        helpMenu.add(opsFolderMenuItem)
+#         itemText, itemName = self.setOfDropDownText()
+#         opsFolderMenuItem = self.makeMenuItem(itemText, itemName)
+#         self.psPluginMenuItems.append(opsFolderMenuItem)
+#         helpMenu.add(opsFolderMenuItem)
 
-        itemText, itemName = self.setLmDropDownText()
-        logMenuItem = self.makeMenuItem(itemText, itemName)
-        self.psPluginMenuItems.append(logMenuItem)
-        helpMenu.add(logMenuItem)
+#         itemText, itemName = self.setLmDropDownText()
+#         logMenuItem = self.makeMenuItem(itemText, itemName)
+#         self.psPluginMenuItems.append(logMenuItem)
+#         helpMenu.add(logMenuItem)
 
-        psMenuBar = PSE.JAVX_SWING.JMenuBar()
-        psMenuBar.add(toolsMenu)
-        psMenuBar.add(PSE.JMRI.jmrit.operations.OperationsMenu())
-        psMenuBar.add(PSE.JMRI.util.WindowMenu(self.psWindow))
-        psMenuBar.add(helpMenu)
+#         psMenuBar = PSE.JAVX_SWING.JMenuBar()
+#         psMenuBar.add(toolsMenu)
+#         psMenuBar.add(PSE.JMRI.jmrit.operations.OperationsMenu())
+#         psMenuBar.add(PSE.JMRI.util.WindowMenu(self.psWindow))
+#         psMenuBar.add(helpMenu)
 
-        configPanel = PSE.readConfigFile('CP')
-        self.psWindow.setName('patternScriptsWindow')
-        self.psWindow.setTitle(PSE.BUNDLE[u'Pattern Scripts'])
-        self.psWindow.addWindowListener(Listeners.PatternScriptsWindow())
-        self.psWindow.setJMenuBar(psMenuBar)
-        self.psWindow.add(self.scrollPanel)
-        # self.psWindow.pack()
-        self.psWindow.setSize(configPanel['PW'], configPanel['PH'])
-        self.psWindow.setLocation(configPanel['PX'], configPanel['PY'])
+#         configPanel = PSE.readConfigFile('CP')
+#         self.psWindow.setName('patternScriptsWindow')
+#         self.psWindow.setTitle(PSE.BUNDLE[u'Pattern Scripts'])
+#         self.psWindow.addWindowListener(Listeners.PatternScriptsWindow())
+#         self.psWindow.setJMenuBar(psMenuBar)
+#         self.psWindow.add(self.scrollPanel)
+#         # self.psWindow.pack()
+#         self.psWindow.setSize(configPanel['PW'], configPanel['PH'])
+#         self.psWindow.setLocation(configPanel['PX'], configPanel['PY'])
 
-        return
+#         return
 
-    def OpenPatternScriptsWindow(self):
+#     def OpenPatternScriptsWindow(self):
 
-        self.psWindow.setVisible(True)
+#         self.psWindow.setVisible(True)
 
-        return
+#         return
 
-    def getPsPluginMenuItems(self):
+#     def getPsPluginMenuItems(self):
 
-        return self.psPluginMenuItems
+#         return self.psPluginMenuItems
 
-    def makeMenuItem(self, itemText, itemName):
-        """Makes all the items for the custom drop down menus."""
+#     def makeMenuItem(self, itemText, itemName):
+#         """Makes all the items for the custom drop down menus."""
 
-        menuItem = PSE.JAVX_SWING.JMenuItem(itemText)
-        menuItem.setName(itemName)
+#         menuItem = PSE.JAVX_SWING.JMenuItem(itemText)
+#         menuItem.setName(itemName)
 
-        return menuItem
+#         return menuItem
 
-    def setPtDropDownText(self):
-        """itemMethod - Set the drop down text for the Translate Plugin item."""
+#     def setPtDropDownText(self):
+#         """itemMethod - Set the drop down text for the Translate Plugin item."""
 
-        menuText = PSE.BUNDLE[u'Translate Plugin']
+#         menuText = PSE.BUNDLE[u'Translate Plugin']
 
-        return menuText, 'ptItemSelected'
+#         return menuText, 'ptItemSelected'
 
-    def setRsDropDownText(self):
-        """itemMethod - Set the drop down text for the Restart From Default item."""
+#     def setRsDropDownText(self):
+#         """itemMethod - Set the drop down text for the Restart From Default item."""
 
-        menuText = PSE.BUNDLE[u'Restart From Default']
+#         menuText = PSE.BUNDLE[u'Restart From Default']
 
-        return menuText, 'rsItemSelected'
+#         return menuText, 'rsItemSelected'
 
-    def setHmDropDownText(self):
-        """itemMethod - Set the drop down text for the Log menu item."""
+#     def setHmDropDownText(self):
+#         """itemMethod - Set the drop down text for the Log menu item."""
 
-        menuText = PSE.BUNDLE[u'Window Help...']
+#         menuText = PSE.BUNDLE[u'Window Help...']
 
-        return menuText, 'helpItemSelected'
+#         return menuText, 'helpItemSelected'
 
-    def setLmDropDownText(self):
-        """itemMethod - Set the drop down text for the Log menu item."""
+#     def setLmDropDownText(self):
+#         """itemMethod - Set the drop down text for the Log menu item."""
 
-        menuText = PSE.BUNDLE[u'View Log File']
+#         menuText = PSE.BUNDLE[u'View Log File']
 
-        return menuText, 'logItemSelected'
+#         return menuText, 'logItemSelected'
 
-    def setGhDropDownText(self):
-        """itemMethod - Set the drop down text for the gitHub page item."""
+#     def setGhDropDownText(self):
+#         """itemMethod - Set the drop down text for the gitHub page item."""
 
-        menuText = PSE.BUNDLE[u'GitHub Web Page']
+#         menuText = PSE.BUNDLE[u'GitHub Web Page']
 
-        return menuText, 'ghItemSelected'
+#         return menuText, 'ghItemSelected'
 
-    def setEcDropDownText(self):
-        """itemMethod - Set the drop down text for the edit config file item."""
+#     def setEcDropDownText(self):
+#         """itemMethod - Set the drop down text for the edit config file item."""
 
-        menuText = PSE.BUNDLE[u'Edit Config File']
+#         menuText = PSE.BUNDLE[u'Edit Config File']
 
-        return menuText, 'ecItemSelected'
+#         return menuText, 'ecItemSelected'
 
-    def setOfDropDownText(self):
-        """itemMethod - Set the drop down text for the operations folder item."""
+#     def setOfDropDownText(self):
+#         """itemMethod - Set the drop down text for the operations folder item."""
 
-        menuText = PSE.BUNDLE[u'Operations Folder']
+#         menuText = PSE.BUNDLE[u'Operations Folder']
 
-        return menuText, 'ofItemSelected'
+#         return menuText, 'ofItemSelected'
 
 
 class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
@@ -281,13 +285,14 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         PSE.makeBuildStatusFolder()
 
+
         logFileTarget = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'buildstatus', 'PatternScriptsLog.txt')
 
         self.logger = PSE.Logger(logFileTarget)
         self.logger.startLogger('OPS')
 
 
-        self.configFile = PSE.readConfigFile()
+        # self.configFile = PSE.readConfigFile()
 
         self.menuItemList = []
 
@@ -295,33 +300,37 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
 
 
-    def addPatternScriptsButton(self):
-        """The Pattern Scripts button on the PanelPro frame."""
+    # def addPatternScriptsButton(self):
+    #     """The Pattern Scripts button on the PanelPro frame."""
 
-        psButton = PSE.JAVX_SWING.JButton()
-        psButton.actionPerformed = self.patternScriptsButtonAction
-        psButton.setName('psButton')
-        PSE.APPS.Apps.buttonSpace().add(psButton)
+    #     psButton = PSE.JAVX_SWING.JButton()
+    #     psButton.actionPerformed = self.patternScriptsButtonAction
+    #     psButton.setName('psButton')
+    #     PSE.APPS.Apps.buttonSpace().add(psButton)
 
-        psButton.setText(PSE.BUNDLE[u'Pattern Scripts'])
-        PSE.APPS.Apps.buttonSpace().revalidate()
+    #     psButton.setText(PSE.BUNDLE[u'Pattern Scripts'])
+    #     PSE.APPS.Apps.buttonSpace().revalidate()
 
-        return
+    #     return
 
-    def patternScriptsButtonAction(self, MOUSE_CLICKED):
+    # def patternScriptsButtonAction(self, MOUSE_CLICKED):
 
-        self.psLog.debug(MOUSE_CLICKED)
+    #     self.psLog.debug(MOUSE_CLICKED)
 
-        buildThePlugin(View())
+    #     buildThePlugin(View())
 
-        return
+    #     return
 
-    def startTheDaemons(self):
-        """Not sure what to call them so I'm calling them daemons."""
+    def subroutineStartup(self):
+        """Methods each subroutine need when started.
+            These do not get deactivated.
+            """
 
-        for include in self.configFile['CP']['IL']:
-            package = __import__(include, fromlist=['Controller', 'Listeners'])
-            package.Controller.startDaemons()
+        for subroutine in PSE.getSubroutineDirs():
+            x = 'Subroutines.' + subroutine
+            print(x)
+            package = __import__(x, globals(), locals(), fromlist=['RemoteCalls'], level=-1)
+            package.RemoteCalls.startupCalls()
 
         return
 
@@ -331,11 +340,11 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         self.psLog = PSE.LOGGING.getLogger('OPS.Main.Controller')
         self.logger.initialLogMessage(self.psLog)
 
-        # PSE.makeReportFolders()
+        PSE.makeReportFolders()
 
-        # Bundle.setupBundle()
+        Bundle.setupBundle()
 
-        # self.startTheDaemons()
+        self.subroutineStartup()
 
         # self.addPatternScriptsButton()
 

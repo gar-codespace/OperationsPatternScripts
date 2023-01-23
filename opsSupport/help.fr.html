@@ -36,33 +36,33 @@
 
 <body>
 
-<h1>Page d'aide - Plugin Pattern Scripts pour JMRI</h1>
-<p>Le plugin Pattern Scripts pour JMRI est une suite de sous-programmes pour JMRI Operations Pro.
-L'utilisation de ce plugin est documentée dans la liste suivante de vidéos.
+<h1>Help Page - Pattern Scripts plugin for JMRI</h1>
+<p>The Pattern Scripts plugin for JMRI is a suite of subroutines for JMRI Operations Pro.
+The use of this plugin is documented in the following list of videos.
 The videos are recorded in the English language.</p>
 
-<h3>Plugin Scripts de motifs - Documentation vidéo</h3>
+<h3>Pattern Scripts plugin - Video Documentation</h3>
 
-<p>Visualisation de ce plugin</p>
-<p><A HREF="https://youtu.be/Sl9yBQaRpeY">Comment ajouter ce plugin à JMRI</A></p>
-<p><A HREF="https://youtu.be/6G7xkRJTczo">Comment traduire ce plugin</A></p>
-<p><A HREF="https://youtu.be/GjPtXk3oKmc">Comment configurer ce plugin</A></p>
-<p><A HREF="https://youtu.be/DK6O9AQmqXo">Comment modifier ce plugin</A></p>
-<h3>Sous-routines - Documentation vidéo</h3>
-<p>Le sous-programme j plus</A></p>
-<p><A HREF="https://youtu.be/IdXvxyo-E3Y">Subroutine de modèle de piste - Démonstration sur un chantier</A></p>
-<p><A HREF="https://youtu.be/2Tv6sUMDD_Y">Subroutine Track Pattern - Démonstration à l'industrie</A></p>
-<p><A HREF="https://youtu.be/rlUfoSesnQo">o2o, la sous-routine ops to ops pour TrainPlayer©</A></p>
+<p>Overview of this plugin</p>
+<p><A HREF="https://youtu.be/Sl9yBQaRpeY">How to add this plugin to JMRI</A></p>
+<p><A HREF="https://youtu.be/6G7xkRJTczo">How to translate this plugin</A></p>
+<p><A HREF="https://youtu.be/GjPtXk3oKmc">How to set up this plugin</A></p>
+<p><A HREF="https://youtu.be/DK6O9AQmqXo">How to modify this plugin</A></p>
+<h3>Subroutines - Video Documentation</h3>
+<p>The j Plus Subroutine</A></p>
+<p><A HREF="https://youtu.be/IdXvxyo-E3Y">Track Pattern Subroutine - Demonstration at a yard</A></p>
+<p><A HREF="https://youtu.be/2Tv6sUMDD_Y">Track Pattern Subroutine - Demonstration at industry</A></p>
+<p><A HREF="https://youtu.be/rlUfoSesnQo">o2o, the ops to ops subroutine for TrainPlayer©</A></p>
 
-<h2>Plugin Scripts de motifs</h2>
+<h2>Pattern Scripts plugin</h2>
 <h3>Introduction</h3>
-<p>Le plugin Pattern Scripts peut être considéré comme un cadre permettant d'héberger des sous-programmes pour JMRI Operations Pro qui nécessitent une interface utilisateur.
-Ce plugin est livré avec trois sous-programmes : j Plus, Pattern Tracks et o2o.
-Un modèle est également inclus pour servir d'échafaudage à une personne souhaitant ajouter son propre sous-programme.
-Bien que les sous-routines soient quelque peu interdépendantes, elles peuvent être activées ou désactivées individuellement selon les besoins.</p>
+<p>The Pattern Scripts plugin can be thought of as a framework for hosting subroutines for JMRI Operations Pro that require a user interface.
+This plugin comes with three subroutines; j Plus, Pattern Tracks, and o2o.
+A template is also included to serve as scaffolding for someone wishing to add their own subroutine.
+Although the subroutines are somewhat interdependent, they may be activated or deactivated individually as needed.</p>
 
-<h3>Organisation</h3>
-<p>Le tableau suivant montre la structure du code de ce plugin.</P>
+<h3>Organization</h3>
+<p>The following chart shows the code structure of this plugin.</P>
 <img src="Code_Structure.png" alt="<Code Structure Image>">
 
 <h3>Plugin Layout</h3>
@@ -70,49 +70,49 @@ Bien que les sous-routines soient quelque peu interdépendantes, elles peuvent �
 <img src="Plugin_Layout.png" alt="<Plugin Layout Image>">
 
 <h3>PatternConfig.json</h3>
-<p>Chaque profil JMRI obtient son propre fichier de configuration, nommé PatternConfig.json.
-Il se trouve dans le dossier des opérations, et est utilisé pour fournir des paramètres personnalisés pour chaque profil et enregistrer les entrées de l'utilisateur.
-<br><font color="blue">La description de chaque élément est en bleu</font>
-<br><font color="green">Les touches modifiables par l'utilisateur sont décrites en vert.</font>
+<p>Each JMRI profile gets its own configuration file, which is named PatternConfig.json.
+It is found in the operations folder, and is used to provide custom settings for each profile and record user inputs.
+<br><font color="blue">The description of each element is in blue</font>
+<br><font color="green">User editable keys are described in green</font>
 <br>Select Tools/Edit Config File.
 If a mistake is made editing the PatternConfig.json file, the plugin will delete the file and provide a new one to start over with.
 Worst case the plugin may crash. If </p>
 
-<h4>Les paramètres du plugin Pattern Scripts dans PatternConfig.json</h4>
+<h4>Pattern Scripts plugin settings in PatternConfig.json</h4>
 <pre>
-  "CP" : { <font color="blue">Panneau de configuration</font>
-    "TS" : { <font color="blue">Services de traduction</font>
+  "CP" : { <font color="blue">Control Panel</font>
+    "TS" : { <font color="blue">Translation Services</font>
       "UD" : "UseDeepL",
       "UX" : "UseSomethingElse"
     },
-    "TC" : "UD", <font color="blue">Choix de la traduction</font>
-    "LN" : "", <font color="blue">Nom de la mise en page à partir des paramètres JMRI</font>
-    "DR" : true, <font color="blue">Réservé</font>
-    "AP" : true, <font color="blue">Ajouter un bouton au cadre de Panel Pro, le plugin n'est pas affiché mais toujours activé</font>
-    "SE" : "utf-8", <font color="blue">Encodage par défaut</font>
-    "IL" : [ <font color="blue">Liste d'inclusion, les sous-routines sont incluses dans cet ordre</font>
+    "TC" : "UD", <font color="blue">Translation choice</font>
+    "LN" : "", <font color="blue">Layout Name from JMRI Settings</font>
+    "DR" : true, <font color="blue">Reserved</font>
+    "AP" : true, <font color="blue">Add button to Panel Pro frame, plugin is not displayed but still enabled</font>
+    "SE" : "utf-8", <font color="blue">Default encoding</font>
+    "IL" : [ <font color="blue">Include list, subroutines are included in this order</font>
       "jPlusSubroutine",
       "PatternTracksSubroutine",
       "o2oSubroutine"
     ],
-    "jPlusSubroutine" : false, <font color="blue">Statut d'activation</font>
-    "PatternTracksSubroutine" : true, <font color="blue">Statut d'activation</font>
-    "o2oSubroutine" : false, <font color="blue">Statut d'activation</font>
-    "PH" : 280, <font color="blue">Hauteur du panneau par défaut</font>
-    "PW" : 1100, <font color="blue">Largeur par défaut du panneau</font>
-    "PX" : 0, <font color="blue">Emplacement du plugin, axe X</font>
-    "PY" : 0, <font color="blue">Emplacement du plugin, axe Y</font>
-    "OC" : true, <font color="green">Ouvrir la fenêtre de la console système au démarrage du plugin</font>
-    "RV" : 20221122 <font color="blue">Contrôle de la révision</font>
+    "jPlusSubroutine" : false, <font color="blue">Activation status</font>
+    "PatternTracksSubroutine" : true, <font color="blue">Activation status</font>
+    "o2oSubroutine" : false, <font color="blue">Activation status</font>
+    "PH" : 280, <font color="blue">Default panel height</font>
+    "PW" : 1100, <font color="blue">Default panel width</font>
+    "PX" : 0, <font color="blue">Plugin location, X axis</font>
+    "PY" : 0, <font color="blue">Plugin location, Y axis</font>
+    "OC" : true, <font color="green">Open System Console Window on starting plugin</font>
+    "RV" : 20221122 <font color="blue">Revision control</font>
   },
-  "CD": { <font color="blue">Définitions des couleurs</font>
-    "CP": { <font color="blue">Palette de couleurs</font>
-      "<font color="green">BLANCH</font>": { <font color="blue">Chacune de ces couleurs peut être modifiée</font>
-        "A": <font color="green">255</font>, <font color="blue">Valeur alpha</font>
-        "B": <font color="green">225</font>, <font color="blue">Valeur bleue</font>
-        "D": <font color="green">Light grey</font>, <font color="blue">Description vague</font>
-        "G": <font color="green">225</font>, <font color="blue">Valeur verte</font>
-        "R": <font color="green">225</font> <font color="blue">Valeur rouge</font>
+  "CD": { <font color="blue">Color Definitions</font>
+    "CP": { <font color="blue">Color Palette</font>
+      "<font color="green">BLANCH</font>": { <font color="blue">Any of these colors can be changed</font>
+        "A": <font color="green">255</font>, <font color="blue">Alpha value</font>
+        "B": <font color="green">225</font>, <font color="blue">Blue value</font>
+        "D": <font color="green">Light grey</font>, <font color="blue">Vague Description</font>
+        "G": <font color="green">225</font>, <font color="blue">Green value</font>
+        "R": <font color="green">225</font> <font color="blue">Red value</font>
       },
       "DUST": {
         "A": 255,
@@ -149,11 +149,11 @@ Worst case the plugin may crash. If </p>
         "G": 208,
         "R": 240
       },
-    "locoColor": <font color="green">"FADED"</font> Ne spécifiez aucune couleur avec ""
+    "locoColor": <font color="green">"FADED"</font> Specify no color with ""
     "carColor": <font color="green">"DUST"</font>,
     "alertColor": <font color="green">"PETAL"</font>
   },
-  "TO" : { <font color="blue">Opérations de la semaine, ajustements des paramètres des opérations</font>
+  "TO" : { <font color="blue">Tweek Operations, adjustments to operations settings</font>
     "SME" : <font color="green">true</font>,  setMainMenuEnabled
     "CWS" : <font color="green">true</font>,  setCloseWindowOnSaveEnabled
     "SBA" : <font color="green">true</font>,  setBuildAggressive
@@ -176,87 +176,87 @@ Worst case the plugin may crash. If </p>
 
 <h2>j Plus Subroutine</h2>
 <h3>Introduction</h3>
-<p>Le sous-programme j Plus ajoute des détails ferroviaires améliorés aux rapports générés par JMRI et ce plugin.</P>
-<p>Les données de cette sous-routine sont saisies dans les zones de texte ou, si la sous-routine TrainPlayer est activée, les détails supplémentaires sur les chemins de fer sont importés à partir du modèle TrainPlayer.</P>
-<p>Il n'est pas nécessaire de remplir tous les champs.</P>
-<p>Les champs améliorés sont les suivants :</P>
-<h4>Nom du chemin de fer en activité</h4>
-<p>Il s'agit du chemin de fer qui possède ou exploite les voies modélisées. N'importe quel nom peut être saisi, tel que 'PRR' ou 'BN UPRR Joint' ou 'G&D'.</P>
-<h4>Territoire opérationnel</h4>
-<p>Il s'agit du nom du chemin de fer pour la partie modélisée, par exemple "Long Beach Intermodal Terminal" ou "Salem Glass Works Branch".</P>
-<h4>Localisation</h4>
-<p>L'endroit où se trouve le chemin de fer, par exemple "The Great Divide" ou "The Bronx, New York".</P>
-<h4>Année modélisée</h4>
-<p>L'année sur laquelle le modèle ferroviaire est basé, c'est un miroir de 'JMRI/OperationsPro/Settings/Year Modeled'.</p>
+<p>The j Plus subroutine adds enhanced railroad detail to reports generated by both JMRI and this plugin.</P>
+<p>Data for this subroutine is entered into the text boxes or if the TrainPlayer subroutine is activated, the additional railroad detail is imported from the TrainPlayer layout.</P>
+<p>Not all fields need be entered.</P>
+<p>The enhanced fields are as follows:</P>
+<h4>Operating Railroad Name</h4>
+<p>This is railroad that owns or operates the tracks being modeled. Any name can be entered such as 'PRR' or 'BN UPRR Joint' or 'G&D'.</P>
+<h4>Operational Territory</h4>
+<p>This is the railroad's name for the part being modeled, such as 'Long Beach Intermodal Terminal' or 'Salem Glass Works Branch'.</P>
+<h4>Location</h4>
+<p>Where the the railroad is located, such as 'The Great Divide' or 'The Bronx, New York'.</P>
+<h4>Year Modeled</h4>
+<p>Which year the model railroad is based on, this is a mirror of 'JMRI/OperationsPro/Settings/Year Modeled'.</p>
 
 <h3>Subroutine Panel</h3>
 <p>OperationsPatternScripts.jPlusSubroutine.Controller.makeSubroutinePanel()</p>
 <img src="j_Plus_Subroutine.png" alt="<j Plus Subroutine Image>">
 
-<h4>j Plus Paramètres des sous-routines dans PatternConfig.json</h4>
+<h4>j Plus Subroutine Settings in PatternConfig.json</h4>
 <pre>
   "JP" :{  <font color="blue">j Plus Details.</font>
-    "OR" : "", <font color="green">Chemin de fer opérationnel, celui qui possède les voies.</font>
-    "TR" : "", <font color="green">Nom de l'opération particulière qui est modélisée.</font>
-    "LO" : "", <font color="green">L'emplacement du prototype.</font>
-    "YR" : "", <font color="green">Année civile faisant l'objet du modèle.</font>
-    "SC" : "", <font color="green">Échelle de modélisme ferroviaire, à partir des paramètres ou de TrainPlayer.</font>
-    "LN" : "", <font color="green">Nom de la maquette, à partir des paramètres ou de TrainPlayer.</font>
-    "BD" : "", <font color="blue">Date de construction de TrainPlayer.</font>
+    "OR" : "", <font color="green">Operating railroad, the one that owns the tracks.</font>
+    "TR" : "", <font color="green">Territory. Name of the particular operation being modeled.</font>
+    "LO" : "", <font color="green">Location of the prototype.</font>
+    "YR" : "", <font color="green">Calendar year being modeled.</font>
+    "SC" : "", <font color="green">Model railroad scale, from settings or TrainPlayer.</font>
+    "LN" : "", <font color="green">Layout name, from settings or TrainPlayer.</font>
+    "BD" : "", <font color="blue">Build date from TrainPlayer.</font>
   },
 </pre>
 
 <h2>Track Pattern Subroutine</h2>
 <h3>Introduction</h3>
-<p>La sous-routine Track Pattern permet de générer des rapports de motifs pour les pistes à un seul endroit.
-  En outre, les voitures peuvent être déplacées d'une piste à l'autre dans un même lieu.
-  En option, si une voiture est déplacée sur un embranchement, l'horaire de cet embranchement peut être appliqué.</p>
+<p>The Track Pattern subroutine can generate pattern reports for tracks at a single location.
+  Additionally, cars can be moved from track to track within a location.
+  Optionally, if a car is moved onto a spur, the schedule for that spur can be applied.</p>
 
 <h3>Subroutine Panel</h3>
 <p>OperationsPatternScripts.PatternTracksSubroutine.Controller.makeSubroutinePanel()</p>
 <img src="Pattern_Scripts_Subroutine.png" alt="<Pattern Scripts Subroutine Image>">
 
-<h3>Rapport sur les modèles de la fenêtre de suivi</h3>
+<h3>Pattern Report for Track Window</h3>
 <p>OperationsPatternScripts.ControllerSetCarsForm.CreatePatternReportGui.makeFrame()</p>
 <img src="Pattern_Report_For_Track.png" alt="<Pattern Report for Track Window Image>">
 
-<h3>Track Pattern et Switch List en format JSON</h3>
-<p>Les rapports de modèle et les exportations TrainPlayer© commencent tous par la création d'un fichier JSON.
-Le fichier est créé par ce plugin et dans le cas des exportations de manifestes TrainPlayer©, le JSON est créé en modifiant le JSON du manifeste généré par JMRI.
-Tous les fichiers JSON sont écrits dans le dossier jsonManifests et suivent le format illustré :</p>
+<h3>Track Pattern and Switch List JSON format</h3>
+<p>The pattern reports and TrainPlayer© exports all start with the creation of a JSON file.
+The file is created by this plugin and in the case of TrainPlayer© manifest exports the JSON is created by modifying the JMRI generated manifest JSON.
+All the JSON files are written to the jsonManifests folder. They follow the illustrated format:</p>
 <img src="Report_File_Format.png" alt="<JSON format for reports>">
 
-<h4>Suivre les paramètres des sous-programmes de motifs dans PatternConfig.json</h4>
+<h4>Track Pattern Subroutine Settings in PatternConfig.json</h4>
 <pre>
   "PT" : { <font color="blue">Pattern Tracks</font>
-    "AD" : [ <font color="blue">Toutes les divisions (écrites par ce plugin)</font>
+    "AD" : [ <font color="blue">All divisions (written by this plugin)</font>
     ],
-    "AL" : [ <font color="blue">Tous les emplacements (écrits par ce plugin)</font>
+    "AL" : [ <font color="blue">All locations (written by this plugin)</font>
     ],
-    "PL" : "", <font color="blue">Pattern Location (écrit par ce plugin)</font>
-    "PT" : { <font color="blue">Pattern-Tracks (écrit par ce plugin)</font>
+    "PL" : "", <font color="blue">Pattern Location (written by this plugin)</font>
+    "PT" : { <font color="blue">Pattern-Tracks (written by this plugin)</font>
     },
-    "PA" : false, <font color="blue">drapeau "Yard Tracks Only" (défini par l'utilisateur, écrit par ce plugin)</font>
-    "PI" : false, <font color="blue">Ignorer l'indicateur Track Length (défini par l'utilisateur, écrit par ce plugin)</font>
-    "AS" : true, <font color="blue">Appliquer le drapeau Schedule (défini par l'utilisateur, écrit par ce plugin)</font>
-    "TI" : false, <font color="blue">TrainPlayer Include flag (défini par l'utilisateur, écrit par ce plugin)</font>
-    "PW" : 260, <font color="blue">Largeur du motif</font>
-    "PH" : 16, <font color="blue">Hauteur du motif</font>
-    "RM": 8, <font color="blue">Multiplicateur de rangs</font>
+    "PA" : false, <font color="blue">Yard Tracks Only flag (set by user, written by this plugin)</font>
+    "PI" : false, <font color="blue">Ignore Track Length flag (set by user, written by this plugin)</font>
+    "AS" : true, <font color="blue">Apply Schedule flag (set by user, written by this plugin)</font>
+    "TI" : false, <font color="blue">TrainPlayer Include flag (set by user, written by this plugin)</font>
+    "PW" : 260, <font color="blue">Pattern Width</font>
+    "PH" : 16, <font color="blue">Pattern Height</font>
+    "RM": 8, <font color="blue">Row Multiplier</font>
 
-  "RM" : { <font color="blue">Modificateurs de rapport</font></h4>
-    "DS" : "<font color="green">*No Waybill</font>", <font color="blue">Désignation de la destination</font>
-    "DT" : "<font color="green">*Not Consigned</font>", <font color="blue">Désignation de la voie de destination</font>
-    "FD" : "<font color="green">*Via Staging</font>", <font color="blue">Indicateur de destination finale</font>
-    "FT" : "<font color="green">*Any Line</font>", <font color="blue">Destination finale Indicateur de piste</font>
-    "SL": [ <font color="blue">Trier les locomotives</font>
+  "RM" : { <font color="blue">Report Modifiers</font></h4>
+    "DS" : "<font color="green">*No Waybill</font>", <font color="blue">Destination designator</font>
+    "DT" : "<font color="green">*Not Consigned</font>", <font color="blue">Destination Track designator</font>
+    "FD" : "<font color="green">*Via Staging</font>", <font color="blue">Final Destination designator</font>
+    "FT" : "<font color="green">*Any Line</font>", <font color="blue">Final destination Track designator</font>
+    "SL": [ <font color="blue">Sort Locomotives</font>
       "<font color="green">Model</font>"
     ],
-    "SC": [ <font color="blue">Trier les voitures</font>
+    "SC": [ <font color="blue">Sort Cars</font>
       "<font color="green">Load Type</font>",
       "<font color="green">FD&Track</font>"
     ],
-    "AW": { <font color="blue">La largeur de l'attribut</font>
+    "AW": { <font color="blue">Attribute Width</font>
       "Input": <font color="green">6</font>,
       "Model": <font color="green">5</font>,
       "Road" : <font color="green">5</font>,
@@ -288,32 +288,32 @@ Tous les fichiers JSON sont écrits dans le dossier jsonManifests et suivent le 
     }
   },
 </pre>
-<h2>o2o Sous-routine, ops 2 ops</h2>
+<h2>o2o Subroutine, ops 2 ops</h2>
 <h3>Introduction</h3>
-<p>La sous-routine ops to ops (o2o) est un groupe d'utilitaires conçus pour être la colle qui permet à JMRI Operations Pro d'être le moteur d'opérations de TrainPlayer©.
-L'idée est d'étendre les capacités de la fonction Advanced Ops de TrainPlayer© pour y inclure la flexibilité d'Operations Pro,
-tout en éliminant l'ennui de maintenir deux bases de données synchronisées.</p>
+<p>The ops to ops (o2o) subroutine is a group of utilities that are designed to be the glue that allows JMRI Operations Pro to be the operations engine for TrainPlayer©.
+  The idea is to expand the capability of TrainPlayer©'s Advanced Ops feature to include the flexibility of Operations Pro,
+  while also eleminating the tedium of keeping two databases synchronised.</p>
 
-<h3>Qui fait quoi</h3>
-<p>Le tableau ci-dessous indique quel programme gère quels éléments.</p>
+<h3>Who Does What</h3>
+<p>The table below shows which program manages which elements.</p>
 <img src="Who_Does_What.png" alt="<Who Does What Image>">
 
 <h3>Subroutine Panel</h3>
 <p>OperationsPatternScripts.PatternTracksSubroutine.Controller.makeSubroutinePanel()</p>
 <img src="o2o_Subroutine.png" alt="<o2o Subroutine Image>">
 
-<h4>o2o Paramètres des sous-routines dans PatternConfig.json</h4>
+<h4>o2o Subroutine Settings in PatternConfig.json</h4>
 <pre>
-  "RD" :{  <font color="blue">Détails ferroviaires, partie facultative de la mise en page TrainPlayer.</font>
-    "RR" : "", <font color="blue">Parent chemin de fer, celui qui possède les voies.</font>
+  "RD" :{  <font color="blue">Railroad Details, optional part of the TrainPlayer layout.</font>
+    "RR" : "", <font color="blue">Parent railroad, the one that owns the tracks.</font>
     "OP" : "", <font color="blue">Name of the particular operation being modeled.</font>
-    "LO" : "", <font color="blue">L'emplacement du prototype.</font>
-    "YR" : "", <font color="blue">Année civile faisant l'objet du modèle.</font>
-    "DV" : [], <font color="blue">Liste des divisions ferroviaires pour ce réseau, séparées par des virgules.</font>
-    "SC" : "" <font color="blue">Échelle de modélisme ferroviaire.</font>
+    "LO" : "", <font color="blue">Location of the prototype.</font>
+    "YR" : "", <font color="blue">Calendar year being modeled.</font>
+    "DV" : [], <font color="blue">List of railroad divisions for this layout, comma seperated.</font>
+    "SC" : "" <font color="blue">Model railroad scale.</font>
   },
   "o2o" : {
-    "PC": [  <font color="blue">Liste des codes de wagons TrainPlayer pour les voitures particulières.</font>
+    "PC": [  <font color="blue">List of TrainPlayer car codes for passenger cars.</font>
       "B",
       "BE",
       "BH",
@@ -348,7 +348,7 @@ tout en éliminant l'ennui de maintenir deux bases de données synchronisées.</
       "PS",
       "PSA"
     ],
-    "CC" : [  <font color="blue">Liste des codes des wagons de queue de TrainPlayer.</font>
+    "CC" : [  <font color="blue">List of TrainPlayer caboose car codes.</font>
       "N",
       "NM",
       "NE"
@@ -371,13 +371,13 @@ tout en éliminant l'ennui de maintenir deux bases de données synchronisées.</
       "O" : 10,
       "G" : 11
     },
-    "RF" : { <font color="blue">Report Files</font> Noms des fichiers d'exportation de la mise en page de TrainPlayer.
+    "RF" : { <font color="blue">Report Files</font> Names of the TrainPlayer layout export files.
       "TRL" : <font color="blue">"TrainPlayer Report - Locations.txt"</font>,
       "TRI" : <font color="blue">"TrainPlayer Report - Industries.txt"</font>,
       "TRR" : <font color="blue">"TrainPlayer Report - Rolling Stock.txt"</font>
     },
 
-    "TR" : {  <font color="blue">Type Rubric</font> Aligner les types de voies du TrainPlayer et du JMRI.
+    "TR" : {  <font color="blue">Type Rubric</font> Align TrainPlayer and JMRI track types.
       "industry": "Spur",
       "interchange": "Interchange",
       "staging": "Staging",
