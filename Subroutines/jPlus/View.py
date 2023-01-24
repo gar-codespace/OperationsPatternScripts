@@ -4,7 +4,7 @@
 """ """
 
 from opsEntities import PSE
-from jPlusSubroutine import ViewEntities
+from Subroutines.jPlus import ViewEntities
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230101
@@ -23,7 +23,7 @@ class ManageGui:
         """Make the frame that all the jPlus controls are added to"""
 
         subroutineFrame = PSE.JAVX_SWING.JPanel() # the track pattern panel
-        subroutineFrame.setName('jPlusSubroutine')
+        subroutineFrame.setName('jPlus')
         subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE['j Plus Subroutine'])
 
         return subroutineFrame
@@ -34,10 +34,8 @@ class ManageGui:
         _psLog.debug('jPlusSubroutine.View.makeSubroutinePanel')
 
         jPlusSubroutinePanel = ViewEntities.jPlusSubroutinePanel()
-        if self.configFile['CP']['o2oSubroutine']:
-            subroutinesPanel = jPlusSubroutinePanel.jPlusPanelFixed()
-        else:
-            subroutinesPanel = jPlusSubroutinePanel.jPlusPanelEditable()
+
+        subroutinesPanel = jPlusSubroutinePanel.jPlusPanelEditable()
 
         subroutinePanelWidgets = jPlusSubroutinePanel.jPlusWidgets()
 

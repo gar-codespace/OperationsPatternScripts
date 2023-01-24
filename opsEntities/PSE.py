@@ -191,6 +191,8 @@ def restartSubroutineByName(subRoutineName):
     frameName = BUNDLE['Pattern Scripts']
     subroutine = getComponentByName(frameName, subRoutineName)
     if subroutine:
+        
+        subRoutineName = 'Subroutines.' + subRoutineName
 
         package = __import__(subRoutineName, globals(), locals(), ['Controller'], 0)
         restart = package.Controller.StartUp(subroutine)
@@ -209,15 +211,15 @@ def restartSubroutineByName(subRoutineName):
         
     return
 
-def deactivateAllSubroutines():
-    """Runs the deActivatedCalls() method on all subroutines."""
+# def deactivateAllSubroutines():
+#     """Runs the deActivatedCalls() method on all subroutines."""
 
 
-    for include in readConfigFile('CP')['IL']:
-        package = __import__(include, fromlist=['Controller'])
-        package.Controller.deActivatedCalls()
+#     for include in readConfigFile('CP')['IL']:
+#         package = __import__(include, fromlist=['Controller'])
+#         package.Controller.deActivatedCalls()
 
-    return
+#     return
 
 def removeAllSubroutines(targetPanel):
     """Not used.
@@ -236,19 +238,58 @@ def removeAllSubroutines(targetPanel):
 
     return targetPanel
 
+def validateSubroutines():
+
+    patternConfig = readConfigFile()
+
+    for subroutine in getSubroutineDirs():
+        subroutinename = 'Subroutines.' + subroutine
+        try:
+            patternConfig['Main Script']['CP'][subroutinename]
+        except:
+            patternConfig['Main Script']['CP'][subroutinename] = True
+
+    writeConfigFile(patternConfig)
+
+    return
+
 def addActiveSubroutines(targetPanel):
     """Adds the activated subroutines to the subroutinePanel of Pattern Scripts."""
 
     patternConfig = readConfigFile()
 
-    for subroutine in patternConfig['CP']['IL']:
-        if patternConfig['CP'][subroutine]:
-            package = __import__(subroutine, fromlist=['Controller'])
+    for subroutine in getSubroutineDirs():
+        subroutinename = 'Subroutines.' + subroutine
+        if patternConfig['Main Script']['CP'][subroutinename]:
+            package = __import__(subroutinename, fromlist=['Controller'], level=-1)
             startUp = package.Controller.StartUp()
             subroutineFrame = startUp.makeSubroutineFrame()
             startUp.startUpTasks()
             targetPanel.add(JAVX_SWING.Box.createRigidArea(JAVA_AWT.Dimension(0,10)))
             targetPanel.add(subroutineFrame)
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # patternConfig = readConfigFile()
+
+    # for subroutine in patternConfig['CP']['IL']:
+    #     if patternConfig['CP'][subroutine]:
+    #         package = __import__(subroutine, fromlist=['Controller'])
+    #         startUp = package.Controller.StartUp()
+    #         subroutineFrame = startUp.makeSubroutineFrame()
+    #         startUp.startUpTasks()
+    #         targetPanel.add(JAVX_SWING.Box.createRigidArea(JAVA_AWT.Dimension(0,10)))
+    #         targetPanel.add(subroutineFrame)
 
     return targetPanel
 
@@ -278,7 +319,7 @@ def updateYearModeled():
     OSU = JMRI.jmrit.operations.setup
     yr = OSU.Setup.getYearModeled()
     
-    configFile['JP'].update({'YR':yr})
+    configFile['jPlus']['LD'].update({'YR':yr})
     writeConfigFile(configFile)
 
     return
@@ -434,10 +475,10 @@ def updateWindowParams(window):
         """
 
     configPanel = readConfigFile()
-    configPanel['CP'].update({'PH': window.getHeight()})
-    configPanel['CP'].update({'PW': window.getWidth()})
-    configPanel['CP'].update({'PX': window.getX()})
-    configPanel['CP'].update({'PY': window.getY()})
+    configPanel['Main Script']['CP'].update({'PH': window.getHeight()})
+    configPanel['Main Script']['CP'].update({'PW': window.getWidth()})
+    configPanel['Main Script']['CP'].update({'PX': window.getX()})
+    configPanel['Main Script']['CP'].update({'PY': window.getY()})
     writeConfigFile(configPanel)
 
     return
@@ -445,6 +486,19 @@ def updateWindowParams(window):
 
 """Utility Methods"""
 
+
+def remoteCalls(call):
+    """call is one of four remote calls in each subroutine RemoteCalls module.
+        startupCalls, activatedCalls, deActivatedCalls, refreshCalls
+        """
+
+    for subroutine in getSubroutineDirs():
+        xModule = 'Subroutines.' + subroutine
+        # package = __import__(xModule, globals(), locals(), fromlist=['RemoteCalls'], level=-1)
+        package = __import__(xModule, fromlist=['RemoteCalls'], level=-1)
+        getattr(package.RemoteCalls, call)()
+
+    return
 
 def psLocale():
     """Dealers choice, both work.
@@ -498,32 +552,49 @@ def initializeReportHeader():
 
     return listHeader
 
-def jPlusHeader():
+# def jPlusHeader():
+#     """Called by:
+#         """
+
+#     configFile = readConfigFile()
+#     detailedHeader = ''
+
+#     operatingRoad = configFile['jPlus']['OR']
+#     if not operatingRoad:
+#         OSU = JMRI.jmrit.operations.setup
+#         operatingRoad = unicode(OSU.Setup.getRailroadName(), ENCODING)
+
+#     detailedHeader += operatingRoad
+#     if configFile['jPlus']['TR']:
+#         detailedHeader += ';' + configFile['jPlus']['TR']
+
+#     if configFile['jPlus']['LO']:
+#         detailedHeader += ';' + configFile['jPlus']['LO']
+
+#     return detailedHeader
+
+
+def expandedHeader(subroutine):
     """Called by:
+        jPlus
         """
 
     configFile = readConfigFile()
-    detailedHeader = ''
+    header = ''
 
-    operatingRoad = configFile['JP']['OR']
+    operatingRoad = configFile[subroutine]['LD']['OR']
     if not operatingRoad:
         OSU = JMRI.jmrit.operations.setup
         operatingRoad = unicode(OSU.Setup.getRailroadName(), ENCODING)
 
-    # patternDivision = configFile['PT']['PD']
-    # if patternDivision:
-    #     detailedHeader += operatingRoad + ' - ' + patternDivision
-    # else:
-    #     detailedHeader += operatingRoad
+    header += operatingRoad
+    if configFile[subroutine]['LD']['TR']:
+        header += ';' + configFile[subroutine]['LD']['TR']
 
-    detailedHeader += operatingRoad
-    if configFile['JP']['TR']:
-        detailedHeader += ';' + configFile['JP']['TR']
+    if configFile[subroutine]['LD']['LO']:
+        header += ';' + configFile[subroutine]['LD']['LO']
 
-    if configFile['JP']['LO']:
-        detailedHeader += ';' + configFile['JP']['LO']
-
-    return detailedHeader
+    return header
 
 def getAllDivisionNames():
     """JMRI sorts the list.
@@ -746,24 +817,24 @@ def getShortLoadType(car):
 """File Handling Methods"""
 
 
-def subroutineCalls(toggle):
-    """Set toggle to 'activate', 'deactivate', or 'refresh'
-        Runs whichever call toggle is set to.
-        """
+# def subroutineCalls(toggle):
+#     """Set toggle to 'activate', 'deactivate', or 'refresh'
+#         Runs whichever call toggle is set to.
+#         """
 
-    configFile = readConfigFile()
+#     configFile = readConfigFile()
 
-    for subroutine in configFile['CP']['IL']:
-        if configFile['CP'][subroutine]:
-            xModule = __import__(subroutine, fromlist=['Controller'])
-            if toggle == 'activate':
-                xModule.Controller.activatedCalls()
-            if toggle == 'deactivate':
-                xModule.Controller.deActivatedCalls()
-            if toggle == 'refresh':
-                xModule.Controller.refreshCalls()
+#     for subroutine in configFile['Main Script']['CP']['IL']:
+#         if configFile['CP'][subroutine]:
+#             xModule = __import__(subroutine, fromlist=['Controller'])
+#             if toggle == 'activate':
+#                 xModule.Controller.activatedCalls()
+#             if toggle == 'deactivate':
+#                 xModule.Controller.deActivatedCalls()
+#             if toggle == 'refresh':
+#                 xModule.Controller.refreshCalls()
 
-    return
+#     return
 
 def getTpRailroadJson(reportName):
     """Any of the TP exports imported into JMRI as a json file:

@@ -20,11 +20,7 @@ def ptItemSelected(TRANSLATE_PLUGIN_EVENT):
 
     _psLog.debug(TRANSLATE_PLUGIN_EVENT)
 
-    textBundles = Bundle.getAllTextBundles()
-    Bundle.makePluginBundle(textBundles)
-
-    Bundle.makeHelpBundle()
-    Bundle.makeHelpPage()
+    Bundle.translateBundle()
 
     xModule = __import__('MainScript')
     xModule.restartThePlugin()
@@ -133,14 +129,14 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
 
         WINDOW_CLOSED.getSource().dispose()
 
-        PSE.subroutineCalls('deactivate')
+        PSE.remoteCalls('deActivatedCalls')
 
         return
 
     def windowClosing(self, WINDOW_CLOSING):
 
         PSE.updateWindowParams(WINDOW_CLOSING.getSource())
-        PSE.deactivateAllSubroutines()
+        # PSE.deactivateAllSubroutines()
         
         return
 
@@ -151,7 +147,7 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         button = PSE.getPsButton()
         button.setEnabled(False)
 
-        PSE.subroutineCalls('activate')
+        PSE.remoteCalls('activatedCalls')
 
         return
 
@@ -159,7 +155,7 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
 
         _psLog.debug(WINDOW_ACTIVATED)
 
-        PSE.subroutineCalls('refresh')
+        PSE.remoteCalls('refreshCalls')
 
         return
 

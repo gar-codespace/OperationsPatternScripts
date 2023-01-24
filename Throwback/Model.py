@@ -28,7 +28,7 @@ def createFolder():
 
 def previousSnapShot():
 
-    configFile = PSE.readConfigFile('TB')['SS']
+    configFile = PSE.readConfigFile('Throwback')['SS']
 
     global SNAP_SHOT_INDEX
     SNAP_SHOT_INDEX -= 1
@@ -39,7 +39,7 @@ def previousSnapShot():
 
 def nextSnapShot():
 
-    configFile = PSE.readConfigFile('TB')['SS']
+    configFile = PSE.readConfigFile('Throwback')['SS']
 
     global SNAP_SHOT_INDEX
     SNAP_SHOT_INDEX += 1
@@ -57,7 +57,7 @@ def takeSnapShot(displayWidgets):
         if widget.getClass() == PSE.JAVX_SWING.JTextField:
             note = widget.getText()
 
-    configFile['TB']['SS'].append([ts, note])
+    configFile['Throwback']['SS'].append([ts, note])
     PSE.writeConfigFile(configFile)
 
     PSE.CMX.save()
@@ -94,7 +94,7 @@ def throwbackSnapShot():
     PSE.CM.dispose()
     PSE.EM.dispose()
 
-    throwbackRestorePoint = PSE.readConfigFile('TB')['SS'][SNAP_SHOT_INDEX]
+    throwbackRestorePoint = PSE.readConfigFile('Throwback')['SS'][SNAP_SHOT_INDEX]
 
     roster = throwbackRestorePoint[0] + '.C.xml.bak'
     targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
@@ -111,7 +111,7 @@ def throwbackSnapShot():
 def resetThrowBack():
 
     configFile = PSE.readConfigFile()
-    configFile['TB'].update({'SS':[['', '']]})
+    configFile['Throwback'].update({'SS':[['', '']]})
     PSE.writeConfigFile(configFile)
 
     filePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback')
@@ -125,6 +125,6 @@ def resetThrowBack():
 def countSnapShots():
 
     global SNAP_SHOT_INDEX
-    SNAP_SHOT_INDEX = len(PSE.readConfigFile('TB')['SS']) - 1
+    SNAP_SHOT_INDEX = len(PSE.readConfigFile('Throwback')['SS']) - 1
 
     return

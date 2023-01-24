@@ -17,8 +17,13 @@ def jPanelSetup():
 
     configFile = PSE.readConfigFile()
 
-    if not configFile['CP']['o2oSubroutine']:
+
+
+    if not 'o2o' in PSE.getSubroutineDirs():
         return
+
+    # if not configFile['CP']['o2oSubroutine']:
+    #     return
 
 
     fileName = 'tpRailroadData.json'
@@ -29,13 +34,13 @@ def jPanelSetup():
     else:
         return
 
-    configFile['JP'].update({'OR':sourceData['operatingRoad']})
-    configFile['JP'].update({'TR':sourceData['territory']})
-    configFile['JP'].update({'LO':sourceData['location']})
-    configFile['JP'].update({'YR':sourceData['year']})
+    configFile['jPlus'].update({'OR':sourceData['operatingRoad']})
+    configFile['jPlus'].update({'TR':sourceData['territory']})
+    configFile['jPlus'].update({'LO':sourceData['location']})
+    configFile['jPlus'].update({'YR':sourceData['year']})
 
     OSU = PSE.JMRI.jmrit.operations.setup
-    OSU.Setup.setYearModeled(configFile['JP']['YR'])
+    OSU.Setup.setYearModeled(configFile['jPlus']['YR'])
 
     PSE.writeConfigFile(configFile)
 

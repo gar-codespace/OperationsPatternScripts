@@ -166,6 +166,36 @@ def makeDefaultHelpBundle():
 
     return
 
+
+"""Bundle translation methods"""
+
+
+def translateBundle():
+
+    allBundles = getAllBundles()
+    print('Yipee')
+
+    makeTranslatedBundle(allBundles)
+
+    # Bundle.makeHelpBundle()
+    # Bundle.makeHelpPage()
+
+    return
+
+def makeTranslatedBundle(textBundle):
+    """Makes the plugin.<locale>.json file from getAllTextBundles()"""
+
+    if PSE.psLocale()[:2] == 'en':
+        return
+
+    fileName = 'plugin.' + PSE.psLocale()[:2] + '.json'
+    targetFile = PSE.OS_PATH.join(PSE.BUNDLE_DIR, fileName)
+
+    translation = baseTranslator(textBundle)
+    PSE.genericWriteReport(targetFile, translation)
+
+    return
+
 def makeHelpBundle():
     """Makes the help.<locale>.json file from bundle.help.txt"""
 
@@ -181,14 +211,11 @@ def makeHelpBundle():
 
     return
 
-
-"""Bundle translation methods"""
-
 def baseTranslator(textBundle):
     """Mini controller translates each item in the bundleFile,
         then appends it to the RAM based scratchFile.
         used by:
-        makePluginBundle
+        makeTranslatedBundle
         makeHelpBundle
         """
 
@@ -267,7 +294,7 @@ class Translator:
         self.tempResult = []
         self.scratchFile = scratchFile
 
-        controlPanel = PSE.readConfigFile('CP')
+        controlPanel = PSE.readConfigFile('Main Script')['CP']
         self.translatorChoice = controlPanel['TS'][controlPanel['TC']]
 
         return

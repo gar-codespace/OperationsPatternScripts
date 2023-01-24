@@ -7,51 +7,36 @@ The info can be input directly or imported from TrainPlayer.
 """
 
 from opsEntities import PSE
-# from jPlusSubroutine import Listeners
-from jPlusSubroutine import Model
-from jPlusSubroutine import View
+from Subroutines.jPlus import Listeners
+from Subroutines.jPlus import Model
+from Subroutines.jPlus import View
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230101
 
 _psLog = PSE.LOGGING.getLogger('OPS.JP.Controller')
 
-
-def startDaemons():
-    """Methods called when this subroutine is initialized by the Main Script.
-        These calls are not turned off.
-        """
-
-    return
-
-def activatedCalls():
-    """Methods called when this subroutine is activated."""
-
-    return
-
-def deActivatedCalls():
-    """Methods called when this subroutine is deactivated."""
-
-    return
-
-def refreshCalls():
-    """Methods called when the subroutine needs to be refreshed."""
-
-    PSE.updateYearModeled()
-    PSE.restartSubroutineByName('jPlusSubroutine')
-
-    return
     
-def setDropDownText():
-    """Pattern Scripts/Tools/itemMethod - Set the drop down text per the config file PatternTracksSubroutine Include flag ['CP'][<subroutine name>]"""
+def getSubroutineDropDownItem():
+    """Pattern Scripts/Tools/<subroutine>"""
 
-    patternConfig = PSE.readConfigFile('CP')
-    if patternConfig['jPlusSubroutine']:
+    patternConfig = PSE.readConfigFile()
+
+    menuItem = PSE.JAVX_SWING.JMenuItem()
+
+    if patternConfig['Main Script']['CP'][__package__]:
         menuText = PSE.BUNDLE[u'Disable'] + ' ' + __package__
     else:
         menuText = PSE.BUNDLE[u'Enable'] + ' ' + __package__
 
-    return menuText, 'jpItemSelected'
+    menuItem.setName(__package__)
+    menuItem.setText(menuText)
+    menuItem.removeActionListener(Listeners.actionListener)
+    menuItem.addActionListener(Listeners.actionListener)
+
+    PSE.writeConfigFile(patternConfig)
+
+    return menuItem
 
 
 class StartUp:
@@ -116,14 +101,14 @@ class StartUp:
         configFile = PSE.readConfigFile()
 
         for id, widget in self.widgets['panel'].items():
-            configFile['JP'].update({id:widget.getText()})
+            configFile['jPlus']['LD'].update({id:widget.getText()})
 
         OSU = PSE.JMRI.jmrit.operations.setup
-        OSU.Setup.setYearModeled(configFile['JP']['YR'])
+        OSU.Setup.setYearModeled(configFile['jPlus']['LD']['YR'])
 
         PSE.writeConfigFile(configFile)
 
-        jPlusHeader = PSE.jPlusHeader().replace(';', '\n')
+        jPlusHeader = PSE.expandedHeader('jPlus').replace(';', '\n')
         OSU.Setup.setRailroadName(jPlusHeader)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

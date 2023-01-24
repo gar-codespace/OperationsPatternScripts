@@ -47,20 +47,20 @@ class jPlusSubroutinePanel:
 
         a7 = PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Year Modeled'], PSE.JAVX_SWING.JLabel.RIGHT)
 
-        a2 = PSE.JAVX_SWING.JTextField(self.configFile['JP']['OR'])
+        a2 = PSE.JAVX_SWING.JTextField(self.configFile['jPlus']['LD']['OR'])
         a2.setColumns(25) # sets the width for all text fields
         self.panelWidgets['OR'] = a2
 
-        a4 = PSE.JAVX_SWING.JTextField(self.configFile['JP']['TR'])
+        a4 = PSE.JAVX_SWING.JTextField(self.configFile['jPlus']['LD']['TR'])
         self.panelWidgets['TR'] = a4
 
-        a6 = PSE.JAVX_SWING.JTextField(self.configFile['JP']['LO'])
+        a6 = PSE.JAVX_SWING.JTextField(self.configFile['jPlus']['LD']['LO'])
         self.panelWidgets['LO'] = a6
 
-        # a8 = PSE.JAVX_SWING.JTextField(self.configFile['JP']['YR'])
+        # a8 = PSE.JAVX_SWING.JTextField(self.configFile['jPlus']['YR'])
         a8 = PSE.JAVX_SWING.JTextField(PSE.JMRI.jmrit.operations.setup.Setup.getYearModeled())
-        # a8.setText(self.configFile['JP']['YR'])
-        # print(self.configFile['JP']['YR'])
+        # a8.setText(self.configFile['jPlus']['YR'])
+        # print(self.configFile['jPlus']['YR'])
 
         self.panelWidgets['YR'] = a8
 
@@ -82,54 +82,54 @@ class jPlusSubroutinePanel:
 
         return jPlusPanel
 
-    def jPlusPanelFixed(self):
-        """If using o2o, the railroad details are added from tpRailroadData.json."""
+    # def jPlusPanelFixed(self):
+    #     """If using o2o, the railroad details are added from tpRailroadData.json."""
 
-        jPlusPanel = PSE.JAVX_SWING.JPanel()
-        jPlusPanel.setLayout(PSE.JAVX_SWING.BoxLayout(jPlusPanel, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
-        jPlusPanel.border = PSE.JAVX_SWING.BorderFactory.createEmptyBorder(5,0,5,0)
+    #     jPlusPanel = PSE.JAVX_SWING.JPanel()
+    #     jPlusPanel.setLayout(PSE.JAVX_SWING.BoxLayout(jPlusPanel, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
+    #     jPlusPanel.border = PSE.JAVX_SWING.BorderFactory.createEmptyBorder(5,0,5,0)
 
-        tpRailroadData = PSE.getTpRailroadJson('tpRailroadData')
+    #     tpRailroadData = PSE.getTpRailroadJson('tpRailroadData')
 
-        if not tpRailroadData:
-            headerDetailLabel = PSE.JAVX_SWING.JLabel()
-            headerDetailLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
-            headerDetailLabel.setText(PSE.BUNDLE[u'Not found: incomplete o2o import'])
-            jPlusPanel.add(headerDetailLabel)
-            jPlusPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
+    #     if not tpRailroadData:
+    #         headerDetailLabel = PSE.JAVX_SWING.JLabel()
+    #         headerDetailLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
+    #         headerDetailLabel.setText(PSE.BUNDLE[u'Not found: incomplete o2o import'])
+    #         jPlusPanel.add(headerDetailLabel)
+    #         jPlusPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
 
-            return jPlusPanel
+    #         return jPlusPanel
 
-        if self.configFile['JP']['OR']:
-            headerDetailLabel = PSE.JAVX_SWING.JLabel()
-            headerDetailLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
-            headerDetailLabel.setText(self.configFile['JP']['OR'])
-            jPlusPanel.add(headerDetailLabel)
-            jPlusPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
+    #     if self.configFile['jPlus']['OR']:
+    #         headerDetailLabel = PSE.JAVX_SWING.JLabel()
+    #         headerDetailLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
+    #         headerDetailLabel.setText(self.configFile['jPlus']['OR'])
+    #         jPlusPanel.add(headerDetailLabel)
+    #         jPlusPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
 
-        if self.configFile['JP']['TR']:
-            headerDetailLabel = PSE.JAVX_SWING.JLabel()
-            headerDetailLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
-            headerDetailLabel.setText(self.configFile['JP']['TR'])
-            jPlusPanel.add(headerDetailLabel)
-            jPlusPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
+    #     if self.configFile['jPlus']['TR']:
+    #         headerDetailLabel = PSE.JAVX_SWING.JLabel()
+    #         headerDetailLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
+    #         headerDetailLabel.setText(self.configFile['jPlus']['TR'])
+    #         jPlusPanel.add(headerDetailLabel)
+    #         jPlusPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
 
-        if self.configFile['JP']['LO']:
-            headerDetailLabel = PSE.JAVX_SWING.JLabel()
-            headerDetailLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
-            headerDetailLabel.setText(self.configFile['JP']['LO'])
-            jPlusPanel.add(headerDetailLabel)
-            jPlusPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
+    #     if self.configFile['jPlus']['LO']:
+    #         headerDetailLabel = PSE.JAVX_SWING.JLabel()
+    #         headerDetailLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
+    #         headerDetailLabel.setText(self.configFile['jPlus']['LO'])
+    #         jPlusPanel.add(headerDetailLabel)
+    #         jPlusPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
 
-        if self.configFile['JP']['YR']:
-            headerDetailLabel = PSE.JAVX_SWING.JLabel()
-            headerDetailLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
-            headerDetailLabel.setText(self.configFile['JP']['YR'])
-            jPlusPanel.add(headerDetailLabel)
+    #     if self.configFile['jPlus']['YR']:
+    #         headerDetailLabel = PSE.JAVX_SWING.JLabel()
+    #         headerDetailLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
+    #         headerDetailLabel.setText(self.configFile['JP']['YR'])
+    #         jPlusPanel.add(headerDetailLabel)
 
-        self.controlWidgets['UP'] = self.updateButton()
+    #     self.controlWidgets['UP'] = self.updateButton()
 
-        return jPlusPanel
+    #     return jPlusPanel
 
     def jPlusWidgets(self):
 

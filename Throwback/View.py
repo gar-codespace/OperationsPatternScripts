@@ -17,7 +17,7 @@ class ManageGui:
 
     def __init__(self):
 
-        self.configFile = PSE.readConfigFile('TB')
+        self.configFile = PSE.readConfigFile('Throwback')
 
         return
 

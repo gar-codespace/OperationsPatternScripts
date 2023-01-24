@@ -35,6 +35,6 @@ def refreshCalls():
     """Methods called when the subroutine needs to be refreshed."""
 
     PSE.updateYearModeled()
-    PSE.restartSubroutineByName('jPlusSubroutine')
+    PSE.restartSubroutineByName('jPlus')
     
     return

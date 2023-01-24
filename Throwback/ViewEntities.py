@@ -23,7 +23,7 @@ class tbSubroutinePanel:
 
     def tbPanelMaker(self):
 
-        snapShot = self.configFile['TB']['SS']
+        snapShot = self.configFile['Throwback']['SS']
 
         lastSnapShot = snapShot[-1]
 
@@ -97,4 +97,4 @@ class tbSubroutinePanel:
 
     # def getLastSnapShot(self):
 
-    #     lastSnapShot = self.configFile['TB']['SS'][-1]
+    #     lastSnapShot = self.configFile['Throwback']['SS'][-1]

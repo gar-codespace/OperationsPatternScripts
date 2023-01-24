@@ -14,30 +14,6 @@ SCRIPT_REV = 20230101
 
 _psLog = PSE.LOGGING.getLogger('OPS.TB.Controller')
 
-
-def startDaemons():
-    """Methods called when this subroutine is initialized by the Main Script.
-        These calls are not turned off.
-        """
-
-    Model.createFolder()
-
-    return
-
-def activatedCalls():
-    """Methods called when this subroutine is activated."""
-
-    return
-
-def deActivatedCalls():
-    """Methods called when this subroutine is deactivated."""
-
-    return
-
-def refreshCalls():
-    """Methods called when the subroutine needs to be refreshed."""
-
-    return
     
 def setDropDownText():
     """Pattern Scripts/Tools/itemMethod - Set the drop down text per the config file PatternTracksSubroutine Include flag ['CP'][<subroutine name>]"""
@@ -105,7 +81,7 @@ class StartUp:
 
         Model.takeSnapShot(self.displayWidgets)
         Model.countSnapShots()
-        lastSS = PSE.readConfigFile('TB')['SS']
+        lastSS = PSE.readConfigFile('Throwback')['SS']
 
         for widget in self.displayWidgets:
             if widget.getName() == 'timeStamp':
