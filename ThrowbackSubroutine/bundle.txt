@@ -1,9 +1,0 @@
-Throwback Subroutine
-Throwback
-Action
-Snap Shot
-Previous
-Next
-Reset
-Commit
-Total Commits

@@ -177,22 +177,20 @@ class CreateStubFile:
 
 def restartAllSubroutines():
 
-    patternConfig = readConfigFile()
-
-    for subroutine in patternConfig['CP']['IL']:
-        if patternConfig['CP'][subroutine]:
-            restartSubroutineByName(subroutine)
+    for subroutine in getSubroutineDirs():
+        subroutine = 'Subroutines.' + subroutine
+        restartSubroutineByName(subroutine)
 
     return
 
 def restartSubroutineByName(subRoutineName):
-    """Finds the named subroutine in the plugin and restarts it."""
+    """Finds the named subroutine in the plugin and restarts it.
+        subroutineName: Subroutines.<subroutine>
+        """
 
     frameName = BUNDLE['Pattern Scripts']
     subroutine = getComponentByName(frameName, subRoutineName)
     if subroutine:
-        
-        subRoutineName = 'Subroutines.' + subRoutineName
 
         package = __import__(subRoutineName, globals(), locals(), ['Controller'], 0)
         restart = package.Controller.StartUp(subroutine)
@@ -211,34 +209,8 @@ def restartSubroutineByName(subRoutineName):
         
     return
 
-# def deactivateAllSubroutines():
-#     """Runs the deActivatedCalls() method on all subroutines."""
-
-
-#     for include in readConfigFile('CP')['IL']:
-#         package = __import__(include, fromlist=['Controller'])
-#         package.Controller.deActivatedCalls()
-
-#     return
-
-def removeAllSubroutines(targetPanel):
-    """Not used.
-        Removes all subroutines from subroutinePanel of Pattern Scripts.
-        """
-
-    frameTitle = BUNDLE['Pattern Scripts']
-    patternConfig = readConfigFile()
-
-    for subroutine in patternConfig['CP']['IL']:
-        target = getComponentByName(frameTitle, subroutine)
-        try:
-            targetPanel.remove(target)
-        except:
-            pass
-
-    return targetPanel
-
 def validateSubroutines():
+    """Checks that each active subroutine has a True/False entry in ['Main Scripts']['CP']."""
 
     patternConfig = readConfigFile()
 
@@ -268,31 +240,7 @@ def addActiveSubroutines(targetPanel):
             targetPanel.add(JAVX_SWING.Box.createRigidArea(JAVA_AWT.Dimension(0,10)))
             targetPanel.add(subroutineFrame)
 
-
-
-
-
-
-
-
-
-
-
-
-
-    # patternConfig = readConfigFile()
-
-    # for subroutine in patternConfig['CP']['IL']:
-    #     if patternConfig['CP'][subroutine]:
-    #         package = __import__(subroutine, fromlist=['Controller'])
-    #         startUp = package.Controller.StartUp()
-    #         subroutineFrame = startUp.makeSubroutineFrame()
-    #         startUp.startUpTasks()
-    #         targetPanel.add(JAVX_SWING.Box.createRigidArea(JAVA_AWT.Dimension(0,10)))
-    #         targetPanel.add(subroutineFrame)
-
     return targetPanel
-
 
 def closePsWindow():
     """Called by:
@@ -319,7 +267,7 @@ def updateYearModeled():
     OSU = JMRI.jmrit.operations.setup
     yr = OSU.Setup.getYearModeled()
     
-    configFile['jPlus']['LD'].update({'YR':yr})
+    configFile['Main Script']['LD'].update({'YR':yr})
     writeConfigFile(configFile)
 
     return
@@ -530,51 +478,7 @@ def occuranceTally(listOfOccurances):
 
     return dict
 
-def initializeReportHeader():
-    """Called by:
-        makeTrackPatternReport
-        Controller.StartUp.setRsButton
-        """
-
-    OSU = JMRI.jmrit.operations.setup
-    configFile = readConfigFile()
-
-    listHeader = {}
-    listHeader['railroadName'] = unicode(OSU.Setup.getRailroadName(), ENCODING)
-
-    listHeader['railroadDescription'] = ''
-    listHeader['trainName'] = ''
-    listHeader['trainDescription'] = ''
-    listHeader['trainComment'] = ''
-    listHeader['division'] = ''
-    listHeader['date'] = unicode(validTime(), ENCODING)
-    listHeader['locations'] = [{'locationName': configFile['PT']['PL'], 'tracks': [{'cars': [], 'locos': []}]}]
-
-    return listHeader
-
-# def jPlusHeader():
-#     """Called by:
-#         """
-
-#     configFile = readConfigFile()
-#     detailedHeader = ''
-
-#     operatingRoad = configFile['jPlus']['OR']
-#     if not operatingRoad:
-#         OSU = JMRI.jmrit.operations.setup
-#         operatingRoad = unicode(OSU.Setup.getRailroadName(), ENCODING)
-
-#     detailedHeader += operatingRoad
-#     if configFile['jPlus']['TR']:
-#         detailedHeader += ';' + configFile['jPlus']['TR']
-
-#     if configFile['jPlus']['LO']:
-#         detailedHeader += ';' + configFile['jPlus']['LO']
-
-#     return detailedHeader
-
-
-def expandedHeader(subroutine):
+def expandedHeader():
     """Called by:
         jPlus
         """
@@ -582,17 +486,17 @@ def expandedHeader(subroutine):
     configFile = readConfigFile()
     header = ''
 
-    operatingRoad = configFile[subroutine]['LD']['OR']
+    operatingRoad = configFile['Main Script']['LD']['OR']
     if not operatingRoad:
         OSU = JMRI.jmrit.operations.setup
         operatingRoad = unicode(OSU.Setup.getRailroadName(), ENCODING)
 
     header += operatingRoad
-    if configFile[subroutine]['LD']['TR']:
-        header += ';' + configFile[subroutine]['LD']['TR']
+    if configFile['Main Script']['LD']['TR']:
+        header += ';' + configFile['Main Script']['LD']['TR']
 
-    if configFile[subroutine]['LD']['LO']:
-        header += ';' + configFile[subroutine]['LD']['LO']
+    if configFile['Main Script']['LD']['LO']:
+        header += ';' + configFile['Main Script']['LD']['LO']
 
     return header
 
@@ -660,32 +564,7 @@ def getAllTracks():
 
     return trackList
 
-def getSelectedTracks():
-    """Gets the track objects checked in the Track Pattern Subroutine.
-        Called by:
-        Controller.StartUp.trackPatternButton
-        ModelEntities.makeTrackPattern
-        View.setRsButton
-        """
 
-    patternTracks = readConfigFile('PT')['PT']
-
-    return [track for track, include in sorted(patternTracks.items()) if include]
-
-def getTrackNamesByLocation(trackType):
-    """Called by:
-        Model.verifySelectedTracks
-        ViewEntities.merge
-        """
-
-    patternLocation = readConfigFile('PT')['PL']
-    allTracksAtLoc = []
-    try: # Catch on the fly user edit of config file error
-        for track in LM.getLocationByName(patternLocation).getTracksByNameList(trackType):
-            allTracksAtLoc.append(unicode(track.getName(), ENCODING))
-        return allTracksAtLoc
-    except AttributeError:
-        return allTracksAtLoc
 
 
 """Formatting Methods"""
@@ -754,7 +633,7 @@ def convertJmriDateToEpoch(jmriTime):
     return epochTime
 
 def formatText(item, length):
-    """Truncate each item to its defined length in PatternConfig.json and add a space at the end.
+    """Truncate each item to its defined length in configFile.json and add a space at the end.
         Called by:
         PatternTracksSubroutine.ViewEntities.merge
         PatternTracksSubroutine.ViewEntities.loopThroughRs
@@ -769,22 +648,7 @@ def formatText(item, length):
 
     return xItem + u' '
 
-def makeReportItemWidthMatrix():
-    """The attribute widths (AW) for each of the rolling stock attributes is defined in the report matrix (RM) of the config file.
-        Called by:
-        PatternTracksSubroutine.Controller.StartUp.trackPatternButton
-        PatternTracksSubroutine.Controller.StartUp.setRsButton
-        PatternTracksSubroutine.ControllerSetCarsForm.CreateSetCarsFormGui.switchListButton
-        PatternTracksSubroutine.ControllerSetCarsForm.CreateSetCarsFormGui.setRsButton
-        """
 
-    reportMatrix = {}
-    attributeWidths = readConfigFile('RM')['AW']
-
-    for aKey, aValue in attributeWidths.items():
-        reportMatrix[aKey] = aValue
-
-    return reportMatrix
 
 def getShortLoadType(car):
     """Replaces empty and load with E, L, or O for occupied.
@@ -811,30 +675,12 @@ def getShortLoadType(car):
     if rs.isCaboose() or rs.isPassenger():
         lt = BUNDLE['occupied'].upper()[0]
 
-    return lt
+    # return lt
+    return 'L'
 
 
 """File Handling Methods"""
 
-
-# def subroutineCalls(toggle):
-#     """Set toggle to 'activate', 'deactivate', or 'refresh'
-#         Runs whichever call toggle is set to.
-#         """
-
-#     configFile = readConfigFile()
-
-#     for subroutine in configFile['Main Script']['CP']['IL']:
-#         if configFile['CP'][subroutine]:
-#             xModule = __import__(subroutine, fromlist=['Controller'])
-#             if toggle == 'activate':
-#                 xModule.Controller.activatedCalls()
-#             if toggle == 'deactivate':
-#                 xModule.Controller.deActivatedCalls()
-#             if toggle == 'refresh':
-#                 xModule.Controller.refreshCalls()
-
-#     return
 
 def getTpRailroadJson(reportName):
     """Any of the TP exports imported into JMRI as a json file:
@@ -877,7 +723,7 @@ def makeReportFolders():
         """
 
     opsDirectory = OS_PATH.join(PROFILE_PATH, 'operations')
-    directories = ['csvManifests', 'csvSwitchLists', 'jsonManifests', 'switchLists', 'patternReports']
+    directories = ['csvManifests', 'csvSwitchLists', 'jsonManifests', 'switchLists']
     x = 0
     for directory in directories:
         targetDirectory = OS_PATH.join(opsDirectory, directory)
@@ -954,9 +800,8 @@ def dumpJson(file):
 
 
 def validateConfigFile():
-    print('validateConfigFile')
 
-    configFile = OS_PATH.join(PROFILE_PATH, 'operations', 'PatternConfig.json')
+    configFile = OS_PATH.join(PROFILE_PATH, 'operations', 'configFile.json')
 # Does one exist?
     if not JAVA_IO.File(configFile).isFile():
         makeNewConfigFile()
@@ -980,12 +825,12 @@ def validateConfigFileVersion():
     currentVersion = readConfigFile('Main Script')['CP']['RV']
 
     if currentVersion == validVersion:
-        _psLog.info('The PatternConfig.json file is the correct version')
+        _psLog.info('The configFile.json file is the correct version')
         return True
     else:
         makeNewConfigFile()
 
-        _psLog.warning('PatternConfig.json version mismatch')
+        _psLog.warning('configFile  .json version mismatch')
         return False
 
 def validateConfigFileComponents():
@@ -1011,6 +856,7 @@ def getSubroutineDirs():
 
     subroutinePath = OS_PATH.join(PLUGIN_ROOT, 'Subroutines')
     dirContents = JAVA_IO.File(subroutinePath).list()
+
     for item in dirContents:
         dirPath = OS_PATH.join(PLUGIN_ROOT, 'Subroutines', item)
         if JAVA_IO.File(dirPath).isDirectory():
@@ -1039,20 +885,20 @@ def readConfigFile(subConfig=None):
 
 def checkConfigFile():
 
-    fileName = 'PatternConfig.json'
+    fileName = 'configFile.json'
     targetPath = OS_PATH.join(PROFILE_PATH, 'operations', fileName)
 
     try:
         loadJson(genericReadReport(targetPath))
     except:
-        # writeNewConfigFile()
         makeNewConfigFile()
         print('Using new configFile')
 
     return loadJson(genericReadReport(targetPath))
 
 def makeNewConfigFile():
-    """Makes a composit ConfigFile.json from OPS.json and each of the subroutine json files."""
+    """Makes a composit ConfigFile.json from OPS.json and each of the subroutine json files.
+        For every subroutine, the chunck of config file is named config.json."""
 
     fileName = 'OPS.json'
     targetPath = OS_PATH.join(PLUGIN_ROOT, 'opsEntities', fileName)
@@ -1062,11 +908,11 @@ def makeNewConfigFile():
     for subroutine in subroutines:
         dirPath = OS_PATH.join(PLUGIN_ROOT, 'Subroutines', subroutine)
         if JAVA_IO.File(dirPath).isDirectory():
-            chunkPath = OS_PATH.join(PLUGIN_ROOT, 'Subroutines', subroutine, subroutine + '.json')
+            chunkPath = OS_PATH.join(PLUGIN_ROOT, 'Subroutines', subroutine, 'config.json')
             configChunk = loadJson(genericReadReport(chunkPath))
-            configFile.update(configChunk)
+            configFile[subroutine] = configChunk
 
-    fileName = 'PatternConfig.json'
+    fileName = 'configFile.json'
     targetPath = OS_PATH.join(PROFILE_PATH, 'operations', fileName)
     targetFile = dumpJson(configFile)
     genericWriteReport(targetPath, targetFile)
@@ -1084,11 +930,11 @@ def tryConfigFile():
     except ValueError:
         writeNewConfigFile()
         configFile = getConfigFile()
-        _psLog.warning('Defective PatternConfig.json found, new file written')
+        _psLog.warning('Defective configFile.json found, new file written')
     except IOError:
         writeNewConfigFile()
         configFile = getConfigFile()
-        _psLog.warning('No PatternConfig.json found, new file written')
+        _psLog.warning('No configFile.json found, new file written')
 
     return configFile
 
@@ -1097,7 +943,7 @@ def getConfigFile():
         tryConfigFile
         """
 
-    fileName = 'PatternConfig.json'
+    fileName = 'configFile.json'
     targetPath = OS_PATH.join(PROFILE_PATH, 'operations', fileName)
 
     return loadJson(genericReadReport(targetPath))
@@ -1110,7 +956,7 @@ def writeConfigFile(configFile):
         PatternTracksSubroutine.Model
         """
 
-    fileName = 'PatternConfig.json'
+    fileName = 'configFile.json'
     targetPath = OS_PATH.join(PROFILE_PATH, 'operations', fileName)
     targetFile = dumpJson(configFile)
     genericWriteReport(targetPath, targetFile)
@@ -1126,7 +972,7 @@ def writeNewConfigFile():
     targetDir = OS_PATH.join(PROFILE_PATH, 'operations')
     JAVA_IO.File(targetDir).mkdir()
 
-    fileName = 'PatternConfig.json'
+    fileName = 'configFile.json'
 
     targetFile = OS_PATH.join(PLUGIN_ROOT, 'opsEntities', fileName)
     copyFrom = JAVA_IO.File(targetFile).toPath()
@@ -1143,7 +989,7 @@ def deleteConfigFile():
         MainScript.Controller.rsItemSelected
         """
 
-    fileName = 'PatternConfig.json'
+    fileName = 'configFile.json'
     targetFile = OS_PATH.join(PROFILE_PATH, 'operations', fileName)
     JAVA_IO.File(targetFile).delete()
 
@@ -1204,7 +1050,7 @@ def getGenericColor(colorName):
         PSE.getAlertColor
         """
 
-    colorPalette = readConfigFile('CD')['CP']
+    colorPalette = readConfigFile('Main Script')['CD']
 
 
     r = colorPalette[colorName]["R"]
@@ -1214,46 +1060,46 @@ def getGenericColor(colorName):
 
     return JAVA_AWT.Color(r, g, b, a)
 
-def getCarColor():
+def getColorA():
     """Try/Except is a bit of protection against bad edits.
         Called by:
         PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
         """
 
     try:
-        colorName = readConfigFile('CD')['carColor']
+        colorName = readConfigFile('Main Script')['CD']['colorA']
         color = getGenericColor(colorName)
         return color
     except:
-        _psLog.warning('Car color definition not found in PatternConfig.json')
+        _psLog.warning('colorA definition not found in configFile.json')
         return JAVA_AWT.Color(0, 0, 0, 0)
 
-def getLocoColor():
+def getColorB():
     """Try/Except is a bit of protection against bad edits.
         Called by:
         PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
         """
 
     try:
-        colorName = readConfigFile('CD')['locoColor']
+        colorName = readConfigFile('Main Script')['CD']['colorB']
         color = getGenericColor(colorName)
         return color
     except:
-        _psLog.warning('Engine color definition not found in PatternConfig.json')
+        _psLog.warning('colorB definition not found in configFile.json')
         return JAVA_AWT.Color(0, 0, 0, 0)
 
-def getAlertColor():
+def getColorC():
     """Try/Except is a bit of protection against bad edits.
         Called by:
         PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
         """
 
     try:
-        colorName = readConfigFile('CD')['alertColor']
+        colorName = readConfigFile('Main Script')['CD']['colorC']
         color = getGenericColor(colorName)
         return color
     except:
-        _psLog.warning('Alert color definition not found in PatternConfig.json')
+        _psLog.warning('colorC definition not found in configFile.json')
         return JAVA_AWT.Color(0, 0, 0, 0)
 
 

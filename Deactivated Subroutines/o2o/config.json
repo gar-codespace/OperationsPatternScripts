@@ -1,0 +1,89 @@
+{
+    "RN" : "o2o-Work-Events",
+    "DL" : 44,
+    "PC": [
+      "B",
+      "BE",
+      "BH",
+      "BM",
+      "BMR",
+      "BMT",
+      "BP",
+      "BR",
+      "BX",
+      "CA",
+      "CS",
+      "D",
+      "DA",
+      "DB",
+      "DC",
+      "DL",
+      "DO",
+      "DP",
+      "DPA",
+      "MA",
+      "MB",
+      "MR",
+      "P",
+      "PA",
+      "PAS",
+      "PB",
+      "PBC",
+      "PBO",
+      "PC",
+      "PL",
+      "PO",
+      "PS",
+      "PSA"
+    ],
+    "CC" : [
+      "N",
+      "NM",
+      "NE"
+    ],
+    "CFL" : [
+      "CMX",
+      "EMX",
+      "LMX"
+    ],
+    "RA" : [
+      "PUSO",
+      "Road",
+      "Number",
+      "Model",
+      "Load_Type",
+      "Load",
+      "Location",
+      "Dest&Track",
+      "FD&Track"
+    ],
+    "RF" : {
+      "TRL" : "TrainPlayer Report - Locations.txt",
+      "TRI" : "TrainPlayer Report - Industries.txt",
+      "TRR" : "TrainPlayer Report - Rolling Stock.txt"
+    },
+    "RMF" : {
+      "PUC" : ["Road", "Number", "Type", "Load Type", "Load", "Destination"],
+      "SOC" : ["Road", "Number", "Type", "Load Type", "Load", "Destination"],
+      "MC" : ["Road", "Number", "Type", "Load Type", "Load", "Final Dest"],
+      "PUL" : ["Road", "Number", "Model", "Consist", "Destination"],
+      "SOL" : ["Road", "Number", "Model", "Consist", "Destination"]
+    },
+    "SM" : {
+      "SCL" : true,
+      "RCL" : true,
+      "LEE" : true
+    },
+    "TR" : {
+      "industry": "Spur",
+      "interchange": "Interchange",
+      "staging": "Staging",
+      "class yard": "Yard",
+      "XO reserved": "Spur"
+    },
+    "CC" : {
+      "locoColor": "FADED",
+      "carColor": "DUST",
+      "alertColor": "RASH"
+      }
+}

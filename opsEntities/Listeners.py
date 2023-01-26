@@ -34,7 +34,7 @@ def ecItemSelected(OPEN_EC_EVENT):
 
     _psLog.debug(OPEN_EC_EVENT)
 
-    configTarget = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'PatternConfig.json')
+    configTarget = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'configFile.json')
 
     if PSE.JAVA_IO.File(configTarget).isFile():
         PSE.genericDisplayReport(configTarget)
@@ -136,7 +136,6 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
     def windowClosing(self, WINDOW_CLOSING):
 
         PSE.updateWindowParams(WINDOW_CLOSING.getSource())
-        # PSE.deactivateAllSubroutines()
         
         return
 

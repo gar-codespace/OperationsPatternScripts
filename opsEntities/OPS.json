@@ -49,7 +49,10 @@
           "D": "Light red",
           "G": 208,
           "R": 240
-        }
+        },
+        "colorA" : "DUST",
+        "colorB" : "FADED",
+        "colorC" : "RASH"
       },
     "CP" : {
       "TS" : {
@@ -74,6 +77,29 @@
       "SIA" : true,
       "SCT" : "ARR Codes",
       "TNB" : false
-      }
+      },
+    "LD" : {
+      "OR" : "",
+      "TR" : "",
+      "LO" : "",
+      "YR" : "",
+      "LN" : "",
+      "BD" : "",
+      "SC" : ""
+    },
+    "SR" : {
+      "Z" : 1,
+      "N" : 2,
+      "TT" : 3,
+      "HON3" : 4,
+      "OO" : 5,
+      "HO" : 6,
+      "SN3" : 7,
+      "S" : 8,
+      "ON3" : 9,
+      "O" : 10,
+      "G" : 11
     }
+    
+  }
 }
