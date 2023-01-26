@@ -99,7 +99,7 @@ class CreateSetCarsFormGui:
 
     # Make the json file
         mergedForm = ModelSetCarsForm.makeMergedForm(self.setCarsForm, self.buttonDict['textBoxEntry'])
-        reportTitle = PSE.BUNDLE['Switch List for Track']
+        reportTitle = PSE.BUNDLE['Switch List']
         fileName = reportTitle + '.json'
         targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'patterns', fileName)
         switchListReport = PSE.dumpJson(mergedForm)
@@ -107,7 +107,7 @@ class CreateSetCarsFormGui:
 
         switchList = ViewSetCarsForm.maksSwitchList()
     # Save formatted data
-        fileName = PSE.BUNDLE['Switch List for Track'] + '.txt'
+        fileName = PSE.BUNDLE['Switch List'] + '.txt'
         targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'patterns', fileName)
         PSE.genericWriteReport(targetPath, switchList)
     # Display formatted data
@@ -131,7 +131,7 @@ class CreateSetCarsFormGui:
             return
     # Make the json file
         mergedForm = ModelSetCarsForm.makeMergedForm(self.setCarsForm, self.buttonDict['textBoxEntry'])
-        reportTitle = PSE.BUNDLE['Switch List for Track']
+        reportTitle = PSE.BUNDLE['Switch List']
         fileName = reportTitle + '.json'
         targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'patterns', fileName)
         switchListReport = PSE.dumpJson(mergedForm)

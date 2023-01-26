@@ -52,6 +52,20 @@ def getSelectedTracks():
 
     return [track for track, include in sorted(patternTracks.items()) if include]
 
+def newWorkList():
+    """The work list is all the switchlists combined.
+        Reset when the Set Cars button is pressed.
+        """
+
+    workList = initializeReportHeader()
+
+    fileName = PSE.BUNDLE['Work List'] + '.json'
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'patterns', fileName)
+    workList = PSE.dumpJson(workList)
+    PSE.genericWriteReport(targetPath, workList)
+
+    return
+
 def patternReport():
     """Mini controller when the Track Pattern Report button is pressed
         Creates the Track Pattern data
@@ -88,27 +102,6 @@ def updateConfigFile(controls):
     _psLog.info('Controls settings for configuration file updated')
 
     return controls
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 def makeTrackPattern(trackList=None):
     """Called by:
@@ -171,19 +164,6 @@ def initializeReportHeader():
     listHeader['locations'] = [{'locationName': configFile['Patterns']['PL'], 'tracks': [{'cars': [], 'locos': []}]}]
 
     return listHeader
-
-def resetPatternLocation():
-    """Called by:
-        Controller.updatePatternTracksSubroutine
-        """
-
-    selectedItem = PSE.getAllDivisionNames()
-    try:
-        jDivision(selectedItem[0])
-    except:
-        jDivision(selectedItem)
-
-    return
 
 def updatePatternLocation(comboBox):
     """Clearinghouse that routes the combo box action to the appropriate method.
@@ -250,28 +230,6 @@ def jLocations(selectedItem):
 
     return
 
-def updatePatternTracks(trackList):
-    """Creates a new list of tracks and their default include flag
-        Called by:
-        Controller.StartUp.yardTrackOnlyCheckBox
-        """
-
-    _psLog.debug('updatePatternTracks')
-    trackDict = {}
-    for track in trackList:
-        trackDict[track] = False
-
-    if trackDict:
-        _psLog.warning('The track list for this location has changed')
-    else:
-        _psLog.warning('There are no tracks for this selection')
-
-    return trackDict
-
-
-
-
-
 def updateLocations():
     """Updates the PT section of the configFile..
         If entries are missing, makes new PT entries using initial values.
@@ -304,7 +262,7 @@ def updateLocations():
         try:
             configFile['Patterns'].update({'PL': locations[0]})
             configFile['Patterns'].update({'AL': locations})
-            configFile['Patterns'].update({'PT': ModelEntities.makeInitialTrackDict(locations[0])})
+            configFile['Patterns'].update({'PT': ModelEntities.updatePatternTracks(locations[0])})
         except:
             _psLog.warning('Initial location and tracks not set in config file')
 
@@ -314,5 +272,39 @@ def updateLocations():
 
     return
 
+def updatePatternTracks(trackList):
+    """Creates a new list of tracks and their default include flag
+        Called by:
+        Controller.StartUp.yardTrackOnlyCheckBox
+        """
+
+    _psLog.debug('updatePatternTracks')
+    trackDict = {}
+    for track in trackList:
+        trackDict[track] = False
+
+    if trackDict:
+        _psLog.warning('The track list for this location has changed')
+    else:
+        _psLog.warning('There are no tracks for this selection')
+
+    return trackDict
+
+def getTrackNamesByLocation(trackType):
+    """Pass through method."""
+
+    return ModelEntities.getTrackNamesByLocation(trackType)
 
 
+# def resetPatternLocation():
+#     """Called by:
+#         Controller.updatePatternTracksSubroutine
+#         """
+
+#     selectedItem = PSE.getAllDivisionNames()
+#     try:
+#         jDivision(selectedItem[0])
+#     except:
+#         jDivision(selectedItem)
+
+#     return

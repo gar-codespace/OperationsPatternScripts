@@ -34,7 +34,7 @@ def setRsToTrack():
 
     _psLog.debug('setRsButton')
 
-    reportTitle = PSE.BUNDLE['Switch List for Track']
+    reportTitle = PSE.BUNDLE['Switch List']
     fileName = reportTitle + '.json'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'Patterns', fileName)
 

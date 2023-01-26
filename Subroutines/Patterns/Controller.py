@@ -138,6 +138,8 @@ class StartUp:
 
         Model.updateConfigFile(self.widgets)
 
+        Model.newWorkList()
+
         if not Model.verifySelectedTracks():
             _psLog.warning('Track not found, re-select the location')
             return

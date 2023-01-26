@@ -15,21 +15,6 @@ FILE_LIST = ['OperationsTrainRoster.xml', 'OperationsRouteRoster.xml']
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.Model')
 
 
-def o2oWorkEventReset():
-    """Creates a new o2o Work Events.json file
-        Called by:
-        PT Sub Controller.StartUp.setRsButton
-        """
-
-    fileName = PSE.BUNDLE['o2o Work Events'] + '.json'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
-
-    newHeader = PSE.initializeReportHeader()
-    newHeader = PSE.dumpJson(newHeader)
-    PSE.genericWriteReport(targetPath, newHeader)
-
-    return
-
 def newJmriRailroad():
     """Mini controller to make a new JMRI railroad.
         tpRailroadData.json and TrainPlayer Report - Rolling Stock.txt

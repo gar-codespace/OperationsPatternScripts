@@ -55,6 +55,6 @@ load
 occupied
 Update Inventory Error Report
 Update Locations
-Work Event List for TrainPlayer©
+Work List
 Work Location:
 Yard tracks only

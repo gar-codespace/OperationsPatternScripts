@@ -21,7 +21,7 @@ def switchListAsCsv(textBoxEntry):
 
     _psLog.debug('switchListAsCsv')
 #  Get json data
-    fileName = PSE.BUNDLE['Switch List for Track'] + '.json'
+    fileName = PSE.BUNDLE['Switch List'] + '.json'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
     trackPattern = PSE.genericReadReport(targetPath)
     trackPattern = PSE.loadJson(trackPattern)
@@ -32,14 +32,14 @@ def switchListAsCsv(textBoxEntry):
     trackPattern = ModelSetCarsForm.makeMergedForm(trackPattern, textBoxEntry)
     trackPatternCsv = ViewEntities.makeTrackPatternCsv(trackPattern)
 # Write CSV data
-    fileName = PSE.BUNDLE['Switch List for Track'] + '.csv'
+    fileName = PSE.BUNDLE['Switch List'] + '.csv'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'csvSwitchLists', fileName)
     PSE.genericWriteReport(targetPath, trackPatternCsv)
 
     return
 
 def maksSwitchList():
-    """Formats and displays the Switch List for Track report.
+    """Formats and displays the Switch List report.
         Called by:
         ControllerSetCarsForm.CreateSetCarsFormGui.switchListButton
         """
@@ -49,13 +49,13 @@ def maksSwitchList():
     PSE.REPORT_ITEM_WIDTH_MATRIX = ViewEntities.makeReportItemWidthMatrix()
 
 # Get the switch list
-    fileName = PSE.BUNDLE['Switch List for Track'] + '.json'
+    fileName = PSE.BUNDLE['Switch List'] + '.json'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'patterns', fileName)
     switchList = PSE.genericReadReport(targetPath)
     switchList = PSE.loadJson(switchList)
 
     reportHeader = ViewEntities.makeTextReportHeader(switchList)
-    reportLocations = PSE.BUNDLE['Switch List for Track'] + '\n\n'
+    reportLocations = PSE.BUNDLE['Switch List'] + '\n\n'
     reportLocations += ViewEntities.makeTextReportLocations(switchList, trackTotals=False)
 
     return reportHeader + reportLocations
@@ -432,17 +432,11 @@ def MakeSetCarsFooter():
         unicode(PSE.BUNDLE['Switch List'], PSE.ENCODING)
         )
 
-    # o2oButton = PSE.JAVX_SWING.JButton(
-    #     unicode(PSE.BUNDLE['o2o Work Events'], PSE.ENCODING)
-    #     )
-    # if not PSE.readConfigFile()['CP']['o2oSubroutine']:
-    #     o2oButton.setVisible(False)
 
     makeWorkPanel.add(PSE.JAVX_SWING.Box.createRigidArea(
         PSE.JAVA_AWT.Dimension(20,0))
         )
     makeWorkPanel.add(printButton)
-    # makeWorkPanel.add(o2oButton)
     makeWorkPanel.add(PSE.JAVX_SWING.Box.createRigidArea(
         PSE.JAVA_AWT.Dimension(20,0))
         )
@@ -471,6 +465,5 @@ def MakeSetCarsFooter():
     footerButtons = []
     footerButtons.append(printButton)
     footerButtons.append(setButton)
-    # footerButtons.append(o2oButton)
 
     return combinedFooter, footerButtons
