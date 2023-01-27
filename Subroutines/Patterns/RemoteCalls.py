@@ -19,7 +19,6 @@ def startupCalls():
     """Methods called when this subroutine is initialized by the Main Script.
         These calls are not turned off.
         """
-    Model.createFolder()
 
     return
 
@@ -40,3 +39,9 @@ def refreshCalls():
     """Methods called when the subroutine needs to be refreshed."""
 
     return
+
+def specificCalls():
+    """Methods called to run specific tasks."""
+
+    return
+    

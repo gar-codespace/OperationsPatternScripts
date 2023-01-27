@@ -18,26 +18,6 @@ SCRIPT_REV = 20230101
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.Controller')
 
 
-def o2oSwitchList(ptSetCarsForm):
-    """Make the JMRI Report - o2o Work Events.csv file.
-        There is dependency with PatternTracksSubroutine.
-        """
-
-    ModelWorkEvents.appendSetCarsForm(ptSetCarsForm)
-# Convert the o2o Work Events file to the format used by TrainPlayer
-    o2o = ModelWorkEvents.o2oSwitchListConversion()
-    o2o.o2oSwitchListGetter()
-    o2o.thinTheHerd()
-    o2o.o2oSwitchListUpdater()
-    o2oSwitchList = o2o.getO2oSwitchList()
-# Common post processor for o2oButton and BuiltTrainExport.o2oWorkEventsBuilder.handle
-    o2o = ModelWorkEvents.o2oWorkEvents(o2oSwitchList)
-    o2o.o2oHeader()
-    o2o.o2oLocations()
-    o2o.saveList()
-
-    return
-
 def getSubroutineDropDownItem():
     """Pattern Scripts/Tools/Subroutines.<subroutine>"""
 

@@ -49,8 +49,8 @@ def maksSwitchList():
     PSE.REPORT_ITEM_WIDTH_MATRIX = ViewEntities.makeReportItemWidthMatrix()
 
 # Get the switch list
-    fileName = PSE.BUNDLE['Switch List'] + '.json'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'patterns', fileName)
+    fileName = PSE.BUNDLE['ops-switch-list'] + '.json'
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'switchLists', fileName)
     switchList = PSE.genericReadReport(targetPath)
     switchList = PSE.loadJson(switchList)
 

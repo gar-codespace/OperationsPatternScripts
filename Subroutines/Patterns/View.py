@@ -54,9 +54,9 @@ def patternReport():
     _psLog.debug('trackPatternButton')
 
 # Get the report
-    reportName = PSE.BUNDLE['Pattern Report']
+    reportName = PSE.BUNDLE['ops-pattern-report']
     fileName = reportName + '.json'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'patterns', fileName)
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
     trackPattern = PSE.genericReadReport(targetPath)
     trackPattern = PSE.loadJson(trackPattern)
 # Modify the report for display
@@ -67,7 +67,7 @@ def patternReport():
     reportLocations += ViewEntities.makeTextReportLocations(trackPattern, trackTotals=True)
 # Save the modified report
     fileName = reportName + '.txt'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'patterns', fileName)
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', fileName)
     PSE.genericWriteReport(targetPath, reportHeader + reportLocations)
 # Display the modified report
     PSE.genericDisplayReport(targetPath)

@@ -87,8 +87,6 @@ class CreateSetCarsFormGui:
 
         return
 
-   
-
     def switchListButton(self, MOUSE_CLICKED):
         """Makes a Set Cars (SC) switch list for the active 'Set Rolling Stock for Track X' window"""
 
@@ -99,16 +97,22 @@ class CreateSetCarsFormGui:
 
     # Make the json file
         mergedForm = ModelSetCarsForm.makeMergedForm(self.setCarsForm, self.buttonDict['textBoxEntry'])
-        reportTitle = PSE.BUNDLE['Switch List']
+        reportTitle = PSE.BUNDLE['ops-switch-list']
         fileName = reportTitle + '.json'
-        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'patterns', fileName)
+        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'switchLists', fileName)
         switchListReport = PSE.dumpJson(mergedForm)
         PSE.genericWriteReport(targetPath, switchListReport)
 
         switchList = ViewSetCarsForm.maksSwitchList()
+
+        Model.appendWorkList(mergedForm)
+
+        MOUSE_CLICKED.getSource().setBackground(PSE.JAVA_AWT.Color.GREEN)
+        PSE.remoteCalls('specificCalls')
+        
     # Save formatted data
-        fileName = PSE.BUNDLE['Switch List'] + '.txt'
-        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'patterns', fileName)
+        fileName = PSE.BUNDLE['ops-switch-list'] + '.txt'
+        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'switchLists', fileName)
         PSE.genericWriteReport(targetPath, switchList)
     # Display formatted data
         PSE.genericDisplayReport(targetPath)
@@ -131,9 +135,9 @@ class CreateSetCarsFormGui:
             return
     # Make the json file
         mergedForm = ModelSetCarsForm.makeMergedForm(self.setCarsForm, self.buttonDict['textBoxEntry'])
-        reportTitle = PSE.BUNDLE['Switch List']
+        reportTitle = PSE.BUNDLE['ops-switch-list']
         fileName = reportTitle + '.json'
-        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'patterns', fileName)
+        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'switchLists', fileName)
         switchListReport = PSE.dumpJson(mergedForm)
         PSE.genericWriteReport(targetPath, switchListReport)
     # Open the pop up window

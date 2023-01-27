@@ -8,6 +8,29 @@ SCRIPT_REV = 20230101
 
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.ModelEntities')
 
+
+def getTpRailroadJson(reportName):
+    """Any of the TP exports imported into JMRI as a json file:
+        tpRailroadData
+        tpRollingStockData
+        tpLocaleData
+        """
+
+    fileName = reportName + '.json'
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
+
+    if not PSE.JAVA_IO.File(targetPath).isFile():
+        _psLog.info(fileName + '.json not found')
+        return {}
+
+    PSE.JAVA_IO.File(targetPath).isFile()
+    report = PSE.genericReadReport(targetPath)
+    tpReport = PSE.loadJson(report)
+
+    _psLog.info(fileName + ': OK')
+
+    return tpReport
+
 def tpDirectoryExists():
     """Checks for the Reports folder in TraipPlayer."""
 
@@ -55,7 +78,7 @@ def setTrackLength():
     _psLog.debug('setTrackLength')
 
     o2oConfig = PSE.readConfigFile('o2o')
-    tpRailroadData = PSE.getTpRailroadJson('tpRailroadData')
+    tpRailroadData = getTpRailroadJson('tpRailroadData')
 
     for id, trackData in tpRailroadData['locales'].items():
         location = PSE.LM.getLocationByName(trackData['location'])
@@ -72,7 +95,7 @@ def newSchedules():
         viaIn and viaOut are not being used.
         """
 
-    tpIndustries = PSE.getTpRailroadJson('tpRailroadData')['industries']
+    tpIndustries = getTpRailroadJson('tpRailroadData')['industries']
 
     for id, industry in tpIndustries.items():
         schedulesPerIndustry = industry['c-schedule']
@@ -128,7 +151,7 @@ def addCarTypesToSpurs():
 
     _psLog.debug('addCarTypesToSpurs')
 
-    industries = PSE.getTpRailroadJson('tpRailroadData')['industries']
+    industries = getTpRailroadJson('tpRailroadData')['industries']
     deselectCarTypes(industries)
     selectCarTypes(industries)
 

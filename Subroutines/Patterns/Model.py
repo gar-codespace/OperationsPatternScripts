@@ -10,17 +10,17 @@ SCRIPT_REV = 20230101
 _psLog = PSE.LOGGING.getLogger('OPS.PT.Model')
 
 
-def createFolder():
-    """Creates a 'patterns' folder in operations."""
+# def createFolder():
+#     """Creates a 'patterns' folder in operations."""
 
-    targetDirectory = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'patterns')
+#     targetDirectory = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'patterns')
 
-    if not PSE.JAVA_IO.File(targetDirectory).isDirectory():
-        PSE.JAVA_IO.File(targetDirectory).mkdirs()
+#     if not PSE.JAVA_IO.File(targetDirectory).isDirectory():
+#         PSE.JAVA_IO.File(targetDirectory).mkdirs()
 
-        _psLog.info('Directory created: ' + targetDirectory)
+#         _psLog.info('Directory created: ' + targetDirectory)
 
-    return
+#     return
 
 def verifySelectedTracks():
     """Catches on the fly user edit of JMRI track names
@@ -59,10 +59,25 @@ def newWorkList():
 
     workList = initializeReportHeader()
 
-    fileName = PSE.BUNDLE['Work List'] + '.json'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'patterns', fileName)
+    fileName = PSE.BUNDLE['ops-work-list'] + '.json'
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
     workList = PSE.dumpJson(workList)
     PSE.genericWriteReport(targetPath, workList)
+
+    return
+
+def appendWorkList(mergedForm):
+
+    tracks = mergedForm['locations'][0]['tracks'][0]
+
+    fileName = PSE.BUNDLE['ops-work-list'] + '.json'
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+    currentWorkList = PSE.jsonLoadS(PSE.genericReadReport(targetPath))
+
+    currentWorkList['locations'][0]['tracks'].append(tracks)
+    currentWorkList = PSE.dumpJson(currentWorkList)
+
+    PSE.genericWriteReport(targetPath, currentWorkList)
 
     return
 
@@ -73,8 +88,8 @@ def patternReport():
         Controller.StartUp.patternReportButton
         """
 
-    fileName = PSE.BUNDLE['Pattern Report'] + '.json'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'patterns', fileName)
+    fileName = PSE.BUNDLE['ops-pattern-report'] + '.json'
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
 
     trackPattern = makeTrackPattern()
     trackPatternReport = makeTrackPatternReport(trackPattern)
@@ -161,7 +176,7 @@ def initializeReportHeader():
     listHeader['trainComment'] = ''
     listHeader['division'] = ''
     listHeader['date'] = unicode(PSE.validTime(), PSE.ENCODING)
-    listHeader['locations'] = [{'locationName': configFile['Patterns']['PL'], 'tracks': [{'cars': [], 'locos': []}]}]
+    listHeader['locations'] = [{'locationName': configFile['Patterns']['PL'], 'tracks': [{'cars': [], 'locos': [], 'length': '', 'trackname': ''}]}]
 
     return listHeader
 

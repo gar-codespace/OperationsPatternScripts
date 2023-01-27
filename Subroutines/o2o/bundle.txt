@@ -15,6 +15,7 @@ New JMRI Railroad
 No changes were made to your JMRI layout.
 o2o Subroutine
 o2o Work Events
+ops-work-list
 TrainPlayer layout not imported to JMRI.
 Update Current Railroad
 Update JMRI Railroad

@@ -64,7 +64,8 @@ def actionListener(EVENT):
 
 
 class TrainsTable(PSE.JAVX_SWING.event.TableModelListener):
-    """Catches user add or remove train while o2oSubroutine is enabled."""
+    """Catches user add or remove train while o2oSubroutine is enabled.
+    Check into TM.newTrain.LISTLENGTH_CHANGED_PROPERTY"""
 
     def __init__(self, builtTrainListener):
 

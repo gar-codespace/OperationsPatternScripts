@@ -37,3 +37,9 @@ def refreshCalls():
     PSE.restartSubroutineByName(__package__)
     
     return
+
+def specificCalls():
+    """Methods called to run specific tasks."""
+
+    return
+    

@@ -38,3 +38,9 @@ def refreshCalls():
     """Methods called when the subroutine needs to be refreshed."""
 
     return
+
+def specificCalls():
+    """Methods called to run specific tasks."""
+
+    return
+    
