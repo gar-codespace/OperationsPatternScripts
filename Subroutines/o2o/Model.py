@@ -125,9 +125,9 @@ def updateJmriRailroad():
     # PSE.CM.dispose()
     # PSE.EM.dispose()
 
-    jmriRailroad = Initiator()
-    jmriRailroad.o2oDetailsToConFig()
-    jmriRailroad.setRailroadDetails()
+    # jmriRailroad = Initiator()
+    # jmriRailroad.o2oDetailsToConFig()
+    # jmriRailroad.setRailroadDetails()
 
     allRsRosters = Attributator()
     allRsRosters.addRoads()
@@ -137,6 +137,9 @@ def updateJmriRailroad():
     allRsRosters.addLocoModels()
     allRsRosters.addLocoTypes()
     allRsRosters.addLocoConsist()
+
+    # PSE.CMX.save()
+    # PSE.EMX.save()
 
     updateDivisions = Divisionator()
     updateDivisions.parseDivisions()
@@ -238,7 +241,7 @@ class TpLocaleculator:
 
     def getTpRrData(self):
 
-        self.sourceData = PSE.getTpRailroadJson('tpRailroadData')
+        self.sourceData = ModelEntities.getTpRailroadJson('tpRailroadData')
 
         return
 
@@ -352,7 +355,7 @@ class Initiator:
         self.OSU = PSE.JMRI.jmrit.operations.setup
 
         self.o2oConfig =  PSE.readConfigFile()
-        self.TpRailroad = PSE.getTpRailroadJson('tpRailroadData')
+        self.TpRailroad = ModelEntities.getTpRailroadJson('tpRailroadData')
 
         print(self.scriptName + ' ' + str(SCRIPT_REV))
 
@@ -431,7 +434,7 @@ class Attributator:
 
         self.scriptName = SCRIPT_NAME + '.Attributator'
 
-        self.tpRailroadData = PSE.getTpRailroadJson('tpRailroadData')
+        self.tpRailroadData = ModelEntities.getTpRailroadJson('tpRailroadData')
 
         print(self.scriptName + ' ' + str(SCRIPT_REV))
 
@@ -545,7 +548,7 @@ class Locationator:
         self.scriptName = SCRIPT_NAME + '.Locationator'
 
         self.o2oConfig = PSE.readConfigFile('o2o')
-        self.tpRailroadData = PSE.getTpRailroadJson('tpRailroadData')
+        self.tpRailroadData = ModelEntities.getTpRailroadJson('tpRailroadData')
 
         self.currentLocale = {'locations':{}, 'tracks':{}}
         self.updatedLocale = {}
@@ -726,7 +729,7 @@ class Divisionator:
     def __init__(self):
 
         self.scriptName = SCRIPT_NAME + '.Divisionator'
-        self.tpRailroadData = PSE.getTpRailroadJson('tpRailroadData')
+        self.tpRailroadData = ModelEntities.getTpRailroadJson('tpRailroadData')
 
         self.tpDivisions = self.tpRailroadData['divisions'] # List of strings
         self.jmriDivisions = [] # list of strings
@@ -820,6 +823,8 @@ class RStockulator:
 
     def getcurrentTpRsData(self):
 
+        print('getcurrentTpRsData')
+
         fileName = 'tpRollingStockData.json'
         targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
 
@@ -829,6 +834,8 @@ class RStockulator:
 
     def makeNewTpRollingStockData(self):
         """Makes a json LUT: TP road + TP Number : TP ID"""
+
+        print('makeNewTpRollingStockData')
 
         _psLog.debug('makeNewTpRollingStockData')
 
