@@ -1,6 +1,5 @@
 Todo:
   How to publish DeepL?
-  Does translating the plugin need to delete the config file?
   Revisit help html to split out help items for each subroutine.
   Add o2o restore button to possibly restore trains, routes, rs details json?
   Get csv manifest/switch list up to speed with divisions.
@@ -18,6 +17,7 @@ Comments:
   On TrainPlayer side, a check is added to validate locale is in format 'location;track'.
   On TrainPlayer side, a check is added to validate industries has a locale entry.'.
   Generalized built train listeners into opsEntities.Listeners.
+  Translate the plugin does not delete the config file.
 
 Tested Items:
   Plugin

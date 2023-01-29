@@ -69,8 +69,6 @@ def restartThePlugin():
     
     PSE.closeOpsWindows('patternScriptsWindow')
 
-    PSE.deleteConfigFile()
-
     Bundle.setupBundle()
 
     buildThePlugin(View())

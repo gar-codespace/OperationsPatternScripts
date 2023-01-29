@@ -48,6 +48,8 @@ def rsItemSelected(RESTART_PLUGIN_EVENT):
 
     _psLog.debug(RESTART_PLUGIN_EVENT)
 
+    PSE.deleteConfigFile()
+
     xModule = __import__('MainScript')
     xModule.restartThePlugin()
 

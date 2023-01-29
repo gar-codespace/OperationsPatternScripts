@@ -173,7 +173,6 @@ def makeDefaultHelpBundle():
 def translateBundle():
 
     allBundles = getAllBundles()
-    print('Yipee')
 
     makeTranslatedBundle(allBundles)
 
