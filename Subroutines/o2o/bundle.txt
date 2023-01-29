@@ -1,4 +1,5 @@
 o2o
+o2o Subroutine
 ALERT: One or more TrainPlayer export files are missing.
 ALERT: TrainPlayer Locations file not found.
 ALERT: TrainPlayer Industries file not found.
@@ -13,8 +14,6 @@ From TrainPlayer, re-export layout to JMRI.
 JMRI does not allow staging and non-staging track types at the same location.
 New JMRI Railroad
 No changes were made to your JMRI layout.
-o2o Subroutine
-o2o Work Events
 ops-work-list
 TrainPlayer layout not imported to JMRI.
 Update Current Railroad

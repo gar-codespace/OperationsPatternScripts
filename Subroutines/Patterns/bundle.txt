@@ -1,5 +1,5 @@
+Patterns
 Pattern Tracks
-Action
 Additional Choices
 Apply Schedule
 Apply the destination tracks schedule
@@ -16,14 +16,9 @@ FAIL: Mismatched input list and car roster lengths
 Hazardous
 Hold
 Ignore track length
-Import TrainPlayer© Railroad
-Location Comment
 Location:
 Locomotives at
 Make Work
-No FD track
-No final destination
-On Train
 Pattern Report for Tracks
 Report Totals for Cars:
 Report Work
@@ -32,13 +27,10 @@ Schedule for
 Schedule:
 Set Rolling Stock for track:
 Set Rolling Stock to Track
-Set to
-Set to Track
 Single
 ops-switch-list
+ops-pattern-report
 Switch List
-Switch List for Selected Tracks
-Switch List for Track
 There are no yard tracks for this location
 There are no tracks for this selection
 Total Cars:
@@ -50,13 +42,10 @@ Pattern Report Subroutine
 Track Totals for Cars:
 Track:
 Tracks at
-Unaffiliated
 unknown
 empty
 load
 occupied
-Update Inventory Error Report
-Update Locations
 ops-work-list
 Work Location:
 Yard tracks only

@@ -703,7 +703,7 @@ def makeReportFolders():
         """
 
     opsDirectory = OS_PATH.join(PROFILE_PATH, 'operations')
-    directories = ['csvManifests', 'csvSwitchLists', 'jsonManifests', 'switchLists']
+    directories = ['csvManifests', 'csvSwitchLists', 'jsonManifests', 'switchLists', 'manifests']
     x = 0
     for directory in directories:
         targetDirectory = OS_PATH.join(opsDirectory, directory)
