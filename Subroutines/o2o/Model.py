@@ -30,7 +30,7 @@ def newJmriRailroad():
     else:
         return False
 
-    PSE.closeTroublesomeWindows()
+    # PSE.closeTroublesomeWindows()
 
     PSE.TMX.makeBackupFile('operations/OperationsTrainRoster.xml')
     PSE.TMX.makeBackupFile('operations/OperationsRouteRoster.xml')
@@ -119,7 +119,7 @@ def updateJmriRailroad():
     resetTrains.getBuiltTrains()
     resetTrains.resetBuildTrains()
 
-    PSE.closeTroublesomeWindows()
+    # PSE.closeTroublesomeWindows()
 
     PSE.SM.dispose()
     # PSE.CM.dispose()
@@ -196,7 +196,7 @@ def updateJmriRollingingStock():
     resetTrains.resetBuildTrains()
 
     try:
-        PSE.closeTroublesomeWindows()
+        # PSE.closeTroublesomeWindows()
 
         allRsRosters = Attributator()
         allRsRosters.addRoads()
@@ -955,6 +955,7 @@ class RStockulator:
             if PSE.EM.getById(currentJmriId):
                 newRsAttribs = self.tpLocos[id]
                 rs = PSE.EM.getById(currentJmriId)
+                
                 rs.setConsist(PSE.ZM.getConsistByName(newRsAttribs['consist']))
 
             elif PSE.CM.getById(currentJmriId):
@@ -968,9 +969,22 @@ class RStockulator:
             rsRoad, rsNumber = ModelEntities.parseCarId(newRsAttribs['id'])
             xLocation, xTrack = ModelEntities.getSetToLocationAndTrack(newRsAttribs['location'], newRsAttribs['track'])
 
+            oldRoad = rs.getRoadName()
             rs.setRoadName(rsRoad)
+            rs.firePropertyChange("rolling stock road", oldRoad, rsRoad)
+
+            oldNumber = rs.getNumber()
             rs.setNumber(rsNumber)
+            rs.firePropertyChange("rolling stock number", oldNumber, rsNumber)
+
+            oldTrack = rs.getTrack()
             rs.setLocation(xLocation, xTrack, True)
+            # rs.firePropertyChange(TRACK_CHANGED_PROPERTY, oldTrack, xTrack)
+
+
+
+
+
             rs.setTypeName(newRsAttribs['aar'])
 
         return
