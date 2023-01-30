@@ -46,8 +46,7 @@ def actionListener(EVENT):
         OSU = PSE.JMRI.jmrit.operations.setup
         eHeader = PSE.expandedHeader().replace(';', '\n')
         OSU.Setup.setRailroadName(eHeader)
-        # patternConfig['Main Script']['LD'].update({'LN':OSU.Setup.getRailroadName()})
-
+        PSE.JMRI.jmrit.operations.setup.OperationsSettingsPanel().savePreferences()
 
         PSE.writeConfigFile(patternConfig)
         targetPanel.removeAll()

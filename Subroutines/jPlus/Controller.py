@@ -120,6 +120,8 @@ class StartUp:
         jPlusHeader = PSE.expandedHeader().replace(';', '\n')
         OSU.Setup.setRailroadName(jPlusHeader)
 
+        PSE.JMRI.jmrit.operations.setup.OperationsSettingsPanel().savePreferences()
+
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return

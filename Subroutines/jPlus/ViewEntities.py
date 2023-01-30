@@ -57,11 +57,8 @@ class jPlusSubroutinePanel:
         a6 = PSE.JAVX_SWING.JTextField(self.configFile['Main Script']['LD']['LO'])
         self.panelWidgets['LO'] = a6
 
-        # a8 = PSE.JAVX_SWING.JTextField(self.configFile['jPlus']['YR'])
+        # a8 = PSE.JAVX_SWING.JTextField(self.configFile['Main Script']['LD']['YR'])
         a8 = PSE.JAVX_SWING.JTextField(PSE.JMRI.jmrit.operations.setup.Setup.getYearModeled())
-        # a8.setText(self.configFile['jPlus']['YR'])
-        # print(self.configFile['jPlus']['YR'])
-
         self.panelWidgets['YR'] = a8
 
         inputGrid.add(a1)

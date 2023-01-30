@@ -24,15 +24,38 @@ class templateSubroutinePanel:
         """Build the GUI here."""
 
         tpPanel = PSE.JAVX_SWING.JPanel()
-        tpPanel.add(PSE.JMRI.jmrit.operations.trains.TrainsTableModel)
+        tableModel = PSE.JMRI.jmrit.operations.trains.TrainsTableModel()
+        print(tableModel.getColumnCount())
+        newTable = PSE.JAVX_SWING.JTable(tableModel)
+
+        column = newTable.getColumnModel().getColumn(0)
+        column.setPreferredWidth(50)
+
+        
+        scrollPanel = PSE.JAVX_SWING.JScrollPane(newTable)
+        newTable.setFillsViewportHeight(True)
+        tpPanel.add(scrollPanel)
+
+
+
+
+
+        # scrollPanel.border = PSE.JAVX_SWING.BorderFactory.createLineBorder(PSE.JAVA_AWT.Color.GRAY)
+        # scrollPanel.setName('scrollPanel')
+
+
+
+
+        # JScrollPane scrollPane = new JScrollPane(table);
+        # tpPanel.add(table)
 
         nrButton = PSE.JAVX_SWING.JButton()
         nrButton.setText(PSE.BUNDLE['xyzzy'])
         nrButton.setName('button')
         self.controlWidgets.append(nrButton)
 
-        tpPanel.add(nrButton)
-        tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
+        # tpPanel.add(nrButton)
+        # tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
 
         return tpPanel
 

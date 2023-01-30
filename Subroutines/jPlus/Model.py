@@ -19,8 +19,8 @@ def jPanelSetup():
 
 
 
-    if not 'o2o' in PSE.getSubroutineDirs():
-        return
+    # if not 'o2o' in PSE.getSubroutineDirs():
+    #     return
 
     # if not configFile['CP']['o2oSubroutine']:
     #     return
@@ -39,8 +39,8 @@ def jPanelSetup():
     configFile['Main Script']['LD'].update({'LO':sourceData['location']})
     configFile['Main Script']['LD'].update({'YR':sourceData['year']})
 
-    OSU = PSE.JMRI.jmrit.operations.setup
-    OSU.Setup.setYearModeled(configFile['Main Script']['LD']['YR'])
+    # OSU = PSE.JMRI.jmrit.operations.setup
+    # OSU.Setup.setYearModeled(configFile['Main Script']['LD']['YR'])
 
     PSE.writeConfigFile(configFile)
 

@@ -49,6 +49,8 @@ def newJmriRailroad():
     # jmriRailroad.tweakOperationsXml()
     jmriRailroad.setReportMessageFormat()
 
+    # PSE.JMRI.jmrit.operations.setup.OperationsSettingsPanel().savePreferences()
+
     allRsRosters = Attributator()
     allRsRosters.addRoads()
     allRsRosters.addCarAar()
