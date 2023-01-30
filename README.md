@@ -35,14 +35,16 @@ This plugin also contains a subroutine so that JMRI can be used as the Ops engin
 ## "In this video..." YouTube video series
 The following are YouTube videos covering the use of this plugin:  
 
+[Overview of this plugin]()  
 [How to add this plugin to JMRI](https://youtu.be/Sl9yBQaRpeY)  
-[How to translate this plugin](https://youtu.be/6G7xkRJTczo)  
-[How to set up this plugin](https://youtu.be/GjPtXk3oKmc)  
-[How to modify this plugin](https://youtu.be/DK6O9AQmqXo)    
-[Track Pattern Subroutine - Demonstration at a yard](https://youtu.be/IdXvxyo-E3Y)  
-[Track Pattern Subroutine - Demonstration at industry](https://youtu.be/2Tv6sUMDD_Y)  
+[How to translate this plugin](https://youtu.be/6G7xkRJTczo)   
+[jPlus Subroutine - Extended railroad details]()  
+[o2o Subroutine - Use a TrainPlayer© layout with JMRI](https://youtu.be/rlUfoSesnQo)  
+[Pattern Report Subroutine - Inventory control for a location]()    
+[Pattern Report Subroutine - Demonstration at a yard](https://youtu.be/IdXvxyo-E3Y)  
+[Pattern Report Subroutine - Demonstration at industry](https://youtu.be/2Tv6sUMDD_Y)  
+[Throwback Subroutine - Run 'what if' experiments]()  
 [How to modify this plugin](https://youtu.be/DK6O9AQmqXo)  
-[o2o, the ops to ops subroutine for TrainPlayer©](https://youtu.be/rlUfoSesnQo)  
 
 ### Web sites
 [TrainPlayer](http://trainplayer.com/)  
