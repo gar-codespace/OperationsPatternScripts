@@ -2,7 +2,7 @@
 This is a jython plugin for JMRI Operations Pro that serves as a platform to host GUI based scripts, which in this instance are being called subroutines.
 There are currently four subroutines that are included in this package:  
 jPlus - A lightweight subroutine that stores extended information about your railroad. This information is displayed in other Pattern scripts subroutines and JMRI manifest and switchlist reports.  
-o2o - A subroutine designed to ease the use of JMRI ops pro with TrainPlayer.  
+o2o - A subroutine designed to ease the use of JMRI ops pro with TrainPlayer model railroad software.  
 Pattern Report Subroutine - An inventory control script that facilitates the movement of rolling stock within a location.  
 Throwback Subroutine - A script to facilitate running 'what if' scenarios to test ideas or track equipment movement.  
 This is the current version, 2.0, and is under development. Consider it pre-release.  
