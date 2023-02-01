@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""From tpRailroadData.json, a new rr is created and the xml files are seeded."""
+"""From tpRailroadData.json, a new JMRI railroad is created or updated."""
 
 from opsEntities import PSE
 from Subroutines.o2o import ModelEntities
@@ -47,6 +47,9 @@ def newJmriRailroad():
 
     ModelEntities.addCarTypesToSpurs()
 
+    print('New JMRI railroad built from TrainPlayer data')
+    _psLog.info('New JMRI railroad built from TrainPlayer data')
+
     return
 
 def updateJmriRailroad():
@@ -73,6 +76,9 @@ def updateJmriRailroad():
 
     RStockulator().updater()
 
+    print('JMRI railroad updated from TrainPlayer data')
+    _psLog.info('JMRI railroad updated from TrainPlayer data')
+
     return
 
 def updateJmriRollingingStock():
@@ -86,6 +92,9 @@ def updateJmriRollingingStock():
     Attributator().attributate()
 
     RStockulator().updater()
+
+    print('JMRI rolling stock updated')
+    _psLog.info('JMRI rolling stock updated')
 
     return
 
@@ -205,7 +214,9 @@ class TpLocaleculator:
         self.getLocations()
         self.makeLocationRubric()
         self.makeTrackIdRubric()
+
         print(self.scriptName + ' ' + str(SCRIPT_REV))
+        _psLog.info('tpLocaleData.json created')
 
         return
 
@@ -235,6 +246,8 @@ class Initiator:
         self.setRailroadDetails()
         # self.tweakOperationsXml()
         self.setReportMessageFormat()
+
+        _psLog.info('JMRI operations settings updated')
 
         return
 
@@ -327,6 +340,8 @@ class Attributator:
         self.addLocoModels()
         self.addLocoTypes()
         self.addLocoConsist()
+
+        _psLog.info('New rolling stock attributes')
 
         return
 
@@ -459,6 +474,8 @@ class Localculator:
         self.addNewLocations()
         self.deleteOldLocations()
 
+        _psLog.info('Locations created or updated')
+
         return
 
     def getCurrentLocations(self):
@@ -487,6 +504,7 @@ class Localculator:
         return
 
     def updateContinuingLocations(self):
+        """The only attribs that are updated are Length, Type and Schedule."""
 
         for location in self.continuingLocations:
             lt = location.split(';')
@@ -584,6 +602,8 @@ class Divisionator:
         self.addDivisionToLocations()
         self.addUnreportedToUnknown()
 
+        _psLog.info('Divisions updated')
+
         return
 
     def parseDivisions(self):
@@ -650,12 +670,9 @@ class RStockulator:
 
         self.tpRollingStockFileName = self.o2oConfig['RF']['TRR']
 
-
-
         self.tpInventory = []
         self.tpCars = {}
         self.tpLocos = {}
-
 
         self.currentRsData = {}
         self.newRsData = {}
@@ -675,6 +692,8 @@ class RStockulator:
         self.parseTpRollingStock()
         self.newJmriRs()
 
+        _psLog.info('New rolling stock')
+
         return
 
     def updater(self):
@@ -689,6 +708,8 @@ class RStockulator:
         self.updateJmriRs()
         self.deregisterOldRs()
         self.newJmriRs()
+
+        _psLog.info('Updated rolling stock')
 
         return
 
@@ -727,7 +748,6 @@ class RStockulator:
             try:
                 line = item.split(';')
                 name, number = ModelEntities.parseCarId(line[0])
-                # self.newRsData[name + number] = line[7]
                 self.newRsData[line[7]] = name + number
             except:
                 _psLog.warning('Line not parsed: ' + item)
@@ -794,12 +814,6 @@ class RStockulator:
 
         return
 
-    def updateJmriRs(self):
-
-        self.setGenericRsAttribs(self.continuingTpIds)
-
-        return
-
     def newJmriRs(self):
 
         for id in self.newTpIds:
@@ -821,6 +835,12 @@ class RStockulator:
         self.currentRsData = self.newRsData
         self.setGenericRsAttribs(self.newTpIds)
         self.setSpecificRsAttribs(self.newTpIds)
+
+        return
+
+    def updateJmriRs(self):
+
+        self.setGenericRsAttribs(self.continuingTpIds)
 
         return
 
@@ -858,17 +878,9 @@ class RStockulator:
             rs.setNumber(rsNumber)
             rs.firePropertyChange("rolling stock number", oldNumber, rsNumber)
 
-            oldTrack = rs.getTrack()
+            # oldTrack = rs.getTrack()
             rs.setLocation(xLocation, xTrack, True)
             # rs.firePropertyChange(TRACK_CHANGED_PROPERTY, oldTrack, xTrack)
-
-
-
-
-
-
-
-
 
             rs.setTypeName(newRsAttribs['aar'])
 
@@ -886,7 +898,7 @@ class RStockulator:
             if PSE.EM.getById(currentJmriId):
                 newRsAttribs = self.tpLocos[id]
                 newLoco = PSE.EM.getById(currentJmriId)
-                newLoco.setLength('40')
+                newLoco.setLength(self.o2oConfig['DL'])
                 newLoco.setModel(newRsAttribs['model'][0:11])
             # Setting the model will automatically set the type
                 newLoco.setWeight('2')
@@ -900,7 +912,7 @@ class RStockulator:
                     newCar.setCaboose(True)
                 if newRsAttribs['aar'] in self.o2oConfig['PC']:
                     newCar.setPassenger(True)
-                newCar.setLength('40')
+                newCar.setLength(self.o2oConfig['DL'])
                 newCar.setWeight('2')
                 newCar.setColor('Red')
 
@@ -935,189 +947,3 @@ class RStockulator:
                 PSE.CM.deregister(PSE.CM.getById(disposeJmriId))            
 
         return
-
-
-
-
-# class Locationator:
-#     """JMRI considers tracks to be a subset of a location.
-#         Locations and tracks are updated using Location Manager."""
-
-#     def __init__(self):
-
-#         self.scriptName = SCRIPT_NAME + '.Locationator'
-
-#         self.o2oConfig = PSE.readConfigFile('o2o')
-#         self.tpRailroadData = ModelEntities.getTpRailroadJson('tpRailroadData')
-
-#         self.currentLocale = {'locations':{}, 'tracks':{}}
-#         self.updatedLocale = {}
-
-#         self.newLocations = []
-#         self.unchangedLocations = []
-#         self.renameLocations = []
-#         self.oldLocations = []
-
-#         self.oldKeys = []
-#         self.newKeys = []
-#         self.continuingKeys = []
-
-#         print(self.scriptName + ' ' + str(SCRIPT_REV))
-
-#         return
-
-#     def getLocaleData(self):
-
-#         _psLog.debug('getLocaleData')
-
-#         fileName = 'tpLocaleData.json'
-#         filePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
-
-#         return PSE.loadJson(PSE.genericReadReport(filePath))
-
-#     def getCurrentLocale(self):
-#         """The current locale is the state of the JMRI date before the update button is pressed.
-#             self.currentLocale = the existing tpLocaleData.json
-#             """
-
-#         _psLog.debug('getCurrentLocale')
-
-#         self.currentLocale = self.getLocaleData()
-
-#         return
-
-#     def getUpdatedLocale(self):
-#         """The updated locale is the data in the TP exports that the JMRI data will be changed to.
-#             self.updatedLocale = a new tpLocaleData.json
-#             """
-
-#         _psLog.debug('getUpdatedLocale')
-
-#         self.updatedLocale = self.getLocaleData()
-
-#         return
-
-#     def getNewLocations(self):
-#         """A list of new location names to be added to JMRI."""
-
-#         currentLocations = [location for location in self.currentLocale['locations']]
-#         updatedLocations = [location for location in self.updatedLocale['locations']]
-
-#         self.newLocations = list(set(updatedLocations) - set(currentLocations))
-
-#         return
-
-#     def getUpdatedLocations(self):
-#         """A list of existing JMRI location names whose name has changed."""
-
-#         return
-
-#     def processLocations(self):
-
-#         _psLog.debug('processLocations')
-
-#         for item in self.renameLocations:
-#             PSE.LM.getLocationByName(item[0]).setName(item[1])
-
-#         return
-
-#     def addNewLocations(self):
-
-#         _psLog.debug('addNewLocations')
-
-#         for location in self.newLocations:
-#             PSE.LM.newLocation(location)
-
-#         return
-
-#     def parseTracks(self):
-
-#         _psLog.debug('parseTracks')
-
-#         currentKeys = self.currentLocale['tracks'].keys()
-#         updateKeys = self.updatedLocale['tracks'].keys()
-
-#         self.oldKeys = list(set(currentKeys) - set(updateKeys))
-#         self.newKeys = list(set(updateKeys) - set(currentKeys))
-
-#         for cKey, cData in self.currentLocale['tracks'].items():
-#             for uKey, uData in self.updatedLocale['tracks'].items():
-#                 if cKey == uKey and cData[0] == uData[0]:
-#                     self.continuingKeys.append(cKey)
-#                 if cKey == uKey and cData[0] != uData[0]:
-#                     self.newKeys.append(cKey)
-#                     self.oldKeys.append(cKey)
-
-#         _psLog.info('Old keys: ' + str(self.oldKeys))
-#         _psLog.info('New keys: ' + str(self.newKeys))
-#         _psLog.info('Continuing keys: ' + str(self.continuingKeys))
-
-#         return
-
-#     def recastTracks(self):
-#         """For tracks that have not changed locations, update:
-#             name
-#             track type
-#             track attributes
-#             """
-
-#         _psLog.debug('recastTracks')
-
-#         for key in self.continuingKeys:
-
-#             location = self.updatedLocale['tracks'][key][0]
-
-#             track = self.currentLocale['tracks'][key][1]
-#             trackType = self.currentLocale['tracks'][key][2]
-#             jmriTrackType = self.o2oConfig['TR'][trackType]
-
-#             newTrack = self.updatedLocale['tracks'][key][1]
-#             newTrackType = self.updatedLocale['tracks'][key][2]
-#             newJmriTrackType = self.o2oConfig['TR'][newTrackType]
-
-#             location = PSE.LM.getLocationByName(location)
-#             track = location.getTrackByName(track, jmriTrackType)
-#             track.setName(newTrack)
-#             location.getTrackByName(newTrack, jmriTrackType).setTrackType(newJmriTrackType)
-
-#             trackData = self.tpRailroadData['locales'][key]
-#             ModelEntities.setTrackAttribs(trackData)
-
-#         return
-
-#     def addNewTracks(self):
-
-#         _psLog.debug('addNewTracks')
-
-#         for key in self.newKeys:
-#             trackData = self.tpRailroadData['locales'][key]
-#             ModelEntities.makeNewTrack(key, trackData)
-
-#         return
-
-#     def deleteOldTracks(self):
-#         """Deletes leftover tracks from unchanged locations."""
-
-#         for key in self.oldKeys:
-#             cTrackData = self.currentLocale['tracks'][key]
-#             trackType = self.o2oConfig['TR'][cTrackData[2]]
-#             location = PSE.LM.getLocationByName(cTrackData[0])
-#             try:
-#                 track = location.getTrackByName(cTrackData[1], trackType)
-#                 location.deleteTrack(track)
-#                 track.dispose()
-#             except:
-#                 print('Not found: ' + cTrackData[0] + ' ' + cTrackData[1])
-#         return
-
-
-
-#     def deleteOldLocations(self):
-#         """Delete locations which have no tracks."""
-
-#         for location in PSE.LM.getList():
-#             if not location.getTracksList():
-#                 PSE.LM.deregister(location)
-#                 location.dispose()
-
-#         return

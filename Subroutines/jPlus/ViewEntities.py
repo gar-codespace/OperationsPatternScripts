@@ -1,12 +1,13 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""Creates either version of the j Plus panel."""
+""" """
 
 from opsEntities import PSE
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230101
+
 
 class jPlusSubroutinePanel:
 
@@ -78,7 +79,6 @@ class jPlusSubroutinePanel:
         jPlusPanel.add(upButton)
 
         return jPlusPanel
-
 
 
     def jPlusWidgets(self):

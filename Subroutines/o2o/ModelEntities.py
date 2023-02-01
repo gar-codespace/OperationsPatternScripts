@@ -9,6 +9,9 @@ SCRIPT_REV = 20230101
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.ModelEntities')
 
 
+"""o2o.Model and o2o.ModelWorkEvents"""
+
+
 def getTpRailroadJson(reportName):
     """Any of the TP exports imported into JMRI as a json file:
         tpRailroadData
@@ -31,6 +34,10 @@ def getTpRailroadJson(reportName):
 
     return tpReport
 
+
+"""o2o.ModelWorkEvents and o2o.BuiltTrainExport"""
+
+
 def tpDirectoryExists():
     """Checks for the Reports folder in TraipPlayer."""
 
@@ -44,52 +51,9 @@ def tpDirectoryExists():
         print('TrainPlayer Reports destination directory not found')
         return
 
-def deselectCarTypes(industries):
-    """For each track in industries, deselect all the RS types,
-        Called by:
-        Model.UpdateLocationsAndTracks.addCarTypesToSpurs
-        """
 
-    for id, industry in industries.items():
-        location = PSE.LM.getLocationByName(industry['a-location'])
-        track = location.getTrackByName(industry['b-track'], None)
-        for typeName in track.getTypeNames():
-            track.deleteTypeName(typeName)
+"""o2o.Model"""
 
-    return
-
-def selectCarTypes(industries):
-    """Select just the RS types used by that track, leaving unused types deselected.
-        Called by:
-        Model.UpdateLocationsAndTracks.addCarTypesToSpurs
-        """
-
-    for id, industry in industries.items():
-        track = PSE.LM.getLocationByName(industry['a-location']).getTrackByName(industry['b-track'], None)
-        for schedule, details in industry['c-schedule'].items():
-            for detail in details:
-                track.addTypeName(detail[0])
-
-    return
-
-# def setTrackLength():
-#     """Set an existing tracks length."""
-
-#     _psLog.debug('setTrackLength')
-
-#     o2oConfig = PSE.readConfigFile('o2o')
-#     tpRailroadData = getTpRailroadJson('tpRailroadData')
-
-#     for id, trackData in tpRailroadData['locales'].items():
-#         location = PSE.LM.getLocationByName(trackData['location'])
-#         trackType = o2oConfig['TR'][trackData['type']]
-#         track = location.getTrackByName(trackData['track'], trackType)
-
-
-#         trackLength = int(trackData['capacity']) * o2oConfig['DL']
-#         track.setLength(trackLength)
-
-#     return
 
 def newSchedules():
     """Write the industry schedules.
@@ -165,25 +129,47 @@ def addCarTypesToSpurs():
 
     return
 
-def makeNewTrack(trackId, trackData):
-    """Set spur length to 'spaces' from TP.
-        Deselect all types for spur tracks.
+def deselectCarTypes(industries):
+    """For each track in industries, deselect all the RS types,
         Called by:
-        Model.Locationator.newLocations
-        Model.UpdateLocationsAndTracks.addNewTracks
+        Model.UpdateLocationsAndTracks.addCarTypesToSpurs
         """
 
-    _psLog.debug('makeNewTrack')
-
-    o2oConfig = PSE.readConfigFile('o2o')
-    jmriTrackType = o2oConfig['TR'][trackData['type']]
-
-    location = PSE.LM.getLocationByName(trackData['location'])
-    location.addTrack(trackData['track'], jmriTrackType)
-
-    setTrackAttribs(trackData)
+    for id, industry in industries.items():
+        location = PSE.LM.getLocationByName(industry['a-location'])
+        track = location.getTrackByName(industry['b-track'], None)
+        for typeName in track.getTypeNames():
+            track.deleteTypeName(typeName)
 
     return
+
+def selectCarTypes(industries):
+    """Select just the RS types used by that track, leaving unused types deselected.
+        Called by:
+        Model.UpdateLocationsAndTracks.addCarTypesToSpurs
+        """
+
+    for id, industry in industries.items():
+        track = PSE.LM.getLocationByName(industry['a-location']).getTrackByName(industry['b-track'], None)
+        for schedule, details in industry['c-schedule'].items():
+            for detail in details:
+                track.addTypeName(detail[0])
+
+    return
+
+def getSetToLocationAndTrack(locationName, trackName):
+    """Called by:
+        ModelNew.NewRollingStock.newCars
+        ModelNew.NewRollingStock.newLocos
+        """
+
+    try:
+        location = PSE.LM.getLocationByName(locationName)
+        track = location.getTrackByName(trackName, None)
+        return location, track
+    except:
+        print('Location and track not found: ', locationName, trackName)
+        return None, None
 
 def setTrackAttribs(trackData):
     """Mini controller to set the attributes for each track,
@@ -277,6 +263,10 @@ def setTrackTypeXoReserved(trackData):
 
     return
 
+
+"""o2o.ModelWorkEvents"""
+
+
 def getWorkEvents():
     """Gets the o2o work events file
         Called by:
@@ -292,6 +282,10 @@ def getWorkEvents():
     jsonFile = PSE.loadJson(workEventList)
 
     return jsonFile
+
+
+"""o2o.ModelImport"""
+
 
 def getTpExport(fileName):
     """Generic file getter, fileName includes .txt
@@ -329,17 +323,24 @@ def parseCarId(carId):
 
     return rsRoad, rsNumber
 
-def getSetToLocationAndTrack(locationName, trackName):
-    """Called by:
-        ModelNew.NewRollingStock.newCars
-        ModelNew.NewRollingStock.newLocos
-        """
 
-    try:
-        location = PSE.LM.getLocationByName(locationName)
-        track = location.getTrackByName(trackName, None)
-        return location, track
-    except:
-        print('Location and track not found: ', locationName, trackName)
-        return None, None
-        
+
+# def makeNewTrack(trackId, trackData):
+#     """Set spur length to 'spaces' from TP.
+#         Deselect all types for spur tracks.
+#         Called by:
+#         Model.Locationator.newLocations
+#         Model.UpdateLocationsAndTracks.addNewTracks
+#         """
+
+#     _psLog.debug('makeNewTrack')
+
+#     o2oConfig = PSE.readConfigFile('o2o')
+#     jmriTrackType = o2oConfig['TR'][trackData['type']]
+
+#     location = PSE.LM.getLocationByName(trackData['location'])
+#     location.addTrack(trackData['track'], jmriTrackType)
+
+#     setTrackAttribs(trackData)
+
+#     return

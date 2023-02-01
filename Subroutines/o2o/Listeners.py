@@ -30,7 +30,6 @@ def actionListener(EVENT):
 
     # Do stuff here
         removeBuiltTrainListener()
-        # patternConfig['CP'].update({__package__:False})
 
 
         PSE.writeConfigFile(patternConfig)
@@ -45,7 +44,6 @@ def actionListener(EVENT):
 
     # Do stuff here
         addBuiltTrainListener()
-        # patternConfig['CP'].update({__package__:True})
 
 
         PSE.writeConfigFile(patternConfig)

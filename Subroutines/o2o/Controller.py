@@ -1,15 +1,16 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""The o2o Subroutine creates a JMRI railroad from TrainPlayer data.
-On the TrainPlayer side, the Quick Keys suite of scripts is used to export the railroad's data.
+"""
+The o2o Subroutine creates a JMRI railroad from TrainPlayer data.
+It also exports a JMRI train's manifest and switch lists from the Patterns subroutine.
+On the TrainPlayer side, the Quick Keys suite of scripts is used to import and export the JMRI railroads' data.
 """
 
 from opsEntities import PSE
 from Subroutines.o2o import Listeners
 from Subroutines.o2o import Model
 from Subroutines.o2o import ModelImport
-from Subroutines.o2o import ModelWorkEvents
 from Subroutines.o2o import View
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
@@ -96,17 +97,13 @@ class StartUp:
         else:
             print('TrainPlayer railroad not imported')
             _psLog.critical('TrainPlayer railroad not imported')
+            _psLog.critical('New JMRI railroad not built')
+
             return
 
         Model.newJmriRailroad()
 
         PSE.restartAllSubroutines()
-
-        #     print('New JMRI railroad built from TrainPlayer data')
-        #     _psLog.info('New JMRI railroad built from TrainPlayer data')
-        # else:
-        #     print('New JMRI railroad not built')
-        #     _psLog.critical('New JMRI railroad not built')
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -125,17 +122,13 @@ class StartUp:
         else:
             print('TrainPlayer railroad not imported')
             _psLog.critical('TrainPlayer railroad not imported')
+            _psLog.critical('JMRI railroad not updated')
+
             return
 
         Model.updateJmriRailroad()
 
         PSE.restartAllSubroutines()
-
-        #     print('JMRI railroad updated from TrainPlayer data')
-        #     _psLog.info('JMRI railroad updated from TrainPlayer data')
-        # else:
-        #     print('JMRI railroad not updated')
-        #     _psLog.critical('JMRI railroad not updated')
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -154,15 +147,11 @@ class StartUp:
         else:
             print('TrainPlayer railroad not imported')
             _psLog.critical('TrainPlayer railroad not imported')
+            _psLog.critical('JMRI rolling stock not updated')
+
             return
 
         Model.updateJmriRollingingStock()
-
-        #     print('JMRI rolling stock updated')
-        #     _psLog.info('JMRI rolling stock updated')
-        # else:
-        #     print('JMRI rolling stock not updated')
-        #     _psLog.critical('JMRI rolling stock not updated')
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

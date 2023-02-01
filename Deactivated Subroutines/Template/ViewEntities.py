@@ -3,7 +3,8 @@
 
 """
 Template subroutine.
-Replace XX with a designator for this subroutines name.
+Build the GUI here.
+Replace XX with a designator for this subroutines' name.
 """
 
 from opsEntities import PSE
@@ -24,7 +25,6 @@ class templateSubroutinePanel:
         """Build the GUI here."""
 
         tpPanel = PSE.JAVX_SWING.JPanel()
-        tpPanel.add(PSE.JMRI.jmrit.operations.trains.TrainsTableModel)
 
         nrButton = PSE.JAVX_SWING.JButton()
         nrButton.setText(PSE.BUNDLE['xyzzy'])
@@ -32,7 +32,7 @@ class templateSubroutinePanel:
         self.controlWidgets.append(nrButton)
 
         tpPanel.add(nrButton)
-        tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
+        # tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
 
         return tpPanel
 

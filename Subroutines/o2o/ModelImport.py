@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""Use the TP inventory, locations and industries text files to generate the tpRailroadData.json file"""
+"""Use the TrainPlayer/Reports inventory, locations and industries text files to generate the tpRailroadData.json file"""
 
 from opsEntities import PSE
 from Subroutines.o2o import ModelEntities

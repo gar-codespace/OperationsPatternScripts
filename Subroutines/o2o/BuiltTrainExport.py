@@ -13,6 +13,7 @@ SCRIPT_DIR = 'OperationsPatternScripts'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b1'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b2'
 
+
 class StandAloneLogging():
     """Called when this script is used by itself"""
 
@@ -138,18 +139,8 @@ class o2oWorkEventsBuilder(jmri.jmrit.automat.AbstractAutomaton):
 
         o2o = ModelWorkEvents.jmriManifestConversion(self.train)
         o2o.jmriManifestGetter()
-
-
-
         o2o.convertHeader()
-
-
-
         o2o.convertBody()
-
-
-
-
         o2oWorkEvents = o2o.geto2oWorkEvents()
     # Common post processor for ModelWorkEvents.ConvertPtMergedForm.o2oButton and BuiltTrainExport.o2oWorkEventsBuilder.handle
         o2o = ModelWorkEvents.o2oWorkEvents(o2oWorkEvents)
