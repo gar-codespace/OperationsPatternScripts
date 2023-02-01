@@ -1,7 +1,8 @@
 Todo:
   How to publish DeepL?
+  implement bumpSchedule and bumpMoves in track.
   Revisit help html to split out help items for each subroutine.
-  Add o2o restore button to possibly restore trains, routes, rs details json?
+  RollingStockulator is a bit busy.
   Get csv manifest/switch list up to speed with divisions.
   All the subroutine actionListener() are very similar. Can this duplication be eliminated?
 

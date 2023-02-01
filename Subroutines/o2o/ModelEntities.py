@@ -72,23 +72,24 @@ def selectCarTypes(industries):
 
     return
 
-def setTrackLength():
-    """Set an existing tracks length."""
+# def setTrackLength():
+#     """Set an existing tracks length."""
 
-    _psLog.debug('setTrackLength')
+#     _psLog.debug('setTrackLength')
 
-    o2oConfig = PSE.readConfigFile('o2o')
-    tpRailroadData = getTpRailroadJson('tpRailroadData')
+#     o2oConfig = PSE.readConfigFile('o2o')
+#     tpRailroadData = getTpRailroadJson('tpRailroadData')
 
-    for id, trackData in tpRailroadData['locales'].items():
-        location = PSE.LM.getLocationByName(trackData['location'])
-        trackType = o2oConfig['TR'][trackData['type']]
-        track = location.getTrackByName(trackData['track'], trackType)
+#     for id, trackData in tpRailroadData['locales'].items():
+#         location = PSE.LM.getLocationByName(trackData['location'])
+#         trackType = o2oConfig['TR'][trackData['type']]
+#         track = location.getTrackByName(trackData['track'], trackType)
 
-        trackLength = int(trackData['capacity']) * o2oConfig['DL']
-        track.setLength(trackLength)
 
-    return
+#         trackLength = int(trackData['capacity']) * o2oConfig['DL']
+#         track.setLength(trackLength)
+
+#     return
 
 def newSchedules():
     """Write the industry schedules.
@@ -100,7 +101,14 @@ def newSchedules():
     for id, industry in tpIndustries.items():
         schedulesPerIndustry = industry['c-schedule']
         for scheduleName, scheduleItems in schedulesPerIndustry.items():
-            schedule = PSE.SM.newSchedule(scheduleName)
+            try:
+                schedule = PSE.SM.getScheduleByName(scheduleName)
+                for item in schedule.getItemsBySequenceList():
+                    schedule.deleteItem(item)
+            except:
+                schedule = PSE.SM.newSchedule(scheduleName)
+                
+            # schedule = PSE.SM.newSchedule(scheduleName)
             for parsedItem in parseSchedules(scheduleItems):
                 scheduleItem = schedule.addItem(parsedItem[0])
                 scheduleItem.setReceiveLoadName(parsedItem[1])
@@ -213,7 +221,7 @@ def setTrackTypeIndustry(trackData):
 
     track.setSchedule(PSE.SM.getScheduleByName(trackData['label']))
 
-    return track
+    return
 
 def setTrackTypeInterchange(trackData):
     """Settings for TP 'interchange' track types.
@@ -244,7 +252,7 @@ def setTrackTypeStaging(trackData):
     track.setRemoveCustomLoadsEnabled(o2oConfig['SM']['RCL'])
     track.setLoadEmptyEnabled(o2oConfig['SM']['LEE'])
 
-    return track
+    return
 
 def setTrackTypeClassYard(trackData):
     """Settings for TP 'class yard' track types.
@@ -267,7 +275,7 @@ def setTrackTypeXoReserved(trackData):
     for type in track.getTypeNames():
         track.addTypeName(type)
 
-    return track
+    return
 
 def getWorkEvents():
     """Gets the o2o work events file

@@ -51,6 +51,13 @@ class FindTrain:
 
         return
 
+    def trainResetter(self):
+        
+        self.getBuiltTrains()
+        self.resetBuildTrains()
+
+        return
+        
     def findNewestTrain(self):
         """If more than 1 train is built, pick the newest one"""
 
