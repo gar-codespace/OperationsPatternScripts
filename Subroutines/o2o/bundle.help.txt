@@ -1,0 +1,14 @@
+>o2o Subroutine<
+>Description<
+>The ops to ops (o2o) subroutine is a group of utilities that are designed to be the glue that allows JMRI Operations Pro to be the operations engine for TrainPlayer©. The idea is to expand the capability of TrainPlayer©'s Advanced Ops feature to include the flexibility of Operations Pro,while also eleminating the tedium of keeping two databases synchronised.<
+>Who Does What<
+>The table below shows which program manages which elements.<
+>Subroutine Panel<
+>Subroutines.o2o.View.ManageGui<
+>o2o Subroutine settings in configFile.json<
+>o2o Subroutine settings<
+>List of TrainPlayer car codes for passenger cars.<
+>List of TrainPlayer caboose car codes.<
+>Core File List<
+> JMRI Model Railroad scale.
+> Align TrainPlayer and JMRI track types.
