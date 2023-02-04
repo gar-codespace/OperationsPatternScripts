@@ -649,7 +649,7 @@ class Divisionator:
             Add the location named Unreported to the division named Unknown.
             """
 
-        location = PSE.LM.getLocationByName(PSE.BUNDLE['Unreported'])
+        location = PSE.LM.getLocationByName('Unreported')
         division = PSE.DM.newDivision(PSE.BUNDLE['Unknown'])
 
         location.setDivision(division)
@@ -898,7 +898,7 @@ class RStockulator:
             if PSE.EM.getById(currentJmriId):
                 newRsAttribs = self.tpLocos[id]
                 newLoco = PSE.EM.getById(currentJmriId)
-                newLoco.setLength(self.o2oConfig['DL'])
+                newLoco.setLength(str(self.o2oConfig['DL']))
                 newLoco.setModel(newRsAttribs['model'][0:11])
             # Setting the model will automatically set the type
                 newLoco.setWeight('2')
@@ -912,7 +912,7 @@ class RStockulator:
                     newCar.setCaboose(True)
                 if newRsAttribs['aar'] in self.o2oConfig['PC']:
                     newCar.setPassenger(True)
-                newCar.setLength(self.o2oConfig['DL'])
+                newCar.setLength(str(self.o2oConfig['DL']))
                 newCar.setWeight('2')
                 newCar.setColor('Red')
 

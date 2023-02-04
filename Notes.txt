@@ -2,8 +2,7 @@ Todo:
   How to publish DeepL?
   Should o2o New railroad reset Throwback?
   Harden Translator.translateSingle() from timeout errors.
-  implement bumpSchedule and bumpMoves in track.
-  RollingStockulator is a bit busy.
+  RStockulator is a bit busy.
   Get csv manifest/switch list up to speed with divisions.
   All the subroutine actionListener() are very similar. Can this duplication be eliminated?
 
@@ -20,6 +19,8 @@ Comments:
   On TrainPlayer side, a check is added to validate industries has a locale entry.'.
   Generalized built train listeners into opsEntities.Listeners.
   Translate the plugin does not delete the config file.
+  TrainPlayer names the location for unlabeled tracks as 'Unreported'. o2o then imports this location as
+  'Unreported' so as with other locations, the name is not translated.
 
 Tested Items:
   Plugin
