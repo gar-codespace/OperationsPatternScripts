@@ -1,8 +1,8 @@
 Todo:
   How to publish DeepL?
-  Abstract all <subroutine>.Controller.getSubroutineDropDownItem() into PSE.
+  Should o2o New railroad reset Throwback?
+  Harden Translator.translateSingle() from timeout errors.
   implement bumpSchedule and bumpMoves in track.
-  Revisit help html to split out help items for each subroutine.
   RollingStockulator is a bit busy.
   Get csv manifest/switch list up to speed with divisions.
   All the subroutine actionListener() are very similar. Can this duplication be eliminated?

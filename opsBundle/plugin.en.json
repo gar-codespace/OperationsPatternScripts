@@ -64,8 +64,6 @@
   "Single": "Single", 
   "Snap Shot": "Snap Shot", 
   "Switch List": "Switch List", 
-  "Template": "Template", 
-  "Template Subroutine": "Template Subroutine", 
   "There are no tracks for this selection": "There are no tracks for this selection", 
   "There are no yard tracks for this location": "There are no yard tracks for this location", 
   "Throwback": "Throwback", 
@@ -92,8 +90,8 @@
   "Year Modeled": "Year Modeled", 
   "at": "at", 
   "empty": "empty", 
-  "j Plus Subroutine": "j Plus Subroutine", 
   "jPlus": "jPlus", 
+  "jPlus Subroutine": "jPlus Subroutine", 
   "load": "load", 
   "o2o": "o2o", 
   "o2o Subroutine": "o2o Subroutine", 
@@ -101,6 +99,5 @@
   "ops-pattern-report": "ops-pattern-report", 
   "ops-switch-list": "ops-switch-list", 
   "ops-work-list": "ops-work-list", 
-  "unknown": "unknown", 
-  "xyzzy": "xyzzy"
+  "unknown": "unknown"
 }

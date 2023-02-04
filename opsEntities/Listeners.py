@@ -20,7 +20,8 @@ def ptItemSelected(TRANSLATE_PLUGIN_EVENT):
 
     _psLog.debug(TRANSLATE_PLUGIN_EVENT)
 
-    Bundle.translateBundle()
+    Bundle.translateBundles()
+    # Bundle.translateHelpHtml()
 
     xModule = __import__('MainScript')
     xModule.restartThePlugin()

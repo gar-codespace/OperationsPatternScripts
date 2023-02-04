@@ -17,14 +17,15 @@ PSE.BUNDLE_DIR = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle')
 _psLog = PSE.LOGGING.getLogger('OPS.OB.Bundle')
 
 
-"""Plugin and subroutine bundle methods"""
+"""Bundle and Help methods"""
+
 
 def setupBundle():
     """Mini controller to set up the bundles."""
 
 # Plugin bundle stuff
-    allBundles = getAllBundles()
-    makeDefaultPluginBundle(allBundles)
+    
+    makeDefaultPluginBundle()
     PSE.BUNDLE = getBundleForLocale()
 
 # Help bundle stuff
@@ -35,23 +36,15 @@ def setupBundle():
 
     return
 
-def getAllBundles():
 
-    targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle', 'bundle.txt')
-    pluginBundle = PSE.genericReadReport(targetPath)
+"""Bundle methods"""
 
-    allSubs = PSE.getSubroutineDirs()
-    for sub in allSubs:
-        targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'Subroutines', sub, 'bundle.txt')
-        subroutineBundle = PSE.genericReadReport(targetPath)
-        pluginBundle += subroutineBundle
 
-    return pluginBundle
-
-def makeDefaultPluginBundle(allBundles):
+def makeDefaultPluginBundle():
     """Makes the default english plugin bundle without using the translator."""
 
     defaultBundle = {}
+    allBundles = getAllBundles()
     bundleFileLocation = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'plugin.en.json')
 
     allBundles = allBundles.splitlines()
@@ -90,6 +83,19 @@ def getBundleForLocale():
             compositeBundle[item] = translation
 
     return compositeBundle
+
+def getAllBundles():
+
+    targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle', 'bundle.txt')
+    pluginBundle = PSE.genericReadReport(targetPath)
+
+    allSubs = PSE.getSubroutineDirs()
+    for sub in allSubs:
+        targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'Subroutines', sub, 'bundle.txt')
+        subroutineBundle = PSE.genericReadReport(targetPath)
+        pluginBundle += subroutineBundle
+
+    return pluginBundle
 
 
 """Help file methods"""
@@ -169,18 +175,22 @@ def updateHelpFileForLocale():
 """Bundle translation methods"""
 
 
-def translateBundle():
-    """Mini controller to translate the bundle and help file."""
+def validateKeyFile():
+    """Checks that the keys.py file exists
+        Called by:
+        Main.View
+        """
 
-    # allBundles = getAllBundles()
-    # makeTranslatedBundle(allBundles)
+    itemTarget =  PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'Keys.py')
+    if PSE.JAVA_IO.File(itemTarget).isFile():
+        return True
+    else:
+        _psLog.warning('Authentication key file not found')
+        print('Authentication key file not found')
+        return False
 
-    translateHelpHtml()
-
-    return
-
-def makeTranslatedBundle(textBundle):
-    """Makes the plugin.<locale>.json file from getAllTextBundles()"""
+def translateBundles():
+    """Makes the plugin.<locale>.json file from getAllBundles()"""
 
     if PSE.psLocale()[:2] == 'en':
         return
@@ -188,7 +198,8 @@ def makeTranslatedBundle(textBundle):
     fileName = 'plugin.' + PSE.psLocale()[:2] + '.json'
     targetFile = PSE.OS_PATH.join(PSE.BUNDLE_DIR, fileName)
 
-    translation = batchTranslator(textBundle)
+    allBundles = getAllBundles()
+    translation = batchTranslator(allBundles)
     PSE.genericWriteReport(targetFile, translation)
 
     return
@@ -242,27 +253,11 @@ def translateHelpHtml():
 
     return
 
-def validateKeyFile():
-    """Checks that the keys.py file exists
-        Called by:
-        Main.View
-        """
-
-    itemTarget =  PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'Keys.py')
-    if PSE.JAVA_IO.File(itemTarget).isFile():
-        return True
-    else:
-        _psLog.warning('Authentication key file not found')
-        print('Authentication key file not found')
-        return False
-
-
-
 def batchTranslator(textBundle):
     """Mini controller translates each item in the bundleFile,
         then appends it to the RAM based scratchFile.
         used by:
-        makeTranslatedBundle
+        translateBundles
         """
 
     startTime = PSE.TIME.time()
@@ -282,6 +277,7 @@ def batchTranslator(textBundle):
     _psLog.info('Bundle translation time: ' + str(round(runTime, 2)))
 
     return translation
+
 
 class Translator:
     """Choice of translators from PSE.readConfigFile('CP')['TS']"""
@@ -313,9 +309,6 @@ class Translator:
         response = urlopen(url)
         translation = PSE.loadJson(response.read())
         response.close()
-
-        
-
 
         return translation
 
@@ -395,128 +388,3 @@ class MakeBundleItem(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         self.scratchFile.append(translation)
 
         return False
-
-
-
-# def makeHelpBundle():
-#     """Makes the help.<locale>.json file from bundle.help.txt"""
-
-#     itemTarget = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'bundle.help.txt')
-#     textBundle = PSE.genericReadReport(itemTarget)
-
-#     fileName = 'help.' + PSE.psLocale()[:2] + '.json'
-#     targetFile = PSE.OS_PATH.join(PSE.BUNDLE_DIR, fileName)
-
-#     if not PSE.JAVA_IO.File(targetFile).isFile():
-#         translation = batchTranslator(textBundle)
-#         PSE.genericWriteReport(targetFile, translation)
-
-#     return
-
-
-
-# def makeHelpPage():
-#     """Makes the help page for the current locale.
-#         Defaults to english on errors.
-#         Called by:
-#         Main.Controller.rsItemSelected
-#         Main.Controller.ptItemSelected
-#         """
-
-#     helpPageTemplatePath = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'help.html.txt')
-#     helpPageTemplate = PSE.genericReadReport(helpPageTemplatePath)
-
-#     helpBundleName = 'help.' + PSE.psLocale()[:2] + '.json'
-#     helpBundlePath = PSE.OS_PATH.join(PSE.BUNDLE_DIR, helpBundleName)
-#     if not PSE.JAVA_IO.File(helpBundlePath).isFile():
-#         helpBundleName = 'help.en.json'
-#         helpBundlePath = PSE.OS_PATH.join(PSE.BUNDLE_DIR, helpBundleName)
-
-#     translationLookUp = PSE.loadJson(PSE.genericReadReport(helpBundlePath))
-
-#     for hKey, hValue in translationLookUp.items():
-#         hKey = unicode(hKey, PSE.ENCODING)
-#         hValue = unicode(hValue, PSE.ENCODING)
-
-#         helpPageTemplate = helpPageTemplate.replace(hKey, hValue)
-
-#     helpPageName = 'help.' + PSE.psLocale()[:2] + '.html'
-#     helpPagePath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsSupport', helpPageName)
-#     PSE.genericWriteReport(helpPagePath, helpPageTemplate)
-
-#     return
-
-
-
-    # fileList = PSE.JAVA_IO.File(PSE.BUNDLE_DIR).list()
-    # if psLocale in fileList:
-    #     bundleFileLocation = PSE.OS_PATH.join(PSE.BUNDLE_DIR, psLocale)
-
-    # localeBundle = PSE.loadJson(PSE.genericReadReport(bundleFileLocation))
-    # if len(localeBundle) == len(defaultBundle):
-    #     return localeBundle
-    # else:
-    #     return defaultBundle
-
-
-    
-# def validateHelpBundle():
-#     """If any files are damaged,
-#         if the length of BUNDLE and getAllTextBundles are not the same,
-#         if plugin.en.json is missing:
-#         make the default help bundle."""
-
-#     defaultBundle = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'help.en.json')
-#     if not PSE.JAVA_IO.File(defaultBundle).isFile():
-#         _psLog.warning('FAIL: default help bundle file missing. Nwe file created.')
-#         makeDefaultHelpBundle()
-
-#     helpTextBundle = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'bundle.help.txt')
-#     try:
-#         helpTextBundle = PSE.genericReadReport(helpTextBundle).splitlines()
-#         helpTextBundle = list(set(helpTextBundle))
-#         helpTextBundleLength = len(helpTextBundle)
-#     except:
-#         helpTextBundleLength = 0
-
-#     fileName = 'help.' + PSE.psLocale()[:2] + '.json'
-#     targetFile = PSE.OS_PATH.join(PSE.BUNDLE_DIR, fileName)
-#     if not PSE.JAVA_IO.File(targetFile).isFile():
-#         fileName = 'help.en.json'
-#         targetFile = PSE.OS_PATH.join(PSE.BUNDLE_DIR, fileName)
-
-#     try:
-#         helpBunde = PSE.loadJson(PSE.genericReadReport(targetFile))
-#         helpBundleLength = len(helpBunde)
-#     except:
-#         helpBundleLength = 1
-
-#     if helpTextBundleLength != helpBundleLength:
-#         fileName = 'help.' + PSE.psLocale()[:2] + '.json'
-#         oldFile = PSE.OS_PATH.join(PSE.BUNDLE_DIR, fileName)
-#         PSE.JAVA_IO.File(oldFile).delete()
-
-#         fileName = 'help.' + PSE.psLocale()[:2] + '.html'
-#         oldFile = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsSupport', fileName)
-#         PSE.JAVA_IO.File(oldFile).delete()
-
-#         _psLog.warning('FAIL: help bundle length mismatch, rebuilding help bundle file.')
-#         makeDefaultHelpBundle()
-
-#     return
-
-# def makeDefaultHelpBundle():
-#     """Makes the default english help bundle without using the translator."""
-
-#     defaultBundle = {}
-#     bundleFileLocation = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'help.en.json')
-
-#     helpTextBundle = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'bundle.help.txt')
-#     helpTextBundle = PSE.genericReadReport(helpTextBundle).splitlines()
-#     for bundleItem in helpTextBundle:
-#         defaultBundle[bundleItem] = bundleItem
-
-#     defaultBundle = PSE.dumpJson(defaultBundle)
-#     PSE.genericWriteReport(bundleFileLocation, defaultBundle)
-
-#     return
