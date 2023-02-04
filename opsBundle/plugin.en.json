@@ -64,6 +64,8 @@
   "Single": "Single", 
   "Snap Shot": "Snap Shot", 
   "Switch List": "Switch List", 
+  "Template": "Template", 
+  "Template Subroutine": "Template Subroutine", 
   "There are no tracks for this selection": "There are no tracks for this selection", 
   "There are no yard tracks for this location": "There are no yard tracks for this location", 
   "Throwback": "Throwback", 
@@ -99,5 +101,6 @@
   "ops-pattern-report": "ops-pattern-report", 
   "ops-switch-list": "ops-switch-list", 
   "ops-work-list": "ops-work-list", 
-  "unknown": "unknown"
+  "unknown": "unknown", 
+  "xyzzy": "xyzzy"
 }

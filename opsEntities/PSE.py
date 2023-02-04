@@ -104,7 +104,8 @@ class Logger:
 
 
 class CreateStubFile:
-    """Copy of the JMRI Java version of CreateStubFile."""
+    """Copy of the JMRI Java version of CreateStubFile.
+        The stub file will substitute english if the help file for the current locale doesn't exist."""
 
     def __init__(self):
 

@@ -1,0 +1,85 @@
+<!-- o2o help section html -->
+<h2>o2o Subroutine</h2>
+<h3>Description</h3>
+<p>The ops to ops (o2o) subroutine is a group of utilities that are designed to be the glue that allows JMRI Operations Pro to be the operations engine for TrainPlayer©. The idea is to expand the capability of TrainPlayer©'s Advanced Ops feature to include the flexibility of Operations Pro, while also eleminating the tedium of keeping two databases synchronised.</p>
+<h3>Who Does What</h3>
+<p>The table below shows which program manages which elements.</p>
+<img src="../Subroutines/o2o/img/Who_Does_What.png" alt="<Who Does What Image>">
+<h3>Subroutine Panel</h3>
+<p>Subroutines.o2o.View.ManageGui</p>
+<img src="../Subroutines/o2o/img/o2o_Subroutine.png" alt="<o2o Subroutine Image>">
+<h4>o2o Subroutine settings in configFile.json</h4>
+<pre>
+  "o2o" : {  <font color="DarkRed">o2o Subroutine settings</font>
+    "PC": [  <font color="DarkRed">List of TrainPlayer car codes for passenger cars.</font>
+      <font color="green">"B"</font>,  <font color="DarkRed">Any of these can be added to or removed</font>
+      "BE",
+      "BH",
+      "BM",
+      "BMR",
+      "BMT",
+      "BP",
+      "BR",
+      "BX",
+      "CA",
+      "CS",
+      "D",
+      "DA",
+      "DB",
+      "DC",
+      "DL",
+      "DO",
+      "DP",
+      "DPA",
+      "MA",
+      "MB",
+      "MR",
+      "P",
+      "PA",
+      "PAS",
+      "PB",
+      "PBC",
+      "PBO",
+      "PC",
+      "PL",
+      "PO",
+      "PS",
+      "PSA"
+    ],
+    "CC" : [  <font color="DarkRed">List of TrainPlayer caboose car codes.</font>
+      <font color="green">"N"</font>,  <font color="DarkRed">Any of these can be added to or removed</font>
+      "NM",
+      "NE"
+    ],
+    "CFL" : [  <font color="DarkRed">Core File List</font>
+      "OperationsCarRoster",
+      "OperationsEngineRoster",
+      "OperationsLocationRoster"
+    ],
+    "SR" : {  <font color="DarkRed">Scale Rubric - JMRI Model Railroad scale.</font>
+      "Z" : 1,
+      "N" : 2,
+      "TT" : 3,
+      "HOn3" : 4,
+      "OO" : 5,
+      "HO" : 6,
+      "Sn3" : 7,
+      "S" : 8,
+      "On3" : 9,
+      "O" : 10,
+      "G" : 11
+    },
+    "RF" : { <font color="DarkRed">Report Files - Names of the TrainPlayer layout export files.</font>
+      "TRL" : "TrainPlayer Report - Locations.txt",
+      "TRI" : "TrainPlayer Report - Industries.txt",
+      "TRR" : "TrainPlayer Report - Rolling Stock.txt"
+    },
+
+    "TR" : {  <font color="DarkRed">Type Rubric - Align TrainPlayer and JMRI track types.</font>
+      "industry": "Spur",
+      "interchange": "Interchange",
+      "staging": "Staging",
+      "class yard": "Yard",
+      "XO reserved": "Spur"
+    }
+</pre>

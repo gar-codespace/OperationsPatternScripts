@@ -1,51 +1,48 @@
+<!-- Patterns help section html -->
 <h2>Patterns Subroutine</h2>
 <h3>Description</h3>
 <p>The Patterns subroutine can generate pattern reports for tracks at a single location. Additionally, cars can be moved from track to track within a location. Optionally, if a car is moved onto a spur, the schedule for that spur can be applied.</p>
 <h3>Subroutine Panel</h3>
 <p>Subroutines.Patterns.View.ManageGui</p>
-<img src="Pattern_Scripts_Subroutine.png" alt="<Pattern Scripts Subroutine Image>">
-
+<img src="../Subroutines/Patterns/img/Pattern_Scripts_Subroutine.png" alt="<Pattern Scripts Subroutine Image>">
 <h3>Pattern Report for Track Window</h3>
 <p>Subroutines.Patterns.ControllerSetCarsForm.CreatePatternReportGui.makeFrame()</p>
-<img src="Pattern_Report_For_Track.png" alt="<Pattern Report for Track Window Image>">
-
+<img src="../Subroutines/Patterns/img/Pattern_Report_For_Track.png" alt="<Pattern Report for Track Window Image>">
 <h3>Track Pattern, Switch List and Work Event json format</h3>
-<p>All the pattern reports start with the creation of a json file.
-These files are created by this plugin and are written to the jsonManifests folder. They follow the illustrated format:</p>
-<img src="Report_File_Format.png" alt="<JSON format for reports>">
+<p>All the pattern reports start with the creation of a json file. These files are created by this plugin and are written to the jsonManifests folder. They follow the illustrated format:</p>
+<img src="../Subroutines/Patterns/img/Report_File_Format.png" alt="<JSON format for reports>">
 <p>Depending upon the task, any of the json files will then be written into a Pattern Report or Switchlist text file or exported to TrainPlayer as a WorkEvents csv file.</p>
-
 <h4>Patterns Subroutine settings in configFile.json</h4>
 <pre>
-  "Patterns" : { <font color="blue">Patterns Subroutine settings</font>
-    "AD" : [ <font color="blue">All divisions (written by this plugin)</font>
+  "Patterns" : { <font color="DarkRed">Patterns Subroutine settings</font>
+    "AD" : [ <font color="DarkRed">All divisions (written by this plugin)</font>
     ],
-    "AL" : [ <font color="blue">All locations (written by this plugin)</font>
+    "AL" : [ <font color="DarkRed">All locations (written by this plugin)</font>
     ],
-    "PL" : "", <font color="blue">Pattern Location (written by this plugin)</font>
-    "PT" : { <font color="blue">Pattern-Tracks (written by this plugin)</font>
+    "PL" : "", <font color="DarkRed">Pattern Location (written by this plugin)</font>
+    "PT" : { <font color="DarkRed">Pattern-Tracks (written by this plugin)</font>
     },
-    "PA" : false, <font color="blue">Yard Tracks Only flag (set by user, written by this plugin)</font>
-    "PI" : false, <font color="blue">Ignore Track Length flag (set by user, written by this plugin)</font>
-    "AS" : true, <font color="blue">Apply Schedule flag (set by user, written by this plugin)</font>
-    "TI" : false, <font color="blue">TrainPlayer Include flag (set by user, written by this plugin)</font>
-    "PW" : 260, <font color="blue">Pattern Width</font>
-    "PH" : 16, <font color="blue">Pattern Height</font>
-    "RM": 8, <font color="blue">Row Multiplier</font>
+    "PA" : false, <font color="DarkRed">Yard Tracks Only flag (set by user, written by this plugin)</font>
+    "PI" : false, <font color="DarkRed">Ignore Track Length flag (set by user, written by this plugin)</font>
+    "AS" : true, <font color="DarkRed">Apply Schedule flag (set by user, written by this plugin)</font>
+    "TI" : false, <font color="DarkRed">TrainPlayer Include flag (set by user, written by this plugin)</font>
+    "PW" : 260, <font color="DarkRed">Pattern Width</font>
+    "PH" : 16, <font color="DarkRed">Pattern Height</font>
+    "RM": 8, <font color="DarkRed">Row Multiplier</font>
 
-  "RM" : { <font color="blue">Report Modifiers</font></h4>
-    "DS" : "<font color="green">*No Waybill</font>", <font color="blue">Destination designator</font>
-    "DT" : "<font color="green">*Not Consigned</font>", <font color="blue">Destination Track designator</font>
-    "FD" : "<font color="green">*Via Staging</font>", <font color="blue">Final Destination designator</font>
-    "FT" : "<font color="green">*Any Line</font>", <font color="blue">Final destination Track designator</font>
-    "SL": [ <font color="blue">Sort Locomotives</font>
+  "RM" : { <font color="DarkRed">Report Modifiers</font></h4>
+    "DS" : "<font color="green">*No Waybill</font>", <font color="DarkRed">Destination designator</font>
+    "DT" : "<font color="green">*Not Consigned</font>", <font color="DarkRed">Destination Track designator</font>
+    "FD" : "<font color="green">*Via Staging</font>", <font color="DarkRed">Final Destination designator</font>
+    "FT" : "<font color="green">*Any Line</font>", <font color="DarkRed">Final destination Track designator</font>
+    "SL": [ <font color="DarkRed">Sort Locomotives</font>
       "<font color="green">Model</font>"
     ],
-    "SC": [ <font color="blue">Sort Cars</font>
+    "SC": [ <font color="DarkRed">Sort Cars</font>
       "<font color="green">Load Type</font>",
       "<font color="green">FD&Track</font>"
     ],
-    "AW": { <font color="blue">Attribute Width</font>
+    "AW": { <font color="DarkRed">Attribute Width</font>
       "Input": <font color="green">6</font>,
       "Model": <font color="green">5</font>,
       "Road" : <font color="green">5</font>,
