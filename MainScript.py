@@ -110,38 +110,6 @@ class View:
 
         return
 
-    # def makeSubroutineMenuItems(self):
-    #     """ """
-
-    #     menuItemList = []
-
-    #     for subroutine in PSE.getSubroutineDirs():
-    #         xModule = 'Subroutines.' + subroutine
-    #         package = __import__(xModule, fromlist=['Controller', 'Listeners'], level=-1)
-    #         menuText, itemName = package.Controller.setDropDownText()
-    #         menuItem = self.makeMenuItem(menuText, itemName)
-    #         menuItem.addActionListener(package.Listeners.actionListener)
-
-    #         menuItemList.append(menuItem)
-
-
-
-
-
-
-
-
-        # for include in self.cpConfig['IL']:
-        #     package = __import__(include, fromlist=['Listeners'])
-
-        #     menuText, itemName = package.Controller.setDropDownText()
-        #     menuItem = self.makeMenuItem(menuText, itemName)
-        #     menuItem.addActionListener(package.Listeners.actionListener)
-
-        #     menuItemList.append(menuItem)
-
-        return menuItemList
-
     def makeScrollPanel(self):
 
         self.scrollPanel = PSE.JAVX_SWING.JScrollPane(self.subroutinePanel)

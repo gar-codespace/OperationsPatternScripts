@@ -2,6 +2,7 @@
 <h2>o2o Subroutine</h2>
 <h3>Description</h3>
 <p>The ops to ops (o2o) subroutine is a group of utilities that are designed to be the glue that allows JMRI Operations Pro to be the operations engine for TrainPlayer©. The idea is to expand the capability of TrainPlayer©'s Advanced Ops feature to include the flexibility of Operations Pro, while also eleminating the tedium of keeping two databases synchronised.</p>
+<p>o2o will automatically export a built train or switchlist to TrainPlayer when the Pattern scripts window is open and the o2o subroutine is displayed. To disable o2o export, disable o2o from the Tools pulldown or close the Pattern Scripts window.</p>
 <h3>Who Does What</h3>
 <p>The table below shows which program manages which elements.</p>
 <img src="../Subroutines/o2o/img/Who_Does_What.png" alt="<Who Does What Image>">
@@ -54,20 +55,7 @@
     "CFL" : [  <font color="DarkRed">Core File List</font>
       "OperationsCarRoster",
       "OperationsEngineRoster",
-      "OperationsLocationRoster"
-    ],
-    "SR" : {  <font color="DarkRed">Scale Rubric - JMRI Model Railroad scale.</font>
-      "Z" : 1,
-      "N" : 2,
-      "TT" : 3,
-      "HOn3" : 4,
-      "OO" : 5,
-      "HO" : 6,
-      "Sn3" : 7,
-      "S" : 8,
-      "On3" : 9,
-      "O" : 10,
-      "G" : 11
+      "OperationsLocationRoster,
     },
     "RF" : { <font color="DarkRed">Report Files - Names of the TrainPlayer layout export files.</font>
       "TRL" : "TrainPlayer Report - Locations.txt",

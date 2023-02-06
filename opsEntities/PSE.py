@@ -103,74 +103,48 @@ class Logger:
         return
 
 
-class CreateStubFile:
-    """Copy of the JMRI Java version of CreateStubFile.
-        The stub file will substitute english if the help file for the current locale doesn't exist."""
+"""Logging Methods"""
 
-    def __init__(self):
 
-        self.stubLocation = OS_PATH.join(JMRI.util.FileUtil.getPreferencesPath(), 'jmrihelp', psLocale()[:2])
+def makePatternLog():
+    """creates a pattern log for display based on the log level, as set by getBuildReportLevel.
+        Called by:
+        MainScript.Controller.logItemSelected
+        """
 
-        self.helpFilePath = ''
-        self.newStubFile = ''
+    outputPatternLog = ''
+    buildReportLevel = JMRI.jmrit.operations.setup.Setup.getBuildReportLevel()
 
-        return
+    loggingIndex = logIndex()
+    logLevel = loggingIndex[buildReportLevel]
 
-    def validateStubLocation(self):
+    fileName = 'PatternScriptsLog.txt'
+    targetPath = OS_PATH.join(PROFILE_PATH, 'operations', 'buildstatus', fileName)
+    patternLogFile = genericReadReport(targetPath)
+    for thisLine in patternLogFile.splitlines():
 
-        if JAVA_IO.File(self.stubLocation).mkdirs():
-            _psLog.info('Stub location created at: ' + self.stubLocation)
-        else:
-            _psLog.info('Stub location already exists')
+        if loggingIndex['9'] in thisLine and int(buildReportLevel) > 0: # critical
+            outputPatternLog += thisLine + '\n'
+        if loggingIndex['7'] in thisLine and int(buildReportLevel) > 0: # error
+            outputPatternLog += thisLine + '\n'
+        if loggingIndex['5'] in thisLine and int(buildReportLevel) > 0: # warning
+            outputPatternLog += thisLine + '\n'
+        if loggingIndex['3'] in thisLine and int(buildReportLevel) > 2: # info
+            outputPatternLog += thisLine + '\n'
+        if loggingIndex['1'] in thisLine and int(buildReportLevel) > 4: # debug
+            outputPatternLog += thisLine + '\n'
 
-        return
+    return outputPatternLog
 
-    def getHelpFileURI(self):
+def logIndex():
+    """Moved here but may be put back into configFile.
+        Called by:
+        PSE.makePatternLog
+        """
 
-        helpFileName = 'help.' + psLocale()[:2] + '.html'
-        helpFilePath = OS_PATH.join(PLUGIN_ROOT, 'opsSupport', helpFileName)
+    loggingIndex = {"9": "- CRITICAL -", "7": "- ERROR -", "5": "- WARNING -", "3": "- INFO -", "1": "- DEBUG -"}
 
-        if not JAVA_IO.File(helpFilePath).isFile():
-            helpFileName = 'help.en.html'
-            helpFilePath = OS_PATH.join(PLUGIN_ROOT, 'opsSupport', helpFileName)
-
-        self.helpFilePath = JAVA_IO.File(helpFilePath).toURI().toString()
-
-        return
-
-    def makeNewStubFile(self):
-
-        stubTemplateFile = 'stub_template.html'
-        stubTemplatePath = OS_PATH.join(JMRI.util.FileUtil.getProgramPath(), 'help', psLocale()[:2], 'local', stubTemplateFile)
-        if not JAVA_IO.File(stubTemplatePath).isFile():
-            stubTemplatePath = OS_PATH.join(PLUGIN_ROOT, 'opsEntities', stubTemplateFile)
-
-        stubTemplate = genericReadReport(stubTemplatePath)
-        stubTemplate = stubTemplate.replace("../index.html#", "")
-        stubTemplate = stubTemplate.replace("<!--HELP_KEY-->", self.helpFilePath)
-        self.newStubFile = stubTemplate.replace("<!--URL_HELP_KEY-->", "")
-
-        return
-
-    def writeStubFile(self):
-
-        _psLog.debug('CreateStubFile.writeStubFile')
-
-        stubFilePath = OS_PATH.join(self.stubLocation, 'psStub.html')
-
-        genericWriteReport(stubFilePath, self.newStubFile)
-
-        return
-
-    def make(self):
-        """Mini controller guides the new stub file process."""
-
-        self.validateStubLocation()
-        self.getHelpFileURI()
-        self.makeNewStubFile()
-        self.writeStubFile()
-
-        return
+    return loggingIndex
 
 
 """GUI Methods"""
@@ -849,8 +823,6 @@ def mergeConfigFiles():
     """Implemented in v3"""
     return
 
-
-
 def readConfigFile(subConfig=None):
     """tryConfigFile will return the config file if it's ok or a new one otherwise.
         Called by:
@@ -975,50 +947,6 @@ def deleteConfigFile():
     JAVA_IO.File(targetFile).delete()
 
     return
-
-
-"""Logging Methods"""
-
-
-def makePatternLog():
-    """creates a pattern log for display based on the log level, as set by getBuildReportLevel.
-        Called by:
-        MainScript.Controller.logItemSelected
-        """
-
-    outputPatternLog = ''
-    buildReportLevel = JMRI.jmrit.operations.setup.Setup.getBuildReportLevel()
-
-    loggingIndex = logIndex()
-    logLevel = loggingIndex[buildReportLevel]
-
-    fileName = 'PatternScriptsLog.txt'
-    targetPath = OS_PATH.join(PROFILE_PATH, 'operations', 'buildstatus', fileName)
-    patternLogFile = genericReadReport(targetPath)
-    for thisLine in patternLogFile.splitlines():
-
-        if loggingIndex['9'] in thisLine and int(buildReportLevel) > 0: # critical
-            outputPatternLog += thisLine + '\n'
-        if loggingIndex['7'] in thisLine and int(buildReportLevel) > 0: # error
-            outputPatternLog += thisLine + '\n'
-        if loggingIndex['5'] in thisLine and int(buildReportLevel) > 0: # warning
-            outputPatternLog += thisLine + '\n'
-        if loggingIndex['3'] in thisLine and int(buildReportLevel) > 2: # info
-            outputPatternLog += thisLine + '\n'
-        if loggingIndex['1'] in thisLine and int(buildReportLevel) > 4: # debug
-            outputPatternLog += thisLine + '\n'
-
-    return outputPatternLog
-
-def logIndex():
-    """Moved here but may be put back into configFile.
-        Called by:
-        PSE.makePatternLog
-        """
-
-    loggingIndex = {"9": "- CRITICAL -", "7": "- ERROR -", "5": "- WARNING -", "3": "- INFO -", "1": "- DEBUG -"}
-
-    return loggingIndex
 
 
 """Color Handling Methods"""

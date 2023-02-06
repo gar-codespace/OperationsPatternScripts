@@ -1,5 +1,5 @@
 <h1>Help Page - Pattern Scripts plugin for JMRI</h1>
-<p>The Pattern Scripts plugin for JMRI is a suite of subroutines for JMRI Operations Pro. The use of this plugin is documented in the following list of videos. The videos are recorded in the English language.</p>
+<p>The Pattern Scripts plugin for JMRI is a suite of subroutines for JMRI Operations Pro. The use of this plugin is documented in the following list of YouTube videos. The videos are recorded in the English language.</p>
 <h3>Pattern Scripts plugin - Video Documentation</h3>
 <p>Overview of this plugin</p>
 <p><A HREF="https://youtu.be/Sl9yBQaRpeY">How to add this plugin to JMRI</A></p>
@@ -8,12 +8,17 @@
 <p><A HREF="https://youtu.be/DK6O9AQmqXo">How to modify this plugin</A></p>
 <h3>Subroutines - Video Documentation</h3>
 <p>The j Plus Subroutine</p>
-<p><A HREF="https://youtu.be/IdXvxyo-E3Y">Track Pattern Subroutine - Demonstration at a yard</A></p>
-<p><A HREF="https://youtu.be/2Tv6sUMDD_Y">Track Pattern Subroutine - Demonstration at industry</A></p>
-<p><A HREF="https://youtu.be/rlUfoSesnQo">o2o, the ops to ops subroutine for TrainPlayer©</A></p>
+<p>The Patterns Subroutine - An overview</p>
+<p><A HREF="https://youtu.be/IdXvxyo-E3Y">The Patterns Subroutine - Demonstration at a yard</A></p>
+<p><A HREF="https://youtu.be/2Tv6sUMDD_Y">The Patterns Subroutine - Demonstration at industry</A></p>
+<p><A HREF="https://youtu.be/rlUfoSesnQo">o2o, the ops to ops subroutine for use with TrainPlayer© model railroad software</A></p>
+<p>The Throwback Subroutine - Run 'what if?' experiments on your layout.</p>
 <h2>Pattern Scripts plugin</h2>
 <h3>Introduction</h3>
-<p>The Pattern Scripts plugin can be thought of as a framework for hosting subroutines for JMRI Operations Pro that require a user interface. This plugin comes with four subroutines; jPlus, Patterns, o2o and Throwback. A template is also included to serve as scaffolding for someone wishing to add their own subroutine. Although the subroutines are somewhat interdependent, they may be activated or deactivated individually as needed.</p>
+<p>The Pattern Scripts plugin can be thought of as a framework for hosting subroutines for JMRI Operations Pro that require a user interface. This plugin comes with four subroutines; jPlus, Patterns, o2o and Throwback. A template is also included to serve as scaffolding for someone wishing to add their own subroutine.</p>
+<p>Although the subroutines are somewhat interdependent, they may be added or removed individually as needed.</p>
+<p>Additionally, each subroutine can be activated or deactivated as needed, fron the Tools menu pulldown.</p>
+<p>Each subroutines' features are only available when the subroutine is active and the Pattern Scripts window is open. For example, extended railroad details will only appear in reports when the Pattern Scripts window is open and the jPlus subroutine is displayed. This is an easy way to turn features on or off.</p>
 <h3>Organization</h3>
 <p>The following chart shows the code structure of this plugin.</P>
 <img src="./img/Code_Structure.png" alt="<Code Structure Image>">
@@ -21,10 +26,10 @@
 <p>OperationsPatternScripts.MainScript.View.makePatternScriptsWindow()</p>
 <img src="./img/Plugin_Layout.png" alt="<Plugin Layout Image>">
 <h3>PatternConfig.json</h3>
-<p>Each JMRI profile gets its own configuration file, which is named PatternConfig.json. It is found in the operations folder, and is used to provide custom settings for each profile and record user inputs.</p>
+<p>Each JMRI profile gets its own configuration file, which is named configFile.json. It is found in the operations folder, and is used to provide custom settings for each profile and record user inputs.</p>
 <p><font color="DarkRed">The description of each element is in dark red.</font></p>
 <p><font color="green">User editable keys are described in green.</font></p>
-<p>Select Tools/Edit Config File. If a mistake is made editing the PatternConfig.json file, the plugin will delete the file and provide a new one to start over with. Worst case the plugin may crash. If that should happed select Tools/Restart From Default.</p>
+<p>Select Tools/Edit Config File. If a mistake is made editing the configFile, the plugin will delete the file and provide a new one to start over with. Worst case the plugin may crash. If that should happed select Tools/Restart From Default.</p>
 <h4>Pattern Scripts plugin settings in PatternConfig.json</h4>
 <pre>
   {

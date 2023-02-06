@@ -35,7 +35,7 @@
 </head>
 <body>
 <h1>Help Page - Pattern Scripts plugin for JMRI</h1>
-<p>The Pattern Scripts plugin for JMRI is a suite of subroutines for JMRI Operations Pro. The use of this plugin is documented in the following list of videos. The videos are recorded in the English language.</p>
+<p>The Pattern Scripts plugin for JMRI is a suite of subroutines for JMRI Operations Pro. The use of this plugin is documented in the following list of YouTube videos. The videos are recorded in the English language.</p>
 <h3>Pattern Scripts plugin - Video Documentation</h3>
 <p>Overview of this plugin</p>
 <p><A HREF="https://youtu.be/Sl9yBQaRpeY">How to add this plugin to JMRI</A></p>
@@ -44,12 +44,17 @@
 <p><A HREF="https://youtu.be/DK6O9AQmqXo">How to modify this plugin</A></p>
 <h3>Subroutines - Video Documentation</h3>
 <p>The j Plus Subroutine</p>
-<p><A HREF="https://youtu.be/IdXvxyo-E3Y">Track Pattern Subroutine - Demonstration at a yard</A></p>
-<p><A HREF="https://youtu.be/2Tv6sUMDD_Y">Track Pattern Subroutine - Demonstration at industry</A></p>
-<p><A HREF="https://youtu.be/rlUfoSesnQo">o2o, the ops to ops subroutine for TrainPlayer©</A></p>
+<p>The Patterns Subroutine - An overview</p>
+<p><A HREF="https://youtu.be/IdXvxyo-E3Y">The Patterns Subroutine - Demonstration at a yard</A></p>
+<p><A HREF="https://youtu.be/2Tv6sUMDD_Y">The Patterns Subroutine - Demonstration at industry</A></p>
+<p><A HREF="https://youtu.be/rlUfoSesnQo">o2o, the ops to ops subroutine for use with TrainPlayer© model railroad software</A></p>
+<p>The Throwback Subroutine - Run 'what if?' experiments on your layout.</p>
 <h2>Pattern Scripts plugin</h2>
 <h3>Introduction</h3>
-<p>The Pattern Scripts plugin can be thought of as a framework for hosting subroutines for JMRI Operations Pro that require a user interface. This plugin comes with four subroutines; jPlus, Patterns, o2o and Throwback. A template is also included to serve as scaffolding for someone wishing to add their own subroutine. Although the subroutines are somewhat interdependent, they may be activated or deactivated individually as needed.</p>
+<p>The Pattern Scripts plugin can be thought of as a framework for hosting subroutines for JMRI Operations Pro that require a user interface. This plugin comes with four subroutines; jPlus, Patterns, o2o and Throwback. A template is also included to serve as scaffolding for someone wishing to add their own subroutine.</p>
+<p>Although the subroutines are somewhat interdependent, they may be added or removed individually as needed.</p>
+<p>Additionally, each subroutine can be activated or deactivated as needed, fron the Tools menu pulldown.</p>
+<p>Each subroutines' features are only available when the subroutine is active and the Pattern Scripts window is open. For example, extended railroad details will only appear in reports when the Pattern Scripts window is open and the jPlus subroutine is displayed. This is an easy way to turn features on or off.</p>
 <h3>Organization</h3>
 <p>The following chart shows the code structure of this plugin.</P>
 <img src="./img/Code_Structure.png" alt="<Code Structure Image>">
@@ -57,10 +62,10 @@
 <p>OperationsPatternScripts.MainScript.View.makePatternScriptsWindow()</p>
 <img src="./img/Plugin_Layout.png" alt="<Plugin Layout Image>">
 <h3>PatternConfig.json</h3>
-<p>Each JMRI profile gets its own configuration file, which is named PatternConfig.json. It is found in the operations folder, and is used to provide custom settings for each profile and record user inputs.</p>
+<p>Each JMRI profile gets its own configuration file, which is named configFile.json. It is found in the operations folder, and is used to provide custom settings for each profile and record user inputs.</p>
 <p><font color="DarkRed">The description of each element is in dark red.</font></p>
 <p><font color="green">User editable keys are described in green.</font></p>
-<p>Select Tools/Edit Config File. If a mistake is made editing the PatternConfig.json file, the plugin will delete the file and provide a new one to start over with. Worst case the plugin may crash. If that should happed select Tools/Restart From Default.</p>
+<p>Select Tools/Edit Config File. If a mistake is made editing the configFile, the plugin will delete the file and provide a new one to start over with. Worst case the plugin may crash. If that should happed select Tools/Restart From Default.</p>
 <h4>Pattern Scripts plugin settings in PatternConfig.json</h4>
 <pre>
   {
@@ -201,6 +206,7 @@
 <h2>o2o Subroutine</h2>
 <h3>Description</h3>
 <p>The ops to ops (o2o) subroutine is a group of utilities that are designed to be the glue that allows JMRI Operations Pro to be the operations engine for TrainPlayer©. The idea is to expand the capability of TrainPlayer©'s Advanced Ops feature to include the flexibility of Operations Pro, while also eleminating the tedium of keeping two databases synchronised.</p>
+<p>o2o will automatically export a built train or switchlist to TrainPlayer when the Pattern scripts window is open and the o2o subroutine is displayed. To disable o2o export, disable o2o from the Tools pulldown or close the Pattern Scripts window.</p>
 <h3>Who Does What</h3>
 <p>The table below shows which program manages which elements.</p>
 <img src="../Subroutines/o2o/img/Who_Does_What.png" alt="<Who Does What Image>">
@@ -253,20 +259,7 @@
     "CFL" : [  <font color="DarkRed">Core File List</font>
       "OperationsCarRoster",
       "OperationsEngineRoster",
-      "OperationsLocationRoster"
-    ],
-    "SR" : {  <font color="DarkRed">Scale Rubric - JMRI Model Railroad scale.</font>
-      "Z" : 1,
-      "N" : 2,
-      "TT" : 3,
-      "HOn3" : 4,
-      "OO" : 5,
-      "HO" : 6,
-      "Sn3" : 7,
-      "S" : 8,
-      "On3" : 9,
-      "O" : 10,
-      "G" : 11
+      "OperationsLocationRoster,
     },
     "RF" : { <font color="DarkRed">Report Files - Names of the TrainPlayer layout export files.</font>
       "TRL" : "TrainPlayer Report - Locations.txt",
@@ -299,17 +292,17 @@
 <h4>Patterns Subroutine settings in configFile.json</h4>
 <pre>
   "Patterns" : { <font color="DarkRed">Patterns Subroutine settings</font>
-    "AD" : [ <font color="DarkRed">All divisions (written by this plugin)</font>
+    "AD" : [ <font color="DarkRed">All divisions</font>
     ],
-    "AL" : [ <font color="DarkRed">All locations (written by this plugin)</font>
+    "AL" : [ <font color="DarkRed">All locations</font>
     ],
-    "PL" : "", <font color="DarkRed">Pattern Location (written by this plugin)</font>
-    "PT" : { <font color="DarkRed">Pattern-Tracks (written by this plugin)</font>
+    "PL" : "", <font color="DarkRed">Pattern Location</font>
+    "PT" : { <font color="DarkRed">Pattern-Tracks</font>
     },
     "PA" : false, <font color="DarkRed">Yard Tracks Only flag (set by user, written by this plugin)</font>
     "PI" : false, <font color="DarkRed">Ignore Track Length flag (set by user, written by this plugin)</font>
     "AS" : true, <font color="DarkRed">Apply Schedule flag (set by user, written by this plugin)</font>
-    "TI" : false, <font color="DarkRed">TrainPlayer Include flag (set by user, written by this plugin)</font>
+    "TI" : false, <font color="DarkRed">TrainPlayer Include flag (reserved)</font>
     "PW" : 260, <font color="DarkRed">Pattern Width</font>
     "PH" : 16, <font color="DarkRed">Pattern Height</font>
     "RM": 8, <font color="DarkRed">Row Multiplier</font>
@@ -361,10 +354,14 @@
 <!-- Throwback help section html -->
 <h2>Throwback plugin</h2>
 <h3>Description</h3>
-<p>Description of the Throwback plugin</p>
+<p>The Throwback Subroutine is modeled on the idea of version control software. Commits are named and saved. In so doing snapshots are taken of the rolling stock data. Trains and routes may then be modified and test cases run, and equipment movement tested.</p>
+<p>Further branches in testing can be made with additional commits.</p>
+<p>Along the way the rolling can be thrown back to a commit, and the other segment of the branch explored.</p>
+<p>When the experiments are done, the rolling stock is then thrown back to the first commit. The rolling stock is synchronized with the actulal layout, but the routes and trains remain modified.</p>
+<p>The video explains this better</p>
 <h3>Plugin Layout</h3>
 <p>Subroutines.Throwback.View.ManageGui()</p>
-<img src="../Subroutines/Throwback/img/Throwback_Layout.png" alt="<Plugin Layout Image>">
+<img src="../Subroutines/Throwback/img/Throwbach_Subroutine.png" alt="<Plugin Layout Image>">
 <h4>Throwback plugin settings in configFile.json</h4>
 <pre>
   "Throwback": {  <font color="DarkRed">Throwback Subroutine settings</font>

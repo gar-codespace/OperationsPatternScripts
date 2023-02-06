@@ -17,6 +17,76 @@ PSE.BUNDLE_DIR = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle')
 _psLog = PSE.LOGGING.getLogger('OPS.OB.Bundle')
 
 
+class CreateStubFile:
+    """Copy of the JMRI Java version of CreateStubFile.
+        The stub file will substitute english if the help file for the current locale doesn't exist."""
+
+    def __init__(self):
+
+        self.stubLocation = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getPreferencesPath(), 'jmrihelp', PSE.psLocale()[:2])
+
+        self.helpFilePath = ''
+        self.newStubFile = ''
+
+        return
+
+    def validateStubLocation(self):
+
+        if PSE.JAVA_IO.File(self.stubLocation).mkdirs():
+            _psLog.info('Stub location created at: ' + self.stubLocation)
+        else:
+            _psLog.info('Stub location already exists')
+
+        return
+
+    def getHelpFileURI(self):
+
+        helpFileName = 'help.' + PSE.psLocale()[:2] + '.html'
+        helpFilePath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsSupport', helpFileName)
+
+        if not PSE.JAVA_IO.File(helpFilePath).isFile():
+            helpFileName = 'help.en.html'
+            helpFilePath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsSupport', helpFileName)
+
+        self.helpFilePath = PSE.JAVA_IO.File(helpFilePath).toURI().toString()
+
+        return
+
+    def makeNewStubFile(self):
+
+        stubTemplateFile = 'stub_template.html'
+        stubTemplatePath = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getProgramPath(), 'help', PSE.psLocale()[:2], 'local', stubTemplateFile)
+        if not PSE.JAVA_IO.File(stubTemplatePath).isFile():
+            stubTemplatePath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsEntities', stubTemplateFile)
+
+        stubTemplate = PSE.genericReadReport(stubTemplatePath)
+        stubTemplate = stubTemplate.replace("../index.html#", "")
+        stubTemplate = stubTemplate.replace("<!--HELP_KEY-->", self.helpFilePath)
+        self.newStubFile = stubTemplate.replace("<!--URL_HELP_KEY-->", "")
+
+        return
+
+    def writeStubFile(self):
+
+        _psLog.debug('CreateStubFile.writeStubFile')
+
+        stubFilePath = PSE.OS_PATH.join(self.stubLocation, 'psStub.html')
+
+        PSE.genericWriteReport(stubFilePath, self.newStubFile)
+
+        return
+
+    def make(self):
+        """Mini controller guides the new stub file process."""
+
+        self.validateStubLocation()
+        self.getHelpFileURI()
+        self.makeNewStubFile()
+        self.writeStubFile()
+
+        return
+
+
 """Bundle and Help methods"""
 
 
@@ -29,7 +99,7 @@ def setupBundle():
     PSE.BUNDLE = getBundleForLocale()
 
 # Help bundle stuff
-    PSE.CreateStubFile().make()
+    CreateStubFile().make()
     makeDefaultHelpFile() # Default help file is in english
     validateHelpForLocale()
     updateHelpFileForLocale()
@@ -98,7 +168,7 @@ def getAllBundles():
     return pluginBundle
 
 
-"""Help file methods"""
+"""Help methods"""
 
 
 def makeDefaultHelpFile():
@@ -172,7 +242,7 @@ def updateHelpFileForLocale():
     return
 
 
-"""Bundle translation methods"""
+"""Bundle and Help translation methods"""
 
 
 def validateKeyFile():
