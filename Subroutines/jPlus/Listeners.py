@@ -16,7 +16,7 @@ def actionListener(EVENT):
 
     _psLog.debug(EVENT)
 
-    PSE.closeTroublesomeWindows()
+    PSE.closeSubordinateWindows()
 
     patternConfig = PSE.readConfigFile()
 

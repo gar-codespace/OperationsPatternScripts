@@ -50,6 +50,7 @@ def nextSnapShot():
     return configFile[SNAP_SHOT_INDEX]
 
 def takeSnapShot(displayWidgets):
+    """Make this into a loop"""
 
     configFile = PSE.readConfigFile()
     ts = PSE.timeStamp()
@@ -60,52 +61,123 @@ def takeSnapShot(displayWidgets):
 
     configFile['Throwback']['SS'].append([ts, note])
     PSE.writeConfigFile(configFile)
-
-    PSE.CMX.save()
-    PSE.EMX.save()
-
+    
+# Cars
     roster = PSE.CMX.getOperationsFileName()
     targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', roster)
-    copyFrom = PSE.JAVA_IO.File(targetFile).toPath()
+    if PSE.JAVA_IO.File(targetFile).isFile():
+        PSE.CMX.save()
+        copyFrom = PSE.JAVA_IO.File(targetFile).toPath()
 
-    roster = ts + '.C.xml.bak'
-    targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
-    copyTo = PSE.JAVA_IO.File(targetFile).toPath()
+        roster = ts + '.C.xml.bak'
+        targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
+        copyTo = PSE.JAVA_IO.File(targetFile).toPath()
 
-    PSE.JAVA_NIO.Files.copy(copyFrom, copyTo, PSE.JAVA_NIO.StandardCopyOption.REPLACE_EXISTING)
-    PSE.JAVA_IO.File(targetFile).setReadOnly()
-
+        PSE.JAVA_NIO.Files.copy(copyFrom, copyTo, PSE.JAVA_NIO.StandardCopyOption.REPLACE_EXISTING)
+        PSE.JAVA_IO.File(targetFile).setReadOnly()
+# Engines
     roster = PSE.EMX.getOperationsFileName()
     targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', roster)
-    copyFrom = PSE.JAVA_IO.File(targetFile).toPath()
+    if PSE.JAVA_IO.File(targetFile).isFile():
+        PSE.EMX.save()
+        copyFrom = PSE.JAVA_IO.File(targetFile).toPath()
 
-    roster = ts + '.E.xml.bak'
-    targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
-    copyTo = PSE.JAVA_IO.File(targetFile).toPath()
+        roster = ts + '.E.xml.bak'
+        targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
+        copyTo = PSE.JAVA_IO.File(targetFile).toPath()
 
-    PSE.JAVA_NIO.Files.copy(copyFrom, copyTo, PSE.JAVA_NIO.StandardCopyOption.REPLACE_EXISTING)
-    PSE.JAVA_IO.File(targetFile).setReadOnly()
+        PSE.JAVA_NIO.Files.copy(copyFrom, copyTo, PSE.JAVA_NIO.StandardCopyOption.REPLACE_EXISTING)
+        PSE.JAVA_IO.File(targetFile).setReadOnly()
+# Locations
+    roster = PSE.LMX.getOperationsFileName()
+    targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', roster)
+    if PSE.JAVA_IO.File(targetFile).isFile():
+        PSE.LMX.save()
+        copyFrom = PSE.JAVA_IO.File(targetFile).toPath()
+
+        roster = ts + '.L.xml.bak'
+        targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
+        copyTo = PSE.JAVA_IO.File(targetFile).toPath()
+
+        PSE.JAVA_NIO.Files.copy(copyFrom, copyTo, PSE.JAVA_NIO.StandardCopyOption.REPLACE_EXISTING)
+        PSE.JAVA_IO.File(targetFile).setReadOnly()
+# Routes
+    roster = PSE.RMX.getOperationsFileName()
+    targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', roster)
+    if PSE.JAVA_IO.File(targetFile).isFile():
+        PSE.RMX.save()
+        copyFrom = PSE.JAVA_IO.File(targetFile).toPath()
+
+        roster = ts + '.R.xml.bak'
+        targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
+        copyTo = PSE.JAVA_IO.File(targetFile).toPath()
+
+        PSE.JAVA_NIO.Files.copy(copyFrom, copyTo, PSE.JAVA_NIO.StandardCopyOption.REPLACE_EXISTING)
+        PSE.JAVA_IO.File(targetFile).setReadOnly()
+# Trains
+    roster = PSE.TMX.getOperationsFileName()
+    targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', roster)
+    if PSE.JAVA_IO.File(targetFile).isFile():
+        PSE.TMX.save()
+        copyFrom = PSE.JAVA_IO.File(targetFile).toPath()
+
+        roster = ts + '.T.xml.bak'
+        targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
+        copyTo = PSE.JAVA_IO.File(targetFile).toPath()
+
+        PSE.JAVA_NIO.Files.copy(copyFrom, copyTo, PSE.JAVA_NIO.StandardCopyOption.REPLACE_EXISTING)
+        PSE.JAVA_IO.File(targetFile).setReadOnly()
 
     return
 
-def throwbackSnapShot():
+def throwbackSnapShot(displayWidgets):
     """Sets the cars and engines rosters to the chosen throwback restore point."""
 
-    PSE.closeTroublesomeWindows()
-    PSE.CM.dispose()
-    PSE.EM.dispose()
-
+    PSE.closeTopLevelWindows()
     throwbackRestorePoint = PSE.readConfigFile('Throwback')['SS'][SNAP_SHOT_INDEX]
 
-    roster = throwbackRestorePoint[0] + '.C.xml.bak'
-    targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
-    PSE.CMX.readFile(targetFile)
-    PSE.CMX.writeOperationsFile() # Also does a backup
+    for widget in displayWidgets:
+        if widget.getName() == 'cCheckBox' and widget.selected:
+            # PSE.CM.dispose()
+            roster = throwbackRestorePoint[0] + '.C.xml.bak'
+            targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
+            PSE.CMX.readFile(targetFile)
+            PSE.CMX.writeOperationsFile() # Also does a backup
 
-    roster = throwbackRestorePoint[0] + '.E.xml.bak'
-    targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
-    PSE.EMX.readFile(targetFile)
-    PSE.EMX.writeOperationsFile()
+        if widget.getName() == 'eCheckBox' and widget.selected:
+            # PSE.EM.dispose()
+            roster = throwbackRestorePoint[0] + '.E.xml.bak'
+            targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
+            PSE.EMX.readFile(targetFile)
+            PSE.EMX.writeOperationsFile()
+
+        if widget.getName() == 'lCheckBox' and widget.selected:
+            # PSE.LM.dispose()
+            roster = throwbackRestorePoint[0] + '.L.xml.bak'
+            targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
+            PSE.LMX.readFile(targetFile)
+            PSE.LMX.writeOperationsFile()
+
+        if widget.getName() == 'rCheckBox' and widget.selected:
+            # PSE.RM.dispose()
+            roster = throwbackRestorePoint[0] + '.R.xml.bak'
+            targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
+            PSE.RMX.readFile(targetFile)
+            PSE.RMX.writeOperationsFile()
+
+        if widget.getName() == 'tCheckBox' and widget.selected:
+            # PSE.TM.dispose()
+            roster = throwbackRestorePoint[0] + '.T.xml.bak'
+            targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
+            PSE.TMX.readFile(targetFile)
+            PSE.TMX.writeOperationsFile()
+    
+    # The order matters
+    PSE.TMX.initialize()
+    PSE.RMX.initialize()
+    PSE.LMX.initialize()
+    PSE.EMX.initialize()
+    PSE.CMX.initialize()
     
     return
 

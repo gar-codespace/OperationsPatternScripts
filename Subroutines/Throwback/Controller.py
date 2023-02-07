@@ -140,7 +140,7 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        Model.throwbackSnapShot()
+        Model.throwbackSnapShot(self.displayWidgets)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

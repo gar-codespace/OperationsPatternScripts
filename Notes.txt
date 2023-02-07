@@ -5,6 +5,7 @@ Todo:
   RStockulator is a bit busy.
   Get csv manifest/switch list up to speed with divisions.
   All the subroutine actionListener() are very similar. Can this duplication be eliminated?
+  make Throwback.Model.takeSnapShot() into a loop.
 
 Comments:
   Schedule does not prevent setting a car to a track.

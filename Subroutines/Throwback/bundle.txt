@@ -4,6 +4,11 @@ Action
 Snap Shot
 Previous
 Next
-Reset
-Commit
+Reset All Commits
+Add New Commit
 Total Commits
+Cars
+Engines
+Locations
+Routes
+Trains

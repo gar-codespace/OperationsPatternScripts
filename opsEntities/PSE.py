@@ -324,19 +324,35 @@ def closeOutputFrame():
 
     return
 
-def closeTroublesomeWindows():
-    """Close all the 'Troublesome' windows when the o2o New JMRI Railroad button is pressed.
+def closeSubordinateWindows():
+    """Close all but the top level windows.
         Called by:
-        o2oSubroutine.Model.newJmriRailroad
-        o2oSubroutine.Model.updateJmriRailroad
         """
 
     console = APPS.Bundle().handleGetMessage('TitleConsole')
     patternScripts = BUNDLE['Pattern Scripts']
     trainsTable = JMRI.jmrit.operations.trains.Bundle().handleGetMessage('TitleTrainsTable')
     routesTable = JMRI.jmrit.operations.routes.Bundle().handleGetMessage('TitleRoutesTable')
+    locationsTable = JMRI.jmrit.operations.locations.Bundle().handleGetMessage('TitleLocationsTable')
 
-    keepTheseWindows = [console, 'PanelPro', patternScripts, routesTable, trainsTable]
+    keepTheseWindows = [console, 'PanelPro', patternScripts, routesTable, trainsTable, locationsTable]
+    
+    for frame in JMRI.util.JmriJFrame.getFrameList():
+        if frame.getTitle() in keepTheseWindows:
+            continue
+        else:
+            frame.setVisible(False)
+            frame.dispose()
+
+    return
+
+def closeTopLevelWindows():
+    """        """
+
+    console = APPS.Bundle().handleGetMessage('TitleConsole')
+    patternScripts = BUNDLE['Pattern Scripts']
+
+    keepTheseWindows = [console, 'PanelPro', patternScripts]
     
     for frame in JMRI.util.JmriJFrame.getFrameList():
         if frame.getTitle() in keepTheseWindows:
