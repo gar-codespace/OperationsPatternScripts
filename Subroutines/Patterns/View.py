@@ -25,7 +25,7 @@ class ManageGui:
         subroutineFrame.setLayout(PSE.JAVX_SWING.BoxLayout(
                 subroutineFrame, PSE.JAVX_SWING.BoxLayout.Y_AXIS))
         subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder( \
-                PSE.BUNDLE['Pattern Report Subroutine'] \
+                PSE.BUNDLE['Patterns Subroutine'] \
                 )
 
         return subroutineFrame

@@ -325,15 +325,3 @@ def getDetailsForCar(carObject, kernelTally):
         carDetailDict['On_Train'] = True
 
     return carDetailDict
-
-# def makeInitialTrackDict(location):
-#     """Sets all the track flags to false for an initial list of tracks.
-#         Called by:
-#         updateLocations
-#         """
-
-#     trackDict = {}
-#     for track in PSE.LM.getLocationByName(location).getTracksByNameList(None):
-#         trackDict[unicode(track, PSE.ENCODING)] = False
-
-#     return trackDict

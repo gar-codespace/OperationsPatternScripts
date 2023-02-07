@@ -74,6 +74,10 @@ class TrackPatternPanel:
         rowLabel = PSE.JAVX_SWING.JLabel()
         tracksPanel.add(rowLabel)
         trackDict = self.configFile['PT'] # pattern tracks
+        if not trackDict:
+            print(self.configFile['PL'])
+            trackDict = self.makeInitialTrackDict(self.configFile['PL'])
+
         if trackDict:
             rowLabel.text = PSE.BUNDLE['Track List:'] + ' '
             for track, flag in sorted(trackDict.items()):
@@ -88,6 +92,21 @@ class TrackPatternPanel:
 
         return tracksPanel
 
+    def makeInitialTrackDict(self, locationName):
+        """Sets all the track flags to false for an initial list of tracks.
+            Called by:
+            makeTracksRow
+            """
+
+        trackDict = {}
+        try: # When used for the first time
+            for track in PSE.LM.getLocationByName(locationName).getTracksByNameList(None):
+                trackDict[unicode(track, PSE.ENCODING)] = False
+        except:
+            return trackDict
+
+        return trackDict
+        
     def makeButtonsRow(self):
         """Make the row of action buttons: 'Track Pattern', 'Set Rolling Stock.' """
 

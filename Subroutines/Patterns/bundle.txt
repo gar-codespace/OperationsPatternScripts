@@ -38,7 +38,7 @@ Track Length:
 Track List:
 ops-pattern-report
 Pattern Report
-Pattern Report Subroutine
+Patterns Subroutine
 Track Totals for Cars:
 Track:
 Tracks at
