@@ -10,17 +10,17 @@ SCRIPT_REV = 20230101
 _psLog = PSE.LOGGING.getLogger('OPS.PT.Model')
 
 
-# def createFolder():
-#     """Creates a 'patterns' folder in operations."""
+def resetConfigFileItems():
+    """Called from PSE.remoteCalls('refreshCalls')"""
 
-#     targetDirectory = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'patterns')
+    configFile = PSE.readConfigFile()
+    configFile['Patterns'].update({'PD':''})
+    configFile['Patterns'].update({'PL':''})
+    configFile['Patterns'].update({'PT':{}})
 
-#     if not PSE.JAVA_IO.File(targetDirectory).isDirectory():
-#         PSE.JAVA_IO.File(targetDirectory).mkdirs()
+    PSE.writeConfigFile(configFile)
 
-#         _psLog.info('Directory created: ' + targetDirectory)
-
-#     return
+    return
 
 def verifySelectedTracks():
     """Catches on the fly user edit of JMRI track names
@@ -309,17 +309,3 @@ def getTrackNamesByLocation(trackType):
     """Pass through method."""
 
     return ModelEntities.getTrackNamesByLocation(trackType)
-
-
-# def resetPatternLocation():
-#     """Called by:
-#         Controller.updatePatternTracksSubroutine
-#         """
-
-#     selectedItem = PSE.getAllDivisionNames()
-#     try:
-#         jDivision(selectedItem[0])
-#     except:
-#         jDivision(selectedItem)
-
-#     return

@@ -69,15 +69,11 @@ class TrackPatternPanel:
         """Make the row of check boxes, one for each track"""
 
         tracksPanel = PSE.JAVX_SWING.JPanel()
-        tracksPanel.setAlignmentX(PSE.JAVX_SWING.JPanel.CENTER_ALIGNMENT)
-
+        # tracksPanel.setAlignmentX(PSE.JAVX_SWING.JPanel.CENTER_ALIGNMENT)
         rowLabel = PSE.JAVX_SWING.JLabel()
         tracksPanel.add(rowLabel)
-        trackDict = self.configFile['PT'] # pattern tracks
-        if not trackDict:
-            print(self.configFile['PL'])
-            trackDict = self.makeInitialTrackDict(self.configFile['PL'])
 
+        trackDict = self.configFile['PT'] # pattern tracks
         if trackDict:
             rowLabel.text = PSE.BUNDLE['Track List:'] + ' '
             for track, flag in sorted(trackDict.items()):
@@ -90,6 +86,8 @@ class TrackPatternPanel:
             self.scButton.setEnabled(False)
             rowLabel.text = PSE.BUNDLE['There are no tracks for this selection']
 
+        if self.configFile['PL'] and not trackDict:
+            trackDict = self.makeInitialTrackDict(self.configFile['PL'])
         return tracksPanel
 
     def makeInitialTrackDict(self, locationName):

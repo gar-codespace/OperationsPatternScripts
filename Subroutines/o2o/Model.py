@@ -22,6 +22,7 @@ def newJmriRailroad():
         Called by:
         Controller.StartUp.newJmriRailroad
         """
+    PSE.remoteCalls('refreshCalls')
 
     PSE.TMX.makeBackupFile('operations/OperationsTrainRoster.xml')
     PSE.TMX.makeBackupFile('operations/OperationsRouteRoster.xml')
@@ -62,6 +63,8 @@ def updateJmriRailroad():
             Controller.StartUp.updateJmriRailroad
         """
 
+    PSE.remoteCalls('refreshCalls')
+    
     BuiltTrainExport.FindTrain().trainResetter()
 
     ModelEntities.newSchedules()
