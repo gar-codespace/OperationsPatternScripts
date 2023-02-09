@@ -31,10 +31,10 @@ class ManageGui:
 
         return subroutineFrame
 
-    def makeSubroutinePanel(self):
-        """Make the controls."""
+    def makeSubroutineGui(self):
+        """Make the Template GUI."""
 
-        _psLog.debug('TemplateSubroutine.View.makeSubroutinePanel')
+        _psLog.debug('TemplateSubroutine.View.makeSubroutineGui')
 
         templateSubroutinePanel = ViewEntities.templateSubroutinePanel()
         subroutinesPanel = templateSubroutinePanel.templatePanelMaker()

@@ -30,10 +30,10 @@ class ManageGui:
 
         return subroutineFrame
 
-    def makeSubroutinePanel(self):
-        """Make the throwback controls"""
+    def makeSubroutineGui(self):
+        """Make the throwback GUI."""
 
-        _psLog.debug('ThrowbackSubroutine.View.makeSubroutinePanel')
+        _psLog.debug('ThrowbackSubroutine.View.makeSubroutineGui')
 
         tbSubroutinePanel = ViewEntities.tbSubroutinePanel()
         subroutinesPanel = tbSubroutinePanel.tbPanelMaker()

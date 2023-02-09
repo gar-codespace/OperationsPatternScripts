@@ -3,8 +3,8 @@
 
 """
 The Patterns subroutins is inventory control for a single JMRI location.
-Yard and track pattern reports can be run on tracks at one location.
-Cars can be moved from track to track at a location.
+Yard and track pattern reports can be run on tracks at the selected location.
+Cars can be moved from track to track at the selected location.
 This subroutine can be used in conjunction with o2o to create TrainPlayer switch lists.
 """
 
@@ -20,7 +20,7 @@ _psLog = PSE.LOGGING.getLogger('OPS.PT.Controller')
 
 
 def getSubroutineDropDownItem():
-    """Pattern Scripts/Tools/Subroutines.<subroutine>"""
+    """Pattern Scripts/Tools/'Enable or disable' Subroutines.<subroutine>"""
 
     patternConfig = PSE.readConfigFile()
 
@@ -42,7 +42,7 @@ def getSubroutineDropDownItem():
 
 
 class StartUp:
-    """Start the pattern tracks subroutine"""
+    """Start the Patterns subroutine"""
 
     def __init__(self, subroutineFrame=None):
 
@@ -50,28 +50,26 @@ class StartUp:
 
         return
 
-    def makeSubroutineFrame(self):
-        """Makes the title border frame"""
+    def getSubroutineFrame(self):
+        """Gets the title border frame"""
 
         self.subroutineFrame = View.ManageGui().makeSubroutineFrame()
-        subroutinePanel = self.makeSubroutinePanel()
-        self.subroutineFrame.add(subroutinePanel)
+        subroutineGui = self.getSubroutineGui()
+        self.subroutineFrame.add(subroutineGui)
 
-        _psLog.info('pattern tracks makeFrame completed')
+        _psLog.info('Patterns makeFrame completed')
 
         return self.subroutineFrame
 
-    def makeSubroutinePanel(self):
-        """Makes the control panel that sits inside the frame
-            Change this to call widgets by name
-            """
+    def getSubroutineGui(self):
+        """Gets the GUI for this subroutine."""
 
         Model.updateLocations()
 
-        self.subroutinePanel, self.widgets = View.ManageGui().makeSubroutinePanel()
+        subroutineGui, self.widgets = View.ManageGui().makeSubroutineGui()
         self.activateWidgets()
 
-        return self.subroutinePanel
+        return subroutineGui
 
     def startUpTasks(self):
         """Run these tasks when this subroutine is started."""
@@ -106,7 +104,7 @@ class StartUp:
         return
 
     def patternReportButton(self, EVENT):
-        """Makes a pattern tracks report based on the config file (PR)"""
+        """Makes a Patterns report based on the config file (PR)"""
 
         _psLog.debug(EVENT)
 

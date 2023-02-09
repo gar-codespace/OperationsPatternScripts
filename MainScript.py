@@ -127,15 +127,11 @@ class View:
         toolsMenu.add(PSE.JMRI.jmrit.operations.setup.PrintOptionAction())
         toolsMenu.add(PSE.JMRI.jmrit.operations.setup.BuildReportOptionAction())
 
-
-
-
         for subroutine in PSE.getSubroutineDirs():
             xModule = 'Subroutines.' + subroutine
             package = __import__(xModule, fromlist=['Controller'], level=-1)
             menuItem = package.Controller.getSubroutineDropDownItem()
             toolsMenu.add(menuItem)
-
 
         itemText, itemName = self.setPtDropDownText()
         ptMenuItem = self.makeMenuItem(itemText, itemName)
@@ -288,9 +284,8 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         psButton = PSE.JAVX_SWING.JButton()
         psButton.actionPerformed = self.patternScriptsButtonAction
         psButton.setName('psButton')
-        PSE.APPS.Apps.buttonSpace().add(psButton)
-
         psButton.setText(PSE.BUNDLE[u'Pattern Scripts'])
+        PSE.APPS.Apps.buttonSpace().add(psButton)
         PSE.APPS.Apps.buttonSpace().revalidate()
 
         return

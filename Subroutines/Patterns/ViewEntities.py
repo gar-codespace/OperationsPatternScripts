@@ -77,7 +77,7 @@ class TrackPatternPanel:
         rowLabel = PSE.JAVX_SWING.JLabel()
         tracksPanel.add(rowLabel)
 
-        # trackDict = self.configFile['PT'] # pattern tracks
+        # trackDict = self.configFile['PT'] # Patterns
         trackDict = self.getTrackDict()
 
         if trackDict:
@@ -144,9 +144,9 @@ class TrackPatternPanel:
         return panelWidgets
 
     def makeTrackPatternPanel(self):
-        """Make the pattern tracks panel object"""
+        """Make the Patterns panel object"""
 
-        tpPanel = PSE.JAVX_SWING.JPanel() # the pattern tracks panel
+        tpPanel = PSE.JAVX_SWING.JPanel() # the Patterns panel
         tpPanel.setLayout(PSE.JAVX_SWING.BoxLayout(tpPanel, PSE.JAVX_SWING.BoxLayout.Y_AXIS))
 
         tpPanel.add(self.makeLocationRow())

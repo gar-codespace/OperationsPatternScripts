@@ -28,10 +28,10 @@ class ManageGui:
 
         return subroutineFrame
 
-    def makeSubroutinePanel(self):
-        """Make the jPlus controls"""
+    def makeSubroutineGui(self):
+        """Make the jPlus GUI."""
 
-        _psLog.debug('jPlusSubroutine.View.makeSubroutinePanel')
+        _psLog.debug('jPlusSubroutine.View.makeSubroutineGui')
 
         jPlusSubroutinePanel = ViewEntities.jPlusSubroutinePanel()
 

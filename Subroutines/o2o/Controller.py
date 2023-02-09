@@ -20,7 +20,7 @@ _psLog = PSE.LOGGING.getLogger('OPS.o2o.Controller')
 
 
 def getSubroutineDropDownItem():
-    """Pattern Scripts/Tools/Subroutines.<subroutine>"""
+    """Pattern Scripts/Tools/'Enable or disable' Subroutines.<subroutine>"""
 
     configFile = PSE.readConfigFile()
 
@@ -50,36 +50,36 @@ class StartUp:
 
         return
 
-    def makeSubroutineFrame(self):
-        """Makes the title border frame"""
+    def getSubroutineFrame(self):
+        """Gets the title border frame"""
 
         self.subroutineFrame = View.ManageGui().makeSubroutineFrame()
-        subroutinePanel = self.makeSubroutinePanel()
-        self.subroutineFrame.add(subroutinePanel)
+        subroutineGui = self.getSubroutineGui()
+        self.subroutineFrame.add(subroutineGui)
 
         _psLog.info('o2o makeFrame completed')
 
         return self.subroutineFrame
 
-    def makeSubroutinePanel(self):
-        """Makes the control panel that sits inside the frame"""
+    def getSubroutineGui(self):
+        """Gets the GUI for this subroutine."""
 
-        self.subroutinePanel, self.widgets = View.ManageGui().makeSubroutinePanel()
-        self.activateWidgets()
+        subroutineGui, widgets = View.ManageGui().makeSubroutineGui()
+        self.activateWidgets(widgets)
 
-        return self.subroutinePanel
+        return subroutineGui
 
     def startUpTasks(self):
         """Run these tasks when this subroutine is started."""
 
         return
 
-    def activateWidgets(self):
+    def activateWidgets(self, widgets):
         """The *.getName value is the name of the action for the widget.
             IE: newJmriRailroad, updateJmriRailroad
             """
 
-        for widget in self.widgets:
+        for widget in widgets:
             widget.actionPerformed = getattr(self, widget.getName())
 
         return

@@ -26,10 +26,10 @@ class ManageGui:
 
         return subroutineFrame
 
-    def makeSubroutinePanel(self):
-        """Make the o2o controls"""
+    def makeSubroutineGui(self):
+        """Make the o2o GUI."""
 
-        _psLog.debug('o2oSubroutine.View.makeSubroutinePanel')
+        _psLog.debug('o2oSubroutine.View.makeSubroutineGui')
 
         o2oSubroutinePanel = ViewEntities.O2oSubroutinePanel()
         subroutinesPanel = o2oSubroutinePanel.o2oPanelMaker()

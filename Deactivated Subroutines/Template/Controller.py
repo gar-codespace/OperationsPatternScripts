@@ -3,11 +3,8 @@
 
 """
 Template to serve as scaffolding for additional subroutines.
-Replace XX with a designator for this subroutines name.
+Replace XX with a designator for this subroutines' name.
 Describe what this subroutine does.
-
-https://stackoverflow.com/questions/301134/how-can-i-import-a-module-dynamically-given-its-name-as-string
-
 """
 
 from opsEntities import PSE
@@ -22,7 +19,7 @@ _psLog = PSE.LOGGING.getLogger('OPS.XX.Controller')
 
 
 def getSubroutineDropDownItem():
-    """Pattern Scripts/Tools/Subroutines.<subroutine>"""
+    """Pattern Scripts/Tools/'Enable or disable' Subroutines.<subroutine>"""
 
     configFile = PSE.readConfigFile()
 
@@ -52,24 +49,24 @@ class StartUp:
 
         return
 
-    def makeSubroutineFrame(self):
-        """Makes the title border frame"""
+    def getSubroutineFrame(self):
+        """Gets the title border frame"""
 
         self.subroutineFrame = View.ManageGui().makeSubroutineFrame()
-        subroutinePanel = self.makeSubroutinePanel()
-        self.subroutineFrame.add(subroutinePanel)
+        subroutineGui = self.getSubroutineGui()
+        self.subroutineFrame.add(subroutineGui)
 
         _psLog.info(__package__ + ' makeFrame completed')
 
         return self.subroutineFrame
 
-    def makeSubroutinePanel(self):
-        """Makes the control panel that sits inside the frame"""
+    def getSubroutineGui(self):
+        """Gets the GUI for this subroutine."""
 
-        self.subroutinePanel, self.widgets = View.ManageGui().makeSubroutinePanel()
+        subroutineGui, self.widgets = View.ManageGui().makeSubroutineGui()
         self.activateWidgets()
 
-        return self.subroutinePanel
+        return subroutineGui
 
     def startUpTasks(self):
         """Run these tasks when this subroutine is started."""

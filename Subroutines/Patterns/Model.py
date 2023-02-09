@@ -100,7 +100,7 @@ def patternReport():
     return
 
 def updateConfigFile(controls):
-    """Updates the pattern tracks part of the config file
+    """Updates the Patterns part of the config file
         Called by:
         Controller.StartUp.trackPatternButton
         Controller.StartUp.setCarsButton

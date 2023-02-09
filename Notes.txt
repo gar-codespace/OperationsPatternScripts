@@ -7,6 +7,7 @@ Todo:
   All the subroutine actionListener() are very similar. Can this duplication be eliminated?
   make Throwback.Model.takeSnapShot() into a loop.
   Put a listener on jPlus.YearModeled similar to Patterns.Listeners.PTCombobox
+  Need to grey out apply schedule to set cars popup for non spur tracks.
 
 Comments:
   Schedule does not prevent setting a car to a track.

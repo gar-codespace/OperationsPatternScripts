@@ -66,7 +66,7 @@ class StartUp:
     def makeSubroutinePanel(self):
         """Makes the control panel that sits inside the frame"""
 
-        self.subroutinePanel, self.widgets = View.ManageGui().makeSubroutinePanel()
+        self.subroutinePanel, self.widgets = View.ManageGui().makeSubroutineGui()
         self.activateWidgets()
 
         return self.subroutinePanel

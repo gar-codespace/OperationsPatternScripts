@@ -30,10 +30,10 @@ class ManageGui:
 
         return subroutineFrame
 
-    def makeSubroutinePanel(self):
-        """Make the Track Pattern controls"""
+    def makeSubroutineGui(self):
+        """Make the Patterns GUI."""
 
-        _psLog.debug('PatternTracksSubroutine.View.makeSubroutinePanel')
+        _psLog.debug('PatternTracksSubroutine.View.makeSubroutineGui')
 
         trackPatternPanel = ViewEntities.TrackPatternPanel()
         subroutinesPanel = trackPatternPanel.makeTrackPatternPanel()

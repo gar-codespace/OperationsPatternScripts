@@ -77,7 +77,7 @@ def findLongestTrackString():
         """
 
     longestTrackString = 6 # 6 is the length of [Hold]
-    for track in PSE.readConfigFile('Patterns')['PT']: # Pattern Tracks
+    for track in PSE.readConfigFile('Patterns')['PT']: # Patterns
         if len(track) > longestTrackString:
             longestTrackString = len(track)
 

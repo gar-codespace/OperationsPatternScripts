@@ -2,7 +2,7 @@
 # © 2021, 2022 Greg Ritacco
 
 """
-A simple subroutine to add extra info about a railroad to JMRI.
+A simple subroutine to add extended info about a railroad to JMRI.
 The info can be input directly or imported from TrainPlayer.
 """
 
@@ -19,7 +19,7 @@ _psLog = PSE.LOGGING.getLogger('OPS.JP.Controller')
 
     
 def getSubroutineDropDownItem():
-    """Pattern Scripts/Tools/Subroutines.<subroutine>"""
+    """Pattern Scripts/Tools/'Enable or disable' Subroutines.<subroutine>"""
 
     configFile = PSE.readConfigFile()
 
@@ -41,7 +41,7 @@ def getSubroutineDropDownItem():
 
 
 class StartUp:
-    """Start the o2o subroutine"""
+    """Start the jPlus subroutine"""
 
     def __init__(self, subroutineFrame=None):
 
@@ -49,29 +49,26 @@ class StartUp:
 
         return
 
-    def makeSubroutineFrame(self):
-        """Makes the title border frame"""
+    def getSubroutineFrame(self):
+        """Gets the title border frame"""
 
         self.subroutineFrame = View.ManageGui().makeSubroutineFrame()
-        subroutinePanel = self.makeSubroutinePanel()
-        self.subroutineFrame.add(subroutinePanel)
+        subroutineGui = self.getSubroutineGui()
+        self.subroutineFrame.add(subroutineGui)
 
         _psLog.info('jPlusSubroutine makeFrame completed')
 
         return self.subroutineFrame
 
-    def makeSubroutinePanel(self):
-        """Makes the control panel that sits inside the frame"""
+    def getSubroutineGui(self):
+        """Gets the GUI for this subroutine."""
 
         Model.jPanelSetup()
-        self.subroutinePanel, self.widgets = View.ManageGui().makeSubroutinePanel()
+        subroutineGui, self.widgets = View.ManageGui().makeSubroutineGui()
 
-        try:
-            self.activateWidgets()
-        except:
-            print('j Plus Update button not added')
+        self.activateWidgets()
 
-        return self.subroutinePanel
+        return subroutineGui
 
     def startUpTasks(self):
         """Run these tasks when this subroutine is started."""
@@ -81,10 +78,7 @@ class StartUp:
         configFile = PSE.readConfigFile()
         if configFile['Main Script']['LD']['LN'] == '':
             configFile['Main Script']['LD'].update({'LN':OSU.Setup.getRailroadName()})
-
-
-        # self.update('Restart: OperationsPatternScripts.jPlusSubroutine.Controller.StartUp')
-        PSE.writeConfigFile(configFile)
+            PSE.writeConfigFile(configFile)
 
         return
 

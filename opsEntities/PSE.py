@@ -169,7 +169,7 @@ def restartSubroutineByName(subRoutineName):
 
         package = __import__(subRoutineName, globals(), locals(), ['Controller'], 0)
         restart = package.Controller.StartUp(subroutine)
-        subroutinePanel = restart.makeSubroutinePanel()
+        subroutinePanel = restart.getSubroutineGui()
         restart.startUpTasks()
 
         subroutine.removeAll()
@@ -210,7 +210,7 @@ def addActiveSubroutines(targetPanel):
         if patternConfig['Main Script']['CP'][subroutinename]:
             package = __import__(subroutinename, fromlist=['Controller'], level=-1)
             startUp = package.Controller.StartUp()
-            subroutineFrame = startUp.makeSubroutineFrame()
+            subroutineFrame = startUp.getSubroutineFrame()
             startUp.startUpTasks()
             targetPanel.add(JAVX_SWING.Box.createRigidArea(JAVA_AWT.Dimension(0,10)))
             targetPanel.add(subroutineFrame)

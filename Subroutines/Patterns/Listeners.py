@@ -1,5 +1,5 @@
 """
-Listeners for the Pattern Tracks subroutine.
+Listeners for the Patterns subroutine.
 JAVAX action performed methods are in Controller.
 """
 
@@ -62,7 +62,7 @@ def actionListener(EVENT):
 
 
 class PTComboBox(PSE.JAVA_AWT.event.ActionListener):
-    """Event triggered from any pattern tracks combo box use.
+    """Event triggered from any Patterns combo box use.
         Be sure to set the name of the combobox that uses this class.
         """
 
