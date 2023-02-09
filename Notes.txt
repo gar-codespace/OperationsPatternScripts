@@ -6,6 +6,7 @@ Todo:
   Get csv manifest/switch list up to speed with divisions.
   All the subroutine actionListener() are very similar. Can this duplication be eliminated?
   make Throwback.Model.takeSnapShot() into a loop.
+  Put a listener on jPlus.YearModeled similar to Patterns.Listeners.PTCombobox
 
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -22,6 +23,7 @@ Comments:
   Translate the plugin does not delete the config file.
   TrainPlayer names the location for unlabeled tracks as 'Unreported'. o2o then imports this location as
   'Unreported' so as with other locations, the name is not translated.
+  Since the Patterns track dict is created when called, it is not necessary to save it into configFile['Patterns']['PT']
 
 Tested Items:
   Plugin

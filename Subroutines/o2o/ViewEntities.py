@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""Creates the TrainPlayer panel."""
+"""Creates the o2o GUI."""
 
 from opsEntities import PSE
 

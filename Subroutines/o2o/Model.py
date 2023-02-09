@@ -22,7 +22,6 @@ def newJmriRailroad():
         Called by:
         Controller.StartUp.newJmriRailroad
         """
-    PSE.remoteCalls('refreshCalls')
 
     PSE.TMX.makeBackupFile('operations/OperationsTrainRoster.xml')
     PSE.TMX.makeBackupFile('operations/OperationsRouteRoster.xml')
@@ -47,7 +46,7 @@ def newJmriRailroad():
     RStockulator().makeNew()
 
     ModelEntities.addCarTypesToSpurs()
-
+    
     print('New JMRI railroad built from TrainPlayer data')
     _psLog.info('New JMRI railroad built from TrainPlayer data')
 

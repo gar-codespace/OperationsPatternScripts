@@ -17,6 +17,7 @@ def resetConfigFileItems():
     configFile['Patterns'].update({'PD':''})
     configFile['Patterns'].update({'PL':''})
     configFile['Patterns'].update({'PT':{}})
+    configFile['Patterns'].update({'PA':False})
 
     PSE.writeConfigFile(configFile)
 
@@ -217,7 +218,6 @@ def jDivision(selectedItem):
     configFile['Patterns'].update({'PT': newLocationTrackDict})
 
     configFile['Patterns'].update({'PA': False})
-    configFile['Patterns'].update({'PI': False})
 
     PSE.writeConfigFile(configFile)
 
@@ -239,7 +239,6 @@ def jLocations(selectedItem):
     configFile['Patterns'].update({'PT': newLocationTrackDict})
 
     configFile['Patterns'].update({'PA': False})
-    configFile['Patterns'].update({'PI': False})
 
     PSE.writeConfigFile(configFile)
 

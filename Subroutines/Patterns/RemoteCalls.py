@@ -39,7 +39,7 @@ def refreshCalls():
     """Methods called when the subroutine needs to be refreshed."""
 
     Model.resetConfigFileItems()
-
+    
     return
 
 def specificCalls():

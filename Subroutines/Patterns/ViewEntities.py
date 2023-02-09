@@ -6,8 +6,12 @@ from opsEntities import PSE
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230101
 
+
+"""Create the Pattern GUI."""
+
+
 class TrackPatternPanel:
-    """Makes the pattern tracks subroutine panel
+    """Makes the Patterns subroutine panel
         Called by:
         View.ManageGui.makeSubroutinePanel"""
 
@@ -73,7 +77,9 @@ class TrackPatternPanel:
         rowLabel = PSE.JAVX_SWING.JLabel()
         tracksPanel.add(rowLabel)
 
-        trackDict = self.configFile['PT'] # pattern tracks
+        # trackDict = self.configFile['PT'] # pattern tracks
+        trackDict = self.getTrackDict()
+
         if trackDict:
             rowLabel.text = PSE.BUNDLE['Track List:'] + ' '
             for track, flag in sorted(trackDict.items()):
@@ -86,22 +92,30 @@ class TrackPatternPanel:
             self.scButton.setEnabled(False)
             rowLabel.text = PSE.BUNDLE['There are no tracks for this selection']
 
-        if self.configFile['PL'] and not trackDict:
-            trackDict = self.makeInitialTrackDict(self.configFile['PL'])
         return tracksPanel
 
-    def makeInitialTrackDict(self, locationName):
-        """Sets all the track flags to false for an initial list of tracks.
-            Called by:
-            makeTracksRow
+    def getTrackDict(self):
+        """Since the track dict is created when called,
+            it is not necessary to save it into configFile['Patterns']['PT']
             """
 
         trackDict = {}
-        try: # When used for the first time
-            for track in PSE.LM.getLocationByName(locationName).getTracksByNameList(None):
+
+    # Try to find a pattern location
+        patternLocation = self.configFile['PL']
+        if not patternLocation:
+            try:
+                patternLocation = PSE.LM.getLocationsByNameList()[0]
+            except:
+                return trackDict
+    # If there is a pattern location, make the dictionary
+        yardTracksOnlyFlag = self.configFile['PA']
+        if yardTracksOnlyFlag:
+            for track in PSE.LM.getLocationByName(patternLocation).getTracksByNameList('Yard'):
                 trackDict[unicode(track, PSE.ENCODING)] = False
-        except:
-            return trackDict
+        else:
+            for track in PSE.LM.getLocationByName(patternLocation).getTracksByNameList(None):
+                trackDict[unicode(track, PSE.ENCODING)] = False
 
         return trackDict
         
