@@ -1,7 +1,9 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-""" """
+"""
+jPlus
+"""
 
 from opsEntities import PSE
 from Subroutines.jPlus import ViewEntities
@@ -33,12 +35,10 @@ class ManageGui:
 
         _psLog.debug('jPlusSubroutine.View.makeSubroutineGui')
 
-        jPlusSubroutinePanel = ViewEntities.jPlusSubroutinePanel()
+        subroutineGui = ViewEntities.subroutineGui()
+        gui = subroutineGui.guiMaker()
+        widgets = subroutineGui.guiWidgetGetter()
 
-        subroutinesPanel = jPlusSubroutinePanel.jPlusPanelEditable()
-
-        subroutinePanelWidgets = jPlusSubroutinePanel.jPlusWidgets()
-
-        return subroutinesPanel, subroutinePanelWidgets
+        return gui, widgets
 
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

@@ -1,6 +1,10 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
+"""
+o2o
+"""
+
 from opsEntities import PSE
 from Subroutines.o2o import ViewEntities
 
@@ -31,10 +35,10 @@ class ManageGui:
 
         _psLog.debug('o2oSubroutine.View.makeSubroutineGui')
 
-        o2oSubroutinePanel = ViewEntities.O2oSubroutinePanel()
-        subroutinesPanel = o2oSubroutinePanel.o2oPanelMaker()
-        subroutinePanelWidgets = o2oSubroutinePanel.o2oWidgetGetter()
+        subroutineGui = ViewEntities.subroutineGui()
+        gui = subroutineGui.guiMaker()
+        widgets = subroutineGui.guiWidgetGetter()
 
-        return subroutinesPanel, subroutinePanelWidgets
+        return gui, widgets
 
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

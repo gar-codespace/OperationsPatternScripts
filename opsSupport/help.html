@@ -8,17 +8,17 @@
 <p><A HREF="https://youtu.be/DK6O9AQmqXo">How to modify this plugin</A></p>
 <h3>Subroutines - Video Documentation</h3>
 <p>The j Plus Subroutine</p>
-<p>The Patterns Subroutine - An overview</p>
-<p><A HREF="https://youtu.be/IdXvxyo-E3Y">The Patterns Subroutine - Demonstration at a yard</A></p>
-<p><A HREF="https://youtu.be/2Tv6sUMDD_Y">The Patterns Subroutine - Demonstration at industry</A></p>
 <p><A HREF="https://youtu.be/rlUfoSesnQo">o2o, the ops to ops subroutine for use with TrainPlayer© model railroad software</A></p>
+<p>The Patterns Subroutine - An overview</p>
+<p><A HREF="https://youtu.be/2Tv6sUMDD_Y">The Patterns Subroutine - Demonstration at industry</A></p>
+<p><A HREF="https://youtu.be/IdXvxyo-E3Y">The Patterns Subroutine - Demonstration at a yard</A></p>
 <p>The Throwback Subroutine - Run 'what if?' experiments on your layout.</p>
 <h2>Pattern Scripts plugin</h2>
 <h3>Introduction</h3>
 <p>The Pattern Scripts plugin can be thought of as a framework for hosting subroutines for JMRI Operations Pro that require a user interface. This plugin comes with four subroutines; jPlus, Patterns, o2o and Throwback. A template is also included to serve as scaffolding for someone wishing to add their own subroutine.</p>
 <p>Although the subroutines are somewhat interdependent, they may be added or removed individually as needed.</p>
 <p>Additionally, each subroutine can be activated or deactivated as needed, fron the Tools menu pulldown.</p>
-<p>Each subroutines' features are only available when the subroutine is active and the Pattern Scripts window is open. For example, extended railroad details will only appear in reports when the Pattern Scripts window is open and the jPlus subroutine is displayed. This is an easy way to turn features on or off.</p>
+<p>Each of the subroutines' features are only available when the subroutine is active and the Pattern Scripts window is open. For example, extended railroad details will only appear in reports when the Pattern Scripts window is open and the jPlus subroutine is displayed. This is an easy way to turn features on or off.</p>
 <h3>Organization</h3>
 <p>The following chart shows the code structure of this plugin.</P>
 <img src="./img/Code_Structure.png" alt="<Code Structure Image>">
@@ -34,13 +34,13 @@
 <pre>
   {
     "Main Script": {
-      "CD": {  <font color="DarkRed">Color Definitions</font>
-        "<font color="green">BLANCH</font>": { <font color="DarkRed">Any of these colors can be changed</font>
-          "A": <font color="green">255</font>, <font color="DarkRed">Alpha value</font>
-          "B": <font color="green">225</font>, <font color="DarkRed">Blue value</font>
-          "D": <font color="green">Light grey</font>, <font color="DarkRed">Vague Description</font>
-          "G": <font color="green">225</font>, <font color="DarkRed">Green value</font>
-          "R": <font color="green">225</font> <font color="DarkRed">Red value</font>
+      "CD": {  <font color="DarkRed">Color Definitions.</font>
+        "<font color="green">BLANCH</font>": { <font color="DarkRed">Any of these colors can be changed.</font>
+          "A": <font color="green">255</font>, <font color="DarkRed">Alpha value.</font>
+          "B": <font color="green">225</font>, <font color="DarkRed">Blue value.</font>
+          "D": <font color="green">Light grey</font>, <font color="DarkRed">Vague Description.</font>
+          "G": <font color="green">225</font>, <font color="DarkRed">Green value.</font>
+          "R": <font color="green">225</font> <font color="DarkRed">Red value.</font>
         }, 
         "DUST": {
           "A": 255, 
@@ -84,36 +84,36 @@
           "G": 208, 
           "R": 240
         }, 
-        "colorA": "DUST", 
-        "colorB": "FADED", 
-        "colorC": "RASH"
+        "colorA": "<font color="green">DUST</font>",  <font color="DarkRed">The name of the color chosen for colorA.</font>
+        "colorB": "<font color="green">FADED</font>",  <font color="DarkRed">The name of the color chosen for colorB.</font> 
+        "colorC": "<font color="green">RASH</font>",  <font color="DarkRed">The name of the color chosen for colorC.</font>
       }, 
-      "CP": { <font color="DarkRed">Control Panel</font>
-        "AP": <font color="green">true</font>,  <font color="DarkRed">Add button to Panel Pro frame, plugin is not displayed but still enabled</font>
-        "DR": true,  <font color="DarkRed">Reserved</font>
-        "OC": <font color="green">true</font>,  <font color="DarkRed">Open System Console Window on starting plugin</font>
-        "PH": <font color="green">280</font>,  <font color="DarkRed">Default panel height</font>
-        "PW": <font color="green">1000</font>,  <font color="DarkRed">Default panel width</font>
-        "PX": 0,     <font color="DarkRed">Plugin location, X axis</font>
-        "PY": 0,     <font color="DarkRed">Plugin location, Y axis</font>
-        "RV": 20230101,  <font color="DarkRed">Revision control</font>
-        "SE": "utf-8",  <font color="DarkRed">Script encoding</font>
-        "TC": "UD",  <font color="DarkRed">Translation Choice</font>
-        "TS": {  <font color="DarkRed">Translation Services</font>
+      "CP": { <font color="DarkRed">Control Panel.</font>
+        "AP": true,  <font color="DarkRed">Reserved.</font>
+        "DR": true,  <font color="DarkRed">Reserved.</font>
+        "OC": <font color="green">true</font>,  <font color="DarkRed">Open System Console Window upon starting the plugin.</font>
+        "PH": <font color="green">280</font>,  <font color="DarkRed">Default plugin panel height.</font>
+        "PW": <font color="green">1000</font>,  <font color="DarkRed">Default plugin panel width.</font>
+        "PX": 0,     <font color="DarkRed">Plugin location, X axis.</font>
+        "PY": 0,     <font color="DarkRed">Plugin location, Y axis.</font>
+        "RV": 20230101,  <font color="DarkRed">Revision control.</font>
+        "SE": "utf-8",  <font color="DarkRed">Script encoding.</font>
+        "TC": "UD",  <font color="DarkRed">Translation Choice.</font>
+        "TS": {  <font color="DarkRed">Translation Services.</font>
           "UD": "UseDeepL", 
           "UX": "UseSomethingElse"
         }
       }, 
-      "LD": {  <font color="DarkRed">Layout Details</font>
-        "BD": "",  <font color="DarkRed">Build Date</font>
-        "LN": "",  <font color="DarkRed">Layout Name</font>
-        "LO": "",  <font color="DarkRed">Location Modeled</font>
-        "OR": "",  <font color="DarkRed">Operating Railroad</font>
-        "SC": "",  <font color="DarkRed">Model Railroad Scale</font>
-        "TR": "",  <font color="DarkRed">Territory Modeled</font>
+      "LD": {  <font color="DarkRed">Layout Details.</font>
+        "BD": "",  <font color="DarkRed">Build Date.</font>
+        "LN": "",  <font color="DarkRed">Layout Name.</font>
+        "LO": "",  <font color="DarkRed">Location Modeled.</font>
+        "OR": "",  <font color="DarkRed">Operating Railroad.</font>
+        "SC": "",  <font color="DarkRed">Model Railroad Scale.</font>
+        "TR": "",  <font color="DarkRed">Territory Modeled.</font>
         "YR": ""   <font color="DarkRed">Year Modeled</font>
       }, 
-      "SR": {  <font color="DarkRed">Scale Rubric</font>
+      "SR": {  <font color="DarkRed">Scale Rubric.</font>
         "G": 11, 
         "HO": 6, 
         "HON3": 4, 
@@ -126,7 +126,7 @@
         "TT": 3, 
         "Z": 1
       }, 
-      "TO": {  <font color="DarkRed">Tweek Operations, adjustments to operations settings</font>
+      "TO": {  <font color="DarkRed">Tweek Operations, adjustments to operations settings.</font>
         "CWS": <font color="green">true</font>,  <font color="DarkRed">setCloseWindowOnSaveEnabled</font>
         "SBA": <font color="green">true</font>,  <font color="DarkRed">setBuildAggressive</font>
         "SCT": <font color="green">"ARR Codes"</font>,  <font color="DarkRed">setCarTypes</font>

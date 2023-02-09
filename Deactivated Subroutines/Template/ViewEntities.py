@@ -2,8 +2,7 @@
 # © 2021, 2022 Greg Ritacco
 
 """
-Template subroutine.
-Build the GUI here.
+Template
 Replace XX with a designator for this subroutines' name.
 """
 
@@ -12,7 +11,7 @@ from opsEntities import PSE
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230101
 
-class templateSubroutinePanel:
+class subroutineGui:
 
     def __init__(self):
         """The *.setName value is the name of the action for the widget"""
@@ -21,8 +20,8 @@ class templateSubroutinePanel:
 
         return
 
-    def templatePanelMaker(self):
-        """Build the GUI here."""
+    def guiMaker(self):
+        """Make the GUI here."""
 
         tpPanel = PSE.JAVX_SWING.JPanel()
 
@@ -36,7 +35,9 @@ class templateSubroutinePanel:
 
         return tpPanel
 
-    def templateWidgetGetter(self):
-        """Returns all the widgets."""
+    def guiWidgetGetter(self):
+        """Returns all the widgets.
+            Can return a list or dict.
+            """
 
         return self.controlWidgets

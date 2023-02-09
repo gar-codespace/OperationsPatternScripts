@@ -2,7 +2,7 @@
 # © 2021, 2022 Greg Ritacco
 
 """
-Template subroutine.
+Template
 Replace XX with a designator for this subroutines' name.
 """
 
@@ -36,10 +36,10 @@ class ManageGui:
 
         _psLog.debug('TemplateSubroutine.View.makeSubroutineGui')
 
-        templateSubroutinePanel = ViewEntities.templateSubroutinePanel()
-        subroutinesPanel = templateSubroutinePanel.templatePanelMaker()
-        subroutinePanelWidgets = templateSubroutinePanel.templateWidgetGetter()
+        subroutineGui = ViewEntities.subroutineGui()
+        gui = subroutineGui.guiMaker()
+        widgets = subroutineGui.guiWidgetGetter()
 
-        return subroutinesPanel, subroutinePanelWidgets
+        return gui, widgets
 
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

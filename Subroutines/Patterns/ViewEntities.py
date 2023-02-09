@@ -1,16 +1,16 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
+"""
+Patterns
+"""
+
 from opsEntities import PSE
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230101
 
-
-"""Create the Pattern GUI."""
-
-
-class TrackPatternPanel:
+class subroutineGui:
     """Makes the Patterns subroutine panel
         Called by:
         View.ManageGui.makeSubroutinePanel"""
@@ -35,6 +35,18 @@ class TrackPatternPanel:
         self.trackCheckBoxes = []
 
         return
+
+    def guiMaker(self):
+        """Make the GUI here."""
+
+        tpPanel = PSE.JAVX_SWING.JPanel() # the Patterns panel
+        tpPanel.setLayout(PSE.JAVX_SWING.BoxLayout(tpPanel, PSE.JAVX_SWING.BoxLayout.Y_AXIS))
+
+        tpPanel.add(self.makeLocationRow())
+        tpPanel.add(self.makeTracksRow())
+        tpPanel.add(self.makeButtonsRow())
+
+        return tpPanel
 
     def makeLocationRow(self):
         """Make widget row containing: 'Division:', combo box, 'Loaction:', combo box, 'Yard Tracks Only', 'Ignore Track Length'.
@@ -130,30 +142,18 @@ class TrackPatternPanel:
 
         return buttonPanel
 
-    def getPanelWidgets(self):
-        """A list of the widgets created by this class"""
+    def guiWidgetGetter(self):
 
-        panelWidgets = []
-        panelWidgets.append(self.divisionComboBox)
-        panelWidgets.append(self.locationComboBox)
-        panelWidgets.append(self.yardTracksOnly)
-        panelWidgets.append(self.trackCheckBoxes)
-        panelWidgets.append(self.ypButton)
-        panelWidgets.append(self.scButton)
+        widgets = []
 
-        return panelWidgets
+        widgets.append(self.divisionComboBox)
+        widgets.append(self.locationComboBox)
+        widgets.append(self.yardTracksOnly)
+        widgets.append(self.trackCheckBoxes)
+        widgets.append(self.ypButton)
+        widgets.append(self.scButton)
 
-    def makeTrackPatternPanel(self):
-        """Make the Patterns panel object"""
-
-        tpPanel = PSE.JAVX_SWING.JPanel() # the Patterns panel
-        tpPanel.setLayout(PSE.JAVX_SWING.BoxLayout(tpPanel, PSE.JAVX_SWING.BoxLayout.Y_AXIS))
-
-        tpPanel.add(self.makeLocationRow())
-        tpPanel.add(self.makeTracksRow())
-        tpPanel.add(self.makeButtonsRow())
-
-        return tpPanel
+        return widgets
 
 
 def makeReportItemWidthMatrix():

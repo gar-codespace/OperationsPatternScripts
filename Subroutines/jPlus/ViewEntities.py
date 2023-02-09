@@ -1,7 +1,9 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-""" """
+"""
+jPlus
+"""
 
 from opsEntities import PSE
 
@@ -9,7 +11,7 @@ SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230101
 
 
-class jPlusSubroutinePanel:
+class subroutineGui:
 
     def __init__(self):
 
@@ -20,17 +22,8 @@ class jPlusSubroutinePanel:
 
         return
 
-    def updateButton(self):
-        """The *.setName value is the name of the action for the widget"""
-
-        upButton = PSE.JAVX_SWING.JButton()
-        upButton.setText(PSE.BUNDLE[u'Update'])
-        upButton.setName('update')
-
-        return upButton
-
-    def jPlusPanelEditable(self):
-        """User can edit the railroad details."""
+    def guiMaker(self):
+        """Make the GUI here."""
 
         jPlusPanel = PSE.JAVX_SWING.JPanel()
         jPlusPanel.setName('jPlus')
@@ -80,8 +73,16 @@ class jPlusSubroutinePanel:
 
         return jPlusPanel
 
+    def updateButton(self):
+        """The *.setName value is the name of the action for the widget"""
 
-    def jPlusWidgets(self):
+        upButton = PSE.JAVX_SWING.JButton()
+        upButton.setText(PSE.BUNDLE[u'Update'])
+        upButton.setName('update')
+
+        return upButton
+
+    def guiWidgetGetter(self):
 
         allWidgets = {}
         allWidgets['control'] = self.controlWidgets

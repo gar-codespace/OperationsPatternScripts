@@ -2,7 +2,7 @@
 # © 2021, 2022 Greg Ritacco
 
 """
-Template
+Throwback
 """
 
 from opsEntities import PSE
@@ -35,10 +35,10 @@ class ManageGui:
 
         _psLog.debug('ThrowbackSubroutine.View.makeSubroutineGui')
 
-        tbSubroutinePanel = ViewEntities.tbSubroutinePanel()
-        subroutinesPanel = tbSubroutinePanel.tbPanelMaker()
-        subroutinePanelWidgets, subroutineDisplayWidgets = tbSubroutinePanel.tbWidgetGetter()
+        subroutineGui = ViewEntities.subroutineGui()
+        gui = subroutineGui.guiMaker()
+        widgets = subroutineGui.guiWidgetGetter()
 
-        return subroutinesPanel, subroutinePanelWidgets, subroutineDisplayWidgets
+        return gui, widgets
 
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

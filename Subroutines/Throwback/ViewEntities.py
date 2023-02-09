@@ -2,7 +2,7 @@
 # © 2021, 2022 Greg Ritacco
 
 """
-Build the GUI here.
+Throwback
 """
 
 from opsEntities import PSE
@@ -10,7 +10,7 @@ from opsEntities import PSE
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230101
 
-class tbSubroutinePanel:
+class subroutineGui:
 
     def __init__(self):
         """The *.setName value is the name of the action for the widget"""
@@ -21,7 +21,8 @@ class tbSubroutinePanel:
 
         return
 
-    def tbPanelMaker(self):
+    def guiMaker(self):
+        """Make the GUI here."""
 
         snapShot = self.configFile['Throwback']['SS']
 
@@ -153,6 +154,10 @@ class tbSubroutinePanel:
 
         return tpPanel
 
-    def tbWidgetGetter(self):
+    def guiWidgetGetter(self):
 
-        return self.controlWidgets, self.displayWidgets
+        widgets = {}
+        widgets['control'] = self.controlWidgets
+        widgets['display'] = self.displayWidgets
+
+        return widgets

@@ -1,6 +1,10 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
+"""
+Patterns
+"""
+
 from opsEntities import PSE
 from Subroutines.Patterns import Model
 from Subroutines.Patterns import ViewEntities
@@ -35,11 +39,11 @@ class ManageGui:
 
         _psLog.debug('PatternTracksSubroutine.View.makeSubroutineGui')
 
-        trackPatternPanel = ViewEntities.TrackPatternPanel()
-        subroutinesPanel = trackPatternPanel.makeTrackPatternPanel()
-        subroutinePanelWidgets = trackPatternPanel.getPanelWidgets()
+        subroutineGui = ViewEntities.subroutineGui()
+        gui = subroutineGui.guiMaker()
+        widgets = subroutineGui.guiWidgetGetter()
 
-        return subroutinesPanel, subroutinePanelWidgets
+        return gui, widgets
 
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

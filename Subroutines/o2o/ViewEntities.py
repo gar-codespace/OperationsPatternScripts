@@ -1,14 +1,16 @@
 # coding=utf-8
 # © 2021, 2022 Greg Ritacco
 
-"""Creates the o2o GUI."""
+"""
+o2o
+"""
 
 from opsEntities import PSE
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230101
 
-class O2oSubroutinePanel:
+class subroutineGui:
 
     def __init__(self):
         """The *.setName value is the name of the action for the widget"""
@@ -25,11 +27,10 @@ class O2oSubroutinePanel:
         self.rsButton.setText('Update Rolling Stock')
         self.rsButton.setName('updateJmriRollingingStock')
 
-        self.controlWidgets = []
-
         return
 
-    def o2oPanelMaker(self):
+    def guiMaker(self):
+        """Make the GUI here."""
 
         tpPanel = PSE.JAVX_SWING.JPanel()
         newRrPanel = PSE.JAVX_SWING.JPanel()
@@ -53,10 +54,12 @@ class O2oSubroutinePanel:
 
         return tpPanel
 
-    def o2oWidgetGetter(self):
+    def guiWidgetGetter(self):
 
-        self.controlWidgets.append(self.nrButton)
-        self.controlWidgets.append(self.urButton)
-        self.controlWidgets.append(self.rsButton)
+        widgets = []
 
-        return self.controlWidgets
+        widgets.append(self.nrButton)
+        widgets.append(self.urButton)
+        widgets.append(self.rsButton)
+
+        return widgets

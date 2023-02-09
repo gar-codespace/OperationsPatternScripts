@@ -63,7 +63,7 @@ class StartUp:
     def getSubroutineGui(self):
         """Gets the GUI for this subroutine."""
 
-        subroutineGui, self.controlWidgets, self.displayWidgets = View.ManageGui().makeSubroutineGui()
+        subroutineGui, self.widgets = View.ManageGui().makeSubroutineGui()
         self.activateWidgets()
 
         return subroutineGui
@@ -80,7 +80,7 @@ class StartUp:
             IE 'commit'
             """
 
-        for widget in self.controlWidgets:
+        for widget in self.widgets['control']:
             widget.actionPerformed = getattr(self, widget.getName())
 
         return
@@ -90,12 +90,11 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-
-        Model.takeSnapShot(self.displayWidgets)
+        Model.takeSnapShot(self.widgets['display'])
         Model.countSnapShots()
         lastSS = PSE.readConfigFile('Throwback')['SS']
 
-        for widget in self.displayWidgets:
+        for widget in self.widgets['display']:
             if widget.getName() == 'timeStamp':
                 widget.setText(lastSS[-1][0])
             if widget.getName() == 'tbText':
@@ -112,7 +111,7 @@ class StartUp:
 
         previousSS = Model.previousSnapShot()
 
-        for widget in self.displayWidgets:
+        for widget in self.widgets['display']:
             if widget.getName() == 'timeStamp':
                 widget.setText(previousSS[0])
             if widget.getName() == 'tbText':
@@ -127,7 +126,7 @@ class StartUp:
 
         nextSS = Model.nextSnapShot()
 
-        for widget in self.displayWidgets:
+        for widget in self.widgets['display']:
             if widget.getName() == 'timeStamp':
                 widget.setText(nextSS[0])
             if widget.getName() == 'tbText':
@@ -140,7 +139,7 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        Model.throwbackSnapShot(self.displayWidgets)
+        Model.throwbackSnapShot(self.widgets['display'])
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

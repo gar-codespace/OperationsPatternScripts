@@ -1,6 +1,0 @@
->Throwback plugin<
->Description<
->Description of the Throwback plugin<
->Plugin Layout<
->Throwback plugin settings in configFile.json<
->Throwback Subroutine settings<
