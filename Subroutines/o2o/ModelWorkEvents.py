@@ -156,8 +156,10 @@ class jmriManifestConversion:
         _psLog.debug('jmriManifestConversion.convertHeader')
 
         if self.configFile['Main Script']['CP'][__package__]:
-            jPlusHeader = PSE.expandedHeader()
-            self.o2oWorkEvents['railroadName'] = jPlusHeader
+
+            OSU = PSE.JMRI.jmrit.operations.setup
+            extendedHeader = unicode(OSU.Setup.getRailroadName(), PSE.ENCODING)
+            self.o2oWorkEvents['railroadName'] = extendedHeader
         else:
             self.o2oWorkEvents['railroadName'] = PSE.HTML_PARSER().unescape(self.jmriManifest['railroad'])
 

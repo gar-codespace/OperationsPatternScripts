@@ -32,6 +32,7 @@ def actionListener(EVENT):
     # Do stuff specific to this subroutine here
         OSU = PSE.JMRI.jmrit.operations.setup
         OSU.Setup.setRailroadName(configFile['Main Script']['LD']['LN'])
+        PSE.JMRI.jmrit.operations.setup.OperationsSettingsPanel().savePreferences()
 
 
         _psLog.info(__package__ + ' removed from pattern scripts frame')

@@ -58,24 +58,24 @@ def setExpandedHeader():
         Called by:
         """
 
+    OSU = PSE.JMRI.jmrit.operations.setup
     configFile = PSE.readConfigFile()
-    operatingRoad = configFile['Main Script']['LD']['OR']
-    if not operatingRoad:
-        OSU = PSE.JMRI.jmrit.operations.setup
-        operatingRoad = unicode(OSU.Setup.getRailroadName(), PSE.ENCODING)
 
-    header = operatingRoad
+    webSafeHeader = configFile['Main Script']['LD']['LN']
+    extendedHeader = configFile['Main Script']['LD']['OR']
+    if not extendedHeader:
+        extendedHeader = unicode(OSU.Setup.getRailroadName(), PSE.ENCODING)
+
     if configFile['Main Script']['LD']['TR']:
-        header += '\n' + configFile['Main Script']['LD']['TR']
+        extendedHeader += '\n' + configFile['Main Script']['LD']['TR']
 
     if configFile['Main Script']['LD']['LO']:
-        header += '\n' + configFile['Main Script']['LD']['LO']
+        extendedHeader += '\n' + configFile['Main Script']['LD']['LO']
 
-    OSU = PSE.JMRI.jmrit.operations.setup
-    OSU.Setup.setRailroadName(header)
+    OSU.Setup.setRailroadName(webSafeHeader)
 # Write the unescaped version to disk
     PSE.JMRI.jmrit.operations.setup.OperationsSettingsPanel().savePreferences()
 # Put the escaped version back into ram
-    OSU.Setup.setRailroadName(header)
+    OSU.Setup.setRailroadName(extendedHeader)
 
     return
