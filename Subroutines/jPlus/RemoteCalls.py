@@ -6,12 +6,12 @@ Calls other subs make to this one
 Keep this as light as possible.
 """
 
-from opsEntities import PSE
+from Subroutines.jPlus import Model
 
-SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
+# SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230101
 
-_psLog = PSE.LOGGING.getLogger('OPS.JP.RemoteCalls')
+# _psLog = PSE.LOGGING.getLogger('OPS.JP.RemoteCalls')
 
 
 def startupCalls():
@@ -34,8 +34,7 @@ def deActivatedCalls():
 def refreshCalls():
     """Methods called when the subroutine needs to be refreshed."""
 
-    PSE.updateYearModeled()
-    PSE.restartSubroutineByName(__package__)
+    Model.updateYearModeled()
     
     return
     

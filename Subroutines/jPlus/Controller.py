@@ -97,24 +97,21 @@ class StartUp:
     def update(self, EVENT):
         '''Update button.
             Writes the text box entries to the configFile.
+            Updates JMRI year modeled.
+            Sets the jPlus expanded header.
             '''
 
         _psLog.debug(EVENT)
 
         configFile = PSE.readConfigFile()
-
         for id, widget in self.widgets['panel'].items():
             configFile['Main Script']['LD'].update({id:widget.getText()})
+        PSE.writeConfigFile(configFile)
 
         OSU = PSE.JMRI.jmrit.operations.setup
         OSU.Setup.setYearModeled(configFile['Main Script']['LD']['YR'])
 
-        PSE.writeConfigFile(configFile)
-
-        jPlusHeader = PSE.expandedHeader().replace(';', '\n')
-        OSU.Setup.setRailroadName(jPlusHeader)
-
-        PSE.JMRI.jmrit.operations.setup.OperationsSettingsPanel().savePreferences()
+        Model.setExpandedHeader()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

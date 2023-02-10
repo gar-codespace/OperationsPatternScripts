@@ -232,21 +232,6 @@ def closePsWindow():
 
     return
 
-def updateYearModeled():
-    """Called by:
-        Listeners.PatternScriptsWindow
-        """
-
-    configFile = readConfigFile()
-
-    OSU = JMRI.jmrit.operations.setup
-    yr = OSU.Setup.getYearModeled()
-    
-    configFile['Main Script']['LD'].update({'YR':yr})
-    writeConfigFile(configFile)
-
-    return
-
 def getComponentByName(frameTitle, componentName):
     """Gets a frame by title.
         Searches a frame for a component by name.
@@ -469,28 +454,6 @@ def occuranceTally(listOfOccurances):
 
     return dict
 
-def expandedHeader():
-    """Called by:
-        jPlus
-        """
-
-    configFile = readConfigFile()
-    header = ''
-
-    operatingRoad = configFile['Main Script']['LD']['OR']
-    if not operatingRoad:
-        OSU = JMRI.jmrit.operations.setup
-        operatingRoad = unicode(OSU.Setup.getRailroadName(), ENCODING)
-
-    header += operatingRoad
-    if configFile['Main Script']['LD']['TR']:
-        header += ';' + configFile['Main Script']['LD']['TR']
-
-    if configFile['Main Script']['LD']['LO']:
-        header += ';' + configFile['Main Script']['LD']['LO']
-
-    return header
-
 def getAllDivisionNames():
     """JMRI sorts the list.
         Called by:
@@ -554,8 +517,6 @@ def getAllTracks():
         trackList += location.getTracksByNameList(None)
 
     return trackList
-
-
 
 
 """Formatting Methods"""
@@ -638,8 +599,6 @@ def formatText(item, length):
         xItem = item[:length]
 
     return xItem + u' '
-
-
 
 def getShortLoadType(car):
     """Replaces empty and load with E, L, or O for occupied.

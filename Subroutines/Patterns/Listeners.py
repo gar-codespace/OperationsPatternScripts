@@ -12,7 +12,7 @@ _psLog = PSE.LOGGING.getLogger('OPS.PT.Listeners')
 
 
 def actionListener(EVENT):
-    """menu item-Tools/Enable Subroutines.Throwback"""
+    """menu item-Tools/Enable Subroutines.Patterns"""
 
     _psLog.debug(EVENT)
 

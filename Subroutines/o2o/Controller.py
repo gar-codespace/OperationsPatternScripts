@@ -103,8 +103,6 @@ class StartUp:
 
         Model.newJmriRailroad()
 
-        PSE.remoteCalls('refreshCalls')
-
         PSE.restartAllSubroutines()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
@@ -129,8 +127,6 @@ class StartUp:
             return
 
         Model.updateJmriRailroad()
-
-        PSE.remoteCalls('refreshCalls')
 
         PSE.restartAllSubroutines()
 
