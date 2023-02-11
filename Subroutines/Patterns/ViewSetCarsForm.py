@@ -6,6 +6,7 @@
 from opsEntities import PSE
 from Subroutines.Patterns import ViewEntities
 from Subroutines.Patterns import ModelSetCarsForm
+from Subroutines.Patterns import ModelEntities
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
@@ -21,7 +22,7 @@ def switchListAsCsv(textBoxEntry):
 
     _psLog.debug('switchListAsCsv')
 #  Get json data
-    fileName = PSE.BUNDLE['Switch List'] + '.json'
+    fileName = PSE.BUNDLE['ops-work-list'] + '.json'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
     trackPattern = PSE.genericReadReport(targetPath)
     trackPattern = PSE.loadJson(trackPattern)

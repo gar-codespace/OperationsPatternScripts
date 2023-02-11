@@ -117,8 +117,8 @@ class CreateSetCarsFormGui:
     # Display formatted data
         PSE.genericDisplayReport(targetPath)
 
-        # if PSE.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
-        #     ViewSetCarsForm.switchListAsCsv(self.buttonDict['textBoxEntry'])
+        if PSE.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
+            ViewSetCarsForm.switchListAsCsv(self.buttonDict['textBoxEntry'])
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

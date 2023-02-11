@@ -326,6 +326,7 @@ def makeTrackPatternCsv(trackPattern):
     trackPatternCsv = u'Operator,Description,Parameters\n' \
                     u'RT,Report Type,' + trackPattern['trainDescription'] + '\n' \
                     u'RN,Railroad Name,"' + trackPattern['railroadName'] + '"\n' \
+                    u'RD,Railroad Division,"' + trackPattern['division'] + '"\n' \
                     u'LN,Location Name,' + trackPattern['locations'][0]['locationName'] + '\n' \
                     u'PRNTR,Printer Name,\n' \
                     u'YPC,Yard Pattern Comment,' + trackPattern['trainComment'] + '\n' \

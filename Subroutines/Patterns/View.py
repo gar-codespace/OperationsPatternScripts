@@ -113,24 +113,6 @@ def setRollingStock():
 
     return
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def trackPatternAsCsv():
     """Track Pattern Report json is written as a CSV file
         Called by:
@@ -139,14 +121,14 @@ def trackPatternAsCsv():
 
     _psLog.debug('trackPatternAsCsv')
 #  Get json data
-    fileName = PSE.BUNDLE['Track Pattern Report'] + '.json'
+    fileName = PSE.BUNDLE['ops-pattern-report'] + '.json'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
     trackPatternCsv = PSE.genericReadReport(targetPath)
     trackPatternCsv = PSE.loadJson(trackPatternCsv)
 # Process json data into CSV
     trackPatternCsv = ViewEntities.makeTrackPatternCsv(trackPatternCsv)
 # Write CSV data
-    fileName = PSE.BUNDLE['Track Pattern Report'] + '.csv'
+    fileName = PSE.BUNDLE['ops-pattern-report'] + '.csv'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'csvSwitchLists', fileName)
     PSE.genericWriteReport(targetPath, trackPatternCsv)
 
