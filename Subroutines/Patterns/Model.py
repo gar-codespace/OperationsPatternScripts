@@ -189,26 +189,21 @@ def jDivision(selectedItem):
     _psLog.debug('jDivision')
 
     configFile = PSE.readConfigFile()
+    newDivision = ModelEntities.testSelectedDivision(selectedItem)
     newDivisionList = PSE.getAllDivisionNames()
     newLocationList = PSE.getLocationNamesByDivision(selectedItem)
-    
-    if not newLocationList:
+    if len(newLocationList) == 0:
         newLocationList = PSE.getAllLocationNames()
 
-    newLocationTrackDict = ModelEntities.getAllTracksForLocation(newLocationList[0])
-
+    configFile['Patterns'].update({'PD': newDivision})
     configFile['Patterns'].update({'AD': newDivisionList})
-    configFile['Patterns'].update({'PD': selectedItem})
-    configFile['Patterns'].update({'AL': newLocationList})
     configFile['Patterns'].update({'PL': newLocationList[0]})
-    configFile['Patterns'].update({'PT': newLocationTrackDict})
+    configFile['Patterns'].update({'AL': newLocationList})
 
     PSE.writeConfigFile(configFile)
-
     PSE.restartSubroutineByName(__package__)
 
-    _psLog.info('The track list for division ' + str(selectedItem) + ' has been created')
-
+    # _psLog.info('The track list for division ' + str(selectedItem) + ' has been created')
     return
 
 def jLocations(selectedItem):
@@ -219,15 +214,13 @@ def jLocations(selectedItem):
     _psLog.debug('jLocations')
 
     configFile = PSE.readConfigFile()
-    newLocation = ModelEntities.testSelectedItem(selectedItem)
+    newLocation = ModelEntities.testSelectedLocation(selectedItem)
     newLocationList = PSE.getAllLocationNames()
-    newLocationTrackDict = ModelEntities.getAllTracksForLocation(newLocation)
 
     configFile['Patterns'].update({'PL': newLocation})
-    configFile['Patterns'].update({'PT': newLocationTrackDict})
+    configFile['Patterns'].update({'AL': newLocationList})
 
     PSE.writeConfigFile(configFile)
-
     PSE.restartSubroutineByName(__package__)
 
     return
@@ -264,7 +257,7 @@ def updateLocations():
         try:
             configFile['Patterns'].update({'PL': locations[0]})
             configFile['Patterns'].update({'AL': locations})
-            configFile['Patterns'].update({'PT': ModelEntities.updatePatternTracks(locations[0])})
+            # configFile['Patterns'].update({'PT': ModelEntities.updatePatternTracks(locations[0])})
         except:
             _psLog.warning('Initial location and tracks not set in config file')
 

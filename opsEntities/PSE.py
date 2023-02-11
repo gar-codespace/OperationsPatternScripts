@@ -467,7 +467,7 @@ def getAllDivisionNames():
 
     return divisionNames
 
-def getLocationNamesByDivision(divisionName):
+def getLocationNamesByDivision(divisionName=None):
 
     locationsByDivision = []
 

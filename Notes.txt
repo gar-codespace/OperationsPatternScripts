@@ -3,10 +3,9 @@ Todo:
   Harden Translator.translateSingle() from timeout errors.
   RStockulator is a bit busy.
   Get csv manifest/switch list up to speed with divisions.
-  All the subroutine actionListener() are very similar. Can this duplication be eliminated?
   make Throwback.Model.takeSnapShot() into a loop.
-  Need to grey out apply schedule to set cars popup for non spur tracks.
   020.ModelWorkEvents.*.parsePtRs and o2o.ModelWorkEvents.*.parseRS do the same things in a different way, can they be merged?
+  Test if the user is not using divisions.
 
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -141,6 +140,7 @@ Version 3 ideas:
   Add check for updates.
   Harden up Bundle against web errors, untranslated items.
   How to use locale modifier, IE en-GB.
+  All the subroutine actionListener() are very similar. Can this duplication be eliminated?
   Implement mergeConfigFiles()
   Start working on adding Patterns to the web server.
     Set Cars windows add work to work list or docket, similar to TrainPlayer button, add Yardmaster button to Set Cars windows. Work can then be reported as it's done.

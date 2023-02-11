@@ -83,30 +83,42 @@ def findLongestTrackString():
 
     return longestTrackString
 
-def testSelectedItem(selectedItem=None):
-    """Catches user edit of locations
+def testSelectedDivision(selectedItem=None):
+    """Catches user edit of divisions
         Called by:
-        Model.updatePatternLocation
+        Model.jDivision
         """
 
-    allLocations = PSE.getAllLocationNames() #List of strings
+    allDivisions = PSE.getAllDivisionNames()
+    if selectedItem in allDivisions:
+        return selectedItem
+    else:
+        return allDivisions[0]
+
+def testSelectedLocation(selectedItem=None):
+    """Catches user edit of locations
+        Called by:
+        Model.jLocation
+        """
+
+    allLocations = PSE.getAllLocationNames()
     if selectedItem in allLocations:
         return selectedItem
     else:
         return allLocations[0]
 
-def getAllTracksForLocation(location):
-    """Sets all tracks to false
-        Called by:
-        Model.updatePatternLocation
-        """
+# def getAllTracksForLocation(location):
+#     """Sets all tracks to false
+#         Called by:
+#         Model.updatePatternLocation
+#         """
 
-    jmriTrackList = PSE.LM.getLocationByName(location).getTracksByNameList(None)
-    trackDict = {}
-    for track in jmriTrackList:
-        trackDict[unicode(track.getName(), PSE.ENCODING)] = False
+#     jmriTrackList = PSE.LM.getLocationByName(location).getTracksByNameList(None)
+#     trackDict = {}
+#     for track in jmriTrackList:
+#         trackDict[unicode(track.getName(), PSE.ENCODING)] = False
 
-    return trackDict
+#     return trackDict
 
 def updateTrackCheckBoxes(trackCheckBoxes):
     """Returns a dictionary of track names and their check box status
