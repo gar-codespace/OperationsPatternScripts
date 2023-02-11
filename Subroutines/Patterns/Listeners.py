@@ -57,7 +57,7 @@ def actionListener(EVENT):
 
 class PTComboBox(PSE.JAVA_AWT.event.ActionListener):
     """Event triggered from any Patterns combo box use.
-        Be sure to set the name of the combobox that uses this class.
+        The method name is the name of the combo box.
         """
 
     def __init__(self):
@@ -67,7 +67,10 @@ class PTComboBox(PSE.JAVA_AWT.event.ActionListener):
     def actionPerformed(self, EVENT):
 
         xModule = __import__(__package__, globals(), locals(), ['Model'], 0)
-        xModule.Model.updatePatternLocation(EVENT.getSource())
+        methodName = EVENT.getSource().getName()
+        itemSelected = EVENT.getSource().getSelectedItem()
+
+        getattr(xModule.Model, methodName)(itemSelected)
 
         PSE.restartSubroutineByName(__package__)
 

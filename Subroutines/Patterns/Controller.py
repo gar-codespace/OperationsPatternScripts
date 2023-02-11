@@ -22,11 +22,11 @@ _psLog = PSE.LOGGING.getLogger('OPS.PT.Controller')
 def getSubroutineDropDownItem():
     """Pattern Scripts/Tools/'Enable or disable' Subroutines.<subroutine>"""
 
-    patternConfig = PSE.readConfigFile()
+    configFile = PSE.readConfigFile()
 
     menuItem = PSE.JAVX_SWING.JMenuItem()
 
-    if patternConfig['Main Script']['CP'][__package__]:
+    if configFile['Main Script']['CP'][__package__]:
         menuText = PSE.BUNDLE[u'Disable'] + ' ' + __package__
     else:
         menuText = PSE.BUNDLE[u'Enable'] + ' ' + __package__
@@ -36,7 +36,7 @@ def getSubroutineDropDownItem():
     menuItem.removeActionListener(Listeners.actionListener)
     menuItem.addActionListener(Listeners.actionListener)
 
-    PSE.writeConfigFile(patternConfig)
+    # PSE.writeConfigFile(configFile)
 
     return menuItem
 
@@ -88,14 +88,21 @@ class StartUp:
 
     def yardTrackOnlyCheckBox(self, EVENT):
 
-        if self.widgets[2].selected:
-            allTracksAtLoc = Model.getTrackNamesByLocation('Yard')
-        else:
-            allTracksAtLoc = Model.getTrackNamesByLocation(None)
+        _psLog.debug(EVENT)
 
         configFile = PSE.readConfigFile()
-        trackDict = Model.updatePatternTracks(allTracksAtLoc)
-        configFile['Patterns'].update({'PT': trackDict})
+
+
+
+
+        print(configFile['Patterns']['PA'])
+        print(configFile['Patterns']['PL'])
+        print(configFile['Patterns']['PD'])
+
+
+
+
+        
         configFile['Patterns'].update({'PA': self.widgets[2].selected})
         PSE.writeConfigFile(configFile)
 

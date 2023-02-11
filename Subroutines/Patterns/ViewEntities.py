@@ -18,6 +18,8 @@ class subroutineGui:
     def __init__(self):
 
         self.configFile = PSE.readConfigFile('Patterns')
+        # print(self.configFile['PD'])
+        # print(self.configFile['PL'])
 
         self.yardTracksOnly = PSE.JAVX_SWING.JCheckBox()
         self.yardTracksOnly.setText(PSE.BUNDLE['Yard tracks only'] + ' ')

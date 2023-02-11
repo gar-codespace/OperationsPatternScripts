@@ -37,7 +37,12 @@ def refreshCalls():
     Model.updateYearModeled()
     
     return
-    
+
+def resetCalls():
+    """Methods called to reset this subroutine."""
+
+    return
+        
 def specificCalls():
     """Methods called to run specific tasks."""
 

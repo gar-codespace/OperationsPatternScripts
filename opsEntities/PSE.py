@@ -168,7 +168,8 @@ def restartSubroutineByName(subRoutineName):
     if subroutine:
 
         package = __import__(subRoutineName, globals(), locals(), ['Controller'], 0)
-        restart = package.Controller.StartUp(subroutine)
+        # restart = package.Controller.StartUp(subroutine)
+        restart = package.Controller.StartUp()
         subroutinePanel = restart.getSubroutineGui()
         restart.startUpTasks()
 

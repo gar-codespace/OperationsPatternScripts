@@ -154,6 +154,10 @@ def scheduleUpdate(toTrack, rollingStock):
         Called by:
         moveRollingStock
         """
+
+    if toTrack.getTrackType() != 'Spur':
+        return
+
     try:
         schedule = PSE.SM.getScheduleByName(toTrack.getScheduleName())
     except:

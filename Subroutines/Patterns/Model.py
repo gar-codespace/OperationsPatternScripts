@@ -181,28 +181,15 @@ def initializeReportHeader():
 
     return listHeader
 
-def updatePatternLocation(comboBox):
-    """Clearinghouse that routes the combo box action to the appropriate method.
-        Catches user edits of locations
-        A method is defined for each comboBox, the method name is the comboBox name.
-        Called by:
-        PTSub.Controller.LocationComboBox.actionPerformed
-        o2oSub.Model.updatePatternTracksSubroutine
-        """
-
-    selectedItem = comboBox.getSelectedItem()
-    getattr(PSE.SYS.modules[__name__], comboBox.getName())(selectedItem)
-
-    return
-
 def jDivision(selectedItem):
-    """Updates the Division: combo box and ripples the changes."""
+    """Updates the Division: combo box and ripples the changes.
+        jDivisions is also the name of the combobox.
+        """
 
     _psLog.debug('jDivision')
 
     configFile = PSE.readConfigFile()
     newDivisionList = PSE.getAllDivisionNames()
-
     newLocationList = PSE.getLocationNamesByDivision(selectedItem)
     
     if not newLocationList:
@@ -217,16 +204,20 @@ def jDivision(selectedItem):
     configFile['Patterns'].update({'PL': newLocationList[0]})
     configFile['Patterns'].update({'PT': newLocationTrackDict})
 
-    configFile['Patterns'].update({'PA': False})
+    # configFile['Patterns'].update({'PA': False})
 
     PSE.writeConfigFile(configFile)
+
+    PSE.restartSubroutineByName(__package__)
 
     _psLog.info('The track list for division ' + str(selectedItem) + ' has been created')
 
     return
 
 def jLocations(selectedItem):
-    """Updates the Locations: combobox and ripples the changes."""
+    """Updates the Locations: combobox and ripples the changes.
+        jLocations is also the name of the combobox.
+        """
 
     _psLog.debug('jLocations')
 
@@ -238,9 +229,11 @@ def jLocations(selectedItem):
     configFile['Patterns'].update({'PL': newLocation})
     configFile['Patterns'].update({'PT': newLocationTrackDict})
 
-    configFile['Patterns'].update({'PA': False})
+    # configFile['Patterns'].update({'PA': False})
 
     PSE.writeConfigFile(configFile)
+
+    PSE.restartSubroutineByName(__package__)
 
     return
 
@@ -286,25 +279,25 @@ def updateLocations():
 
     return
 
-def updatePatternTracks(trackList):
-    """Creates a new list of tracks and their default include flag
-        Called by:
-        Controller.StartUp.yardTrackOnlyCheckBox
-        """
+# def updatePatternTracks(trackList):
+#     """Creates a new list of tracks and their default include flag
+#         Called by:
+#         Controller.StartUp.yardTrackOnlyCheckBox
+#         """
 
-    _psLog.debug('updatePatternTracks')
-    trackDict = {}
-    for track in trackList:
-        trackDict[track] = False
+#     _psLog.debug('updatePatternTracks')
+#     trackDict = {}
+#     for track in trackList:
+#         trackDict[track] = False
 
-    if trackDict:
-        _psLog.warning('The track list for this location has changed')
-    else:
-        _psLog.warning('There are no tracks for this selection')
+#     if trackDict:
+#         _psLog.warning('The track list for this location has changed')
+#     else:
+#         _psLog.warning('There are no tracks for this selection')
 
-    return trackDict
+#     return trackDict
 
-def getTrackNamesByLocation(trackType):
-    """Pass through method."""
+# def getTrackNamesByLocation(trackType):
+#     """Pass through method."""
 
-    return ModelEntities.getTrackNamesByLocation(trackType)
+#     return ModelEntities.getTrackNamesByLocation(trackType)
