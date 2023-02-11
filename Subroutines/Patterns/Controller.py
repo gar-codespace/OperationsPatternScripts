@@ -1,5 +1,5 @@
 # coding=utf-8
-# © 2021, 2022 Greg Ritacco
+# © 2023 Greg Ritacco
 
 """
 The Patterns subroutins is inventory control for a single JMRI location.
@@ -14,7 +14,7 @@ from Subroutines.Patterns import View
 from Subroutines.Patterns import Model
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
-SCRIPT_REV = 20230101
+SCRIPT_REV = 20230201
 
 _psLog = PSE.LOGGING.getLogger('OPS.PT.Controller')
 
@@ -35,8 +35,6 @@ def getSubroutineDropDownItem():
     menuItem.setText(menuText)
     menuItem.removeActionListener(Listeners.actionListener)
     menuItem.addActionListener(Listeners.actionListener)
-
-    # PSE.writeConfigFile(configFile)
 
     return menuItem
 
@@ -90,19 +88,7 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        configFile = PSE.readConfigFile()
-
-
-
-
-        print(configFile['Patterns']['PA'])
-        print(configFile['Patterns']['PL'])
-        print(configFile['Patterns']['PD'])
-
-
-
-
-        
+        configFile = PSE.readConfigFile()     
         configFile['Patterns'].update({'PA': self.widgets[2].selected})
         PSE.writeConfigFile(configFile)
 

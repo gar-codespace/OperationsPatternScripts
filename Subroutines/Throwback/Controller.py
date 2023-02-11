@@ -1,5 +1,5 @@
 # coding=utf-8
-# © 2021, 2022 Greg Ritacco
+# © 2023 Greg Ritacco
 
 """
 The Throwback subroutine works sort of like version control software.
@@ -13,7 +13,7 @@ from Subroutines.Throwback import View
 from Subroutines.Throwback import Listeners
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
-SCRIPT_REV = 20230101
+SCRIPT_REV = 20230201
 
 _psLog = PSE.LOGGING.getLogger('OPS.TB.Controller')
 
@@ -21,11 +21,11 @@ _psLog = PSE.LOGGING.getLogger('OPS.TB.Controller')
 def getSubroutineDropDownItem():
     """Pattern Scripts/Tools/'Enable or disable' Subroutines.<subroutine>"""
 
-    patternConfig = PSE.readConfigFile()
+    configFile = PSE.readConfigFile()
 
     menuItem = PSE.JAVX_SWING.JMenuItem()
 
-    if patternConfig['Main Script']['CP'][__package__]:
+    if configFile['Main Script']['CP'][__package__]:
         menuText = PSE.BUNDLE[u'Disable'] + ' ' + __package__
     else:
         menuText = PSE.BUNDLE[u'Enable'] + ' ' + __package__
@@ -35,7 +35,7 @@ def getSubroutineDropDownItem():
     menuItem.removeActionListener(Listeners.actionListener)
     menuItem.addActionListener(Listeners.actionListener)
 
-    PSE.writeConfigFile(patternConfig)
+    PSE.writeConfigFile(configFile)
 
     return menuItem
 

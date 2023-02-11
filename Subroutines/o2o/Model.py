@@ -1,5 +1,5 @@
 # coding=utf-8
-# © 2021, 2022 Greg Ritacco
+# © 2023 Greg Ritacco
 
 """From tpRailroadData.json, a new JMRI railroad is created or updated."""
 
@@ -8,7 +8,7 @@ from Subroutines.o2o import ModelEntities
 from Subroutines.o2o import BuiltTrainExport
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
-SCRIPT_REV = 20230101
+SCRIPT_REV = 20230201
 
 FILE_LIST = ['OperationsTrainRoster.xml', 'OperationsRouteRoster.xml']
 

@@ -1,5 +1,5 @@
 # coding=utf-8
-# © 2021, 2022 Greg Ritacco
+# © 2023 Greg Ritacco
 
 """Bundle translation services.
     The Translation Services offered are in configFile('CP')['TS']
@@ -15,7 +15,7 @@ except:
     pass
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
-SCRIPT_REV = 20230101
+SCRIPT_REV = 20230201
 
 class UseDeepL:
     """Specifics for using DeepL"""

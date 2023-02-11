@@ -7,7 +7,7 @@ Replace XX with a designator for this subroutines name.
 from opsEntities import PSE
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
-SCRIPT_REV = 20230101
+SCRIPT_REV = 20230201
 
 _psLog = PSE.LOGGING.getLogger('OPS.XX.Listeners')
 
@@ -19,20 +19,20 @@ def actionListener(EVENT):
 
     PSE.closeSubordinateWindows()
 
-    patternConfig = PSE.readConfigFile()
+    configFile = PSE.readConfigFile()
 
     frameTitle = PSE.BUNDLE['Pattern Scripts']
     targetPanel = PSE.getComponentByName(frameTitle, 'subroutinePanel')
 
 # If it's on, turn it off
-    if patternConfig['Main Script']['CP'][__package__]: 
+    if configFile['Main Script']['CP'][__package__]: 
         menuText = PSE.BUNDLE[u'Enable'] + ' ' + __package__
-        patternConfig['Main Script']['CP'].update({__package__:False})
+        configFile['Main Script']['CP'].update({__package__:False})
         
     # Do stuff specific to this subroutine here
 
 
-        PSE.writeConfigFile(patternConfig)
+        PSE.writeConfigFile(configFile)
         targetPanel.removeAll()
         targetPanel = PSE.addActiveSubroutines(targetPanel)
 
@@ -42,12 +42,12 @@ def actionListener(EVENT):
 # If it's off, turn it on
     else:
         menuText = PSE.BUNDLE[u'Disable'] + ' ' + __package__
-        patternConfig['Main Script']['CP'].update({__package__:True})
+        configFile['Main Script']['CP'].update({__package__:True})
         
     # Do stuff specific to this subroutine here
 
 
-        PSE.writeConfigFile(patternConfig)
+        PSE.writeConfigFile(configFile)
         targetPanel.removeAll()
         targetPanel = PSE.addActiveSubroutines(targetPanel)
 

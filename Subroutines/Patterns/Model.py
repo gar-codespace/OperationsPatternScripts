@@ -1,17 +1,17 @@
 # coding=utf-8
-# © 2021, 2022 Greg Ritacco
+# © 2023 Greg Ritacco
 
 from opsEntities import PSE
 from Subroutines.Patterns import ModelEntities
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
-SCRIPT_REV = 20230101
+SCRIPT_REV = 20230201
 
 _psLog = PSE.LOGGING.getLogger('OPS.PT.Model')
 
 
 def resetConfigFileItems():
-    """Called from PSE.remoteCalls('refreshCalls')"""
+    """Called from PSE.remoteCalls('resetCalls')"""
 
     configFile = PSE.readConfigFile()
     configFile['Patterns'].update({'PD':''})
@@ -199,12 +199,9 @@ def jDivision(selectedItem):
 
     configFile['Patterns'].update({'AD': newDivisionList})
     configFile['Patterns'].update({'PD': selectedItem})
-
     configFile['Patterns'].update({'AL': newLocationList})
     configFile['Patterns'].update({'PL': newLocationList[0]})
     configFile['Patterns'].update({'PT': newLocationTrackDict})
-
-    # configFile['Patterns'].update({'PA': False})
 
     PSE.writeConfigFile(configFile)
 
@@ -228,8 +225,6 @@ def jLocations(selectedItem):
 
     configFile['Patterns'].update({'PL': newLocation})
     configFile['Patterns'].update({'PT': newLocationTrackDict})
-
-    # configFile['Patterns'].update({'PA': False})
 
     PSE.writeConfigFile(configFile)
 
@@ -278,26 +273,3 @@ def updateLocations():
     PSE.writeConfigFile(configFile)
 
     return
-
-# def updatePatternTracks(trackList):
-#     """Creates a new list of tracks and their default include flag
-#         Called by:
-#         Controller.StartUp.yardTrackOnlyCheckBox
-#         """
-
-#     _psLog.debug('updatePatternTracks')
-#     trackDict = {}
-#     for track in trackList:
-#         trackDict[track] = False
-
-#     if trackDict:
-#         _psLog.warning('The track list for this location has changed')
-#     else:
-#         _psLog.warning('There are no tracks for this selection')
-
-#     return trackDict
-
-# def getTrackNamesByLocation(trackType):
-#     """Pass through method."""
-
-#     return ModelEntities.getTrackNamesByLocation(trackType)

@@ -1,5 +1,5 @@
 # coding=utf-8
-# © 2021, 2022 Greg Ritacco
+# © 2023 Greg Ritacco
 
 """
 Calls other subs make to this one
@@ -10,7 +10,7 @@ from opsEntities import PSE
 from Subroutines.Throwback import Model
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
-SCRIPT_REV = 20230101
+SCRIPT_REV = 20230201
 
 _psLog = PSE.LOGGING.getLogger('OPS.TB.RemoteCalls')
 

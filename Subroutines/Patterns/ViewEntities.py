@@ -1,5 +1,5 @@
 # coding=utf-8
-# © 2021, 2022 Greg Ritacco
+# © 2023 Greg Ritacco
 
 """
 Patterns
@@ -8,7 +8,7 @@ Patterns
 from opsEntities import PSE
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
-SCRIPT_REV = 20230101
+SCRIPT_REV = 20230201
 
 class subroutineGui:
     """Makes the Patterns subroutine panel
@@ -91,7 +91,6 @@ class subroutineGui:
         rowLabel = PSE.JAVX_SWING.JLabel()
         tracksPanel.add(rowLabel)
 
-        # trackDict = self.configFile['PT'] # Patterns
         trackDict = self.getTrackDict()
 
         if trackDict:

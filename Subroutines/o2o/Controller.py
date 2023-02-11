@@ -1,5 +1,5 @@
 # coding=utf-8
-# © 2021, 2022 Greg Ritacco
+# © 2023 Greg Ritacco
 
 """
 The o2o Subroutine creates a JMRI railroad from TrainPlayer data.
@@ -14,7 +14,7 @@ from Subroutines.o2o import ModelImport
 from Subroutines.o2o import View
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
-SCRIPT_REV = 20230101
+SCRIPT_REV = 20230201
 
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.Controller')
 

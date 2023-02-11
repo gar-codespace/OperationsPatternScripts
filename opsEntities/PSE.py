@@ -1,5 +1,5 @@
 # coding=utf-8
-# © 2021, 2022 Greg Ritacco
+# © 2023 Greg Ritacco
 
 """
 PSE is an abbreviation for Pattern Script Entities.
@@ -42,7 +42,7 @@ J_BUNDLE = JMRI.jmrit.operations.setup.Setup()
 # SB.handleGetMessage('Road')
 
 SCRIPT_NAME = 'OperationsPatternScripts.opsEntities.PSE'
-SCRIPT_REV = 20230101
+SCRIPT_REV = 20230201
 
 OM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.OperationsManager)
 PM = JMRI.InstanceManager.getDefault(JMRI.util.gui.GuiLafPreferencesManager)
@@ -188,27 +188,27 @@ def restartSubroutineByName(subRoutineName):
 def validateSubroutines():
     """Checks that each active subroutine has a True/False entry in ['Main Scripts']['CP']."""
 
-    patternConfig = readConfigFile()
+    configFile = readConfigFile()
 
     for subroutine in getSubroutineDirs():
         subroutinename = 'Subroutines.' + subroutine
         try:
-            patternConfig['Main Script']['CP'][subroutinename]
+            configFile['Main Script']['CP'][subroutinename]
         except:
-            patternConfig['Main Script']['CP'][subroutinename] = True
+            configFile['Main Script']['CP'][subroutinename] = True
 
-    writeConfigFile(patternConfig)
+    writeConfigFile(configFile)
 
     return
 
 def addActiveSubroutines(targetPanel):
     """Adds the activated subroutines to the subroutinePanel of Pattern Scripts."""
 
-    patternConfig = readConfigFile()
+    configFile = readConfigFile()
 
     for subroutine in getSubroutineDirs():
         subroutinename = 'Subroutines.' + subroutine
-        if patternConfig['Main Script']['CP'][subroutinename]:
+        if configFile['Main Script']['CP'][subroutinename]:
             package = __import__(subroutinename, fromlist=['Controller'], level=-1)
             startUp = package.Controller.StartUp()
             subroutineFrame = startUp.getSubroutineFrame()
@@ -749,8 +749,8 @@ def validateConfigFileVersion():
 
     fileName = 'OPS.json'
     targetPath = OS_PATH.join(PLUGIN_ROOT, 'opsEntities', fileName)
-    validPatternConfig = loadJson(genericReadReport(targetPath))
-    validVersion = validPatternConfig['Main Script']['CP']['RV']
+    validConfigFile = loadJson(genericReadReport(targetPath))
+    validVersion = validConfigFile['Main Script']['CP']['RV']
     currentVersion = readConfigFile('Main Script')['CP']['RV']
 
     if currentVersion == validVersion:
@@ -892,7 +892,6 @@ def writeConfigFile(configFile):
 
 def writeNewConfigFile():
     """Called by:
-        MainScript.Model.validatePatternConfig
         PSE.tryConfigFile
         """
 
