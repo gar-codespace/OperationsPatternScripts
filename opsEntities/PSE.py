@@ -632,8 +632,6 @@ def getShortLoadType(car):
 """File Handling Methods"""
 
 
-
-
 def makeBuildStatusFolder():
     """The buildStatus folder is created first so the log file can be written.
         Called by:
@@ -935,7 +933,6 @@ def getGenericColor(colorName):
         """
 
     colorPalette = readConfigFile('Main Script')['CD']
-
 
     r = colorPalette[colorName]["R"]
     g = colorPalette[colorName]["G"]

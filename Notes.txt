@@ -1,13 +1,12 @@
 Todo:
   How to publish DeepL?
-  Should o2o New railroad reset Throwback?
   Harden Translator.translateSingle() from timeout errors.
   RStockulator is a bit busy.
   Get csv manifest/switch list up to speed with divisions.
   All the subroutine actionListener() are very similar. Can this duplication be eliminated?
   make Throwback.Model.takeSnapShot() into a loop.
-  Put a listener on jPlus.YearModeled similar to Patterns.Listeners.PTCombobox
   Need to grey out apply schedule to set cars popup for non spur tracks.
+  020.ModelWorkEvents.*.parsePtRs and o2o.ModelWorkEvents.*.parseRS do the same things in a different way, can they be merged?
 
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -25,6 +24,7 @@ Comments:
   TrainPlayer names the location for unlabeled tracks as 'Unreported'. o2o then imports this location as
   'Unreported' so as with other locations, the name is not translated.
   Since the Patterns track dict is created when called, it is not necessary to save it into configFile['Patterns']['PT']
+  o2o New Railroad does npt reset Throwback.
 
 Tested Items:
   Plugin
@@ -86,7 +86,7 @@ Tested Items:
     Set cars to spur removes FD OK.
     Toggle AS Apply schedule in config file works OK.
 
-  Language
+  Language Bundle
     Language changes OK.
     Language bundle sketched in, to be hardened against web errors.
     Bundle added with French test case.
@@ -139,12 +139,10 @@ Catches Items:
 
 Version 3 ideas:
   Add check for updates.
-  Maybe move o2o model FILE_LIST to configFile.json?
-  020.ModelWorkEvents.*.parsePtRs and o2o.ModelWorkEvents.*.parseRS do the same things in a different way, can they be merged?
   Harden up Bundle against web errors, untranslated items.
   How to use locale modifier, IE en-GB.
   Implement mergeConfigFiles()
-  Start working on distributed JMRI
+  Start working on adding Patterns to the web server.
     Set Cars windows add work to work list or docket, similar to TrainPlayer button, add Yardmaster button to Set Cars windows. Work can then be reported as it's done.
     jmri.jmrit.operations.locations.YardmasterFrame(location)
     Phone based switch list crew can report work when done. Crews use train symbol as ID
@@ -154,10 +152,3 @@ Wish List:
   add Pattern Scripts to Operations Pro combo box?
   plugin added to button in trains window (AWT.getComponents())?
   jmri.util.swing.JMenuUtil.replaceMenuItem() to replace the trains window with a new trains window that includes a ps button?
-
-Colors:
-  # DUST = java.awt.Color(245,242,233) # Light tan
-  # PALE = java.awt.Color(237,243,250) # Light blue
-  # LICHEN = java.awt.Color(244,255,236) # Light green
-  # FADED = java.awt.Color(237,225,245) # Light purple
-  # BLANCH = java.awt.Color(235,225,212) # Light orange

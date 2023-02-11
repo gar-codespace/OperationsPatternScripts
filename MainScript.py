@@ -1,7 +1,7 @@
 """
 Pattern Scripts plugin for JMRI Operations Pro
 OPS = Operations Pattern Scripts
-Copyright 2021, 2022 Greg Ritacco
+Copyright 2021, 2022, 2023 Greg Ritacco
 No restrictions on use, but I would appreciate the reference.
 """
 
@@ -41,7 +41,6 @@ PSE.validateConfigFile()
 PSE.ENCODING = PSE.readConfigFile('Main Script')['CP']['SE']
 
 Bundle.BUNDLE_DIR = OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle')
-
 
 def buildThePlugin(view):
     """Mini controller to build and display the PS Plugin Window.
@@ -265,14 +264,10 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         PSE.makeBuildStatusFolder()
 
-
         logFileTarget = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'buildstatus', 'PatternScriptsLog.txt')
 
         self.logger = PSE.Logger(logFileTarget)
         self.logger.startLogger('OPS')
-
-
-        # self.configFile = PSE.readConfigFile()
 
         self.menuItemList = []
 
