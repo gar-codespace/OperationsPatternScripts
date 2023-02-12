@@ -175,7 +175,7 @@ def initializeReportHeader():
     listHeader['trainName'] = ''
     listHeader['trainDescription'] = ''
     listHeader['trainComment'] = ''
-    listHeader['division'] = ''
+    listHeader['division'] = configFile['Patterns']['PD']
     listHeader['date'] = unicode(PSE.validTime(), PSE.ENCODING)
     listHeader['locations'] = [{'locationName': configFile['Patterns']['PL'], 'tracks': [{'cars': [], 'locos': [], 'length': '', 'trackname': ''}]}]
 

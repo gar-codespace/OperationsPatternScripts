@@ -1,10 +1,7 @@
 Todo:
   How to publish DeepL?
-  Harden Translator.translateSingle() from timeout errors.
   RStockulator is a bit busy.
-  Get csv manifest/switch list up to speed with divisions.
   make Throwback.Model.takeSnapShot() into a loop.
-  020.ModelWorkEvents.*.parsePtRs and o2o.ModelWorkEvents.*.parseRS do the same things in a different way, can they be merged?
   Test if the user is not using divisions.
 
 Comments:
@@ -137,16 +134,18 @@ Catches Items:
   Catches new JMRI RR with o2o and j Plus active OK.
 
 Version 3 ideas:
-  Add check for updates.
   Harden up Bundle against web errors, untranslated items.
+  Harden Translator.translateSingle() from timeout errors.
   How to use locale modifier, IE en-GB.
   All the subroutine actionListener() are very similar. Can this duplication be eliminated?
-  Implement mergeConfigFiles()
+  020.ModelWorkEvents.*.parsePtRs and o2o.ModelWorkEvents.*.parseRS do the same things in a different way, can they be merged?
+  Implement mergeConfigFiles() maybe?
   Start working on adding Patterns to the web server.
-    Set Cars windows add work to work list or docket, similar to TrainPlayer button, add Yardmaster button to Set Cars windows. Work can then be reported as it's done.
-    jmri.jmrit.operations.locations.YardmasterFrame(location)
-    Phone based switch list crew can report work when done. Crews use train symbol as ID
-    Maybe a custom Trains window with only the trains for each yard master location + pattern scripts
+    Set Rolling Stock to Track button creates a train.
+    Switch List button on Set Cars form adds work to the train and builds the train.
+    The switch list train will display on the web server page.
+    Use the conductor feature on the train to report work done and terminate the train.
+    A train listener detects the terminated switch list train and deletes it.
 
 Wish List:
   add Pattern Scripts to Operations Pro combo box?

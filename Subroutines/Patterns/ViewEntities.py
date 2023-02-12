@@ -316,9 +316,8 @@ def loopThroughRs(type, rsAttribs):
     return switchListRow
 
 def makeTrackPatternCsv(trackPattern):
-    """Notice that I added a double quote for the railroadName entry.
-        The csv import keeps the j Pluse extended data in thr csv RN field.
-        CSV writer does not support utf-8
+    """The double quote for the railroadName entry is added to keep the j Pluse extended data intact.
+        CSV writer does not support utf-8.
         Called by:
         Model.writeTrackPatternCsv
         """
@@ -331,9 +330,13 @@ def makeTrackPatternCsv(trackPattern):
                     u'PRNTR,Printer Name,\n' \
                     u'YPC,Yard Pattern Comment,' + trackPattern['trainComment'] + '\n' \
                     u'VT,Valid,' + trackPattern['date'] + '\n'
+    trackPatternCsv += 'SE,Set Engines\n'
+    trackPatternCsv += u'Set_To,Road,Number,Type,Model,Length,Weight,Consist,Owner,Track,Location,Destination,Comment\n'
     for track in trackPattern['locations'][0]['tracks']: # There is only one location
-        trackPatternCsv += u'TN,Track name,' + unicode(track['trackName'], PSE.ENCODING) + '\n'
-        trackPatternCsv += u'Set_To,Road,Number,Type,Model,Length,Weight,Consist,Owner,Track,Location,Destination,Comment\n'
+        try:
+            trackPatternCsv += u'TN,Track name,' + unicode(track['trackName'], PSE.ENCODING) + '\n'
+        except:
+            pass
         for loco in track['locos']:
             trackPatternCsv +=  loco['Set_To'] + ',' \
                             + loco['Road'] + ',' \
@@ -349,7 +352,13 @@ def makeTrackPatternCsv(trackPattern):
                             + loco['Destination'] + ',' \
                             + loco['Comment'] + ',' \
                             + '\n'
-        trackPatternCsv += u'Set_To,Road,Number,Type,Length,Weight,Load,Load_Type,Hazardous,Color,Kernel,Kernel_Size,Owner,Track,Location,Destination,Dest&Track,Final_Dest,FD&Track,Comment,Drop_Comment,Pickup_Comment,RWE\n'
+    trackPatternCsv += 'SC,Set Cars\n'
+    trackPatternCsv += u'Set_To,Road,Number,Type,Length,Weight,Load,Load_Type,Hazardous,Color,Kernel,Kernel_Size,Owner,Track,Location,Destination,Dest&Track,Final_Dest,FD&Track,Comment,Drop_Comment,Pickup_Comment,RWE\n'
+    for track in trackPattern['locations'][0]['tracks']: # There is only one location
+        try:
+            trackPatternCsv += u'TN,Track name,' + unicode(track['trackName'], PSE.ENCODING) + '\n'
+        except:
+            pass
         for car in track['cars']:
             trackPatternCsv +=  car['Set_To'] + ',' \
                             + car['Road'] + ',' \

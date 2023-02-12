@@ -33,7 +33,7 @@ def switchListAsCsv(textBoxEntry):
     trackPattern = ModelSetCarsForm.makeMergedForm(trackPattern, textBoxEntry)
     trackPatternCsv = ViewEntities.makeTrackPatternCsv(trackPattern)
 # Write CSV data
-    fileName = PSE.BUNDLE['Switch List'] + '.csv'
+    fileName = PSE.BUNDLE['ops-switch-list'] + '.csv'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'csvSwitchLists', fileName)
     PSE.genericWriteReport(targetPath, trackPatternCsv)
 
