@@ -1,6 +1,10 @@
 # coding=utf-8
 # © 2023 Greg Ritacco
 
+"""
+Patterns
+"""
+
 from opsEntities import PSE
 from Subroutines.Patterns import ModelEntities
 
@@ -23,28 +27,84 @@ def resetConfigFileItems():
 
     return
 
-def verifySelectedTracks():
-    """Catches on the fly user edit of JMRI track names
+def initializeLocations():
+    """Initializes the Patterns section of the configFile.
+        If entries are missing, makes new PT entries using initial values.
+        Called by:
+        Controller.StartUp.makeSubroutinePanel
+        """
+
+    _psLog.debug('updateLocations')
+
+    configFile = PSE.readConfigFile()
+    locations = []
+# Setup divisions
+    allDivisions = PSE.getAllDivisionNames()
+    configFile['Patterns'].update({'AD': allDivisions})
+
+    if len(allDivisions) != 0 and not configFile['Patterns']['PD']: # when this sub is initialized
+        configFile['Patterns'].update({'PD': allDivisions[0]})
+
+        _psLog.info('Set initial division in config file')
+# Setup locations
+    if not configFile['Patterns']['PL']: # when this sub is initialised
+
+        division = configFile['Patterns']['PD']
+        locations = PSE.getLocationNamesByDivision(division)
+        if not locations:
+            locations = PSE.getAllLocationNames()
+
+        try:
+            configFile['Patterns'].update({'PL': locations[0]})
+            configFile['Patterns'].update({'AL': locations})
+        except:
+            _psLog.warning('Initial location and tracks not set in config file')
+
+        _psLog.info('Set initial location and tracks in config file')
+
+    PSE.writeConfigFile(configFile)
+
+    return
+
+def updateConfigFile(controls):
+    """Updates the Patterns part of the config file
         Called by:
         Controller.StartUp.trackPatternButton
         Controller.StartUp.setCarsButton
         """
 
-    _psLog.debug('verifySelectedTracks')
+    _psLog.debug('updateConfigFile')
 
-    validStatus = True
-    allTracksAtLoc = ModelEntities.getTrackNamesByLocation(None)
+    configFile = PSE.readConfigFile()
+    configFile['Patterns'].update({"PL": controls[1].getSelectedItem()})
+    configFile['Patterns'].update({"PA": controls[2].selected})
+    configFile['Patterns'].update({"PT": ModelEntities.updateTrackCheckBoxes(controls[3])})
 
-    if not allTracksAtLoc:
-        _psLog.warning('configFile.json corrupted, new file written.')
+    PSE.writeConfigFile(configFile)
+
+    return controls
+
+def validSelection():
+    """Catches on the fly user edit of JMRI location and tracknames.
+        patternTracks and allTracksAtLoc should be the same.
+        Called by:
+        Controller.StartUp.trackPatternButton
+        Controller.StartUp.setCarsButton
+        """
+
+    _psLog.debug('validSelection')
+    configFile = PSE.readConfigFile()
+    patternLocation = configFile['Patterns']['PL']
+
+    if not PSE.LM.getLocationByName(patternLocation): # test if user renames a location
         return False
 
-    patternTracks = PSE.readConfigFile('Patterns')['PT']
-    for track in patternTracks:
-        if not track in allTracksAtLoc:
-            validStatus = False
+    allTracksAtLoc = ModelEntities.getTrackNamesByLocation(None)
+    patternTracks = configFile['Patterns']['PT']
+    if list(set(allTracksAtLoc).difference(set(patternTracks))): # Test if track names were edited.
+        return False
 
-    return validStatus
+    return True
 
 def getSelectedTracks():
     """Gets the track objects checked in the Track Pattern Subroutine."""
@@ -66,6 +126,67 @@ def newWorkList():
     PSE.genericWriteReport(targetPath, workList)
 
     return
+
+def initializeReportHeader():
+
+    OSU = PSE.JMRI.jmrit.operations.setup
+    configFile = PSE.readConfigFile()
+
+    listHeader = {}
+    listHeader['railroadName'] = unicode(OSU.Setup.getRailroadName(), PSE.ENCODING)
+
+    listHeader['railroadDescription'] = configFile['Patterns']['RD']
+    listHeader['trainName'] = configFile['Patterns']['TN']
+    listHeader['trainDescription'] = configFile['Patterns']['TD']
+    listHeader['trainComment'] = configFile['Patterns']['TC']
+    listHeader['division'] = configFile['Patterns']['PD']
+    listHeader['date'] = unicode(PSE.validTime(), PSE.ENCODING)
+    listHeader['locations'] = [{'locationName': configFile['Patterns']['PL'], 'tracks': [{'cars': [], 'locos': [], 'length': '', 'trackname': ''}]}]
+
+    return listHeader
+
+def makeTrackPattern(trackList=None):
+    """Called by:
+        Model.trackPatternButton
+        View.setRsButton
+        """
+
+    if not trackList:
+        trackList = getSelectedTracks()
+
+    detailsForTrack = []
+    patternLocation = PSE.readConfigFile('Patterns')['PL']
+    for trackName in trackList:
+        detailsForTrack.append(ModelEntities.getGenericTrackDetails(patternLocation, trackName))
+
+    trackPattern = {}
+    trackPattern['locationName'] = patternLocation
+    trackPattern['tracks'] = detailsForTrack
+
+    return trackPattern
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def appendWorkList(mergedForm):
 
@@ -99,45 +220,9 @@ def patternReport():
 
     return
 
-def updateConfigFile(controls):
-    """Updates the Patterns part of the config file
-        Called by:
-        Controller.StartUp.trackPatternButton
-        Controller.StartUp.setCarsButton
-        """
 
-    _psLog.debug('updateConfigFile')
 
-    configFile = PSE.readConfigFile()
-    configFile['Patterns'].update({"PL": controls[1].getSelectedItem()})
-    configFile['Patterns'].update({"PA": controls[2].selected})
-    configFile['Patterns'].update({"PT": ModelEntities.updateTrackCheckBoxes(controls[3])})
 
-    PSE.writeConfigFile(configFile)
-
-    _psLog.info('Controls settings for configuration file updated')
-
-    return controls
-
-def makeTrackPattern(trackList=None):
-    """Called by:
-        Model.trackPatternButton
-        View.setRsButton
-        """
-
-    if not trackList:
-        trackList = getSelectedTracks()
-
-    detailsForTrack = []
-    patternLocation = PSE.readConfigFile('Patterns')['PL']
-    for trackName in trackList:
-        detailsForTrack.append(ModelEntities.getGenericTrackDetails(patternLocation, trackName))
-
-    trackPattern = {}
-    trackPattern['locationName'] = patternLocation
-    trackPattern['tracks'] = detailsForTrack
-
-    return trackPattern
 
 def makeTrackPatternReport(trackPattern):
     """Called by:
@@ -159,27 +244,7 @@ def makeTrackPatternReport(trackPattern):
 
 
 
-def initializeReportHeader():
-    """Called by:
-        makeTrackPatternReport
-        Controller.StartUp.setRsButton
-        """
 
-    OSU = PSE.JMRI.jmrit.operations.setup
-    configFile = PSE.readConfigFile()
-
-    listHeader = {}
-    listHeader['railroadName'] = unicode(OSU.Setup.getRailroadName(), PSE.ENCODING)
-
-    listHeader['railroadDescription'] = ''
-    listHeader['trainName'] = ''
-    listHeader['trainDescription'] = ''
-    listHeader['trainComment'] = ''
-    listHeader['division'] = configFile['Patterns']['PD']
-    listHeader['date'] = unicode(PSE.validTime(), PSE.ENCODING)
-    listHeader['locations'] = [{'locationName': configFile['Patterns']['PL'], 'tracks': [{'cars': [], 'locos': [], 'length': '', 'trackname': ''}]}]
-
-    return listHeader
 
 def jDivision(selectedItem):
     """Updates the Division: combo box and ripples the changes.
@@ -225,44 +290,6 @@ def jLocations(selectedItem):
 
     return
 
-def updateLocations():
-    """Updates the PT section of the configFile..
-        If entries are missing, makes new PT entries using initial values.
-        The configFile is updated if initial values are used.
-        Called by:
-        Controller.StartUp.makeSubroutinePanel
-        """
 
-    _psLog.debug('updateLocations')
 
-    configFile = PSE.readConfigFile()
 
-    allDivisions = PSE.getAllDivisionNames()
-    locations = []
-
-    configFile['Patterns'].update({'AD': allDivisions})
-
-    if len(allDivisions) != 0 and not configFile['Patterns']['PD']: # when this sub is initialized
-        configFile['Patterns'].update({'PD': allDivisions[0]})
-
-        _psLog.info('Set initial division in config file')
-
-    if not configFile['Patterns']['PL']: # when this sub is initialised
-
-        division = configFile['Patterns']['PD']
-        locations = PSE.getLocationNamesByDivision(division)
-        if not locations:
-            locations = PSE.getAllLocationNames()
-
-        try:
-            configFile['Patterns'].update({'PL': locations[0]})
-            configFile['Patterns'].update({'AL': locations})
-            # configFile['Patterns'].update({'PT': ModelEntities.updatePatternTracks(locations[0])})
-        except:
-            _psLog.warning('Initial location and tracks not set in config file')
-
-        _psLog.info('Set initial location and tracks in config file')
-
-    PSE.writeConfigFile(configFile)
-
-    return

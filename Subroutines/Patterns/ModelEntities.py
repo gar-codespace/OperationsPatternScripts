@@ -1,13 +1,41 @@
 # coding=utf-8
 # © 2023 Greg Ritacco
 
+"""
+Patterns
+"""
+
 from opsEntities import PSE
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
 
 
+def getTrackNamesByLocation(trackType):
+    """Called by:
+        Model.verifySelectedTracks
+        ViewEntities.merge
+        """
 
+    patternLocation = PSE.readConfigFile('Patterns')['PL']
+    allTracksAtLoc = []
+    try: # Catch on the fly user edit of config file error
+        for track in PSE.LM.getLocationByName(patternLocation).getTracksByNameList(trackType):
+            allTracksAtLoc.append(unicode(track.getName(), PSE.ENCODING))
+        return allTracksAtLoc
+    except AttributeError:
+        return allTracksAtLoc
+
+
+
+
+
+
+
+
+
+
+        
 def makeUserInputList(textBoxEntry):
     """Called by:
         ModelSetCarsForm.makeMergedForm
@@ -56,20 +84,7 @@ def merge(switchList, userInputList):
 
     return switchList
 
-def getTrackNamesByLocation(trackType):
-    """Called by:
-        Model.verifySelectedTracks
-        ViewEntities.merge
-        """
 
-    patternLocation = PSE.readConfigFile('Patterns')['PL']
-    allTracksAtLoc = []
-    try: # Catch on the fly user edit of config file error
-        for track in PSE.LM.getLocationByName(patternLocation).getTracksByNameList(trackType):
-            allTracksAtLoc.append(unicode(track.getName(), PSE.ENCODING))
-        return allTracksAtLoc
-    except AttributeError:
-        return allTracksAtLoc
 
 def findLongestTrackString():
     """Called by:
@@ -107,18 +122,7 @@ def testSelectedLocation(selectedItem=None):
     else:
         return allLocations[0]
 
-# def getAllTracksForLocation(location):
-#     """Sets all tracks to false
-#         Called by:
-#         Model.updatePatternLocation
-#         """
 
-#     jmriTrackList = PSE.LM.getLocationByName(location).getTracksByNameList(None)
-#     trackDict = {}
-#     for track in jmriTrackList:
-#         trackDict[unicode(track.getName(), PSE.ENCODING)] = False
-
-#     return trackDict
 
 def updateTrackCheckBoxes(trackCheckBoxes):
     """Returns a dictionary of track names and their check box status
@@ -337,3 +341,17 @@ def getDetailsForCar(carObject, kernelTally):
         carDetailDict['On_Train'] = True
 
     return carDetailDict
+
+
+# def getAllTracksForLocation(location):
+#     """Sets all tracks to false
+#         Called by:
+#         Model.updatePatternLocation
+#         """
+
+#     jmriTrackList = PSE.LM.getLocationByName(location).getTracksByNameList(None)
+#     trackDict = {}
+#     for track in jmriTrackList:
+#         trackDict[unicode(track.getName(), PSE.ENCODING)] = False
+
+#     return trackDict

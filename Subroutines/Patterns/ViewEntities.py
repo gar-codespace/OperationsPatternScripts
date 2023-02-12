@@ -170,6 +170,21 @@ def makeReportItemWidthMatrix():
 
     return reportMatrix
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def modifyTrackPatternReport(trackPattern):
     """Make adjustments to the way the reports display here.
         The undeflying json is not changed.

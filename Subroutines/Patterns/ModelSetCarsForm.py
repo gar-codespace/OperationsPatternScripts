@@ -1,7 +1,9 @@
 # coding=utf-8
 # © 2023 Greg Ritacco
 
-"""Process methods for the Set Cars Form for Track X form"""
+"""
+Methods for the Set Cars Form for Track X form
+"""
 
 from opsEntities import PSE
 from Subroutines.Patterns import ModelEntities
@@ -44,31 +46,6 @@ def setRsToTrack():
     moveRollingStock(switchList)
 
     return
-
-# def o2oButton(ptSetCarsForm):
-#     """Mini controller that appends the ptSetCarsForm to o2o Work Events.json.
-#         Called by:
-#         ControllerptSetCarsForm.CreateptSetCarsFormGui.o2oButton
-#         """
-#     reportTitle = PSE.BUNDLE['o2o Work Events']
-#     fileName = reportTitle + '.json'
-#     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
-# # Load the existing o2o switch list
-#     o2oSwitchList = PSE.genericReadReport(targetPath)
-#     o2oSwitchList = PSE.loadJson(o2oSwitchList)
-# # Append cars and locos from ptSetCarsForm
-#     o2oSwitchListCars = o2oSwitchList['locations'][0]['tracks'][0]['cars']
-#     ptSetCarsFormCars = ptSetCarsForm['locations'][0]['tracks'][0]['cars']
-#     o2oSwitchList['locations'][0]['tracks'][0]['cars'] = o2oSwitchListCars + ptSetCarsFormCars
-
-#     o2oSwitchListLocos = o2oSwitchList['locations'][0]['tracks'][0]['locos']
-#     ptSetCarsFormLocos = ptSetCarsForm['locations'][0]['tracks'][0]['locos']
-#     o2oSwitchList['locations'][0]['tracks'][0]['locos'] = o2oSwitchListLocos + ptSetCarsFormLocos
-# # Write the appended file
-#     o2oSwitchList = PSE.dumpJson(o2oSwitchList)
-#     PSE.genericWriteReport(targetPath, o2oSwitchList)
-
-#     return
 
 def moveRollingStock(switchList):
     """Similar to:
@@ -187,3 +164,29 @@ def testValidityOfForm(setCarsForm, textBoxEntry):
         _psLog.critical('Mismatched input list and car roster lengths')
         PSE.openOutputFrame(PSE.BUNDLE['FAIL: Mismatched input list and car roster lengths'])
         return False
+
+
+# def o2oButton(ptSetCarsForm):
+#     """Mini controller that appends the ptSetCarsForm to o2o Work Events.json.
+#         Called by:
+#         ControllerptSetCarsForm.CreateptSetCarsFormGui.o2oButton
+#         """
+#     reportTitle = PSE.BUNDLE['o2o Work Events']
+#     fileName = reportTitle + '.json'
+#     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+# # Load the existing o2o switch list
+#     o2oSwitchList = PSE.genericReadReport(targetPath)
+#     o2oSwitchList = PSE.loadJson(o2oSwitchList)
+# # Append cars and locos from ptSetCarsForm
+#     o2oSwitchListCars = o2oSwitchList['locations'][0]['tracks'][0]['cars']
+#     ptSetCarsFormCars = ptSetCarsForm['locations'][0]['tracks'][0]['cars']
+#     o2oSwitchList['locations'][0]['tracks'][0]['cars'] = o2oSwitchListCars + ptSetCarsFormCars
+
+#     o2oSwitchListLocos = o2oSwitchList['locations'][0]['tracks'][0]['locos']
+#     ptSetCarsFormLocos = ptSetCarsForm['locations'][0]['tracks'][0]['locos']
+#     o2oSwitchList['locations'][0]['tracks'][0]['locos'] = o2oSwitchListLocos + ptSetCarsFormLocos
+# # Write the appended file
+#     o2oSwitchList = PSE.dumpJson(o2oSwitchList)
+#     PSE.genericWriteReport(targetPath, o2oSwitchList)
+
+#     return

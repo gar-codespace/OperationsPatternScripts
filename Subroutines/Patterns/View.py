@@ -78,48 +78,16 @@ def patternReport():
 
     return
 
-def setRollingStock():
-    """"Set Cars to Track button opens a window for each selected track"""
-
-    _psLog.debug('setRsButton')
-
-    selectedTracks = Model.getSelectedTracks()
-    if not selectedTracks:
-        _psLog.warning('No tracks were selected for the Set Cars button')
-
-        return
-
-    PSE.REPORT_ITEM_WIDTH_MATRIX = ViewEntities.makeReportItemWidthMatrix()
-    locationName = PSE.readConfigFile('Patterns')['PL']
-    windowOffset = 200
-    for i, trackName in enumerate(selectedTracks, start=1):
-        trackPattern = Model.makeTrackPattern([trackName]) # makeTrackPattern takes a track list
-        setCarsForm = Model.makeTrackPatternReport(trackPattern)
-    # Apply common formatting to report
-        setCarsForm = ViewEntities.modifyTrackPatternReport(setCarsForm)
-
-        newFrame = ControllerSetCarsForm.CreateSetCarsFormGui(setCarsForm)
-        newWindow = newFrame.makeFrame()
-        newWindow.setTitle(PSE.BUNDLE['Set Rolling Stock for track:'] + ' ' + trackName)
-        newWindow.setName('setCarsWindow')
-        newWindow.setLocation(windowOffset, 180)
-        newWindow.pack()
-        newWindow.setVisible(True)
-        windowOffset += 50
-
-        _psLog.info(u'Set Rolling Stock Window created for track ' + trackName)
-
-    _psLog.info(str(i) + ' Set Rolling Stock windows for ' + locationName + ' created')
-
-    return
-
 def trackPatternAsCsv():
-    """Track Pattern Report json is written as a CSV file
+    """ops-pattern-report.json is written as a CSV file
         Called by:
         Controller.StartUp.trackPatternButton
         """
 
     _psLog.debug('trackPatternAsCsv')
+
+    if not PSE.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
+        return
 #  Get json data
     fileName = PSE.BUNDLE['ops-pattern-report'] + '.json'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
@@ -133,3 +101,38 @@ def trackPatternAsCsv():
     PSE.genericWriteReport(targetPath, trackPatternCsv)
 
     return
+    
+def setRollingStock():
+    """"Set Cars to Track button opens a window for each selected track"""
+
+    _psLog.debug('setRollingStock')
+
+    locationName = PSE.readConfigFile('Patterns')['PL']
+    selectedTracks = Model.getSelectedTracks()
+    PSE.REPORT_ITEM_WIDTH_MATRIX = ViewEntities.makeReportItemWidthMatrix()
+
+    windowOffset = 200
+    i = 0
+    for trackName in selectedTracks:
+        trackPattern = Model.makeTrackPattern([trackName]) # makeTrackPattern takes a track list
+        setCarsForm = Model.makeTrackPatternReport(trackPattern)
+    # Apply common formatting to report
+        setCarsForm = ViewEntities.modifyTrackPatternReport(setCarsForm)
+
+        newFrame = ControllerSetCarsForm.CreateSetCarsFormGui(setCarsForm)
+        newWindow = newFrame.makeFrame()
+        newWindow.setTitle(PSE.BUNDLE['Set Rolling Stock for track:'] + ' ' + trackName)
+        newWindow.setName('setCarsWindow')
+        newWindow.setLocation(windowOffset, 180)
+        newWindow.pack()
+        newWindow.setVisible(True)
+        windowOffset += 50
+        i += 1
+
+        _psLog.info(u'Set Rolling Stock Window created for track ' + trackName)
+
+    _psLog.info(str(i) + ' Set Rolling Stock windows for ' + locationName + ' created')
+
+    return
+
+

@@ -1,7 +1,9 @@
 # coding=utf-8
 # © 2023 Greg Ritacco
 
-"""Makes a 'Set Cars Form for Track X' form for each selected track"""
+"""
+Makes a 'Set Cars Form for Track X' form for each selected track.
+"""
 
 from opsEntities import PSE
 from Subroutines.Patterns import Listeners

@@ -62,7 +62,7 @@ class StartUp:
     def getSubroutineGui(self):
         """Gets the GUI for this subroutine."""
 
-        Model.updateLocations()
+        Model.initializeLocations()
 
         subroutineGui, self.widgets = View.ManageGui().makeSubroutineGui()
         self.activateWidgets()
@@ -103,19 +103,14 @@ class StartUp:
 
         Model.updateConfigFile(self.widgets)
 
-        if not Model.verifySelectedTracks():
-            _psLog.warning('Track not found, re-select the location')
-            return
-
-        if not Model.getSelectedTracks():
-            _psLog.warning('No tracks were selected for the pattern button')
+        if not Model.validSelection():
+            print('ERROR: re-select the location')
+            _psLog.warning('Error, re-select the location')
             return
 
         Model.patternReport()
         View.patternReport()
-
-        if PSE.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
-            View.trackPatternAsCsv()
+        View.trackPatternAsCsv()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -128,10 +123,10 @@ class StartUp:
         _psLog.debug(EVENT)
 
         Model.updateConfigFile(self.widgets)
-
         Model.newWorkList()
 
-        if not Model.verifySelectedTracks():
+        if not Model.validSelection():
+            print('ERROR: re-select the location')
             _psLog.warning('Track not found, re-select the location')
             return
 
