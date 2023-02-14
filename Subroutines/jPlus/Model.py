@@ -8,7 +8,16 @@ from opsEntities import PSE
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
 
+
 _psLog = PSE.LOGGING.getLogger('OPS.JP.Model')
+
+def resetConfigFileItems():
+    """Called from PSE.remoteCalls('resetCalls')"""
+
+    # configFile = PSE.readConfigFile()
+    # PSE.writeConfigFile(configFile)
+
+    return
 
 def jPanelSetup():
     """Copy the jPanel data from tpRailroadData.json into the JP fields of the config file."""

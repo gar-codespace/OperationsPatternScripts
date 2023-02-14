@@ -7,7 +7,7 @@ Keep this as light as possible.
 """
 
 from opsEntities import PSE
-# from Subroutines.Patterns import Model
+from Subroutines.Patterns import Model
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
@@ -44,7 +44,7 @@ def refreshCalls():
 def resetCalls():
     """Methods called to reset this subroutine."""
 
-    # Model.resetConfigFileItems()
+    Model.resetConfigFileItems()
     
     return
 

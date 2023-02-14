@@ -12,9 +12,17 @@ SCRIPT_REV = 20230201
 
 FILE_LIST = ['OperationsTrainRoster.xml', 'OperationsRouteRoster.xml']
 
+
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.Model')
 
+def resetConfigFileItems():
+    """Called from PSE.remoteCalls('resetCalls')"""
 
+    # configFile = PSE.readConfigFile()
+    # PSE.writeConfigFile(configFile)
+
+    return
+    
 def newJmriRailroad():
     """Mini controller to make a new JMRI railroad.
         tpRailroadData.json and TrainPlayer Report - Rolling Stock.txt
@@ -22,6 +30,8 @@ def newJmriRailroad():
         Called by:
         Controller.StartUp.newJmriRailroad
         """
+
+    PSE.remoteCalls('resetCalls')
 
     PSE.TMX.makeBackupFile('operations/OperationsTrainRoster.xml')
     PSE.TMX.makeBackupFile('operations/OperationsRouteRoster.xml')

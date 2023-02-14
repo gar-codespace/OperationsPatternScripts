@@ -9,7 +9,7 @@ Keep this as light as possible.
 from Subroutines.jPlus import Model
 
 # SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
-SCRIPT_REV = 20230201
+# SCRIPT_REV = 20230201
 
 # _psLog = PSE.LOGGING.getLogger('OPS.JP.RemoteCalls')
 
@@ -40,6 +40,8 @@ def refreshCalls():
 
 def resetCalls():
     """Methods called to reset this subroutine."""
+
+    Model.resetConfigFileItems()
 
     return
         
