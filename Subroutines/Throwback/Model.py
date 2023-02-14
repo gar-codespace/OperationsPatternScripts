@@ -147,13 +147,13 @@ def throwbackSnapShot(displayWidgets):
     throwbackRestorePoint = PSE.readConfigFile('Throwback')['SS'][SNAP_SHOT_INDEX]
 
     for widget in displayWidgets:
-        if widget.getName() == 'tCheckBox' and widget.selected:
-            PSE.TM.dispose()
-            roster = throwbackRestorePoint[0] + '.T.xml.bak'
+        if widget.getName() == 'lCheckBox' and widget.selected:
+            PSE.LM.dispose()
+            roster = throwbackRestorePoint[0] + '.L.xml.bak'
             targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
-            PSE.TMX.readFile(targetFile)
-            PSE.TMX.writeOperationsFile()
-            PSE.TMX.initialize()
+            PSE.LMX.readFile(targetFile)
+            PSE.LMX.writeOperationsFile()
+            PSE.LMX.initialize()
 
     for widget in displayWidgets:
         if widget.getName() == 'rCheckBox' and widget.selected:
@@ -165,13 +165,13 @@ def throwbackSnapShot(displayWidgets):
             PSE.RMX.initialize()
 
     for widget in displayWidgets:
-        if widget.getName() == 'lCheckBox' and widget.selected:
-            PSE.LM.dispose()
-            roster = throwbackRestorePoint[0] + '.L.xml.bak'
+        if widget.getName() == 'tCheckBox' and widget.selected:
+            PSE.TM.dispose()
+            roster = throwbackRestorePoint[0] + '.T.xml.bak'
             targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
-            PSE.LMX.readFile(targetFile)
-            PSE.LMX.writeOperationsFile()
-            PSE.LMX.initialize()
+            PSE.TMX.readFile(targetFile)
+            PSE.TMX.writeOperationsFile()
+            PSE.TMX.initialize()
 
     for widget in displayWidgets:
         if widget.getName() == 'cCheckBox' and widget.selected:
