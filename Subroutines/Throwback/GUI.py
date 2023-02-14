@@ -2,7 +2,7 @@
 # © 2023 Greg Ritacco
 
 """
-Throwback
+All the GUI items are made here.
 """
 
 from opsEntities import PSE

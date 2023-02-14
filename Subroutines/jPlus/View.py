@@ -6,7 +6,7 @@ jPlus
 """
 
 from opsEntities import PSE
-from Subroutines.jPlus import ViewEntities
+from Subroutines.jPlus import GUI
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
@@ -35,7 +35,7 @@ class ManageGui:
 
         _psLog.debug('jPlusSubroutine.View.makeSubroutineGui')
 
-        subroutineGui = ViewEntities.subroutineGui()
+        subroutineGui = GUI.subroutineGui()
         gui = subroutineGui.guiMaker()
         widgets = subroutineGui.guiWidgetGetter()
 

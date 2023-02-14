@@ -2,7 +2,7 @@
 # © 2023 Greg Ritacco
 
 """
-Template
+All the GUI items are made here.
 Replace XX with a designator for this subroutines' name.
 """
 
@@ -36,8 +36,9 @@ class subroutineGui:
         return tpPanel
 
     def guiWidgetGetter(self):
-        """Returns all the widgets.
-            Can return a list or dict.
-            """
+        """
+        Returns all the widgets.
+        Can return a list or dict.
+        """
 
         return self.controlWidgets

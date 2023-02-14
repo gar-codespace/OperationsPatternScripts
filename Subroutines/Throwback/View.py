@@ -6,7 +6,7 @@ Throwback
 """
 
 from opsEntities import PSE
-from Subroutines.Throwback import ViewEntities
+from Subroutines.Throwback import GUI
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
@@ -17,7 +17,7 @@ class ManageGui:
 
     def __init__(self):
 
-        self.configFile = PSE.readConfigFile('Throwback')
+        # self.configFile = PSE.readConfigFile('Throwback')
 
         return
 
@@ -35,7 +35,7 @@ class ManageGui:
 
         _psLog.debug('ThrowbackSubroutine.View.makeSubroutineGui')
 
-        subroutineGui = ViewEntities.subroutineGui()
+        subroutineGui = GUI.subroutineGui()
         gui = subroutineGui.guiMaker()
         widgets = subroutineGui.guiWidgetGetter()
 

@@ -6,7 +6,7 @@ o2o
 """
 
 from opsEntities import PSE
-from Subroutines.o2o import ViewEntities
+from Subroutines.o2o import GUI
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
@@ -17,7 +17,7 @@ class ManageGui:
 
     def __init__(self):
 
-        self.configFile = PSE.readConfigFile('o2o')
+        # self.configFile = PSE.readConfigFile('o2o')
 
         return
 
@@ -35,7 +35,7 @@ class ManageGui:
 
         _psLog.debug('o2oSubroutine.View.makeSubroutineGui')
 
-        subroutineGui = ViewEntities.subroutineGui()
+        subroutineGui = GUI.subroutineGui()
         gui = subroutineGui.guiMaker()
         widgets = subroutineGui.guiWidgetGetter()
 
