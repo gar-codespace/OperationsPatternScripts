@@ -11,8 +11,8 @@ from Subroutines.Patterns import ModelEntities
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
 
-_psLog = PSE.LOGGING.getLogger('OPS.PT.Model')
 
+_psLog = PSE.LOGGING.getLogger('OPS.PT.Model')
 
 def resetConfigFileItems():
     """Called from PSE.remoteCalls('resetCalls')"""
@@ -28,11 +28,12 @@ def resetConfigFileItems():
     return
 
 def initializeLocations():
-    """Initializes the Patterns section of the configFile.
-        If entries are missing, makes new PT entries using initial values.
-        Called by:
-        Controller.StartUp.makeSubroutinePanel
-        """
+    """
+    Initializes the Patterns section of the configFile.
+    If entries are missing, makes new PT entries using initial values.
+    Called by:
+    Controller.StartUp.makeSubroutinePanel
+    """
 
     _psLog.debug('updateLocations')
 
@@ -67,56 +68,113 @@ def initializeLocations():
     return
 
 def updateConfigFile(controls):
-    """Updates the Patterns part of the config file
-        Called by:
-        Controller.StartUp.trackPatternButton
-        Controller.StartUp.setCarsButton
-        """
+    """
+    Updates the Patterns part of the config file
+    Called by:
+    Controller.StartUp.trackPatternButton
+    Controller.StartUp.setCarsButton
+    """
 
     _psLog.debug('updateConfigFile')
 
     configFile = PSE.readConfigFile()
     configFile['Patterns'].update({"PL": controls[1].getSelectedItem()})
     configFile['Patterns'].update({"PA": controls[2].selected})
-    configFile['Patterns'].update({"PT": ModelEntities.updateTrackCheckBoxes(controls[3])})
 
     PSE.writeConfigFile(configFile)
 
     return controls
 
-def validSelection():
-    """Catches on the fly user edit of JMRI location and tracknames.
-        patternTracks and allTracksAtLoc should be the same.
-        Called by:
-        Controller.StartUp.trackPatternButton
-        Controller.StartUp.setCarsButton
-        """
+def validSelection(trackCheckBoxes):
+    """
+    Catches on the fly user edit of JMRI location and tracknames.
+    patternTracks and allTracksAtLoc should be the same.
+    Called by:
+    Controller.StartUp.trackPatternButton
+    Controller.StartUp.setCarsButton
+    """
 
     _psLog.debug('validSelection')
     configFile = PSE.readConfigFile()
     patternLocation = configFile['Patterns']['PL']
 
-    if not PSE.LM.getLocationByName(patternLocation): # test if user renames a location
+    if not PSE.LM.getLocationByName(patternLocation): # test if location was changed.
         return False
 
     allTracksAtLoc = ModelEntities.getTrackNamesByLocation(None)
-    patternTracks = configFile['Patterns']['PT']
-    if list(set(allTracksAtLoc).difference(set(patternTracks))): # Test if track names were edited.
+    subTracksAtLoc = [widget.text for widget in trackCheckBoxes]
+    if list(set(allTracksAtLoc).difference(set(subTracksAtLoc))): # Test if track names were changed.
         return False
 
     return True
 
-def getSelectedTracks():
-    """Gets the track objects checked in the Track Pattern Subroutine."""
+def makeTrackPatternBody(trackCheckBoxes):
+    """Makes the body of a track pattern report."""
 
-    patternTracks = PSE.readConfigFile('Patterns')['PT']
+    patternLocation = PSE.readConfigFile('Patterns')['PL']
 
-    return [track for track, include in sorted(patternTracks.items()) if include]
+    detailsForTrack = []
+    for widget in sorted(trackCheckBoxes):
+        if widget.selected:
+            detailsForTrack.append(ModelEntities.getGenericTrackDetails(patternLocation, widget.text))
+
+    trackPatternBody = {}
+    trackPatternBody['locationName'] = patternLocation
+    trackPatternBody['tracks'] = detailsForTrack
+
+    return trackPatternBody
+
+def makeTrackPatternReport(trackPattern):
+    """Combine header and body into a complete report."""
+
+    trackPatternReport = initializeReportHeader()
+    parseName = trackPatternReport['railroadName'].replace(';', '\n')
+    trackPatternReport.update({'railroadName':parseName})
+
+    division = PSE.getDivisionForLocation(trackPatternReport['locations'][0]['locationName'])
+    trackPatternReport.update({'division':division})
+
+# put in as a list to maintain compatability with JSON File Format/JMRI manifest export.
+    trackPatternReport['locations'] = [trackPattern]
+
+    return trackPatternReport
+
+def writePatternReport(trackPattern):
+    """
+    Writes the track pattern report as a json file.
+    Called by:
+    Controller.StartUp.patternReportButton
+    """
+
+    fileName = PSE.BUNDLE['ops-pattern-report'] + '.json'
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+
+    
+    trackPatternReport = PSE.dumpJson(trackPattern)
+    PSE.genericWriteReport(targetPath, trackPatternReport)
+
+    return
+
+def appendWorkList(mergedForm):
+
+    tracks = mergedForm['locations'][0]['tracks'][0]
+
+    fileName = PSE.BUNDLE['ops-work-list'] + '.json'
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+    currentWorkList = PSE.jsonLoadS(PSE.genericReadReport(targetPath))
+
+    currentWorkList['locations'][0]['tracks'].append(tracks)
+    currentWorkList = PSE.dumpJson(currentWorkList)
+
+    PSE.genericWriteReport(targetPath, currentWorkList)
+
+    return
 
 def newWorkList():
-    """The work list is all the switchlists combined.
-        Reset when the Set Cars button is pressed.
-        """
+    """
+    The work list is all the switchlists combined.
+    Reset when the Set Cars button is pressed.
+    """
 
     workList = initializeReportHeader()
 
@@ -145,107 +203,6 @@ def initializeReportHeader():
 
     return listHeader
 
-def makeTrackPattern(trackList=None):
-    """Called by:
-        Model.trackPatternButton
-        View.setRsButton
-        """
-
-    if not trackList:
-        trackList = getSelectedTracks()
-
-    detailsForTrack = []
-    patternLocation = PSE.readConfigFile('Patterns')['PL']
-    for trackName in trackList:
-        detailsForTrack.append(ModelEntities.getGenericTrackDetails(patternLocation, trackName))
-
-    trackPattern = {}
-    trackPattern['locationName'] = patternLocation
-    trackPattern['tracks'] = detailsForTrack
-
-    return trackPattern
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def appendWorkList(mergedForm):
-
-    tracks = mergedForm['locations'][0]['tracks'][0]
-
-    fileName = PSE.BUNDLE['ops-work-list'] + '.json'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
-    currentWorkList = PSE.jsonLoadS(PSE.genericReadReport(targetPath))
-
-    currentWorkList['locations'][0]['tracks'].append(tracks)
-    currentWorkList = PSE.dumpJson(currentWorkList)
-
-    PSE.genericWriteReport(targetPath, currentWorkList)
-
-    return
-
-def patternReport():
-    """Mini controller when the Track Pattern Report button is pressed
-        Creates the Track Pattern data
-        Called by:
-        Controller.StartUp.patternReportButton
-        """
-
-    fileName = PSE.BUNDLE['ops-pattern-report'] + '.json'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
-
-    trackPattern = makeTrackPattern()
-    trackPatternReport = makeTrackPatternReport(trackPattern)
-    trackPatternReport = PSE.dumpJson(trackPatternReport)
-    PSE.genericWriteReport(targetPath, trackPatternReport)
-
-    return
-
-
-
-
-
-def makeTrackPatternReport(trackPattern):
-    """Called by:
-        Model.trackPatternButton
-        View.setRsButton
-        """
-
-    trackPatternReport = initializeReportHeader()
-    parseName = trackPatternReport['railroadName'].replace(';', '\n')
-    trackPatternReport.update({'railroadName':parseName})
-
-    division = PSE.getDivisionForLocation(trackPatternReport['locations'][0]['locationName'])
-    trackPatternReport.update({'division':division})
-
-# put in as a list to maintain compatability with JSON File Format/JMRI manifest export.
-    trackPatternReport['locations'] = [trackPattern]
-
-    return trackPatternReport
-
-
-
-
-
 def jDivision(selectedItem):
     """Updates the Division: combo box and ripples the changes.
         jDivisions is also the name of the combobox.
@@ -268,7 +225,6 @@ def jDivision(selectedItem):
     PSE.writeConfigFile(configFile)
     PSE.restartSubroutineByName(__package__)
 
-    # _psLog.info('The track list for division ' + str(selectedItem) + ' has been created')
     return
 
 def jLocations(selectedItem):
@@ -289,7 +245,3 @@ def jLocations(selectedItem):
     PSE.restartSubroutineByName(__package__)
 
     return
-
-
-
-

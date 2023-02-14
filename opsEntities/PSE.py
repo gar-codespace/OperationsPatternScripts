@@ -629,6 +629,19 @@ def getShortLoadType(car):
     # return lt
     return 'L'
 
+def makeReportItemWidthMatrix():
+    """The attribute widths (AW) for each of the rolling stock attributes is defined in the report matrix (RM) of the config file."""
+
+    reportMatrix = {}
+    attributeWidths = readConfigFile('Patterns')['RM']['AW']
+
+    for aKey, aValue in attributeWidths.items():
+        reportMatrix[aKey] = aValue
+
+    global REPORT_ITEM_WIDTH_MATRIX
+    REPORT_ITEM_WIDTH_MATRIX = reportMatrix
+
+    return
 
 """File Handling Methods"""
 

@@ -6,39 +6,56 @@ Methods for the Set Cars Form for Track X form
 """
 
 from opsEntities import PSE
+from Subroutines.Patterns import View
 from Subroutines.Patterns import ModelEntities
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
 
+
 _psLog = PSE.LOGGING.getLogger('OPS.PT.ModelSetCarsForm')
 
+def formIsValid(setCarsForm, textBoxEntry):
+    """
+    Checks that both submitted forms are the same length
+    Called by:
+    ControllerSetCarsForm.CreateSetCarsForm.quickCheck
+    """
+
+    _psLog.debug('testValidityOfForm')
+
+    locoCount = len(setCarsForm['locations'][0]['tracks'][0]['locos'])
+    carCount = len(setCarsForm['locations'][0]['tracks'][0]['cars'])
+
+    if len(textBoxEntry) == locoCount + carCount:
+        return True
+    else:
+        return False
 
 def makeMergedForm(setCarsForm, buttonDict):
-    """Called by:
-        ControllerSetCarsForm.CreateSetCarsFormGui.o2oButton
-        switchListButton
-        """
+    """
+    Called by:
+    ControllerSetCarsForm.CreateSetCarsForm.o2oButton
+    switchListButton
+    """
 
     inputList = ModelEntities.makeUserInputList(buttonDict)
     mergedForm = ModelEntities.merge(setCarsForm, inputList)
 
     return mergedForm
 
-
-
 def setRsToTrack():
-    """Mini controller that moves the selected RS to the selected track.
-        Subject to track length and RS type restrictions.
-        Called by:
-        ControllerSetCarsForm.CreateSetCarsFormGui.setRsButton
-        """
+    """
+    Subject to track length and RS type restrictions.
+    Called by:
+    ControllerSetCarsForm.CreateSetCarsForm.setRsButton
+    """
 
     _psLog.debug('setRsButton')
 
     reportTitle = PSE.BUNDLE['ops-switch-list']
     fileName = reportTitle + '.json'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'switchLists', fileName)
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
 
     switchList = PSE.genericReadReport(targetPath)
     switchList = PSE.loadJson(switchList)
@@ -48,23 +65,20 @@ def setRsToTrack():
     return
 
 def moveRollingStock(switchList):
-    """Similar to:
-        ViewEntities.merge
-        """
-
-    setCount = 0
-    i = -1
+    """
+    Similar to:
+    ViewEntities.merge
+    """
 
     configFile = PSE.readConfigFile()
 
     ignoreTrackLength = configFile['Patterns']['PI']
     applySchedule = configFile['Patterns']['AS']
-    # location = configFile['Patterns']['PL']
-
     allTracksAtLoc = ModelEntities.getTrackNamesByLocation(None)
-
     toLocation = PSE.LM.getLocationByName(unicode(switchList['locations'][0]['locationName'], PSE.ENCODING))
 
+    setCount = 0
+    i = -1
     locos = switchList['locations'][0]['tracks'][0]['locos']
     for loco in locos:
         i += 1
@@ -117,9 +131,10 @@ def moveRollingStock(switchList):
     return
 
 def rsUpdate(toTrack, rollingStock):
-    """Called by:
-        moveRollingStock
-        """
+    """
+    Called by:
+    moveRollingStock
+    """
 
     if toTrack.getTrackType() == 'Spur':
         rollingStock.setMoves(rollingStock.getMoves() + 1)
@@ -127,10 +142,11 @@ def rsUpdate(toTrack, rollingStock):
     return
 
 def scheduleUpdate(toTrack, rollingStock):
-    """If the to-track is a spur, try to set the load/empty requirement for the track.
-        Called by:
-        moveRollingStock
-        """
+    """
+    If the to-track is a spur, try to set the load/empty requirement for the track.
+    Called by:
+    moveRollingStock
+    """
 
     if toTrack.getTrackType() != 'Spur':
         return
@@ -147,46 +163,45 @@ def scheduleUpdate(toTrack, rollingStock):
 
     return
 
-def testValidityOfForm(setCarsForm, textBoxEntry):
-    """Checks that both submitted forms are the same length
-        Called by:
-        ControllerSetCarsForm.CreateSetCarsFormGui.quickCheck
-        """
+def makeTextSwitchList(switchList):
+    """
+    Formats and displays the Switch List report.
+    Called by:
+    ControllerSetCarsForm.CreateSetCarsForm.switchListButton
+    """
 
-    _psLog.debug('testValidityOfForm')
+    _psLog.debug('maksSwitchList')
 
-    locoCount = len(setCarsForm['locations'][0]['tracks'][0]['locos'])
-    carCount = len(setCarsForm['locations'][0]['tracks'][0]['cars'])
+    PSE.makeReportItemWidthMatrix()
 
-    if len(textBoxEntry) == locoCount + carCount:
-        return True
-    else:
-        _psLog.critical('Mismatched input list and car roster lengths')
-        PSE.openOutputFrame(PSE.BUNDLE['FAIL: Mismatched input list and car roster lengths'])
-        return False
+    reportHeader = View.makeTextReportHeader(switchList)
+    reportLocations = PSE.BUNDLE['Switch List'] + '\n\n'
+    reportLocations += View.makeTextReportLocations(switchList, trackTotals=False)
 
+    return reportHeader + reportLocations
 
-# def o2oButton(ptSetCarsForm):
-#     """Mini controller that appends the ptSetCarsForm to o2o Work Events.json.
-#         Called by:
-#         ControllerptSetCarsForm.CreateptSetCarsFormGui.o2oButton
-#         """
-#     reportTitle = PSE.BUNDLE['o2o Work Events']
-#     fileName = reportTitle + '.json'
-#     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
-# # Load the existing o2o switch list
-#     o2oSwitchList = PSE.genericReadReport(targetPath)
-#     o2oSwitchList = PSE.loadJson(o2oSwitchList)
-# # Append cars and locos from ptSetCarsForm
-#     o2oSwitchListCars = o2oSwitchList['locations'][0]['tracks'][0]['cars']
-#     ptSetCarsFormCars = ptSetCarsForm['locations'][0]['tracks'][0]['cars']
-#     o2oSwitchList['locations'][0]['tracks'][0]['cars'] = o2oSwitchListCars + ptSetCarsFormCars
+def switchListAsCsv(textBoxEntry):
+    """
+    Track Pattern Report json is written as a CSV file
+    Called by:
+    ControllerSetCarsForm.CreateSetCarsForm.switchListButton
+    """
 
-#     o2oSwitchListLocos = o2oSwitchList['locations'][0]['tracks'][0]['locos']
-#     ptSetCarsFormLocos = ptSetCarsForm['locations'][0]['tracks'][0]['locos']
-#     o2oSwitchList['locations'][0]['tracks'][0]['locos'] = o2oSwitchListLocos + ptSetCarsFormLocos
-# # Write the appended file
-#     o2oSwitchList = PSE.dumpJson(o2oSwitchList)
-#     PSE.genericWriteReport(targetPath, o2oSwitchList)
+    _psLog.debug('switchListAsCsv')
+#  Get json data
+    fileName = PSE.BUNDLE['ops-work-list'] + '.json'
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+    trackPattern = PSE.genericReadReport(targetPath)
+    trackPattern = PSE.loadJson(trackPattern)
+# Process json data into CSV
+    userInputList = ModelEntities.makeUserInputList(textBoxEntry)
+    trackPattern = ModelEntities.merge(trackPattern, userInputList)
 
-#     return
+    trackPattern = makeMergedForm(trackPattern, textBoxEntry)
+    trackPatternCsv = View.makeTrackPatternCsv(trackPattern)
+# Write CSV data
+    fileName = PSE.BUNDLE['ops-switch-list'] + '.csv'
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'csvSwitchLists', fileName)
+    PSE.genericWriteReport(targetPath, trackPatternCsv)
+
+    return

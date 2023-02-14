@@ -8,8 +8,8 @@ from opsEntities import PSE
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
 
-_psLog = PSE.LOGGING.getLogger('OPS.PT.Listeners')
 
+_psLog = PSE.LOGGING.getLogger('OPS.PT.Listeners')
 
 def actionListener(EVENT):
     """menu item-Tools/Enable Subroutines.Patterns"""
@@ -56,9 +56,10 @@ def actionListener(EVENT):
 
 
 class PTComboBox(PSE.JAVA_AWT.event.ActionListener):
-    """Event triggered from any Patterns combo box use.
-        The method name is the name of the combo box.
-        """
+    """
+    Event triggered from any Patterns combo box use.
+    The method name is the name of the combo box.
+    """
 
     def __init__(self):
 

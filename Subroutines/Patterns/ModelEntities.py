@@ -12,10 +12,11 @@ SCRIPT_REV = 20230201
 
 
 def getTrackNamesByLocation(trackType):
-    """Called by:
-        Model.verifySelectedTracks
-        ViewEntities.merge
-        """
+    """
+    Called by:
+    Model.verifySelectedTracks
+    ViewEntities.merge
+    """
 
     patternLocation = PSE.readConfigFile('Patterns')['PL']
     allTracksAtLoc = []
@@ -26,20 +27,11 @@ def getTrackNamesByLocation(trackType):
     except AttributeError:
         return allTracksAtLoc
 
-
-
-
-
-
-
-
-
-
-        
 def makeUserInputList(textBoxEntry):
-    """Called by:
-        ModelSetCarsForm.makeMergedForm
-        """
+    """
+    Called by:
+    ModelSetCarsForm.makeMergedForm
+    """
 
     userInputList = []
     for userInput in textBoxEntry:
@@ -48,10 +40,11 @@ def makeUserInputList(textBoxEntry):
     return userInputList
 
 def merge(switchList, userInputList):
-    """Merge the values in textBoxEntry into the ['Set_To'] field of switchList.
-        Called by:
-        ModelSetCarsForm.makeMergedForm
-        """
+    """
+    Merge the values in textBoxEntry into the ['Set_To'] field of switchList.
+    Called by:
+    ModelSetCarsForm.makeMergedForm
+    """
 
     longestTrackString = findLongestTrackString()
     allTracksAtLoc = getTrackNamesByLocation(None)
@@ -84,12 +77,11 @@ def merge(switchList, userInputList):
 
     return switchList
 
-
-
 def findLongestTrackString():
-    """Called by:
-        merge
-        """
+    """
+    Called by:
+    merge
+    """
 
     longestTrackString = 6 # 6 is the length of [Hold]
     for track in PSE.readConfigFile('Patterns')['PT']: # Patterns
@@ -99,10 +91,11 @@ def findLongestTrackString():
     return longestTrackString
 
 def testSelectedDivision(selectedItem=None):
-    """Catches user edit of divisions
-        Called by:
-        Model.jDivision
-        """
+    """
+    Catches user edit of divisions
+    Called by:
+    Model.jDivision
+    """
 
     allDivisions = PSE.getAllDivisionNames()
     if selectedItem in allDivisions:
@@ -111,10 +104,11 @@ def testSelectedDivision(selectedItem=None):
         return allDivisions[0]
 
 def testSelectedLocation(selectedItem=None):
-    """Catches user edit of locations
-        Called by:
-        Model.jLocation
-        """
+    """
+    Catches user edit of locations
+    Called by:
+    Model.jLocation
+    """
 
     allLocations = PSE.getAllLocationNames()
     if selectedItem in allLocations:
@@ -122,25 +116,12 @@ def testSelectedLocation(selectedItem=None):
     else:
         return allLocations[0]
 
-
-
-def updateTrackCheckBoxes(trackCheckBoxes):
-    """Returns a dictionary of track names and their check box status
-        Called by:
-        Model.updateConfigFile
-        """
-
-    dict = {}
-    for item in trackCheckBoxes:
-        dict[unicode(item.text, PSE.ENCODING)] = item.selected
-
-    return dict
-
 def getGenericTrackDetails(locationName, trackName):
-    """The loco and car lists are sorted at this level, used to make the Track Pattern Report.json file
-        Called by:
-        makeTrackPattern
-        """
+    """
+    The loco and car lists are sorted at this level, used to make the Track Pattern Report.json file
+    Called by:
+    makeTrackPattern
+    """
 
     genericTrackDetails = {}
     genericTrackDetails['trackName'] = trackName
@@ -151,11 +132,12 @@ def getGenericTrackDetails(locationName, trackName):
     return genericTrackDetails
 
 def sortLocoList(locoList):
-    """Try/Except protects against bad edit of config file
-        Sort order of PSE.readConfigFile('RM')['SL'] is top down
-        Called by:
-        getGenericTrackDetails
-        """
+    """
+    Try/Except protects against bad edit of config file
+    Sort order of PSE.readConfigFile('RM')['SL'] is top down
+    Called by:
+    getGenericTrackDetails
+    """
 
     sortLocos = PSE.readConfigFile('Patterns')['RM']['SL']
     for sortKey in sortLocos:
@@ -168,11 +150,12 @@ def sortLocoList(locoList):
     return locoList
 
 def getRsOnTrains():
-    """Make a list of all rolling stock that are on built trains
-        Called by:
-        getDetailsForLoco
-        getDetailsForCar
-        """
+    """
+    Make a list of all rolling stock that are on built trains
+    Called by:
+    getDetailsForLoco
+    getDetailsForCar
+    """
 
     builtTrainList = []
     for train in PSE.TM.getTrainsByStatusList():
@@ -187,10 +170,11 @@ def getRsOnTrains():
     return listOfAssignedRs
 
 def getLocoListForTrack(track):
-    """Creates a generic locomotive list for a track
-        Called by:
-        getGenericTrackDetails
-        """
+    """
+    Creates a generic locomotive list for a track
+    Called by:
+    getGenericTrackDetails
+    """
 
     location = PSE.readConfigFile('Patterns')['PL']
     locoList = getLocoObjects(location, track)
@@ -198,9 +182,10 @@ def getLocoListForTrack(track):
     return [getDetailsForLoco(loco) for loco in locoList]
 
 def getLocoObjects(location, track):
-    """Called by:
-        getLocoListForTrack
-        """
+    """
+    Called by:
+    getLocoListForTrack
+    """
 
     locoList = []
     allLocos = PSE.EM.getByModelList()
@@ -208,10 +193,11 @@ def getLocoObjects(location, track):
     return [loco for loco in allLocos if loco.getLocationName() == location and loco.getTrackName() == track]
 
 def getDetailsForLoco(locoObject):
-    """Mimics jmri.jmrit.operations.setup.Setup.getEngineAttributes()
-        Called by:
-        getLocoListForTrack
-        """
+    """
+    Mimics jmri.jmrit.operations.setup.Setup.getEngineAttributes()
+    Called by:
+    getLocoListForTrack
+    """
 
     locoDetailDict = {}
 
@@ -242,11 +228,12 @@ def getDetailsForLoco(locoObject):
     return locoDetailDict
 
 def sortCarList(carList):
-    """Try/Except protects against bad edit of config file
-        Sort order of PSE.readConfigFile('Patterns')['RM']['SC'] is top down
-        Called by:
-        getGenericTrackDetails
-        """
+    """
+    Try/Except protects against bad edit of config file
+    Sort order of PSE.readConfigFile('Patterns')['RM']['SC'] is top down
+    Called by:
+    getGenericTrackDetails
+    """
 
     sortCars = PSE.readConfigFile('Patterns')['RM']['SC']
     for sortKey in sortCars:
@@ -259,10 +246,11 @@ def sortCarList(carList):
     return carList
 
 def getCarListForTrack(track):
-    """A list of car attributes as a dictionary
-        Called by:
-        getGenericTrackDetails
-        """
+    """
+    A list of car attributes as a dictionary
+    Called by:
+    getGenericTrackDetails
+    """
 
     location = PSE.readConfigFile('Patterns')['PL']
     carList = getCarObjects(location, track)
@@ -273,18 +261,20 @@ def getCarListForTrack(track):
     return carDetails
 
 def getCarObjects(location, track):
-    """Called by:
-        getCarListForTrack
-        """
+    """
+    Called by:
+    getCarListForTrack
+    """
 
     allCars = PSE.CM.getByIdList()
 
     return [car for car in allCars if car.getLocationName() == location and car.getTrackName() == track]
 
 def getKernelTally():
-    """Called by:
-        getCarListForTrack
-        """
+    """
+    Called by:
+    getCarListForTrack
+    """
 
     tally = []
     for car in PSE.CM.getByIdList():
@@ -297,10 +287,11 @@ def getKernelTally():
     return kernelTally
 
 def getDetailsForCar(carObject, kernelTally):
-    """Mimics jmri.jmrit.operations.setup.Setup.getCarAttributes()
-        Called by:
-        getCarListForTrack
-        """
+    """
+    Mimics jmri.jmrit.operations.setup.Setup.getCarAttributes()
+    Called by:
+    getCarListForTrack
+    """
 
     carDetailDict = {}
     trackId = PSE.LM.getLocationByName(carObject.getLocationName()).getTrackById(carObject.getTrackId())
@@ -341,17 +332,3 @@ def getDetailsForCar(carObject, kernelTally):
         carDetailDict['On_Train'] = True
 
     return carDetailDict
-
-
-# def getAllTracksForLocation(location):
-#     """Sets all tracks to false
-#         Called by:
-#         Model.updatePatternLocation
-#         """
-
-#     jmriTrackList = PSE.LM.getLocationByName(location).getTracksByNameList(None)
-#     trackDict = {}
-#     for track in jmriTrackList:
-#         trackDict[unicode(track.getName(), PSE.ENCODING)] = False
-
-#     return trackDict

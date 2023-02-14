@@ -9,15 +9,15 @@ This subroutine can be used in conjunction with o2o to create TrainPlayer switch
 """
 
 from opsEntities import PSE
-from Subroutines.Patterns import Listeners
-from Subroutines.Patterns import View
 from Subroutines.Patterns import Model
+from Subroutines.Patterns import View
+from Subroutines.Patterns import Listeners
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
 
-_psLog = PSE.LOGGING.getLogger('OPS.PT.Controller')
 
+_psLog = PSE.LOGGING.getLogger('OPS.PT.Controller')
 
 def getSubroutineDropDownItem():
     """Pattern Scripts/Tools/'Enable or disable' Subroutines.<subroutine>"""
@@ -40,7 +40,7 @@ def getSubroutineDropDownItem():
 
 
 class StartUp:
-    """Start the Patterns subroutine"""
+    """Start the Patterns subroutine."""
 
     def __init__(self, subroutineFrame=None):
 
@@ -49,7 +49,7 @@ class StartUp:
         return
 
     def getSubroutineFrame(self):
-        """Gets the title border frame"""
+        """Gets the title border frame."""
 
         self.subroutineFrame = View.ManageGui().makeSubroutineFrame()
         subroutineGui = self.getSubroutineGui()
@@ -75,6 +75,7 @@ class StartUp:
         return
 
     def activateWidgets(self):
+        """Puts actions on all the widgets that need actions."""
 
         self.widgets[0].addActionListener(Listeners.PTComboBox())
         self.widgets[1].addActionListener(Listeners.PTComboBox())
@@ -97,18 +98,24 @@ class StartUp:
         return
 
     def patternReportButton(self, EVENT):
-        """Makes a Patterns report based on the config file (PR)"""
+        """
+        Displays a Pattern Report from values in the configFile.
+        The selected tracks are read directly from the track check boxes row.
+        """
 
         _psLog.debug(EVENT)
 
         Model.updateConfigFile(self.widgets)
 
-        if not Model.validSelection():
+        if not Model.validSelection(self.widgets[3]):
             print('ERROR: re-select the location')
             _psLog.warning('Error, re-select the location')
             return
 
-        Model.patternReport()
+        trackPatternBody = Model.makeTrackPatternBody(self.widgets[3])
+        trackPatternReport = Model.makeTrackPatternReport(trackPatternBody)
+        Model.writePatternReport(trackPatternReport)
+
         View.patternReport()
         View.trackPatternAsCsv()
 
@@ -117,20 +124,19 @@ class StartUp:
         return
 
     def setRsButton(self, EVENT):
-        """Opens a "Pattern Report for Track X" window for each checked track
-            """
+        """Opens a "Pattern Report for Track X" window for each checked track."""
 
         _psLog.debug(EVENT)
 
         Model.updateConfigFile(self.widgets)
         Model.newWorkList()
 
-        if not Model.validSelection():
+        if not Model.validSelection(self.widgets[3]):
             print('ERROR: re-select the location')
             _psLog.warning('Track not found, re-select the location')
             return
 
-        View.setRollingStock()
+        View.setCarsToTrack(self.widgets[3])
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

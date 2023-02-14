@@ -11,7 +11,7 @@ Set Cars
 Division:
 Do Not Apply Schedule
 Eqpt. Length:
-FAIL: CreateSetCarsFormGui.quickCheck.testValidityOfForm
+FAIL: CreateSetCarsFormGui.quickCheck.formIsValid
 FAIL: Mismatched input list and car roster lengths
 Hazardous
 Hold

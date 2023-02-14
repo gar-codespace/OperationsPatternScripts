@@ -25,7 +25,7 @@
   "Enable": "Enable", 
   "Engines": "Engines", 
   "Eqpt. Length:": "Eqpt. Length:", 
-  "FAIL: CreateSetCarsFormGui.quickCheck.testValidityOfForm": "FAIL: CreateSetCarsFormGui.quickCheck.testValidityOfForm", 
+  "FAIL: CreateSetCarsFormGui.quickCheck.formIsValid": "FAIL: CreateSetCarsFormGui.quickCheck.formIsValid", 
   "FAIL: Mismatched input list and car roster lengths": "FAIL: Mismatched input list and car roster lengths", 
   "From TrainPlayer, re-export layout to JMRI.": "From TrainPlayer, re-export layout to JMRI.", 
   "GitHub Web Page": "GitHub Web Page", 
