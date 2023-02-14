@@ -143,50 +143,53 @@ def throwbackSnapShot(displayWidgets):
     """Sets the cars and engines rosters to the chosen throwback restore point."""
 
     PSE.closeTopLevelWindows()
+
     throwbackRestorePoint = PSE.readConfigFile('Throwback')['SS'][SNAP_SHOT_INDEX]
 
     for widget in displayWidgets:
-        if widget.getName() == 'cCheckBox' and widget.selected:
-            # PSE.CM.dispose()
-            roster = throwbackRestorePoint[0] + '.C.xml.bak'
-            targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
-            PSE.CMX.readFile(targetFile)
-            PSE.CMX.writeOperationsFile() # Also does a backup
-
-        if widget.getName() == 'eCheckBox' and widget.selected:
-            # PSE.EM.dispose()
-            roster = throwbackRestorePoint[0] + '.E.xml.bak'
-            targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
-            PSE.EMX.readFile(targetFile)
-            PSE.EMX.writeOperationsFile()
-
-        if widget.getName() == 'lCheckBox' and widget.selected:
-            # PSE.LM.dispose()
-            roster = throwbackRestorePoint[0] + '.L.xml.bak'
-            targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
-            PSE.LMX.readFile(targetFile)
-            PSE.LMX.writeOperationsFile()
-
-        if widget.getName() == 'rCheckBox' and widget.selected:
-            # PSE.RM.dispose()
-            roster = throwbackRestorePoint[0] + '.R.xml.bak'
-            targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
-            PSE.RMX.readFile(targetFile)
-            PSE.RMX.writeOperationsFile()
-
         if widget.getName() == 'tCheckBox' and widget.selected:
-            # PSE.TM.dispose()
+            PSE.TM.dispose()
             roster = throwbackRestorePoint[0] + '.T.xml.bak'
             targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
             PSE.TMX.readFile(targetFile)
             PSE.TMX.writeOperationsFile()
-    
-    # The order matters
-    PSE.TMX.initialize()
-    PSE.RMX.initialize()
-    PSE.LMX.initialize()
-    PSE.EMX.initialize()
-    PSE.CMX.initialize()
+            PSE.TMX.initialize()
+
+    for widget in displayWidgets:
+        if widget.getName() == 'rCheckBox' and widget.selected:
+            PSE.RM.dispose()
+            roster = throwbackRestorePoint[0] + '.R.xml.bak'
+            targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
+            PSE.RMX.readFile(targetFile)
+            PSE.RMX.writeOperationsFile()
+            PSE.RMX.initialize()
+
+    for widget in displayWidgets:
+        if widget.getName() == 'lCheckBox' and widget.selected:
+            PSE.LM.dispose()
+            roster = throwbackRestorePoint[0] + '.L.xml.bak'
+            targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
+            PSE.LMX.readFile(targetFile)
+            PSE.LMX.writeOperationsFile()
+            PSE.LMX.initialize()
+
+    for widget in displayWidgets:
+        if widget.getName() == 'cCheckBox' and widget.selected:
+            PSE.CM.dispose()
+            roster = throwbackRestorePoint[0] + '.C.xml.bak'
+            targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
+            PSE.CMX.readFile(targetFile)
+            PSE.CMX.writeOperationsFile() # Also does a backup
+            PSE.CMX.initialize()
+
+    for widget in displayWidgets:
+        if widget.getName() == 'eCheckBox' and widget.selected:
+            PSE.EM.dispose()
+            roster = throwbackRestorePoint[0] + '.E.xml.bak'
+            targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
+            PSE.EMX.readFile(targetFile)
+            PSE.EMX.writeOperationsFile()
+            PSE.EMX.initialize()
     
     return
 

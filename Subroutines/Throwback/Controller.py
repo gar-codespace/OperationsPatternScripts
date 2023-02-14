@@ -139,7 +139,11 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
+        PSE.remoteCalls('resetCalls')
+
         Model.throwbackSnapShot(self.widgets['display'])
+
+        PSE.restartAllSubroutines()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

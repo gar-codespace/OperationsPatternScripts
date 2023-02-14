@@ -15,6 +15,14 @@ def resetConfigFileItems():
     """Called from PSE.remoteCalls('resetCalls')"""
 
     # configFile = PSE.readConfigFile()
+    # configFile['Main Script']['LD'].update({'BD':''})
+    # configFile['Main Script']['LD'].update({'LN':''})
+    # configFile['Main Script']['LD'].update({'LO':''})
+    # configFile['Main Script']['LD'].update({'OR':''})
+    # configFile['Main Script']['LD'].update({'SC':''})
+    # configFile['Main Script']['LD'].update({'TR':''})
+    # configFile['Main Script']['LD'].update({'YR':''})
+
     # PSE.writeConfigFile(configFile)
 
     return
