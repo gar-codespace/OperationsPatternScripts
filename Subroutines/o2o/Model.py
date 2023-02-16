@@ -920,9 +920,9 @@ class RStockulator:
             elif PSE.CM.getById(currentJmriId):
                 newRsAttribs = self.tpCars[id]
                 newCar = PSE.CM.getById(currentJmriId)
-                if newRsAttribs['aar'] in self.o2oConfig['CC']:
+                if newRsAttribs['aar'] in self.o2oConfig['CX']:
                     newCar.setCaboose(True)
-                if newRsAttribs['aar'] in self.o2oConfig['PC']:
+                if newRsAttribs['aar'] in self.o2oConfig['PX']:
                     newCar.setPassenger(True)
                 newCar.setLength(str(self.o2oConfig['DL']))
                 newCar.setWeight('2')
