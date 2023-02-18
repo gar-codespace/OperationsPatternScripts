@@ -3,6 +3,8 @@ Todo:
   RStockulator is a bit busy.
   make Throwback.Model.takeSnapShot() into a loop.
   Test if the user is not using divisions.
+  o2o set all track length of 0 to Settings.MaxTrainlength
+  Patterns Apply schedule also apply FD if it's in the schedule.
 
 Comments:
   Schedule does not prevent setting a car to a track.
