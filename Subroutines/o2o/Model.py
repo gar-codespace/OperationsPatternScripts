@@ -246,7 +246,7 @@ class Initiator:
 
         self.OSU = PSE.JMRI.jmrit.operations.setup
 
-        self.o2oConfig =  PSE.readConfigFile()
+        self.configFile =  PSE.readConfigFile()
         self.TpRailroad = ModelEntities.getTpRailroadJson('tpRailroadData')
 
         print(self.scriptName + ' ' + str(SCRIPT_REV))
@@ -270,17 +270,17 @@ class Initiator:
     def o2oDetailsToConFig(self):
         """Optional railroad details from the TrainPlayer layout are added to the config file."""
 
-        self.o2oConfig['Main Script']['LD'].update({'OR':self.TpRailroad['operatingRoad']})
-        self.o2oConfig['Main Script']['LD'].update({'TR':self.TpRailroad['territory']})
-        self.o2oConfig['Main Script']['LD'].update({'LO':self.TpRailroad['location']})
-        self.o2oConfig['Main Script']['LD'].update({'YR':self.TpRailroad['year']})
-        self.o2oConfig['Main Script']['LD'].update({'SC':self.TpRailroad['scale']})
-        self.o2oConfig['Main Script']['LD'].update({'LN':self.TpRailroad['layoutName']})
-        self.o2oConfig['Main Script']['LD'].update({'BD':self.TpRailroad['buildDate']})
-        self.o2oConfig['Main Script']['LD'].update({'ML':PSE.JMRI.jmrit.operations.setup.Setup.getMaxTrainLength()})
+        self.configFile['Main Script']['LD'].update({'OR':self.TpRailroad['operatingRoad']})
+        self.configFile['Main Script']['LD'].update({'TR':self.TpRailroad['territory']})
+        self.configFile['Main Script']['LD'].update({'LO':self.TpRailroad['location']})
+        self.configFile['Main Script']['LD'].update({'YR':self.TpRailroad['year']})
+        self.configFile['Main Script']['LD'].update({'SC':self.TpRailroad['scale']})
+        self.configFile['Main Script']['LD'].update({'LN':self.TpRailroad['layoutName']})
+        self.configFile['Main Script']['LD'].update({'BD':self.TpRailroad['buildDate']})
+        self.configFile['Main Script']['LD'].update({'ML':PSE.JMRI.jmrit.operations.setup.Setup.getMaxTrainLength()})
 
-        PSE.writeConfigFile(self.o2oConfig)
-        self.o2oConfig =  PSE.readConfigFile()
+        PSE.writeConfigFile(self.configFile)
+        self.configFile =  PSE.readConfigFile()
 
         return
 
@@ -290,17 +290,17 @@ class Initiator:
         _psLog.debug('setRailroadDetails')
 
     # Set the name
-        layoutName = self.o2oConfig['Main Script']['LD']['LN']
+        layoutName = self.configFile['Main Script']['LD']['LN']
 
         self.OSU.Setup.setRailroadName(layoutName)
     # Set the year
-        rrYear = self.o2oConfig['Main Script']['LD']['YR']
+        rrYear = self.configFile['Main Script']['LD']['YR']
         if rrYear:
             self.OSU.Setup.setYearModeled(rrYear)
 
-        rrScale = self.o2oConfig['Main Script']['LD']['SC']
+        rrScale = self.configFile['Main Script']['LD']['SC']
         if rrScale:
-            self.OSU.Setup.setScale(self.o2oConfig['Main Script']['SR'][rrScale.upper()])
+            self.OSU.Setup.setScale(self.configFile['Main Script']['SR'][rrScale.upper()])
 
         return
 
@@ -309,24 +309,24 @@ class Initiator:
 
         _psLog.debug('tweakOperationsXml')
 
-        self.OSU.Setup.setMainMenuEnabled(self.o2oConfig['Main Script']['TO']['SME'])
-        self.OSU.Setup.setCloseWindowOnSaveEnabled(self.o2oConfig['Main Script']['TO']['CWS'])
-        self.OSU.Setup.setBuildAggressive(self.o2oConfig['Main Script']['TO']['SBA'])
-        self.OSU.Setup.setStagingTrackImmediatelyAvail(self.o2oConfig['Main Script']['TO']['SIA'])
-        self.OSU.Setup.setCarTypes(self.o2oConfig['Main Script']['TO']['SCT'])
-        self.OSU.Setup.setStagingTryNormalBuildEnabled(self.o2oConfig['Main Script']['TO']['TNB'])
-        self.OSU.Setup.setManifestEditorEnabled(self.o2oConfig['Main Script']['TO']['SME'])
+        self.OSU.Setup.setMainMenuEnabled(self.configFile['Main Script']['TO']['SME'])
+        self.OSU.Setup.setCloseWindowOnSaveEnabled(self.configFile['Main Script']['TO']['CWS'])
+        self.OSU.Setup.setBuildAggressive(self.configFile['Main Script']['TO']['SBA'])
+        self.OSU.Setup.setStagingTrackImmediatelyAvail(self.configFile['Main Script']['TO']['SIA'])
+        self.OSU.Setup.setCarTypes(self.configFile['Main Script']['TO']['SCT'])
+        self.OSU.Setup.setStagingTryNormalBuildEnabled(self.configFile['Main Script']['TO']['TNB'])
+        self.OSU.Setup.setManifestEditorEnabled(self.configFile['Main Script']['TO']['SME'])
 
         return
 
     def setReportMessageFormat(self):
         """Sets the default message format as defined in the configFile."""
 
-        self.OSU.Setup.setPickupManifestMessageFormat(self.o2oConfig['o2o']['RMF']['PUC'])
-        self.OSU.Setup.setDropManifestMessageFormat(self.o2oConfig['o2o']['RMF']['SOC'])
-        self.OSU.Setup.setLocalManifestMessageFormat(self.o2oConfig['o2o']['RMF']['MC'])
-        self.OSU.Setup.setPickupEngineMessageFormat(self.o2oConfig['o2o']['RMF']['PUL'])
-        self.OSU.Setup.setDropEngineMessageFormat(self.o2oConfig['o2o']['RMF']['SOL'])
+        self.OSU.Setup.setPickupManifestMessageFormat(self.configFile['o2o']['RMF']['PUC'])
+        self.OSU.Setup.setDropManifestMessageFormat(self.configFile['o2o']['RMF']['SOC'])
+        self.OSU.Setup.setLocalManifestMessageFormat(self.configFile['o2o']['RMF']['MC'])
+        self.OSU.Setup.setPickupEngineMessageFormat(self.configFile['o2o']['RMF']['PUL'])
+        self.OSU.Setup.setDropEngineMessageFormat(self.configFile['o2o']['RMF']['SOL'])
 
         return
 
@@ -468,7 +468,7 @@ class Localculator:
 
         self.scriptName = SCRIPT_NAME + '.Localculator'
 
-        self.o2oConfig = PSE.readConfigFile()
+        self.configFile = PSE.readConfigFile()
         self.tpRailroadData = ModelEntities.getTpRailroadJson('tpRailroadData')
 
         self.currentLocations = []
@@ -523,7 +523,7 @@ class Localculator:
     def updateContinuingLocations(self):
         """The only attribs that are updated are Length, Type and Schedule."""
 
-        oldMaxLength = self.o2oConfig['Main Script']['LD']['ML']
+        oldMaxLength = self.configFile['Main Script']['LD']['ML']
         newMaxLength = PSE.JMRI.jmrit.operations.setup.Setup.getMaxTrainLength()
 
         for location in self.continuingLocations:
@@ -534,8 +534,8 @@ class Localculator:
             type = ''
             for index, trackData in self.tpRailroadData['locales'].items():
                 if trackData['location'] == locationName and trackData['track'] == trackName:
-                    length = self.o2oConfig['o2o']['DL'] * int(trackData['capacity'])
-                    type = self.o2oConfig['o2o']['TR'][trackData['type']]
+                    length = self.configFile['o2o']['DL'] * int(trackData['capacity'])
+                    type = self.configFile['o2o']['TR'][trackData['type']]
                     label = trackData['label']
 
             track = PSE.LM.getLocationByName(locationName).getTrackByName(trackName, None)
@@ -549,15 +549,15 @@ class Localculator:
                 track.setSchedule(newSchedule)
                 # PSE.LM.getLocationByName(locationName).firePropertyChange(track.SCHEDULE_ID_CHANGED_PROPERTY, None, newSchedule.getId())
 
-        self.o2oConfig['Main Script']['LD'].update({'DT':newMaxLength})
-        PSE.writeConfigFile(self.o2oConfig)
-        self.o2oConfig =  PSE.readConfigFile()
+        self.configFile['Main Script']['LD'].update({'DT':newMaxLength})
+        PSE.writeConfigFile(self.configFile)
+        self.configFile =  PSE.readConfigFile()
 
         return
 
     def addNewLocations(self):
 
-        maxTrackLength = self.o2oConfig['Main Script']['LD']['DT']
+        maxTrackLength = self.configFile['Main Script']['LD']['DT']
 
         for location in self.newLocations:
             lt = location.split(';')
@@ -566,12 +566,12 @@ class Localculator:
             length = 0
             type = ''
             for index, trackData in self.tpRailroadData['locales'].items():
-                length = (self.o2oConfig['o2o']['DL'] + 4) * int(trackData['capacity'])
+                length = (self.configFile['o2o']['DL'] + 4) * int(trackData['capacity'])
                 if length == 0:
                     length = maxTrackLength
 
                 if trackData['location'] == locationName and trackData['track'] == trackName:
-                    type = self.o2oConfig['o2o']['TR'][trackData['type']]
+                    type = self.configFile['o2o']['TR'][trackData['type']]
                     location = PSE.LM.newLocation(locationName)
                     track = location.addTrack(trackName, type)
                     track.setLength(length)
@@ -695,11 +695,11 @@ class RStockulator:
 
         self.scriptName = SCRIPT_NAME + '.RStockulator'
 
-        self.o2oConfig = PSE.readConfigFile('o2o')
+        self.configFile = PSE.readConfigFile('o2o')
         self.jmriCars = PSE.CM.getList()
         self.jmriLocos = PSE.EM.getList()
 
-        self.tpRollingStockFileName = self.o2oConfig['RF']['TRR']
+        self.tpRollingStockFileName = self.configFile['RF']['TRR']
 
         self.tpInventory = []
         self.tpCars = {}
@@ -931,7 +931,7 @@ class RStockulator:
             if PSE.EM.getById(currentJmriId):
                 newRsAttribs = self.tpLocos[id]
                 newLoco = PSE.EM.getById(currentJmriId)
-                newLoco.setLength(str(self.o2oConfig['DL']))
+                newLoco.setLength(str(self.configFile['DL']))
                 newLoco.setModel(newRsAttribs['model'][0:11])
             # Setting the model will automatically set the type
                 newLoco.setWeight('2')
@@ -941,11 +941,11 @@ class RStockulator:
             elif PSE.CM.getById(currentJmriId):
                 newRsAttribs = self.tpCars[id]
                 newCar = PSE.CM.getById(currentJmriId)
-                if newRsAttribs['aar'] in self.o2oConfig['CX']:
+                if newRsAttribs['aar'] in self.configFile['CX']:
                     newCar.setCaboose(True)
-                if newRsAttribs['aar'] in self.o2oConfig['PX']:
+                if newRsAttribs['aar'] in self.configFile['PX']:
                     newCar.setPassenger(True)
-                newCar.setLength(str(self.o2oConfig['DL']))
+                newCar.setLength(str(self.configFile['DL']))
                 newCar.setWeight('2')
                 newCar.setColor('Red')
 
