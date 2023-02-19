@@ -31,6 +31,7 @@ def newJmriRailroad():
         Controller.StartUp.newJmriRailroad
         """
 
+    PSE.closeSubordinateWindows()
     PSE.remoteCalls('resetCalls')
 
     PSE.TMX.makeBackupFile('operations/OperationsTrainRoster.xml')
@@ -40,6 +41,7 @@ def newJmriRailroad():
     PSE.RM.dispose()
     PSE.DM.dispose()
     PSE.LM.dispose()
+    # PSE.SM.dispose()
     PSE.CM.dispose()
     PSE.EM.dispose()
 
@@ -47,9 +49,9 @@ def newJmriRailroad():
 
     Attributator().attributate()
 
-    ModelEntities.newSchedules()
-
     Localculator().localculate()
+
+    ModelEntities.newSchedules()
 
     Divisionator().divisionate()
 
@@ -72,15 +74,16 @@ def updateJmriRailroad():
             Controller.StartUp.updateJmriRailroad
         """
 
+    PSE.closeSubordinateWindows()
     PSE.remoteCalls('refreshCalls')
     
     BuiltTrainExport.FindTrain().trainResetter()
 
-    ModelEntities.newSchedules()
-
     Attributator().attributate()
 
     Localculator().localculate()
+
+    ModelEntities.newSchedules()
 
     Divisionator().divisionate()
 
@@ -99,6 +102,7 @@ def updateJmriRollingingStock():
             Controller.Startup.updateJmriRollingingStock
         """
 
+    PSE.closeSubordinateWindows()
     BuiltTrainExport.FindTrain().trainResetter()
 
     Attributator().attributate()
@@ -256,7 +260,7 @@ class Initiator:
 
         self.o2oDetailsToConFig()
         self.setRailroadDetails()
-        # self.tweakOperationsXml()
+        self.tweakOperationsXml()
         self.setReportMessageFormat()
 
         _psLog.info('JMRI operations settings updated')
@@ -273,6 +277,7 @@ class Initiator:
         self.o2oConfig['Main Script']['LD'].update({'SC':self.TpRailroad['scale']})
         self.o2oConfig['Main Script']['LD'].update({'LN':self.TpRailroad['layoutName']})
         self.o2oConfig['Main Script']['LD'].update({'BD':self.TpRailroad['buildDate']})
+        self.o2oConfig['Main Script']['LD'].update({'ML':PSE.JMRI.jmrit.operations.setup.Setup.getMaxTrainLength()})
 
         PSE.writeConfigFile(self.o2oConfig)
         self.o2oConfig =  PSE.readConfigFile()
@@ -304,13 +309,13 @@ class Initiator:
 
         _psLog.debug('tweakOperationsXml')
 
-        self.OSU.Setup.setMainMenuEnabled(self.o2oConfig['o2o']['TO']['SME'])
-        self.OSU.Setup.setCloseWindowOnSaveEnabled(self.o2oConfig['o2o']['TO']['CWS'])
-        self.OSU.Setup.setBuildAggressive(self.o2oConfig['o2o']['TO']['SBA'])
-        self.OSU.Setup.setStagingTrackImmediatelyAvail(self.o2oConfig['o2o']['TO']['SIA'])
-        self.OSU.Setup.setCarTypes(self.o2oConfig['o2o']['TO']['SCT'])
-        self.OSU.Setup.setStagingTryNormalBuildEnabled(self.o2oConfig['o2o']['TO']['TNB'])
-        self.OSU.Setup.setManifestEditorEnabled(self.o2oConfig['o2o']['TO']['SME'])
+        self.OSU.Setup.setMainMenuEnabled(self.o2oConfig['Main Script']['TO']['SME'])
+        self.OSU.Setup.setCloseWindowOnSaveEnabled(self.o2oConfig['Main Script']['TO']['CWS'])
+        self.OSU.Setup.setBuildAggressive(self.o2oConfig['Main Script']['TO']['SBA'])
+        self.OSU.Setup.setStagingTrackImmediatelyAvail(self.o2oConfig['Main Script']['TO']['SIA'])
+        self.OSU.Setup.setCarTypes(self.o2oConfig['Main Script']['TO']['SCT'])
+        self.OSU.Setup.setStagingTryNormalBuildEnabled(self.o2oConfig['Main Script']['TO']['TNB'])
+        self.OSU.Setup.setManifestEditorEnabled(self.o2oConfig['Main Script']['TO']['SME'])
 
         return
 
@@ -518,6 +523,9 @@ class Localculator:
     def updateContinuingLocations(self):
         """The only attribs that are updated are Length, Type and Schedule."""
 
+        oldMaxLength = self.o2oConfig['Main Script']['LD']['ML']
+        newMaxLength = PSE.JMRI.jmrit.operations.setup.Setup.getMaxTrainLength()
+
         for location in self.continuingLocations:
             lt = location.split(';')
             locationName = lt[0]
@@ -532,16 +540,24 @@ class Localculator:
 
             track = PSE.LM.getLocationByName(locationName).getTrackByName(trackName, None)
             track.setTrackType(type)
-            track.setLength(length)
+            if track.getLength() == oldMaxLength:
+                track.setLength(newMaxLength)
             
             if track.getTrackType() == 'Spur':
+                track.setLength(length)
                 newSchedule = PSE.SM.getScheduleByName(label)
                 track.setSchedule(newSchedule)
                 # PSE.LM.getLocationByName(locationName).firePropertyChange(track.SCHEDULE_ID_CHANGED_PROPERTY, None, newSchedule.getId())
 
+        self.o2oConfig['Main Script']['LD'].update({'DT':newMaxLength})
+        PSE.writeConfigFile(self.o2oConfig)
+        self.o2oConfig =  PSE.readConfigFile()
+
         return
 
     def addNewLocations(self):
+
+        maxTrackLength = self.o2oConfig['Main Script']['LD']['DT']
 
         for location in self.newLocations:
             lt = location.split(';')
@@ -550,8 +566,11 @@ class Localculator:
             length = 0
             type = ''
             for index, trackData in self.tpRailroadData['locales'].items():
+                length = (self.o2oConfig['o2o']['DL'] + 4) * int(trackData['capacity'])
+                if length == 0:
+                    length = maxTrackLength
+
                 if trackData['location'] == locationName and trackData['track'] == trackName:
-                    length = self.o2oConfig['o2o']['DL'] * int(trackData['capacity'])
                     type = self.o2oConfig['o2o']['TR'][trackData['type']]
                     location = PSE.LM.newLocation(locationName)
                     track = location.addTrack(trackName, type)
@@ -874,9 +893,11 @@ class RStockulator:
             elif PSE.CM.getById(currentJmriId):
                 newRsAttribs = self.tpCars[id]
                 rs = PSE.CM.getById(currentJmriId)
-                shipLoadName = self.getLoadFromSchedule(newRsAttribs)
+                shipLoadName, destination = self.getLoadFromSchedule(newRsAttribs)
                 if shipLoadName:
                     rs.setLoadName(shipLoadName)
+                if destination:
+                    rs.setFinalDestination(destination)
                 rs.setKernel(PSE.KM.getKernelByName(newRsAttribs['kernel']))
 
             rsRoad, rsNumber = ModelEntities.parseCarId(newRsAttribs['id'])
@@ -939,15 +960,15 @@ class RStockulator:
         track = location.getTrackByName(attribs['track'], None)
 
         if location.isStaging():
-            return 'E'
+            return 'E', None
 
         try:
             jSchedule = track.getSchedule()
             jItem = jSchedule.getItemByType(attribs['aar'])
-            return jItem.getShipLoadName()
+            return jItem.getShipLoadName(), jItem.getDestination()
             
         except:
-             return
+             return None, None
 
     def deregisterOldRs(self):
 

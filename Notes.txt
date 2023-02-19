@@ -3,8 +3,6 @@ Todo:
   RStockulator is a bit busy.
   make Throwback.Model.takeSnapShot() into a loop.
   Test if the user is not using divisions.
-  o2o set all track length of 0 to Settings.MaxTrainlength
-  Patterns Apply schedule also apply FD if it's in the schedule.
 
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -119,6 +117,9 @@ Tested Items:
     Tries to set a new cars load from schedule OK.
     o2o Model deleteOldTracks(self): only deletes leftover tracks from unchanged locations.
     Update Rolling Stock only updates Name, Number, Location, Load, Consist/Kernal, Type OK.
+    Sets undefined track length to Settings.MaxTrainLength OK.
+    Updates new Settings.MaxTrainlength OK.
+    Adds FD to car at industry if schedule has a FD OK.
 
 Catches Items:
   Catches pattern report button press no tracks selected OK.
