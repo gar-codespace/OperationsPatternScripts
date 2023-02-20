@@ -1,8 +1,5 @@
 Todo:
   How to publish DeepL?
-  RStockulator is a bit busy.
-  make Throwback.Model.takeSnapShot() into a loop.
-  Test if the user is not using divisions.
 
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -20,7 +17,7 @@ Comments:
   TrainPlayer names the location for unlabeled tracks as 'Unreported'. o2o then imports this location as
   'Unreported' so as with other locations, the name is not translated.
   Since the Patterns track dict is created when called, it is not necessary to save it into configFile['Patterns']['PT']
-  o2o New Railroad does npt reset Throwback.
+  o2o New Railroad does not reset Throwback.
 
 Tested Items:
   Plugin
@@ -46,7 +43,23 @@ Tested Items:
     Subroutines activate and deactivate OK.
     All subroutine restarters refactored as PSE.restartSubroutineByName OK.
 
-  Reports
+  Language Bundle
+    Language changes OK.
+    Language bundle sketched in, to be hardened against web errors.
+    Bundle added with French test case.
+    BUNDLE calls placed in 'View' methods only as much as possible.
+    Bundle creates new plugin and help page translations OK.
+    DYI version of concurrency seems to work OK.
+
+  jPlus
+    Subroutine turns on and off OK.
+    Extended RR details works with JMRI repoert OK.
+    Extended RR details works with JMRI webserver OK.
+    Extended RR details works with Patterns repoert OK.
+
+  Patterns
+    Subroutine turns on and off OK.
+    Test if the user is not using divisions OK.
     Test with really long location and spur names OK.
     PatternScriptEntities.getShortLoadType works and translates OK.
     Kernel Size is displaying in reports OK.
@@ -68,8 +81,6 @@ Tested Items:
     Reports ignore Tab,Tab2, Tab3 OK.
     JMRI and j Plus output to text and csv manifest and switch list OK.
     OPS and j Plus output to text and csv manifest and switch list OK.
-
-  Actions
     Caboose and passenger move OK.
     Caboose and Passenger car types are loaded as O for Occupied OK.
     When setting to a spur the reserved column for the spur shows an entry, as it should when setting a destination.
@@ -82,15 +93,8 @@ Tested Items:
     Set cars to spur removes FD OK.
     Toggle AS Apply schedule in config file works OK.
 
-  Language Bundle
-    Language changes OK.
-    Language bundle sketched in, to be hardened against web errors.
-    Bundle added with French test case.
-    BUNDLE calls placed in 'View' methods only as much as possible.
-    Bundle creates new plugin and help page translations OK.
-    DYI version of concurrency seems to work OK.
-
   o2o
+    Subroutine turns on and off OK.
     New JMRI Railroad working OK.
     When active, exports JMRI manifest to TP OK.
     When not active, does not export JMRI manifest to TP OK.
@@ -120,6 +124,13 @@ Tested Items:
     Sets undefined track length to Settings.MaxTrainLength OK.
     Updates new Settings.MaxTrainlength OK.
     Adds FD to car at industry if schedule has a FD OK.
+
+  Throwback
+    Subroutine turns on and off OK.
+    Makes commits OK.
+    Scroll through commits OK.
+    Vertical or horizontal display OK.
+    Throwbacks one, some, or all xml OK.
 
 Catches Items:
   Catches pattern report button press no tracks selected OK.

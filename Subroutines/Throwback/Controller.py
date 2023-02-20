@@ -71,7 +71,7 @@ class StartUp:
     def startUpTasks(self):
         """Run these tasks when this subroutine is started."""
 
-        Model.countSnapShots()
+        Model.countCommits()
 
         return
 
@@ -91,8 +91,8 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        Model.takeSnapShot(self.widgets['display'])
-        Model.countSnapShots()
+        Model.makeCommit(self.widgets['display'])
+        Model.countCommits()
         lastSS = PSE.readConfigFile('Throwback')['SS']
 
         for widget in self.widgets['display']:
@@ -110,7 +110,7 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        previousSS = Model.previousSnapShot()
+        previousSS = Model.previousCommit()
 
         for widget in self.widgets['display']:
             if widget.getName() == 'timeStamp':
@@ -125,7 +125,7 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        nextSS = Model.nextSnapShot()
+        nextSS = Model.nextCommit()
 
         for widget in self.widgets['display']:
             if widget.getName() == 'timeStamp':
@@ -142,7 +142,7 @@ class StartUp:
 
         PSE.remoteCalls('resetCalls')
 
-        Model.throwbackSnapShot(self.widgets['display'])
+        Model.throwbackCommit(self.widgets['display'])
 
         PSE.restartAllSubroutines()
 

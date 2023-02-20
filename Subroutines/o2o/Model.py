@@ -754,6 +754,7 @@ class RStockulator:
         return
 
     def checkFile(self):
+        """Checks the validity of tpRollingStockData.json"""
 
         fileName = 'tpRollingStockData.json'
         targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
@@ -830,10 +831,8 @@ class RStockulator:
             if line[2].startswith('ET'):
                 continue
             if line[2].startswith('E'):
-                # self.tpLocos[line[0].replace(" ", "")] = {'model': line[1], 'aar': line[2], 'location': line[3], 'track': line[4], 'load': line[5], 'consist': line[6]}
                 self.tpLocos[line[7]] = {'model': line[1], 'aar': line[2], 'location': line[3], 'track': line[4], 'load': line[5], 'consist': line[6], 'id': line[0]}
             else:
-                # self.tpCars[line[0].replace(" ", "")] = {'type': line[1], 'aar': line[2], 'location': line[3], 'track': line[4], 'load': line[5], 'kernel': line[6]}
                 self.tpCars[line[7]] = {'type': line[1], 'aar': line[2], 'location': line[3], 'track': line[4], 'load': line[5], 'kernel': line[6], 'id': line[0]}
 
         return
@@ -887,7 +886,6 @@ class RStockulator:
 
     def setGenericRsAttribs(self, idList):
         """
-        Used when updating rolling stock.
         Sets only the road name, number, kernal/consist, location, track and load.
         """
 
