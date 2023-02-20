@@ -18,8 +18,10 @@ _psLog = PSE.LOGGING.getLogger('OPS.OB.Bundle')
 
 
 class CreateStubFile:
-    """Copy of the JMRI Java version of CreateStubFile.
-        The stub file will substitute english if the help file for the current locale doesn't exist."""
+    """
+    Copy of the JMRI Java version of CreateStubFile.
+    The stub file will substitute english if the help file for the current locale doesn't exist.
+    """
 
     def __init__(self):
 
@@ -127,12 +129,13 @@ def makeDefaultPluginBundle():
     return
 
 def getBundleForLocale():
-    """Gets the bundle json for the current locale if it exists, otherwise english.
-        Called by:
-        Main.Controller.buildThePlugin
-        Main.Controller.ptItemSelected
-        BuiltTrainExport
-        """
+    """
+    Gets the bundle json for the current locale if it exists, otherwise english.
+    Called by:
+    Main.Controller.buildThePlugin
+    Main.Controller.ptItemSelected
+    BuiltTrainExport
+    """
 
     bundleFileLocation = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'plugin.en.json')
     defaultBundle = PSE.loadJson(PSE.genericReadReport(bundleFileLocation))
@@ -193,8 +196,10 @@ def makeDefaultHelpFile():
     return
 
 def validateHelpForLocale():
-    """Checks taht a help html exists for the current locale.
-        If not, copy the default english version as the current locales' help file."""
+    """
+    Checks taht a help html exists for the current locale.
+    If not, copy the default english version as the current locales' help file.
+    """
 
     localeHelpHtml = 'Help.' + PSE.psLocale()[:2] + '.html'
     localeHelpFileLocation = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsSupport', localeHelpHtml)
@@ -212,9 +217,10 @@ def validateHelpForLocale():
     return
 
 def updateHelpFileForLocale():
-    """Checks that all the activated subroutines have entries in the help html for the current locale.
-        If not, the english version is added to the locales' help file.
-        """
+    """
+    Checks that all the activated subroutines have entries in the help html for the current locale.
+    If not, the english version is added to the locales' help file.
+    """
 
     if PSE.psLocale()[:2] =='en':
         return
@@ -246,10 +252,11 @@ def updateHelpFileForLocale():
 
 
 def validateKeyFile():
-    """Checks that the keys.py file exists
-        Called by:
-        Main.View
-        """
+    """
+    Checks that the keys.py file exists
+    Called by:
+    Main.View
+    """
 
     itemTarget =  PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'Keys.py')
     if PSE.JAVA_IO.File(itemTarget).isFile():
@@ -275,10 +282,11 @@ def translateBundles():
     return
 
 def translateHelpHtml():
-    """Translate the help html one line at a time.
-        Use re to cull out only the text portions of the help html.
-        Breaking re up into 3 patterns seems more managable.
-        """
+    """
+    Translate the help html one line at a time.
+    Use re to cull out only the text portions of the help html.
+    Breaking re up into 3 patterns seems more managable.
+    """
 
     translator = Translator()
     translator.setTranslationService()
@@ -324,11 +332,12 @@ def translateHelpHtml():
     return
 
 def batchTranslator(textBundle):
-    """Mini controller translates each item in the bundleFile,
-        then appends it to the RAM based scratchFile.
-        used by:
-        translateBundles
-        """
+    """
+    Mini controller translates each item in the bundleFile,
+    then appends it to the RAM based scratchFile.
+    used by:
+    translateBundles
+    """
 
     startTime = PSE.TIME.time()
 
@@ -364,8 +373,10 @@ class Translator:
         return
 
     def setTranslationService(self):
-        """Gets the translator from readConfigFile('CP')['TC']
-            Example: self.translationService = Translators.UseDeepL()"""
+        """
+        Gets the translator from readConfigFile('CP')['TC']
+        Example: self.translationService = Translators.UseDeepL()
+        """
 
         self.translationService = getattr(Translators, self.translatorChoice)()
 

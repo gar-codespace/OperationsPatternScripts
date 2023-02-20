@@ -15,9 +15,10 @@ from Subroutines.jPlus import Model
 
 
 def startupCalls():
-    """Methods called when this subroutine is initialized by the Main Script.
-        These calls are not turned off.
-        """
+    """
+    Methods called when this subroutine is initialized by the Main Script.
+    These calls are not turned off.
+    """
 
     return
 

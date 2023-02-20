@@ -74,9 +74,10 @@ class StartUp:
         return
         
     def activateWidgets(self):
-        """The widget.getName() value is the name of the action for the widget.
-            IE 'button'
-            """
+        """
+        The widget.getName() value is the name of the action for the widget.
+        IE 'button'
+        """
 
         for widget in self.widgets:
             widget.actionPerformed = getattr(self, widget.getName())

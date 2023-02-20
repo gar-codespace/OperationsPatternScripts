@@ -107,10 +107,11 @@ class Logger:
 
 
 def makePatternLog():
-    """creates a pattern log for display based on the log level, as set by getBuildReportLevel.
-        Called by:
-        MainScript.Controller.logItemSelected
-        """
+    """
+    creates a pattern log for display based on the log level, as set by getBuildReportLevel.
+    Called by:
+    MainScript.Controller.logItemSelected
+    """
 
     outputPatternLog = ''
     buildReportLevel = JMRI.jmrit.operations.setup.Setup.getBuildReportLevel()
@@ -137,10 +138,11 @@ def makePatternLog():
     return outputPatternLog
 
 def logIndex():
-    """Moved here but may be put back into configFile.
-        Called by:
-        PSE.makePatternLog
-        """
+    """
+    Moved here but may be put back into configFile.
+    Called by:
+    PSE.makePatternLog
+    """
 
     loggingIndex = {"9": "- CRITICAL -", "7": "- ERROR -", "5": "- WARNING -", "3": "- INFO -", "1": "- DEBUG -"}
 
@@ -159,9 +161,10 @@ def restartAllSubroutines():
     return
 
 def restartSubroutineByName(subRoutineName):
-    """Finds the named subroutine in the plugin and restarts it.
-        subroutineName: Subroutines.<subroutine>
-        """
+    """
+    Finds the named subroutine in the plugin and restarts it.
+    subroutineName: Subroutines.<subroutine>
+    """
 
     frameName = BUNDLE['Pattern Scripts']
     subroutine = getComponentByName(frameName, subRoutineName)
@@ -234,10 +237,11 @@ def closePsWindow():
     return
 
 def getComponentByName(frameTitle, componentName):
-    """Gets a frame by title.
-        Searches a frame for a component by name.
-        Uses crawler() to find a component in a frame.
-        """
+    """
+    Gets a frame by title.
+    Searches a frame for a component by name.
+    Uses crawler() to find a component in a frame.
+    """
 
     global CRAWLER
     CRAWLER = []
@@ -273,11 +277,12 @@ def openSystemConsole():
     return
 
 def openOutputFrame(message):
-    """The Script Output Window is used to display critical errors.
-        Adds the message to the Script Output window.
-        https://groups.io/g/jmriusers/message/33745
-        https://groups.io/g/jmriusers/message/33747
-        """
+    """
+    The Script Output Window is used to display critical errors.
+    Adds the message to the Script Output window.
+    https://groups.io/g/jmriusers/message/33745
+    https://groups.io/g/jmriusers/message/33747
+    """
 
     bundle = JMRI.jmrit.jython.Bundle()
     frameName = bundle.handleGetMessage('TitleOutputFrame')
@@ -311,9 +316,10 @@ def closeOutputFrame():
     return
 
 def closeSubordinateWindows():
-    """Close all but the top level windows.
-        Called by:
-        """
+    """
+    Close all but the top level windows.
+    Called by:
+    """
 
     console = APPS.Bundle().handleGetMessage('TitleConsole')
     patternScripts = BUNDLE['Pattern Scripts']
@@ -333,7 +339,6 @@ def closeSubordinateWindows():
     return
 
 def closeTopLevelWindows():
-    """        """
 
     console = APPS.Bundle().handleGetMessage('TitleConsole')
     patternScripts = BUNDLE['Pattern Scripts']
@@ -350,11 +355,12 @@ def closeTopLevelWindows():
     return
 
 def getPsButton():
-    """Gets the Pattern Scripts button on the PanelPro frame.
-        Called by:
-        Listeners.PatternScriptsWindow.windowClosed
-        Listeners.PatternScriptsWindow.windowOpened
-        """
+    """
+    Gets the Pattern Scripts button on the PanelPro frame.
+    Called by:
+    Listeners.PatternScriptsWindow.windowClosed
+    Listeners.PatternScriptsWindow.windowOpened
+    """
 
     buttonSpaceComponents = APPS.Apps.buttonSpace().getComponents()
     for component in buttonSpaceComponents:
@@ -364,11 +370,12 @@ def getPsButton():
             return None
 
 def closeSetCarsWindows():
-    """Close all the Set Cars windows when the Pattern Scripts window is closed.
-        Called by:
-        MainScript.Controller.closePsWindow
-        Listeners.PatternScriptsWindow.windowClosing
-        """
+    """
+    Close all the Set Cars windows when the Pattern Scripts window is closed.
+    Called by:
+    MainScript.Controller.closePsWindow
+    Listeners.PatternScriptsWindow.windowClosing
+    """
 
     for frame in JMRI.util.JmriJFrame.getFrameList():
         if frame.getName() == 'setCarsWindow':
@@ -378,12 +385,13 @@ def closeSetCarsWindows():
     return
 
 def closeOpsWindows(windowName):
-    """Close all the windows of a certain name.
-        Called by:
-        MainScript.Controller.closePsWindow
-        Listeners.PatternScriptsWindow.windowClosing
-        controllerSetCarsForm.setRsButton
-        """
+    """
+    Close all the windows of a certain name.
+    Called by:
+    MainScript.Controller.closePsWindow
+    Listeners.PatternScriptsWindow.windowClosing
+    controllerSetCarsForm.setRsButton
+    """
 
     for frame in JMRI.util.JmriJFrame.getFrameList():
         if frame.getName() == windowName:
@@ -393,11 +401,12 @@ def closeOpsWindows(windowName):
     return
 
 def updateWindowParams(window):
-    """Setting JmriJFrame(True, True) has no effect that I can figure.
-        Called by:
-        MainScript.Controller.closePsWindow
-        Listeners.PatternScriptsWindow.windowClosing
-        """
+    """
+    Setting JmriJFrame(True, True) has no effect that I can figure.
+    Called by:
+    MainScript.Controller.closePsWindow
+    Listeners.PatternScriptsWindow.windowClosing
+    """
 
     configPanel = readConfigFile()
     configPanel['Main Script']['CP'].update({'PH': window.getHeight()})
@@ -413,9 +422,10 @@ def updateWindowParams(window):
 
 
 def remoteCalls(call):
-    """call is one of four remote calls in each subroutine RemoteCalls module.
-        startupCalls, activatedCalls, deActivatedCalls, refreshCalls
-        """
+    """
+    call is one of four remote calls in each subroutine RemoteCalls module.
+    startupCalls, activatedCalls, deActivatedCalls, refreshCalls
+    """
 
     for subroutine in getSubroutineDirs():
         xModule = 'Subroutines.' + subroutine
@@ -426,22 +436,25 @@ def remoteCalls(call):
     return
 
 def psLocale():
-    """Dealers choice, both work.
-        Called by:
-        Bundle
-        Translaters
-        """
+    """
+    Dealers choice, both work.
+    Called by:
+    Bundle
+    Translaters
+    """
 
     return PM.getLocale().toString()
     # return unicode(PM.getLocale(), ENCODING)
 
 def occuranceTally(listOfOccurances):
-    """Tally the occurances of a word in a list and return a dictionary.
-        Home grown version of collections.Counter.
-        Called by:
-        ModelEntities.getKernelTally
-        ViewEntities.makeTextReportLocations
-        """
+    """
+    Tally the occurances of a word in a list and return a dictionary.
+    Home grown version of collections.Counter.
+    Called by:
+    ModelEntities.getKernelTally
+    ViewEntities.makeTextReportLocations
+    o2o.ModelEntities
+    """
 
     dict = {}
     while len(listOfOccurances):
@@ -456,10 +469,11 @@ def occuranceTally(listOfOccurances):
     return dict
 
 def getAllDivisionNames():
-    """JMRI sorts the list.
-        Called by:
-        Model.updatePatternLocation
-        """
+    """
+    JMRI sorts the list.
+    Called by:
+    Model.updatePatternLocation
+    """
 
     divisionNames = []
     for item in DM.getDivisionsByNameList():
@@ -489,15 +503,16 @@ def getDivisionForLocation(locationName):
     return divisionName
 
 def getAllLocationNames():
-    """JMRI sorts the list, returns list of location names.
-        Called by:
-        o2o.Model.UpdateLocationsAndTracks
-        PSE.getAllTrackIds
-        Model.updatePatternLocation
-        Model.updateLocations
-        ModelEntities.testSelectedItem
-        o2oSubroutine.Model.UpdateLocationsAndTracks.addNewLocations
-        """
+    """
+    JMRI sorts the list, returns list of location names.
+    Called by:
+    o2o.Model.UpdateLocationsAndTracks
+    PSE.getAllTrackIds
+    Podel.updatePatternLocation
+    Model.updateLocations
+    ModelEntities.testSelectedItem
+    o2oSubroutine.Model.UpdateLocationsAndTracks.addNewLocations
+    """
 
     locationNames = []
     for item in LM.getLocationsByNameList():
@@ -506,12 +521,13 @@ def getAllLocationNames():
     return locationNames
 
 def getAllTracks():
-    """All track objects for all locations.
-        Called by:
-        Model.UpdateLocationsAndTracks
-        ModelEntities.setNonSpurTrackLength
-        Model.updatePatternLocation
-        """
+    """
+    All track objects for all locations.
+    Called by:
+    Model.UpdateLocationsAndTracks
+    ModelEntities.setNonSpurTrackLength
+    Model.updatePatternLocation
+    """
 
     trackList = []
     for location in LM.getList():
@@ -524,13 +540,14 @@ def getAllTracks():
 
 
 def validTime(epochTime=0):
-    """Valid Time, get local time adjusted for time zone and dst.
-        Called by:
-        o2oSubroutine.ModelImport.TrainPlayerImporter.processFileHeaders
-        o2oSubroutine.ModelWorkEvents.jmriManifestConversion.convertHeader
-        PatternTracksSubroutine.ModelEntities.initializeReportHeader
-        Nov 15, 2022 11:53 AM PST vs Valid 11/15/2022 11:54
-        """
+    """
+    Valid Time, get local time adjusted for time zone and dst.
+    Called by:
+    o2oSubroutine.ModelImport.TrainPlayerImporter.processFileHeaders
+    o2oSubroutine.ModelWorkEvents.jmriManifestConversion.convertHeader
+    PatternTracksSubroutine.ModelEntities.initializeReportHeader
+    Nov 15, 2022 11:53 AM PST vs Valid 11/15/2022 11:54
+    """
 
     year = getYear()
     time = getTime(epochTime)
@@ -571,10 +588,11 @@ def getYear():
         return TIME.strftime('%Y', TIME.gmtime(TIME.time()))
 
 def convertJmriDateToEpoch(jmriTime):
-    """Example: 2022-02-26T17:16:17.807+0000
-        Called by:
-        o2oSubroutine.ModelWorkEvents.jmriManifestConversion.convertHeader
-        """
+    """
+    Example: 2022-02-26T17:16:17.807+0000
+    Called by:
+    o2oSubroutine.ModelWorkEvents.jmriManifestConversion.convertHeader
+    """
 
     epochTime = TIME.mktime(TIME.strptime(jmriTime, "%Y-%m-%dT%H:%M:%S.%f+0000"))
 
@@ -586,11 +604,12 @@ def convertJmriDateToEpoch(jmriTime):
     return epochTime
 
 def formatText(item, length):
-    """Truncate each item to its defined length in configFile.json and add a space at the end.
-        Called by:
-        PatternTracksSubroutine.ViewEntities.merge
-        PatternTracksSubroutine.ViewEntities.loopThroughRs
-        """
+    """
+    Truncate each item to its defined length in configFile.json and add a space at the end.
+    Called by:
+    PatternTracksSubroutine.ViewEntities.merge
+    PatternTracksSubroutine.ViewEntities.loopThroughRs
+    """
 
     if isinstance(item, bool): # Hazardous is a boolean
         item = 'HazMat'
@@ -602,14 +621,15 @@ def formatText(item, length):
     return xItem + u' '
 
 def getShortLoadType(car):
-    """Replaces empty and load with E, L, or O for occupied.
-        JMRI defines custom load type as empty but default load type as Empty, hence the 'or' statement.
-        Load, Empty, Occupied and Unknown are translated by the bundle.
-        Called by:
-        ViewEntities.modifyTrackPatternReport
-        ModelWorkEvent.o2oSwitchListConversion.parsePtRs
-        ModelWorkEvents.jmriManifestConversion.parseRS
-        """
+    """
+    Replaces empty and load with E, L, or O for occupied.
+    JMRI defines custom load type as empty but default load type as Empty, hence the 'or' statement.
+    Load, Empty, Occupied and Unknown are translated by the bundle.
+    Called by:
+    ViewEntities.modifyTrackPatternReport
+    ModelWorkEvent.o2oSwitchListConversion.parsePtRs
+    ModelWorkEvents.jmriManifestConversion.parseRS
+    """
 
     try:
         rs = CM.getByRoadAndNumber(car['Road'], car['Number']) # Pattern scripts nomenclature
@@ -647,10 +667,11 @@ def makeReportItemWidthMatrix():
 
 
 def makeBuildStatusFolder():
-    """The buildStatus folder is created first so the log file can be written.
-        Called by:
-        MainScript.Controller
-        """
+    """
+    The buildStatus folder is created first so the log file can be written.
+    Called by:
+    MainScript.Controller
+    """
 
     targetDirectory = OS_PATH.join(PROFILE_PATH, 'operations', 'buildstatus')
     if not JAVA_IO.File(targetDirectory).isDirectory():
@@ -659,10 +680,11 @@ def makeBuildStatusFolder():
     return
 
 def makeReportFolders():
-    """Checks/creates the folders this plugin writes to.
-        Used By:
-        MainScript.Controller
-        """
+    """
+    Checks/creates the folders this plugin writes to.
+    Used By:
+    MainScript.Controller
+    """
 
     opsDirectory = OS_PATH.join(PROFILE_PATH, 'operations')
     directories = ['csvManifests', 'csvSwitchLists', 'jsonManifests', 'switchLists', 'manifests']
@@ -682,10 +704,11 @@ def makeReportFolders():
     return
 
 def genericReadReport(filePath):
-    """try/except catches initial read of config file.
-        Called by:
-        Everything
-        """
+    """
+    try/except catches initial read of config file.
+    Called by:
+    Everything
+    """
 
     try:
         ENCODING
@@ -698,8 +721,10 @@ def genericReadReport(filePath):
     return genericReport
 
 def genericWriteReport(filePath, genericReport):
-    """Called by:
-        Everything"""
+    """
+    Called by:
+    Everything
+    """
 
     try:
         ENCODING
@@ -712,13 +737,14 @@ def genericWriteReport(filePath, genericReport):
     return
 
 def genericDisplayReport(genericReportPath):
-    """Dealer's choice, the JMRI or Java version.
-        Called by:
-        MainScript.Controller.logItemSelected
-        MainScript.Controller.ecItemSelected
-        PatternTracksSubroutine.View.trackPatternButton
-        PatternTracksSubroutine.ViewSetCarsForm.switchListButton
-        """
+    """
+    Dealer's choice, the JMRI or Java version.
+    Called by:
+    MainScript.Controller.logItemSelected
+    MainScript.Controller.ecItemSelected
+    PatternTracksSubroutine.View.trackPatternButton
+    PatternTracksSubroutine.ViewSetCarsForm.switchListButton
+    """
 
     # JMRI.util.HelpUtil.openWindowsFile(genericReportPath)
     JAVA_AWT.Desktop.getDesktop().edit(JAVA_IO.File(genericReportPath))
@@ -726,14 +752,18 @@ def genericDisplayReport(genericReportPath):
     return
 
 def loadJson(file):
-    """Called by:
-        Everything"""
+    """
+    Called by:
+    Everything
+    """
 
     return jsonLoadS(file)
 
 def dumpJson(file):
-    """Called by:
-        Everything"""
+    """
+    Called by:
+    Everything
+    """
 
     return jsonDumpS(file, indent=2, sort_keys=True)
 
@@ -755,10 +785,11 @@ def validateConfigFile():
     return
 
 def validateConfigFileVersion():
-    """Checks that the config file is the current version.
-        Called by:
-        OperationsPatternScripts.MainScript.Model
-        """
+    """
+    Checks that the config file is the current version.
+    Called by:
+    OperationsPatternScripts.MainScript.Model
+    """
 
     fileName = 'OPS.json'
     targetPath = OS_PATH.join(PLUGIN_ROOT, 'opsEntities', fileName)
@@ -811,10 +842,11 @@ def mergeConfigFiles():
     return
 
 def readConfigFile(subConfig=None):
-    """tryConfigFile will return the config file if it's ok or a new one otherwise.
-        Called by:
-        Everything
-        """
+    """
+    tryConfigFile will return the config file if it's ok or a new one otherwise.
+    Called by:
+    Everything
+    """
 
     configFile = checkConfigFile()
 
@@ -837,8 +869,10 @@ def checkConfigFile():
     return loadJson(genericReadReport(targetPath))
 
 def makeNewConfigFile():
-    """Makes a composit ConfigFile.json from OPS.json and each of the subroutine json files.
-        For every subroutine, the chunck of config file is named config.json."""
+    """
+    Makes a composit ConfigFile.json from OPS.json and each of the subroutine json files.
+    For every subroutine, the chunck of config file is named config.json.
+    """
 
     fileName = 'OPS.json'
     targetPath = OS_PATH.join(PLUGIN_ROOT, 'opsEntities', fileName)
@@ -860,10 +894,11 @@ def makeNewConfigFile():
     return
 
 def tryConfigFile():
-    """Try/except catches some user edit mistakes.
-        Called by:
-        PSE.readConfigFile
-        """
+    """
+    Try/except catches some user edit mistakes.
+    Called by:
+    PSE.readConfigFile
+    """
 
     try:
         configFile = getConfigFile()
@@ -879,9 +914,10 @@ def tryConfigFile():
     return configFile
 
 def getConfigFile():
-    """Called by:
-        tryConfigFile
-        """
+    """
+    Called by:
+    tryConfigFile
+    """
 
     fileName = 'configFile.json'
     targetPath = OS_PATH.join(PROFILE_PATH, 'operations', fileName)
@@ -889,12 +925,13 @@ def getConfigFile():
     return loadJson(genericReadReport(targetPath))
 
 def writeConfigFile(configFile):
-    """Called by:
-        MainScript.Controller
-        PSE.updateWindowParams
-        PatternTracksSubroutine.Controller.StartUp.yardTrackOnlyCheckBox
-        PatternTracksSubroutine.Model
-        """
+    """
+    Called by:
+    MainScript.Controller
+    PSE.updateWindowParams
+    PatternTracksSubroutine.Controller.StartUp.yardTrackOnlyCheckBox
+    PatternTracksSubroutine.Model
+    """
 
     fileName = 'configFile.json'
     targetPath = OS_PATH.join(PROFILE_PATH, 'operations', fileName)
@@ -904,9 +941,10 @@ def writeConfigFile(configFile):
     return
 
 def writeNewConfigFile():
-    """Called by:
-        PSE.tryConfigFile
-        """
+    """
+    Called by:
+    PSE.tryConfigFile
+    """
 
     targetDir = OS_PATH.join(PROFILE_PATH, 'operations')
     JAVA_IO.File(targetDir).mkdir()
@@ -924,9 +962,10 @@ def writeNewConfigFile():
     return
 
 def deleteConfigFile():
-    """Called by:
-        MainScript.Controller.rsItemSelected
-        """
+    """
+    Called by:
+    MainScript.Controller.rsItemSelected
+    """
 
     fileName = 'configFile.json'
     targetFile = OS_PATH.join(PROFILE_PATH, 'operations', fileName)
@@ -939,11 +978,12 @@ def deleteConfigFile():
 
 
 def getGenericColor(colorName):
-    """Called by:
-        PSE.getCarColor
-        PSE.getLocoColor
-        PSE.getAlertColor
-        """
+    """
+    Called by:
+    PSE.getCarColor
+    PSE.getLocoColor
+    PSE.getAlertColor
+    """
 
     colorPalette = readConfigFile('Main Script')['CD']
 
@@ -955,10 +995,11 @@ def getGenericColor(colorName):
     return JAVA_AWT.Color(r, g, b, a)
 
 def getColorA():
-    """Try/Except is a bit of protection against bad edits.
-        Called by:
-        PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
-        """
+    """
+    Try/Except is a bit of protection against bad edits.
+    Called by:
+    PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
+    """
 
     try:
         colorName = readConfigFile('Main Script')['CD']['colorA']
@@ -969,10 +1010,11 @@ def getColorA():
         return JAVA_AWT.Color(0, 0, 0, 0)
 
 def getColorB():
-    """Try/Except is a bit of protection against bad edits.
-        Called by:
-        PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
-        """
+    """
+    Try/Except is a bit of protection against bad edits.
+    Called by:
+    PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
+    """
 
     try:
         colorName = readConfigFile('Main Script')['CD']['colorB']
@@ -983,10 +1025,11 @@ def getColorB():
         return JAVA_AWT.Color(0, 0, 0, 0)
 
 def getColorC():
-    """Try/Except is a bit of protection against bad edits.
-        Called by:
-        PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
-        """
+    """
+    Try/Except is a bit of protection against bad edits.
+    Called by:
+    PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
+    """
 
     try:
         colorName = readConfigFile('Main Script')['CD']['colorC']
@@ -1001,12 +1044,13 @@ def getColorC():
 
 
 def translateMessageFormat():
-    """The messageFormat is in the locale's language, it has to be hashed to the plugin fields.
-        Dealers choice, J_BUNDLE.ROAD or SB.handleGetMessage('Road').
-        Called by:
-        PatternTracksSubroutine.ViewEntities.loopThroughRs
-        PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
-        """
+    """
+    The messageFormat is in the locale's language, it has to be hashed to the plugin fields.
+    Dealers choice, J_BUNDLE.ROAD or SB.handleGetMessage('Road').
+    Called by:
+    PatternTracksSubroutine.ViewEntities.loopThroughRs
+    PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
+    """
 
     rosetta = {}
 #Common

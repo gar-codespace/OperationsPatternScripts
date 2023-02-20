@@ -3,7 +3,7 @@
 
 """
 A simple subroutine to add extended info about a railroad to JMRI.
-The info can be input directly or imported from TrainPlayer.
+The info can be input directly or imported from TrainPlayer if using o2o.
 """
 
 from opsEntities import PSE
@@ -83,9 +83,10 @@ class StartUp:
         return
 
     def activateWidgets(self):
-        """The widget.getName() value is the name of the action for the widget.
-            IE 'update'
-            """
+        """
+        The widget.getName() value is the name of the action for the widget.
+        IE 'update'
+        """
 
         widget = self.widgets['control']['UP']
         name = widget.getName()
@@ -95,11 +96,12 @@ class StartUp:
         return
 
     def update(self, EVENT):
-        '''Update button.
-            Writes the text box entries to the configFile.
-            Updates JMRI year modeled.
-            Sets the jPlus expanded header.
-            '''
+        """
+        Update button.
+        Writes the text box entries to the configFile.
+        Updates JMRI year modeled.
+        Sets the jPlus expanded header.
+        """
 
         _psLog.debug(EVENT)
 

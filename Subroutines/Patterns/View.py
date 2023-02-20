@@ -159,10 +159,11 @@ def modifyTrackPatternReport(trackPattern):
     return trackPattern
 
 def getStandins(car, standins):
-    """Replaces null destination and fd with the standin from the configFile
-        Called by:
-        modifyTrackPatternReport
-        """
+    """
+    Replaces null destination and fd with the standin from the configFile
+    Called by:
+    modifyTrackPatternReport
+    """
 
     destStandin = car['Destination']
     if not car['Destination']:

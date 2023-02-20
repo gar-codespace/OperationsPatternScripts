@@ -75,9 +75,10 @@ class StartUp:
         return
 
     def activateWidgets(self, widgets):
-        """The *.getName value is the name of the action for the widget.
-            IE: newJmriRailroad, updateJmriRailroad
-            """
+        """
+        The *.getName value is the name of the action for the widget.
+        IE: newJmriRailroad, updateJmriRailroad
+        """
 
         for widget in widgets:
             widget.actionPerformed = getattr(self, widget.getName())

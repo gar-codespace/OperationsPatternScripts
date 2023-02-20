@@ -24,12 +24,13 @@ def resetConfigFileItems():
     return
     
 def newJmriRailroad():
-    """Mini controller to make a new JMRI railroad.
-        tpRailroadData.json and TrainPlayer Report - Rolling Stock.txt
-        are used as source files.
-        Called by:
-        Controller.StartUp.newJmriRailroad
-        """
+    """
+    Mini controller to make a new JMRI railroad.
+    tpRailroadData.json and TrainPlayer Report - Rolling Stock.txt
+    are used as source files.
+    Called by:
+    Controller.StartUp.newJmriRailroad
+    """
 
     PSE.closeSubordinateWindows()
     PSE.remoteCalls('resetCalls')
@@ -65,14 +66,15 @@ def newJmriRailroad():
     return
 
 def updateJmriRailroad():
-    """Mini controller to update JMRI railroad.
-        Does not change Trains and Routes.
-        Cars and engines are updated.
-        Schedules are rewritten from scratch.
-        Locations uses LM to update everything.
-        Called by:
-            Controller.StartUp.updateJmriRailroad
-        """
+    """
+    Mini controller to update JMRI railroad.
+    Does not change Trains and Routes.
+    Cars and engines are updated.
+    Schedules are rewritten from scratch.
+    Locations uses LM to update everything.
+    Called by:
+    Controller.StartUp.updateJmriRailroad
+    """
 
     PSE.closeSubordinateWindows()
     PSE.remoteCalls('refreshCalls')
@@ -97,10 +99,11 @@ def updateJmriRailroad():
     return
 
 def updateJmriRollingingStock():
-    """Mini controller to update only the rolling stock.
-        Called by:
-            Controller.Startup.updateJmriRollingingStock
-        """
+    """
+    Mini controller to update only the rolling stock.
+    Called by:
+    Controller.Startup.updateJmriRollingingStock
+    """
 
     PSE.closeSubordinateWindows()
     BuiltTrainExport.FindTrain().trainResetter()
@@ -187,9 +190,10 @@ class TpLocaleculator:
             return False
 
     def isValid(self):
-        """Catch  all user errors here.
-            Can't have staging and non-staging track types at the same location.
-            """ 
+        """
+        Catch  all user errors here.
+        Can't have staging and non-staging track types at the same location.
+        """ 
 
         stagingLocations = []
         nonstagingLocations = []
@@ -254,9 +258,10 @@ class Initiator:
         return
 
     def initialize(self):
-        """Mini controller to make settings changes,
-            some of which are personal.
-            """
+        """
+        Mini controller to make settings changes,
+        some of which are personal.
+        """
 
         self.o2oDetailsToConFig()
         self.setRailroadDetails()
@@ -332,10 +337,11 @@ class Initiator:
 
 
 class Attributator:
-    """Sets all the rolling stock attributes.
-        TCM - Temporary Context Manager.
-        Nothing is removed from OperationsCarRoster.xml, only added to.
-        """
+    """
+    Sets all the rolling stock attributes.
+    TCM - Temporary Context Manager.
+    Nothing is removed from OperationsCarRoster.xml, only added to.
+    """
 
     def __init__(self):
 
@@ -363,10 +369,11 @@ class Attributator:
         return
 
     def addRoads(self):
-        """Add any new road name from the tpRailroadData.json file.
-            Don't do this: newNames = list(set(self.tpRailroadData['roads']) - set(TCM.getNames()))
-            Null lists cause the default list to be added.
-            """
+        """
+        Add any new road name from the tpRailroadData.json file.
+        Don't do this: newNames = list(set(self.tpRailroadData['roads']) - set(TCM.getNames()))
+        Null lists cause the default list to be added.
+        """
 
         _psLog.debug('addRoads')
 
@@ -390,9 +397,10 @@ class Attributator:
         return
 
     def addCarLoads(self):
-        """Add the loads and load types for each car type (TP AAR) in tpRailroadData.json.
-            Empty is the only TP empty type.
-            """
+        """
+        Add the loads and load types for each car type (TP AAR) in tpRailroadData.json.
+        Empty is the only TP empty type.
+        """
 
         _psLog.debug('addCarLoads')
 
@@ -676,9 +684,10 @@ class Divisionator:
         return
 
     def addUnreportedToUnknown(self):
-        """This method adds a division named Unknown.
-            Add the location named Unreported to the division named Unknown.
-            """
+        """
+        This method adds a division named Unknown.
+        Add the location named Unreported to the division named Unknown.
+        """
 
         location = PSE.LM.getLocationByName('Unreported')
         division = PSE.DM.newDivision(PSE.BUNDLE['Unknown'])
@@ -805,13 +814,14 @@ class RStockulator:
         return
 
     def splitTpList(self):
-        """self.tpInventory string format:
-            TP Car ; TP Type ; TP AAR; JMRI Location; JMRI Track; TP Load; TP Kernel, TP ID
-            TP Loco; TP Model; TP AAR; JMRI Location; JMRI Track; TP Load; TP Consist, TP ID
+        """
+        self.tpInventory string format:
+        TP Car ; TP Type ; TP AAR; JMRI Location; JMRI Track; TP Load; TP Kernel, TP ID
+        TP Loco; TP Model; TP AAR; JMRI Location; JMRI Track; TP Load; TP Consist, TP ID
 
-            self.tpCars  dictionary format: {TP ID :  {type: TP Collection, aar: TP AAR, location: JMRI Location, track: JMRI Track, load: TP Load, kernel: TP Kernel, id: JMRI ID}}
-            self.tpLocos dictionary format: {TP ID :  [Model, AAR, JMRI Location, JMRI Track, 'unloadable', Consist, JMRI ID]}
-            """
+        self.tpCars  dictionary format: {TP ID :  {type: TP Collection, aar: TP AAR, location: JMRI Location, track: JMRI Track, load: TP Load, kernel: TP Kernel, id: JMRI ID}}
+        self.tpLocos dictionary format: {TP ID :  [Model, AAR, JMRI Location, JMRI Track, 'unloadable', Consist, JMRI ID]}
+        """
 
         _psLog.debug('splitTpList')
 
@@ -876,9 +886,10 @@ class RStockulator:
         return
 
     def setGenericRsAttribs(self, idList):
-        """Used when updating rolling stock.
-            Sets only the road name, number, kernal/consist, location, track and load.
-            """
+        """
+        Used when updating rolling stock.
+        Sets only the road name, number, kernal/consist, location, track and load.
+        """
 
         _psLog.debug('setGenericRsAttribs')
 
@@ -920,9 +931,10 @@ class RStockulator:
         return
 
     def setSpecificRsAttribs(self, idList):
-        """Used when adding new rolling stock.
-            TP ID  : {'kernel': u'', 'type': u'box x23 prr', 'aar': u'XM', 'load': u'Empty', 'location': u'City', 'track': u'701'}
-            """
+        """
+        Used when adding new rolling stock.
+        TP ID  : {'kernel': u'', 'type': u'box x23 prr', 'aar': u'XM', 'load': u'Empty', 'location': u'City', 'track': u'701'}
+        """
 
         _psLog.debug('setSpecificRsAttribs')
 

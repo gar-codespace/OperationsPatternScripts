@@ -66,10 +66,11 @@ class opsWorkListConversion:
         return
 
     def parsePtRs(self, rs):
-        """The load field is either Load(car) or Model(loco).
-            Pattern scripts have only one location,
-            so Location and Destination are the same.
-            """
+        """
+        The load field is either Load(car) or Model(loco).
+        Pattern scripts have only one location,
+        so Location and Destination are the same.
+        """
 
         parsedRS = {}
         parsedRS['Road'] = rs['Road']
@@ -205,10 +206,11 @@ class jmriManifestConversion:
         return
 
     def parseRS(self, rs):
-        """The load field ie either Load or Model.
-            How to combine this with parsePtRs?
-            They do the sae thing.
-            """
+        """
+        The load field ie either Load or Model.
+        How to combine this with parsePtRs?
+        They do the sae thing.
+        """
 
         parsedRS = {}
         parsedRS['Road'] = rs['road']
@@ -233,10 +235,11 @@ class jmriManifestConversion:
 
 
 class o2oWorkEvents:
-    """This class makes the o2o work event list for TrainPlayer.
-        TrainPlayer rolling stock IDs are used to identify TP RS,
-        using tpRollingStockData.json as the LUT.
-        """
+    """
+    This class makes the o2o work event list for TrainPlayer.
+    TrainPlayer rolling stock IDs are used to identify TP RS,
+    using tpRollingStockData.json as the LUT.
+    """
 
     def __init__(self, workEvents):
 
@@ -285,10 +288,11 @@ class o2oWorkEvents:
         return
 
     def makeLine(self, rs):
-        """This makes a rolling stock line for the TP o2o file.
-            Identify the rolling stock by its TP car_ID
-            format: PUSO, TP ID, Road, Number, Car Type, L/E/O, Load or Model, From, To
-            """
+        """
+        This makes a rolling stock line for the TP o2o file.
+        Identify the rolling stock by its TP car_ID
+        format: PUSO, TP ID, Road, Number, Car Type, L/E/O, Load or Model, From, To
+        """
 
         ID = rs['Road'] + rs['Number']
         tpID = self.inverseTpRollingStockData[ID]

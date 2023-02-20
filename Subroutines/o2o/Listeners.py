@@ -55,8 +55,10 @@ def actionListener(EVENT):
 
 
 class TrainsTable(PSE.JAVX_SWING.event.TableModelListener):
-    """Catches user add or remove train while o2oSubroutine is enabled.
-    Check into TM.newTrain.LISTLENGTH_CHANGED_PROPERTY"""
+    """
+    Catches user add or remove train while o2oSubroutine is enabled.
+    Check into TM.newTrain.LISTLENGTH_CHANGED_PROPERTY
+    """
 
     def __init__(self, builtTrainListener):
 
@@ -94,7 +96,6 @@ class BuiltTrain(PSE.JAVA_BEANS.PropertyChangeListener):
 
 
 def addTrainsTableListener():
-    """ """
 
     builtTrainListener = BuiltTrain()
     trainsTableListener = TrainsTable(builtTrainListener)
@@ -105,10 +106,11 @@ def addTrainsTableListener():
     return
 
 def addBuiltTrainListener():
-    """Called by:
-        PatternScriptsWindow.windowOpened
-        o2oSubroutine.Listeners.actionListener
-        """
+    """
+    Called by:
+    PatternScriptsWindow.windowOpened
+    o2oSubroutine.Listeners.actionListener
+    """
 
     removeBuiltTrainListener()
 
@@ -118,10 +120,11 @@ def addBuiltTrainListener():
     return
 
 def removeBuiltTrainListener():
-    """Called by:
-        PatternScriptsWindow.windowClosing
-        o2oSubroutine.Listeners.actionListener
-        """
+    """
+    Called by:
+    PatternScriptsWindow.windowClosing
+    o2oSubroutine.Listeners.actionListener
+    """
         
     trainList = PSE.TM.getTrainsByIdList()
     for train in trainList:

@@ -1,7 +1,9 @@
 # coding=utf-8
 # © 2023 Greg Ritacco
 
-"""Use the TrainPlayer/Reports inventory, locations and industries text files to generate the tpRailroadData.json file"""
+"""
+Use the TrainPlayer/Reports inventory, locations and industries text files to generate the tpRailroadData.json file.
+"""
 
 from opsEntities import PSE
 from Subroutines.o2o import ModelEntities
@@ -140,8 +142,7 @@ class TrainPlayerImporter:
         return True
 
     def processFileHeaders(self):
-        """Process the header info from the TP report files.
-            """
+        """Process the header info from the TP report files."""
 
         _psLog.debug('processFileHeaders')
 
@@ -175,9 +176,10 @@ class TrainPlayerImporter:
         return
 
     def getRrLocations(self):
-        """self.tpLocations format: TP ID; JMRI Location Name; JMRI Track Name; TP Label; TP Type; TP Spaces.
-            Makes a list of just the locations.
-            """
+        """
+        self.tpLocations format: TP ID; JMRI Location Name; JMRI Track Name; TP Label; TP Type; TP Spaces.
+        Makes a list of just the locations.
+        """
         _psLog.debug('getRrLocations')
 
         locationList = ['Unreported']
@@ -192,10 +194,11 @@ class TrainPlayerImporter:
         return
 
     def getRrLocales(self):
-        """self.tpLocations format: TP ID; JMRI Location Name; JMRI Track Name; TP Label; TP Type; TP Spaces.
-            Makes a list of tuples of the locales and their data.
-            locale format: (location, {ID, Capacity, Type, Track})
-            """
+        """
+        self.tpLocations format: TP ID; JMRI Location Name; JMRI Track Name; TP Label; TP Type; TP Spaces.
+        Makes a list of tuples of the locales and their data.
+        locale format: (location, {ID, Capacity, Type, Track})
+        """
         _psLog.debug('getRrLocales')
 
         locales = {}
@@ -210,10 +213,11 @@ class TrainPlayerImporter:
         return
 
     def getAllTpIndustry(self):
-        """self.tpIndustryList format: JMRI Location Name[0], JMRI Track Name[1], Track Label[2], AAR[3], S/R[4], Load Name[5], Staging[6], ViaIn[7], ViaOut[8], TP ID[9]
-            Makes a list of tuples of the industries and their data.
-            industry format: [JMRI Location Name, {ID, JMRI Track Name, Industry, AAR, schedule(label, aar, [receive, ship]), Staging, ViaIn, ViaOut}]
-            """
+        """
+        self.tpIndustryList format: JMRI Location Name[0], JMRI Track Name[1], Track Label[2], AAR[3], S/R[4], Load Name[5], Staging[6], ViaIn[7], ViaOut[8], TP ID[9]
+        Makes a list of tuples of the industries and their data.
+        industry format: [JMRI Location Name, {ID, JMRI Track Name, Industry, AAR, schedule(label, aar, [receive, ship]), Staging, ViaIn, ViaOut}]
+        """
 
         _psLog.debug('getAllTpIndustry')
 
@@ -360,10 +364,11 @@ class TrainPlayerImporter:
         return
 
     def getAllTpLocoModels(self):
-        """character length fromOperations.xml\<max_len_string_attibute length="10" />
-            List of tuples: (JMRI model, JMRI type)
-            Don't include tenders
-            """
+        """
+        Character length fromOperations.xml\<max_len_string_attibute length="10" />
+        List of tuples: (JMRI model, JMRI type)
+        Don't include tenders
+        """
         _psLog.debug('getAllTpLocoModels')
 
         allItems = []

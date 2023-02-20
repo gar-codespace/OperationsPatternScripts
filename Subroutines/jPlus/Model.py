@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2023 Greg Ritacco
 
-""" """
+"""jPlus"""
 
 from opsEntities import PSE
 
@@ -50,9 +50,10 @@ def jPanelSetup():
     return
 
 def updateYearModeled():
-    """Writes the JMRI year modeled from settings into the jPlus Year Modeled text box.
-        Called by:
-        """
+    """
+    Writes the JMRI year modeled from settings into the jPlus Year Modeled text box.
+    Called by:
+    """
     
     configFile = PSE.readConfigFile()
     if not configFile['Main Script']['CP']['Subroutines.jPlus']:
@@ -71,9 +72,10 @@ def updateYearModeled():
     return
 
 def setExpandedHeader():
-    """Makes an expanded header with escapes from the layout details ['LD'] fields.
-        Called by:
-        """
+    """
+    Makes an expanded header with escapes from the layout details ['LD'] fields.
+    Called by:
+    """
 
     OSU = PSE.JMRI.jmrit.operations.setup
     configFile = PSE.readConfigFile()

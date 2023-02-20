@@ -1,6 +1,8 @@
 # coding=utf-8
 # © 2023 Greg Ritacco
 
+"""o2o"""
+
 from opsEntities import PSE
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
@@ -13,11 +15,12 @@ _psLog = PSE.LOGGING.getLogger('OPS.o2o.ModelEntities')
 
 
 def getTpRailroadJson(reportName):
-    """Any of the TP exports imported into JMRI as a json file:
-        tpRailroadData
-        tpRollingStockData
-        tpLocaleData
-        """
+    """
+    Any of the TP exports imported into JMRI as a json file:
+    tpRailroadData
+    tpRollingStockData
+    tpLocaleData
+    """
 
     fileName = reportName + '.json'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
@@ -56,9 +59,10 @@ def tpDirectoryExists():
 
 
 def newSchedules():
-    """Write the industry schedules.
-        viaIn and viaOut are not being used.
-        """
+    """
+    Write the industry schedules.
+    viaIn and viaOut are not being used.
+    """
 
     tpIndustries = getTpRailroadJson('tpRailroadData')['industries']
 
@@ -71,52 +75,94 @@ def newSchedules():
                     schedule.deleteItem(item)
             except:
                 schedule = PSE.SM.newSchedule(scheduleName)
-                
-            # schedule = PSE.SM.newSchedule(scheduleName)
-            for parsedItem in parseSchedules(scheduleItems):
-                scheduleItem = schedule.addItem(parsedItem[0])
-                scheduleItem.setReceiveLoadName(parsedItem[1])
-                scheduleItem.setShipLoadName(parsedItem[2])
-                scheduleItem.setDestination(PSE.LM.getLocationByName(parsedItem[3]))
+
+            for composedItem in composeSchedules(scheduleItems):
+                scheduleItem = schedule.addItem(composedItem[0])
+                scheduleItem.setReceiveLoadName(composedItem[1])
+                scheduleItem.setShipLoadName(composedItem[2])
+                scheduleItem.setDestination(PSE.LM.getLocationByName(composedItem[3]))
+                # ViaIn composedItem[4]
+                # ViaOut composedItem[5]
 
     return
 
-def parseSchedules(scheduleItems):
-    """For all schedules, replace Null with Empty,
-        A duplicate is two TP/Industries rows with the same aar and the same ship/recieve.
-        ModelImport.TrainPlayerImporter.processFileHeaders.self.tpIndustries.sort() or this won't work.
-        scheduleItem: aarName[0], receiveLoad[1], shipload[2], stagingName[3], viaIn[4], viaOut[5]
-        """
+def composeSchedules(scheduleItems):
+    """
+    For all single node schedules, replace Null with Empty.
+    For all double node schedules, combine Ship/Receive with the load name.
+    ModelImport.TrainPlayerImporter.processFileHeaders.self.tpIndustries.sort() or this won't work.
+    scheduleItem: aarName[0], receiveLoad[1], shipload[2], stagingName[3], viaIn[4], viaOut[5]
+    """
 
-    parsedItems = []
-# Find ship/receive duplicates
-    dupes = []
+    composedItems = []
+    aar = []
+
     for item in scheduleItems:
-        rAar = item[0]
-        rLoad = item[1]
-        sLoad = item[2]
-        for lookUp in scheduleItems:
-            if rAar == lookUp[0] and rLoad == lookUp[2] and sLoad == lookUp[1]:
-                dupes.append(item)
+        aar.append(item[0])
+    tallyAar = PSE.occuranceTally(aar)
 
-# Merge duplicates
-    merged = [item for item in dupes if not item[1]]
+    for aar, occurances in tallyAar.items():
 
-# Add duplicates to the schedule
-    for item in merged:
-        parsedItems.append([item[0], item[2], item[2], item[3], item[4], item[5]])
+        if occurances == 1:
+            for item in scheduleItems:
+                if item[0] == aar:
+                    single = singleNode(item)
+                    composedItems.append(single)
 
-# Find the singles
-    singles = [item for item in scheduleItems if item not in dupes]
+        if occurances == 2:
+            nodes = []
+            for item in scheduleItems:
+                if item[0] == aar:
+                    nodes.append(item)
+            composed = doubleNode(nodes)
+            composedItems.append(composed)
 
-# Add singles to the schedule
-    for item in singles:
-        if not item[1]:
-            parsedItems.append([item[0], 'Empty', item[2], item[3], item[4], item[5]])
-        else:
-            parsedItems.append([item[0], item[1], 'Empty', item[3], item[4], item[5]])
+        if occurances > 2:
+            nodes = []
+            for item in scheduleItems:
+                if item[0] == aar:
+                    nodes.append(item)
 
-    return parsedItems
+            while nodes:
+                nodeA = nodes.pop(0)
+                if len(nodes) == 0:
+                    composed = singleNode(nodeA)
+                    composedItems.append(composed)
+
+                for i, testNode in enumerate(nodes):
+                    if (nodeA[1] and nodeA[1] == testNode[2]) or (nodeA[2] and nodeA[2] == testNode[1]):
+                        nodeB = nodes.pop(i)
+                        composed = doubleNode([nodeA, nodeB])
+                        composedItems.append(composed)
+
+    return composedItems
+
+def singleNode(node):
+    """For each AAR when either the ship or recieve is an empty."""
+
+    composedNode = []
+    if node[1]:
+        composedNode = [node[0], node[1], 'Empty', node[3], node[4], node[5]]
+    else:
+        composedNode = [node[0], 'Empty', node[2], node[3], node[4], node[5]]
+
+    return composedNode
+
+def doubleNode(nodes):
+    """For each AAR when ship and recieve is a load."""
+
+    composedNode = []
+    if nodes[0][3]:
+        fd = nodes[0][3]
+    else:
+        fd = nodes[1][3]
+
+    if nodes[0][1]:
+        composedNode = [nodes[0][0], nodes[0][1], nodes[1][2], fd, nodes[0][4], nodes[0][5]]
+    else:
+        composedNode = [nodes[0][0], nodes[1][1], nodes[0][2], fd, nodes[0][4], nodes[0][5]]
+
+    return composedNode
 
 def addCarTypesToSpurs():
     """Checks the car types check box for car types used at each spur"""
@@ -130,10 +176,11 @@ def addCarTypesToSpurs():
     return
 
 def deselectCarTypes(industries):
-    """For each track in industries, deselect all the RS types,
-        Called by:
-        Model.UpdateLocationsAndTracks.addCarTypesToSpurs
-        """
+    """
+    For each track in industries, deselect all the RS types,
+    Called by:
+    Model.UpdateLocationsAndTracks.addCarTypesToSpurs
+    """
 
     for id, industry in industries.items():
         location = PSE.LM.getLocationByName(industry['a-location'])
@@ -144,10 +191,11 @@ def deselectCarTypes(industries):
     return
 
 def selectCarTypes(industries):
-    """Select just the RS types used by that track, leaving unused types deselected.
-        Called by:
-        Model.UpdateLocationsAndTracks.addCarTypesToSpurs
-        """
+    """
+    Select just the RS types used by that track, leaving unused types deselected.
+    Called by:
+    Model.UpdateLocationsAndTracks.addCarTypesToSpurs
+    """
 
     for id, industry in industries.items():
         track = PSE.LM.getLocationByName(industry['a-location']).getTrackByName(industry['b-track'], None)
@@ -158,10 +206,11 @@ def selectCarTypes(industries):
     return
 
 def getSetToLocationAndTrack(locationName, trackName):
-    """Called by:
-        ModelNew.NewRollingStock.newCars
-        ModelNew.NewRollingStock.newLocos
-        """
+    """
+    Called by:
+    ModelNew.NewRollingStock.newCars
+    ModelNew.NewRollingStock.newLocos
+    """
 
     try:
         location = PSE.LM.getLocationByName(locationName)
@@ -172,12 +221,13 @@ def getSetToLocationAndTrack(locationName, trackName):
         return None, None
 
 def setTrackAttribs(trackData):
-    """Mini controller to set the attributes for each track,
-        based on TrainPlayer track type.
-        Called by:
-        makeNewTrack
-        Model.UpdateLocationsAndTracks.updateTrackParams
-        """
+    """
+    Mini controller to set the attributes for each track,
+    based on TrainPlayer track type.
+    Called by:
+    makeNewTrack
+    Model.UpdateLocationsAndTracks.updateTrackParams
+    """
 
     if trackData['type'] == 'industry':
         setTrackTypeIndustry(trackData)
@@ -197,10 +247,11 @@ def setTrackAttribs(trackData):
     return
 
 def setTrackTypeIndustry(trackData):
-    """Settings for TP 'industry' track types.
-        Called by:
-        setTrackAttribs
-        """
+    """
+    Settings for TP 'industry' track types.
+    Called by:
+    setTrackAttribs
+    """
 
     location = PSE.LM.getLocationByName(trackData['location'])
     track = location.getTrackByName(trackData['track'], None)
@@ -210,11 +261,12 @@ def setTrackTypeIndustry(trackData):
     return
 
 def setTrackTypeInterchange(trackData):
-    """Settings for TP 'interchange' track types.
-        Select all car and loco types.
-        Called by:
-        setTrackAttribs
-        """
+    """
+    Settings for TP 'interchange' track types.
+    Select all car and loco types.
+    Called by:
+    setTrackAttribs
+    """
 
     location = PSE.LM.getLocationByName(trackData['location'])
     track = location.getTrackByName(trackData['track'], None)
@@ -224,10 +276,11 @@ def setTrackTypeInterchange(trackData):
     return
 
 def setTrackTypeStaging(trackData):
-    """Settings for TP 'staging' track types.
-        Called by:
-        setTrackAttribs
-        """
+    """
+    Settings for TP 'staging' track types.
+    Called by:
+    setTrackAttribs
+    """
 
     o2oConfig =  PSE.readConfigFile('o2o')
 
@@ -241,20 +294,22 @@ def setTrackTypeStaging(trackData):
     return
 
 def setTrackTypeClassYard(trackData):
-    """Settings for TP 'class yard' track types.
-        Called by:
-        setTrackAttribs
-        """
+    """
+    Settings for TP 'class yard' track types.
+    Called by:
+    setTrackAttribs
+    """
 
     return
 
 def setTrackTypeXoReserved(trackData):
-    """Settings for TP 'XO reserved' track types.
-        XO tracks are spurs with all train directions turned off.
-        All car types are selected.
-        Called by:
-        setTrackAttribs
-        """
+    """
+    Settings for TP 'XO reserved' track types.
+    XO tracks are spurs with all train directions turned off.
+    All car types are selected.
+    Called by:
+    setTrackAttribs
+    """
 
     track = setTrackTypeIndustry(trackData)
     track.setTrainDirections(0)
@@ -268,11 +323,12 @@ def setTrackTypeXoReserved(trackData):
 
 
 def getWorkEvents():
-    """Gets the o2o work events file
-        Called by:
-        ModelWorkEvents.ConvertPtMergedForm.getWorkEvents
-        ModelWorkEvents.o2oWorkEvents.getWorkEvents
-        """
+    """
+    Gets the o2o work events file
+    Called by:
+    ModelWorkEvents.ConvertPtMergedForm.getWorkEvents
+    ModelWorkEvents.o2oWorkEvents.getWorkEvents
+    """
 
     reportName = PSE.BUNDLE['o2o Work Events']
     fileName = reportName + '.json'
@@ -288,10 +344,11 @@ def getWorkEvents():
 
 
 def getTpExport(fileName):
-    """Generic file getter, fileName includes .txt
-        Called by:
-        ModelImport.TrainPlayerImporter.getTpReportFiles
-        """
+    """
+    Generic file getter, fileName includes .txt
+    Called by:
+    ModelImport.TrainPlayerImporter.getTpReportFiles
+    """
 
     targetPath = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData', 'Roaming', 'TrainPlayer', 'Reports', fileName)
 
@@ -302,13 +359,14 @@ def getTpExport(fileName):
         return False
 
 def parseCarId(carId):
-    """Splits a TP car id into a JMRI road name and number
-        Called by:
-        ModelImport.TrainPlayerImporter.getAllTpRoads
-        ModelNew.NewRollingStock.makeTpRollingStockData
-        ModelNew.NewRollingStock.newCars
-        ModelNew.NewRollingStock.newLocos
-        """
+    """
+    Splits a TP car id into a JMRI road name and number
+    Called by:
+    ModelImport.TrainPlayerImporter.getAllTpRoads
+    ModelNew.NewRollingStock.makeTpRollingStockData
+    ModelNew.NewRollingStock.newCars
+    ModelNew.NewRollingStock.newLocos
+    """
 
     rsRoad = ''
     rsNumber = ''
@@ -322,25 +380,3 @@ def parseCarId(carId):
             rsRoad += character
 
     return rsRoad, rsNumber
-
-
-
-# def makeNewTrack(trackId, trackData):
-#     """Set spur length to 'spaces' from TP.
-#         Deselect all types for spur tracks.
-#         Called by:
-#         Model.Locationator.newLocations
-#         Model.UpdateLocationsAndTracks.addNewTracks
-#         """
-
-#     _psLog.debug('makeNewTrack')
-
-#     o2oConfig = PSE.readConfigFile('o2o')
-#     jmriTrackType = o2oConfig['TR'][trackData['type']]
-
-#     location = PSE.LM.getLocationByName(trackData['location'])
-#     location.addTrack(trackData['track'], jmriTrackType)
-
-#     setTrackAttribs(trackData)
-
-#     return

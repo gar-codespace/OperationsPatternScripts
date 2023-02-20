@@ -76,9 +76,10 @@ class StartUp:
         return
 
     def activateWidgets(self):
-        """The widget.getName() value is the name of the action for the widget.
-            IE 'commit'
-            """
+        """
+        The widget.getName() value is the name of the action for the widget.
+        IE 'commit'
+        """
 
         for widget in self.widgets['control']:
             widget.actionPerformed = getattr(self, widget.getName())
