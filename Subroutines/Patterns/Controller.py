@@ -20,16 +20,16 @@ SCRIPT_REV = 20230201
 _psLog = PSE.LOGGING.getLogger('OPS.PT.Controller')
 
 def getSubroutineDropDownItem():
-    """Pattern Scripts/Tools/'Enable or disable' Subroutines.<subroutine>"""
+    """Pattern Scripts/Tools/'Show or disable' Subroutines.<subroutine>"""
 
     configFile = PSE.readConfigFile()
 
     menuItem = PSE.JAVX_SWING.JMenuItem()
 
     if configFile['Main Script']['CP'][__package__]:
-        menuText = PSE.BUNDLE[u'Disable'] + ' ' + __package__
+        menuText = PSE.BUNDLE[u'Hide'] + ' ' + __package__
     else:
-        menuText = PSE.BUNDLE[u'Enable'] + ' ' + __package__
+        menuText = PSE.BUNDLE[u'Show'] + ' ' + __package__
 
     menuItem.setName(__package__)
     menuItem.setText(menuText)

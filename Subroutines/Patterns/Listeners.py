@@ -12,7 +12,7 @@ SCRIPT_REV = 20230201
 _psLog = PSE.LOGGING.getLogger('OPS.PT.Listeners')
 
 def actionListener(EVENT):
-    """menu item-Tools/Enable Subroutines.Patterns"""
+    """menu item-Tools/Show Subroutines.Patterns"""
 
     _psLog.debug(EVENT)
 
@@ -25,7 +25,7 @@ def actionListener(EVENT):
 
 # If it's on, turn it off
     if configFile['Main Script']['CP'][__package__]: 
-        menuText = PSE.BUNDLE[u'Enable'] + ' ' + __package__
+        menuText = PSE.BUNDLE[u'Show'] + ' ' + __package__
         configFile['Main Script']['CP'].update({__package__:False})
         
     # Do stuff specific to this subroutine here
@@ -35,7 +35,7 @@ def actionListener(EVENT):
 
 # If it's off, turn it on
     else:
-        menuText = PSE.BUNDLE[u'Disable'] + ' ' + __package__
+        menuText = PSE.BUNDLE[u'Hide'] + ' ' + __package__
         configFile['Main Script']['CP'].update({__package__:True})
         
     # Do stuff specific to this subroutine here

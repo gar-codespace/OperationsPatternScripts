@@ -29,9 +29,9 @@ def getSubroutineDropDownItem():
     menuItem = PSE.JAVX_SWING.JMenuItem()
 
     if configFile['Main Script']['CP'][__package__]:
-        menuText = PSE.BUNDLE[u'Disable'] + ' ' + __package__
+        menuText = PSE.BUNDLE[u'Hide'] + ' ' + __package__
     else:
-        menuText = PSE.BUNDLE[u'Enable'] + ' ' + __package__
+        menuText = PSE.BUNDLE[u'Show'] + ' ' + __package__
 
     menuItem.setName(__package__)
     menuItem.setText(menuText)

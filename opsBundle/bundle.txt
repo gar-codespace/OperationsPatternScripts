@@ -9,5 +9,5 @@ Tools
 Translate Plugin
 View Log File
 Window Help...
-Enable
-Disable
+Show
+Hide
