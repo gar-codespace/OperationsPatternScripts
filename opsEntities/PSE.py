@@ -209,6 +209,25 @@ def addActiveSubroutines(targetPanel):
 
     configFile = readConfigFile()
 
+
+
+# Catch dynamic add or removal of a subroutine
+    for subroutine in getSubroutineDirs():
+        subroutinename = 'Subroutines.' + subroutine
+        try:
+            configFile['Main Script']['CP'][subroutinename]
+        except:
+            configFile['Main Script']['CP'][subroutinename] = True
+
+    writeConfigFile(configFile)
+    configFile = readConfigFile()
+
+
+
+
+
+
+
     for subroutine in getSubroutineDirs():
         subroutinename = 'Subroutines.' + subroutine
         if configFile['Main Script']['CP'][subroutinename]:

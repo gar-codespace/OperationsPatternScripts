@@ -56,7 +56,9 @@ def updateYearModeled():
     """
     
     configFile = PSE.readConfigFile()
-    if not configFile['Main Script']['CP']['Subroutines.jPlus']:
+    try:
+        configFile['Main Script']['CP']['Subroutines.jPlus']
+    except:
         return
 
     OSU = PSE.JMRI.jmrit.operations.setup
@@ -65,9 +67,12 @@ def updateYearModeled():
     configFile['Main Script']['LD'].update({'YR':yr})
     PSE.writeConfigFile(configFile)
 
-    frameTitle = PSE.BUNDLE['Pattern Scripts']
-    targetPanel = PSE.getComponentByName(frameTitle, 'yearModeled')
-    targetPanel.setText(yr)
+    try: # PS plugin started with jPlus hidden
+        frameTitle = PSE.BUNDLE['Pattern Scripts']
+        targetPanel = PSE.getComponentByName(frameTitle, 'yearModeled')
+        targetPanel.setText(yr)
+    except:
+        pass
 
     return
 
