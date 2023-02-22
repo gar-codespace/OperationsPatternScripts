@@ -1,5 +1,6 @@
 Todo:
   How to publish DeepL?
+  Change QK Random Roads to apply to just a cut of cars or the whole RR.
 
 Comments:
   Schedule does not prevent setting a car to a track.

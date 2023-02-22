@@ -104,6 +104,7 @@ def throwbackCommit(displayWidgets):
             PSE.LMX.readFile(targetFile)
             PSE.LMX.writeOperationsFile()
             PSE.LMX.initialize()
+            _psLog.info('Throwback: ' + widget.getText() + ' to ' + throwbackRestorePoint[1])
 
     for widget in displayWidgets:
         if widget.getName() == 'rCheckBox' and widget.selected:
@@ -113,6 +114,7 @@ def throwbackCommit(displayWidgets):
             PSE.RMX.readFile(targetFile)
             PSE.RMX.writeOperationsFile()
             PSE.RMX.initialize()
+            _psLog.info('Throwback: ' + widget.getText() + ' to ' + throwbackRestorePoint[1])
 
     for widget in displayWidgets:
         if widget.getName() == 'tCheckBox' and widget.selected:
@@ -122,6 +124,7 @@ def throwbackCommit(displayWidgets):
             PSE.TMX.readFile(targetFile)
             PSE.TMX.writeOperationsFile()
             PSE.TMX.initialize()
+            _psLog.info('Throwback: ' + widget.getText() + ' to ' + throwbackRestorePoint[1])
 
     for widget in displayWidgets:
         if widget.getName() == 'cCheckBox' and widget.selected:
@@ -131,6 +134,7 @@ def throwbackCommit(displayWidgets):
             PSE.CMX.readFile(targetFile)
             PSE.CMX.writeOperationsFile() # Also does a backup
             PSE.CMX.initialize()
+            _psLog.info('Throwback: ' + widget.getText() + ' to ' + throwbackRestorePoint[1])
 
     for widget in displayWidgets:
         if widget.getName() == 'eCheckBox' and widget.selected:
@@ -140,6 +144,7 @@ def throwbackCommit(displayWidgets):
             PSE.EMX.readFile(targetFile)
             PSE.EMX.writeOperationsFile()
             PSE.EMX.initialize()
+            _psLog.info('Throwback: ' + widget.getText() + ' to ' + throwbackRestorePoint[1])
     
     return
 
