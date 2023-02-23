@@ -53,63 +53,35 @@ def actionListener(EVENT):
 
     return
 
-
-class TrainsTable(PSE.JAVX_SWING.event.TableModelListener):
-    """
-    Catches user add or remove train while o2oSubroutine is enabled.
-    Check into TM.newTrain.LISTLENGTH_CHANGED_PROPERTY
-    """
-
-    def __init__(self, builtTrainListener):
-
-        self.builtTrainListener = builtTrainListener
-
-        return
-
-    def tableChanged(self, TABLE_CHANGE):
-
-        _psLog.debug(TABLE_CHANGE)
-
-        removeBuiltTrainListener()
-        addBuiltTrainListener()
-
-        return
-
-
-class BuiltTrain(PSE.JAVA_BEANS.PropertyChangeListener):
-    """Starts o2oWorkEventsBuilder on trainBuilt."""
-
-    def propertyChange(self, TRAIN_BUILT):
-
-        configFile = PSE.readConfigFile()
-
-        if TRAIN_BUILT.propertyName != 'TrainBuilt':
-            return
-
-        if configFile['Main Script']['CP'][__package__] and TRAIN_BUILT.newValue == True:
-            xModule = __import__(__package__, globals(), locals(), ['BuiltTrainExport'], 0)
-            o2oWorkEvents = xModule.BuiltTrainExport.o2oWorkEventsBuilder()
-            o2oWorkEvents.passInTrain(TRAIN_BUILT.getSource())
-            o2oWorkEvents.start()
-
-        return
-
-
 def addTrainsTableListener():
 
-    builtTrainListener = BuiltTrain()
-    trainsTableListener = TrainsTable(builtTrainListener)
-
-    trainsTableModel = PSE.JMRI.jmrit.operations.trains.TrainsTableModel()
-    trainsTableModel.addTableModelListener(trainsTableListener)
+    PSE.TM.addPropertyChangeListener(o2oTrainsTable())
 
     return
 
+
+class o2oTrainsTable(PSE.JAVA_BEANS.PropertyChangeListener):
+    """The trains table model gets this listener."""
+
+    def __init__(self):
+
+        return
+
+    def propertyChange(self, TRAIN_LIST):
+
+        _psLog.debug(TRAIN_LIST)
+
+        if TRAIN_LIST.propertyName == 'TrainsListLength':
+
+            removeBuiltTrainListener()
+            addBuiltTrainListener()
+
+        return
+
+
 def addBuiltTrainListener():
     """
-    Called by:
-    PatternScriptsWindow.windowOpened
-    o2oSubroutine.Listeners.actionListener
+    Adds BuiltTrain to every train in the roster.
     """
 
     removeBuiltTrainListener()
@@ -121,9 +93,7 @@ def addBuiltTrainListener():
 
 def removeBuiltTrainListener():
     """
-    Called by:
-    PatternScriptsWindow.windowClosing
-    o2oSubroutine.Listeners.actionListener
+    Removes BuiltTrain from every train in the roster.
     """
         
     trainList = PSE.TM.getTrainsByIdList()
@@ -133,3 +103,21 @@ def removeBuiltTrainListener():
                 train.removePropertyChangeListener(listener)
 
     return
+
+
+class BuiltTrain(PSE.JAVA_BEANS.PropertyChangeListener):
+    """
+    Starts o2oWorkEventsBuilder on trainBuilt.
+    """
+
+    def propertyChange(self, TRAIN_BUILT):
+
+        _psLog.debug(TRAIN_BUILT)
+
+        if TRAIN_BUILT.propertyName == 'TrainBuilt' and TRAIN_BUILT.newValue == True:
+            xModule = __import__(__package__, globals(), locals(), ['BuiltTrainExport'], 0)
+            o2oWorkEvents = xModule.BuiltTrainExport.o2oWorkEventsBuilder()
+            o2oWorkEvents.passInTrain(TRAIN_BUILT.getSource())
+            o2oWorkEvents.start()
+
+        return

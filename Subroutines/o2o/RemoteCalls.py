@@ -21,7 +21,7 @@ def startupCalls():
     """
     Methods called when this subroutine is initialized by the Main Script.
     These calls are not turned off.
-        """
+    """
 
     Listeners.addTrainsTableListener()
 
@@ -29,6 +29,7 @@ def startupCalls():
 
 def activatedCalls():
     """Methods called when this subroutine is activated."""
+
 
     Listeners.addBuiltTrainListener()
 

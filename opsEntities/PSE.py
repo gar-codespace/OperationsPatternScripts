@@ -442,13 +442,13 @@ def updateWindowParams(window):
 
 def remoteCalls(call):
     """
-    call is one of four remote calls in each subroutine RemoteCalls module.
-    startupCalls, activatedCalls, deActivatedCalls, refreshCalls
+    call is one of the remote calls in each subroutine RemoteCalls module.
+    startupCalls, activatedCalls, deActivatedCalls, refreshCalls Etc.
     """
 
     for subroutine in getSubroutineDirs():
         xModule = 'Subroutines.' + subroutine
-        # package = __import__(xModule, globals(), locals(), fromlist=['RemoteCalls'], level=-1)
+        package = __import__(xModule, globals(), locals(), fromlist=['RemoteCalls'], level=-1)
         package = __import__(xModule, fromlist=['RemoteCalls'], level=-1)
         getattr(package.RemoteCalls, call)()
 

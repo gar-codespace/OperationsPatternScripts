@@ -137,6 +137,8 @@ class o2oWorkEventsBuilder(jmri.jmrit.automat.AbstractAutomaton):
 
         self.o2oLog.debug('ModelWorkEvents.jmriManifestConversion')
 
+        self.train.setPrinted(True)
+
         o2o = ModelWorkEvents.jmriManifestConversion(self.train)
         o2o.jmriManifestGetter()
         o2o.convertHeader()

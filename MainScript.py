@@ -289,6 +289,8 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(MOUSE_CLICKED)
 
+        PSE.remoteCalls('startupCalls')
+
         buildThePlugin(View())
 
         return
@@ -304,8 +306,6 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         Bundle.setupBundle()
 
         PSE.validateSubroutines()
-
-        PSE.remoteCalls('startupCalls')
 
         self.addPatternScriptsButton()
 
