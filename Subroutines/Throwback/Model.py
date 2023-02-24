@@ -90,7 +90,10 @@ def makeCommit(displayWidgets):
     return
 
 def throwbackCommit(displayWidgets):
-    """Sets the cars and engines rosters to the chosen throwback restore point."""
+    """
+    Sets the cars and engines rosters to the chosen throwback restore point.
+    PSE.<x>.writeOperationsFile() also does a backup.
+    """
 
     PSE.closeTopLevelWindows()
 
@@ -103,7 +106,6 @@ def throwbackCommit(displayWidgets):
             targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
             PSE.LMX.readFile(targetFile)
             PSE.LMX.writeOperationsFile()
-            PSE.LMX.initialize()
             _psLog.info('Throwback: ' + widget.getText() + ' to ' + throwbackRestorePoint[1])
 
     for widget in displayWidgets:
@@ -113,7 +115,6 @@ def throwbackCommit(displayWidgets):
             targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
             PSE.RMX.readFile(targetFile)
             PSE.RMX.writeOperationsFile()
-            PSE.RMX.initialize()
             _psLog.info('Throwback: ' + widget.getText() + ' to ' + throwbackRestorePoint[1])
 
     for widget in displayWidgets:
@@ -123,7 +124,6 @@ def throwbackCommit(displayWidgets):
             targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
             PSE.TMX.readFile(targetFile)
             PSE.TMX.writeOperationsFile()
-            PSE.TMX.initialize()
             _psLog.info('Throwback: ' + widget.getText() + ' to ' + throwbackRestorePoint[1])
 
     for widget in displayWidgets:
@@ -132,8 +132,7 @@ def throwbackCommit(displayWidgets):
             roster = throwbackRestorePoint[0] + '.C.xml.bak'
             targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
             PSE.CMX.readFile(targetFile)
-            PSE.CMX.writeOperationsFile() # Also does a backup
-            PSE.CMX.initialize()
+            PSE.CMX.writeOperationsFile()
             _psLog.info('Throwback: ' + widget.getText() + ' to ' + throwbackRestorePoint[1])
 
     for widget in displayWidgets:
@@ -143,9 +142,8 @@ def throwbackCommit(displayWidgets):
             targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
             PSE.EMX.readFile(targetFile)
             PSE.EMX.writeOperationsFile()
-            PSE.EMX.initialize()
             _psLog.info('Throwback: ' + widget.getText() + ' to ' + throwbackRestorePoint[1])
-    
+
     return
 
 def resetThrowBack():

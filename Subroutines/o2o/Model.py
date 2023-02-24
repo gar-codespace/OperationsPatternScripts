@@ -83,9 +83,10 @@ def updateJmriRailroad():
 
     Attributator().attributate()
 
+    PSE.SM.dispose()
+    ModelEntities.newSchedules()
     Localculator().localculate()
 
-    ModelEntities.newSchedules()
 
     Divisionator().divisionate()
 
