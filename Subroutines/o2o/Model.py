@@ -543,7 +543,7 @@ class Localculator:
             type = ''
             for index, trackData in self.tpRailroadData['locales'].items():
                 if trackData['location'] == locationName and trackData['track'] == trackName:
-                    length = self.configFile['o2o']['DL'] * int(trackData['capacity'])
+                    length = (self.configFile['o2o']['DL'] + 4) * int(trackData['capacity'])
                     type = self.configFile['o2o']['TR'][trackData['type']]
                     label = trackData['label']
 
