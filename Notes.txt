@@ -136,6 +136,7 @@ Tested Items:
     Scroll through commits OK.
     Vertical or horizontal display OK.
     Throwbacks one, some, or all xml OK.
+    Set checkbox default to False OK.
 
 Catches Items:
   Catches pattern report button press no tracks selected OK.

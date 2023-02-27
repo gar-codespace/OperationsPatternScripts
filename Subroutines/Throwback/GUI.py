@@ -94,31 +94,31 @@ class subroutineGui:
 
         carsCheckBox = PSE.JAVX_SWING.JCheckBox()
         carsCheckBox.setText(PSE.BUNDLE['Cars'])
-        carsCheckBox.setSelected(True)
+        carsCheckBox.setSelected(False)
         carsCheckBox.setName('cCheckBox')
         self.displayWidgets.append(carsCheckBox)
 
         locosCheckBox = PSE.JAVX_SWING.JCheckBox()
         locosCheckBox.setText(PSE.BUNDLE['Engines'])
-        locosCheckBox.setSelected(True)
+        locosCheckBox.setSelected(False)
         locosCheckBox.setName('eCheckBox')
         self.displayWidgets.append(locosCheckBox)
 
         locationsCheckBox = PSE.JAVX_SWING.JCheckBox()
         locationsCheckBox.setText(PSE.BUNDLE['Locations'])
-        locationsCheckBox.setSelected(True)
+        locationsCheckBox.setSelected(False)
         locationsCheckBox.setName('lCheckBox')
         self.displayWidgets.append(locationsCheckBox)
 
         routesCheckBox = PSE.JAVX_SWING.JCheckBox()
         routesCheckBox.setText(PSE.BUNDLE['Routes'])
-        routesCheckBox.setSelected(True)
+        routesCheckBox.setSelected(False)
         routesCheckBox.setName('rCheckBox')
         self.displayWidgets.append(routesCheckBox)
 
         trainsCheckBox = PSE.JAVX_SWING.JCheckBox()
         trainsCheckBox.setText(PSE.BUNDLE['Trains'])
-        trainsCheckBox.setSelected(True)
+        trainsCheckBox.setSelected(False)
         trainsCheckBox.setName('tCheckBox')
         self.displayWidgets.append(trainsCheckBox)
 
