@@ -77,7 +77,7 @@ class StartUp:
     def activateWidgets(self, widgets):
         """
         The *.getName value is the name of the action for the widget.
-        IE: newJmriRailroad, updateJmriRailroad
+        IE: newJmriRailroad, updateJmriLocations
         """
 
         for widget in widgets:
@@ -110,8 +110,26 @@ class StartUp:
 
         return
 
-    def updateJmriRailroad(self, EVENT):
-        """Updates the locations data and writes new car and engine data."""
+    def updateJmriLocations(self, EVENT):
+        """Applies changes made to the TrainPlayer/OC/Locations tab."""
+
+        _psLog.debug(EVENT)
+
+        
+
+        Model.updateJmriLocations()
+
+        PSE.restartAllSubroutines()
+
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+        return
+
+    def updateJmriIndustries(self, EVENT):
+        """
+        Applies changes made to the TrainPlayer/OC/Industries tab.
+        Rolling is updated.
+        """
 
         _psLog.debug(EVENT)
 
@@ -127,14 +145,14 @@ class StartUp:
 
             return
 
-        Model.updateJmriRailroad()
+        Model.updateJmriIndustries()
 
         PSE.restartAllSubroutines()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
-
+    
     def updateJmriRollingingStock(self, EVENT):
         """Writes new car and engine data."""
 

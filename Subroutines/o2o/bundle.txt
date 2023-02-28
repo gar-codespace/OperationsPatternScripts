@@ -17,7 +17,8 @@ No changes were made to your JMRI layout.
 ops-work-list
 TrainPlayer layout not imported to JMRI.
 Update Current Railroad
-Update JMRI Railroad
+Update Locations
+Update Industries
 Unknown
 unknown
 empty

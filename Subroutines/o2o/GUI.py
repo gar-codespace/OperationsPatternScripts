@@ -19,13 +19,17 @@ class subroutineGui:
         self.nrButton.setText(PSE.BUNDLE['New JMRI Railroad'])
         self.nrButton.setName('newJmriRailroad')
 
-        self.urButton = PSE.JAVX_SWING.JButton()
-        self.urButton.setText(PSE.BUNDLE['Update JMRI Railroad'])
-        self.urButton.setName('updateJmriRailroad')
+        self.ulButton = PSE.JAVX_SWING.JButton()
+        self.ulButton.setText(PSE.BUNDLE['Update Locations'])
+        self.ulButton.setName('updateJmriLocations')
 
-        self.rsButton = PSE.JAVX_SWING.JButton()
-        self.rsButton.setText('Update Rolling Stock')
-        self.rsButton.setName('updateJmriRollingingStock')
+        self.uiButton = PSE.JAVX_SWING.JButton()
+        self.uiButton.setText(PSE.BUNDLE['Update Industries'])
+        self.uiButton.setName('updateJmriIndustries')
+
+        self.ursButton = PSE.JAVX_SWING.JButton()
+        self.ursButton.setText('Update Rolling Stock')
+        self.ursButton.setName('updateJmriRollingingStock')
 
         return
 
@@ -43,9 +47,11 @@ class subroutineGui:
 
         updateRrPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE['Update Current Railroad'])
         updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(50,0)))
-        updateRrPanel.add(self.urButton)
+        updateRrPanel.add(self.ulButton)
         updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(30,0)))
-        updateRrPanel.add(self.rsButton)
+        updateRrPanel.add(self.uiButton)
+        updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(30,0)))
+        updateRrPanel.add(self.ursButton)
         updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(50,0)))
 
         tpPanel.add(newRrPanel)
@@ -59,7 +65,8 @@ class subroutineGui:
         widgets = []
 
         widgets.append(self.nrButton)
-        widgets.append(self.urButton)
-        widgets.append(self.rsButton)
+        widgets.append(self.ulButton)
+        widgets.append(self.uiButton)
+        widgets.append(self.ursButton)
 
         return widgets

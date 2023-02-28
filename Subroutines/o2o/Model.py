@@ -4,6 +4,7 @@
 """From tpRailroadData.json, a new JMRI railroad is created or updated."""
 
 from opsEntities import PSE
+from Subroutines.o2o import ModelImport
 from Subroutines.o2o import ModelEntities
 from Subroutines.o2o import BuiltTrainExport
 
@@ -65,43 +66,204 @@ def newJmriRailroad():
 
     return
 
-def updateJmriRailroad():
+
+
+
+
+
+
+
+
+
+
+def updateJmriLocations():
     """
-    Mini controller to update JMRI railroad.
+    Mini controller.
+    Applies changes made to the TrainPlayer/OC/Locations tab.
     Does not change Trains and Routes.
-    Cars and engines are updated.
     Schedules are rewritten from scratch.
     Locations uses LM to update everything.
+    Rolling stock is not updated.
     Called by:
-    Controller.StartUp.updateJmriRailroad
+    Controller.StartUp.updateJmriLocations
     """
 
-    PSE.closeSubordinateWindows()
-    PSE.remoteCalls('refreshCalls')
+    locationator = Locationator()
+    locationator.getCurrentRrData()
+
+    if ModelImport.importTpRailroad():
+        print('TrainPlayer railroad data imported OK')
+        _psLog.info('TrainPlayer railroad data imported OK')
+
+    else:
+        print('TrainPlayer railroad not imported')
+        _psLog.critical('TrainPlayer railroad not imported')
+        _psLog.critical('JMRI railroad not updated')
+
+        return
     
+    PSE.closeOutputFrame()
+    PSE.closeSubordinateWindows()
     BuiltTrainExport.FindTrain().trainResetter()
 
     Attributator().attributate()
+    
+    locationator.getUpdatedRrData()
+    locationator.locationate()
 
-    PSE.SM.dispose()
-    ModelEntities.newSchedules()
-    Localculator().localculate()
+    # PSE.SM.dispose()
+    # ModelEntities.newSchedules()
 
 
-    Divisionator().divisionate()
+    # Divisionator().divisionate()
 
-    ModelEntities.addCarTypesToSpurs()
+    # ModelEntities.addCarTypesToSpurs()
 
-    RStockulator().updater()
+ 
 
+    PSE.remoteCalls('refreshCalls')
     print('JMRI railroad updated from TrainPlayer data')
     _psLog.info('JMRI railroad updated from TrainPlayer data')
 
     return
 
+class Locationator:
+    """Locations and tracks are updated using Location Manager."""
+
+    def __init__(self):
+
+        self.scriptName = SCRIPT_NAME + '.Locationator'
+
+        self.configFile = PSE.readConfigFile()
+        self.currentIds = []
+        self.updatedIds = []
+
+        self.currentRrData = {}
+        self.updatedRrData = {}
+        self.continuingIds = []
+        self.newIds = []
+        self.oldIds = []
+
+
+
+
+
+
+
+
+        print(self.scriptName + ' ' + str(SCRIPT_REV))
+
+        return
+    
+    def getCurrentRrData(self):
+
+        self.currentRrData = ModelEntities.getTpRailroadJson('tpRailroadData')
+
+        return
+
+    def getUpdatedRrData(self):
+
+        self.updatedRrData = ModelEntities.getTpRailroadJson('tpRailroadData')
+
+        return
+    
+    def locationate(self):
+
+        self.parseLocationIds()
+        self.updateContinuingLocations()
+
+        return
+    
+    def parseLocationIds(self):
+
+        self.currentIds = self.currentRrData['locationIds']
+        self.updatedIds = self.updatedRrData['locationIds']
+
+        self.newIds = list(set(self.updatedIds).difference(set(self.currentIds)))
+        self.oldIds = list(set(self.currentIds).difference(set(self.updatedIds)))
+        self.continuingIds = list(set(self.currentIds) - set(self.oldIds))
+
+        print(self.newIds)
+        print(self.oldIds)
+        print(self.continuingIds)
+
+
+        return
+    
+    def updateContinuingLocations(self):
+
+        for id in self.continuingIds:
+
+            trackType = self.configFile['o2o']['TR'][self.updatedRrData['locales'][id]['type']]
+            length = (self.configFile['o2o']['DL'] + 4) * int(self.updatedRrData['locales'][id]['capacity'])
+            currentLocation = PSE.LM.getLocationByName(self.currentRrData['locales'][id]['location'])
+            updatedLocation = PSE.LM.newLocation(self.updatedRrData['locales'][id]['location'])
+
+            try:
+                track = updatedLocation.getTrackByName(self.currentRrData['locales'][id]['track'], None)
+                track.setName(self.updatedRrData['locales'][id]['track'])
+                track.setTrackType(trackType)
+            except:
+                track = currentLocation.getTrackByName(self.currentRrData['locales'][id]['track'], None)
+                track.copyTrack(self.updatedRrData['locales'][id]['track'], updatedLocation)
+                currentLocation.deleteTrack(track)
+                
+                # track = updatedLocation.addTrack(self.updatedRrData['locales'][id]['track'], trackType)
+
+            if trackType == 'Spur':
+                track.setLength(length)
+
+
+
+
+
+
+
+                # location.setName(self.updatedRrData['locales'][id]['location'])
+
+
+
+
+
+            
+        return
+
+
+
+
+
+
+
+
+
+
+
+
+def updateJmriIndustries():
+    """
+    Mini controller.
+    Applies changes made to the TrainPlayer/OC/Industries tab.
+    Rolling stock is not updated.
+    Locations are otherwise not changed.
+    Called by:
+    Controller.Startup.updateJmriIndustries
+    """
+
+    PSE.closeSubordinateWindows()
+    BuiltTrainExport.FindTrain().trainResetter()
+    PSE.remoteCalls('refreshCalls')
+
+    PSE.SM.dispose()
+    ModelEntities.newSchedules()
+    Localculator().schedulator()
+    ModelEntities.addCarTypesToSpurs()
+
+    return
+
 def updateJmriRollingingStock():
     """
-    Mini controller to update only the rolling stock.
+    Mini controller.
+    Applies changes made to TrainPlayer rolling stock.
     Called by:
     Controller.Startup.updateJmriRollingingStock
     """
@@ -503,7 +665,17 @@ class Localculator:
         _psLog.info('Locations created or updated')
 
         return
+    
+    def schedulator(self):
+        """Mini controller to update schedules."""
 
+        self.getCurrentLocations()
+        self.getImportedLocations()
+        self.parseLocations()
+        self.updateContinuingLocations()
+
+        return
+    
     def getCurrentLocations(self):
 
         for locationName in PSE.getAllLocationNames():
@@ -897,7 +1069,6 @@ class RStockulator:
             if PSE.EM.getById(currentJmriId):
                 newRsAttribs = self.tpLocos[id]
                 rs = PSE.EM.getById(currentJmriId)
-                
                 rs.setConsist(PSE.ZM.getConsistByName(newRsAttribs['consist']))
 
             elif PSE.CM.getById(currentJmriId):
@@ -913,17 +1084,17 @@ class RStockulator:
             rsRoad, rsNumber = ModelEntities.parseCarId(newRsAttribs['id'])
             xLocation, xTrack = ModelEntities.getSetToLocationAndTrack(newRsAttribs['location'], newRsAttribs['track'])
 
-            oldRoad = rs.getRoadName()
+            # oldRoad = rs.getRoadName()
             rs.setRoadName(rsRoad)
-            rs.firePropertyChange("rolling stock road", oldRoad, rsRoad)
+            # rs.firePropertyChange("rolling stock road", oldRoad, rsRoad)
 
             oldNumber = rs.getNumber()
             rs.setNumber(rsNumber)
             rs.firePropertyChange("rolling stock number", oldNumber, rsNumber)
 
-            # oldTrack = rs.getTrack()
+            # # oldTrack = rs.getTrack()
             rs.setLocation(xLocation, xTrack, True)
-            # rs.firePropertyChange(TRACK_CHANGED_PROPERTY, oldTrack, xTrack)
+            # # rs.firePropertyChange(TRACK_CHANGED_PROPERTY, oldTrack, xTrack)
 
             rs.setTypeName(newRsAttribs['aar'])
 

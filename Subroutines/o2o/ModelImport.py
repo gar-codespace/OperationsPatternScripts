@@ -31,6 +31,7 @@ def importTpRailroad():
         return False
 
     trainPlayerImport.processFileHeaders()
+    trainPlayerImport.getLocationIds()
     trainPlayerImport.getRrLocations()
     trainPlayerImport.getRrLocales()
 
@@ -175,6 +176,20 @@ class TrainPlayerImporter:
 
         return
 
+    def getLocationIds(self):
+
+        _psLog.debug('getLocationIds')
+
+        tpLocationIds = []
+
+        for lineItem in self.tpLocations:
+            splitLine = lineItem.split(';')
+            tpLocationIds.append(splitLine[0])
+
+        self.rr['locationIds'] = tpLocationIds
+
+        return
+
     def getRrLocations(self):
         """
         self.tpLocations format: TP ID; JMRI Location Name; JMRI Track Name; TP Label; TP Type; TP Spaces.
@@ -183,7 +198,6 @@ class TrainPlayerImporter:
         _psLog.debug('getRrLocations')
 
         locationList = ['Unreported']
-        rrLocations = {}
 
         for lineItem in self.tpLocations:
             splitLine = lineItem.split(';')
