@@ -225,8 +225,6 @@ def setTrackAttribs(trackData):
     Mini controller to set the attributes for each track,
     based on TrainPlayer track type.
     Called by:
-    makeNewTrack
-    Model.UpdateLocationsAndTracks.updateTrackParams
     """
 
     if trackData['type'] == 'industry':
@@ -256,6 +254,7 @@ def setTrackTypeIndustry(trackData):
     location = PSE.LM.getLocationByName(trackData['location'])
     track = location.getTrackByName(trackData['track'], None)
 
+    track.setLength(trackData['spurLength'])
     track.setSchedule(PSE.SM.getScheduleByName(trackData['label']))
 
     return
@@ -270,6 +269,7 @@ def setTrackTypeInterchange(trackData):
 
     location = PSE.LM.getLocationByName(trackData['location'])
     track = location.getTrackByName(trackData['track'], None)
+    track.setLength(trackData['defaultLength'])
     for type in track.getTypeNames():
         track.addTypeName(type)
 
@@ -286,6 +286,7 @@ def setTrackTypeStaging(trackData):
 
     location = PSE.LM.getLocationByName(trackData['location'])
     track = location.getTrackByName(trackData['track'], None)
+    track.setLength(trackData['defaultLength'])
 
     track.setAddCustomLoadsAnySpurEnabled(o2oConfig['SM']['SCL'])
     track.setRemoveCustomLoadsEnabled(o2oConfig['SM']['RCL'])

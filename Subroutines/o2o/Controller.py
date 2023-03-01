@@ -90,19 +90,12 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        PSE.closeOutputFrame()
-
-        if ModelImport.importTpRailroad():
-            print('TrainPlayer railroad data imported OK')
-            _psLog.info('TrainPlayer railroad data imported OK')
-        else:
-            print('TrainPlayer railroad not imported')
-            _psLog.critical('TrainPlayer railroad not imported')
-            _psLog.critical('New JMRI railroad not built')
-
+        if not Model.getTrainPlayerRailroad():
             return
-
+        
         Model.newJmriRailroad()
+
+        PSE.remoteCalls('resetCalls')
 
         PSE.restartAllSubroutines()
 
@@ -111,13 +104,20 @@ class StartUp:
         return
 
     def updateJmriLocations(self, EVENT):
-        """Applies changes made to the TrainPlayer/OC/Locations tab."""
+        """
+        Applies changes made to the TrainPlayer/OC/Locations tab.
+        Ripples changes through the industries data.
+        """
 
         _psLog.debug(EVENT)
 
-        
+        if not Model.getTrainPlayerRailroad():
+            return
 
         Model.updateJmriLocations()
+        Model.updateJmriIndustries()
+
+        PSE.remoteCalls('resetCalls')
 
         PSE.restartAllSubroutines()
 
@@ -133,19 +133,12 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        PSE.closeOutputFrame()
-
-        if ModelImport.importTpRailroad():
-            print('TrainPlayer railroad data imported OK')
-            _psLog.info('TrainPlayer railroad data imported OK')
-        else:
-            print('TrainPlayer railroad not imported')
-            _psLog.critical('TrainPlayer railroad not imported')
-            _psLog.critical('JMRI railroad not updated')
-
+        if not Model.getTrainPlayerRailroad():
             return
 
         Model.updateJmriIndustries()
+
+        PSE.remoteCalls('resetCalls')
 
         PSE.restartAllSubroutines()
 
@@ -158,19 +151,12 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        PSE.closeOutputFrame()
-
-        if ModelImport.importTpRailroad():
-            print('TrainPlayer railroad data imported OK')
-            _psLog.info('TrainPlayer railroad data imported OK')
-        else:
-            print('TrainPlayer railroad not imported')
-            _psLog.critical('TrainPlayer railroad not imported')
-            _psLog.critical('JMRI rolling stock not updated')
-
+        if not Model.getTrainPlayerRailroad():
             return
-
+        
         Model.updateJmriRollingingStock()
+
+        PSE.remoteCalls('refreshCalls')
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

@@ -17,9 +17,9 @@ _psLog = PSE.LOGGING.getLogger('OPS.XX.Model')
 def resetConfigFileItems():
     """Called from PSE.remoteCalls('resetCalls')"""
 
-    configFile = PSE.readConfigFile()
+    # configFile = PSE.readConfigFile()
     # Reset to defaults here
 
-    PSE.writeConfigFile(configFile)
+    # PSE.writeConfigFile(configFile)
 
     return
