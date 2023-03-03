@@ -180,7 +180,7 @@ class TrainPlayerImporter:
 
         _psLog.debug('getLocationIds')
 
-        tpLocationIds = []
+        tpLocationIds = ['00']
 
         for lineItem in self.tpLocations:
             splitLine = lineItem.split(';')

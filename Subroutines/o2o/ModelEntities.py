@@ -58,9 +58,9 @@ def tpDirectoryExists():
 """o2o.Model"""
 
 
-def newSchedules():
+def rebuildSchedules():
     """
-    Write the industry schedules.
+    Rebuilds the industry schedules.
     viaIn and viaOut are not being used.
     """
 
@@ -76,13 +76,58 @@ def newSchedules():
             except:
                 schedule = PSE.SM.newSchedule(scheduleName)
 
+            # for scheduleItem in scheduleItems:
+            #     scheduleLine = schedule.addItem(scheduleItem[0])
+            #     scheduleLine.setReceiveLoadName(scheduleItem[1])
+            #     scheduleLine.setShipLoadName(scheduleItem[2])
+            #     scheduleLine.setDestination(PSE.LM.getLocationByName(scheduleItem[3]))
+                # scheduleLine.setViaIn(scheduleItem[4])
+                # scheduleLine.setViaOut(scheduleItem[5])
+
+
             for composedItem in composeSchedules(scheduleItems):
-                scheduleItem = schedule.addItem(composedItem[0])
-                scheduleItem.setReceiveLoadName(composedItem[1])
-                scheduleItem.setShipLoadName(composedItem[2])
-                scheduleItem.setDestination(PSE.LM.getLocationByName(composedItem[3]))
-                # ViaIn composedItem[4]
-                # ViaOut composedItem[5]
+                pass
+                # scheduleItem = schedule.addItem(composedItem[0])
+                # scheduleItem.setReceiveLoadName(composedItem[1])
+                # scheduleItem.setShipLoadName(composedItem[2])
+            #     scheduleItem.setDestination(PSE.LM.getLocationByName(composedItem[3]))
+                # scheduleLine.setViaIn(scheduleItem[4])
+                # scheduleLine.setViaOut(scheduleItem[5])
+
+    return
+
+def condenseSchedules():
+    """The logic to interpret the TP industries tab is implemented here."""
+
+    for schedule in PSE.SM.getSchedulesByNameList():
+        items = schedule.getItemsBySequenceList()
+        while items:
+            currentItem = items.pop()
+            type = currentItem.getTypeName()
+            receive = currentItem.getReceiveLoadName()
+            ship = currentItem.getShipLoadName()
+            popList = []
+            for i, testItem in enumerate(items):
+                if testItem.getTypeName() == type:
+                    if testItem.getReceiveLoadName() == ship:
+                        currentItem.setReceiveLoadName(ship)
+                        # popList.append(testItem.getId())
+                        break
+                    if testItem.getShipLoadName() == receive:
+                        currentItem.setShipLoadName(receive)
+                        # popList.append(testItem.getId())
+                        break
+
+
+
+            # if not popList:
+            #     continue
+
+            # for popItem in popList:
+            #     schedule.deleteItem(schedule.getItemById(popItem))
+
+            
+
 
     return
 
@@ -101,39 +146,68 @@ def composeSchedules(scheduleItems):
         aar.append(item[0])
     tallyAar = PSE.occuranceTally(aar)
 
-    for aar, occurances in tallyAar.items():
+    r = []
+    for item in scheduleItems:
+        r.append(item[1])
+    tallyAar = PSE.occuranceTally(r)
+    print(tallyAar)
 
-        if occurances == 1:
-            for item in scheduleItems:
-                if item[0] == aar:
-                    single = singleNode(item)
-                    composedItems.append(single)
+    s = []
+    for item in scheduleItems:
+        s.append(item[2])
+    tallyAar = PSE.occuranceTally(s)
+    print(tallyAar)
 
-        if occurances == 2:
-            nodes = []
-            for item in scheduleItems:
-                if item[0] == aar:
-                    nodes.append(item)
-            composed = doubleNode(nodes)
-            composedItems.append(composed)
 
-        if occurances > 2:
-            nodes = []
-            for item in scheduleItems:
-                if item[0] == aar:
-                    nodes.append(item)
 
-            while nodes:
-                nodeA = nodes.pop(0)
-                if len(nodes) == 0:
-                    composed = singleNode(nodeA)
-                    composedItems.append(composed)
 
-                for i, testNode in enumerate(nodes):
-                    if (nodeA[1] and nodeA[1] == testNode[2]) or (nodeA[2] and nodeA[2] == testNode[1]):
-                        nodeB = nodes.pop(i)
-                        composed = doubleNode([nodeA, nodeB])
-                        composedItems.append(composed)
+
+
+    # if len(tallyAar) == 1:
+    #     single = singleNode(scheduleItems[0])
+    #     composedItems.append(single)
+
+    #     return composedItems
+
+    # for aar, occurances in tallyAar.items():
+    #     for item in scheduleItems:
+    #         if item[0] == aar:
+
+
+
+
+
+
+
+
+
+
+
+    #     if occurances == 2:
+    #         nodes = []
+    #         for item in scheduleItems:
+    #             if item[0] == aar:
+    #                 nodes.append(item)
+    #         composed = doubleNode(nodes)
+    #         composedItems.append(composed)
+
+    #     if occurances > 2:
+    #         nodes = []
+    #         for item in scheduleItems:
+    #             if item[0] == aar:
+    #                 nodes.append(item)
+
+    #         while nodes:
+    #             nodeA = nodes.pop(0)
+    #             if len(nodes) == 0:
+    #                 composed = singleNode(nodeA)
+    #                 composedItems.append(composed)
+
+    #             for i, testNode in enumerate(nodes):
+    #                 if (nodeA[1] and nodeA[1] == testNode[2]) or (nodeA[2] and nodeA[2] == testNode[1]):
+    #                     nodeB = nodes.pop(i)
+    #                     composed = doubleNode([nodeA, nodeB])
+    #                     composedItems.append(composed)
 
     return composedItems
 
@@ -163,6 +237,59 @@ def doubleNode(nodes):
         composedNode = [nodes[0][0], nodes[1][1], nodes[0][2], fd, nodes[0][4], nodes[0][5]]
 
     return composedNode
+
+
+# def composeSchedules(scheduleItems):
+#     """
+#     For all single node schedules, replace Null with Empty.
+#     For all double node schedules, combine Ship/Receive with the load name.
+#     ModelImport.TrainPlayerImporter.processFileHeaders.self.tpIndustries.sort() or this won't work.
+#     scheduleItem: aarName[0], receiveLoad[1], shipload[2], stagingName[3], viaIn[4], viaOut[5]
+#     """
+
+#     composedItems = []
+#     aar = []
+
+#     for item in scheduleItems:
+#         aar.append(item[0])
+#     tallyAar = PSE.occuranceTally(aar)
+#     print(len(tallyAar))
+
+#     for aar, occurances in tallyAar.items():
+
+#         if occurances == 1:
+#             for item in scheduleItems:
+#                 if item[0] == aar:
+#                     single = singleNode(item)
+#                     composedItems.append(single)
+
+#         if occurances == 2:
+#             nodes = []
+#             for item in scheduleItems:
+#                 if item[0] == aar:
+#                     nodes.append(item)
+#             composed = doubleNode(nodes)
+#             composedItems.append(composed)
+
+#         if occurances > 2:
+#             nodes = []
+#             for item in scheduleItems:
+#                 if item[0] == aar:
+#                     nodes.append(item)
+
+#             while nodes:
+#                 nodeA = nodes.pop(0)
+#                 if len(nodes) == 0:
+#                     composed = singleNode(nodeA)
+#                     composedItems.append(composed)
+
+#                 for i, testNode in enumerate(nodes):
+#                     if (nodeA[1] and nodeA[1] == testNode[2]) or (nodeA[2] and nodeA[2] == testNode[1]):
+#                         nodeB = nodes.pop(i)
+#                         composed = doubleNode([nodeA, nodeB])
+#                         composedItems.append(composed)
+
+#     return composedItems
 
 def addCarTypesToSpurs():
     """Checks the car types check box for car types used at each spur"""
@@ -301,6 +428,10 @@ def setTrackTypeClassYard(trackData):
     setTrackAttribs
     """
 
+    location = PSE.LM.getLocationByName(trackData['location'])
+    track = location.getTrackByName(trackData['track'], None)
+    track.setLength(trackData['defaultLength'])
+
     return
 
 def setTrackTypeXoReserved(trackData):
@@ -313,6 +444,7 @@ def setTrackTypeXoReserved(trackData):
     """
 
     track = setTrackTypeIndustry(trackData)
+    track.setLength(trackData['spurLength'])
     track.setTrainDirections(0)
     for type in track.getTypeNames():
         track.addTypeName(type)

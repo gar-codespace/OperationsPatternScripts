@@ -115,7 +115,7 @@ class StartUp:
             return
 
         Model.updateJmriLocations()
-        Model.updateJmriIndustries()
+        # Model.updateJmriIndustries()
 
         PSE.remoteCalls('resetCalls')
 

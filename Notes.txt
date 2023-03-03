@@ -3,8 +3,6 @@ Todo:
   o2o listeners don't work with throwback?
   New JMRI railroad should close trains and routes.
   Throwback-Trains should restart o2o listeners if o2o is being used.
-  Change o2o Update RR to Update Locations.
-  o2o Update Locations should add new car loads to schedules.
 
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -156,6 +154,7 @@ Catches Items:
 Version 3 ideas:
   Harden up Bundle against web errors, untranslated items.
   Harden Translator.translateSingle() from timeout errors.
+  Replace RemoteCalls with listeners.
   How to use locale modifier, IE en-GB.
   All the subroutine actionListener() are very similar. Can this duplication be eliminated?
   020.ModelWorkEvents.*.parsePtRs and o2o.ModelWorkEvents.*.parseRS do the same things in a different way, can they be merged?
