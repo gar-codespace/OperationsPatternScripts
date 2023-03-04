@@ -76,6 +76,7 @@ def rebuildSchedules():
             except:
                 schedule = PSE.SM.newSchedule(scheduleName)
 
+
             # for scheduleItem in scheduleItems:
             #     scheduleLine = schedule.addItem(scheduleItem[0])
             #     scheduleLine.setReceiveLoadName(scheduleItem[1])
@@ -86,13 +87,12 @@ def rebuildSchedules():
 
 
             for composedItem in composeSchedules(scheduleItems):
-                pass
-                # scheduleItem = schedule.addItem(composedItem[0])
-                # scheduleItem.setReceiveLoadName(composedItem[1])
-                # scheduleItem.setShipLoadName(composedItem[2])
-            #     scheduleItem.setDestination(PSE.LM.getLocationByName(composedItem[3]))
-                # scheduleLine.setViaIn(scheduleItem[4])
-                # scheduleLine.setViaOut(scheduleItem[5])
+                scheduleItem = schedule.addItem(composedItem[0])
+                scheduleItem.setReceiveLoadName(composedItem[1])
+                scheduleItem.setShipLoadName(composedItem[2])
+                scheduleItem.setDestination(PSE.LM.getLocationByName(composedItem[3]))
+                # scheduleItem.useViaInForSomething(composedItem[4])
+                # scheduleItem.useViaOutForSomething(composedItem[5])
 
     return
 
@@ -137,26 +137,63 @@ def composeSchedules(scheduleItems):
     For all double node schedules, combine Ship/Receive with the load name.
     ModelImport.TrainPlayerImporter.processFileHeaders.self.tpIndustries.sort() or this won't work.
     scheduleItem: aarName[0], receiveLoad[1], shipload[2], stagingName[3], viaIn[4], viaOut[5]
+    scheduleItem = (aarName, sr, loadName, stagingName, viaIn, viaOut)
     """
 
     composedItems = []
-    aar = []
+    residuleItems = []
 
-    for item in scheduleItems:
-        aar.append(item[0])
-    tallyAar = PSE.occuranceTally(aar)
+    # sr = []
+    # for item in scheduleItems:
+    #     sr.append(item[1])
+    # tallySR = PSE.occuranceTally(sr)
 
-    r = []
-    for item in scheduleItems:
-        r.append(item[1])
-    tallyAar = PSE.occuranceTally(r)
-    print(tallyAar)
+    # if len(tallySR) == 1:
+    #     for item in scheduleItems:
+    #         composedItems.append(singleNode(item))
 
-    s = []
-    for item in scheduleItems:
-        s.append(item[2])
-    tallyAar = PSE.occuranceTally(s)
-    print(tallyAar)
+    #     return composedItems
+
+    # scheduleItems = scheduleItems.sort()
+
+
+
+
+    # while scheduleItems:
+    #     currentItem = scheduleItems[0]
+    #     for i, testItem in enumerate(scheduleItems, start=1):
+    #         if currentItem[0] == testItem[0] and currentItem[2] == testItem[2]:
+    #             composedItems.append(doubleNodeSymetric(currentItem, testItem))
+    #             scheduleItems.pop(0)
+    #             scheduleItems.pop(i)
+    #         else:
+    #             residuleItems.append(scheduleItems.pop(0))
+
+    testItems = [item for item in scheduleItems]
+    for currentItem in scheduleItems:
+        testItems.pop()
+        for testItem in testItems:
+            if currentItem[0] == testItem[0] and currentItem[2] == testItem[2]:
+                composedItems.append(doubleNodeSymetric(currentItem, testItem))
+
+
+
+
+
+
+            #     residuleItems.append(scheduleItems.pop(j))
+            #     residuleItems.append(currentItem)
+
+    # while residuleItems:
+    #     currentItem = residuleItems.pop(0)
+    #     for i, testItem in enumerate(residuleItems):
+    #         if currentItem[0] == testItem[0]:
+    #             composedItems.append(doubleNodeAsymetric(currentItem, testItem))
+    #             residuleItems.pop(i)
+    #         else:
+    #             composedItems.append(singleNode(currentItem))
+
+
 
 
 
@@ -212,32 +249,77 @@ def composeSchedules(scheduleItems):
     return composedItems
 
 def singleNode(node):
-    """For each AAR when either the ship or recieve is an empty."""
+    """
+    For each AAR when either the ship or recieve is an empty.
+    [u'XM', u'S', u'steel products', u'', u'', u'']
+    """
 
     composedNode = []
-    if node[1]:
-        composedNode = [node[0], node[1], 'Empty', node[3], node[4], node[5]]
+    if node[1] == 'R':
+        composedNode = [node[0], node[2], 'Empty', node[3], node[4], node[5]]
     else:
         composedNode = [node[0], 'Empty', node[2], node[3], node[4], node[5]]
 
+
+
+
+
+    # composedNode = []
+    # if node[1]:
+    #     composedNode = [node[0], node[1], 'Empty', node[3], node[4], node[5]]
+    # else:
+    #     composedNode = [node[0], 'Empty', node[2], node[3], node[4], node[5]]
+
     return composedNode
 
-def doubleNode(nodes):
-    """For each AAR when ship and recieve is a load."""
+def doubleNodeSymetric(node1, node2):
+    """
+    For each AAR when ship and recieve is the same load.
+    [u'XM', u'S', u'steel products', u'', u'', u'']
+    """
 
     composedNode = []
-    if nodes[0][3]:
-        fd = nodes[0][3]
+    if node1[3]:
+        fd = node1[3]
     else:
-        fd = nodes[1][3]
+        fd = node2[3]
 
-    if nodes[0][1]:
-        composedNode = [nodes[0][0], nodes[0][1], nodes[1][2], fd, nodes[0][4], nodes[0][5]]
-    else:
-        composedNode = [nodes[0][0], nodes[1][1], nodes[0][2], fd, nodes[0][4], nodes[0][5]]
+    composedNode = [node1[0], node1[2], node2[2], fd, node1[4], node1[5]]
+
+    # if node1[1]:
+    #     composedNode = [node1[0], node1[1], node2[2], fd, node1[4], node1[5]]
+    # else:
+    #     composedNode = [node1[0], node2[1], node1[2], fd, node1[4], node1[5]]
 
     return composedNode
 
+def doubleNodeAsymetric(node1, node2):
+    """
+    For each AAR when the ship and receive load is different.
+    format: [u'XM', u'S', u'steel products', u'Staging', u'ViaIn', u'ViaOut']
+    """
+
+    composedNode = []
+    if node1[3]:
+        fd = node1[3]
+    else:
+        fd = node2[3]
+
+    if node1[1] == 'R':
+        r = node1[2]
+        s = node2[2]
+    else:
+        r = node2[2]
+        s = node1[2]
+
+    composedNode = [node1[0], r, s, fd, node1[4], node1[5]]
+
+    # if node1[1]:
+    #     composedNode = [node1[0], node1[1], node2[2], fd, node1[4], node1[5]]
+    # else:
+    #     composedNode = [node1[0], node2[1], node1[2], fd, node1[4], node1[5]]
+
+    return composedNode
 
 # def composeSchedules(scheduleItems):
 #     """

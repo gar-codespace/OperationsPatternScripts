@@ -65,8 +65,8 @@ def newJmriRailroad():
 
     Initiator().initialize()
     Attributator().attributate()
-    ModelEntities.rebuildSchedules()
-    ModelEntities.condenseSchedules()
+    # ModelEntities.rebuildSchedules()
+    # ModelEntities.condenseSchedules()
     Locationator().creater()
     Divisionator().divisionate()
     RStockulator().makeNew()

@@ -257,7 +257,8 @@ class TrainPlayerImporter:
                 stagingName = line[6]
                 viaIn = line[7]
                 viaOut = line[8]
-                scheduleItem = (aarName, receiveLoad, shipload, stagingName, viaIn, viaOut)
+                # scheduleItem = (aarName, receiveLoad, shipload, stagingName, viaIn, viaOut, sr)
+                scheduleItem = (aarName, sr, loadName, stagingName, viaIn, viaOut)
                 industryDict[tpId]['c-schedule'][trackLabel].append(scheduleItem)
             else:
             # Start a new one
@@ -277,7 +278,8 @@ class TrainPlayerImporter:
                 viaIn = line[7]
                 viaOut = line[8]
                 tpId = line[9]
-                scheduleItem = (aarName, receiveLoad, shipload, stagingName, viaIn, viaOut)
+                # scheduleItem = (aarName, receiveLoad, shipload, stagingName, viaIn, viaOut, sr)
+                scheduleItem = (aarName, sr, loadName, stagingName, viaIn, viaOut)
                 schedule = {trackLabel:[scheduleItem]}
                 industryDict[tpId] = {u'a-location': locationName, u'b-track': trackName, u'c-schedule': schedule}
 
