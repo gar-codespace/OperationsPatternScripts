@@ -65,12 +65,11 @@ def newJmriRailroad():
 
     Initiator().initialize()
     Attributator().attributate()
-    # ModelEntities.rebuildSchedules()
-    # ModelEntities.condenseSchedules()
+    ModelEntities.rebuildSchedules()
     Locationator().creater()
     Divisionator().divisionate()
-    RStockulator().makeNew()
     ModelEntities.addCarTypesToSpurs()
+    RStockulator().makeNew()
     
     print('New JMRI railroad built from TrainPlayer data')
     _psLog.info('New JMRI railroad built from TrainPlayer data')
@@ -91,10 +90,8 @@ def updateJmriLocations():
     
     Attributator().attributate()
     ModelEntities.rebuildSchedules()
-    # ModelEntities.condenseSchedules()
     Locationator().updater()
     Divisionator().divisionate()
-    # RStockulator().updater()
     ModelEntities.addCarTypesToSpurs()
     RStockulator().updater()
 
