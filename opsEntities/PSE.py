@@ -346,7 +346,8 @@ def closeSubordinateWindows():
     routesTable = JMRI.jmrit.operations.routes.Bundle().handleGetMessage('TitleRoutesTable')
     locationsTable = JMRI.jmrit.operations.locations.Bundle().handleGetMessage('TitleLocationsTable')
 
-    keepTheseWindows = [console, 'PanelPro', patternScripts, routesTable, trainsTable, locationsTable]
+    # keepTheseWindows = [console, 'PanelPro', patternScripts, routesTable, trainsTable, locationsTable]
+    keepTheseWindows = [console, 'PanelPro', patternScripts, locationsTable]
     
     for frame in JMRI.util.JmriJFrame.getFrameList():
         if frame.getTitle() in keepTheseWindows:

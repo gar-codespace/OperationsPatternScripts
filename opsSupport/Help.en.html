@@ -207,7 +207,14 @@
 <h3>Description</h3>
 <p>The ops to ops (o2o) subroutine is a group of utilities that are designed to be the glue that allows JMRI Operations Pro to be the operations engine for TrainPlayer©. The idea is to expand the capability of TrainPlayer©'s Advanced Ops feature to include the flexibility of Operations Pro, while also eleminating the tedium of keeping two databases synchronised.</p>
 <p>o2o will automatically export a built train or switchlist to TrainPlayer when the Pattern scripts window is open and the o2o subroutine is displayed. To disable o2o export, disable o2o from the Tools pulldown or close the Pattern Scripts window.</p>
-<h3>Who Does What</h3>
+<h3>What the buttons do</h3>
+<p>Before any of these buttons are pressed, export your layout from TrainPlayer. The QuickKeys for TrainPlayer subroutines have to be added to TrainPlayer before your TrainPlayer layout can be exported. Refer to the Quick Keys documentation.</p>
+<p><A HREF="https://github.com/gar-codespace/QuickKeys-for-TrainPlayer">The Quick Keys page on GitHub</A></p>
+<p>New JMRI Railroad - Pressing this button erases any existing data and builds a new JMRI railroad from the Advanced Ops window via a TrainPlayer export. The Routes and Trains XML files are backed up, the others are discarded.</p>
+<p>Update Locations - Pressing this button updates your JMRI railroad to the changes made to the TrainPlayer Advanced Ops Locations and Industries tabs, along with any changes made to your TrainPlayer rolling stock.</p>
+<p>Update Industries - Pressing this button only applies changes made to the TrainPlayer Advanced Ops Industries tab. Nothing else is updated. This effectively updates only JMRI schedule data.</p>
+<p>Update Rolling Stock - Pressing this button applies changes made to your TrainPlayer rolling stock to your JMRI rolling stock. If a change is made to existing cars, the final destination is not overwritten.</p>
+<h3>Who does what</h3>
 <p>The table below shows which program manages which elements.</p>
 <img src="../Subroutines/o2o/img/Who_Does_What.png" alt="<Who Does What Image>">
 <h3>Subroutine Panel</h3>

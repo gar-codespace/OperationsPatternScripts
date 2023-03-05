@@ -76,16 +76,6 @@ def rebuildSchedules():
             except:
                 schedule = PSE.SM.newSchedule(scheduleName)
 
-
-            # for scheduleItem in scheduleItems:
-            #     scheduleLine = schedule.addItem(scheduleItem[0])
-            #     scheduleLine.setReceiveLoadName(scheduleItem[1])
-            #     scheduleLine.setShipLoadName(scheduleItem[2])
-            #     scheduleLine.setDestination(PSE.LM.getLocationByName(scheduleItem[3]))
-                # scheduleLine.setViaIn(scheduleItem[4])
-                # scheduleLine.setViaOut(scheduleItem[5])
-
-
             for composedItem in composeSchedules(scheduleItems):
                 scheduleItem = schedule.addItem(composedItem[0])
                 scheduleItem.setReceiveLoadName(composedItem[1])
@@ -96,155 +86,57 @@ def rebuildSchedules():
 
     return
 
-def condenseSchedules():
-    """The logic to interpret the TP industries tab is implemented here."""
-
-    for schedule in PSE.SM.getSchedulesByNameList():
-        items = schedule.getItemsBySequenceList()
-        while items:
-            currentItem = items.pop()
-            type = currentItem.getTypeName()
-            receive = currentItem.getReceiveLoadName()
-            ship = currentItem.getShipLoadName()
-            popList = []
-            for i, testItem in enumerate(items):
-                if testItem.getTypeName() == type:
-                    if testItem.getReceiveLoadName() == ship:
-                        currentItem.setReceiveLoadName(ship)
-                        # popList.append(testItem.getId())
-                        break
-                    if testItem.getShipLoadName() == receive:
-                        currentItem.setShipLoadName(receive)
-                        # popList.append(testItem.getId())
-                        break
-
-
-
-            # if not popList:
-            #     continue
-
-            # for popItem in popList:
-            #     schedule.deleteItem(schedule.getItemById(popItem))
-
-            
-
-
-    return
-
 def composeSchedules(scheduleItems):
     """
+    Combine ship/receive with same aar onto a single line.
     For all single node schedules, replace Null with Empty.
-    For all double node schedules, combine Ship/Receive with the load name.
     ModelImport.TrainPlayerImporter.processFileHeaders.self.tpIndustries.sort() or this won't work.
-    scheduleItem: aarName[0], receiveLoad[1], shipload[2], stagingName[3], viaIn[4], viaOut[5]
     scheduleItem = (aarName, sr, loadName, stagingName, viaIn, viaOut)
     """
 
+# First pass - same aar, ship receive same load
     composedItems = []
-    residuleItems = []
+    matchedIndex = []
 
-    # sr = []
-    # for item in scheduleItems:
-    #     sr.append(item[1])
-    # tallySR = PSE.occuranceTally(sr)
+    index = len(scheduleItems)
+    for i in range(0, index):
+        currentItem = scheduleItems[i]
+        for j in range(i+1, index):
+            testItem = scheduleItems[j]
+            if currentItem[0] == testItem[0] and currentItem[1] != testItem[1] and currentItem[2] == testItem[2]:
+                composedItems.append(doubleNode(currentItem, testItem))
+                matchedIndex.append(i)
+                matchedIndex.append(j)
 
-    # if len(tallySR) == 1:
-    #     for item in scheduleItems:
-    #         composedItems.append(singleNode(item))
+    matchedIndex = list(set(matchedIndex))
+    for index in reversed(matchedIndex):
+        scheduleItems.pop(index)
 
-    #     return composedItems
+    if len(scheduleItems) == 0:
+        return composedItems
 
-    # scheduleItems = scheduleItems.sort()
+# Second pass - same aar, ship receive different load
+    matchedIndex = []
+    index = len(scheduleItems)
+    for i in range(0, index):
+        currentItem = scheduleItems[i]
+        for j in range(i+1, index):
+            testItem = scheduleItems[j]
+            if currentItem[0] == testItem[0] and currentItem[1] != testItem[1]:
+                composedItems.append(doubleNode(currentItem, testItem))
+                matchedIndex.append(i)
+                matchedIndex.append(j)
 
+    matchedIndex = list(set(matchedIndex))
+    for index in reversed(matchedIndex):
+        scheduleItems.pop(index)
 
+    if len(scheduleItems) == 0:
+        return composedItems
 
-
-    # while scheduleItems:
-    #     currentItem = scheduleItems[0]
-    #     for i, testItem in enumerate(scheduleItems, start=1):
-    #         if currentItem[0] == testItem[0] and currentItem[2] == testItem[2]:
-    #             composedItems.append(doubleNodeSymetric(currentItem, testItem))
-    #             scheduleItems.pop(0)
-    #             scheduleItems.pop(i)
-    #         else:
-    #             residuleItems.append(scheduleItems.pop(0))
-
-    testItems = [item for item in scheduleItems]
-    for currentItem in scheduleItems:
-        testItems.pop()
-        for testItem in testItems:
-            if currentItem[0] == testItem[0] and currentItem[2] == testItem[2]:
-                composedItems.append(doubleNodeSymetric(currentItem, testItem))
-
-
-
-
-
-
-            #     residuleItems.append(scheduleItems.pop(j))
-            #     residuleItems.append(currentItem)
-
-    # while residuleItems:
-    #     currentItem = residuleItems.pop(0)
-    #     for i, testItem in enumerate(residuleItems):
-    #         if currentItem[0] == testItem[0]:
-    #             composedItems.append(doubleNodeAsymetric(currentItem, testItem))
-    #             residuleItems.pop(i)
-    #         else:
-    #             composedItems.append(singleNode(currentItem))
-
-
-
-
-
-
-
-
-    # if len(tallyAar) == 1:
-    #     single = singleNode(scheduleItems[0])
-    #     composedItems.append(single)
-
-    #     return composedItems
-
-    # for aar, occurances in tallyAar.items():
-    #     for item in scheduleItems:
-    #         if item[0] == aar:
-
-
-
-
-
-
-
-
-
-
-
-    #     if occurances == 2:
-    #         nodes = []
-    #         for item in scheduleItems:
-    #             if item[0] == aar:
-    #                 nodes.append(item)
-    #         composed = doubleNode(nodes)
-    #         composedItems.append(composed)
-
-    #     if occurances > 2:
-    #         nodes = []
-    #         for item in scheduleItems:
-    #             if item[0] == aar:
-    #                 nodes.append(item)
-
-    #         while nodes:
-    #             nodeA = nodes.pop(0)
-    #             if len(nodes) == 0:
-    #                 composed = singleNode(nodeA)
-    #                 composedItems.append(composed)
-
-    #             for i, testNode in enumerate(nodes):
-    #                 if (nodeA[1] and nodeA[1] == testNode[2]) or (nodeA[2] and nodeA[2] == testNode[1]):
-    #                     nodeB = nodes.pop(i)
-    #                     composed = doubleNode([nodeA, nodeB])
-    #                     composedItems.append(composed)
+# Third pass - ship or receive not specified
+    for item in scheduleItems:
+        composedItems.append(singleNode(item))
 
     return composedItems
 
@@ -260,19 +152,9 @@ def singleNode(node):
     else:
         composedNode = [node[0], 'Empty', node[2], node[3], node[4], node[5]]
 
-
-
-
-
-    # composedNode = []
-    # if node[1]:
-    #     composedNode = [node[0], node[1], 'Empty', node[3], node[4], node[5]]
-    # else:
-    #     composedNode = [node[0], 'Empty', node[2], node[3], node[4], node[5]]
-
     return composedNode
 
-def doubleNodeSymetric(node1, node2):
+def doubleNode(node1, node2):
     """
     For each AAR when ship and recieve is the same load.
     [u'XM', u'S', u'steel products', u'', u'', u'']
@@ -286,92 +168,7 @@ def doubleNodeSymetric(node1, node2):
 
     composedNode = [node1[0], node1[2], node2[2], fd, node1[4], node1[5]]
 
-    # if node1[1]:
-    #     composedNode = [node1[0], node1[1], node2[2], fd, node1[4], node1[5]]
-    # else:
-    #     composedNode = [node1[0], node2[1], node1[2], fd, node1[4], node1[5]]
-
     return composedNode
-
-def doubleNodeAsymetric(node1, node2):
-    """
-    For each AAR when the ship and receive load is different.
-    format: [u'XM', u'S', u'steel products', u'Staging', u'ViaIn', u'ViaOut']
-    """
-
-    composedNode = []
-    if node1[3]:
-        fd = node1[3]
-    else:
-        fd = node2[3]
-
-    if node1[1] == 'R':
-        r = node1[2]
-        s = node2[2]
-    else:
-        r = node2[2]
-        s = node1[2]
-
-    composedNode = [node1[0], r, s, fd, node1[4], node1[5]]
-
-    # if node1[1]:
-    #     composedNode = [node1[0], node1[1], node2[2], fd, node1[4], node1[5]]
-    # else:
-    #     composedNode = [node1[0], node2[1], node1[2], fd, node1[4], node1[5]]
-
-    return composedNode
-
-# def composeSchedules(scheduleItems):
-#     """
-#     For all single node schedules, replace Null with Empty.
-#     For all double node schedules, combine Ship/Receive with the load name.
-#     ModelImport.TrainPlayerImporter.processFileHeaders.self.tpIndustries.sort() or this won't work.
-#     scheduleItem: aarName[0], receiveLoad[1], shipload[2], stagingName[3], viaIn[4], viaOut[5]
-#     """
-
-#     composedItems = []
-#     aar = []
-
-#     for item in scheduleItems:
-#         aar.append(item[0])
-#     tallyAar = PSE.occuranceTally(aar)
-#     print(len(tallyAar))
-
-#     for aar, occurances in tallyAar.items():
-
-#         if occurances == 1:
-#             for item in scheduleItems:
-#                 if item[0] == aar:
-#                     single = singleNode(item)
-#                     composedItems.append(single)
-
-#         if occurances == 2:
-#             nodes = []
-#             for item in scheduleItems:
-#                 if item[0] == aar:
-#                     nodes.append(item)
-#             composed = doubleNode(nodes)
-#             composedItems.append(composed)
-
-#         if occurances > 2:
-#             nodes = []
-#             for item in scheduleItems:
-#                 if item[0] == aar:
-#                     nodes.append(item)
-
-#             while nodes:
-#                 nodeA = nodes.pop(0)
-#                 if len(nodes) == 0:
-#                     composed = singleNode(nodeA)
-#                     composedItems.append(composed)
-
-#                 for i, testNode in enumerate(nodes):
-#                     if (nodeA[1] and nodeA[1] == testNode[2]) or (nodeA[2] and nodeA[2] == testNode[1]):
-#                         nodeB = nodes.pop(i)
-#                         composed = doubleNode([nodeA, nodeB])
-#                         composedItems.append(composed)
-
-#     return composedItems
 
 def addCarTypesToSpurs():
     """Checks the car types check box for car types used at each spur"""

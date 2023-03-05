@@ -375,26 +375,6 @@ class Attributator:
         return
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class Locationator:
     """Locations and tracks are updated using Location Manager."""
 
@@ -533,21 +513,6 @@ class Locationator:
 
         return
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     def getEmptyLocations(self):
 
         for location in PSE.getAllLocationNames():
@@ -575,16 +540,6 @@ class Locationator:
 
         return
 
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
 class Divisionator:
     """All methods involving divisions."""

@@ -1,7 +1,6 @@
 Todo:
   How to publish DeepL?
   o2o listeners don't work with throwback?
-  New JMRI railroad should close trains and routes.
   Throwback-Trains should restart o2o listeners if o2o is being used.
 
 Comments:
@@ -127,6 +126,7 @@ Tested Items:
     Sets undefined track length to Settings.MaxTrainLength OK.
     Updates new Settings.MaxTrainlength OK.
     Adds FD to car at industry if schedule has a FD OK.
+    New JMRI railroad should close trains and routes OK.
 
   Throwback
     Subroutine turns on and off OK.
