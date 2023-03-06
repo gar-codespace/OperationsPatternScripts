@@ -17,7 +17,7 @@ def actionListener(EVENT):
 
     _psLog.debug(EVENT)
 
-    PSE.closeSubordinateWindows()
+    # PSE.closeSubordinateWindows()
 
     configFile = PSE.readConfigFile()
 

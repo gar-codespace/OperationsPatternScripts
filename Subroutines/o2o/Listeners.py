@@ -16,7 +16,7 @@ def actionListener(EVENT):
 
     _psLog.debug(EVENT)
 
-    PSE.closeSubordinateWindows()
+    # PSE.closeSubordinateWindows()
 
     configFile = PSE.readConfigFile()
 
@@ -29,7 +29,7 @@ def actionListener(EVENT):
         configFile['Main Script']['CP'].update({__package__:False})
 
     # Do stuff here
-        removeBuiltTrainListener()
+        # removeBuiltTrainListener()
 
         _psLog.info(__package__ + ' removed from pattern scripts frame')
         print(__package__ + ' deactivated')

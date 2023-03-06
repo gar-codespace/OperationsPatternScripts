@@ -1,7 +1,5 @@
 Todo:
   How to publish DeepL?
-  o2o listeners don't work with throwback?
-  Throwback-Trains should restart o2o listeners if o2o is being used.
 
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -36,7 +34,7 @@ Tested Items:
     Handles JMRI load type Empty or empty OK.
     All SI items set to false works OK.
     SI set to TP only works OK.
-    Generic sub tests OK.
+    Template sub tests OK.
     Display all 'critical' log messages to Script Output window OK.
     Add a listener to monitor if a new train is created or deleted, builtTrain listeners updated accordingly.
     Mapped TP OC Class/XO reserved as JMRI spur, turn off train directions.
@@ -127,6 +125,7 @@ Tested Items:
     Updates new Settings.MaxTrainlength OK.
     Adds FD to car at industry if schedule has a FD OK.
     New JMRI railroad should close trains and routes OK.
+    Listeners set when using throwback OK.
 
   Throwback
     Subroutine turns on and off OK.
@@ -135,6 +134,7 @@ Tested Items:
     Vertical or horizontal display OK.
     Throwbacks one, some, or all xml OK.
     Set checkbox default to False OK.
+    o2o listeners set when using throwback OK.
 
 Catches Items:
   Catches pattern report button press no tracks selected OK.
