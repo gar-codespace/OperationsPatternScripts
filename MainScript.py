@@ -303,12 +303,6 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         PSE.makeReportFolders()
 
-        watchPatternScriptsWindow = PSE.JAVA_NIO.FileSystems.getDefault().newWatchService()
-        targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'Subroutines')
-        watchPath = PSE.JAVA_NIO.Paths.get(targetPath)
-        watchPath.register(watchPatternScriptsWindow, PSE.JAVA_NIO.StandardWatchEventKinds.ENTRY_CREATE)
-        # print(type(watchPath))
-
         Bundle.setupBundle()
 
         PSE.validateSubroutines()

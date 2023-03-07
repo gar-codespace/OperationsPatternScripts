@@ -86,6 +86,9 @@ def rebuildSchedules():
 
     return
 
+
+
+
 def composeSchedules(scheduleItems):
     """
     Combine ship/receive with same aar onto a single line.
@@ -94,51 +97,140 @@ def composeSchedules(scheduleItems):
     scheduleItem = (aarName, sr, loadName, stagingName, viaIn, viaOut)
     """
 
-# First pass - same aar, ship receive same load
-    composedItems = []
-    matchedIndex = []
 
-    index = len(scheduleItems)
-    for i in range(0, index):
-        currentItem = scheduleItems[i]
-        for j in range(i+1, index):
-            testItem = scheduleItems[j]
+    composedItems = []
+
+    while scheduleItems:
+        currentItem = scheduleItems.pop(0)
+        j = 0
+        for testItem in scheduleItems: # First pass - same aar, ship receive same load
             if currentItem[0] == testItem[0] and currentItem[1] != testItem[1] and currentItem[2] == testItem[2]:
                 composedItems.append(doubleNode(currentItem, testItem))
-                matchedIndex.append(i)
-                matchedIndex.append(j)
+                print('first')
+                print(currentItem[2])
+                print(testItem[2])
+                scheduleItems.pop(j)
+                if len(scheduleItems) > 1:
+                    currentItem = scheduleItems.pop(0)
+            j += 1
 
-    matchedIndex = list(set(matchedIndex))
-    for index in reversed(matchedIndex):
-        scheduleItems.pop(index)
-
-    if len(scheduleItems) == 0:
-        return composedItems
-
-# Second pass - same aar, ship receive different load
-    matchedIndex = []
-    index = len(scheduleItems)
-    for i in range(0, index):
-        currentItem = scheduleItems[i]
-        for j in range(i+1, index):
-            testItem = scheduleItems[j]
-            if currentItem[0] == testItem[0] and currentItem[1] != testItem[1]:
+        j = 0
+        for testItem in scheduleItems: # Second pass - same aar, ship receive different load
+            if currentItem[0] == testItem[0] and currentItem[1] != testItem[1] and currentItem[2] != testItem[2]:
                 composedItems.append(doubleNode(currentItem, testItem))
-                matchedIndex.append(i)
-                matchedIndex.append(j)
+                print('second')
+                print(currentItem[2])
+                print(testItem[2])
+                scheduleItems.pop(j)
+                if len(scheduleItems) > 1:
+                    currentItem = scheduleItems.pop(0)
+            j += 1
 
-    matchedIndex = list(set(matchedIndex))
-    for index in reversed(matchedIndex):
-        scheduleItems.pop(index)
 
-    if len(scheduleItems) == 0:
-        return composedItems
 
-# Third pass - ship or receive not specified
-    for item in scheduleItems:
-        composedItems.append(singleNode(item))
+        # currentItem = scheduleItems.pop(0)
+        # j = 0
+        # for testItem in scheduleItems: # Second pass - same aar, ship receive different load
+        #     if currentItem[0] == testItem[0] and currentItem[1] != testItem[1] and currentItem[2] != testItem[2]:
+        #         composedItems.append(doubleNode(currentItem, testItem))
+        #         print('second')
+        #         print(currentItem[2])
+        #         print(testItem[2])
+        #         scheduleItems.pop(j)
+        #         break
+        #     j += 1
+
+
+
+
+
+#     matchedIndex = list(set(matchedIndex))
+#     for index in reversed(matchedIndex):
+#         scheduleItems.pop(index)
+
+#     if len(scheduleItems) == 0:
+#         return composedItems
+
+# # Second pass - same aar, ship receive different load
+#     matchedIndex = []
+#     index = len(scheduleItems)
+#     for i in range(0, index):
+#         currentItem = scheduleItems[i]
+#         for j in range(i+1, index):
+#             testItem = scheduleItems[j]
+#             if currentItem[0] == testItem[0] and currentItem[1] != testItem[1]:
+#                 composedItems.append(doubleNode(currentItem, testItem))
+#                 matchedIndex.append(i)
+#                 matchedIndex.append(j)
+
+#     matchedIndex = list(set(matchedIndex))
+#     for index in reversed(matchedIndex):
+#         scheduleItems.pop(index)
+
+#     if len(scheduleItems) == 0:
+#         return composedItems
+
+# # Third pass - ship or receive not specified
+#     for item in scheduleItems:
+#         composedItems.append(singleNode(item))
 
     return composedItems
+
+
+
+# def composeSchedules(scheduleItems):
+#     """
+#     Combine ship/receive with same aar onto a single line.
+#     For all single node schedules, replace Null with Empty.
+#     ModelImport.TrainPlayerImporter.processFileHeaders.self.tpIndustries.sort() or this won't work.
+#     scheduleItem = (aarName, sr, loadName, stagingName, viaIn, viaOut)
+#     """
+
+# # First pass - same aar, ship receive same load
+#     composedItems = []
+#     matchedIndex = []
+
+#     index = len(scheduleItems)
+#     for i in range(0, index):
+#         currentItem = scheduleItems[i]
+#         for j in range(i+1, index):
+#             testItem = scheduleItems[j]
+#             if currentItem[0] == testItem[0] and currentItem[1] != testItem[1] and currentItem[2] == testItem[2]:
+#                 composedItems.append(doubleNode(currentItem, testItem))
+#                 matchedIndex.append(i)
+#                 matchedIndex.append(j)
+
+#     matchedIndex = list(set(matchedIndex))
+#     for index in reversed(matchedIndex):
+#         scheduleItems.pop(index)
+
+#     if len(scheduleItems) == 0:
+#         return composedItems
+
+# # Second pass - same aar, ship receive different load
+#     matchedIndex = []
+#     index = len(scheduleItems)
+#     for i in range(0, index):
+#         currentItem = scheduleItems[i]
+#         for j in range(i+1, index):
+#             testItem = scheduleItems[j]
+#             if currentItem[0] == testItem[0] and currentItem[1] != testItem[1]:
+#                 composedItems.append(doubleNode(currentItem, testItem))
+#                 matchedIndex.append(i)
+#                 matchedIndex.append(j)
+
+#     matchedIndex = list(set(matchedIndex))
+#     for index in reversed(matchedIndex):
+#         scheduleItems.pop(index)
+
+#     if len(scheduleItems) == 0:
+#         return composedItems
+
+# # Third pass - ship or receive not specified
+#     for item in scheduleItems:
+#         composedItems.append(singleNode(item))
+
+#     return composedItems
 
 def singleNode(node):
     """
