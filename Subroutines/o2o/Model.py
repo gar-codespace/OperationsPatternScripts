@@ -63,20 +63,20 @@ def newJmriRailroad():
     PSE.CM.dispose()
     PSE.EM.dispose()
 
-    Initiator().initialize()
-    Attributator().attributate()
-    ModelEntities.rebuildSchedules()
-    Locationator().creater()
-    Divisionator().divisionate()
+    Initiator().initialist()
+    Attributator().attributist()
+    ScheduleAuteur().auteurist()
+    Locationator().creator()
+    Divisionator().divisionist()
     ModelEntities.addCarTypesToSpurs()
-    RStockulator().makeNew()
+    RStockulator().creator()
     
     print('New JMRI railroad built from TrainPlayer data')
     _psLog.info('New JMRI railroad built from TrainPlayer data')
 
     return
 
-def updateJmriLocations():
+def updateJmriRailroad():
     """
     Mini controller.
     Applies changes made to the TrainPlayer/OC/Locations tab.
@@ -85,15 +85,15 @@ def updateJmriLocations():
     Locations uses LM to update everything.
     Rolling stock is not updated.
     Called by:
-    Controller.StartUp.updateJmriLocations
+    Controller.StartUp.updateJmriRailroad
     """
     
-    Attributator().attributate()
-    ModelEntities.rebuildSchedules()
-    Locationator().updater()
-    Divisionator().divisionate()
+    Attributator().attributist()
+    ScheduleAuteur().auteurist()
+    Locationator().locationist()
+    Divisionator().divisionist()
     ModelEntities.addCarTypesToSpurs()
-    RStockulator().updater()
+    RStockulator().updator()
 
     print('JMRI locations updated from TrainPlayer data')
     _psLog.info('JMRI locations updated from TrainPlayer data')
@@ -103,15 +103,16 @@ def updateJmriLocations():
 def updateJmriIndustries():
     """
     Mini controller.
-    Applies changes made to the TrainPlayer/OC/Industries tab.
+    Applies changes made to the TrainPlayer/OC/Industries tab only.
     Rolling stock is not updated.
     Locations are otherwise not changed.
     Called by:
     Controller.Startup.updateJmriIndustries
     """
     
-    Attributator().attributate()
-    ModelEntities.rebuildSchedules()
+    Attributator().attributist()
+    ScheduleAuteur().auteurist()
+    Locationator().industriest()
     ModelEntities.addCarTypesToSpurs()
 
     print('JMRI industries updated from TrainPlayer data')
@@ -127,8 +128,9 @@ def updateJmriRollingingStock():
     Controller.Startup.updateJmriRollingingStock
     """
 
-    Attributator().attributate()
-    RStockulator().updater()
+    Attributator().attributist()
+    RStockulator().updator()
+    ModelEntities.addCarTypesToSpurs()
 
     print('JMRI rolling stock updated from TrainPlayer data')
     _psLog.info('JMRI rolling stock updated from TrainPlayer data')
@@ -152,7 +154,7 @@ class Initiator:
 
         return
 
-    def initialize(self):
+    def initialist(self):
         """
         Mini controller to make settings changes,
         some of which are personal.
@@ -259,7 +261,7 @@ class Attributator:
 
         return
 
-    def attributate(self):
+    def attributist(self):
         """Mini controller to add rolling stock attributes to the RS xml files."""
 
         self.addRoads()
@@ -375,6 +377,186 @@ class Attributator:
         return
 
 
+class ScheduleAuteur:
+
+    def __init__(self):
+
+        self.tpIndustries = ModelEntities.getTpRailroadJson('tpRailroadData')['industries']
+        self.allSchedules = []
+        self.scheduleItems = []
+        self.composedItems = []
+
+        return
+    
+    def auteurist(self):
+        """
+        Mini controller.
+        """
+
+        self.disposeSchedules()
+        self.addSchedules()
+
+        return
+    
+    def disposeSchedules(self):
+
+        PSE.SM.dispose()
+
+        return
+    
+    def addSchedules(self):
+        """ViaIn and ViaOut are not currently used."""
+
+        for id, industry in self.tpIndustries.items():
+            scheduleForIndustry = industry['c-schedule']
+            for scheduleName, self.scheduleItems in scheduleForIndustry.items():
+                
+                schedule = PSE.SM.newSchedule(scheduleName)
+                self.composeSchedule()
+
+                for item in self.composedItems:
+                    scheduleItem = schedule.addItem(item[0])
+                    scheduleItem.setReceiveLoadName(item[1])
+                    scheduleItem.setShipLoadName(item[2])
+                    scheduleItem.setDestination(PSE.LM.getLocationByName(item[3]))
+                    # scheduleItem.useViaInForSomething(item[4])
+                    # scheduleItem.useViaOutForSomething(item[5])
+
+        return
+    
+    def composeSchedule(self):
+        """
+        Mini controller.
+        First - find same aar, S/R same load name.
+        Second - find same aar, S/R different load name.
+        Third - everything left is a single node.
+        scheduleItem = (aarName, sr, loadName, stagingName, viaIn, viaOut)
+        """
+
+        self.composedItems = []
+        self.symetric()
+        self.asymetric()
+        self.mono()
+
+        if len(self.scheduleItems) != 0:
+            _psLog.warning('Some schedule items were not applied.')
+            print('Some schedule items were not applied.')
+
+        return
+    
+    def symetric(self):
+        """Same aar, ship/receive the same load."""
+
+        indexLength = len(self.scheduleItems) - 1
+        if indexLength == 0:
+            return
+
+        for z in range(indexLength):
+            currentItem = self.scheduleItems.pop(0)
+            match = False
+            j = 0
+            for i, testItem in enumerate(self.scheduleItems):
+                if currentItem[0] == testItem[0] and currentItem[1] != testItem[1] and currentItem[2] == testItem[2]:
+                    self.composedItems.append(self.doubleNodeS(currentItem, testItem))
+                    match = True
+                    j = i
+                    break
+
+            if match:
+                self.scheduleItems.pop(j)
+            else:
+                self.scheduleItems.append(currentItem)
+
+            if len(self.scheduleItems) < 2:
+                break
+
+        return
+    
+    def asymetric(self):
+        """Same aar, ship/receive different load."""
+
+        indexLength = len(self.scheduleItems) - 1
+        if indexLength == 0:
+            return
+
+        for z in range(indexLength):
+            currentItem = self.scheduleItems.pop(0)
+            match = False
+            j = 0
+            for i, testItem in enumerate(self.scheduleItems):
+                if currentItem[0] == testItem[0] and currentItem[1] != testItem[1] and currentItem[2] != testItem[2]:
+                    self.composedItems.append(self.doubleNodeA(currentItem, testItem))
+                    match = True
+                    j = i
+                    break
+
+            if match:
+                self.scheduleItems.pop(j)
+            else:
+                self.scheduleItems.append(currentItem)
+
+            if len(self.scheduleItems) < 2:
+                break
+
+        return
+
+    def mono(self):
+        """For each aar, either an S or an R, but not both."""
+
+        indexLength = len(self.scheduleItems)
+        if indexLength == 0:
+            return
+        
+        for z in range(indexLength):
+            currentItem = self.scheduleItems.pop(0)
+            self.composedItems.append(self.singleNode(currentItem))
+
+        return
+    
+    def singleNode(self, node):
+        """For each AAR when either the ship or recieve is an empty."""
+
+        composedNode = []
+        if node[1] == 'R':
+            composedNode = [node[0], node[2], 'Empty', node[3], node[4], node[5]]
+        else:
+            composedNode = [node[0], 'Empty', node[2], node[3], node[4], node[5]]
+
+        return composedNode
+
+    def doubleNodeS(self, node1, node2):
+        """For each AAR with a ship and recieve."""
+
+        composedNode = []
+        if node1[3]:
+            fd = node1[3]
+        else:
+            fd = node2[3]
+
+        composedNode = [node1[0], node1[2], node2[2], fd, node1[4], node1[5]]
+
+        return composedNode
+
+    def doubleNodeA(self, node1, node2):
+        """
+        For each AAR with a ship and recieve.
+        scheduleItem = (aarName, sr, loadName, stagingName, viaIn, viaOut)
+        """
+
+        composedNode = []
+        if node1[3]:
+            fd = node1[3]
+        else:
+            fd = node2[3]
+
+        if node1[1] == 'R':
+            composedNode = [node1[0], node1[2], node2[2], fd, node1[4], node1[5]]
+        else:
+            composedNode = [node1[0], node2[2], node1[2], fd, node1[4], node1[5]]
+
+        return composedNode
+    
+
 class Locationator:
     """Locations and tracks are updated using Location Manager."""
 
@@ -397,10 +579,23 @@ class Locationator:
 
         return
     
-    def updater(self):
+    def creator(self):
         """
         Mini controller.
-        Updates JMRI locations.
+        Makes new JMRI locations.
+        """
+
+        self.getUpdatedRrData()
+        self.newmakeNewIds()
+        self.makeNewLocations()
+        self.makeJmriData()
+
+        return
+    
+    def locationist(self):
+        """
+        Mini controller.
+        Updates JMRI locations and industries.
         """
 
         self.getCurrentRrData()
@@ -415,15 +610,14 @@ class Locationator:
 
         return
     
-    def creater(self):
+    def industriest(self):
         """
         Mini controller.
-        Makes new JMRI locations.
+        Updates existing industry schedules.
         """
 
         self.getUpdatedRrData()
-        self.newmakeNewIds()
-        self.makeNewLocations()
+        self.updateSchedules()
         self.makeJmriData()
 
         return
@@ -453,8 +647,6 @@ class Locationator:
         self.oldIds = list(set(self.currentIds).difference(set(self.updatedIds)))
         self.continuingIds = list(set(self.currentIds) - set(self.oldIds))
 
-
-
         return
     
     def updateContinuingLocations(self):
@@ -478,13 +670,19 @@ class Locationator:
             self.updatedRrData['locales'][id]['spurLength'] = spurLength
             self.updatedRrData['locales'][id]['defaultLength'] = PSE.JMRI.jmrit.operations.setup.Setup.getMaxTrainLength()
             ModelEntities.setTrackAttribs(self.updatedRrData['locales'][id])
-            # print(self.updatedRrData['locales'][id])
-
-            # if trackType == 'Spur':
-            #     track.setLength(length)
             
         return
 
+    def updateSchedules(self):
+
+        for id, data in self.updatedRrData['industries'].items():
+            location = PSE.LM.getLocationByName(data['a-location'])
+            track = location.getTrackByName(data['b-track'], 'Spur')
+            schedule = PSE.SM.getScheduleByName(data['c-schedule'].keys()[0])
+            track.setSchedule(schedule)
+            
+        return
+    
     def makeNewLocations(self):
 
         for id in self.newIds:
@@ -499,7 +697,6 @@ class Locationator:
             trackData['spurLength'] = spurLength
             trackData['defaultLength'] = PSE.JMRI.jmrit.operations.setup.Setup.getMaxTrainLength()
 
-            # ModelEntities.setTrackAttribs(self.updatedRrData['locales'][id])
             ModelEntities.setTrackAttribs(trackData)
 
         return
@@ -556,7 +753,7 @@ class Divisionator:
 
         return
 
-    def divisionate(self):
+    def divisionist(self):
         """Mini controller to process divisions."""
 
         self.parseDivisions()
@@ -652,7 +849,7 @@ class RStockulator:
 
         return
 
-    def makeNew(self):
+    def creator(self):
         """Mini controller to make new rosters of JMRI rolling stock."""
 
         self.makeNewTpRollingStockData()
@@ -663,7 +860,7 @@ class RStockulator:
 
         return
 
-    def updater(self):
+    def updator(self):
         """Mini controller to update JMRI rolling stock."""
 
         if not self.checkFile():
