@@ -405,9 +405,14 @@ class ScheduleAuteur:
         return
     
     def addSchedules(self):
-        """ViaIn and ViaOut are not currently used."""
+        """
+        TrainPlayer Staging is mapped to JMRI Destination.
+        TrainPlayer ViaIn is mapped to JMRI Road.
+        ViaOut is not currently used."""
 
-        for id, industry in self.tpIndustries.items():
+        _psLog.debug('addSchedules')
+
+        for _, industry in self.tpIndustries.items():
             scheduleForIndustry = industry['c-schedule']
             for scheduleName, self.scheduleItems in scheduleForIndustry.items():
                 
@@ -419,7 +424,7 @@ class ScheduleAuteur:
                     scheduleItem.setReceiveLoadName(item[1])
                     scheduleItem.setShipLoadName(item[2])
                     scheduleItem.setDestination(PSE.LM.getLocationByName(item[3]))
-                    # scheduleItem.useViaInForSomething(item[4])
+                    scheduleItem.setRoadName(item[4])
                     # scheduleItem.useViaOutForSomething(item[5])
 
         return
@@ -427,16 +432,18 @@ class ScheduleAuteur:
     def composeSchedule(self):
         """
         Mini controller.
-        First - find same aar, S/R same load name.
-        Second - find same aar, S/R different load name.
-        Third - everything left is a single node.
-        scheduleItem = (aarName, sr, loadName, stagingName, viaIn, viaOut)
+        When a match is found, the current and match items are removed from scheduleItems,
+        and processed and added to composedItems.       
+        scheduleItem format = (aarName, sr, loadName, stagingName, viaIn, viaOut)
+        Lists are immutable while iterating.
         """
 
+        _psLog.debug('composeSchedule')
+
         self.composedItems = []
-        self.symetric()
-        self.asymetric()
-        self.mono()
+        self.symetric() # First - find same aar, S/R same load name.
+        self.asymetric() # Second - find same aar, S/R different load name.
+        self.mono() # Third - everything left is a single node.
 
         if len(self.scheduleItems) != 0:
             _psLog.warning('Some schedule items were not applied.')
@@ -451,19 +458,18 @@ class ScheduleAuteur:
         if indexLength == 0:
             return
 
-        for z in range(indexLength):
+        for _ in range(indexLength): # scheduleItems is iterated by proxy.
             currentItem = self.scheduleItems.pop(0)
             match = False
-            j = 0
-            for i, testItem in enumerate(self.scheduleItems):
+            for i in range(len(self.scheduleItems)):
+                testItem = self.scheduleItems[i]
                 if currentItem[0] == testItem[0] and currentItem[1] != testItem[1] and currentItem[2] == testItem[2]:
-                    self.composedItems.append(self.doubleNodeS(currentItem, testItem))
+                    self.composedItems.append(self.symetricDoubleNode(currentItem, testItem))
                     match = True
-                    j = i
                     break
 
             if match:
-                self.scheduleItems.pop(j)
+                self.scheduleItems.pop(i)
             else:
                 self.scheduleItems.append(currentItem)
 
@@ -471,7 +477,7 @@ class ScheduleAuteur:
                 break
 
         return
-    
+
     def asymetric(self):
         """Same aar, ship/receive different load."""
 
@@ -479,19 +485,19 @@ class ScheduleAuteur:
         if indexLength == 0:
             return
 
-        for z in range(indexLength):
+        for _ in range(indexLength): # scheduleItems is iterated by proxy.
             currentItem = self.scheduleItems.pop(0)
             match = False
-            j = 0
-            for i, testItem in enumerate(self.scheduleItems):
+            # i = 0
+            for i in range(len(self.scheduleItems)):
+                testItem = self.scheduleItems[i]
                 if currentItem[0] == testItem[0] and currentItem[1] != testItem[1] and currentItem[2] != testItem[2]:
-                    self.composedItems.append(self.doubleNodeA(currentItem, testItem))
+                    self.composedItems.append(self.asymetricDoubleNode(currentItem, testItem))
                     match = True
-                    j = i
                     break
 
             if match:
-                self.scheduleItems.pop(j)
+                self.scheduleItems.pop(i)
             else:
                 self.scheduleItems.append(currentItem)
 
@@ -512,20 +518,12 @@ class ScheduleAuteur:
             self.composedItems.append(self.singleNode(currentItem))
 
         return
-    
-    def singleNode(self, node):
-        """For each AAR when either the ship or recieve is an empty."""
 
-        composedNode = []
-        if node[1] == 'R':
-            composedNode = [node[0], node[2], 'Empty', node[3], node[4], node[5]]
-        else:
-            composedNode = [node[0], 'Empty', node[2], node[3], node[4], node[5]]
-
-        return composedNode
-
-    def doubleNodeS(self, node1, node2):
-        """For each AAR with a ship and recieve."""
+    def symetricDoubleNode(self, node1, node2):
+        """
+        For each AAR with a ship and recieve.
+        S/R the same load name.
+        """
 
         composedNode = []
         if node1[3]:
@@ -537,9 +535,10 @@ class ScheduleAuteur:
 
         return composedNode
 
-    def doubleNodeA(self, node1, node2):
+    def asymetricDoubleNode(self, node1, node2):
         """
         For each AAR with a ship and recieve.
+        S/R are different load names.
         scheduleItem = (aarName, sr, loadName, stagingName, viaIn, viaOut)
         """
 
@@ -553,6 +552,20 @@ class ScheduleAuteur:
             composedNode = [node1[0], node1[2], node2[2], fd, node1[4], node1[5]]
         else:
             composedNode = [node1[0], node2[2], node1[2], fd, node1[4], node1[5]]
+
+        return composedNode
+    
+    def singleNode(self, node):
+        """For each AAR when either the ship or recieve is an empty."""
+
+        if node[2] == 'empty':
+            node[2] = 'Empty'
+
+        composedNode = []
+        if node[1] == 'R':
+            composedNode = [node[0], node[2], 'Empty', node[3], node[4], node[5]]
+        else:
+            composedNode = [node[0], 'Empty', node[2], node[3], node[4], node[5]]
 
         return composedNode
     
@@ -744,7 +757,6 @@ class Divisionator:
     def __init__(self):
 
         self.scriptName = SCRIPT_NAME + '.Divisionator'
-        # self.tpRailroadData = ModelEntities.getTpRailroadJson('tpRailroadData')
 
         self.newDivisions = []
         self.obsoleteDivisions = []
@@ -1035,18 +1047,12 @@ class RStockulator:
             rsRoad, rsNumber = ModelEntities.parseCarId(newRsAttribs['id'])
             xLocation, xTrack = ModelEntities.getSetToLocationAndTrack(newRsAttribs['location'], newRsAttribs['track'])
 
-            # oldRoad = rs.getRoadName()
             rs.setRoadName(rsRoad)
-            # rs.firePropertyChange("rolling stock road", oldRoad, rsRoad)
 
             oldNumber = rs.getNumber()
             rs.setNumber(rsNumber)
             rs.firePropertyChange("rolling stock number", oldNumber, rsNumber)
-
-            # # oldTrack = rs.getTrack()
             rs.setLocation(xLocation, xTrack, True)
-            # # rs.firePropertyChange(TRACK_CHANGED_PROPERTY, oldTrack, xTrack)
-
             rs.setTypeName(newRsAttribs['aar'])
 
         return

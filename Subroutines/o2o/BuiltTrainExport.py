@@ -1,5 +1,5 @@
 """
-Exports a JMRI manifest into a csv for import into the TrainPlayer o2o script suite.
+Exports a JMRI manifest into a csv for import into the TrainPlayer Quick Keys script suite.
 Callable from the pattern scripts subroutine or stand alone.
 """
 

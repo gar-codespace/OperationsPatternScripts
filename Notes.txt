@@ -1,6 +1,7 @@
 Todo:
   How to publish DeepL?
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
+  Catch o2o update locations but press update industries.
 
 Comments:
   Schedule does not prevent setting a car to a track.

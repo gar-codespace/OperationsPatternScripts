@@ -157,10 +157,6 @@ class TrainPlayerImporter:
         self.rr['location'] = rrData[2]
         self.rr['year'] = rrData[3]
 
-        # divisions = rrData[4].split(',')
-        # divisions.append('Unknown')
-        # self.rr['divisions'] = divisions
-
         self.rr['divisions'] = rrData[4].split(',')
 
         self.rr['scale'] = rrData[5]
@@ -248,16 +244,9 @@ class TrainPlayerImporter:
                 aarName = line[3]
                 sr = line[4]
                 loadName = line[5]
-                if sr == 'S':
-                    receiveLoad = ''
-                    shipload = loadName
-                else:
-                    receiveLoad =  loadName
-                    shipload = ''
                 stagingName = line[6]
                 viaIn = line[7]
                 viaOut = line[8]
-                # scheduleItem = (aarName, receiveLoad, shipload, stagingName, viaIn, viaOut, sr)
                 scheduleItem = (aarName, sr, loadName, stagingName, viaIn, viaOut)
                 industryDict[tpId]['c-schedule'][trackLabel].append(scheduleItem)
             else:
@@ -268,17 +257,10 @@ class TrainPlayerImporter:
                 aarName = line[3]
                 sr = line[4]
                 loadName = line[5]
-                if sr == 'S':
-                    receiveLoad = ''
-                    shipload = loadName
-                else:
-                    receiveLoad =  loadName
-                    shipload = ''
                 stagingName = line[6]
                 viaIn = line[7]
                 viaOut = line[8]
                 tpId = line[9]
-                # scheduleItem = (aarName, receiveLoad, shipload, stagingName, viaIn, viaOut, sr)
                 scheduleItem = (aarName, sr, loadName, stagingName, viaIn, viaOut)
                 schedule = {trackLabel:[scheduleItem]}
                 industryDict[tpId] = {u'a-location': locationName, u'b-track': trackName, u'c-schedule': schedule}
