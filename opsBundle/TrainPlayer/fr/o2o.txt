@@ -1,0 +1,37 @@
+"o2o Workevents - Version 2"
+,
+"Le manifeste est vide."
+,
+"Appuyez sur 'm' pour lire le manifeste."
+,
+"Lire le manifeste."
+,
+"Commutation à"
+,
+"wagons à prendre en charge (bleu),"
+,
+"wagons à sortir (rouge)."
+,
+"Lecture du premier événement de travail."
+,
+"Lecture du prochain événement professionnel."
+,
+"Lecture de l'événement de travail précédent."
+,
+"Lecture du dernier événement professionnel."
+,
+"Appuyez sur la touche Page Down pour accéder à l'événement suivant."
+,
+"Appuyez sur la touche Page Up pour accéder à l'événement précédent."
+,
+"Numéro de l'événement de travail"
+,
+"de"
+,
+"De"
+,
+"A"
+,
+"Pick up"
+,
+"Set out"

@@ -1,0 +1,71 @@
+"
+********** Todas las QuickKeys están desactivadas **********
+
+h significa Ayuda. Pulse h para abrir y cerrar esta ventana.
+Pulse u para abrir el menú de utilidades.
+"
+,
+"
+*** QuickKeys ***
+
+h significa Ayuda. Pulse h para abrir y cerrar esta ventana.
+Pulse u para abrir el menú de utilidades.
+f es para Pantalla completa. Pulse f para entrar o salir del modo de pantalla completa.
+z es para pauZar. Pulse z para pausar la acción. (Ajuste del sistema).
+j es para Temporizador de trabajo. Pulse j para iniciar y detener el temporizador.
+"
+,
+"
+*** CSpeed Switching ***
+
+Pulse a para activar o desactivar el seguimiento automático.
+Pulse t para añadir 1 mph (kph) cada vez que pulse la tecla.
+g es para Go. Pulse g una vez para Yard Speed, otra vez para Max Speed.
+Pulse r para cambiar la dirección del tren, incluso en movimiento.
+s es para Lento/Parar. Pulse s para reducir a velocidad de acoplamiento, de nuevo para parar.
+
+Pulse u para seleccionar Física de la vibración.
+"
+,
+"
+*** Phake Physics ***
+
+Pulse a para activar o desactivar el seguimiento automático.
+t significa Acelerador. La velocidad de aceleración aumenta cada vez que se pulsa t.
+b significa Freno. La presión de frenado aumenta cada vez que se pulsa la tecla b.
+n es para Neutro. Pulse n para mantener la velocidad actual.
+Cuando está parado, r cambia la dirección del tren.
+e es por Emergencia. Pulse e para parar ahora mismo.
+
+Pulse u para seleccionar Conmutación de velocidad.
+"
+,
+"
+*** Drop Kick ***
+
+c es para Cortar. Pulse c para cortar el coche seleccionado. (Ajuste sistema)
+k es de Kick. Pulsa k para patear algunos coches. (Kick Em)
+d es de Drop. Pulsa d para soltar algunos coches. (Let Em Go)
+
+Pulse k o d con el tren parado para limpiar los motores de patada.
+"
+,
+"
+*** Turntable ***
+
+Pulse un número, 0 - 9, que corresponda a una pista de avance de tabla válida.
+Pulse una letra, a - z, que corresponda a una pista de parada válida.
+Pulse a para las agujas del reloj, c para las agujas del reloj.
+"
+,
+"
+*** o2o Workevents ***
+
+m significa Manifiesto. Pulse m para leer el manifiesto JMRI.
+l es para Lista. Pulse l para mostrar u ocultar la lista de interruptores.
+u es de Utilidad. Pulsa la tecla u para ejecutar una utilidad de O2O.
+Pulsa la tecla Inicio para ir a la parte superior del manifiesto.
+Pulse la tecla Fin para ir al final del manifiesto.
+Pulse Av Pág para acceder al siguiente evento.
+Pulse Av Pág para ir al evento anterior.
+"

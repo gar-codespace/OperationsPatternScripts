@@ -4,7 +4,6 @@ Main script listeners.
 
 from opsEntities import PSE
 from opsBundle import Bundle
-# import MainScript
 
 SCRIPT_NAME = 'OperationsPatternScripts.opsEntities.Listeners'
 SCRIPT_REV = 20230201
@@ -21,7 +20,9 @@ def ptItemSelected(TRANSLATE_PLUGIN_EVENT):
     _psLog.debug(TRANSLATE_PLUGIN_EVENT)
 
     Bundle.translateBundles()
+
     # Bundle.translateHelpHtml()
+    # Bundle.translateUtility()
 
     xModule = __import__('MainScript')
     xModule.restartThePlugin()
@@ -167,4 +168,3 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         return
     def windowDeactivated(self, WINDOW_DEACTIVATED):
         return
-

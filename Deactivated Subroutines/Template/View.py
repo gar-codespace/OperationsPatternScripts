@@ -3,11 +3,10 @@
 
 """
 Template
-Replace XX with a designator for this subroutines' name.
 """
 
 from opsEntities import PSE
-from Subroutines.Template import ViewEntities
+from Subroutines.Template import GUI
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
@@ -34,9 +33,9 @@ class ManageGui:
     def makeSubroutineGui(self):
         """Make the Template GUI."""
 
-        _psLog.debug('TemplateSubroutine.View.makeSubroutineGui')
+        _psLog.debug('Template.View.makeSubroutineGui')
 
-        subroutineGui = ViewEntities.subroutineGui()
+        subroutineGui = GUI.subroutineGui()
         gui = subroutineGui.guiMaker()
         widgets = subroutineGui.guiWidgetGetter()
 

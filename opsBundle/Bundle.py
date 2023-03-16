@@ -469,3 +469,42 @@ class MakeBundleItem(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         self.scratchFile.append(translation)
 
         return False
+
+
+def translateUtility():
+    """
+    Utility to translate the TrainPlayer side bundle files.
+    Translates one line at a time, so it's slow.
+    Preserves line order.
+    Translate other text files that need it."""
+
+    controlPanel = PSE.readConfigFile('Main Script')['CP']
+    translatorChoice = controlPanel['TS'][controlPanel['TC']]
+    translationService = getattr(Translators, translatorChoice)()
+
+# TrainPlayer bundle files
+    bundleFiles = ['Help.txt', 'Message.txt', 'o2o.txt', 'Utility.txt']
+    # bundleFiles = ['Help.txt']
+    locale = PSE.psLocale()[:2]
+    targetDir = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'TrainPlayer', locale)
+    PSE.JAVA_IO.File(targetDir).mkdir()
+
+    for file in bundleFiles:
+        translatedFile = ''
+        source = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'TrainPlayer', 'en', file)
+        sourceFile = PSE.genericReadReport(source)
+        for line in sourceFile.splitlines():
+            encodedItem = unicode(line, PSE.ENCODING)
+            url = translationService.getTheUrl(encodedItem)
+            response = urlopen(url)
+            translation = PSE.loadJson(response.read())
+            response.close()
+            translatedFile += translation['translations'][0]['text'] + '\n'
+
+        destination = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'TrainPlayer', locale, file)
+        PSE.genericWriteReport(destination, translatedFile)
+
+    return
+
+
+

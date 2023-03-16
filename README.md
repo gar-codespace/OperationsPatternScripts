@@ -11,16 +11,23 @@ A set of introductory videos is hosted on youtube, these cover the use of this p
 ## "In this video..." YouTube video series
 The following are YouTube videos covering the use of this plugin:  
 
-Overview of this plugin   
+### Pattern Scripts plugin - Video Documentation
+[Overview of this plugin](https://youtu.be/GG4WyXV0AzQ)  
 [How to add this plugin to JMRI](https://youtu.be/Sl9yBQaRpeY)  
-[How to translate this plugin](https://youtu.be/6G7xkRJTczo)   
-jPlus Subroutine - Extended railroad details  
-[o2o Subroutine - Use a TrainPlayer© layout with JMRI](https://youtu.be/rlUfoSesnQo)  
-Pattern Report Subroutine - Inventory control for a location   
-[Pattern Report Subroutine - Demonstration at a yard](https://youtu.be/IdXvxyo-E3Y)  
-[Pattern Report Subroutine - Demonstration at industry](https://youtu.be/2Tv6sUMDD_Y)  
-Throwback Subroutine - Run 'what if' experiments  
+[How to translate this plugin](https://youtu.be/6G7xkRJTczo)  
+[How to set up this plugin](https://youtu.be/GjPtXk3oKmc)  
 [How to modify this plugin](https://youtu.be/DK6O9AQmqXo)  
+
+### The jPlus subroutine  
+jPlus Subroutine - Extended railroad details  
+### The o2o subroutine  
+[o2o Subroutine - Use a TrainPlayer© layout with JMRI](https://youtu.be/rlUfoSesnQo)  
+### The Patterns subroutine
+Overview  
+[Demonstration at a yard](https://youtu.be/IdXvxyo-E3Y)  
+[Demonstration at industry](https://youtu.be/2Tv6sUMDD_Y)  
+### The Throwback subroutine  
+Run 'what if' experiments  
 
 ### Web sites
 [TrainPlayer](http://trainplayer.com/)  

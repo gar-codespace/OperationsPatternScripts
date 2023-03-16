@@ -1,0 +1,71 @@
+"
+********** Alle QuickKeys sind ausgeschaltet **********
+
+h steht für Help (Hilfe). Mit h können Sie dieses Fenster öffnen und schließen.
+u steht für Dienstprogramme. Drücken Sie u, um das Dienstprogrammmenü aufzurufen.
+"
+,
+"
+*** Quick Keys ***
+
+h steht für Help (Hilfe). Mit h können Sie dieses Fenster öffnen und schließen.
+u steht für Dienstprogramme. Drücken Sie u, um das Dienstprogrammmenü aufzurufen.
+f steht für Vollbild. f drücken, um den Vollbildmodus aufzurufen oder zu verlassen.
+z steht für Pause. z drücken, um die Aktion zu unterbrechen (Systemeinstellung)
+j steht für Job-Timer. j drücken, um den Timer zu starten und zu stoppen.
+"
+,
+"
+*** Speed Switching ***
+
+a steht für Auto-Follow. a drücken, um Auto-Follow ein- oder auszuschalten.
+t steht für Throttle (Gas). t drücken, um bei jedem Tastendruck 1 mph (km/h) hinzuzufügen.
+g steht für "Go". g einmal für Yard Speed, ein zweites Mal für Max Speed drücken.
+r steht für Reverser: Drücken Sie r, um die Richtung des Zuges zu ändern, auch während der Fahrt.
+s steht für Slow/Stop. Drücken Sie s, um auf Kupplungsgeschwindigkeit zu verlangsamen, und erneut, um anzuhalten.
+
+Drücken Sie u, um Phake Physics zu wählen.
+"
+,
+"
+*** Phake Physics ***
+
+a steht für Auto-Follow. a drücken, um Auto-Follow ein- oder auszuschalten.
+t steht für Throttle, d.h. die Beschleunigung wird bei jedem Drücken von t erhöht.
+b steht für Brake, d.h. der Bremsdruck erhöht sich bei jedem Drücken der Taste b.
+n steht für Neutral. n drücken, um die aktuelle Geschwindigkeit zu halten.
+r steht für Reverser, d. h., bei einem Halt ändert r die Zugrichtung.
+e steht für Notfall. e drücken, um sofort zu stoppen.
+
+Drücken Sie u, um Geschwindigkeitsumschaltung zu wählen.
+"
+,
+"
+*** Drop Kick ***
+
+c steht für Ausschneiden. c drücken, um das ausgewählte Auto auszuschneiden (Systemeinstellung).
+k steht für Kick. Drücken Sie k, um ein paar Autos zu treten (Kick Em).
+d steht für Drop. Drücken Sie d, um ein paar Autos fallen zu lassen (Let Em Go).
+
+Drücken Sie k oder d bei angehaltenem Zug, um die Kickmotoren zu reinigen.
+"
+,
+"
+*** Turntable ***
+
+Drücken Sie eine Nummer (0 - 9), die einer gültigen Tabellenführungsspur entspricht.
+Drücken Sie einen Buchstaben, a - z, der einem gültigen Stalltrack entspricht.
+Drücken Sie a für gegen den Uhrzeigersinn, c für im Uhrzeigersinn.
+"
+,
+"
+*** o2o Workevents ***
+
+m steht für Manifest: Drücken Sie m, um das JMRI-Manifest zu lesen.
+l steht für Liste. l drücken, um die Schalterliste ein- oder auszublenden.
+u steht für Dienstprogramm. Drücken Sie die Taste u, um ein O2O-Dienstprogramm auszuführen.
+Drücken Sie die Home-Taste, um an den Anfang des Manifests zu gelangen.
+Drücken Sie die Endetaste, um zum Ende des Manifests zu gelangen.
+Drücken Sie die Taste "Bild ab" für das nächste Arbeitsereignis.
+Drücken Sie die Taste Page Up, um zum vorherigen Arbeitsschritt zu gelangen.
+"

@@ -1,0 +1,37 @@
+"o2o Workevents - Versión 2"
+,
+"El manifiesto está vacío".
+,
+"Pulse la tecla m para leer el manifiesto".
+,
+"Leyendo el manifiesto".
+,
+"Cambiando a"
+,
+"vagones para recoger (azul),"
+,
+"vagones para partir (rojo)".
+,
+"Leyendo el primer workevent".
+,
+"Lectura del próximo workevent".
+,
+"Lectura del workkevent anterior".
+,
+"Leyendo el último workevent".
+,
+"Pulse Avance de Página para el siguiente evento de trabajo".
+,
+"Pulse Av Pág para el evento de trabajo anterior".
+,
+"Número de evento laboral"
+,
+"de"
+,
+"De"
+,
+"A"
+,
+"Recoge"
+,
+"Set out"

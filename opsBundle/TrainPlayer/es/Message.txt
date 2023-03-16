@@ -1,0 +1,47 @@
+"
+Phake Physics está activo
+"
+,
+"
+Conmutación de velocidad activada
+"
+,
+"
+¿Limpiar los motores Kick?
+"
+,
+"
+Introduzca el identificador de la nota: Random Roads - Source Data
+"
+,
+"
+¿Generar carreteras aleatorias para todos los coches?
+"
+,
+"
+El tiempo transcurrido es
+"
+,
+"
+Número de movimientos:
+"
+,
+"
+¿Cuál es el nombre del núcleo?
+"
+,
+"
+¿Inicializar todos los coches?
+"
+,
+"
+El manifiesto está al principio.
+"
+,
+"
+El manifiesto está al final.
+"
+,
+"
+¿Leer en el manifiesto JMRI?
+"

@@ -1,0 +1,47 @@
+"
+Phake Physics ist aktiv
+"
+,
+"
+Speed Switching ist aktiv
+"
+,
+"
+Die Kick-Motoren aufräumen?
+"
+,
+"
+Geben Sie die ID für die Notiz ein: Random Roads - Source Data
+"
+,
+"
+Zufällige Straßen für alle Autos generieren?
+"
+,
+"
+Die verstrichene Zeit ist
+"
+,
+"
+Anzahl der Züge:
+"
+,
+"
+Wie lautet der Name des Kernels?
+"
+,
+"
+Alle Fahrzeuge initialisieren?
+"
+,
+"
+Das Manifest steht am Anfang.
+"
+,
+"
+Das Manifest befindet sich am Ende.
+"
+,
+"
+Im JMRI-Manifest lesen?
+"

@@ -1,0 +1,40 @@
+"
+*** Quick Keys Utilities ***
+
+Pulsar 1: Activa todas las Teclas Rápidas.
+"
+,
+"
+*** Quick Keys Utilities ***
+
+Pulsar 1: Desactiva todas las Teclas Rápidas.
+"
+,
+"Pulsa 2: Cambia a Phake Physics.
+"
+,
+"Pulsar 2: Cambiar a Conmutación rápida.
+"
+,
+"Pulse 3: Asigne nombres de carretera aleatorios a los equipos.
+"
+,
+"Pulse 4:
+"
+,
+"Pulse 5:
+"
+,
+"
+*** o2o Utilidades ***
+
+Pulsar 6: Inicializar pistas de trazado.
+Pulse 7: Fije los coches en su posición actual.
+Pulse 8: Hacer un JMRI consist o kernel.
+Pulse 9: Exportar diseño TrainPlayer.
+"
+,
+"Pulse 0:
+"
+,
+"Pulse u de nuevo para salir de esta ventana".

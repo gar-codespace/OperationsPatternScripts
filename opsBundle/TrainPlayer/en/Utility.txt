@@ -1,0 +1,40 @@
+"
+*** Quick Keys Utilities ***
+
+Press 1: Turn all Quick Keys on.
+"
+,
+"
+*** Quick Keys Utilities ***
+
+Press 1: Turn all Quick Keys off.
+"
+,
+"Press 2: Change to Phake Physics.
+"
+,
+"Press 2: Change to Speed Switching.
+"
+,
+"Press 3: Assign random road names to equipment.
+"
+,
+"Press 4:
+"
+,
+"Press 5:
+"
+,
+"
+*** o2o Utilities ***
+
+Press 6: Initialize layout tracks.
+Press 7: Set cars to their current location.
+Press 8: Make a JMRI consist or kernel.
+Press 9: Export TrainPlayer layout.
+"
+,
+"Press 0:
+"
+,
+"Press u again to exit this window."

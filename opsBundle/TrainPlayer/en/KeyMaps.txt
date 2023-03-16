@@ -1,0 +1,33 @@
+"
+a	      - Auto follow
+b	      - Brake
+c	      - Cut
+d	      - Drop cars
+e	      - Emergency (stop)
+f	      - Full screen
+g	      - Go (increase speed)
+h	      - Help menu
+I	      - 
+j	      - Job timer
+k	      - Kick cars
+l	      - List (o2o work list)
+m	      - Manifest
+n	      - Neutral
+o	      - 
+p	      - 
+q	      - 
+r	      - Reverser
+s	      - Slow/Stop
+t	      - Throttle
+u	      - Utilities menu
+v	      - 
+w	      - 
+x	      - 
+y	      - 
+z	      - pauZe
+Home	  - Beginning of worklist
+End	      - End of worklist
+Page Up	  - Previous work event
+Page Down - Next work event
+1 – 9	  - Turntable approach track
+"

@@ -1,0 +1,71 @@
+"
+********** Toutes les touches rapides sont désactivées **********
+
+Appuyez sur h pour ouvrir et fermer cette fenêtre.
+Appuyez sur u pour afficher le menu des utilitaires.
+"
+,
+"
+*** Touches rapides ***
+
+Appuyez sur h pour ouvrir et fermer cette fenêtre.
+Appuyez sur u pour afficher le menu des utilitaires.
+Appuyez sur f pour entrer ou sortir du mode plein écran.
+z est pour pauZe. Appuyez sur z pour mettre l'action en pause. (Réglage du système)
+Appuyez sur j pour démarrer et arrêter la minuterie.
+"
+,
+"
+*** Commutation de vitesse ***
+
+Appuyez sur a pour activer ou désactiver la fonction Auto-Follow.
+Appuyez sur t pour ajouter 1 mph (kilomètre par heure) à chaque fois que vous appuyez sur la touche.
+Appuyez sur g une fois pour la vitesse de la cour, une autre fois pour la vitesse maximale.
+Appuyez sur r pour changer la direction du train, même en cours de route.
+Appuyer sur s pour ralentir la vitesse de l'attelage, puis à nouveau pour l'arrêter.
+
+Appuyez sur u pour sélectionner Phake Physics.
+"
+,
+"
+*** Phake Physics ***
+
+Appuyez sur a pour activer ou désactiver la fonction Auto-Follow.
+Le taux d'accélération augmente chaque fois que l'on appuie sur la touche t.
+La pression de freinage augmente chaque fois que l'on appuie sur la touche b.
+Appuyez sur n pour conserver la vitesse actuelle.
+r est l'abréviation de "Reverser" (inverseur). À l'arrêt, r change le sens de marche du train.
+Appuyez sur e pour arrêter tout de suite.
+
+Appuyez sur u pour sélectionner Commutation de vitesse.
+"
+,
+"
+*** Le coup de pied tombant, c'est le coup de pied de l'homme, le coup de pied de l'homme.
+
+Appuyez sur c pour couper la voiture sélectionnée. (Réglage du système)
+k comme Kick. Appuyez sur k pour donner un coup de pied à des voitures (Kick Em).
+d comme Drop. Appuyez sur d pour laisser tomber des voitures (Let Em Go).
+
+Appuyez sur k ou d lorsque le train est à l'arrêt pour nettoyer les moteurs de kick.
+"
+,
+"
+*** Plateau tournant ***
+
+Appuyez sur un chiffre, de 0 à 9, qui correspond à une piste de plomb de table valide.
+Appuyez sur une lettre, a - z, qui correspond à une piste de décrochage valide.
+Appuyez sur a pour le sens inverse des aiguilles d'une montre, sur c pour le sens des aiguilles d'une montre.
+"
+,
+"
+*** o2o Workevents ***
+
+Appuyez sur m pour lire le manifeste de JMRI.
+Appuyez sur l pour afficher ou masquer la liste des commutateurs.
+Appuyer sur la touche u pour lancer un utilitaire O2O.
+Appuyez sur la touche Home pour revenir au début du manifeste.
+Appuyez sur la touche Fin pour aller au bas du manifeste.
+Appuyer sur Page Down pour passer à l'événement suivant.
+Appuyez sur Page Up pour accéder à l'événement précédent.
+"

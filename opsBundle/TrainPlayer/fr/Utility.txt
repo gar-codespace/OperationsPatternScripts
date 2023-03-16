@@ -1,0 +1,40 @@
+"
+*** Quick Keys Utilities ***
+
+Appuyer sur 1 : activer toutes les touches rapides.
+"
+,
+"
+*** Quick Keys Utilities ***
+
+Appuyer sur 1 : Désactiver toutes les touches rapides.
+"
+,
+"Appuyez sur 2 : Passez à la physique du phake.
+"
+,
+"Appuyez sur 2 : Passez à la commutation de vitesse.
+"
+,
+"Appuyez sur 3 : Attribuez des noms de route aléatoires à l'équipement.
+"
+,
+"Appuyez sur 4 :
+"
+,
+"Appuyez sur 5 :
+"
+,
+"
+*** o2o Utilities ***
+
+Appuyer sur 6 : Initialiser les pistes de mise en page.
+Appuyez sur la touche 7 : pour ramener les voitures à leur emplacement actuel.
+Appuyer sur 8 : Faire un consist ou kernel JMRI.
+Appuyer sur 9 : Exporter la mise en page de TrainPlayer.
+"
+,
+"Appuyez sur 0 :
+"
+,
+"Appuyez à nouveau sur u pour quitter cette fenêtre."

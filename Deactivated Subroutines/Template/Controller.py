@@ -3,7 +3,9 @@
 
 """
 Template to serve as scaffolding for additional subroutines.
+For all the files in this subroutine:
 Replace XX with a designator for this subroutines' name.
+Replace Template with the name of this subroutine.
 Describe what this subroutine does.
 """
 

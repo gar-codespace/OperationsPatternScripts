@@ -1,0 +1,40 @@
+"
+*** Quick Keys Utilities ***
+
+Drücken Sie 1: Schalten Sie alle Schnelltasten ein.
+"
+,
+"
+*** Quick Keys Utilities ***
+
+Drücken Sie 1: Schalten Sie alle Schnelltasten aus.
+"
+,
+"Drücken Sie 2: Wechseln Sie zu Phake Physics.
+"
+,
+"Drücken Sie 2: Wechseln Sie zu Speed Switching.
+"
+,
+"Drücken Sie 3: Weisen Sie den Geräten zufällige Straßennamen zu.
+"
+,
+"Drücken Sie 4:
+"
+,
+"Drücken Sie 5:
+"
+,
+"
+*** o2o Utilities ***
+
+Drücken Sie 6: Initialisierung der Layoutspuren.
+Drücken Sie 7: Setzen Sie die Fahrzeuge auf ihren aktuellen Standort.
+Drücken Sie 8: Machen Sie einen JMRI-Kern oder -Kern.
+Drücken Sie 9: TrainPlayer-Layout exportieren.
+"
+,
+"Drücken Sie 0:
+"
+,
+"Drücken Sie erneut u, um dieses Fenster zu verlassen."

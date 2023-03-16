@@ -1,0 +1,47 @@
+"
+Phake Physics est actif
+"
+,
+"
+La commutation de vitesse est active
+"
+,
+"
+Nettoyer les Kick Motors ?
+"
+,
+"
+Saisir l'identifiant de la note : Random Roads - Source Data
+"
+,
+"
+Générer des routes aléatoires pour toutes les voitures ?
+"
+,
+"
+Le temps écoulé est
+"
+,
+"
+Nombre de mouvements :
+"
+,
+"
+Quel est le nom du noyau ?
+"
+,
+"
+Initialiser tous les véhicules ?
+"
+,
+"
+Le manifeste se trouve au début.
+"
+,
+"
+Le manifeste se trouve à la fin.
+"
+,
+"
+Lire dans le manifeste JMRI ?
+"

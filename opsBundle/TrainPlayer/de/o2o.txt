@@ -1,0 +1,37 @@
+"o2o Workevents - Version 2"
+,
+"Das Manifest ist leer."
+,
+"Drücken Sie die Taste m, um das Manifest einzulesen."
+,
+"Lesen des Manifests".
+,
+"Umschalten auf"
+,
+"Waggons zum Abholen (blau),"
+,
+"Triebwagen zum Abfahren (rot)".
+,
+"Lesen des ersten Workevents".
+,
+"Nächstes Workevent lesen".
+,
+"Vorheriges Arbeitsereignis lesen".
+,
+"Lesen des letzten Workevents".
+,
+"Drücken Sie Page Down für das nächste Workevent."
+,
+"Drücken Sie die Taste "Page Up" für das vorherige Arbeitsereignis."
+,
+"Workevent-Nummer"
+,
+"von"
+,
+"Von"
+,
+"Zu"
+,
+"Abholen"
+,
+"Aufbrechen"

@@ -1,0 +1,71 @@
+"
+**********  All QuickKeys are turned off **********
+
+h is for Help. Press h to open and close this window.
+u is for Utilities. Press u to bring up the utility menu.
+"
+,
+"
+*** Quick Keys ***
+
+h is for Help. Press h to open and close this window.
+u is for Utilities. Press u to bring up the utility menu.
+f is for Full screen. Press f to enter or exit full screen mode.
+z is for pauZe. Press z to pause the action. (System Setting)
+j is for Job Timer. Press j to start and stop the timer.
+"
+,
+"
+*** Speed Switching ***
+
+a is for Auto-Follow. Press a to toggle Auto-Follow on or off.
+t is for Throttle. Press t to add 1 mph (kph) each time the key is pressed.
+g is for Go. Press g once for Yard Speed, again for Max Speed.
+r is for Reverser. Press r to change the trains direction, even while moving.
+s is for Slow/Stop. Press s to slow to coupling speed, again to stop.
+
+Press u to select Phake Physics.
+"
+,
+"
+*** Phake Physics ***
+
+a is for Auto-Follow. Press a to toggle Auto-Follow on or off.
+t is for Throttle. Acceleration rate is increased each time t is pressed.
+b is for Brake. Braking pressure increases each time the b key is pressed.
+n is for Neutral. Press n to hold current speed.
+r is for Reverser. When stopped, r changes train direction.
+e is for Emergency. Press e to stop right now.
+
+Press u to select Speed Switching.
+"
+,
+"
+*** Drop Kick ***
+
+c is for Cut. Press c to cut off the selected car. (System Setting)
+k is for Kick. Press k to kick some cars. (Kick Em)
+d is for Drop. Press d to drop some cars. (Let Em Go)
+
+Press k or d with the train stopped to clean up kick motors.
+"
+,
+"
+*** Turntable ***
+
+Press a number, 0 - 9, that corresponds to a valid table lead track.
+Press a letter, a - z, that corresponds to a valid stall track.
+Press a for anticlockwise, c for clockwise.
+"
+,
+"
+*** o2o Workevents ***
+
+m is for Manifest. Press m to read the JMRI manifest.
+l is for List. Press l to show or hide the switch list.
+u is for Utility. Press the u key to run a O2O utility.
+Press the Home key to go to the top of the manifest.
+Press the End key to go to the bottom of the manifest.
+Press Page Down for the next workevent.
+Press Page Up for the previous workevent.
+"
