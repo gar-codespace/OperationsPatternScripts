@@ -289,9 +289,13 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(MOUSE_CLICKED)
 
-        PSE.remoteCalls('startupCalls')
+        PSE.validateConfigFile()
+
+        Bundle.setupBundle()
 
         buildThePlugin(View())
+
+        PSE.remoteCalls('startupCalls')
 
         return
 

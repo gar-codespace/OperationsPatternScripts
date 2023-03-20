@@ -12,7 +12,7 @@ A set of introductory videos is hosted on youtube, these cover the use of this p
 The following are YouTube videos covering the use of this plugin:  
 
 ### Pattern Scripts plugin - Video Documentation
-[Overview of this plugin](https://youtu.be/GG4WyXV0AzQ)  
+[Overview of this plugin](https://youtu.be/vFeCn1d2YfI)  
 [How to add this plugin to JMRI](https://youtu.be/Sl9yBQaRpeY)  
 [How to translate this plugin](https://youtu.be/6G7xkRJTczo)  
 [How to set up this plugin](https://youtu.be/GjPtXk3oKmc)  

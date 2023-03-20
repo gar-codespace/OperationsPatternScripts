@@ -73,13 +73,6 @@ class StartUp:
     def startUpTasks(self):
         """Run these tasks when this subroutine is started."""
 
-    # When jPlus is started for the first time
-        OSU = PSE.JMRI.jmrit.operations.setup
-        configFile = PSE.readConfigFile()
-        if configFile['Main Script']['LD']['LN'] == '':
-            configFile['Main Script']['LD'].update({'LN':OSU.Setup.getRailroadName()})
-            PSE.writeConfigFile(configFile)
-
         return
 
     def activateWidgets(self):

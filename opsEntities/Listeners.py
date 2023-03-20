@@ -131,9 +131,10 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         button = PSE.getPsButton()
         button.setEnabled(True)
 
-        WINDOW_CLOSED.getSource().dispose()
-
         PSE.remoteCalls('deActivatedCalls')
+        PSE.deactivateSubroutines()
+
+        WINDOW_CLOSED.getSource().dispose()
 
         return
 

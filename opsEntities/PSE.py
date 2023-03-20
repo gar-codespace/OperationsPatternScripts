@@ -222,12 +222,6 @@ def addActiveSubroutines(targetPanel):
     writeConfigFile(configFile)
     configFile = readConfigFile()
 
-
-
-
-
-
-
     for subroutine in getSubroutineDirs():
         subroutinename = 'Subroutines.' + subroutine
         if configFile['Main Script']['CP'][subroutinename]:
@@ -443,16 +437,22 @@ def updateWindowParams(window):
 
 def remoteCalls(call):
     """
-    call is one of the remote calls in each subroutine RemoteCalls module.
+    Applies 'call' to entries in ConfigFile()['Main Script']['CP']
+    'call' is one of the remote calls in each subroutine RemoteCalls module.
     startupCalls, activatedCalls, deActivatedCalls, refreshCalls Etc.
     """
 
-    for subroutine in getSubroutineDirs():
-        xModule = 'Subroutines.' + subroutine
-        package = __import__(xModule, globals(), locals(), fromlist=['RemoteCalls'], level=-1)
-        package = __import__(xModule, fromlist=['RemoteCalls'], level=-1)
-        getattr(package.RemoteCalls, call)()
+    cpItems = readConfigFile()['Main Script']['CP']
 
+    for item, value in cpItems.items():
+        if 'Subroutines.' in item and value:
+            try:
+                package = __import__(item, fromlist=['RemoteCalls'], level=-1)
+                getattr(package.RemoteCalls, call)()
+            except ImportError:
+                print(item + ' not found')
+
+        # package = __import__(xModule, globals(), locals(), fromlist=['RemoteCalls'], level=-1)
     return
 
 def psLocale():
@@ -792,6 +792,7 @@ def dumpJson(file):
 
 
 def validateConfigFile():
+    """Checks and corrects the configFile."""
 
     configFile = OS_PATH.join(PROFILE_PATH, 'operations', 'configFile.json')
 # Does one exist?
@@ -799,6 +800,8 @@ def validateConfigFile():
         makeNewConfigFile()
 # Is it the right version?
     validateConfigFileVersion()
+# Are the current subroutines activated?
+    activateCurrentSubroutines()
 # Does it have all the needed components?
     validateConfigFileComponents()
 
@@ -827,18 +830,46 @@ def validateConfigFileVersion():
         return False
 
 def validateConfigFileComponents():
+    """Checks that each subroutine in the Subroutines folder has a configFile component."""
+
+    configFile = readConfigFile()
+
+    for subroutine in getSubroutineDirs():
+        subroutineName = 'Subroutines.' + subroutine
+        if not subroutineName in configFile['Main Script']['CP'].keys():
+            chunkPath = OS_PATH.join(PLUGIN_ROOT, 'Subroutines', subroutine, 'config.json')
+            configChunk = loadJson(genericReadReport(chunkPath))
+            configFile[subroutine] = configChunk
+
+    writeConfigFile(configFile)
+
+    return
+
+def activateCurrentSubroutines():
     """Checks that each active subroutine has a config file entry."""
 
-    allSubs = getSubroutineDirs()
-    allKeys = readConfigFile().keys()
-    dirLength = len(allSubs)
-    for sub in allSubs:
-        if not sub in allKeys:
-            dirLength -= 1
-            _psLog.info(sub + ' subroutine will be added to the config file')
+    configFile = readConfigFile()
 
-    if dirLength != len(allSubs):
-        makeNewConfigFile()
+    for subroutine in getSubroutineDirs():
+        configFile['Main Script']['CP']['Subroutines.' + subroutine] = True
+
+    writeConfigFile(configFile)
+
+    return
+
+def deactivateSubroutines():
+    """
+    All the subroutines listed in the configFile are set to False.
+    validateConfigFileComponents sets those subs in the Subroutines folder to true.
+    """
+
+    configFile = readConfigFile()
+    cpItems = configFile['Main Script']['CP']
+    for item, value in cpItems.items():
+        if 'Subroutines.' in item:
+            cpItems.update({item: False})
+
+    writeConfigFile(configFile)
 
     return
 

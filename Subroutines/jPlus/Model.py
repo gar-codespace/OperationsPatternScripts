@@ -103,3 +103,13 @@ def setExpandedHeader():
     OSU.Setup.setRailroadName(extendedHeader)
 
     return
+
+def setDefaultHeader():
+
+    configFile = PSE.readConfigFile()
+    
+    OSU = PSE.JMRI.jmrit.operations.setup
+    OSU.Setup.setRailroadName(configFile['Main Script']['LD']['LN'])
+    # PSE.JMRI.jmrit.operations.setup.OperationsSettingsPanel().savePreferences()
+
+    return

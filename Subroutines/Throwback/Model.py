@@ -37,26 +37,32 @@ def createFolder():
 
 def previousCommit():
 
-    configFile = PSE.readConfigFile('Throwback')['SS']
+    snapShots = PSE.readConfigFile('Throwback')['SS']
+    numberOfEntries = len(snapShots)
+    if numberOfEntries == 1:
+        minimum = 0
+    else:
+        minimum = 1
 
     global SNAP_SHOT_INDEX
     SNAP_SHOT_INDEX -= 1
 
-    if SNAP_SHOT_INDEX == 0:
-        SNAP_SHOT_INDEX = 1
+    if SNAP_SHOT_INDEX < 1:
+        SNAP_SHOT_INDEX = minimum
 
-    return configFile[SNAP_SHOT_INDEX]
+    return snapShots[SNAP_SHOT_INDEX]
 
 def nextCommit():
 
-    configFile = PSE.readConfigFile('Throwback')['SS']
+    snapShots = PSE.readConfigFile('Throwback')['SS']
+    numberOfEntries = len(snapShots)
 
     global SNAP_SHOT_INDEX
     SNAP_SHOT_INDEX += 1
-    if SNAP_SHOT_INDEX >= len(configFile):
-        SNAP_SHOT_INDEX = len(configFile) - 1
+    if SNAP_SHOT_INDEX >= numberOfEntries:
+        SNAP_SHOT_INDEX = numberOfEntries - 1
 
-    return configFile[SNAP_SHOT_INDEX]
+    return snapShots[SNAP_SHOT_INDEX]
 
 def makeCommit(displayWidgets):
 

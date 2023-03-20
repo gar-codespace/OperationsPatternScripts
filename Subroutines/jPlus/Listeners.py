@@ -24,25 +24,23 @@ def actionListener(EVENT):
     frameTitle = PSE.BUNDLE['Pattern Scripts']
     targetPanel = PSE.getComponentByName(frameTitle, 'subroutinePanel')
 
-# If it's on, turn it off
+    # Hide this subroutine
     if configFile['Main Script']['CP'][__package__]: 
         menuText = PSE.BUNDLE[u'Show'] + ' ' + __package__
         configFile['Main Script']['CP'].update({__package__:False})
         
     # Do stuff specific to this subroutine here
-        OSU = PSE.JMRI.jmrit.operations.setup
-        OSU.Setup.setRailroadName(configFile['Main Script']['LD']['LN'])
-        PSE.JMRI.jmrit.operations.setup.OperationsSettingsPanel().savePreferences()
+
 
 
         _psLog.info(__package__ + ' removed from pattern scripts frame')
         print(__package__ + ' deactivated')
+    # Show this subroutine
     else:
         menuText = PSE.BUNDLE[u'Hide'] + ' ' + __package__
         configFile['Main Script']['CP'].update({__package__:True})
         
     # Do stuff specific to this subroutine here
-        Model.setExpandedHeader()
 
 
 
