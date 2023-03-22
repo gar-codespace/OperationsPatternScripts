@@ -129,8 +129,6 @@ class CreateSetCarsForm:
 
 
 
-
-
         if PSE.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
             ModelSetCarsForm.switchListAsCsv(self.buttonDict['textBoxEntry'])
 

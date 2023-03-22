@@ -343,6 +343,32 @@
     }
   },
 </pre>
+<!-- Throwback help section html -->
+<h2>Throwback plugin</h2>
+<h3>Description</h3>
+<p>The Throwback Subroutine is modeled on the idea of version control software. Commits are named and saved. In so doing snapshots are taken of the railroads data. The commit then serves as a setpoint that allows any of the JMRI data sets to be returned to.</p>
+<h3>What the buttons do</h3>
+<p>The name of each commit is entered into the text box of the Total Commits frame. Enter the name BEFORE pressing the Add New Commit button.</p>
+<p>The Previous and Next buttons facilitate scrolling through your collection of commits if more than one commit has been created. The list is ordered by creation date/time.</p>
+<p>Pressing the Reset All Commits button erases all saved commits, so be careful.</p>
+<p>In the Actions panel, select any combination of data sets to be thrown back by clicking its check box.</p>
+<p>Pressing the Throwback button sets the selected data set to the setpoint displayed in the Total Commits text box.</p>
+<p>This subroutine is called Throwback, but any of your data sets can be thrown to any commit, back or foreward.</p>
+<p>This subroutine does not interact with JMRIs Auto Save or Auto Backup feature, they run as configured.</p>
+<h3>Plugin Layout</h3>
+<p>Subroutines.Throwback.View.ManageGui()</p>
+<img src="../Subroutines/Throwback/img/Throwbach_Subroutine.png" alt="<Plugin Layout Image>">
+<h4>Throwback plugin settings in configFile.json</h4>
+<pre>
+  "Throwback": {  <font color="DarkRed">Throwback Subroutine settings</font>
+    "SS": [  <font color="DarkRed">Saved Setpoints</font>
+      [
+        "",  <font color="DarkRed">Time stamp, file name</font>
+        ""
+      ]
+    ]
+  }
+</pre>
 
 </body>
 </html>
