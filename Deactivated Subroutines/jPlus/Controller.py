@@ -22,10 +22,11 @@ def getSubroutineDropDownItem():
     """Pattern Scripts/Tools/'Show or disable' Subroutines.<subroutine>"""
 
     configFile = PSE.readConfigFile()
+    subroutineName = __package__.split('.')[1]
 
     menuItem = PSE.JAVX_SWING.JMenuItem()
 
-    if configFile['Main Script']['CP'][__package__]:
+    if configFile[subroutineName]['SV']:
         menuText = PSE.BUNDLE[u'Hide'] + ' ' + __package__
     else:
         menuText = PSE.BUNDLE[u'Show'] + ' ' + __package__

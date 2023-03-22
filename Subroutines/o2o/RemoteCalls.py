@@ -23,22 +23,28 @@ def startupCalls():
     These calls are not turned off.
     """
 
-    Listeners.addTrainsTableListener()
+    # configFile = PSE.readConfigFile()
+    # if configFile['Main Script']['CP'][__package__]:
 
     return
 
 def activatedCalls():
     """Methods called when this subroutine is activated."""
 
-
-    Listeners.addBuiltTrainListener()
+    configFile = PSE.readConfigFile()
+    if configFile['Main Script']['CP'][__package__]:
+        Listeners.addTrainsTableListener()
+        Listeners.addBuiltTrainListener()
+        print('addBuiltTrainListener')
 
     return
 
 def deActivatedCalls():
     """Methods called when this subroutine is deactivated."""
 
+    Listeners.removeTrainsTableListener()
     Listeners.removeBuiltTrainListener()
+    print('removeBuiltTrainListener')
 
     return
 

@@ -12,42 +12,33 @@ _psLog = PSE.LOGGING.getLogger('OPS.JP.Listeners')
 
 
 def actionListener(EVENT):
-    """menu item-Tools/Show Subroutines.o2o."""
+    """menu item-Tools Show/Hide Subroutines.o2o."""
 
     _psLog.debug(EVENT)
 
-    # PSE.closeSubordinateWindows()
-
     configFile = PSE.readConfigFile()
+    subroutineName = __package__.split('.')[1]
 
-    frameTitle = PSE.BUNDLE['Pattern Scripts']
-    targetPanel = PSE.getComponentByName(frameTitle, 'subroutinePanel')
-
-# If it's on, turn it off
-    if configFile['Main Script']['CP'][__package__]: 
+    if configFile[subroutineName]['SV']: # Hide this subroutine
         menuText = PSE.BUNDLE[u'Show'] + ' ' + __package__
-        configFile['Main Script']['CP'].update({__package__:False})
+        configFile[subroutineName].update({'SV':False})
+        _psLog.info('Hide ' + __package__)
+        print('Hide ' + __package__)
+    # Do subroutine specific stuff here
 
-    # Do stuff here
-        # removeBuiltTrainListener()
 
-        _psLog.info(__package__ + ' removed from pattern scripts frame')
-        print(__package__ + ' deactivated')
-    else:
+
+    else: # Show this subroutine
         menuText = PSE.BUNDLE[u'Hide'] + ' ' + __package__
-        configFile['Main Script']['CP'].update({__package__:True})
+        configFile[subroutineName].update({'SV':True})
+        _psLog.info('Show ' + __package__)
+        print('Show ' + __package__)
+    # Do subroutine specific stuff here
 
-    # Do stuff here
-        addBuiltTrainListener()
 
-        _psLog.info(__package__ + ' added to pattern scripts frame')
-        print(__package__ + ' activated')
 
     PSE.writeConfigFile(configFile)
-    targetPanel.removeAll()
-    targetPanel = PSE.addActiveSubroutines(targetPanel)
-    targetPanel.validate()
-    targetPanel.repaint()
+    PSE.repaintPatternScriptsWindow()
 
     EVENT.getSource().setText(menuText)
 
@@ -56,6 +47,12 @@ def actionListener(EVENT):
 def addTrainsTableListener():
 
     PSE.TM.addPropertyChangeListener(o2oTrainsTable())
+
+    return
+
+def removeTrainsTableListener():
+
+    PSE.TM.removePropertyChangeListener(o2oTrainsTable())
 
     return
 
@@ -81,31 +78,31 @@ class o2oTrainsTable(PSE.JAVA_BEANS.PropertyChangeListener):
 
 def addBuiltTrainListener():
     """
-    Adds BuiltTrain to every train in the roster.
+    Adds o2oBuiltTrain to every train in the roster.
     """
 
     removeBuiltTrainListener()
 
     trainList = PSE.TM.getTrainsByIdList()
     for train in trainList:
-        train.addPropertyChangeListener(BuiltTrain())
+        train.addPropertyChangeListener(o2oBuiltTrain())
     return
 
 def removeBuiltTrainListener():
     """
-    Removes BuiltTrain from every train in the roster.
+    Removes o2oBuiltTrain from every train in the roster.
     """
         
     trainList = PSE.TM.getTrainsByIdList()
     for train in trainList:
         for listener in train.getPropertyChangeListeners():
-            if listener.getClass() == BuiltTrain:
+            if listener.getClass() == o2oBuiltTrain:
                 train.removePropertyChangeListener(listener)
 
     return
 
 
-class BuiltTrain(PSE.JAVA_BEANS.PropertyChangeListener):
+class o2oBuiltTrain(PSE.JAVA_BEANS.PropertyChangeListener):
     """
     Starts o2oWorkEventsBuilder on trainBuilt.
     """

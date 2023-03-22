@@ -23,6 +23,9 @@ def startupCalls():
 
     print('jPlus startupCalls')
 
+    configFile = PSE.readConfigFile()
+    if configFile['Main Script']['CP'][__package__]:
+        pass
     OSU = PSE.JMRI.jmrit.operations.setup
     configFile = PSE.readConfigFile()
     if configFile['Main Script']['LD']['LN'] == '':
@@ -34,8 +37,8 @@ def startupCalls():
 def activatedCalls():
     """Methods called when this subroutine is activated."""
 
-    # Model.setExpandedHeader()
-    print('jPlus activated')
+    # configFile = PSE.readConfigFile()
+    # if configFile['Main Script']['CP'][__package__]:
 
     return
 
@@ -43,7 +46,6 @@ def deActivatedCalls():
     """Methods called when this subroutine is deactivated."""
 
     Model.setDefaultHeader()
-    print('jPlus deactivated')
 
     return
 

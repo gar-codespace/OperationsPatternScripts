@@ -152,6 +152,22 @@ def logIndex():
 """GUI Methods"""
 
 
+def repaintPatternScriptsWindow():
+    """
+    Repaints the Pattern Scripts window.
+    Called by:
+    All Show/Hide pulldowns.
+    """
+
+    frameTitle = BUNDLE['Pattern Scripts']
+    targetPanel = getComponentByName(frameTitle, 'subroutinePanel')
+    targetPanel.removeAll()
+    targetPanel = addActiveSubroutines(targetPanel)
+    targetPanel.validate()
+    targetPanel.repaint()
+
+    return
+
 def restartAllSubroutines():
 
     for subroutine in getSubroutineDirs():
@@ -224,7 +240,8 @@ def addActiveSubroutines(targetPanel):
 
     for subroutine in getSubroutineDirs():
         subroutinename = 'Subroutines.' + subroutine
-        if configFile['Main Script']['CP'][subroutinename]:
+        # if configFile['Main Script']['CP'][subroutinename]:
+        if configFile[subroutine]['SV']:
             package = __import__(subroutinename, fromlist=['Controller'], level=-1)
             startUp = package.Controller.StartUp()
             subroutineFrame = startUp.getSubroutineFrame()
@@ -444,13 +461,15 @@ def remoteCalls(call):
 
     cpItems = readConfigFile()['Main Script']['CP']
 
-    for item, value in cpItems.items():
-        if 'Subroutines.' in item and value:
+    # for item, value in cpItems.items():
+    for item in cpItems:
+        if 'Subroutines.' in item:
             try:
                 package = __import__(item, fromlist=['RemoteCalls'], level=-1)
                 getattr(package.RemoteCalls, call)()
             except ImportError:
-                print(item + ' not found')
+                pass
+                # print(item + ' not found')
 
         # package = __import__(xModule, globals(), locals(), fromlist=['RemoteCalls'], level=-1)
     return
@@ -835,8 +854,9 @@ def validateConfigFileComponents():
     configFile = readConfigFile()
 
     for subroutine in getSubroutineDirs():
-        subroutineName = 'Subroutines.' + subroutine
-        if not subroutineName in configFile['Main Script']['CP'].keys():
+        try:
+            configFile[subroutine]
+        except KeyError:
             chunkPath = OS_PATH.join(PLUGIN_ROOT, 'Subroutines', subroutine, 'config.json')
             configChunk = loadJson(genericReadReport(chunkPath))
             configFile[subroutine] = configChunk

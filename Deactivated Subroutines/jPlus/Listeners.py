@@ -1,19 +1,19 @@
 """
-Listeners for the Template subroutine.
+Listeners for the jPlus subroutine.
 JAVAX action performed methods are in Controller.
-Replace XX with a designator for this subroutines name.
 """
 
+from Subroutines.jPlus import Model
 from opsEntities import PSE
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
 
-_psLog = PSE.LOGGING.getLogger('OPS.XX.Listeners')
+_psLog = PSE.LOGGING.getLogger('OPS.JP.Listeners')
 
 
 def actionListener(EVENT):
-    """menu item-Tools/Show Subroutines.Template"""
+    """menu item-Tools/Show Subroutines.jPlus."""
 
     _psLog.debug(EVENT)
 

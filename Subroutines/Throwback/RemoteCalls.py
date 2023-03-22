@@ -21,12 +21,17 @@ def startupCalls():
     These calls are not turned off.
     """
 
-    Model.createFolder()
+    configFile = PSE.readConfigFile()
+    if configFile['Main Script']['CP'][__package__]:
+        Model.createFolder()
 
     return
 
 def activatedCalls():
     """Methods called when this subroutine is activated."""
+
+    # configFile = PSE.readConfigFile()
+    # if configFile['Main Script']['CP'][__package__]:
 
     return
 

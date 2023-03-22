@@ -20,10 +20,16 @@ def startupCalls():
     These calls are not turned off.
     """
 
+    # configFile = PSE.readConfigFile()
+    # if configFile['Main Script']['CP'][__package__]:
+
     return
 
 def activatedCalls():
     """Methods called when this subroutine is activated."""
+
+    # configFile = PSE.readConfigFile()
+    # if configFile['Main Script']['CP'][__package__]:
 
     return
 
@@ -42,6 +48,8 @@ def refreshCalls():
 def resetCalls():
     """Methods called to reset this subroutine."""
 
+   # Model.resetConfigFileItems()
+   
     return
     
 def specificCalls():
