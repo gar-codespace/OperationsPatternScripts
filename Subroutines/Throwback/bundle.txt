@@ -4,7 +4,7 @@ Action
 Snap Shot
 Previous
 Next
-Reset All Commits
+Delete All Commits
 Add New Commit
 Total Commits
 Cars

@@ -73,7 +73,7 @@ class subroutineGui:
         self.controlWidgets.append(ssButton)
 
         rsButton = PSE.JAVX_SWING.JButton()
-        rsButton.setText(PSE.BUNDLE[u'Reset All Commits'])
+        rsButton.setText(PSE.BUNDLE[u'Delete All Commits'])
         rsButton.setName('reset')
         self.controlWidgets.append(rsButton)
 

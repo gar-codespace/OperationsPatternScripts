@@ -18,8 +18,6 @@ The following are YouTube videos covering the use of this plugin:
 [How to set up this plugin](https://youtu.be/GjPtXk3oKmc)  
 [How to modify this plugin](https://youtu.be/DK6O9AQmqXo)  
 
-### The jPlus subroutine  
-jPlus Subroutine - Extended railroad details  
 ### The o2o subroutine  
 [o2o Subroutine - Use a TrainPlayer© layout with JMRI](https://youtu.be/rlUfoSesnQo)  
 ### The Patterns subroutine
@@ -27,7 +25,7 @@ Overview
 [Demonstration at a yard](https://youtu.be/IdXvxyo-E3Y)  
 [Demonstration at industry](https://youtu.be/2Tv6sUMDD_Y)  
 ### The Throwback subroutine  
-Run 'what if' experiments  
+[Run 'what if' experiments](https://youtu.be/5YleSgJGN9k)  
 
 ### Web sites
 [TrainPlayer](http://trainplayer.com/)  
