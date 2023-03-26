@@ -34,60 +34,75 @@ class subroutineGui:
         selectionFrame.setLayout(PSE.JAVX_SWING.BoxLayout(selectionFrame, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
         selectionFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE[u'Total Commits'] + u' - ' + str(len(snapShot) - 1))
 
-        inputRow = PSE.JAVX_SWING.JPanel()
-        inputRow.setName('inputRow')
-
-        pvButton = PSE.JAVX_SWING.JButton()
-        pvButton.setText(PSE.BUNDLE[u'Previous'])
-        pvButton.setName('previous')
-        self.controlWidgets.append(pvButton)
-
-        timeStampLabel = PSE.JAVX_SWING.JLabel(lastSnapShot[0])
-        timeStampLabel.setName('timeStamp')
-        self.displayWidgets.append(timeStampLabel)
-
         tbText = PSE.JAVX_SWING.JTextField(20)
         tbText.setText(lastSnapShot[1])
         tbText.setName('tbText')
         self.displayWidgets.append(tbText)
 
-        nxButton = PSE.JAVX_SWING.JButton()
-        nxButton.setText(PSE.BUNDLE[u'Next'])
-        nxButton.setName('next')
-        self.controlWidgets.append(nxButton)
-
-        inputRow.add(pvButton)
-        inputRow.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
-        inputRow.add(timeStampLabel)
-        inputRow.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(10,0)))
+        inputRow = PSE.JAVX_SWING.JPanel()
+        inputRow.setName('inputRow')
         inputRow.add(tbText)
-        inputRow.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
-        inputRow.add(nxButton)
-
-        buttonRow = PSE.JAVX_SWING.JPanel()
-        buttonRow.setName('buttonRow')
 
         ssButton = PSE.JAVX_SWING.JButton()
         ssButton.setText(PSE.BUNDLE[u'Add New Commit'])
         ssButton.setName('commit')
         self.controlWidgets.append(ssButton)
 
+        commitRow = PSE.JAVX_SWING.JPanel()
+        commitRow.setName('commitRow')
+        commitRow.add(ssButton)
+
         rsButton = PSE.JAVX_SWING.JButton()
         rsButton.setText(PSE.BUNDLE[u'Delete All Commits'])
         rsButton.setName('reset')
         self.controlWidgets.append(rsButton)
 
-        buttonRow.add(ssButton)
-        buttonRow.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(30,0)))
-        buttonRow.add(rsButton)
+        resetRow = PSE.JAVX_SWING.JPanel()
+        resetRow.setName('resetRow')
+        resetRow.add(rsButton)
 
         selectionFrame.add(inputRow)
-        selectionFrame.add(buttonRow)
+        selectionFrame.add(commitRow)
+        selectionFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
+        selectionFrame.add(PSE.JAVX_SWING.JSeparator())
+        selectionFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
+        selectionFrame.add(resetRow)
+        selectionFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
+
     # Action
         actionFrame = PSE.JAVX_SWING.JPanel()
         actionFrame.setName('actionFrame')
         actionFrame.setLayout(PSE.JAVX_SWING.BoxLayout(actionFrame, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
         actionFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE[u'Action'])
+
+        commitRow = PSE.JAVX_SWING.JPanel()
+        commitRow.setName('commitRow')
+
+        pvButton = PSE.JAVX_SWING.JButton()
+        pvButton.setText(PSE.BUNDLE[u'Previous'])
+        pvButton.setName('previous')
+        self.controlWidgets.append(pvButton)
+
+        timeStamp = PSE.JAVX_SWING.JLabel(lastSnapShot[0])
+        timeStamp.setName('timeStamp')
+        self.displayWidgets.append(timeStamp)
+
+        commitName = PSE.JAVX_SWING.JLabel(lastSnapShot[1])
+        commitName.setName('commitName')
+        self.displayWidgets.append(commitName)
+
+        nxButton = PSE.JAVX_SWING.JButton()
+        nxButton.setText(PSE.BUNDLE[u'Next'])
+        nxButton.setName('next')
+        self.controlWidgets.append(nxButton)
+
+        commitRow.add(pvButton)
+        commitRow.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
+        commitRow.add(timeStamp)
+        commitRow.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(10,0)))
+        commitRow.add(commitName)
+        commitRow.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
+        commitRow.add(nxButton)
 
         checkboxRow = PSE.JAVX_SWING.JPanel()
         checkboxRow.setName('checkboxRow')
@@ -142,7 +157,11 @@ class subroutineGui:
 
         actionRow.add(tbButton)
 
+        actionFrame.add(commitRow)
         actionFrame.add(checkboxRow)
+        actionFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
+        actionFrame.add(PSE.JAVX_SWING.JSeparator())
+        actionFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
         actionFrame.add(actionRow)
 
         tpPanel = PSE.JAVX_SWING.JPanel()

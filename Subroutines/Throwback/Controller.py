@@ -99,7 +99,7 @@ class StartUp:
         for widget in self.widgets['display']:
             if widget.getName() == 'timeStamp':
                 widget.setText(lastSS[-1][0])
-            if widget.getName() == 'tbText':
+            if widget.getName() == 'commitName':
                 widget.setText(lastSS[-1][1])
     
         PSE.restartSubroutineByName(__package__)
@@ -116,7 +116,7 @@ class StartUp:
         for widget in self.widgets['display']:
             if widget.getName() == 'timeStamp':
                 widget.setText(previousSS[0])
-            if widget.getName() == 'tbText':
+            if widget.getName() == 'commitName':
                 widget.setText(previousSS[1])
 
         return
@@ -131,7 +131,7 @@ class StartUp:
         for widget in self.widgets['display']:
             if widget.getName() == 'timeStamp':
                 widget.setText(nextSS[0])
-            if widget.getName() == 'tbText':
+            if widget.getName() == 'commitName':
                 widget.setText(nextSS[1])
 
         return
