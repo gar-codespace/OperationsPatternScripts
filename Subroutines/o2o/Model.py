@@ -88,6 +88,7 @@ def updateJmriRailroad():
     Controller.StartUp.updateJmriRailroad
     """
     
+    Initiator().incrementor()
     Attributator().attributist()
     ScheduleAuteur().auteurist()
     Locationator().locationist()
@@ -166,7 +167,20 @@ class Initiator:
         self.tweakOperationsXml()
         self.setReportMessageFormat()
 
+        _psLog.info('Layout details added')
         _psLog.info('JMRI operations settings updated')
+
+        return
+    
+    def incrementor(self):
+        """
+        Mini controller to update railroad details.
+        """
+
+        self.o2oDetailsToConFig()
+        self.setRailroadDetails()
+
+        _psLog.info('Layout details updated')
 
         return
     
@@ -188,9 +202,7 @@ class Initiator:
         self.configFile['Main Script']['LD'].update({'LO':self.TpRailroad['location']})
         self.configFile['Main Script']['LD'].update({'YR':self.TpRailroad['year']})
         self.configFile['Main Script']['LD'].update({'SC':self.TpRailroad['scale']})
-        self.configFile['Main Script']['LD'].update({'LN':self.TpRailroad['layoutName']})
         self.configFile['Main Script']['LD'].update({'BD':self.TpRailroad['buildDate']})
-        self.configFile['Main Script']['LD'].update({'ML':PSE.JMRI.jmrit.operations.setup.Setup.getMaxTrainLength()})
 
         PSE.writeConfigFile(self.configFile)
         self.configFile =  PSE.readConfigFile()
@@ -203,9 +215,7 @@ class Initiator:
         _psLog.debug('setRailroadDetails')
 
     # Set the name
-        layoutName = self.configFile['Main Script']['LD']['LN']
-
-        self.OSU.Setup.setRailroadName(layoutName)
+        self.OSU.Setup.setRailroadName(self.TpRailroad['layoutName'])
     # Set the year
         rrYear = self.configFile['Main Script']['LD']['YR']
         if rrYear:
@@ -214,6 +224,8 @@ class Initiator:
         rrScale = self.configFile['Main Script']['LD']['SC']
         if rrScale:
             self.OSU.Setup.setScale(self.configFile['Main Script']['SR'][rrScale.upper()])
+
+        PSE.JMRI.jmrit.operations.setup.OperationsSettingsPanel().savePreferences()
 
         return
 

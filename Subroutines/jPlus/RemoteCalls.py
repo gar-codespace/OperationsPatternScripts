@@ -6,13 +6,7 @@ Calls other subs make to this one
 Keep this as light as possible.
 """
 
-from opsEntities import PSE
 from Subroutines.jPlus import Model
-
-# SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
-# SCRIPT_REV = 20230201
-
-# _psLog = PSE.LOGGING.getLogger('OPS.JP.RemoteCalls')
 
 
 def startupCalls():
@@ -21,31 +15,19 @@ def startupCalls():
     These calls are not turned off.
     """
 
-    print('jPlus startupCalls')
-
-    configFile = PSE.readConfigFile()
-    if configFile['Main Script']['CP'][__package__]:
-        pass
-    OSU = PSE.JMRI.jmrit.operations.setup
-    configFile = PSE.readConfigFile()
-    if configFile['Main Script']['LD']['LN'] == '':
-        configFile['Main Script']['LD'].update({'LN':OSU.Setup.getRailroadName()})
-        PSE.writeConfigFile(configFile)
-
     return
 
 def activatedCalls():
     """Methods called when this subroutine is activated."""
 
-    # configFile = PSE.readConfigFile()
-    # if configFile['Main Script']['CP'][__package__]:
+    Model.activateExtendedHeader()
 
     return
 
 def deActivatedCalls():
     """Methods called when this subroutine is deactivated."""
 
-    Model.setDefaultHeader()
+    Model.deactivateExtendedHeader()
 
     return
 

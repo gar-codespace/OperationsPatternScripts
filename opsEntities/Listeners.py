@@ -131,9 +131,6 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         button = PSE.getPsButton()
         button.setEnabled(True)
 
-        PSE.remoteCalls('deActivatedCalls')
-        PSE.deactivateSubroutines()
-
         WINDOW_CLOSED.getSource().dispose()
 
         return
@@ -141,7 +138,9 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
     def windowClosing(self, WINDOW_CLOSING):
 
         PSE.updateWindowParams(WINDOW_CLOSING.getSource())
-        
+        PSE.remoteCalls('deActivatedCalls')
+        PSE.deactivateSubroutines()
+            
         return
 
     def windowOpened(self, WINDOW_OPENED):

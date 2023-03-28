@@ -64,7 +64,6 @@ class StartUp:
     def getSubroutineGui(self):
         """Gets the GUI for this subroutine."""
 
-        Model.jPanelSetup()
         subroutineGui, self.widgets = View.ManageGui().makeSubroutineGui()
 
         self.activateWidgets()
@@ -106,8 +105,6 @@ class StartUp:
 
         OSU = PSE.JMRI.jmrit.operations.setup
         OSU.Setup.setYearModeled(configFile['Main Script']['LD']['YR'])
-
-        Model.setExpandedHeader()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
