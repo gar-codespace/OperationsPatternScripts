@@ -295,8 +295,6 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         buildThePlugin(View())
 
-        PSE.remoteCalls('startupCalls')
-
         return
 
     def handle(self):

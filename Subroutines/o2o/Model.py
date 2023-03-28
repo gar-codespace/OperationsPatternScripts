@@ -16,13 +16,6 @@ FILE_LIST = ['OperationsTrainRoster.xml', 'OperationsRouteRoster.xml']
 
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.Model')
 
-def resetConfigFileItems():
-    """Called from PSE.remoteCalls('resetCalls')"""
-
-    # configFile = PSE.readConfigFile()
-    # PSE.writeConfigFile(configFile)
-
-    return
 
 def getTrainPlayerRailroad():
 

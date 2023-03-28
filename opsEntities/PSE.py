@@ -210,11 +210,11 @@ def validateSubroutines():
     configFile = readConfigFile()
 
     for subroutine in getSubroutineDirs():
-        subroutinename = 'Subroutines.' + subroutine
+        subroutineName = 'Subroutines.' + subroutine
         try:
-            configFile['Main Script']['CP'][subroutinename]
+            configFile['Main Script']['CP'][subroutineName]
         except:
-            configFile['Main Script']['CP'][subroutinename] = True
+            configFile['Main Script']['CP'][subroutineName] = True
 
     writeConfigFile(configFile)
 
@@ -229,23 +229,22 @@ def addActiveSubroutines(targetPanel):
 
 # Catch dynamic add or removal of a subroutine
     for subroutine in getSubroutineDirs():
-        subroutinename = 'Subroutines.' + subroutine
+        subroutineName = 'Subroutines.' + subroutine
         try:
-            configFile['Main Script']['CP'][subroutinename]
+            configFile['Main Script']['CP'][subroutineName]
         except:
-            configFile['Main Script']['CP'][subroutinename] = True
+            configFile['Main Script']['CP'][subroutineName] = True
 
     writeConfigFile(configFile)
     configFile = readConfigFile()
 
     for subroutine in getSubroutineDirs():
-        subroutinename = 'Subroutines.' + subroutine
-        # if configFile['Main Script']['CP'][subroutinename]:
+        subroutineName = 'Subroutines.' + subroutine
+        package = __import__(subroutineName, fromlist=['Controller'], level=-1)
+        startUp = package.Controller.StartUp()
+        startUp.startUpTasks()
         if configFile[subroutine]['SV']:
-            package = __import__(subroutinename, fromlist=['Controller'], level=-1)
-            startUp = package.Controller.StartUp()
             subroutineFrame = startUp.getSubroutineFrame()
-            startUp.startUpTasks()
             targetPanel.add(JAVX_SWING.Box.createRigidArea(JAVA_AWT.Dimension(0,10)))
             targetPanel.add(subroutineFrame)
 
@@ -456,7 +455,7 @@ def remoteCalls(call):
     """
     Applies 'call' to entries in ConfigFile()['Main Script']['CP']
     'call' is one of the remote calls in each subroutine RemoteCalls module.
-    startupCalls, activatedCalls, deActivatedCalls, refreshCalls Etc.
+    activatedCalls, deActivatedCalls, refreshCalls Etc.
     """
 
     cpItems = readConfigFile()['Main Script']['CP']
@@ -888,6 +887,8 @@ def deactivateSubroutines():
     for item, value in cpItems.items():
         if 'Subroutines.' in item:
             cpItems.update({item: False})
+
+    configFile['Main Script']['CP'].update({'EH':False})
 
     writeConfigFile(configFile)
 

@@ -15,14 +15,7 @@ SCRIPT_REV = 20230201
 
 _psLog = PSE.LOGGING.getLogger('OPS.TB.Model')
 
-def resetConfigFileItems():
-    """Called from PSE.remoteCalls('resetCalls')"""
 
-    # configFile = PSE.readConfigFile()
-    # PSE.writeConfigFile(configFile)
-
-    return
-    
 def createFolder():
     """Creates a 'throwback' folder in operations."""
 

@@ -14,6 +14,7 @@ SCRIPT_REV = 20230201
 
 _psLog = PSE.LOGGING.getLogger('OPS.XX.Model')
 
+
 def resetConfigFileItems():
     """Called from PSE.remoteCalls('resetCalls')"""
 

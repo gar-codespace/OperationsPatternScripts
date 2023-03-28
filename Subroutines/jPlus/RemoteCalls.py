@@ -9,19 +9,10 @@ Keep this as light as possible.
 from Subroutines.jPlus import Model
 
 
-def startupCalls():
-    """
-    Methods called when this subroutine is initialized by the Main Script.
-    These calls are not turned off.
-    """
-
-    return
-
 def activatedCalls():
     """Methods called when this subroutine is activated."""
 
-    Model.activateExtendedHeader()
-
+    
     return
 
 def deActivatedCalls():
@@ -40,8 +31,6 @@ def refreshCalls():
 
 def resetCalls():
     """Methods called to reset this subroutine."""
-
-    Model.resetConfigFileItems()
 
     return
         

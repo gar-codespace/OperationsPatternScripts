@@ -9,24 +9,6 @@ Keep this as light as possible.
 from opsEntities import PSE
 from Subroutines.o2o import Listeners
 from Subroutines.o2o import ModelWorkEvents
-# from Subroutines.o2o import Model
-
-SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
-SCRIPT_REV = 20230201
-
-_psLog = PSE.LOGGING.getLogger('OPS.o2o.RemoteCalls')
-
-
-def startupCalls():
-    """
-    Methods called when this subroutine is initialized by the Main Script.
-    These calls are not turned off.
-    """
-
-    # configFile = PSE.readConfigFile()
-    # if configFile['Main Script']['CP'][__package__]:
-
-    return
 
 def activatedCalls():
     """Methods called when this subroutine is activated."""
@@ -55,8 +37,6 @@ def refreshCalls():
 
 def resetCalls():
     """Methods called to reset this subroutine."""
-
-    # Model.resetConfigFileItems()
 
     return
     

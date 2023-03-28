@@ -72,6 +72,10 @@ class StartUp:
     def startUpTasks(self):
         """Run these tasks when this subroutine is started."""
 
+        configFile = PSE.readConfigFile()
+        if configFile['Main Script']['CP'][__package__]:
+            Model.createFolder()
+            
         Model.countCommits()
 
         return

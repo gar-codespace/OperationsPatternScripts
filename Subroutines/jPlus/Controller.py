@@ -73,6 +73,8 @@ class StartUp:
     def startUpTasks(self):
         """Run these tasks when this subroutine is started."""
 
+        Model.activateExtendedHeader()
+
         return
 
     def activateWidgets(self):
