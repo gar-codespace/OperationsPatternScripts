@@ -1,7 +1,7 @@
 # coding=utf-8
 # © 2023 Greg Ritacco
 
-"""Creates the TrainPlayer JMRI Report - o2o Work Events.csv file from either PatternTracksSubroutine or BuiltTrainExport"""
+"""Creates the TrainPlayer JMRI Report - o2o Workevents.csv file from either PatternTracksSubroutine or BuiltTrainExport"""
 
 from opsEntities import PSE
 from Subroutines.o2o import ModelEntities
@@ -250,7 +250,7 @@ class o2oWorkEvents:
         self.workEvents = workEvents
         self.o2oList = ''
 
-        fileName = 'JMRI Report - o2o Work Events.csv'
+        fileName = 'JMRI Report - o2o Workevents.csv'
         self.o2oWorkEventPath = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData', 'Roaming', 'TrainPlayer', 'Reports', fileName)
 
         return
