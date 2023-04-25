@@ -627,12 +627,20 @@ def getYear():
 
 def convertJmriDateToEpoch(jmriTime):
     """
-    Example: 2022-02-26T17:16:17.807+0000
+    Example: "date" : "2022-02-26T17:16:17.807+0000"
+    Example: "date" : "1915-04-24T20:55:40.227+00:00"
     Called by:
     o2oSubroutine.ModelWorkEvents.jmriManifestConversion.convertHeader
     """
-
-    epochTime = TIME.mktime(TIME.strptime(jmriTime, "%Y-%m-%dT%H:%M:%S.%f+0000"))
+    try:
+        epochTime = TIME.mktime(TIME.strptime(jmriTime, "%Y-%m-%dT%H:%M:%S.%f+0000"))
+    except ValueError:
+        pass
+    try:
+        epochTime = TIME.mktime(TIME.strptime(jmriTime, "%Y-%m-%dT%H:%M:%S.%f+00:00"))
+    except ValueError:
+        pass
+    
 
     if TIME.localtime(epochTime).tm_isdst and TIME.daylight: # If local dst and dst are both 1
         epochTime -= TIME.altzone
