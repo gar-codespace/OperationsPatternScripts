@@ -3,7 +3,7 @@ Todo:
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
   Catch o2o update locations but press update industries.
   Duplication of PSE chunkPath.
-  Allpy schedules to o2o Update Rolling Stock
+  Apply schedules to o2o Update Rolling Stock
 
 Comments:
   Schedule does not prevent setting a car to a track.
