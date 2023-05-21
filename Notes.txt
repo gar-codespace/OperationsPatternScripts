@@ -4,6 +4,7 @@ Todo:
   Catch o2o update locations but press update industries.
   Duplication of PSE chunkPath.
   Apply schedules to o2o Update Rolling Stock
+  Change Throwback file suffix to .o2o
 
 Comments:
   Schedule does not prevent setting a car to a track.
