@@ -79,7 +79,7 @@ def makeCommit(displayWidgets):
             roster.save()
             copyFrom = PSE.JAVA_IO.File(targetFile).toPath()
 
-            fileName = ts + '.' + xml[:1] + '.xml.bak'
+            fileName = ts + '.' + xml[:1] + '.xml.o2o'
             targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', fileName)
             copyTo = PSE.JAVA_IO.File(targetFile).toPath()
 
@@ -101,7 +101,7 @@ def throwbackCommit(displayWidgets):
     for widget in displayWidgets:
         if widget.getName() == 'lCheckBox' and widget.selected:
             PSE.LM.dispose()
-            roster = throwbackRestorePoint[0] + '.L.xml.bak'
+            roster = throwbackRestorePoint[0] + '.L.xml.o2o'
             targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
             PSE.LMX.readFile(targetFile)
             PSE.LMX.writeOperationsFile()
@@ -110,7 +110,7 @@ def throwbackCommit(displayWidgets):
     for widget in displayWidgets:
         if widget.getName() == 'rCheckBox' and widget.selected:
             PSE.RM.dispose()
-            roster = throwbackRestorePoint[0] + '.R.xml.bak'
+            roster = throwbackRestorePoint[0] + '.R.xml.o2o'
             targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
             PSE.RMX.readFile(targetFile)
             PSE.RMX.writeOperationsFile()
@@ -119,7 +119,7 @@ def throwbackCommit(displayWidgets):
     for widget in displayWidgets:
         if widget.getName() == 'tCheckBox' and widget.selected:
             PSE.TM.dispose()
-            roster = throwbackRestorePoint[0] + '.T.xml.bak'
+            roster = throwbackRestorePoint[0] + '.T.xml.o2o'
             targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
             PSE.TMX.readFile(targetFile)
             PSE.TMX.writeOperationsFile()
@@ -128,7 +128,7 @@ def throwbackCommit(displayWidgets):
     for widget in displayWidgets:
         if widget.getName() == 'cCheckBox' and widget.selected:
             PSE.CM.dispose()
-            roster = throwbackRestorePoint[0] + '.C.xml.bak'
+            roster = throwbackRestorePoint[0] + '.C.xml.o2o'
             targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
             PSE.CMX.readFile(targetFile)
             PSE.CMX.writeOperationsFile()
@@ -137,7 +137,7 @@ def throwbackCommit(displayWidgets):
     for widget in displayWidgets:
         if widget.getName() == 'eCheckBox' and widget.selected:
             PSE.EM.dispose()
-            roster = throwbackRestorePoint[0] + '.E.xml.bak'
+            roster = throwbackRestorePoint[0] + '.E.xml.o2o'
             targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
             PSE.EMX.readFile(targetFile)
             PSE.EMX.writeOperationsFile()
