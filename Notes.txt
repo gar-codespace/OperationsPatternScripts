@@ -96,6 +96,7 @@ Tested Items:
     Ignore Track Length works with schedules.
     Set cars to spur removes FD OK.
     Toggle AS Apply schedule in config file works OK.
+    getOwner() or getOwnerName() depending on version OK
 
   o2o
     Subroutine turns on and off OK.

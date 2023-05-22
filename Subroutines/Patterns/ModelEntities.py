@@ -209,7 +209,11 @@ def getDetailsForLoco(locoObject):
     locoDetailDict['Length'] = locoObject.getLength()
     locoDetailDict['Weight'] = locoObject.getWeightTons()
     locoDetailDict['Color'] = locoObject.getColor()
-    locoDetailDict['Owner'] = str(locoObject.getOwnerName())
+    # Depending on which version of JMRI Ops Pro
+    try:
+        locoDetailDict['Owner'] = locoObject.getOwner()
+    except:
+        locoDetailDict['Owner'] = locoObject.getOwnerName()
     locoDetailDict['Comment'] = locoObject.getComment()
     locoDetailDict['Location'] = locoObject.getLocationName()
     locoDetailDict['Track'] = locoObject.getTrackName()
@@ -312,7 +316,11 @@ def getDetailsForCar(carObject, kernelTally):
     carDetailDict['Color'] = carObject.getColor()
     carDetailDict['Kernel'] = carObject.getKernelName()
     carDetailDict['Kernel Size'] = str(kernelSize)
-    carDetailDict['Owner'] = str(carObject.getOwnerName())
+    # Depending on which version of JMRI Ops Pro
+    try:
+        carDetailDict['Owner'] = carObject.getOwner()
+    except:
+        carDetailDict['Owner'] = carObject.getOwnerName()
     carDetailDict['Track'] = carObject.getTrackName()
     carDetailDict['Location'] = carObject.getLocationName()
     carDetailDict['Comment'] = carObject.getComment()
