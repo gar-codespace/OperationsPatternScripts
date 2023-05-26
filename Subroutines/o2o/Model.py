@@ -45,9 +45,6 @@ def newJmriRailroad():
     Controller.StartUp.newJmriRailroad
     """
 
-    PSE.TMX.makeBackupFile('operations/OperationsTrainRoster.xml')
-    PSE.TMX.makeBackupFile('operations/OperationsRouteRoster.xml')
-
     PSE.TM.dispose()
     PSE.RM.dispose()
     PSE.DM.dispose()
@@ -292,6 +289,10 @@ class Attributator:
 
         tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarRoads
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+
+        for xName in TCM.getNames():
+            TCM.deleteName(xName)
+
         for xName in self.tpRailroadData['roads']:
             TCM.addName(xName)
 
@@ -304,6 +305,11 @@ class Attributator:
 
         tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarTypes
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+
+
+        for xName in TCM.getNames():
+            TCM.deleteName(xName)
+
         for xName in self.tpRailroadData['carAAR']:
             TCM.addName(xName)
 
@@ -1103,8 +1109,8 @@ class RStockulator:
         location = PSE.LM.getLocationByName(attribs['location'])
         track = location.getTrackByName(attribs['track'], None)
 
-        if location.isStaging():
-            return 'E', None
+        if track.getTrackType() == 'Yard':
+            return 'Empty', None
 
         try:
             jSchedule = track.getSchedule()
@@ -1112,7 +1118,7 @@ class RStockulator:
             return jItem.getShipLoadName(), jItem.getDestination()
             
         except:
-             return None, None
+             return 'E', None
 
     def deregisterOldRs(self):
 
