@@ -5,6 +5,7 @@ Todo:
   Duplication of PSE chunkPath.
   Apply schedules to o2o Update Rolling Stock
   o2o Import ignore EQDK
+  o2o update rolling stock resets select car types
 
 Comments:
   Schedule does not prevent setting a car to a track.
