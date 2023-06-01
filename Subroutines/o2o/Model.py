@@ -290,8 +290,7 @@ class Attributator:
         tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarRoads
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
 
-        for xName in TCM.getNames():
-            TCM.deleteName(xName)
+        TCM.dispose()
 
         for xName in self.tpRailroadData['roads']:
             TCM.addName(xName)
@@ -306,9 +305,7 @@ class Attributator:
         tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarTypes
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
 
-
-        for xName in TCM.getNames():
-            TCM.deleteName(xName)
+        TCM.dispose()
 
         for xName in self.tpRailroadData['carAAR']:
             TCM.addName(xName)
@@ -325,6 +322,9 @@ class Attributator:
 
         tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarLoads
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+
+        TCM.dispose()
+
         carLoads = self.tpRailroadData['carLoads']
         for aar in self.tpRailroadData['carAAR']:
             TCM.addType(aar)
@@ -356,6 +356,9 @@ class Attributator:
 
         tc = PSE.JMRI.jmrit.operations.rollingstock.engines.EngineModels
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+
+        TCM.dispose()
+
         for xName in self.tpRailroadData['locoModels']:
             xModel = xName[0]
             xType = xName[1]
@@ -372,6 +375,9 @@ class Attributator:
 
         tc = PSE.JMRI.jmrit.operations.rollingstock.engines.EngineTypes
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+
+        TCM.dispose()
+        
         for xName in self.tpRailroadData['locoTypes']:
             TCM.addName(xName)
 
