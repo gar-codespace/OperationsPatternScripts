@@ -163,7 +163,7 @@ def setTrackTypeInterchange(trackData):
 
     location = PSE.LM.getLocationByName(trackData['location'])
     track = location.getTrackByName(trackData['track'], None)
-    track.setLength(trackData['defaultLength'])
+    track.setLength(trackData['spurLength'])
     for type in track.getTypeNames():
         track.addTypeName(type)
 
@@ -180,7 +180,7 @@ def setTrackTypeStaging(trackData):
 
     location = PSE.LM.getLocationByName(trackData['location'])
     track = location.getTrackByName(trackData['track'], None)
-    track.setLength(trackData['defaultLength'])
+    track.setLength(trackData['spurLength'])
 
     track.setAddCustomLoadsAnySpurEnabled(o2oConfig['SM']['SCL'])
     track.setRemoveCustomLoadsEnabled(o2oConfig['SM']['RCL'])
@@ -197,7 +197,7 @@ def setTrackTypeClassYard(trackData):
 
     location = PSE.LM.getLocationByName(trackData['location'])
     track = location.getTrackByName(trackData['track'], None)
-    track.setLength(trackData['defaultLength'])
+    track.setLength(trackData['spurLength'])
 
     return
 

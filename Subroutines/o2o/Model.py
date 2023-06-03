@@ -700,7 +700,8 @@ class Locationator:
         for id in self.continuingIds:
 
             trackType = self.configFile['o2o']['TR'][self.updatedRrData['locales'][id]['type']]
-            spurLength = (self.configFile['o2o']['DL'] + 4) * int(self.updatedRrData['locales'][id]['capacity'])
+            # Multiply TP vacantSpots by configFile[default length]
+            self.updatedRrData['locales'][id]['spurLength'] = (self.configFile['o2o']['DL'] + 4) * int(self.updatedRrData['locales'][id]['capacity'])
             currentLocation = PSE.LM.getLocationByName(self.currentRrData['locales'][id]['location'])
             updatedLocation = PSE.LM.newLocation(self.updatedRrData['locales'][id]['location'])
 
@@ -709,12 +710,13 @@ class Locationator:
                 track.setName(self.updatedRrData['locales'][id]['track'])
                 track.setTrackType(trackType)
             except:
-                track = currentLocation.getTrackByName(self.currentRrData['locales'][id]['track'], None)
-                track.copyTrack(self.updatedRrData['locales'][id]['track'], updatedLocation)
-                currentLocation.deleteTrack(track)
-                
-            self.updatedRrData['locales'][id]['spurLength'] = spurLength
-            self.updatedRrData['locales'][id]['defaultLength'] = PSE.JMRI.jmrit.operations.setup.Setup.getMaxTrainLength()
+                try:
+                    track = currentLocation.getTrackByName(self.currentRrData['locales'][id]['track'], None)
+                    track.copyTrack(self.updatedRrData['locales'][id]['track'], updatedLocation)
+                    currentLocation.deleteTrack(track)
+                except:
+                    print(id)
+
             ModelEntities.setTrackAttribs(self.updatedRrData['locales'][id])
             
         return
@@ -734,14 +736,12 @@ class Locationator:
         for id in self.newIds:
 
             trackData = self.updatedRrData['locales'][id]
-            spurLength = (self.configFile['o2o']['DL'] + 4) * int(trackData['capacity'])
+            # Multiply TP vacantSpots by configFile[default length]
+            trackData['spurLength'] = (self.configFile['o2o']['DL'] + 4) * int(trackData['capacity'])
             trackType = self.configFile['o2o']['TR'][trackData['type']]
 
             location = PSE.LM.newLocation(trackData['location'])
             location.addTrack(trackData['track'], trackType)
-
-            trackData['spurLength'] = spurLength
-            trackData['defaultLength'] = PSE.JMRI.jmrit.operations.setup.Setup.getMaxTrainLength()
 
             ModelEntities.setTrackAttribs(trackData)
 
