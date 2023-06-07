@@ -149,13 +149,13 @@ class subroutineGui:
     def makeButtonsRow(self):
         """Make the row of action buttons: 'Track Pattern', 'Set Rolling Stock.' """
 
-        buttonPanel = PSE.JAVX_SWING.JPanel()
-        buttonPanel.setAlignmentX(PSE.JAVX_SWING.JPanel.CENTER_ALIGNMENT)
-        buttonPanel.add(self.ypButton)
-        buttonPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(30,0)))
-        buttonPanel.add(self.scButton)
+        trackButtonsPanel = PSE.JAVX_SWING.JPanel()
+        trackButtonsPanel.setAlignmentX(PSE.JAVX_SWING.JPanel.CENTER_ALIGNMENT)
+        trackButtonsPanel.add(self.ypButton)
+        trackButtonsPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(30,0)))
+        trackButtonsPanel.add(self.scButton)
 
-        return buttonPanel
+        return trackButtonsPanel
 
     def guiWidgetGetter(self):
 
@@ -184,32 +184,32 @@ def makeSetCarsForTrackForm(setCarsFormData):
     setCarsForm = PSE.JAVX_SWING.JPanel()
     setCarsForm.setLayout(PSE.JAVX_SWING.BoxLayout(setCarsForm, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
 
-    setCarsFormHeader = makeSetCarsFormHeader(setCarsFormData)
-    setCarsForm.add(setCarsFormHeader)
+    headerPanel = makeSetCarsFormHeader(setCarsFormData)
+    setCarsForm.add(headerPanel)
     # setCarsForm.add(PSE.JAVX_SWING.JSeparator())
 
-    setCarsRowOfTracks, buttonList = makeSetCarsTrackButtons()
+    trackButtonsPanel, buttonList = makeSetCarsTrackButtons()
     allSetCarsWidgets['trackButtons'] = buttonList
-    setCarsForm.add(setCarsRowOfTracks)
+    trackButtonsPane = PSE.JAVX_SWING.JScrollPane(trackButtonsPanel)
+    setCarsForm.add(trackButtonsPane)
     # setCarsForm.add(PSE.JAVX_SWING.JSeparator())
 
-    setCarsListOfInventory, textBoxList = makeSetCarsListOfInventory(setCarsFormData)
+    inventoryPanel, textBoxList = makeSetCarsListOfInventory(setCarsFormData)
     allSetCarsWidgets['textBoxEntry'] = textBoxList
-    setCarsForm.add(setCarsListOfInventory)
-    setCarsFormPane = PSE.JAVX_SWING.JScrollPane(setCarsListOfInventory)
-    setCarsForm.add(setCarsFormPane)
+    inventoryPane = PSE.JAVX_SWING.JScrollPane(inventoryPanel)
+    setCarsForm.add(inventoryPane)
     # setCarsForm.add(PSE.JAVX_SWING.JSeparator())
 
-    setCarsSchedule, scheduleButton = makeSetCarsScheduleRow(setCarsFormData)
+    schedulePanel, scheduleButton = makeSetCarsScheduleRow(setCarsFormData)
     allSetCarsWidgets['scheduleButton'] = None
-    if setCarsSchedule:
-        setCarsForm.add(setCarsSchedule)
+    if schedulePanel:
+        setCarsForm.add(schedulePanel)
         allSetCarsWidgets['scheduleButton'] = scheduleButton
         # setCarsForm.add(PSE.JAVX_SWING.JSeparator())
 
-    setCarsFooter, footerButtons = MakeSetCarsFooter()
+    footerPanel, footerButtons = MakeSetCarsFooter()
     allSetCarsWidgets['footerButtons'] = footerButtons
-    setCarsForm.add(setCarsFooter)
+    setCarsForm.add(footerPanel)
 
     return setCarsForm, allSetCarsWidgets
 
@@ -260,8 +260,8 @@ def makeSetCarsTrackButtons():
     location =  PSE.readConfigFile('Patterns')['PL']
     allTracksAtLoc =  PSE.LM.getLocationByName(location).getTracksByNameList(None)
 
-    buttonPanel = PSE.JAVX_SWING.JPanel()
-    buttonPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder( \
+    trackButtonsPanel = PSE.JAVX_SWING.JPanel()
+    trackButtonsPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder( \
             PSE.BUNDLE['Tracks at'] \
             +  ' ' + location \
             )
@@ -269,9 +269,9 @@ def makeSetCarsTrackButtons():
     for track in allTracksAtLoc:
         selectTrackButton = PSE.JAVX_SWING.JButton(track.getName())
         buttonList.append(selectTrackButton)
-        buttonPanel.add(selectTrackButton)
+        trackButtonsPanel.add(selectTrackButton)
 
-    return buttonPanel, buttonList
+    return trackButtonsPanel, buttonList
 
 def makeSetCarsListOfInventory(setCarsFormData):
     """
