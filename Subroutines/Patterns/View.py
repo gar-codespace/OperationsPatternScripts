@@ -7,7 +7,7 @@ Patterns
 
 from opsEntities import PSE
 from Subroutines.Patterns import Model
-from Subroutines.Patterns import ControllerSetCarsForm
+from Subroutines.Patterns import SetCarsForm_Controller
 from Subroutines.Patterns import GUI
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
@@ -122,7 +122,7 @@ def setCarsToTrack(trackCheckBoxes):
     # Apply common formatting to report
         setCarsForm = modifyTrackPatternReport(setCarsForm)
 
-        newFrame = ControllerSetCarsForm.CreateSetCarsForm(setCarsForm)
+        newFrame = SetCarsForm_Controller.CreateSetCarsForm(setCarsForm)
         newWindow = newFrame.makeFrame()
         newWindow.setTitle(PSE.BUNDLE['Set Rolling Stock for track:'] + ' ' + trackCheckBox.text)
         newWindow.setName('setCarsWindow')

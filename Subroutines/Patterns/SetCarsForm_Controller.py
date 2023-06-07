@@ -7,8 +7,8 @@ Makes a 'Set Cars Form for Track X' form for each selected track.
 
 from opsEntities import PSE
 from Subroutines.Patterns import Model
-from Subroutines.Patterns import ModelSetCarsForm
-from Subroutines.Patterns import ViewSetCarsForm
+from Subroutines.Patterns import SetCarsForm_Model
+from Subroutines.Patterns import SetCarsForm_View
 from Subroutines.Patterns import Listeners
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
@@ -34,7 +34,7 @@ class CreateSetCarsForm:
 
     def makeFrame(self):
 
-        setCarsFrame = ViewSetCarsForm.ManageSetCarsGui(self.setCarsForm)
+        setCarsFrame = SetCarsForm_View.ManageSetCarsGui(self.setCarsForm)
         setCarsFrame.makeSetCarsFrame()
 
         setCarsForTrackWindow = setCarsFrame.getSetCarsForTrackWindow()
@@ -64,7 +64,7 @@ class CreateSetCarsForm:
 
     def quickCheck(self):
 
-        if ModelSetCarsForm.formIsValid(self.setCarsForm, self.buttonDict['textBoxEntry']):
+        if SetCarsForm_Model.formIsValid(self.setCarsForm, self.buttonDict['textBoxEntry']):
             _psLog.info('PASS - form validated')
             return True
         else:
@@ -99,11 +99,11 @@ class CreateSetCarsForm:
         if not self.quickCheck():
             return
 
-        mergedForm = ModelSetCarsForm.makeMergedForm(self.setCarsForm, self.buttonDict['textBoxEntry'])
+        mergedForm = SetCarsForm_Model.makeMergedForm(self.setCarsForm, self.buttonDict['textBoxEntry'])
         self.jsonSaver(mergedForm)
 
     # Save the merged form as a text switch list
-        switchList = ModelSetCarsForm.makeTextSwitchList(mergedForm)
+        switchList = SetCarsForm_Model.makeTextSwitchList(mergedForm)
         fileName = PSE.BUNDLE['ops-switch-list'] + '.txt'
         targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'switchLists', fileName)
         PSE.genericWriteReport(targetPath, switchList)
@@ -130,7 +130,7 @@ class CreateSetCarsForm:
 
 
         if PSE.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
-            ModelSetCarsForm.switchListAsCsv(self.buttonDict['textBoxEntry'])
+            SetCarsForm_Model.switchListAsCsv(self.buttonDict['textBoxEntry'])
 
         MOUSE_CLICKED.getSource().setBackground(PSE.JAVA_AWT.Color.GREEN)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
@@ -148,13 +148,13 @@ class CreateSetCarsForm:
         if not self.quickCheck():
             return
 
-        mergedForm = ModelSetCarsForm.makeMergedForm(self.setCarsForm, self.buttonDict['textBoxEntry'])
+        mergedForm = SetCarsForm_Model.makeMergedForm(self.setCarsForm, self.buttonDict['textBoxEntry'])
         self.jsonSaver(mergedForm)
 
     # Open the pop up window
         PSE.closeOpsWindows('popupFrame')
 
-        popup = ViewSetCarsForm.ManagePopUp()
+        popup = SetCarsForm_View.ManagePopUp()
         popupFrame = popup.getPopupFrame()
         popupWidgets = popup.getPopupWidgets()
 
@@ -211,7 +211,7 @@ class CreateSetCarsForm:
 
     def setCarsButton(self, MOUSE_CLICKED):
 
-        ModelSetCarsForm.setRsToTrack()
+        SetCarsForm_Model.setRsToTrack()
 
         popupWindow = MOUSE_CLICKED.getSource().getTopLevelAncestor()
         popupWindow.setVisible(False)
