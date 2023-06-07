@@ -50,7 +50,7 @@ def buildThePlugin(view):
         """
 
     view.makeSubroutinePanel()
-    view.makeScrollPanel()
+    # view.makeScrollPanel()
     view.makePatternScriptsWindow()
 
     for menuItem in view.getPsPluginMenuItems():
@@ -90,7 +90,7 @@ class View:
 
         self.psWindow = PSE.JMRI.util.JmriJFrame()
 
-        """Dealers choice, jPanel or Box."""
+        # """Dealers choice, jPanel or Box."""
         # self.subroutinePanel = PSE.JAVX_SWING.JPanel()
         # self.subroutinePanel.setLayout(PSE.JAVX_SWING.BoxLayout( self.subroutinePanel, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
         self.subroutinePanel = PSE.JAVX_SWING.Box(PSE.JAVX_SWING.BoxLayout.PAGE_AXIS)
@@ -109,13 +109,13 @@ class View:
 
         return
 
-    def makeScrollPanel(self):
+    # def makeScrollPanel(self):
 
-        self.scrollPanel = PSE.JAVX_SWING.JScrollPane(self.subroutinePanel)
-        self.scrollPanel.border = PSE.JAVX_SWING.BorderFactory.createLineBorder(PSE.JAVA_AWT.Color.GRAY)
-        self.scrollPanel.setName('scrollPanel')
+    #     self.scrollPanel = PSE.JAVX_SWING.JScrollPane(self.subroutinePanel)
+    #     self.scrollPanel.border = PSE.JAVX_SWING.BorderFactory.createLineBorder(PSE.JAVA_AWT.Color.GRAY)
+    #     self.scrollPanel.setName('scrollPanel')
 
-        return
+    #     return
 
     def makePatternScriptsWindow(self):
 
@@ -182,7 +182,8 @@ class View:
         self.psWindow.setTitle(PSE.BUNDLE[u'Pattern Scripts'])
         self.psWindow.addWindowListener(Listeners.PatternScriptsWindow())
         self.psWindow.setJMenuBar(psMenuBar)
-        self.psWindow.add(self.scrollPanel)
+        # self.psWindow.add(self.scrollPanel)
+        self.psWindow.add(self.subroutinePanel)
         # self.psWindow.pack()
         self.psWindow.setSize(configPanel['PW'], configPanel['PH'])
         self.psWindow.setLocation(configPanel['PX'], configPanel['PY'])

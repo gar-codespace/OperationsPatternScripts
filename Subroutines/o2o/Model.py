@@ -1140,7 +1140,7 @@ class RStockulator:
             return jItem.getShipLoadName(), jItem.getDestination()
             
         except:
-             return 'E', None
+             return 'Empty', None
 
     def deregisterOldRs(self):
 

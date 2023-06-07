@@ -245,8 +245,10 @@ def addActiveSubroutines(targetPanel):
         startUp.startUpTasks()
         if configFile[subroutine]['SV']:
             subroutineFrame = startUp.getSubroutineFrame()
-            targetPanel.add(JAVX_SWING.Box.createRigidArea(JAVA_AWT.Dimension(0,10)))
             targetPanel.add(subroutineFrame)
+
+
+    targetPanel.add(JAVX_SWING.Box.createVerticalGlue())
 
     return targetPanel
 
