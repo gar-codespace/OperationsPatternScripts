@@ -182,68 +182,30 @@ def makeSetCarsForTrackForm(setCarsFormData):
     allSetCarsWidgets = {}
 
     setCarsForm = PSE.JAVX_SWING.JPanel()
-    setCarsForm.setLayout(PSE.JAVX_SWING.BoxLayout(
-        setCarsForm, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS)
-        )
+    setCarsForm.setLayout(PSE.JAVX_SWING.BoxLayout(setCarsForm, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
 
     setCarsFormHeader = makeSetCarsFormHeader(setCarsFormData)
     setCarsForm.add(setCarsFormHeader)
-    setCarsForm.add(PSE.JAVX_SWING.JSeparator())
+    # setCarsForm.add(PSE.JAVX_SWING.JSeparator())
 
     setCarsRowOfTracks, buttonList = makeSetCarsTrackButtons()
     allSetCarsWidgets['trackButtons'] = buttonList
     setCarsForm.add(setCarsRowOfTracks)
-    setCarsForm.add(PSE.JAVX_SWING.JSeparator())
+    # setCarsForm.add(PSE.JAVX_SWING.JSeparator())
 
-    setCarsFormBody = PSE.JAVX_SWING.JPanel()
-    setCarsFormBody.setLayout(PSE.JAVX_SWING.BoxLayout(
-        setCarsFormBody, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS)
-        )
-
-    setCarsEqptRows = MakeSetCarsEqptRows(setCarsFormData)
-
-    if setCarsFormData['locations'][0]['tracks'][0]['locos']:
-        locoFormBody = PSE.JAVX_SWING.JPanel()
-        locoFormBody.setLayout(PSE.JAVX_SWING.BoxLayout(
-            locoFormBody, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS)
-            )
-        locoFormBody.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder( \
-                PSE.BUNDLE['Locomotives at'] \
-                +  ' ' + setCarsFormData['locations'][0]['tracks'][0]['trackName'] \
-                )
-
-        setCarsLocoRows = setCarsEqptRows.makeSetCarsLocoRows()
-        for loco in setCarsLocoRows:
-            locoFormBody.add(loco)
-        setCarsFormBody.add(locoFormBody)
-
-    if setCarsFormData['locations'][0]['tracks'][0]['cars']:
-        carFormBody = PSE.JAVX_SWING.JPanel()
-        carFormBody.setLayout(PSE.JAVX_SWING.BoxLayout(
-            carFormBody, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS)
-            )
-        carFormBody.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder( \
-                PSE.BUNDLE['Cars at'] \
-                +  ' ' + setCarsFormData['locations'][0]['tracks'][0]['trackName'] \
-                )
-
-        setCarsCarRows = setCarsEqptRows.makeSetCarsCarRows()
-        for car in setCarsCarRows:
-            carFormBody.add(car)
-        setCarsFormBody.add(carFormBody)
-
-    allSetCarsWidgets['textBoxEntry'] = setCarsEqptRows.textBoxEntryList()
-
-    setCarsFormPane = PSE.JAVX_SWING.JScrollPane(setCarsFormBody)
+    setCarsListOfInventory, textBoxList = makeSetCarsListOfInventory(setCarsFormData)
+    allSetCarsWidgets['textBoxEntry'] = textBoxList
+    setCarsForm.add(setCarsListOfInventory)
+    setCarsFormPane = PSE.JAVX_SWING.JScrollPane(setCarsListOfInventory)
     setCarsForm.add(setCarsFormPane)
-    setCarsForm.add(PSE.JAVX_SWING.JSeparator())
+    # setCarsForm.add(PSE.JAVX_SWING.JSeparator())
 
     setCarsSchedule, scheduleButton = makeSetCarsScheduleRow(setCarsFormData)
     allSetCarsWidgets['scheduleButton'] = None
     if setCarsSchedule:
         setCarsForm.add(setCarsSchedule)
         allSetCarsWidgets['scheduleButton'] = scheduleButton
-        setCarsForm.add(PSE.JAVX_SWING.JSeparator())
+        # setCarsForm.add(PSE.JAVX_SWING.JSeparator())
 
     setCarsFooter, footerButtons = MakeSetCarsFooter()
     allSetCarsWidgets['footerButtons'] = footerButtons
@@ -310,6 +272,43 @@ def makeSetCarsTrackButtons():
         buttonPanel.add(selectTrackButton)
 
     return buttonPanel, buttonList
+
+def makeSetCarsListOfInventory(setCarsFormData):
+    """
+    Creates the 'Set Cars Form for Track X' forms list of rolling stock
+    Called by:
+    makeSetCarsForTrackForm
+    """
+
+    inventoryFormBody = PSE.JAVX_SWING.JPanel()
+    inventoryFormBody.setLayout(PSE.JAVX_SWING.BoxLayout(inventoryFormBody, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
+
+    setCarsEqptRows = MakeSetCarsEqptRows(setCarsFormData)
+
+    if setCarsFormData['locations'][0]['tracks'][0]['locos']:
+        locoFormBody = PSE.JAVX_SWING.JPanel()
+        locoFormBody.setLayout(PSE.JAVX_SWING.BoxLayout(locoFormBody, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
+        locoFormBody.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE['Locomotives at'] +  ' ' + setCarsFormData['locations'][0]['tracks'][0]['trackName'])
+
+        setCarsLocoRows = setCarsEqptRows.makeSetCarsLocoRows()
+        for loco in setCarsLocoRows:
+            locoFormBody.add(loco)
+        inventoryFormBody.add(locoFormBody)
+
+    if setCarsFormData['locations'][0]['tracks'][0]['cars']:
+        carFormBody = PSE.JAVX_SWING.JPanel()
+        carFormBody.setLayout(PSE.JAVX_SWING.BoxLayout(carFormBody, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
+        carFormBody.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder( \
+                PSE.BUNDLE['Cars at'] +  ' ' + setCarsFormData['locations'][0]['tracks'][0]['trackName'])
+
+        setCarsCarRows = setCarsEqptRows.makeSetCarsCarRows()
+        for car in setCarsCarRows:
+            carFormBody.add(car)
+        inventoryFormBody.add(carFormBody)
+
+    textBoxList = setCarsEqptRows.getTextBoxEntryList()
+    
+    return inventoryFormBody, textBoxList
 
 def makeSetCarsScheduleRow(setCarsFormData):
     """
@@ -496,7 +495,7 @@ class MakeSetCarsEqptRows():
 
         return listOfCarRows
 
-    def textBoxEntryList(self):
+    def getTextBoxEntryList(self):
 
         return self.textBoxEntry
 
