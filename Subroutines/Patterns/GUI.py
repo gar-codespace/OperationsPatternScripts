@@ -186,18 +186,16 @@ def makeSetCarsForTrackForm(setCarsFormData):
 
     headerPanel = makeSetCarsFormHeader(setCarsFormData)
     setCarsForm.add(headerPanel)
-    # setCarsForm.add(PSE.JAVX_SWING.JSeparator())
-
+    
     trackButtonsPanel, buttonList = makeSetCarsTrackButtons()
     allSetCarsWidgets['trackButtons'] = buttonList
-    trackButtonsPane = PSE.JAVX_SWING.JScrollPane(trackButtonsPanel)
-    setCarsForm.add(trackButtonsPane)
-    # setCarsForm.add(PSE.JAVX_SWING.JSeparator())
+
+    setCarsForm.add(trackButtonsPanel)
 
     inventoryPanel, textBoxList = makeSetCarsListOfInventory(setCarsFormData)
     allSetCarsWidgets['textBoxEntry'] = textBoxList
-    inventoryPane = PSE.JAVX_SWING.JScrollPane(inventoryPanel)
-    setCarsForm.add(inventoryPane)
+    
+    setCarsForm.add(inventoryPanel)
     # setCarsForm.add(PSE.JAVX_SWING.JSeparator())
 
     schedulePanel, scheduleButton = makeSetCarsScheduleRow(setCarsFormData)
@@ -205,7 +203,6 @@ def makeSetCarsForTrackForm(setCarsFormData):
     if schedulePanel:
         setCarsForm.add(schedulePanel)
         allSetCarsWidgets['scheduleButton'] = scheduleButton
-        # setCarsForm.add(PSE.JAVX_SWING.JSeparator())
 
     footerPanel, footerButtons = MakeSetCarsFooter()
     allSetCarsWidgets['footerButtons'] = footerButtons
@@ -245,6 +242,7 @@ def makeSetCarsFormHeader(setCarsFormData):
         headerDetailLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
         headerDetailLabel.setText(item)
         combinedHeader.add(headerDetailLabel)
+
     combinedHeader.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,10)))
     combinedHeader.add(headerTrackLabel)
     combinedHeader.add(headerValidLabel)
@@ -253,25 +251,34 @@ def makeSetCarsFormHeader(setCarsFormData):
 
 def makeSetCarsTrackButtons():
     """
+    Makes a scrollable row of buttons, one for each track
     Called by:
     makeSetCarsForTrackForm
     """
 
+    buttonList = []
     location =  PSE.readConfigFile('Patterns')['PL']
     allTracksAtLoc =  PSE.LM.getLocationByName(location).getTracksByNameList(None)
+    paneHeight = PSE.PM.getFontSize() * 4 + 20
 
     trackButtonsPanel = PSE.JAVX_SWING.JPanel()
-    trackButtonsPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder( \
-            PSE.BUNDLE['Tracks at'] \
-            +  ' ' + location \
-            )
-    buttonList = []
     for track in allTracksAtLoc:
         selectTrackButton = PSE.JAVX_SWING.JButton(track.getName())
         buttonList.append(selectTrackButton)
         trackButtonsPanel.add(selectTrackButton)
 
-    return trackButtonsPanel, buttonList
+    VSN = PSE.JAVX_SWING.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
+    HSA = PSE.JAVX_SWING.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS
+    trackButtonsPane = PSE.JAVX_SWING.JScrollPane(trackButtonsPanel, VSN, HSA)
+
+    trackButtonsWrapper = PSE.JAVX_SWING.JPanel()
+    trackButtonsWrapper.setLayout(PSE.JAVX_SWING.BoxLayout(trackButtonsWrapper, PSE.JAVX_SWING.BoxLayout.Y_AXIS))
+    trackButtonsWrapper.setMinimumSize(PSE.JAVA_AWT.Dimension(paneHeight, paneHeight))
+    trackButtonsWrapper.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE['Tracks at'] +  ' ' + location)
+
+    trackButtonsWrapper.add(trackButtonsPane)
+
+    return trackButtonsWrapper, buttonList
 
 def makeSetCarsListOfInventory(setCarsFormData):
     """
@@ -306,9 +313,15 @@ def makeSetCarsListOfInventory(setCarsFormData):
             carFormBody.add(car)
         inventoryFormBody.add(carFormBody)
 
+    inventoryPane = PSE.JAVX_SWING.JScrollPane(inventoryFormBody)
+
+    inventoryWrapper = PSE.JAVX_SWING.JPanel()
+    inventoryWrapper.setLayout(PSE.JAVX_SWING.BoxLayout(inventoryWrapper, PSE.JAVX_SWING.BoxLayout.Y_AXIS))
+    inventoryWrapper.add(inventoryPane)
+
     textBoxList = setCarsEqptRows.getTextBoxEntryList()
     
-    return inventoryFormBody, textBoxList
+    return inventoryWrapper, textBoxList
 
 def makeSetCarsScheduleRow(setCarsFormData):
     """

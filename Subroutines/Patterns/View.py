@@ -126,9 +126,21 @@ def setCarsToTrack(trackCheckBoxes):
         newWindow = newFrame.makeFrame()
         newWindow.setTitle(PSE.BUNDLE['Set Rolling Stock for track:'] + ' ' + trackCheckBox.text)
         newWindow.setName('setCarsWindow')
-        newWindow.setLocation(windowOffset, 180)
         newWindow.pack()
+
+        newWidth = newWindow.getWidth()
+        if newWidth > 800:
+            newWidth = 800
+
+        newHeight = newWindow.getHeight()
+        if newHeight > 800:
+            newHeight = 800
+
+        newDimension = PSE.JAVA_AWT.Dimension(newWidth, newHeight)
+        newWindow.setSize(newDimension)
+        newWindow.setLocation(windowOffset, 100)
         newWindow.setVisible(True)
+
         windowOffset += 50
         i += 1
 
