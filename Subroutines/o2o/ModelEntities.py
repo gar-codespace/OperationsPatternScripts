@@ -37,6 +37,30 @@ def getTpRailroadJson(reportName):
 
     return tpReport
 
+def getCurrentRrData():
+    """
+    Directly retrieve the current RR's data from the JMRI XML.
+    """
+
+    currentRrData = {}
+
+    locales = {}
+    locations = []
+    for location in PSE.LM.getLocationsByNameList():
+        locations.append(location.getName())
+        locale = {}
+        for track in location.getTracksList():
+            locale['location'] = location.getName()
+            locale['track'] = track.getName()
+            locale['type'] = track.getTrackType()
+            locale['capacity'] = track.getLength()
+            locales[track.getId()] = locale
+
+    currentRrData['locations'] = locations
+    currentRrData['locales'] = locales
+
+    return currentRrData
+
 
 """o2o.ModelWorkEvents and o2o.BuiltTrainExport"""
 

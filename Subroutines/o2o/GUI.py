@@ -20,12 +20,12 @@ class subroutineGui:
         self.nrButton.setName('newJmriRailroad')
 
         self.ulButton = PSE.JAVX_SWING.JButton()
-        self.ulButton.setText(PSE.BUNDLE['Update JMRI Railroad'])
-        self.ulButton.setName('updateJmriRailroad')
+        self.ulButton.setText(PSE.BUNDLE['Update Locations'])
+        self.ulButton.setName('updateJmriLocations')
 
         self.uiButton = PSE.JAVX_SWING.JButton()
-        self.uiButton.setText(PSE.BUNDLE['Update Industries'])
-        self.uiButton.setName('updateJmriIndustries')
+        self.uiButton.setText(PSE.BUNDLE['Update Tracks'])
+        self.uiButton.setName('updateJmriTracks')
 
         self.ursButton = PSE.JAVX_SWING.JButton()
         self.ursButton.setText('Update Rolling Stock')

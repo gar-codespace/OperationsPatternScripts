@@ -77,7 +77,7 @@ class StartUp:
     def activateWidgets(self, widgets):
         """
         The *.getName value is the name of the action for the widget.
-        IE: newJmriRailroad, updateJmriRailroad
+        IE: newJmriRailroad, updateJmriLocations
         """
 
         for widget in widgets:
@@ -103,10 +103,9 @@ class StartUp:
 
         return
 
-    def updateJmriRailroad(self, EVENT):
+    def updateJmriLocations(self, EVENT):
         """
         Applies changes made to the TrainPlayer/OC/Locations tab.
-        Ripples changes through the industries data.
         """
 
         _psLog.debug(EVENT)
@@ -114,7 +113,7 @@ class StartUp:
         if not Model.getTrainPlayerRailroad():
             return
 
-        Model.updateJmriRailroad()
+        Model.updateJmriLocations()
 
         PSE.remoteCalls('resetCalls')
 
@@ -124,10 +123,9 @@ class StartUp:
 
         return
 
-    def updateJmriIndustries(self, EVENT):
+    def updateJmriTracks(self, EVENT):
         """
         Applies changes made to the TrainPlayer/OC/Industries tab.
-        Rolling is updated.
         """
 
         _psLog.debug(EVENT)
@@ -135,7 +133,7 @@ class StartUp:
         if not Model.getTrainPlayerRailroad():
             return
 
-        Model.updateJmriIndustries()
+        Model.updateJmriTracks()
 
         PSE.remoteCalls('resetCalls')
 

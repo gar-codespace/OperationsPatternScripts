@@ -57,17 +57,17 @@ def newJmriRailroad():
     Attributator().disposal()
     Attributator().attributist()
     ScheduleAuteur().auteurist()
-    Locationator().creator()
+    Locationator().locationist()
     Divisionator().divisionist()
     ModelEntities.addCarTypesToSpurs()
-    RStockulator().creator()
+    # RStockulator().creator()
     
     print('New JMRI railroad built from TrainPlayer data')
     _psLog.info('New JMRI railroad built from TrainPlayer data')
 
     return
 
-def updateJmriRailroad():
+def updateJmriLocations():
     """
     Mini controller.
     Applies changes made to the TrainPlayer/OC/Locations tab.
@@ -76,7 +76,7 @@ def updateJmriRailroad():
     Locations uses LM to update everything.
     Rolling stock is not updated.
     Called by:
-    Controller.StartUp.updateJmriRailroad
+    Controller.StartUp.updateJmriLocations
     """
     
     Initiator().incrementor()
@@ -84,27 +84,24 @@ def updateJmriRailroad():
     ScheduleAuteur().auteurist()
     Locationator().locationist()
     Divisionator().divisionist()
-    ModelEntities.addCarTypesToSpurs()
-    RStockulator().updator()
 
     print('JMRI locations updated from TrainPlayer data')
     _psLog.info('JMRI locations updated from TrainPlayer data')
 
     return
 
-def updateJmriIndustries():
+def updateJmriTracks():
     """
     Mini controller.
-    Applies changes made to the TrainPlayer/OC/Industries tab only.
-    Rolling stock is not updated.
-    Locations are otherwise not changed.
+    Uses LM to update tracks and track attributes.
+    Does not update rolling stock.
     Called by:
-    Controller.Startup.updateJmriIndustries
+    Controller.Startup.updateJmriTracks
     """
     
     Attributator().attributist()
     ScheduleAuteur().auteurist()
-    Locationator().industriest()
+    Trackulator().trackist()
     ModelEntities.addCarTypesToSpurs()
 
     print('JMRI industries updated from TrainPlayer data')
@@ -122,7 +119,6 @@ def updateJmriRollingingStock():
 
     Attributator().attributist()
     RStockulator().updator()
-    ModelEntities.addCarTypesToSpurs()
 
     print('JMRI rolling stock updated from TrainPlayer data')
     _psLog.info('JMRI rolling stock updated from TrainPlayer data')
@@ -604,73 +600,44 @@ class ScheduleAuteur:
     
 
 class Locationator:
-    """Locations and tracks are updated using Location Manager."""
+    """Locations are updated using Location Manager."""
 
     def __init__(self):
 
         self.scriptName = SCRIPT_NAME + '.Locationator'
 
         self.configFile = PSE.readConfigFile()
-        self.currentIds = []
-        self.updatedIds = []
 
         self.currentRrData = {}
         self.updatedRrData = {}
-        self.continuingIds = []
-        self.newIds = []
-        self.oldIds = []
-        self.emptyLocations = []
+
+        self.continuingLocations = []
+        self.newLocations = []
+        self.oldLocations = []
 
         print(self.scriptName + ' ' + str(SCRIPT_REV))
-
-        return
-    
-    def creator(self):
-        """
-        Mini controller.
-        Makes new JMRI locations.
-        """
-
-        self.getUpdatedRrData()
-        self.newmakeNewIds()
-        self.makeNewLocations()
-        self.makeJmriData()
 
         return
     
     def locationist(self):
         """
         Mini controller.
-        Updates JMRI locations and industries.
+        Updates new or continuing locations and delets obsolete locations.
         """
 
         self.getCurrentRrData()
         self.getUpdatedRrData()
-        self.parseLocationIds()
-        self.updateContinuingLocations()
-        self.removeOldTracks()
-        self.getEmptyLocations()
-        self.removeEmptyLocations()
-        self.makeNewLocations()
-        self.makeJmriData()
+        self.parseLocations()
+        self.addNewLocations()
+        self.deleteOldLocations()
 
-        return
-    
-    def industriest(self):
-        """
-        Mini controller.
-        Updates existing industry schedules.
-        """
-
-        self.getUpdatedRrData()
-        self.updateSchedules()
-        self.makeJmriData()
+        PSE.LMX.save()
 
         return
     
     def getCurrentRrData(self):
 
-        self.currentRrData = ModelEntities.getTpRailroadJson('jmriRailroadData')
+        self.currentRrData = ModelEntities.getCurrentRrData()
 
         return
 
@@ -680,106 +647,34 @@ class Locationator:
 
         return
     
-    def newmakeNewIds(self):
+    def parseLocations(self):
+        """
+        Create three lists:
+        self.continuingLocations = []
+        self.newLocations = []
+        self.oldLocations = []
+        """
 
-        self.newIds = self.updatedRrData['locationIds']
+        currentLocations = self.currentRrData['locations']
+        updatedLocations = self.updatedRrData['locations']
 
-    def parseLocationIds(self):
-
-        self.currentIds = self.currentRrData['locationIds']
-        self.updatedIds = self.updatedRrData['locationIds']
-
-        self.newIds = list(set(self.updatedIds).difference(set(self.currentIds)))
-        self.oldIds = list(set(self.currentIds).difference(set(self.updatedIds)))
-        self.continuingIds = list(set(self.currentIds) - set(self.oldIds))
-
-        return
-    
-    def updateContinuingLocations(self):
-
-        for id in self.continuingIds:
-
-            trackType = self.configFile['o2o']['TR'][self.updatedRrData['locales'][id]['type']]
-            # Multiply TP vacantSpots by configFile[default length]
-            self.updatedRrData['locales'][id]['spurLength'] = (self.configFile['o2o']['DL'] + 4) * int(self.updatedRrData['locales'][id]['capacity'])
-            currentLocation = PSE.LM.getLocationByName(self.currentRrData['locales'][id]['location'])
-            updatedLocation = PSE.LM.newLocation(self.updatedRrData['locales'][id]['location'])
-
-            try:
-                track = updatedLocation.getTrackByName(self.currentRrData['locales'][id]['track'], None)
-                track.setName(self.updatedRrData['locales'][id]['track'])
-                track.setTrackType(trackType)
-            except:
-                try:
-                    track = currentLocation.getTrackByName(self.currentRrData['locales'][id]['track'], None)
-                    track.copyTrack(self.updatedRrData['locales'][id]['track'], updatedLocation)
-                    currentLocation.deleteTrack(track)
-                except:
-                    print(id)
-
-            ModelEntities.setTrackAttribs(self.updatedRrData['locales'][id])
-            
-        return
-
-    def updateSchedules(self):
-
-        for id, data in self.updatedRrData['industries'].items():
-            location = PSE.LM.getLocationByName(data['a-location'])
-            track = location.getTrackByName(data['b-track'], 'Spur')
-            schedule = PSE.SM.getScheduleByName(data['c-schedule'].keys()[0])
-            track.setSchedule(schedule)
-            
-        return
-    
-    def makeNewLocations(self):
-
-        for id in self.newIds:
-
-            trackData = self.updatedRrData['locales'][id]
-            # Multiply TP vacantSpots by configFile[default length]
-            trackData['spurLength'] = (self.configFile['o2o']['DL'] + 4) * int(trackData['capacity'])
-            trackType = self.configFile['o2o']['TR'][trackData['type']]
-
-            location = PSE.LM.newLocation(trackData['location'])
-            location.addTrack(trackData['track'], trackType)
-
-            ModelEntities.setTrackAttribs(trackData)
-
-        return
-
-    def removeOldTracks(self):
-
-        for id in self.oldIds:
-
-            currentLocation = PSE.LM.getLocationByName(self.currentRrData['locales'][id]['location'])
-            currentLocation.deleteTrack(currentLocation.getTrackByName(self.currentRrData['locales'][id]['track'], None))
-
-        return
-
-    def getEmptyLocations(self):
-
-        for location in PSE.getAllLocationNames():
-            if len(PSE.LM.getLocationByName(location).getTracksList()) == 0:
-                self.emptyLocations.append(location)
+        self.newLocations = list(set(updatedLocations).difference(set(currentLocations)))
+        self.oldLocations = list(set(currentLocations).difference(set(updatedLocations)))
+        self.continuingLocations = list(set(currentLocations).difference(set(self.oldLocations)))
 
         return
     
-    def removeEmptyLocations(self):
+    def addNewLocations(self):
 
-        for emptyLocation in self.emptyLocations:
-            PSE.LM.deregister(PSE.LM.getLocationByName(emptyLocation))
+        for location in self.newLocations:
+            PSE.LM.newLocation(location)
 
         return
     
-    def makeJmriData(self):
+    def deleteOldLocations(self):
 
-        targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'tpRailroadData.json')
-        copyFrom = PSE.JAVA_IO.File(targetFile).toPath()
-
-        targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jmriRailroadData.json')
-        copyTo = PSE.JAVA_IO.File(targetFile).toPath()
-
-        PSE.JAVA_NIO.Files.copy(copyFrom, copyTo, PSE.JAVA_NIO.StandardCopyOption.REPLACE_EXISTING)
+        for location in self.oldLocations:
+            PSE.LM.deregister(PSE.LM.getLocationByName(location))
 
         return
 
@@ -866,6 +761,106 @@ class Divisionator:
         return
 
 
+class Trackulator:
+    """Locations are updated using Location Manager."""
+
+    def __init__(self):
+
+        self.scriptName = SCRIPT_NAME + '.Trackulator'
+
+        self.configFile = PSE.readConfigFile()
+
+        self.currentRrData = {}
+        self.updatedRrData = {}
+
+        self.continuingTracks = []
+        self.newTracks = []
+        self.oldTracks = []
+
+        print(self.scriptName + ' ' + str(SCRIPT_REV))
+
+        return
+
+    def trackist(self):
+        """
+        Mini controller.
+        Updates JMRI tracks and track attributes.
+        """
+
+        self.getCurrentRrData()
+        self.getUpdatedRrData()
+        self.parseTracks()
+        self.deleteOldTracks()
+        self.updateTracks()
+        self.updateSchedules()
+
+        PSE.LMX.save()
+        
+
+        return
+    
+    def getCurrentRrData(self):
+
+        self.currentRrData = ModelEntities.getCurrentRrData()
+
+        return
+
+    def getUpdatedRrData(self):
+
+        self.updatedRrData = ModelEntities.getTpRailroadJson('tpRailroadData')
+
+        return
+
+    def parseTracks(self):
+
+        currentTracks = []
+        for locale, data in self.currentRrData['locales'].items():
+            currentTracks.append(data['location'] + ';' + data['track'])
+
+        updatedTracks = []
+        for locale, data in self.updatedRrData['locales'].items():
+            updatedTracks.append(data['location'] + ';' + data['track'])
+
+        self.oldTracks = list(set(currentTracks).difference(set(updatedTracks)))
+
+        return
+        
+    def deleteOldTracks(self):
+
+        for track in self.oldTracks:
+            splitLine = track.split(';')
+            location = PSE.LM.getLocationByName(splitLine[0])
+            track = location.getTrackByName(splitLine[1], None)
+            location.deleteTrack(track)
+
+        return
+
+    def updateTracks(self):
+        """
+        Whether new or continuing, all tracks are updated the same.
+        """
+
+        for id, data in self.updatedRrData['locales'].items():
+            location = PSE.LM.getLocationByName(data['location'])
+            trackType = self.configFile['o2o']['TR'][data['type']]
+            location.addTrack(data['track'], trackType)
+            track = location.getTrackByName(data['track'], trackType)
+            trackLength = int(data['capacity']) * (self.configFile['o2o']['DL'] + 4)
+            track.setLength(trackLength)            
+
+        return
+
+    def updateSchedules(self):
+
+        for id, data in self.updatedRrData['industries'].items():
+            location = PSE.LM.getLocationByName(data['a-location'])
+            track = location.getTrackByName(data['b-track'], 'Spur')
+            schedule = PSE.SM.getScheduleByName(data['c-schedule'].keys()[0])
+            track.setSchedule(schedule)
+            
+        return
+
+
 class RStockulator:
     """All methods concerning rolling stock."""
 
@@ -874,56 +869,41 @@ class RStockulator:
         self.scriptName = SCRIPT_NAME + '.RStockulator'
 
         self.configFile = PSE.readConfigFile('o2o')
+        self.tpRollingStockFileName = self.configFile['RF']['TRR']
+
         self.jmriCars = PSE.CM.getList()
         self.jmriLocos = PSE.EM.getList()
-
-        self.tpRollingStockFileName = self.configFile['RF']['TRR']
 
         self.tpInventory = []
         self.tpCars = {}
         self.tpLocos = {}
 
-        self.currentRsData = {}
-        self.newRsData = {}
-
-        self.newTpIds = []
-        self.oldTpIds = []
-        self.continuingTpIds = []
-
         print(self.scriptName + ' ' + str(SCRIPT_REV))
 
         return
 
-    def creator(self):
-        """Mini controller to make new rosters of JMRI rolling stock."""
-
-        self.makeNewTpRollingStockData()
-        self.parseTpRollingStock()
-        self.newJmriRs()
-
-        _psLog.info('New rolling stock')
-
-        return
-
     def updator(self):
-        """Mini controller to update JMRI rolling stock."""
+        """
+        Mini controller to update JMRI rolling stock.
+        """
 
-        if not self.checkFile():
-            return
+        # if not self.checkFile():
+        #     return
 
-        self.getcurrentTpRsData()
-        self.makeNewTpRollingStockData()
+        self.getTpInventory()
+        self.splitTpList()
         self.parseTpRollingStock()
-        self.updateJmriRs()
-        self.deregisterOldRs()
-        self.newJmriRs()
+        self.deleteOldRollingStock()
+        self.updateRollingStock()
 
         _psLog.info('Updated rolling stock')
 
         return
 
     def checkFile(self):
-        """Checks the validity of tpRollingStockData.json"""
+        """
+        Checks the validity of tpRollingStockData.json
+        """
 
         fileName = 'tpRollingStockData.json'
         targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
@@ -936,40 +916,6 @@ class RStockulator:
             _psLog.critical('Alert: Create a new JMRI layout first.')
 
             return False
-
-    def getcurrentTpRsData(self):
-
-        fileName = 'tpRollingStockData.json'
-        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
-
-        self.currentRsData = PSE.loadJson(PSE.genericReadReport(targetPath))
-
-        return
-
-    def makeNewTpRollingStockData(self):
-        """Makes a json LUT: TP road + TP Number : TP ID"""
-
-        _psLog.debug('makeNewTpRollingStockData')
-
-        self.getTpInventory()
-        self.splitTpList()
-
-        for item in self.tpInventory:
-            try:
-                line = item.split(';')
-                name, number = ModelEntities.parseCarId(line[0])
-                self.newRsData[line[7]] = name + number
-            except:
-                _psLog.warning('Line not parsed: ' + item)
-                pass
-
-        fileName = 'tpRollingStockData.json'
-        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
-
-        formattedRsFile = PSE.dumpJson(self.newRsData)
-        PSE.genericWriteReport(targetPath, formattedRsFile)
-
-        return
 
     def getTpInventory(self):
 
@@ -1005,150 +951,125 @@ class RStockulator:
                 self.tpCars[line[7]] = {'type': line[1], 'aar': line[2], 'location': line[3], 'track': line[4], 'load': line[5], 'kernel': line[6], 'id': line[0]}
 
         return
-
+    
     def parseTpRollingStock(self):
-        """Makes 3 lists, continnuing, new and old rolling stock."""
-
-        currentRsIds = []
-        for id in self.currentRsData:
-            currentRsIds.append(id)
-
-        newRsIds = []
-        for id in self.newRsData:
-            newRsIds.append(id)
-
-        self.continuingTpIds = list(set(currentRsIds).intersection(set(newRsIds)))
-        self.newTpIds = list(set(newRsIds) - (set(currentRsIds)))
-        self.oldTpIds = list(set(currentRsIds) - (set(newRsIds)))
-
-        return
-
-    def newJmriRs(self):
-
-        for id in self.newTpIds:
-            newJmriId = self.newRsData[id]
-            rsRoad, rsNumber = ModelEntities.parseCarId(newJmriId)
-
-            try:
-                self.tpCars[id]['aar']
-                PSE.CM.newRS(rsRoad, rsNumber)
-            except:
-                pass
-
-            try:
-                self.tpLocos[id]['aar']
-                PSE.EM.newRS(rsRoad, rsNumber)
-            except:
-                pass
-
-        self.currentRsData = self.newRsData
-        self.setGenericRsAttribs(self.newTpIds)
-        self.setSpecificRsAttribs(self.newTpIds)
-
-        return
-
-    def updateJmriRs(self):
-
-        self.setGenericRsAttribs(self.continuingTpIds)
-
-        return
-
-    def setGenericRsAttribs(self, idList):
         """
-        Sets only the road name, number, kernal/consist, location, track and load.
+        Makes a list of obsolete cars and locos.
         """
 
-        _psLog.debug('setGenericRsAttribs')
+        updatedLocoIds = []
+        for id, data in self.tpLocos.items():
+            updatedLocoIds.append(data['id'])
 
-        for id in idList:
-            currentJmriId = self.currentRsData[id]
-            if PSE.EM.getById(currentJmriId):
-                newRsAttribs = self.tpLocos[id]
-                rs = PSE.EM.getById(currentJmriId)
-                rs.setConsist(PSE.ZM.getConsistByName(newRsAttribs['consist']))
+        currentLocoIds = []
+        for item in self.jmriLocos:
+            currentLocoIds.append(item.getRoadName() + ' ' + item.getNumber())
 
-            elif PSE.CM.getById(currentJmriId):
-                newRsAttribs = self.tpCars[id]
-                rs = PSE.CM.getById(currentJmriId)
-                shipLoadName, destination = self.getLoadFromSchedule(newRsAttribs)
-                if shipLoadName:
-                    rs.setLoadName(shipLoadName)
-                if destination:
-                    rs.setFinalDestination(destination)
-                rs.setKernel(PSE.KM.getKernelByName(newRsAttribs['kernel']))
+        updatedCarIds = []
+        for id, data in self.tpCars.items():
+            updatedCarIds.append(data['id'])
 
-            rsRoad, rsNumber = ModelEntities.parseCarId(newRsAttribs['id'])
-            xLocation, xTrack = ModelEntities.getSetToLocationAndTrack(newRsAttribs['location'], newRsAttribs['track'])
+        currentCarIds = []
+        for item in self.jmriCars:
+            currentCarIds.append(item.getRoadName() + ' ' + item.getNumber())
 
-            rs.setRoadName(rsRoad)
-
-            oldNumber = rs.getNumber()
-            rs.setNumber(rsNumber)
-            rs.firePropertyChange("rolling stock number", oldNumber, rsNumber)
-            rs.setLocation(xLocation, xTrack, True)
-            rs.setTypeName(newRsAttribs['aar'])
+        self.oldTpLocoIds = list(set(currentLocoIds).difference(set(updatedLocoIds)))
+        self.oldTpCarIds = list(set(currentCarIds).difference(set(updatedCarIds)))
 
         return
 
-    def setSpecificRsAttribs(self, idList):
-        """
-        Used when adding new rolling stock.
-        TP ID  : {'kernel': u'', 'type': u'box x23 prr', 'aar': u'XM', 'load': u'Empty', 'location': u'City', 'track': u'701'}
-        """
+    def deleteOldRollingStock(self):
 
-        _psLog.debug('setSpecificRsAttribs')
+        for loco in self.oldTpLocoIds:
+            locoId = loco.replace(' ', '')
+            PSE.EM.deregister(PSE.EM.getById(locoId))
 
-        for id in idList:
-            currentJmriId = self.currentRsData[id]
-            if PSE.EM.getById(currentJmriId):
-                newRsAttribs = self.tpLocos[id]
-                newLoco = PSE.EM.getById(currentJmriId)
-                newLoco.setLength(str(self.configFile['DL']))
-                newLoco.setModel(newRsAttribs['model'][0:11])
-            # Setting the model will automatically set the type
-                newLoco.setWeight('2')
-                newLoco.setColor('Black')
-                newLoco.setConsist(PSE.ZM.getConsistByName(newRsAttribs['consist']))
-
-            elif PSE.CM.getById(currentJmriId):
-                newRsAttribs = self.tpCars[id]
-                newCar = PSE.CM.getById(currentJmriId)
-                if newRsAttribs['aar'] in self.configFile['CX']:
-                    newCar.setCaboose(True)
-                if newRsAttribs['aar'] in self.configFile['PX']:
-                    newCar.setPassenger(True)
-                newCar.setLength(str(self.configFile['DL']))
-                newCar.setWeight('2')
-                newCar.setColor('Red')
-
-            else:
-                print('Exclude rolling stock: ' + currentJmriId)
+        for car in self.oldTpCarIds:
+            carId = car.replace(' ', '')
+            PSE.CM.deregister(PSE.CM.getById(carId))
 
         return
 
-    def getLoadFromSchedule(self, attribs):
+    def updateRollingStock(self):
+        """
+        Whether the RS is new or continuing, its 'base' attributes are updated.
+        """
 
-        location = PSE.LM.getLocationByName(attribs['location'])
-        track = location.getTrackByName(attribs['track'], None)
+        for id, data in self.tpLocos.items():
+            loco = data['id'].split()
+            PSE.EM.newRS(loco[0], loco[1])
+            self.setBaseLocoAttribs(data)
 
-        if track.getTrackType() == 'Yard':
-            return 'Empty', None
+        for id, data in self.tpCars.items():
+            car = data['id'].split()
+            PSE.CM.newRS(car[0], car[1])
+            self.setBaseCarAttribs(data)
 
+        PSE.EMX.save()
+        PSE.CMX.save()
+
+        return
+
+    def setBaseLocoAttribs(self, locoData):
+        """
+        Sets only the consist, length, model, type, location, track.
+        self.tpLocos dictionary format: {TP ID :  [Model, AAR, JMRI Location, JMRI Track, 'unloadable', Consist, JMRI ID]}
+        """
+
+        # _psLog.debug('setBaseLocoAttribs')
+
+        locoId = locoData['id'].split()
+        loco = PSE.EM.getById(locoId[0] + locoId[1])
+
+        consist = PSE.ZM.newConsist(locoData['consist'])
+        loco.setConsist(consist)
+        loco.setLength(str(self.configFile['DL']))
+        loco.setModel(locoData['model'])
+        loco.setTypeName(locoData['aar'])
+        location = PSE.LM.getLocationByName(locoData['location'])
+        track = location.getTrackByName(locoData['track'], None)
         try:
-            jSchedule = track.getSchedule()
-            jItem = jSchedule.getItemByType(attribs['aar'])
-            return jItem.getShipLoadName(), jItem.getDestination()
-            
+            loco.setLocation(location, track, True)
         except:
-             return 'Empty', None
-
-    def deregisterOldRs(self):
-
-        for id in self.oldTpIds:
-            disposeJmriId = self.currentRsData[id]
-            try:
-                PSE.EM.deregister(PSE.EM.getById(disposeJmriId))
-            except:
-                PSE.CM.deregister(PSE.CM.getById(disposeJmriId))            
+            print(locoData)
 
         return
+
+    def setBaseCarAttribs(self, carData):
+        """
+        Sets only the kernel, length, type, location, track.
+        self.tpCars  dictionary format: {TP ID :  {type: TP Collection, aar: TP AAR, location: JMRI Location, track: JMRI Track, load: TP Load, kernel: TP Kernel, id: JMRI ID}}
+        """
+        # _psLog.debug('setBaseCarAttribs')
+
+        carId = carData['id'].split()
+        car = PSE.CM.getById(carId[0] + carId[1])
+
+        kernel = PSE.KM.newKernel(carData['kernel'])
+        car.setKernel(kernel)
+        car.setLength(str(self.configFile['DL']))
+        car.setTypeName(carData['aar'])
+        car.setLoadName(carData['load'])
+        location = PSE.LM.getLocationByName(carData['location'])
+        track = location.getTrackByName(carData['track'], None)
+        car.setLocation(location, track, True)
+
+
+
+        return
+
+    # def getLoadFromSchedule(self, attribs):
+
+    #     location = PSE.LM.getLocationByName(attribs['location'])
+    #     track = location.getTrackByName(attribs['track'], None)
+
+    #     if track.getTrackType() == 'Yard':
+    #         return 'Empty', None
+
+    #     try:
+    #         jSchedule = track.getSchedule()
+    #         jItem = jSchedule.getItemByType(attribs['aar'])
+    #         return jItem.getShipLoadName(), jItem.getDestination()
+            
+    #     except:
+    #          return 'Empty', None
