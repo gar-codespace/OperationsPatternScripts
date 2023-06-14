@@ -12,13 +12,15 @@ Check TrainPlayer-Advanced Ops-Industries for errors.
 Create New Railroad
 From TrainPlayer, re-export layout to JMRI.
 JMRI does not allow staging and non-staging track types at the same location.
-New JMRI Railroad
 No changes were made to your JMRI layout.
 ops-work-list
 TrainPlayer layout not imported to JMRI.
 Update Current Railroad
-Update Locations
-Update Tracks
+Initialize
+Locations
+Tracks
+Rolling Stock
+Schedules
 Unreported
 Unknown
 unknown

@@ -16,21 +16,24 @@ class subroutineGui:
         """The *.setName value is the name of the action for the widget"""
 
         self.nrButton = PSE.JAVX_SWING.JButton()
-        self.nrButton.setText(PSE.BUNDLE['New JMRI Railroad'])
+        self.nrButton.setText(PSE.BUNDLE['Initialize'])
         self.nrButton.setName('newJmriRailroad')
 
         self.ulButton = PSE.JAVX_SWING.JButton()
-        self.ulButton.setText(PSE.BUNDLE['Update Locations'])
+        self.ulButton.setText(PSE.BUNDLE['Locations'])
         self.ulButton.setName('updateJmriLocations')
 
         self.uiButton = PSE.JAVX_SWING.JButton()
-        self.uiButton.setText(PSE.BUNDLE['Update Tracks'])
+        self.uiButton.setText(PSE.BUNDLE['Tracks'])
         self.uiButton.setName('updateJmriTracks')
 
         self.ursButton = PSE.JAVX_SWING.JButton()
-        self.ursButton.setText('Update Rolling Stock')
+        self.ursButton.setText('Rolling Stock')
         self.ursButton.setName('updateJmriRollingingStock')
 
+        self.asButton = PSE.JAVX_SWING.JButton()
+        self.asButton.setText('Schedules')
+        self.asButton.setName('applySchedules')
         return
 
     def guiMaker(self):
@@ -53,6 +56,8 @@ class subroutineGui:
         updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(30,0)))
         updateRrPanel.add(self.ursButton)
         updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(50,0)))
+        updateRrPanel.add(self.asButton)
+        updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(50,0)))
 
         tpPanel.add(newRrPanel)
         tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(30,0)))
@@ -68,5 +73,6 @@ class subroutineGui:
         widgets.append(self.ulButton)
         widgets.append(self.uiButton)
         widgets.append(self.ursButton)
+        widgets.append(self.asButton)
 
         return widgets

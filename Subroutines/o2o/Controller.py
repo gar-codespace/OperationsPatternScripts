@@ -93,6 +93,8 @@ class StartUp:
         if not Model.getTrainPlayerRailroad():
             return
         
+        PSE.closeSubordinateWindows(level=1)
+        
         Model.newJmriRailroad()
 
         PSE.remoteCalls('resetCalls')
@@ -112,6 +114,8 @@ class StartUp:
 
         if not Model.getTrainPlayerRailroad():
             return
+        
+        PSE.closeSubordinateWindows(level=2)
 
         Model.updateJmriLocations()
 
@@ -132,6 +136,8 @@ class StartUp:
 
         if not Model.getTrainPlayerRailroad():
             return
+        
+        PSE.closeSubordinateWindows(level=2)
 
         Model.updateJmriTracks()
 
@@ -144,14 +150,34 @@ class StartUp:
         return
     
     def updateJmriRollingingStock(self, EVENT):
-        """Writes new car and engine data."""
+        """Writes new or updated car and engine data."""
 
         _psLog.debug(EVENT)
 
         if not Model.getTrainPlayerRailroad():
             return
         
+        PSE.closeSubordinateWindows(level=2)
+        
         Model.updateJmriRollingingStock()
+
+        PSE.remoteCalls('refreshCalls')
+
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+        return
+
+    def applySchedules(self, EVENT):
+        """Sets each spurs load to the current schedule."""
+
+        _psLog.debug(EVENT)
+
+        if not Model.getTrainPlayerRailroad():
+            return
+        
+        PSE.closeSubordinateWindows(level=2)
+        
+        Model.applyJmriSchedules()
 
         PSE.remoteCalls('refreshCalls')
 

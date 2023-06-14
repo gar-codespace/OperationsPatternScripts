@@ -23,7 +23,6 @@ def getTrainPlayerRailroad():
         print('TrainPlayer railroad data imported OK')
         _psLog.info('TrainPlayer railroad data imported OK')
         PSE.closeOutputFrame()
-        PSE.closeSubordinateWindows()
         BuiltTrainExport.FindTrain().trainResetter()
 
         return True
@@ -53,14 +52,13 @@ def newJmriRailroad():
     PSE.CM.dispose()
     PSE.EM.dispose()
 
-    Initiator().initialist()
-    Attributator().disposal()
-    Attributator().attributist()
-    ScheduleAuteur().auteurist()
-    Locationator().locationist()
-    Divisionator().divisionist()
-    ModelEntities.addCarTypesToSpurs()
-    # RStockulator().creator()
+    # PSE.CMX.initialize()
+    # PSE.CMX.save()
+    # PSE.EMX.initialize()
+    # PSE.EMX.save()
+    # PSE.LMX.initialize()
+    # PSE.LMX.save()
+
     
     print('New JMRI railroad built from TrainPlayer data')
     _psLog.info('New JMRI railroad built from TrainPlayer data')
@@ -81,7 +79,6 @@ def updateJmriLocations():
     
     Initiator().incrementor()
     Attributator().attributist()
-    ScheduleAuteur().auteurist()
     Locationator().locationist()
     Divisionator().divisionist()
 
@@ -122,6 +119,19 @@ def updateJmriRollingingStock():
 
     print('JMRI rolling stock updated from TrainPlayer data')
     _psLog.info('JMRI rolling stock updated from TrainPlayer data')
+
+    return
+
+def applyJmriSchedules():
+    """
+    Mini controller.
+    Applies the updated schedules to set the loads for cars at spurs.
+    """
+
+    RStockulator().scheduleApplicator()
+
+    print('JMRI schedules updated from TrainPlayer data')
+    _psLog.info('JMRI schedules updated from TrainPlayer data')
 
     return
 
@@ -792,9 +802,9 @@ class Trackulator:
         self.parseTracks()
         self.deleteOldTracks()
         self.updateTracks()
-        self.updateSchedules()
+        self.addSchedulesToSpurs()
 
-        PSE.LMX.save()
+
         
 
         return
@@ -843,14 +853,13 @@ class Trackulator:
         for id, data in self.updatedRrData['locales'].items():
             location = PSE.LM.getLocationByName(data['location'])
             trackType = self.configFile['o2o']['TR'][data['type']]
-            location.addTrack(data['track'], trackType)
-            track = location.getTrackByName(data['track'], trackType)
+            track = location.addTrack(data['track'], trackType)
             trackLength = int(data['capacity']) * (self.configFile['o2o']['DL'] + 4)
             track.setLength(trackLength)            
 
         return
 
-    def updateSchedules(self):
+    def addSchedulesToSpurs(self):
 
         for id, data in self.updatedRrData['industries'].items():
             location = PSE.LM.getLocationByName(data['a-location'])
@@ -878,6 +887,10 @@ class RStockulator:
         self.tpCars = {}
         self.tpLocos = {}
 
+        self.listOfSpurs = []
+        self.carList = []
+        self.shipList = []
+
         print(self.scriptName + ' ' + str(SCRIPT_REV))
 
         return
@@ -896,9 +909,59 @@ class RStockulator:
         self.deleteOldRollingStock()
         self.updateRollingStock()
 
+        # PSE.EMX.save()
+        # PSE.CMX.save()
+
         _psLog.info('Updated rolling stock')
 
         return
+
+    def scheduleApplicator(self):
+        """
+        Mini controller sets the loads for cars at spurs.
+        """
+
+        self.getAllSpurs()
+        self.applySpursSchedule()
+
+        return
+    
+    def getAllSpurs(self):
+
+        for track in PSE.getAllTracks():
+            if track.getTrackTypeName() == 'spur':
+                self.listOfSpurs.append(track)
+
+        return
+    
+    def applySpursSchedule(self):
+
+        for spur in self.listOfSpurs:
+            self.carList = PSE.CM.getList(spur)
+            self.shipList = self.getShipList(spur)
+            self.applySchedule()
+
+        return
+    
+    def applySchedule(self):
+
+        for car in self.carList:
+            for ship in self.shipList:
+                if car.getTypeName() == ship[0]:
+                    car.setLoadName(ship[1])
+
+        return
+    
+    def getShipList(self, spur):
+
+        spurSchedule = spur.getSchedule()
+        items = spurSchedule.getItemsBySequenceList()
+        shipList = []
+        for item in items:
+            shipList.append((item.getTypeName(), item.getShipLoadName()))
+
+        return shipList
+    
 
     def checkFile(self):
         """
@@ -995,18 +1058,13 @@ class RStockulator:
         Whether the RS is new or continuing, its 'base' attributes are updated.
         """
 
-        for id, data in self.tpLocos.items():
-            loco = data['id'].split()
-            PSE.EM.newRS(loco[0], loco[1])
-            self.setBaseLocoAttribs(data)
-
+        _psLog.debug('setBaseCarAttribs')
         for id, data in self.tpCars.items():
-            car = data['id'].split()
-            PSE.CM.newRS(car[0], car[1])
             self.setBaseCarAttribs(data)
 
-        PSE.EMX.save()
-        PSE.CMX.save()
+        _psLog.debug('setBaseLocoAttribs')
+        for id, data in self.tpLocos.items():
+            self.setBaseLocoAttribs(data)
 
         return
 
@@ -1016,22 +1074,19 @@ class RStockulator:
         self.tpLocos dictionary format: {TP ID :  [Model, AAR, JMRI Location, JMRI Track, 'unloadable', Consist, JMRI ID]}
         """
 
-        # _psLog.debug('setBaseLocoAttribs')
-
         locoId = locoData['id'].split()
-        loco = PSE.EM.getById(locoId[0] + locoId[1])
+        loco = PSE.EM.newRS(locoId[0], locoId[1])
 
-        consist = PSE.ZM.newConsist(locoData['consist'])
-        loco.setConsist(consist)
-        loco.setLength(str(self.configFile['DL']))
-        loco.setModel(locoData['model'])
         loco.setTypeName(locoData['aar'])
+        loco.setModel(locoData['model'])
+        loco.setLength(str(self.configFile['DL']))
+        consist = PSE.ZM.getConsistByName(locoData['consist'])
+        loco.setConsist(consist)
+
         location = PSE.LM.getLocationByName(locoData['location'])
         track = location.getTrackByName(locoData['track'], None)
-        try:
-            loco.setLocation(location, track, True)
-        except:
-            print(locoData)
+        loco.setLocation(location, track, True)
+
 
         return
 
@@ -1040,16 +1095,16 @@ class RStockulator:
         Sets only the kernel, length, type, location, track.
         self.tpCars  dictionary format: {TP ID :  {type: TP Collection, aar: TP AAR, location: JMRI Location, track: JMRI Track, load: TP Load, kernel: TP Kernel, id: JMRI ID}}
         """
-        # _psLog.debug('setBaseCarAttribs')
 
         carId = carData['id'].split()
-        car = PSE.CM.getById(carId[0] + carId[1])
+        car = PSE.CM.newRS(carId[0], carId[1])
 
-        kernel = PSE.KM.newKernel(carData['kernel'])
-        car.setKernel(kernel)
-        car.setLength(str(self.configFile['DL']))
         car.setTypeName(carData['aar'])
         car.setLoadName(carData['load'])
+        car.setLength(str(self.configFile['DL']))
+        kernel = PSE.KM.getKernelByName(carData['kernel'])
+        car.setKernel(kernel)
+
         location = PSE.LM.getLocationByName(carData['location'])
         track = location.getTrackByName(carData['track'], None)
         car.setLocation(location, track, True)
@@ -1057,19 +1112,3 @@ class RStockulator:
 
 
         return
-
-    # def getLoadFromSchedule(self, attribs):
-
-    #     location = PSE.LM.getLocationByName(attribs['location'])
-    #     track = location.getTrackByName(attribs['track'], None)
-
-    #     if track.getTrackType() == 'Yard':
-    #         return 'Empty', None
-
-    #     try:
-    #         jSchedule = track.getSchedule()
-    #         jItem = jSchedule.getItemByType(attribs['aar'])
-    #         return jItem.getShipLoadName(), jItem.getDestination()
-            
-    #     except:
-    #          return 'Empty', None

@@ -346,7 +346,7 @@ def closeOutputFrame():
 
     return
 
-def closeSubordinateWindows():
+def closeSubordinateWindows(level):
     """
     Close all but the top level windows.
     Called by:
@@ -358,8 +358,14 @@ def closeSubordinateWindows():
     routesTable = JMRI.jmrit.operations.routes.Bundle().handleGetMessage('TitleRoutesTable')
     locationsTable = JMRI.jmrit.operations.locations.Bundle().handleGetMessage('TitleLocationsTable')
 
-    # keepTheseWindows = [console, 'PanelPro', patternScripts, routesTable, trainsTable, locationsTable]
-    keepTheseWindows = [console, 'PanelPro', patternScripts, locationsTable]
+    if level == 1:
+        keepTheseWindows = [console, 'PanelPro', patternScripts]
+
+    if level == 2:
+        keepTheseWindows = [console, 'PanelPro', patternScripts, locationsTable]
+
+    if level == 3:
+        keepTheseWindows = [console, 'PanelPro', patternScripts, routesTable, trainsTable, locationsTable]
     
     for frame in JMRI.util.JmriJFrame.getFrameList():
         if frame.getTitle() in keepTheseWindows:
