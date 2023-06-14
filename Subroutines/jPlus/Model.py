@@ -12,6 +12,20 @@ SCRIPT_REV = 20230201
 _psLog = PSE.LOGGING.getLogger('OPS.JP.Model')
 
 
+def resetConfigFileItems():
+
+    configFile =  PSE.readConfigFile()
+    configFile['Main Script']['LD']['BD'] = ''
+    configFile['Main Script']['LD']['LO'] = ''
+    configFile['Main Script']['LD']['OR'] = ''
+    configFile['Main Script']['LD']['SC'] = ''
+    configFile['Main Script']['LD']['TR'] = ''
+    configFile['Main Script']['LD']['YR'] = ''
+
+    PSE.writeConfigFile(configFile)
+
+    return
+
 def updateYearModeled():
     """
     Writes the JMRI year modeled from settings into the jPlus Year Modeled text box.

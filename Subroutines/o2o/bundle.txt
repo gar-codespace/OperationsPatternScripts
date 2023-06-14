@@ -7,15 +7,17 @@ ALERT: TrainPlayer Inventory file not found.
 ALERT: Staging and non-staging tracks at same location:
 ALERT: TrainPlayer export issue.
 Alert: Create a new JMRI layout first.
+Alert: No JMRI locations were found.
+Alert: No JMRI tracks were found.
 Check TrainPlayer-Advanced Ops-Locales for semi colon.
 Check TrainPlayer-Advanced Ops-Industries for errors.
-Create New Railroad
 From TrainPlayer, re-export layout to JMRI.
 JMRI does not allow staging and non-staging track types at the same location.
 No changes were made to your JMRI layout.
 ops-work-list
 TrainPlayer layout not imported to JMRI.
-Update Current Railroad
+Reset layout attributes
+Import from TrainPlayer
 Initialize
 Locations
 Tracks

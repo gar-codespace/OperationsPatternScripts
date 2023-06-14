@@ -22,6 +22,7 @@ def resetConfigFileItems():
     configFile['Patterns'].update({'PL':''})
     configFile['Patterns'].update({'PT':{}})
     configFile['Patterns'].update({'PA':False})
+    configFile['Patterns'].update({'AL':[]})
 
     PSE.writeConfigFile(configFile)
 

@@ -102,7 +102,6 @@ class StartUp:
         PSE.restartAllSubroutines()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-
         return
 
     def updateJmriLocations(self, EVENT):
@@ -119,7 +118,7 @@ class StartUp:
 
         Model.updateJmriLocations()
 
-        PSE.remoteCalls('resetCalls')
+        PSE.remoteCalls('refreshCalls')
 
         PSE.restartAllSubroutines()
 
@@ -141,7 +140,7 @@ class StartUp:
 
         Model.updateJmriTracks()
 
-        PSE.remoteCalls('resetCalls')
+        PSE.remoteCalls('refreshCalls')
 
         PSE.restartAllSubroutines()
 

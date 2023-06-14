@@ -32,6 +32,10 @@ def refreshCalls():
 def resetCalls():
     """Methods called to reset this subroutine."""
 
+    Model.resetConfigFileItems()
+
+
+
     return
         
 def specificCalls():

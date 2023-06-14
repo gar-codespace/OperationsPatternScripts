@@ -11,8 +11,6 @@ from Subroutines.o2o import BuiltTrainExport
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
 
-# FILE_LIST = ['OperationsTrainRoster.xml', 'OperationsRouteRoster.xml']
-
 
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.Model')
 
@@ -37,9 +35,8 @@ def getTrainPlayerRailroad():
 
 def newJmriRailroad():
     """
-    Mini controller to make a new JMRI railroad.
-    tpRailroadData.json and TrainPlayer Report - Rolling Stock.txt
-    are used as source files.
+    Mini controller to initialize a JMRI railroad.
+    Erases all the xml files.
     Called by:
     Controller.StartUp.newJmriRailroad
     """
@@ -51,14 +48,6 @@ def newJmriRailroad():
     PSE.LM.dispose()
     PSE.CM.dispose()
     PSE.EM.dispose()
-
-    # PSE.CMX.initialize()
-    # PSE.CMX.save()
-    # PSE.EMX.initialize()
-    # PSE.EMX.save()
-    # PSE.LMX.initialize()
-    # PSE.LMX.save()
-
     
     print('New JMRI railroad built from TrainPlayer data')
     _psLog.info('New JMRI railroad built from TrainPlayer data')
@@ -96,6 +85,11 @@ def updateJmriTracks():
     Controller.Startup.updateJmriTracks
     """
     
+    if not PSE.getAllLocationNames():
+        message = PSE.BUNDLE['Alert: No JMRI locations were found.']
+        PSE.openOutputFrame(message)        
+        return
+
     Attributator().attributist()
     ScheduleAuteur().auteurist()
     Trackulator().trackist()
@@ -114,6 +108,11 @@ def updateJmriRollingingStock():
     Controller.Startup.updateJmriRollingingStock
     """
 
+    if not PSE.getAllTracks():
+        message = PSE.BUNDLE['Alert: No JMRI tracks were found.']
+        PSE.openOutputFrame(message)
+        return
+
     Attributator().attributist()
     RStockulator().updator()
 
@@ -128,6 +127,11 @@ def applyJmriSchedules():
     Applies the updated schedules to set the loads for cars at spurs.
     """
 
+    if not PSE.getAllTracks():
+        message = PSE.BUNDLE['Alert: No JMRI tracks were found.']
+        PSE.openOutputFrame(message)
+        return
+    
     RStockulator().scheduleApplicator()
 
     print('JMRI schedules updated from TrainPlayer data')
