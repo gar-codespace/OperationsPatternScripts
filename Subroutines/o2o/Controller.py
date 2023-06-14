@@ -47,6 +47,7 @@ class StartUp:
     def __init__(self, subroutineFrame=None):
 
         self.subroutineFrame = subroutineFrame
+        self.configFile = PSE.readConfigFile()
 
         return
 
@@ -64,8 +65,8 @@ class StartUp:
     def getSubroutineGui(self):
         """Gets the GUI for this subroutine."""
 
-        subroutineGui, widgets = View.ManageGui().makeSubroutineGui()
-        self.activateWidgets(widgets)
+        subroutineGui, self.widgets = View.ManageGui().makeSubroutineGui()
+        self.activateWidgets()
 
         return subroutineGui
 
@@ -74,13 +75,13 @@ class StartUp:
 
         return
 
-    def activateWidgets(self, widgets):
+    def activateWidgets(self):
         """
         The *.getName value is the name of the action for the widget.
         IE: newJmriRailroad, updateJmriLocations
         """
 
-        for widget in widgets:
+        for widget in self.widgets:
             widget.actionPerformed = getattr(self, widget.getName())
 
         return
@@ -113,7 +114,7 @@ class StartUp:
 
         if not Model.getTrainPlayerRailroad():
             return
-        
+
         PSE.closeSubordinateWindows(level=2)
 
         Model.updateJmriLocations()
@@ -135,7 +136,7 @@ class StartUp:
 
         if not Model.getTrainPlayerRailroad():
             return
-        
+
         PSE.closeSubordinateWindows(level=2)
 
         Model.updateJmriTracks()
@@ -155,12 +156,14 @@ class StartUp:
 
         if not Model.getTrainPlayerRailroad():
             return
-        
+
         PSE.closeSubordinateWindows(level=2)
         
         Model.updateJmriRollingingStock()
 
         PSE.remoteCalls('refreshCalls')
+
+        PSE.restartAllSubroutines()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -173,12 +176,14 @@ class StartUp:
 
         if not Model.getTrainPlayerRailroad():
             return
-        
+
         PSE.closeSubordinateWindows(level=2)
         
         Model.applyJmriSchedules()
 
         PSE.remoteCalls('refreshCalls')
+
+        PSE.restartAllSubroutines()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

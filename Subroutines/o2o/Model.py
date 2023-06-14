@@ -41,8 +41,8 @@ def newJmriRailroad():
     Controller.StartUp.newJmriRailroad
     """
 
-    PSE.TM.dispose()
-    PSE.RM.dispose()
+    # PSE.TM.dispose()
+    # PSE.RM.dispose()
     PSE.DM.dispose()
     PSE.SM.dispose()
     PSE.LM.dispose()
@@ -70,6 +70,10 @@ def updateJmriLocations():
     Attributator().attributist()
     Locationator().locationist()
     Divisionator().divisionist()
+# Ripple the changes
+    updateJmriTracks()
+    updateJmriRollingingStock()
+    applyJmriSchedules()
 
     print('JMRI locations updated from TrainPlayer data')
     _psLog.info('JMRI locations updated from TrainPlayer data')
@@ -93,7 +97,9 @@ def updateJmriTracks():
     Attributator().attributist()
     ScheduleAuteur().auteurist()
     Trackulator().trackist()
-    ModelEntities.addCarTypesToSpurs()
+# Ripple the changes
+    updateJmriRollingingStock()
+    applyJmriSchedules()
 
     print('JMRI industries updated from TrainPlayer data')
     _psLog.info('JMRI industries updated from TrainPlayer data')
@@ -115,6 +121,8 @@ def updateJmriRollingingStock():
 
     Attributator().attributist()
     RStockulator().updator()
+# Ripple the changes
+    applyJmriSchedules()
 
     print('JMRI rolling stock updated from TrainPlayer data')
     _psLog.info('JMRI rolling stock updated from TrainPlayer data')
@@ -787,6 +795,12 @@ class Trackulator:
         self.currentRrData = {}
         self.updatedRrData = {}
 
+        self.currentTrackIds = []
+        self.updatedTrackIds = []
+        self.continuingTrackIds = []
+        self.newTrackIds = []
+        self.oldTrackIds = []
+
         self.continuingTracks = []
         self.newTracks = []
         self.oldTracks = []
@@ -803,13 +817,14 @@ class Trackulator:
 
         self.getCurrentRrData()
         self.getUpdatedRrData()
-        self.parseTracks()
+        self.getTrackIds()
+
+        self.parseTrackIds()
+        self.updateContinuingTracks()
+        self.addNewTracks()
         self.deleteOldTracks()
-        self.updateTracks()
+        ModelEntities.addCarTypesToSpurs()
         self.addSchedulesToSpurs()
-
-
-        
 
         return
     
@@ -824,42 +839,89 @@ class Trackulator:
         self.updatedRrData = ModelEntities.getTpRailroadJson('tpRailroadData')
 
         return
+    
+    def getTrackIds(self):
 
-    def parseTracks(self):
+        # print(self.currentRrData['locales'])
 
-        currentTracks = []
-        for locale, data in self.currentRrData['locales'].items():
-            currentTracks.append(data['location'] + ';' + data['track'])
+        for trackId in self.currentRrData['locales']:
+            self.currentTrackIds.append(trackId)
 
-        updatedTracks = []
-        for locale, data in self.updatedRrData['locales'].items():
-            updatedTracks.append(data['location'] + ';' + data['track'])
-
-        self.oldTracks = list(set(currentTracks).difference(set(updatedTracks)))
+        for trackId in self.updatedRrData['locales']:
+            self.updatedTrackIds.append(trackId)
 
         return
-        
+    
+    def parseTrackIds(self):
+
+        self.newTrackIds = list(set(self.updatedTrackIds).difference(set(self.currentTrackIds)))
+        self.oldTrackIds = list(set(self.currentTrackIds).difference(set(self.updatedTrackIds)))
+        self.continuingTrackIds = list(set(self.currentTrackIds).difference(set(self.oldTrackIds)))
+
+        # print(self.newTrackIds)
+        # print(self.oldTrackIds)
+        # print(self.continuingTrackIds)
+
+        return
+
+    def updateContinuingTracks(self):
+        """
+        format: "1": {"capacity": "12", "label": "FH", "location": "Fulton Terminal", "track": "Freight House", "type": "industry"}, 
+        """
+
+
+        for continuingTrackId in self.continuingTrackIds:
+            currentTrackData = self.currentRrData['locales'][continuingTrackId]
+            updatedTrackData = self.updatedRrData['locales'][continuingTrackId]
+
+
+            if currentTrackData['location'] == updatedTrackData['location']:
+                trackType = self.configFile['o2o']['TR'][updatedTrackData['type']]
+                trackLength = int(updatedTrackData['capacity']) * (self.configFile['o2o']['DL'] + 4)
+        # If the location is the same, only update the tracks name, type and length
+                currentLocation = PSE.LM.getLocationByName(currentTrackData['location'])
+                currentTrack = currentLocation.getTrackByName(currentTrackData['track'], None)
+                currentTrack.setName(updatedTrackData['track'])
+                currentTrack.setTrackType(trackType)
+                currentTrack.setLength(trackLength)
+            else:
+        # If the locations differ, copy the current track, update name, type and length, and delete the current track
+                currentLocation = PSE.LM.getLocationByName(currentTrackData['location'])
+                currentTrack = currentLocation.getTrackByName(currentTrackData['track'], None)
+                updatedLocation = PSE.LM.getLocationByName(updatedTrackData['location'])
+                updatedTrack = currentTrack.copyTrack(updatedTrackData['track'], updatedLocation)
+                updatedTrack.setName(updatedTrackData['track'])
+                updatedTrack.setTrackType(trackType)
+                updatedTrack.setLength(trackLength)
+
+                currentLocation.deleteTrack(currentTrack)
+
+        return
+
+    def addNewTracks(self):
+        """
+        format: "1": {"capacity": "12", "label": "FH", "location": "Fulton Terminal", "track": "Freight House", "type": "industry"}, 
+        """
+
+        for newTrackId in self.newTrackIds:
+            newTrackData = self.updatedRrData['locales'][newTrackId]
+            location = PSE.LM.getLocationByName(newTrackData['location'])
+            trackType = self.configFile['o2o']['TR'][newTrackData['type']]
+            track = location.addTrack(newTrackData['track'], trackType)
+            trackLength = int(newTrackData['capacity']) * (self.configFile['o2o']['DL'] + 4)
+            track.setLength(trackLength)
+            trackComment = 'TrainPlayer ID:' + str(newTrackId)
+            track.setComment(trackComment)
+
+        return
+
     def deleteOldTracks(self):
 
-        for track in self.oldTracks:
-            splitLine = track.split(';')
-            location = PSE.LM.getLocationByName(splitLine[0])
-            track = location.getTrackByName(splitLine[1], None)
+        for oldTrackId in self.oldTrackIds:
+            oldTrackData = self.currentRrData['locales'][oldTrackId]
+            location = PSE.LM.getLocationByName(oldTrackData['location'])
+            track = location.getTrackByName(oldTrackData['track'], None)
             location.deleteTrack(track)
-
-        return
-
-    def updateTracks(self):
-        """
-        Whether new or continuing, all tracks are updated the same.
-        """
-
-        for id, data in self.updatedRrData['locales'].items():
-            location = PSE.LM.getLocationByName(data['location'])
-            trackType = self.configFile['o2o']['TR'][data['type']]
-            track = location.addTrack(data['track'], trackType)
-            trackLength = int(data['capacity']) * (self.configFile['o2o']['DL'] + 4)
-            track.setLength(trackLength)            
 
         return
 
@@ -868,10 +930,47 @@ class Trackulator:
         for id, data in self.updatedRrData['industries'].items():
             location = PSE.LM.getLocationByName(data['a-location'])
             track = location.getTrackByName(data['b-track'], 'Spur')
-            schedule = PSE.SM.getScheduleByName(data['c-schedule'].keys()[0])
+            scheduleName = data['c-schedule'].keys()[0]
+            schedule = PSE.SM.getScheduleByName(scheduleName)
             track.setSchedule(schedule)
-            
+
         return
+    
+
+
+
+
+
+
+
+
+    # def parseTracks(self):
+
+    #     currentTracks = []
+    #     for locale, data in self.currentRrData['locales'].items():
+    #         currentTracks.append(data['location'] + ';' + data['track'])
+
+    #     updatedTracks = []
+    #     for locale, data in self.updatedRrData['locales'].items():
+    #         updatedTracks.append(data['location'] + ';' + data['track'])
+
+    #     self.oldTracks = list(set(currentTracks).difference(set(updatedTracks)))
+
+    #     return
+
+    # def updateTracks(self):
+    #     """
+    #     Whether new or continuing, all tracks are updated the same.
+    #     """
+
+    #     for id, data in self.updatedRrData['locales'].items():
+    #         location = PSE.LM.getLocationByName(data['location'])
+    #         trackType = self.configFile['o2o']['TR'][data['type']]
+    #         track = location.addTrack(data['track'], trackType)
+    #         trackLength = int(data['capacity']) * (self.configFile['o2o']['DL'] + 4)
+    #         track.setLength(trackLength)            
+
+    #     return
 
 
 class RStockulator:

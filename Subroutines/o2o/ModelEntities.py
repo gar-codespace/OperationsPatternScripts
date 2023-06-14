@@ -40,30 +40,28 @@ def getTpRailroadJson(reportName):
 def getCurrentRrData():
     """
     Directly retrieve the current RR's data from the JMRI XML.
+    format: "1": {"capacity": "12", "label": "FH", "location": "Fulton Terminal", "track": "Freight House", "type": "industry"},
     """
 
     currentRrData = {}
-
-    locales = {}
     locations = []
+    locales = {}
     for location in PSE.LM.getLocationsByNameList():
         locations.append(location.getName())
-        locale = {}
         for track in location.getTracksList():
+            locale = {}
             locale['location'] = location.getName()
             locale['track'] = track.getName()
             locale['type'] = track.getTrackType()
             locale['capacity'] = track.getLength()
-            locales[track.getId()] = locale
+            trackId = track.getComment().split(':')
+
+            locales[trackId[1]] = locale
 
     currentRrData['locations'] = locations
     currentRrData['locales'] = locales
 
     return currentRrData
-
-
-"""o2o.ModelWorkEvents and o2o.BuiltTrainExport"""
-
 
 def tpDirectoryExists():
     """Checks for the Reports folder in TraipPlayer."""
@@ -83,37 +81,45 @@ def tpDirectoryExists():
 
 
 def addCarTypesToSpurs():
-    """Checks the car types check box for car types used at each spur"""
+    """
+    Mini controller.
+    Checks the car types check box for car types used at each spur
+    """
 
     _psLog.debug('addCarTypesToSpurs')
 
-    industries = getTpRailroadJson('tpRailroadData')['industries']
-    deselectCarTypes(industries)
-    selectCarTypes(industries)
+    
+    deselectCarTypes()
+    selectCarTypes()
 
     return
 
-def deselectCarTypes(industries):
+def deselectCarTypes():
     """
     For each track in industries, deselect all the RS types,
     Called by:
     Model.UpdateLocationsAndTracks.addCarTypesToSpurs
     """
 
+    industries = getTpRailroadJson('tpRailroadData')['industries']
+
     for id, industry in industries.items():
         location = PSE.LM.getLocationByName(industry['a-location'])
         track = location.getTrackByName(industry['b-track'], None)
+
         for typeName in track.getTypeNames():
             track.deleteTypeName(typeName)
 
     return
 
-def selectCarTypes(industries):
+def selectCarTypes():
     """
     Select just the RS types used by that track, leaving unused types deselected.
     Called by:
     Model.UpdateLocationsAndTracks.addCarTypesToSpurs
     """
+
+    industries = getTpRailroadJson('tpRailroadData')['industries']
 
     for id, industry in industries.items():
         track = PSE.LM.getLocationByName(industry['a-location']).getTrackByName(industry['b-track'], None)
