@@ -243,7 +243,7 @@ def makeSetCarsFormHeader(setCarsFormData):
         headerDetailLabel.setText(item)
         combinedHeader.add(headerDetailLabel)
 
-    combinedHeader.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,10)))
+    # combinedHeader.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,10)))
     combinedHeader.add(headerTrackLabel)
     combinedHeader.add(headerValidLabel)
 
@@ -571,13 +571,13 @@ def setCarsPopup():
     buttonRow.add(cancelButton)
     buttonRow.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(30,0)))
 # Build the panel
-    popupPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,20)))
+    # popupPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,20)))
     popupPanel.add(checkBoxPanel)
-    popupPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,20)))
+    # popupPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,20)))
     popupPanel.add(PSE.JAVX_SWING.JSeparator())
-    popupPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,20)))
+    # popupPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,20)))
     popupPanel.add(buttonRow)
-    popupPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,20)))
+    # popupPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,20)))
 
     popupFrame.add(popupPanel)
     popupFrame.pack()

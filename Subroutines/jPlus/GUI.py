@@ -69,7 +69,7 @@ class subroutineGui:
         inputGrid.add(a8)
 
         jPlusPanel.add(inputGrid)
-        jPlusPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,20)))
+        jPlusPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
         
         upButton = self.updateButton()
         self.controlWidgets['UP'] = upButton

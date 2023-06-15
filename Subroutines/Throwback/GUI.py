@@ -63,11 +63,11 @@ class subroutineGui:
 
         selectionFrame.add(inputRow)
         selectionFrame.add(commitRow)
-        selectionFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
+        # selectionFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
         selectionFrame.add(PSE.JAVX_SWING.JSeparator())
-        selectionFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
+        # selectionFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
         selectionFrame.add(resetRow)
-        selectionFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
+        # selectionFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
 
     # Action
         actionFrame = PSE.JAVX_SWING.JPanel()
@@ -159,9 +159,9 @@ class subroutineGui:
 
         actionFrame.add(commitRow)
         actionFrame.add(checkboxRow)
-        actionFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
+        # actionFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
         actionFrame.add(PSE.JAVX_SWING.JSeparator())
-        actionFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
+        # actionFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
         actionFrame.add(actionRow)
 
         tpPanel = PSE.JAVX_SWING.JPanel()
