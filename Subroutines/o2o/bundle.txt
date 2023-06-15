@@ -16,13 +16,12 @@ JMRI does not allow staging and non-staging track types at the same location.
 No changes were made to your JMRI layout.
 ops-work-list
 TrainPlayer layout not imported to JMRI.
-Reset layout attributes
+Import preperation
 Import from TrainPlayer
 Initialize
 Locations
-Tracks
-Rolling Stock
-Schedules
+Industries
+Cars
 Unreported
 Unknown
 unknown

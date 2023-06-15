@@ -1,12 +1,7 @@
 Todo:
   How to publish DeepL?
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
-  Catch o2o update locations but press update industries.
   Duplication of PSE chunkPath.
-  Apply schedules to o2o Update Rolling Stock
-  o2o Import ignore EQDK
-  o2o update rolling stock resets select car types
-  Rename ControllerSetCarsForm to SetCarsFormController Etc.
 
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -134,6 +129,7 @@ Tested Items:
     Adds FD to car at industry if schedule has a FD OK.
     New JMRI railroad should close trains and routes OK.
     Listeners set when using throwback OK.
+    o2o Import ignore EQDK OK.
 
   Throwback
     Subroutine turns on and off OK.

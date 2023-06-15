@@ -35,8 +35,7 @@ def getTrainPlayerRailroad():
 
 def newJmriRailroad():
     """
-    Mini controller to initialize a JMRI railroad.
-    Erases all the xml files.
+    Mini controller to initialize a JMRI railroad for TrainPlayer import
     Called by:
     Controller.StartUp.newJmriRailroad
     """
@@ -61,7 +60,6 @@ def updateJmriLocations():
     Does not change Trains and Routes.
     Schedules are rewritten from scratch.
     Locations uses LM to update everything.
-    Rolling stock is not updated.
     Called by:
     Controller.StartUp.updateJmriLocations
     """
@@ -84,7 +82,6 @@ def updateJmriTracks():
     """
     Mini controller.
     Uses LM to update tracks and track attributes.
-    Does not update rolling stock.
     Called by:
     Controller.Startup.updateJmriTracks
     """
@@ -110,6 +107,8 @@ def updateJmriRollingingStock():
     """
     Mini controller.
     Applies changes made to TrainPlayer rolling stock.
+    Loads cars at spurs per schedule.
+    Sets cars load at staging to E.
     Called by:
     Controller.Startup.updateJmriRollingingStock
     """
@@ -903,15 +902,25 @@ class Trackulator:
         format: "1": {"capacity": "12", "label": "FH", "location": "Fulton Terminal", "track": "Freight House", "type": "industry"}, 
         """
 
+        o2oConfig = self.configFile['o2o']
+
         for newTrackId in self.newTrackIds:
             newTrackData = self.updatedRrData['locales'][newTrackId]
             location = PSE.LM.getLocationByName(newTrackData['location'])
-            trackType = self.configFile['o2o']['TR'][newTrackData['type']]
+            trackType = o2oConfig['TR'][newTrackData['type']]
             track = location.addTrack(newTrackData['track'], trackType)
-            trackLength = int(newTrackData['capacity']) * (self.configFile['o2o']['DL'] + 4)
+            trackLength = int(newTrackData['capacity']) * (o2oConfig['DL'] + 4)
             track.setLength(trackLength)
             trackComment = 'TrainPlayer ID:' + str(newTrackId)
             track.setComment(trackComment)
+
+            if newTrackData['type'] == 'staging':
+                track.setAddCustomLoadsAnySpurEnabled(o2oConfig['SM']['SCL'])
+                track.setRemoveCustomLoadsEnabled(o2oConfig['SM']['RCL'])
+                track.setLoadSwapEnabled(o2oConfig['SM']['LEE'])
+
+            if newTrackData['track'] == '~' or newTrackData['type'] == 'XO reserved':
+                track.setTrainDirections(0)
 
         return
 
@@ -935,42 +944,6 @@ class Trackulator:
             track.setSchedule(schedule)
 
         return
-    
-
-
-
-
-
-
-
-
-    # def parseTracks(self):
-
-    #     currentTracks = []
-    #     for locale, data in self.currentRrData['locales'].items():
-    #         currentTracks.append(data['location'] + ';' + data['track'])
-
-    #     updatedTracks = []
-    #     for locale, data in self.updatedRrData['locales'].items():
-    #         updatedTracks.append(data['location'] + ';' + data['track'])
-
-    #     self.oldTracks = list(set(currentTracks).difference(set(updatedTracks)))
-
-    #     return
-
-    # def updateTracks(self):
-    #     """
-    #     Whether new or continuing, all tracks are updated the same.
-    #     """
-
-    #     for id, data in self.updatedRrData['locales'].items():
-    #         location = PSE.LM.getLocationByName(data['location'])
-    #         trackType = self.configFile['o2o']['TR'][data['type']]
-    #         track = location.addTrack(data['track'], trackType)
-    #         trackLength = int(data['capacity']) * (self.configFile['o2o']['DL'] + 4)
-    #         track.setLength(trackLength)            
-
-    #     return
 
 
 class RStockulator:
@@ -1003,17 +976,11 @@ class RStockulator:
         Mini controller to update JMRI rolling stock.
         """
 
-        # if not self.checkFile():
-        #     return
-
         self.getTpInventory()
         self.splitTpList()
         self.parseTpRollingStock()
         self.deleteOldRollingStock()
         self.updateRollingStock()
-
-        # PSE.EMX.save()
-        # PSE.CMX.save()
 
         _psLog.info('Updated rolling stock')
 
@@ -1026,6 +993,7 @@ class RStockulator:
 
         self.getAllSpurs()
         self.applySpursSchedule()
+        self.setCarsAtStaging()
 
         return
     
@@ -1065,23 +1033,13 @@ class RStockulator:
 
         return shipList
     
+    def setCarsAtStaging(self):
 
-    def checkFile(self):
-        """
-        Checks the validity of tpRollingStockData.json
-        """
+        for car in PSE.CM.getList():
+            if car.getTrack().getTrackTypeName() == 'staging':
+                car.setLoadName('E')
 
-        fileName = 'tpRollingStockData.json'
-        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
-        if PSE.JAVA_IO.File(targetPath).isFile():
-
-            return True
-        else:
-            message = PSE.BUNDLE['Alert: Create a new JMRI layout first.']
-            PSE.openOutputFrame(message)
-            _psLog.critical('Alert: Create a new JMRI layout first.')
-
-            return False
+        return
 
     def getTpInventory(self):
 

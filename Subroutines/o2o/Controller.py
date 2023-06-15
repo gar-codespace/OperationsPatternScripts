@@ -168,23 +168,3 @@ class StartUp:
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
-
-    def applySchedules(self, EVENT):
-        """Sets each spurs load to the current schedule."""
-
-        _psLog.debug(EVENT)
-
-        if not Model.getTrainPlayerRailroad():
-            return
-
-        PSE.closeSubordinateWindows(level=2)
-        
-        Model.applyJmriSchedules()
-
-        PSE.remoteCalls('refreshCalls')
-
-        PSE.restartAllSubroutines()
-
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-
-        return

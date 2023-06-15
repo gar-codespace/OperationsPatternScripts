@@ -24,16 +24,12 @@ class subroutineGui:
         self.ulButton.setName('updateJmriLocations')
 
         self.uiButton = PSE.JAVX_SWING.JButton()
-        self.uiButton.setText(PSE.BUNDLE['Tracks'])
+        self.uiButton.setText(PSE.BUNDLE['Industries'])
         self.uiButton.setName('updateJmriTracks')
 
         self.ursButton = PSE.JAVX_SWING.JButton()
-        self.ursButton.setText('Rolling Stock')
+        self.ursButton.setText('Cars')
         self.ursButton.setName('updateJmriRollingingStock')
-
-        self.asButton = PSE.JAVX_SWING.JButton()
-        self.asButton.setText('Schedules')
-        self.asButton.setName('applySchedules')
         return
 
     def guiMaker(self):
@@ -43,7 +39,7 @@ class subroutineGui:
         newRrPanel = PSE.JAVX_SWING.JPanel()
         updateRrPanel = PSE.JAVX_SWING.JPanel()
 
-        newRrPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE['Reset layout attributes'])
+        newRrPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE['Import preperation'])
         newRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(50,0)))
         newRrPanel.add(self.nrButton)
         newRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(50,0)))
@@ -56,8 +52,6 @@ class subroutineGui:
         updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(30,0)))
         updateRrPanel.add(self.ursButton)
         updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(30,0)))
-        updateRrPanel.add(self.asButton)
-        updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(50,0)))
 
         tpPanel.add(updateRrPanel)
         tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(30,0)))
@@ -73,6 +67,5 @@ class subroutineGui:
         widgets.append(self.ulButton)
         widgets.append(self.uiButton)
         widgets.append(self.ursButton)
-        widgets.append(self.asButton)
 
         return widgets
