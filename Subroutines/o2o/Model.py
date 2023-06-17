@@ -1024,9 +1024,17 @@ class RStockulator:
         return
     
     def getShipList(self, spur):
+        """
+        A track can be a spur and not have a schedule.
+        """
 
-        spurSchedule = spur.getSchedule()
-        items = spurSchedule.getItemsBySequenceList()
+        try:
+            spurSchedule = spur.getSchedule()
+            items = spurSchedule.getItemsBySequenceList()
+        except:
+             _psLog.warning('No schedule for track: ' + spur.getName())
+             return
+        
         shipList = []
         for item in items:
             shipList.append((item.getTypeName(), item.getShipLoadName()))
