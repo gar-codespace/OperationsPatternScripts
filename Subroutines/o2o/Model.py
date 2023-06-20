@@ -813,7 +813,9 @@ class Divisionator:
 
         if PSE.DM.getNumberOfdivisions() != 0:
             location = PSE.LM.getLocationByName('Unreported')
-            division = PSE.DM.newDivision('Unknown')
+            # location = PSE.LM.getLocationByName(PSE.BUNDLE['Unreported'])
+
+            division = PSE.DM.newDivision(PSE.BUNDLE['Unknown'])
 
             location.setDivision(division)
 

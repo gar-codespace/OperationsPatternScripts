@@ -49,7 +49,10 @@ def initializeComboBoxes():
         configFile['Patterns'].update({'AL': locations})
 
         if configFile['Patterns']['PL'] == '':
-            configFile['Patterns'].update({'PL': locations[0]})
+            try:
+                configFile['Patterns'].update({'PL': locations[0]})
+            except:
+                configFile['Patterns'].update({'PL': ''})
 
 
 
