@@ -28,41 +28,45 @@ def resetConfigFileItems():
 
     return
 
-def initializeLocations():
+def initializeComboBoxes():
     """
-    Initializes the Patterns section of the configFile.
-    If entries are missing, makes new PT entries using initial values.
+    Initializes the Patterns section of the configFile when used for the first time.
     Called by:
     Controller.StartUp.makeSubroutinePanel
     """
 
-    _psLog.debug('updateLocations')
+    _psLog.debug('initializeComboBoxes')
 
     configFile = PSE.readConfigFile()
-    locations = []
-# Setup divisions
-    allDivisions = PSE.getAllDivisionNames()
-    configFile['Patterns'].update({'AD': allDivisions})
 
-    if len(allDivisions) != 0 and not configFile['Patterns']['PD']: # when this sub is initialized
-        configFile['Patterns'].update({'PD': allDivisions[0]})
+    print(PSE.DM.getNumberOfdivisions())
 
-        _psLog.info('Set initial division in config file')
-# Setup locations
-    if not configFile['Patterns']['PL']: # when this sub is initialised
 
-        division = configFile['Patterns']['PD']
-        locations = PSE.getLocationNamesByDivision(division)
-        if not locations:
-            locations = PSE.getAllLocationNames()
+    if PSE.DM.getNumberOfdivisions() == 0:
+        configFile['Patterns'].update({'AD': []})
+        configFile['Patterns'].update({'PD': ''})
+        locations = PSE.getAllLocationNames()
+        configFile['Patterns'].update({'AL': locations})
 
-        try:
+        if configFile['Patterns']['PL'] == '':
             configFile['Patterns'].update({'PL': locations[0]})
-            configFile['Patterns'].update({'AL': locations})
-        except:
-            _psLog.warning('Initial location and tracks not set in config file')
 
-        _psLog.info('Set initial location and tracks in config file')
+
+
+    if PSE.DM.getNumberOfdivisions() > 0:
+        allDivisions = PSE.getAllDivisionNames()
+
+        configFile['Patterns'].update({'AD': allDivisions})
+        locations = PSE.getLocationNamesByDivision(configFile['Patterns']['PD'])
+        configFile['Patterns'].update({'AL': locations})
+        if configFile['Patterns']['PD'] == '':
+            configFile['Patterns'].update({'PD': allDivisions[0]})
+            try:
+                configFile['Patterns'].update({'PL': locations[0]})
+            except:
+                configFile['Patterns'].update({'PL': ''})
+
+    _psLog.info('Set initial location and tracks in config file')
 
     PSE.writeConfigFile(configFile)
 
@@ -238,12 +242,15 @@ def jDivision(selectedItem):
     newDivision = ModelEntities.testSelectedDivision(selectedItem)
     newDivisionList = PSE.getAllDivisionNames()
     newLocationList = PSE.getLocationNamesByDivision(selectedItem)
-    if len(newLocationList) == 0:
-        newLocationList = PSE.getAllLocationNames()
+
+    if not newLocationList:
+        # newLocationList = PSE.getAllLocationNames()
+        configFile['Patterns'].update({'PL': ''})
+    else:
+        configFile['Patterns'].update({'PL': newLocationList[0]})
 
     configFile['Patterns'].update({'PD': newDivision})
     configFile['Patterns'].update({'AD': newDivisionList})
-    configFile['Patterns'].update({'PL': newLocationList[0]})
     configFile['Patterns'].update({'AL': newLocationList})
 
     PSE.writeConfigFile(configFile)
@@ -260,7 +267,21 @@ def jLocations(selectedItem):
 
     configFile = PSE.readConfigFile()
     newLocation = ModelEntities.testSelectedLocation(selectedItem)
-    newLocationList = PSE.getAllLocationNames()
+
+
+
+
+
+
+    if PSE.DM.getNumberOfdivisions() == 0:
+        newLocationList = PSE.getAllLocationNames()
+    else:
+        newLocationList = PSE.getLocationNamesByDivision(configFile['Patterns']['PD'])
+
+
+
+
+
 
     configFile['Patterns'].update({'PL': newLocation})
     configFile['Patterns'].update({'AL': newLocationList})

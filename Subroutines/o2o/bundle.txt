@@ -22,9 +22,10 @@ Initialize
 Locations
 Industries
 Cars
+unknown
 Unreported
 Unknown
-unknown
+Unassigned
 empty
 load
 occupied

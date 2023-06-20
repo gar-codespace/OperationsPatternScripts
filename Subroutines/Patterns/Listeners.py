@@ -63,7 +63,7 @@ class PTComboBox(PSE.JAVA_AWT.event.ActionListener):
 
         getattr(xModule.Model, methodName)(itemSelected)
 
-        PSE.restartSubroutineByName(__package__)
+        # PSE.restartSubroutineByName(__package__)
 
         return
 

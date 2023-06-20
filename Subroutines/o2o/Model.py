@@ -40,13 +40,13 @@ def newJmriRailroad():
     Controller.StartUp.newJmriRailroad
     """
 
-    # PSE.TM.dispose()
-    # PSE.RM.dispose()
     PSE.DM.dispose()
     PSE.SM.dispose()
     PSE.LM.dispose()
     PSE.CM.dispose()
     PSE.EM.dispose()
+
+    resetConfigFile()
     
     print('New JMRI railroad built from TrainPlayer data')
     _psLog.info('New JMRI railroad built from TrainPlayer data')
@@ -143,6 +143,26 @@ def applyJmriSchedules():
 
     print('JMRI schedules updated from TrainPlayer data')
     _psLog.info('JMRI schedules updated from TrainPlayer data')
+
+    return
+
+def resetConfigFile():
+
+    configFile =  PSE.readConfigFile()
+
+    configFile['Main Script']['LD'].update({'OR':''})
+    configFile['Main Script']['LD'].update({'TR':''})
+    configFile['Main Script']['LD'].update({'LO':''})
+    configFile['Main Script']['LD'].update({'YR':''})
+    configFile['Main Script']['LD'].update({'SC':''})
+    configFile['Main Script']['LD'].update({'BD':''})
+
+    configFile['Patterns'].update({'AD':[]})
+    configFile['Patterns'].update({'AL':[]})
+    configFile['Patterns'].update({'PD':''})
+    configFile['Patterns'].update({'PL':''})
+
+    PSE.writeConfigFile(configFile)
 
     return
 
@@ -730,6 +750,9 @@ class Divisionator:
     def parseDivisions(self):
 
         updateDivisions = ModelEntities.getTpRailroadJson('tpRailroadData')['divisions']
+        if updateDivisions[0] == '':
+            updateDivisions = []
+        
         currentDivisions = [division.getName() for division in PSE.DM.getList()]
 
         self.newDivisions = list(set(updateDivisions) - set(currentDivisions))
@@ -738,14 +761,24 @@ class Divisionator:
         return
 
     def removeObsoleteDivisions(self):
-
-        if len(self.obsoleteDivisions) == 0:
-            return
+        """
+        First remove all divisions that are not in the TrainPlayer export.
+        Second, for every location check that the assigned division is valid.
+        If no, set the division to unassigned.
+        """
 
         for division in self.obsoleteDivisions:
             obsolete = PSE.DM.getDivisionByName(division)
             PSE.DM.deregister(obsolete)
 
+        allDivisions = PSE.getAllDivisionNames()
+        locations = PSE.getAllLocationNames()
+        for location in locations:
+            divisionName = PSE.LM.getLocationByName(location).getDivisionName()
+            if divisionName not in allDivisions and PSE.DM.getNumberOfdivisions() != 0:
+                PSE.LM.getLocationByName(location).setDivision(PSE.DM.newDivision('Unassigned'))
+            if divisionName not in allDivisions and PSE.DM.getNumberOfdivisions() == 0:
+                PSE.LM.getLocationByName(location).setDivision(None)
         return
 
     def addNewDivisions(self):
@@ -756,16 +789,20 @@ class Divisionator:
         return
 
     def addDivisionToLocations(self):
-        """Edge case, if there is only one division, add all locations to it."""
+        """
+        If there is only one division, add all locations to it."""
 
-        if PSE.DM.getNumberOfdivisions() != 1:
-            return
+        if PSE.DM.getNumberOfdivisions() == 1:
+            division = PSE.DM.getList()[0]
+            for location in PSE.LM.getList():
+                location.setDivision(division)
 
-        division = PSE.DM.getList()[0]
+        if PSE.DM.getNumberOfdivisions() > 1:
+            division = PSE.DM.newDivision(PSE.BUNDLE['Unassigned'])
+            for location in PSE.LM.getList():
+                if not location.getDivision(): # If its already assigned, don't change it
+                    location.setDivision(division)
 
-        for location in PSE.LM.getList():
-            location.setDivision(division)
-                
         return
 
     def addUnreportedToUnknown(self):
@@ -774,10 +811,11 @@ class Divisionator:
         Add the location named Unreported to the division named Unknown.
         """
 
-        location = PSE.LM.getLocationByName('Unreported')
-        division = PSE.DM.newDivision('Unknown')
+        if PSE.DM.getNumberOfdivisions() != 0:
+            location = PSE.LM.getLocationByName('Unreported')
+            division = PSE.DM.newDivision('Unknown')
 
-        location.setDivision(division)
+            location.setDivision(division)
 
         return
 

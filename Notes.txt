@@ -2,7 +2,8 @@ Todo:
   How to publish DeepL?
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
   Duplication of PSE chunkPath.
-  Only Throwback/Locations should reset jPlus.
+  With multiple divisions, o2o Locations should add a division called Unassigned.
+  o2o models addDivisionToLocations make into list comprehension
 
 Comments:
   Schedule does not prevent setting a car to a track.

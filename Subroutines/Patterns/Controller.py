@@ -63,7 +63,7 @@ class StartUp:
     def getSubroutineGui(self):
         """Gets the GUI for this subroutine."""
 
-        Model.initializeLocations()
+        Model.initializeComboBoxes()
 
         subroutineGui, self.widgets = View.ManageGui().makeSubroutineGui()
         self.activateWidgets()

@@ -120,6 +120,10 @@ class subroutineGui:
 
         return tracksPanel
 
+
+
+
+
     def getTrackDict(self):
         """
         Since the track dict is created when called,
@@ -127,24 +131,54 @@ class subroutineGui:
         """
 
         trackDict = {}
+    # Check for a pattern location 'PL'
+        if not self.configFile['PL']:
+            return trackDict
 
-    # Try to find a pattern location
+    # for the selected pattern location, make the track dictionary
         patternLocation = self.configFile['PL']
-        if not patternLocation:
-            try:
-                patternLocation = PSE.LM.getLocationsByNameList()[0]
-            except:
-                return trackDict
-    # If there is a pattern location, make the dictionary
-        yardTracksOnlyFlag = self.configFile['PA']
-        if yardTracksOnlyFlag:
-            for track in PSE.LM.getLocationByName(patternLocation).getTracksByNameList('Yard'):
-                trackDict[unicode(track, PSE.ENCODING)] = False
-        else:
-            for track in PSE.LM.getLocationByName(patternLocation).getTracksByNameList(None):
-                trackDict[unicode(track, PSE.ENCODING)] = False
+        yardTracksOnlyFlag = None
+
+        if self.configFile['PA']:
+            yardTracksOnlyFlag = 'Yard'
+
+        for track in PSE.LM.getLocationByName(patternLocation).getTracksByNameList(yardTracksOnlyFlag):
+            trackDict[unicode(track, PSE.ENCODING)] = False
 
         return trackDict
+    
+
+
+
+
+    # def getTrackDict(self):
+    #     """
+    #     Since the track dict is created when called,
+    #     it is not necessary to save it into configFile['Patterns']['PT']
+    #     """
+
+    #     trackDict = {}
+
+    # # Try to find a pattern location
+    #     patternLocation = self.configFile['PL']
+    #     if not patternLocation:
+    #         try:
+    #             patternLocation = PSE.LM.getLocationsByNameList()[0]
+    #         except:
+    #             return trackDict
+    # # If there is a pattern location, make the dictionary
+    #     yardTracksOnlyFlag = self.configFile['PA']
+    #     if yardTracksOnlyFlag:
+    #         for track in PSE.LM.getLocationByName(patternLocation).getTracksByNameList('Yard'):
+    #             trackDict[unicode(track, PSE.ENCODING)] = False
+    #     else:
+    #         try:
+    #             for track in PSE.LM.getLocationByName(patternLocation).getTracksByNameList(None):
+    #                 trackDict[unicode(track, PSE.ENCODING)] = False
+    #         except:
+    #             pass
+
+    #     return trackDict
         
     def makeButtonsRow(self):
         """Make the row of action buttons: 'Track Pattern', 'Set Rolling Stock.' """

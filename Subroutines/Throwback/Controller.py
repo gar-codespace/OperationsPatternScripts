@@ -145,7 +145,7 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        PSE.remoteCalls('resetCalls')
+        # PSE.remoteCalls('resetCalls')
 
         Model.throwbackCommit(self.widgets['display'])
 
