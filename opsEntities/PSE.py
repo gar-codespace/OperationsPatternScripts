@@ -800,8 +800,10 @@ def genericDisplayReport(genericReportPath):
     PatternTracksSubroutine.ViewSetCarsForm.switchListButton
     """
 
-    # JMRI.util.HelpUtil.openWindowsFile(genericReportPath)
-    JAVA_AWT.Desktop.getDesktop().edit(JAVA_IO.File(genericReportPath))
+    targetFile = JAVA_IO.File(genericReportPath)
+    # JMRI.util.HelpUtil.openWindowsFile(targetFile)
+
+    JAVA_AWT.Desktop.getDesktop().edit(targetFile)
 
     return
 
