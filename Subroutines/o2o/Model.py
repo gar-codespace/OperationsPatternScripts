@@ -33,11 +33,12 @@ def getTrainPlayerRailroad():
         return False
 
 
-def newJmriRailroad():
+def initializeJmriRailroad():
     """
-    Mini controller to initialize a JMRI railroad for TrainPlayer import
+    Mini controller to initialize a JMRI railroad for TrainPlayer import.
+    Does not change Trains and Routes.
     Called by:
-    Controller.StartUp.newJmriRailroad
+    Controller.StartUp.initializeJmriRailroad
     """
 
     PSE.DM.dispose()
@@ -45,36 +46,42 @@ def newJmriRailroad():
     PSE.LM.dispose()
     PSE.CM.dispose()
     PSE.EM.dispose()
-
-    resetConfigFile()
     
-    print('New JMRI railroad built from TrainPlayer data')
-    _psLog.info('New JMRI railroad built from TrainPlayer data')
+    print('JMRI data has been initiallized')
+    _psLog.info('JMRI data has been initiallized')
 
     return
 
 def updateJmriLocations():
     """
     Mini controller.
-    Applies changes made to the TrainPlayer/OC/Locations tab.
+    Applies changes made to the TrainPlayer/OC/Locations, Industries, and Cars tabs.
     Does not change Trains and Routes.
     Schedules are rewritten from scratch.
     Locations uses LM to update everything.
     Called by:
     Controller.StartUp.updateJmriLocations
     """
-    
+
+# This part does the locations    
     Initiator().incrementor()
     Attributator().attributist()
     Locationator().locationist()
     Divisionator().divisionist()
-# Ripple the changes
-    updateJmriTracks()
-    updateJmriRollingingStock()
-    applyJmriSchedules()
-
     print('JMRI locations updated from TrainPlayer data')
     _psLog.info('JMRI locations updated from TrainPlayer data')
+
+# This part does the tracks
+    ScheduleAuteur().auteurist()
+    Trackulator().trackist()
+    print('JMRI tracks updated from TrainPlayer data')
+    _psLog.info('JMRI tracks updated from TrainPlayer data')
+
+# This part does the rolling stock
+    RStockulator().updator()
+    RStockulator().scheduleApplicator()
+    print('JMRI rolling stock updated from TrainPlayer data')
+    _psLog.info('JMRI rolling stock updated from TrainPlayer data')
 
     return
 
@@ -82,6 +89,7 @@ def updateJmriTracks():
     """
     Mini controller.
     Uses LM to update tracks and track attributes.
+    Also updates rolling stock.
     Called by:
     Controller.Startup.updateJmriTracks
     """
@@ -94,13 +102,14 @@ def updateJmriTracks():
     Attributator().attributist()
     ScheduleAuteur().auteurist()
     Trackulator().trackist()
-# Ripple the changes
-    updateJmriRollingingStock()
-    applyJmriSchedules()
+    print('JMRI tracks updated from TrainPlayer data')
+    _psLog.info('JMRI tracks updated from TrainPlayer data')
 
-    print('JMRI industries updated from TrainPlayer data')
-    _psLog.info('JMRI industries updated from TrainPlayer data')
-
+# This part does the rolling stock
+    RStockulator().updator()
+    RStockulator().scheduleApplicator()
+    print('JMRI rolling stock updated from TrainPlayer data')
+    _psLog.info('JMRI rolling stock updated from TrainPlayer data')
     return
 
 def updateJmriRollingingStock():
@@ -120,49 +129,9 @@ def updateJmriRollingingStock():
 
     Attributator().attributist()
     RStockulator().updator()
-# Ripple the changes
-    applyJmriSchedules()
-
+    RStockulator().scheduleApplicator()
     print('JMRI rolling stock updated from TrainPlayer data')
     _psLog.info('JMRI rolling stock updated from TrainPlayer data')
-
-    return
-
-def applyJmriSchedules():
-    """
-    Mini controller.
-    Applies the updated schedules to set the loads for cars at spurs.
-    """
-
-    if not PSE.getAllTracks():
-        message = PSE.BUNDLE['Alert: No JMRI tracks were found.']
-        PSE.openOutputFrame(message)
-        return
-    
-    RStockulator().scheduleApplicator()
-
-    print('JMRI schedules updated from TrainPlayer data')
-    _psLog.info('JMRI schedules updated from TrainPlayer data')
-
-    return
-
-def resetConfigFile():
-
-    configFile =  PSE.readConfigFile()
-
-    configFile['Main Script']['LD'].update({'OR':''})
-    configFile['Main Script']['LD'].update({'TR':''})
-    configFile['Main Script']['LD'].update({'LO':''})
-    configFile['Main Script']['LD'].update({'YR':''})
-    configFile['Main Script']['LD'].update({'SC':''})
-    configFile['Main Script']['LD'].update({'BD':''})
-
-    configFile['Patterns'].update({'AD':[]})
-    configFile['Patterns'].update({'AL':[]})
-    configFile['Patterns'].update({'PD':''})
-    configFile['Patterns'].update({'PL':''})
-
-    PSE.writeConfigFile(configFile)
 
     return
 
@@ -223,7 +192,9 @@ class Initiator:
         return
 
     def o2oDetailsToConFig(self):
-        """Optional railroad details from the TrainPlayer layout are added to the config file."""
+        """
+        Optional railroad details from the TrainPlayer layout are added to the config file.
+        """
 
         self.configFile['Main Script']['LD'].update({'OR':self.TpRailroad['operatingRoad']})
         self.configFile['Main Script']['LD'].update({'TR':self.TpRailroad['territory']})
@@ -238,7 +209,9 @@ class Initiator:
         return
 
     def setRailroadDetails(self):
-        """Optional railroad details from the TrainPlayer layout are added to JMRI."""
+        """
+        Optional railroad details from the TrainPlayer layout are added to JMRI.
+        """
 
         _psLog.debug('setRailroadDetails')
 
@@ -258,7 +231,9 @@ class Initiator:
         return
 
     def tweakOperationsXml(self):
-        """Some of these are just favorites of mine."""
+        """
+        Some of these are just favorites of mine.
+        """
 
         _psLog.debug('tweakOperationsXml')
 
@@ -273,7 +248,9 @@ class Initiator:
         return
 
     def setReportMessageFormat(self):
-        """Sets the default message format as defined in the configFile."""
+        """
+        Sets the default message format as defined in the configFile.
+        """
 
         self.OSU.Setup.setPickupManifestMessageFormat(self.configFile['o2o']['RMF']['PUC'])
         self.OSU.Setup.setDropManifestMessageFormat(self.configFile['o2o']['RMF']['SOC'])
@@ -317,7 +294,7 @@ class Attributator:
         return
     
     def disposal(self):
-        """Runs when New JMRI Railroad is selected"""
+        """Runs when Initialize JMRI Railroad is selected"""
 
         tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarRoads
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
@@ -359,7 +336,9 @@ class Attributator:
         return
 
     def addCarAar(self):
-        """Add any new type names using the aar names from the tpRailroadData.json file."""
+        """
+        Add any new type names using the aar names from the tpRailroadData.json file.
+        """
 
         _psLog.debug('addCarAar')
 
@@ -397,7 +376,9 @@ class Attributator:
         return
 
     def addCarKernels(self):
-        """Add new kernels using those from tpRailroadData.json."""
+        """
+        Add new kernels using those from tpRailroadData.json.
+        """
 
         _psLog.debug('addCarKernels')
 
@@ -407,7 +388,9 @@ class Attributator:
         return
 
     def addLocoModels(self):
-        """Add new engine models using the model names from the tpRailroadData.json file."""
+        """
+        Add new engine models using the model names from the tpRailroadData.json file.
+        """
 
         _psLog.debug('addLocoModels')
 
@@ -424,7 +407,9 @@ class Attributator:
         return
 
     def addLocoTypes(self):
-        """Add new engine types using the type names from the tpRailroadData.json file."""
+        """
+        Add new engine types using the type names from the tpRailroadData.json file.
+        """
 
         _psLog.debug('addLocoTypes')
 
@@ -437,7 +422,9 @@ class Attributator:
         return
 
     def addLocoConsist(self):
-        """Add new JMRI consist names using the consist names from the tpRailroadData.json file."""
+        """
+        Add new JMRI consist names using the consist names from the tpRailroadData.json file.
+        """
 
         _psLog.debug('addLocoConsist')
 
@@ -448,6 +435,9 @@ class Attributator:
 
 
 class ScheduleAuteur:
+    """
+    Everything to do with schedules.
+    """
 
     def __init__(self):
 
@@ -478,7 +468,8 @@ class ScheduleAuteur:
         """
         TrainPlayer Staging is mapped to JMRI Destination.
         TrainPlayer ViaIn is mapped to JMRI Road.
-        ViaOut is not currently used."""
+        ViaOut is not currently used.
+        """
 
         _psLog.debug('addSchedules')
 
@@ -577,7 +568,9 @@ class ScheduleAuteur:
         return
 
     def mono(self):
-        """For each aar, either an S or an R, but not both."""
+        """
+        For each aar, either an S or an R, but not both.
+        """
 
         indexLength = len(self.scheduleItems)
         if indexLength == 0:
@@ -626,7 +619,9 @@ class ScheduleAuteur:
         return composedNode
     
     def singleNode(self, node):
-        """For each AAR when either the ship or recieve is an empty."""
+        """
+        For each AAR when either the ship or recieve is an empty.
+        """
 
         if node[2] == 'empty':
             node[2] = 'Empty'
@@ -641,7 +636,9 @@ class ScheduleAuteur:
     
 
 class Locationator:
-    """Locations are updated using Location Manager."""
+    """
+    Locations are updated using Location Manager.
+    """
 
     def __init__(self):
 
@@ -721,7 +718,9 @@ class Locationator:
 
 
 class Divisionator:
-    """All methods involving divisions."""
+    """
+    All methods involving divisions.
+    """
 
     def __init__(self):
 
@@ -735,7 +734,9 @@ class Divisionator:
         return
 
     def divisionist(self):
-        """Mini controller to process divisions."""
+        """
+        Mini controller to process divisions.
+        """
 
         self.parseDivisions()
         self.removeObsoleteDivisions()
@@ -790,7 +791,8 @@ class Divisionator:
 
     def addDivisionToLocations(self):
         """
-        If there is only one division, add all locations to it."""
+        If there is only one division, add all locations to it.
+        """
 
         if PSE.DM.getNumberOfdivisions() == 1:
             division = PSE.DM.getList()[0]
@@ -823,7 +825,9 @@ class Divisionator:
 
 
 class Trackulator:
-    """Locations are updated using Location Manager."""
+    """
+    Locations are updated using Location Manager.
+    """
 
     def __init__(self):
 
@@ -896,10 +900,6 @@ class Trackulator:
         self.newTrackIds = list(set(self.updatedTrackIds).difference(set(self.currentTrackIds)))
         self.oldTrackIds = list(set(self.currentTrackIds).difference(set(self.updatedTrackIds)))
         self.continuingTrackIds = list(set(self.currentTrackIds).difference(set(self.oldTrackIds)))
-
-        # print(self.newTrackIds)
-        # print(self.oldTrackIds)
-        # print(self.continuingTrackIds)
 
         return
 
@@ -987,7 +987,9 @@ class Trackulator:
 
 
 class RStockulator:
-    """All methods concerning rolling stock."""
+    """
+    All methods concerning rolling stock.
+    """
 
     def __init__(self):
 
@@ -1007,8 +1009,6 @@ class RStockulator:
         self.carList = []
         self.shipList = []
 
-        print(self.scriptName + ' ' + str(SCRIPT_REV))
-
         return
 
     def updator(self):
@@ -1022,6 +1022,7 @@ class RStockulator:
         self.deleteOldRollingStock()
         self.updateRollingStock()
 
+        print(self.scriptName + '.updator ' + str(SCRIPT_REV))
         _psLog.info('Updated rolling stock')
 
         return
@@ -1034,6 +1035,8 @@ class RStockulator:
         self.getAllSpurs()
         self.applySpursSchedule()
         self.setCarsAtStaging()
+
+        print(self.scriptName + '.scheduleApplicator ' + str(SCRIPT_REV))
 
         return
     
@@ -1217,7 +1220,5 @@ class RStockulator:
         location = PSE.LM.getLocationByName(carData['location'])
         track = location.getTrackByName(carData['track'], None)
         car.setLocation(location, track, True)
-
-
 
         return

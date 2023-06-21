@@ -15,14 +15,20 @@ SCRIPT_REV = 20230201
 _psLog = PSE.LOGGING.getLogger('OPS.PT.Model')
 
 def resetConfigFileItems():
-    """Called from PSE.remoteCalls('resetCalls')"""
+    """
+    Called from PSE.remoteCalls('resetCalls')
+    """
 
     configFile = PSE.readConfigFile()
+
+    configFile['Patterns'].update({'AD':[]})
     configFile['Patterns'].update({'PD':''})
+
+    configFile['Patterns'].update({'AL':[]})
     configFile['Patterns'].update({'PL':''})
+
     configFile['Patterns'].update({'PT':{}})
     configFile['Patterns'].update({'PA':False})
-    configFile['Patterns'].update({'AL':[]})
 
     PSE.writeConfigFile(configFile)
 
@@ -38,9 +44,6 @@ def initializeComboBoxes():
     _psLog.debug('initializeComboBoxes')
 
     configFile = PSE.readConfigFile()
-
-    print(PSE.DM.getNumberOfdivisions())
-
 
     if PSE.DM.getNumberOfdivisions() == 0:
         configFile['Patterns'].update({'AD': []})

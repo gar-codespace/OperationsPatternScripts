@@ -78,7 +78,7 @@ class StartUp:
     def activateWidgets(self):
         """
         The *.getName value is the name of the action for the widget.
-        IE: newJmriRailroad, updateJmriLocations
+        IE: initializeJmriRailroad, updateJmriLocations
         """
 
         for widget in self.widgets:
@@ -86,7 +86,7 @@ class StartUp:
 
         return
 
-    def newJmriRailroad(self, EVENT):
+    def initializeJmriRailroad(self, EVENT):
         """Creates a new JMRI railroad from the tpRailroadData.json file"""
 
         _psLog.debug(EVENT)
@@ -95,10 +95,10 @@ class StartUp:
             return
         
         PSE.closeSubordinateWindows(level=1)
-        
-        Model.newJmriRailroad()
 
         PSE.remoteCalls('resetCalls')
+        
+        Model.initializeJmriRailroad()
 
         PSE.restartAllSubroutines()
 
