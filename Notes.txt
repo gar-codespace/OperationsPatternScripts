@@ -4,6 +4,7 @@ Todo:
   Duplication of PSE chunkPath.
   With multiple divisions, o2o Locations should add a division called Unassigned.
   o2o models addDivisionToLocations make into list comprehension
+  Add jPlus info to o2o exports?
 
 Comments:
   Schedule does not prevent setting a car to a track.

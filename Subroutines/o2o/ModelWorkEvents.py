@@ -99,7 +99,12 @@ class opsWorkListConversion:
         try:
             self.o2oWorkList['railroadName'] = PSE.expandedHeader()
         except:
-            self.o2oWorkList['railroadName'] = self.opsWorkList['railroadName']
+            # self.o2oWorkList['railroadName'] = self.opsWorkList['railroadName']
+            OSU = PSE.JMRI.jmrit.operations.setup
+            self.o2oWorkList['railroadName'] = unicode(OSU.Setup.getRailroadName(), PSE.ENCODING)
+
+
+           
 
         self.o2oWorkList['railroadDescription'] = self.opsWorkList['railroadDescription']
         self.o2oWorkList['trainName'] = self.opsWorkList['trainName']
@@ -294,8 +299,8 @@ class o2oWorkEvents:
         format: PUSO, TP ID, Road, Number, Car Type, L/E/O, Load or Model, From, To
         """
 
-        ID = rs['Road'] + rs['Number']
-        tpID = self.inverseTpRollingStockData[ID]
+        ID = rs['Road'] + ' ' + rs['Number']
+        # tpID = self.inverseTpRollingStockData[ID]
         load = ''
         try:
             load = rs['Load']
@@ -311,7 +316,7 @@ class o2oWorkEvents:
 
         so = rs['Destination'] + ';' + rs['Set_To']
 
-        return rs['PUSO'] + ',' + tpID + ',' + rs['Road'] + ',' + rs['Number'] + ',' + rs['Type'] + ',' + lt + ',' + load + ',' + pu + ',' + so
+        return rs['PUSO'] + ',' + ID + ',' + rs['Road'] + ',' + rs['Number'] + ',' + rs['Type'] + ',' + lt + ',' + load + ',' + pu + ',' + so
 
     def saveList(self):
 
