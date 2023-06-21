@@ -792,7 +792,7 @@ def genericWriteReport(filePath, genericReport):
 
 def genericDisplayReport(genericReportPath):
     """
-    Dealer's choice, the JMRI or Java version.
+    Dealer's choice, the JMRI or Java version, well, maybe not.
     Called by:
     MainScript.Controller.logItemSelected
     MainScript.Controller.ecItemSelected
@@ -801,9 +801,10 @@ def genericDisplayReport(genericReportPath):
     """
 
     targetFile = JAVA_IO.File(genericReportPath)
-    # JMRI.util.HelpUtil.openWindowsFile(targetFile)
+    JMRI.util.HelpUtil.openWindowsFile(targetFile)
 
-    JAVA_AWT.Desktop.getDesktop().edit(targetFile)
+    # JAVA_AWT.Desktop.getDesktop().edit(targetFile)
+    # Windows 11 throws error with json file
 
     return
 
