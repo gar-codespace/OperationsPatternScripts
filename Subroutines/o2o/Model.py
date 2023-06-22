@@ -796,14 +796,11 @@ class Divisionator:
 
         if PSE.DM.getNumberOfdivisions() == 1:
             division = PSE.DM.getList()[0]
-            for location in PSE.LM.getList():
-                location.setDivision(division)
+            [location.setDivision(division) for location in PSE.LM.getList()]
 
         if PSE.DM.getNumberOfdivisions() > 1:
             division = PSE.DM.newDivision(PSE.BUNDLE['Unassigned'])
-            for location in PSE.LM.getList():
-                if not location.getDivision(): # If its already assigned, don't change it
-                    location.setDivision(division)
+            [location.setDivision(division) for location in PSE.LM.getList() if not location.getDivision()]
 
         return
 
