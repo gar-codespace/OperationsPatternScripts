@@ -21,6 +21,8 @@ def resetConfigFileItems():
     configFile['Main Script']['LD']['SC'] = ''
     configFile['Main Script']['LD']['TR'] = ''
     configFile['Main Script']['LD']['YR'] = ''
+    configFile['Main Script']['LD']['JN'] = ''
+    configFile['Main Script']['LD']['RN'] = ''
 
     PSE.writeConfigFile(configFile)
 

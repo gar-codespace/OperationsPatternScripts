@@ -139,8 +139,8 @@ def makeTrackPatternReport(trackPattern):
     """Combine header and body into a complete report."""
 
     trackPatternReport = initializeReportHeader()
-    parseName = trackPatternReport['railroadName'].replace(';', '\n')
-    trackPatternReport.update({'railroadName':parseName})
+    # parseName = trackPatternReport['railroadName'].replace(';', '\n')
+    # trackPatternReport.update({'railroadName':parseName})
 
     division = PSE.getDivisionForLocation(trackPatternReport['locations'][0]['locationName'])
     trackPatternReport.update({'division':division})
@@ -202,7 +202,7 @@ def initializeReportHeader():
     configFile = PSE.readConfigFile()
 
     listHeader = {}
-    listHeader['railroadName'] = getRailroadName()
+    listHeader['railroadName'] = PSE.getRailroadName()
 
     listHeader['railroadDescription'] = configFile['Patterns']['RD']
     listHeader['trainName'] = configFile['Patterns']['TN']
@@ -213,29 +213,6 @@ def initializeReportHeader():
     listHeader['locations'] = [{'locationName': configFile['Patterns']['PL'], 'tracks': [{'cars': [], 'locos': [], 'length': '', 'trackname': ''}]}]
 
     return listHeader
-
-def getRailroadName():
-    """
-    Returns either a standard or extended railroad name.
-    """
-
-    configFile = PSE.readConfigFile()
-
-    if not configFile['Main Script']['CP']['EH']:
-        OSU = PSE.JMRI.jmrit.operations.setup
-        return unicode(OSU.Setup.getRailroadName(), PSE.ENCODING)
-
-    rrName = ''
-    if configFile['Main Script']['LD']['OR']:
-        rrName += configFile['Main Script']['LD']['OR'] + '\n'
-
-    if configFile['Main Script']['LD']['TR']:
-        rrName += configFile['Main Script']['LD']['TR'] + '\n'
-
-    if configFile['Main Script']['LD']['LO']:
-        rrName += configFile['Main Script']['LD']['LO'] + '\n'
-
-    return rrName[:-1]
 
 def jDivision(selectedItem):
     """Updates the Division: combo box and ripples the changes.

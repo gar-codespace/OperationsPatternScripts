@@ -4,6 +4,7 @@ Todo:
   Duplication of PSE chunkPath.
   Add jPlus info to o2o exports
   Add Import from o2o to jPlus
+  Add print statements to all try/except exceptions
 
 Comments:
   Schedule does not prevent setting a car to a track.

@@ -96,12 +96,9 @@ class opsWorkListConversion:
 
     def o2oWorkListUpdater(self):
 
-        try:
-            self.o2oWorkList['railroadName'] = PSE.expandedHeader()
-        except:
-            # self.o2oWorkList['railroadName'] = self.opsWorkList['railroadName']
-            OSU = PSE.JMRI.jmrit.operations.setup
-            self.o2oWorkList['railroadName'] = unicode(OSU.Setup.getRailroadName(), PSE.ENCODING)
+
+        self.o2oWorkList['railroadName'] = PSE.getRailroadName()
+
 
 
            
@@ -161,14 +158,17 @@ class jmriManifestConversion:
 
         _psLog.debug('jmriManifestConversion.convertHeader')
 
-        if self.configFile['Main Script']['CP'][__package__]:
+        # if self.configFile['Main Script']['CP'][__package__]:
 
-            OSU = PSE.JMRI.jmrit.operations.setup
-            extendedHeader = unicode(OSU.Setup.getRailroadName(), PSE.ENCODING)
-            self.o2oWorkEvents['railroadName'] = extendedHeader
-        else:
-            self.o2oWorkEvents['railroadName'] = PSE.HTML_PARSER().unescape(self.jmriManifest['railroad'])
+        OSU = PSE.JMRI.jmrit.operations.setup
+        extendedHeader = unicode(OSU.Setup.getRailroadName(), PSE.ENCODING)
+        self.o2oWorkEvents['railroadName'] = extendedHeader
+        #     self.o2oWorkEvents['railroadName'] = PSE.getRailroadName()
+        # else:
+        #     self.o2oWorkEvents['railroadName'] = PSE.HTML_PARSER().unescape(self.jmriManifest['railroad'])
 
+
+        # self.o2oWorkEvents['railroadName'] = '"' + PSE.getRailroadName() + '"'
         self.o2oWorkEvents['railroadDescription'] = PSE.JMRI.jmrit.operations.setup.Setup.getComment()
         self.o2oWorkEvents['trainName'] = PSE.HTML_PARSER().unescape(self.jmriManifest['userName'])
         self.o2oWorkEvents['trainDescription'] = PSE.HTML_PARSER().unescape(self.jmriManifest['description'])
@@ -249,7 +249,7 @@ class o2oWorkEvents:
     def __init__(self, workEvents):
 
         self.tpRollingStockData = ModelEntities.getTpRailroadJson('tpRollingStockData')
-        self.inverseTpRollingStockData = {v:k for k,v in self.tpRollingStockData.items()}
+        # self.inverseTpRollingStockData = {v:k for k,v in self.tpRollingStockData.items()}
         # https://stackoverflow.com/questions/2568673/inverse-dictionary-lookup-in-python
 
         self.workEvents = workEvents
@@ -263,8 +263,9 @@ class o2oWorkEvents:
     def o2oHeader(self):
 
         _psLog.debug('o2oWorkEvents.o2oHeader')
-        
-        self.o2oList = 'HN,' + self.workEvents['railroadName'] + '\n'
+
+        # self.o2oList = 'HN,' + self.workEvents['railroadName'] + '\n'
+        self.o2oList = 'HN,' + PSE.getRailroadName().replace('\n', ';') + '\n'
         self.o2oList += 'HT,' + self.workEvents['trainName'] + '\n'
         self.o2oList += 'HD,' + self.workEvents['trainDescription'] + '\n'
         # self.o2oList += 'HC,' + self.workEvents['trainComment'] + '\n'
