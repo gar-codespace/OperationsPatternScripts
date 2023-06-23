@@ -26,6 +26,7 @@ def refreshCalls():
     """Methods called when the subroutine needs to be refreshed."""
 
     Model.updateYearModeled()
+    Model.extendedRailroadDetails()
     
     return
 
@@ -33,8 +34,6 @@ def resetCalls():
     """Methods called to reset this subroutine."""
 
     Model.resetConfigFileItems()
-
-
 
     return
         

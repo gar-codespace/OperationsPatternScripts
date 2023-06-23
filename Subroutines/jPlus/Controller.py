@@ -108,6 +108,8 @@ class StartUp:
         OSU = PSE.JMRI.jmrit.operations.setup
         OSU.Setup.setYearModeled(configFile['Main Script']['LD']['YR'])
 
+        PSE.remoteCalls('refreshCalls')
+
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return

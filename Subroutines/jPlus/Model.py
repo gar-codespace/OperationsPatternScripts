@@ -26,6 +26,40 @@ def resetConfigFileItems():
 
     return
 
+def extendedRailroadDetails():
+    """
+    Two additional details:
+    Railroad Name ['RN'] and jPlus Composite Name ['JN'] are added to ['Main Script']['LD']
+    Called on jPlus refresh
+    """
+
+    configFile = PSE.readConfigFile()
+    layoutDetails = configFile['Main Script']['LD']
+    OSU = PSE.JMRI.jmrit.operations.setup
+
+    layoutDetails.update({'RN':OSU.Setup.getRailroadName()})
+
+    layoutDetails.update({'JN':makeCompositRailroadName(layoutDetails)})
+
+    PSE.writeConfigFile(configFile)
+
+    return
+
+def makeCompositRailroadName(layoutDetails):
+    """
+    Uses jPlus layout properties to make a composite name for other OPS subroutines.
+    """
+
+    operatingRoad = layoutDetails['OR']
+    territory = layoutDetails['TR']
+    location = layoutDetails['LO']
+
+    compositeName = operatingRoad + '\n' + territory + '\n' + location
+
+    return compositeName
+
+
+
 def updateYearModeled():
     """
     Writes the JMRI year modeled from settings into the jPlus Year Modeled text box.

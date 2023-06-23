@@ -2,7 +2,8 @@ Todo:
   How to publish DeepL?
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
   Duplication of PSE chunkPath.
-  Add jPlus info to o2o exports?
+  Add jPlus info to o2o exports
+  Add Import from o2o to jPlus
 
 Comments:
   Schedule does not prevent setting a car to a track.

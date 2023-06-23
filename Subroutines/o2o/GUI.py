@@ -30,6 +30,11 @@ class subroutineGui:
         self.ursButton = PSE.JAVX_SWING.JButton()
         self.ursButton.setText(PSE.BUNDLE['Cars'])
         self.ursButton.setName('updateJmriRollingingStock')
+
+        self.lpButton = PSE.JAVX_SWING.JButton()
+        self.lpButton.setText(PSE.BUNDLE['Properties'])
+        self.lpButton.setName('updateJmriProperties')
+
         return
 
     def guiMaker(self):
@@ -51,6 +56,8 @@ class subroutineGui:
         updateRrPanel.add(self.uiButton)
         updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(30,0)))
         updateRrPanel.add(self.ursButton)
+        updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(30,0)))
+        updateRrPanel.add(self.lpButton)
         updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(50,0)))
 
         tpPanel.add(updateRrPanel)
@@ -67,5 +74,6 @@ class subroutineGui:
         widgets.append(self.ulButton)
         widgets.append(self.uiButton)
         widgets.append(self.ursButton)
+        widgets.append(self.lpButton)
 
         return widgets

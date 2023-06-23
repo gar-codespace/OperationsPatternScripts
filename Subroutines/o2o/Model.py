@@ -64,7 +64,7 @@ def updateJmriLocations():
     """
 
 # This part does the locations    
-    Initiator().incrementor()
+    Initiator().initialist()
     Attributator().attributist()
     Locationator().locationist()
     Divisionator().divisionist()
@@ -135,6 +135,15 @@ def updateJmriRollingingStock():
 
     return
 
+def updateJmriProperties():
+
+    Initiator().properties()
+
+    print('JMRI railroad properties updated from TrainPlayer data')
+    _psLog.info('JMRI railroad properties updated from TrainPlayer data')
+
+    return
+
 
 class Initiator:
     """Make tweeks to Operations.xml here."""
@@ -158,8 +167,6 @@ class Initiator:
         some of which are personal.
         """
 
-        self.deleteDataJson()
-        self.o2oDetailsToConFig()
         self.setRailroadDetails()
         self.tweakOperationsXml()
         self.setReportMessageFormat()
@@ -169,25 +176,15 @@ class Initiator:
 
         return
     
-    def incrementor(self):
+    def properties(self):
         """
-        Mini controller to update railroad details.
+        Mini controller to update railroad properties.
         """
 
         self.o2oDetailsToConFig()
         self.setRailroadDetails()
 
         _psLog.info('Layout details updated')
-
-        return
-    
-    def deleteDataJson(self):
-
-        listOfFiles = ['jmriRailroadData', 'tpLocaleData', 'tpRollingStockData']
-        for file in listOfFiles:
-            targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', file + '.json')
-            if PSE.JAVA_IO.File(targetFile).isFile():
-                PSE.JAVA_IO.File(targetFile).delete()
 
         return
 
@@ -207,7 +204,7 @@ class Initiator:
         self.configFile =  PSE.readConfigFile()
 
         return
-
+    
     def setRailroadDetails(self):
         """
         Optional railroad details from the TrainPlayer layout are added to JMRI.
@@ -216,7 +213,7 @@ class Initiator:
         _psLog.debug('setRailroadDetails')
 
     # Set the name
-        self.OSU.Setup.setRailroadName(self.TpRailroad['layoutName'])
+        # self.OSU.Setup.setRailroadName(self.TpRailroad['layoutName'])
     # Set the year
         rrYear = self.configFile['Main Script']['LD']['YR']
         if rrYear:
@@ -293,30 +290,30 @@ class Attributator:
 
         return
     
-    def disposal(self):
-        """Runs when Initialize JMRI Railroad is selected"""
+    # def disposal(self):
+    #     """Runs when Initialize JMRI Railroad is selected"""
 
-        tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarRoads
-        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
-        TCM.dispose()
+    #     tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarRoads
+    #     TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+    #     TCM.dispose()
 
-        tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarTypes
-        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
-        TCM.dispose()
+    #     tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarTypes
+    #     TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+    #     TCM.dispose()
 
-        tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarLoads
-        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
-        TCM.dispose()
+    #     tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarLoads
+    #     TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+    #     TCM.dispose()
 
-        tc = PSE.JMRI.jmrit.operations.rollingstock.engines.EngineModels
-        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
-        TCM.dispose()
+    #     tc = PSE.JMRI.jmrit.operations.rollingstock.engines.EngineModels
+    #     TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+    #     TCM.dispose()
 
-        tc = PSE.JMRI.jmrit.operations.rollingstock.engines.EngineTypes
-        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
-        TCM.dispose()
+    #     tc = PSE.JMRI.jmrit.operations.rollingstock.engines.EngineTypes
+    #     TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+    #     TCM.dispose()
 
-        return
+    #     return
     
     def addRoads(self):
         """

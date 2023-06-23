@@ -168,3 +168,22 @@ class StartUp:
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
+
+    def updateJmriProperties(self, EVENT):
+        """Writes new or updated car and engine data."""
+
+        _psLog.debug(EVENT)
+
+        if not Model.getTrainPlayerRailroad():
+            return
+        
+        Model.updateJmriProperties()
+        
+        PSE.remoteCalls('refreshCalls')
+
+        PSE.restartAllSubroutines()
+
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+        return
+    
