@@ -91,24 +91,13 @@ def updateYearModeled():
 
     return
 
-def activateExtendedHeader():
+def extendedHeaderActivator(toggle):
     """
-    Sets configFile['Main Script]['CP']['EH"] to true.
-    """
-
-    configFile = PSE.readConfigFile()
-    configFile['Main Script']['CP'].update({'EH':True})
-    PSE.writeConfigFile(configFile)
-
-    return
-
-def deactivateExtendedHeader():
-    """
-    Sets configFile['Main Script]['CP']['EH"] to false.
+    Sets configFile['Main Script]['CP']['EH"] to true or false.
     """
 
     configFile = PSE.readConfigFile()
-    configFile['Main Script']['CP'].update({'EH':False})
+    configFile['Main Script']['CP'].update({'EH':toggle})
     PSE.writeConfigFile(configFile)
 
     return

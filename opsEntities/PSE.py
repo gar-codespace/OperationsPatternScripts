@@ -587,16 +587,16 @@ def getRailroadName():
     """
     Returns either a standard or extended railroad name or the JMRI railroad name.
     """
-
     configFile = readConfigFile()
-
-    if configFile['Main Script']['LD']['JN']:
-        railroadName = configFile['Main Script']['LD']['JN']
-    elif configFile['Main Script']['LD']['RN']:
-        railroadName = configFile['Main Script']['LD']['RN']
-    else:
-        OSU = PSE.JMRI.jmrit.operations.setup
-        railroadName = unicode(OSU.Setup.getRailroadName(), ENCODING)
+    OSU = JMRI.jmrit.operations.setup
+    railroadName = unicode(OSU.Setup.getRailroadName(), ENCODING)
+    
+    if configFile['Main Script']['CP']['EH']:
+        
+        if configFile['Main Script']['LD']['RN']:
+            railroadName = configFile['Main Script']['LD']['RN']
+        if configFile['Main Script']['LD']['JN']:
+            railroadName = configFile['Main Script']['LD']['JN']
 
     return railroadName
 
@@ -707,7 +707,6 @@ def getShortLoadType(car):
     try:
         rs = CM.getByRoadAndNumber(car['Road'], car['Number']) # Pattern scripts nomenclature
     except:
-        print('Exception at: PSE.getShortLoadType')
         rs = CM.getByRoadAndNumber(car['road'], car['number']) # JMRI nomenclature
 
     lt =  BUNDLE['unknown'].upper()[0]
@@ -720,8 +719,8 @@ def getShortLoadType(car):
     if rs.isCaboose() or rs.isPassenger():
         lt = BUNDLE['occupied'].upper()[0]
 
-    # return lt
-    return 'L'
+    return lt
+    # return 'L'
 
 def makeReportItemWidthMatrix():
     """The attribute widths (AW) for each of the rolling stock attributes is defined in the report matrix (RM) of the config file."""

@@ -1,10 +1,7 @@
 Todo:
   How to publish DeepL?
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
-  Duplication of PSE chunkPath.
-  Add jPlus info to o2o exports
-  Add Import from o2o to jPlus
-  Add print statements to all try/except exceptions
+  Duplication of PSE chunkPath.  
 
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -47,6 +44,7 @@ Tested Items:
     Plugin and help bundles validate OK.
     Subroutines activate and deactivate OK.
     All subroutine restarters refactored as PSE.restartSubroutineByName OK.
+    Add print statements to all try/except exceptions OK.
 
   Language Bundle
     Language changes OK.
@@ -98,6 +96,7 @@ Tested Items:
     Set cars to spur removes FD OK.
     Toggle AS Apply schedule in config file works OK.
     getOwner() or getOwnerName() depending on version OK
+    Reports use jPlus data OK.
 
   o2o
     Subroutine turns on and off OK.
@@ -133,6 +132,7 @@ Tested Items:
     New JMRI railroad should close trains and routes OK.
     Listeners set when using throwback OK.
     o2o Import ignore EQDK OK.
+    TrainPlayer work event lists use jPlus data OK.
 
   Throwback
     Subroutine turns on and off OK.
