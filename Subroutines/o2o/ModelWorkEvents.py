@@ -80,6 +80,7 @@ class opsWorkListConversion:
             parsedRS['Load Type'] = PSE.getShortLoadType(rs)
             parsedRS['Load'] = rs['Load']
         except:
+            print('Exception at: o2o.ModelWorkEvents.parsePtRs')
             parsedRS['Load'] = rs['Model']
         parsedRS['Location'] = rs['Location']
         parsedRS['Track'] = rs['Track']
@@ -225,6 +226,7 @@ class jmriManifestConversion:
             parsedRS['Load Type'] = PSE.getShortLoadType(rs)
             parsedRS['Load'] = rs['load']
         except:
+            print('Exception at: o2o.ModelWorkEvents.parseRS')
             parsedRS['Load'] = rs['model']
 
         parsedRS['Location'] = rs['location']['userName']
@@ -306,11 +308,13 @@ class o2oWorkEvents:
         try:
             load = rs['Load']
         except:
+            print('Exception at: o2o.ModelWorkEvents.makeLine')
             load = rs['Model']
 
         try: # Locos don't use load type
             lt = rs['Load Type']
         except:
+            print('Exception at: o2o.ModelWorkEvents.makeLine')
             lt = u'X'
 
         pu = rs['Location'] + ';' + rs['Track']

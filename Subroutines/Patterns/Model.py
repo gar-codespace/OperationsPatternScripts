@@ -55,6 +55,7 @@ def initializeComboBoxes():
             try:
                 configFile['Patterns'].update({'PL': locations[0]})
             except:
+                print('Exception at: Patterns.Model.initializeComboBoxes')
                 configFile['Patterns'].update({'PL': ''})
 
 
@@ -70,6 +71,7 @@ def initializeComboBoxes():
             try:
                 configFile['Patterns'].update({'PL': locations[0]})
             except:
+                print('Exception at: Patterns.Model.initializeComboBoxes')
                 configFile['Patterns'].update({'PL': ''})
 
     _psLog.info('Set initial location and tracks in config file')

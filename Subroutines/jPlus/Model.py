@@ -72,6 +72,7 @@ def updateYearModeled():
     try:
         configFile['Main Script']['CP']['Subroutines.jPlus']
     except:
+        print('Exception at: jPlus.Model.updateYearModeled')
         return
 
     OSU = PSE.JMRI.jmrit.operations.setup
@@ -85,6 +86,7 @@ def updateYearModeled():
         targetPanel = PSE.getComponentByName(frameTitle, 'yearModeled')
         targetPanel.setText(yr)
     except:
+        print('Exception at: jPlus.Model.updateYearModeled')
         pass
 
     return

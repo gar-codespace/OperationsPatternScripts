@@ -146,6 +146,7 @@ def sortLocoList(locoList):
             translatedkey = (sortKey)
             locoList.sort(key=lambda row: row[translatedkey])
         except:
+            print('Exception at: Patterns.ModelEntities.sortLocoList')
             print('Loco list not sorted')
 
     return locoList
@@ -213,6 +214,7 @@ def getDetailsForLoco(locoObject):
     try:
         locoDetailDict['Owner'] = locoObject.getOwner()
     except:
+        print('Exception at: Patterns.ModelEntities.getDetailsForLoco')
         locoDetailDict['Owner'] = locoObject.getOwnerName()
     locoDetailDict['Comment'] = locoObject.getComment()
     locoDetailDict['Location'] = locoObject.getLocationName()
@@ -222,6 +224,7 @@ def getDetailsForLoco(locoObject):
     try:
         locoDetailDict['Consist'] = locoObject.getConsist().getName()
     except:
+        print('Exception at: Patterns.ModelEntities.getDetailsForLoco')
         locoDetailDict['Consist'] = PSE.BUNDLE['Single']
     locoDetailDict['Set_To'] = u'[  ] '
     locoDetailDict[u'PUSO'] = u' '
@@ -246,6 +249,7 @@ def sortCarList(carList):
             translatedkey = (sortKey)
             carList.sort(key=lambda row: row[translatedkey])
         except:
+            print('Exception at: Patterns.ModelEntities.sortCarList')
             print('Car list not sorted')
 
     return carList

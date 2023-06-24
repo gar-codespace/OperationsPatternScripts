@@ -13,6 +13,7 @@ from opsEntities import PSE
 try:
     from opsBundle import Keys
 except:
+    print('Exception at: Translators.from opsBundle import Keys')
     pass
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
@@ -48,6 +49,7 @@ class UseDeepL:
         try:
             translation = response['translations'][0]['text']
         except:
+            print('Exception at: Translators.UseDeepL.parseResult')
             translation = error
 
         return (source, translation)

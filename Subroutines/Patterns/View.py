@@ -186,6 +186,7 @@ def getStandins(car, standins):
         if not car['Final Dest']:
             fdStandin = standins['FD']
     except:
+        print('Exception at: Patterns.View.getStandins')
         fdStandin = ''
 
     return destStandin, fdStandin
@@ -309,6 +310,7 @@ def makeTrackPatternCsv(trackPattern):
         try:
             trackPatternCsv += u'TN,Track name,' + unicode(track['trackName'], PSE.ENCODING) + '\n'
         except:
+            print('Exception at: Patterns.View.makeTrackPatternCsv')
             pass
         for loco in track['locos']:
             trackPatternCsv +=  loco['Set_To'] + ',' \
@@ -331,6 +333,7 @@ def makeTrackPatternCsv(trackPattern):
         try:
             trackPatternCsv += u'TN,Track name,' + unicode(track['trackName'], PSE.ENCODING) + '\n'
         except:
+            print('Exception at: Patterns.View.makeTrackPatternCsv')
             pass
         for car in track['cars']:
             trackPatternCsv +=  car['Set_To'] + ',' \

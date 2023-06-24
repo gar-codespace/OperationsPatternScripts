@@ -533,6 +533,7 @@ class MakeSetCarsEqptRows():
                 try:
                     label = PSE.JAVX_SWING.JLabel(car[translatedItem])
                 except: # The hazardous field is a boolean so work around it
+                    print('Exception at: Patterns.GUI.MakeSetCarsEqptRows.makeSetCarsCarRows')
                     label = PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Hazardous'])
                 box = makeSwingBox(self.reportWidth[translatedItem] * self.panelWidth, self.panelHeight)
                 box.add(label)

@@ -1069,6 +1069,7 @@ class RStockulator:
             spurSchedule = spur.getSchedule()
             items = spurSchedule.getItemsBySequenceList()
         except:
+             print('Exception at: o2o.Model.getShipList')
              _psLog.warning('No schedule for track: ' + spur.getName())
              return
         
@@ -1094,6 +1095,7 @@ class RStockulator:
             self.tpInventory.pop(0) # Remove the key
             _psLog.info('TrainPlayer Inventory file OK')
         except:
+            print('Exception at: o2o.Model.getTpInventory')
             _psLog.warning('TrainPlayer Inventory file not found')
 
         return

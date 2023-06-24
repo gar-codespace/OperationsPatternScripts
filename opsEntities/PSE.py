@@ -214,6 +214,7 @@ def validateSubroutines():
         try:
             configFile['Main Script']['CP'][subroutineName]
         except:
+            print('Exception at: PSE.validateSubroutines')
             configFile['Main Script']['CP'][subroutineName] = True
 
     writeConfigFile(configFile)
@@ -233,6 +234,7 @@ def addActiveSubroutines(targetPanel):
         try:
             configFile['Main Script']['CP'][subroutineName]
         except:
+            print('Exception at: PSE.addActiveSubroutines')
             configFile['Main Script']['CP'][subroutineName] = True
 
     writeConfigFile(configFile)
@@ -705,6 +707,7 @@ def getShortLoadType(car):
     try:
         rs = CM.getByRoadAndNumber(car['Road'], car['Number']) # Pattern scripts nomenclature
     except:
+        print('Exception at: PSE.getShortLoadType')
         rs = CM.getByRoadAndNumber(car['road'], car['number']) # JMRI nomenclature
 
     lt =  BUNDLE['unknown'].upper()[0]
@@ -972,6 +975,7 @@ def checkConfigFile():
         loadJson(genericReadReport(targetPath))
     except:
         makeNewConfigFile()
+        print('Exception at: PSE.checkConfigFile')
         print('Using new configFile')
 
     return loadJson(genericReadReport(targetPath))
@@ -1114,6 +1118,7 @@ def getColorA():
         color = getGenericColor(colorName)
         return color
     except:
+        print('Exception at: PSE.getColorA')
         _psLog.warning('colorA definition not found in configFile.json')
         return JAVA_AWT.Color(0, 0, 0, 0)
 
@@ -1129,6 +1134,7 @@ def getColorB():
         color = getGenericColor(colorName)
         return color
     except:
+        print('Exception at: PSE.getColorB')
         _psLog.warning('colorB definition not found in configFile.json')
         return JAVA_AWT.Color(0, 0, 0, 0)
 
@@ -1144,6 +1150,7 @@ def getColorC():
         color = getGenericColor(colorName)
         return color
     except:
+        print('Exception at: PSE.getColorC')
         _psLog.warning('colorC definition not found in configFile.json')
         return JAVA_AWT.Color(0, 0, 0, 0)
 

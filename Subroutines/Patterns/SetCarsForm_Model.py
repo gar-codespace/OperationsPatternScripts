@@ -154,6 +154,7 @@ def scheduleUpdate(toTrack, rollingStock):
     try:
         schedule = PSE.SM.getScheduleByName(toTrack.getScheduleName())
     except:
+        print('Exception at: Patterns.Model.scheduleUpdate')
         return
 
     carType = rollingStock.getTypeName()

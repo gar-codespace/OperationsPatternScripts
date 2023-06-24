@@ -141,6 +141,7 @@ def getSetToLocationAndTrack(locationName, trackName):
         track = location.getTrackByName(trackName, None)
         return location, track
     except:
+        print('Exception at: o2o.ModelEntities.getSetToLocationAndTrack')
         print('Location and track not found: ', locationName, trackName)
         return None, None
 

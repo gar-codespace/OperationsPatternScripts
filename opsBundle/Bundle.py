@@ -153,6 +153,7 @@ def getBundleForLocale():
         try:
             compositeBundle[item] = localeBundle[item]
         except:
+            print('Exception at: Bundle.getBundleForLocale')
             compositeBundle[item] = translation
 
     return compositeBundle
@@ -458,6 +459,7 @@ class MakeBundleItem(PSE.JMRI.jmrit.automat.AbstractAutomaton):
                 translation = PSE.loadJson(response.read())
                 response.close()
             except:
+                print('Exception at: Bundle.handle')
                 _psLog.warning('Not translated: ' + self.item)
             if response:
                 break
