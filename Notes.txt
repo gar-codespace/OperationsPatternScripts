@@ -1,7 +1,10 @@
 Todo:
   How to publish DeepL?
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
-  Duplication of PSE chunkPath.  
+  Duplication of PSE chunkPath.
+  Add console output to verify o2o set cars to track.
+  When jPlus is deactivated don't delete the config data, just turn it off
+  is config Main Script LD LN obsolete?
 
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -11,7 +14,7 @@ Comments:
   os.path.join() is used to make all paths for better OS compatibility.
   Plugin is Javafied as much as possible.
   _trackNameClickedOn moved to PSE.TRACK_NAME_CLICKED_ON
-  o2o importTpRailroad rolled into New JMRI Railroad and Update JMRI Railroad.
+  o2o importTpRailroad rolled into the jPlus buttons.
   On TrainPlayer side, a check is added to validate locale is in format 'location;track'.
   On TrainPlayer side, a check is added to validate industries has a locale entry.'.
   Generalized built train listeners into opsEntities.Listeners.
@@ -23,57 +26,52 @@ Comments:
 
 Tested Items:
   Plugin
-    Handle multiple versions OK.
+    Tested with JMRI versions 5.2
+    Tested with Java versions 11.0
     Handles font size change OK.
-    Test for file write locations OK.
     Works if two instances of PanelPro are open OK.
-    All Set Cars windows close when Pattern Scripts window is closed OK.
+    Test for file write locations OK.
     PatternConfig.json version check OK.
     Bad edits of config file protected as much as possible. CBB
     On defective config file, plugin replaces the defective file with the master copy OK.
-    Pattern Scripts plugin hardened against errors more or less. CBB
-    Plugin restarts OK.
-    Handles JMRI load type Empty or empty OK.
-    All SI items set to false works OK.
-    SI set to TP only works OK.
     Template sub tests OK.
-    Display all 'critical' log messages to Script Output window OK.
-    Add a listener to monitor if a new train is created or deleted, builtTrain listeners updated accordingly.
-    Mapped TP OC Class/XO reserved as JMRI spur, turn off train directions.
-    ALERT messages open and display to the script output window OK.
-    Plugin and help bundles validate OK.
-    Subroutines activate and deactivate OK.
+    Plugin restarts OK.
     All subroutine restarters refactored as PSE.restartSubroutineByName OK.
+    All SI items set to false works OK.
+    Handles JMRI load type Empty or empty OK.
+    Subroutines activate and deactivate OK.
+    Display all 'critical' log messages to Script Output window OK.
+    ALERT messages open and display to the script output window OK.
     Add print statements to all try/except exceptions OK.
+    formatText() works with utf-8 OK.
 
   Language Bundle
+    Plugin and help bundles validate OK.
     Language changes OK.
     Language bundle sketched in, to be hardened against web errors.
-    Bundle added with French test case.
     BUNDLE calls placed in 'View' methods only as much as possible.
     Bundle creates new plugin and help page translations OK.
-    DYI version of concurrency seems to work OK.
+    Homebrew version of concurrency seems to work OK.
 
   jPlus
     Subroutine turns on and off OK.
-    Extended RR details works with JMRI repoert OK.
-    Extended RR details works with JMRI webserver OK.
-    Extended RR details works with Patterns repoert OK.
+    jPlus seperated from JMRI reports and web server for now.
+    Extended RR details works with Patterns report OK.
+    Plays well with o2o.
 
   Patterns
     Subroutine turns on and off OK.
+    All Set Cars windows close when Pattern Scripts window is closed OK.
+    Patterns subroutine hardened against errors more or less. CBB
     Test if the user is not using divisions OK.
     Test with really long location and spur names OK.
     PatternScriptEntities.getShortLoadType works and translates OK.
     Kernel Size is displaying in reports OK.
     [Hold] changed to ['Current Track Name'] for reports.
     Ignore Track Length works with yard tracks OK.
-    formatText formats ascii OK.
-    formatText() works with utf-8 OK.
     Create JSON header OK.
     Create JSON body OK.
     Append JSON switchlist OK.
-    Write JMRI location list to trainPlayer OK.
     Write JMRI workEvent list to TrainPlayer OK.
     Report Title - Pattern Report edits OK.
     Report Title - Set Cars edits OK.
@@ -82,8 +80,8 @@ Tested Items:
     Locos in report follow jmri.jmrit.operations.setup.Setup.getDropEngineMessageFormat OK.
     Cars in report follow jmri.jmrit.operations.setup.Setup.getLocalCarMessageFormat OK.
     Reports ignore Tab,Tab2, Tab3 OK.
-    JMRI and j Plus output to text and csv manifest and switch list OK.
-    OPS and j Plus output to text and csv manifest and switch list OK.
+    JMRI and jPlus output to text and csv manifest and switch list OK.
+    OPS and jPlus output to text and csv manifest and switch list OK.
     Caboose and passenger move OK.
     Caboose and Passenger car types are loaded as O for Occupied OK.
     When setting to a spur the reserved column for the spur shows an entry, as it should when setting a destination.
@@ -99,43 +97,47 @@ Tested Items:
     Reports use jPlus data OK.
 
   o2o
-    Subroutine turns on and off OK.
-    New JMRI Railroad working OK.
-    When active, exports JMRI manifest to TP OK.
-    When not active, does not export JMRI manifest to TP OK.
-    TP import creates the track length OK.
-    ExportToTrainPlayer.py works as module OK.
-    ExportToTrainPlayer.py works as script OK.
-    When run as a stand alone script, ManifestForTrainPlayer does not read config file, which is correct.
-    New and Update o2o buttons refreshes the PS Subroutine GUI OK.
-    Update RR updates track length OK.
-    Update RR updates track type OK.
-    Update RR renames locations OK.
-    Update RR renames tracks OK.
-    Update RR adds new location and new track OK.
-    Update RR deletes old locations and tracks OK.
-    Update RR deletes an old track from an existing location OK.
-    Update RR moves an existing track to a new location OK.
-    Update RR moves an existing track to a different existing location OK.
-    Update RR resolves staging/non-staging tracks at same location OK.
-    Update RR works with making new location and adding existing track to it OK.
-    Resets built trains on Update RR and Update RS OK.
-    New RR adds Divisions OK.
-    Update RR updates divisions OK.
-    The layout year is the report year OK.
-    Tries to set a new cars load from schedule OK.
-    o2o Model deleteOldTracks(self): only deletes leftover tracks from unchanged locations.
-    Update Rolling Stock only updates Name, Number, Location, Load, Consist/Kernal, Type OK.
-    Sets undefined track length to Settings.MaxTrainLength OK.
-    Updates new Settings.MaxTrainlength OK.
-    Adds FD to car at industry if schedule has a FD OK.
-    New JMRI railroad should close trains and routes OK.
-    Listeners set when using throwback OK.
-    o2o Import ignore EQDK OK.
-    TrainPlayer work event lists use jPlus data OK.
+    Import-
+      Subroutine turns on and off OK.
+      Initialize and Import o2o buttons refreshes the PS Subroutine GUI OK.
+      Initialize JMRI Railroad working OK.
+      o2o Import ignore EQDK OK.
+      Tries to set a new cars load from schedule OK.
+      Sets track length to TP track length OK.
+      Mapped TP OC Class/XO reserved as JMRI spur, turn off train directions.
+      Spurs set length to Vacant Spots or if 0 to @CAPAC OK. 
+      Import RR updates track length OK.
+      Import RR updates track type OK.
+      Import RR renames tracks OK.
+      Import RR renames locations OK.
+      Import RR adds new location and new track OK.
+      Import RR deletes old locations and tracks OK.
+      Import RR deletes an old track from an existing location OK.
+      Import RR moves an existing track to a new location OK.
+      Import RR moves an existing track to a different existing location OK.
+      Import RR updates divisions OK.
+      Import Rolling Stock only updates Name, Number, Location, Load, Consist/Kernal, Type OK.
+      Import RR resolves staging/non-staging tracks at same location OK.
+      Import RR works with making new location and adding existing track to it OK.
+      Correct windows close when pressing Initialize and Update buttons OK.
+      Resets built trains on Import OK.
+      o2o Model deleteOldTracks(self): only deletes tracks with an ID that's not currently in the TP layout OK.
+      Adds FD to car at industry if schedule has a valid FD OK.
+
+    Export-
+      When active, exports JMRI manifest to TP OK.
+      When not active, does not export JMRI manifest to TP OK.
+      Add a listener to monitor if a new train is created or deleted, builtTrain listeners updated accordingly OK.
+      The layout year is the report year OK.
+      TrainPlayer work event lists use jPlus data OK.
+      ExportToTrainPlayer.py works as module OK.
+
+      Not retested - ExportToTrainPlayer.py works as script OK.
+      Not retested - When run as a stand alone script, ManifestForTrainPlayer does not read config file, which is correct.
 
   Throwback
     Subroutine turns on and off OK.
+    o2o Listeners set when using throwback OK.
     Makes commits OK.
     Scroll through commits OK.
     Vertical or horizontal display OK.
@@ -157,15 +159,18 @@ Catches Items:
   Catches user edit train while TP export is enabled.
   Catches missing or corrupt TrainPlayer layout export files OK.
   Catches new JMRI RR with o2o and j Plus active OK.
+  Catches TrainPlayer error: track is not a spur but has an Industries entry OK.
 
 Version 3 ideas:
   Harden up Bundle against web errors, untranslated items.
   Harden Translator.translateSingle() from timeout errors.
   Replace RemoteCalls with listeners.
   How to use locale modifier, IE en-GB.
+  Test formatText with ascii and others
   All the subroutine actionListener() are very similar. Can this duplication be eliminated?
   020.ModelWorkEvents.*.parsePtRs and o2o.ModelWorkEvents.*.parseRS do the same things in a different way, can they be merged?
   Implement mergeConfigFiles() maybe?
+  jPlus integration into JMRI reports and web server.
   Start working on adding Patterns to the web server.
     Set Rolling Stock to Track button creates a train.
     Switch List button on Set Cars form adds work to the train and builds the train.

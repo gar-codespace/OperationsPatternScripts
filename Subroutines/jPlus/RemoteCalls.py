@@ -12,7 +12,7 @@ from Subroutines.jPlus import Model
 def activatedCalls():
     """Methods called when this subroutine is activated."""
 
-    Model.extendedHeaderActivator(True)
+    # Model.extendedHeaderActivator(False)
     
     return
 
@@ -34,7 +34,7 @@ def refreshCalls():
 def resetCalls():
     """Methods called to reset this subroutine."""
 
-    Model.resetConfigFileItems()
+    # Model.resetConfigFileItems()
 
     return
         

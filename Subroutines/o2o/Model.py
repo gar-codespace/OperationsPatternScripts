@@ -66,7 +66,9 @@ def updateJmriLocations():
 # This part does the locations    
     Initiator().initialist()
     Attributator().attributist()
-    Locationator().locationist()
+    if not Locationator().locationist():
+        return
+    
     Divisionator().divisionist()
     print('JMRI locations updated from TrainPlayer data')
     _psLog.info('JMRI locations updated from TrainPlayer data')
@@ -82,6 +84,9 @@ def updateJmriLocations():
     RStockulator().scheduleApplicator()
     print('JMRI rolling stock updated from TrainPlayer data')
     _psLog.info('JMRI rolling stock updated from TrainPlayer data')
+
+# This part does the extended header
+    Initiator().properties()
 
     return
 
@@ -110,6 +115,10 @@ def updateJmriTracks():
     RStockulator().scheduleApplicator()
     print('JMRI rolling stock updated from TrainPlayer data')
     _psLog.info('JMRI rolling stock updated from TrainPlayer data')
+
+# This part does the extended header
+    Initiator().properties()
+
     return
 
 def updateJmriRollingingStock():
@@ -133,6 +142,9 @@ def updateJmriRollingingStock():
     print('JMRI rolling stock updated from TrainPlayer data')
     _psLog.info('JMRI rolling stock updated from TrainPlayer data')
 
+# This part does the extended header
+    Initiator().properties()
+    
     return
 
 def updateJmriProperties():
@@ -481,11 +493,32 @@ class ScheduleAuteur:
                     scheduleItem = schedule.addItem(item[0])
                     scheduleItem.setReceiveLoadName(item[1])
                     scheduleItem.setShipLoadName(item[2])
-                    scheduleItem.setDestination(PSE.LM.getLocationByName(item[3]))
+                    destination = self.checkDestination(item[3])
+                    scheduleItem.setDestination(destination)
                     scheduleItem.setRoadName(item[4])
                     # scheduleItem.useViaOutForSomething(item[5])
 
         return
+    
+    def checkDestination(self, testDest):
+        """
+        Validates the schedule items destination was typed correctly into TrainPlayer.
+        """
+
+        if not testDest:
+            return None
+
+        checkDest = PSE.LM.getLocationByName(testDest)
+        try:
+            checkDest.getName()
+            return checkDest
+
+        except AttributeError:
+            _psLog.critical('ALERT: Not a valid location:' + ' ' + testDest)
+            PSE.openOutputFrame(PSE.BUNDLE['ALERT: Not a valid location:'] + ' ' + testDest)
+            PSE.openOutputFrame('Error at: TrainPlayer/Advanced Ops/Industries/Staging')
+            return None
+
     
     def composeSchedule(self):
         """
@@ -662,13 +695,17 @@ class Locationator:
 
         self.getCurrentRrData()
         self.getUpdatedRrData()
+
+        if not self.validateUpdatedLocations():
+            return False
+        
         self.parseLocations()
         self.addNewLocations()
         self.deleteOldLocations()
 
         PSE.LMX.save()
 
-        return
+        return True
     
     def getCurrentRrData(self):
 
@@ -681,6 +718,29 @@ class Locationator:
         self.updatedRrData = ModelEntities.getTpRailroadJson('tpRailroadData')
 
         return
+    
+    def validateUpdatedLocations(self):
+        """
+        Check that staging locations don't have other track types.
+        """
+
+        stagingList = []
+        nonStagingList = []
+        for index, locale in self.updatedRrData['locales'].items():
+            if locale['type'] == 'staging':
+                stagingList.append(locale['location'])
+            else:
+                nonStagingList.append(locale['location'])
+
+        invalidLocations = list(set(stagingList).intersection(nonStagingList))
+        if invalidLocations:
+            _psLog.critical('Alert: staging and non staging tracks at:' + ' ' + str(invalidLocations))
+            PSE.openOutputFrame(PSE.BUNDLE['Alert: staging and non staging tracks at:'] + ' ' + str(invalidLocations))
+            PSE.openOutputFrame(PSE.BUNDLE['Import terminated without completion'])
+
+            return False
+
+        return True
     
     def parseLocations(self):
         """
@@ -969,14 +1029,20 @@ class Trackulator:
         return
 
     def addSchedulesToSpurs(self):
+        """
+        Catches TrainPlayer error: track is not a spur but has an industries entry.
+        """
 
         for id, data in self.updatedRrData['industries'].items():
             location = PSE.LM.getLocationByName(data['a-location'])
             track = location.getTrackByName(data['b-track'], 'Spur')
+            if not track:
+                _psLog.critical('ALERT: Not a spur track: ' + data['b-track'])
+                PSE.openOutputFrame(PSE.BUNDLE['ALERT: Not a spur track:'] + ' ' + data['b-track'])
+                continue
             scheduleName = data['c-schedule'].keys()[0]
             schedule = PSE.SM.getScheduleByName(scheduleName)
             track.setSchedule(schedule)
-
         return
 
 
@@ -1027,7 +1093,7 @@ class RStockulator:
         """
 
         self.getAllSpurs()
-        self.applySpursSchedule()
+        self.applySpursScheduleToCars()
         self.setCarsAtStaging()
 
         print(self.scriptName + '.scheduleApplicator ' + str(SCRIPT_REV))
@@ -1035,6 +1101,9 @@ class RStockulator:
         return
     
     def getAllSpurs(self):
+        """
+        Returns an unordered list of spurs as strings.
+        """
 
         for track in PSE.getAllTracks():
             if track.getTrackTypeName() == 'spur':
@@ -1042,24 +1111,42 @@ class RStockulator:
 
         return
     
-    def applySpursSchedule(self):
+    def applySpursScheduleToCars(self):
+        """
+        Applies a suprs schedule to each car at the spur.
+        """
 
         for spur in self.listOfSpurs:
             self.carList = PSE.CM.getList(spur)
             self.shipList = self.getShipList(spur)
-            self.applySchedule()
+            self.applyScheduleItemToCar()
 
         return
     
-    def applySchedule(self):
+    def applyScheduleItemToCar(self):
 
         for car in self.carList:
+            litmus = 0
             for ship in self.shipList:
                 if car.getTypeName() == ship[0]:
-                    car.setLoadName(ship[1])
+                    currentTrack = car.getTrack()
+                    currentSchedule = currentTrack.getSchedule()
+                    currentScheduleItem = currentSchedule.getItemByType(ship[0])
+                    currentLoad = currentScheduleItem.getShipLoadName()
+                    currentDestination = currentScheduleItem.getDestinationName()
+                    currentDestination = PSE.LM.getLocationByName(currentDestination)
+
+                    car.setLoadName(currentLoad)
+                    car.setFinalDestination(currentDestination)
+                    litmus = 1
+
+            if litmus == 0:
+                print('Alert: Schedule item not found for car: ' + car.getRoadName() + ' ' + car.getNumber() + ' ' + car.getTrackName())
+                PSE.openOutputFrame(PSE.BUNDLE['Alert: Schedule item not found for car:'] + ' ' + car.getRoadName() + ' ' + car.getNumber() + ' ' + car.getTrackName())
+                PSE.openOutputFrame(PSE.BUNDLE['Track does not serve this car type'])
 
         return
-    
+
     def getShipList(self, spur):
         """
         A track can be a spur and not have a schedule.
@@ -1075,7 +1162,7 @@ class RStockulator:
         
         shipList = []
         for item in items:
-            shipList.append((item.getTypeName(), item.getShipLoadName()))
+            shipList.append((item.getTypeName(), item.getShipLoadName(), item.getDestinationName()))
 
         return shipList
     

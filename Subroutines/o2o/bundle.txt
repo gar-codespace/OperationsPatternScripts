@@ -9,6 +9,12 @@ ALERT: TrainPlayer export issue.
 Alert: Create a new JMRI layout first.
 Alert: No JMRI locations were found.
 Alert: No JMRI tracks were found.
+ALERT: Not a spur track:
+ALERT: Not a valid location:
+Alert: Schedule item not found for car:
+Alert: staging and non staging tracks at:
+Import terminated without completion
+Track does not serve this car type
 Check TrainPlayer-Advanced Ops-Locales for semi colon.
 Check TrainPlayer-Advanced Ops-Industries for errors.
 From TrainPlayer, re-export layout to JMRI.
@@ -16,8 +22,9 @@ JMRI does not allow staging and non-staging track types at the same location.
 No changes were made to your JMRI layout.
 ops-work-list
 TrainPlayer layout not imported to JMRI.
-Import preperation
-Import from TrainPlayer
+Import Preperation
+Import TrainPlayer's Advanced Ops
+Import Personalized Settings
 Initialize
 Locations
 Industries
@@ -29,4 +36,4 @@ Unassigned
 empty
 load
 occupied
-Properties
+Railroad Details

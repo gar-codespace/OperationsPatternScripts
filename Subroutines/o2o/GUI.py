@@ -32,7 +32,7 @@ class subroutineGui:
         self.ursButton.setName('updateJmriRollingingStock')
 
         self.lpButton = PSE.JAVX_SWING.JButton()
-        self.lpButton.setText(PSE.BUNDLE['Properties'])
+        self.lpButton.setText(PSE.BUNDLE['Railroad Details'])
         self.lpButton.setName('updateJmriProperties')
 
         return
@@ -43,24 +43,30 @@ class subroutineGui:
         tpPanel = PSE.JAVX_SWING.JPanel()
         newRrPanel = PSE.JAVX_SWING.JPanel()
         updateRrPanel = PSE.JAVX_SWING.JPanel()
+        extendedRrPanel = PSE.JAVX_SWING.JPanel()
 
-        newRrPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE['Import preperation'])
-        newRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(50,0)))
+        newRrPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE['Import Preperation'])
+        newRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(40,0)))
         newRrPanel.add(self.nrButton)
-        newRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(50,0)))
+        newRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(40,0)))
 
-        updateRrPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE['Import from TrainPlayer'])
-        updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(50,0)))
+        updateRrPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE["Import TrainPlayer's Advanced Ops"])
+        updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(40,0)))
         updateRrPanel.add(self.ulButton)
-        updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(30,0)))
+        updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
         updateRrPanel.add(self.uiButton)
-        updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(30,0)))
+        updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
         updateRrPanel.add(self.ursButton)
-        updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(30,0)))
-        updateRrPanel.add(self.lpButton)
-        updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(50,0)))
+        updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(40,0)))
+
+        extendedRrPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE['Import Personalized Settings'])
+        extendedRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(40,0)))
+        extendedRrPanel.add(self.lpButton)
+        extendedRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(40,0)))
 
         tpPanel.add(updateRrPanel)
+        tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(30,0)))
+        tpPanel.add(extendedRrPanel)
         tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(30,0)))
         tpPanel.add(newRrPanel)
 
