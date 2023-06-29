@@ -165,12 +165,6 @@ class subroutineGui:
         actionFrame.add(actionRow)
 
         tpPanel = PSE.JAVX_SWING.JPanel()
-    # Vertical layout
-        # tpPanel.setLayout(PSE.JAVX_SWING.BoxLayout(tpPanel, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
-        # tpPanel.add(selectionFrame)
-        # tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,10)))
-        # tpPanel.add(actionFrame)
-    # Horizontal layout
         tpPanel.add(selectionFrame)
         tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(10,0)))
         tpPanel.add(actionFrame)

@@ -137,13 +137,11 @@ Tested Items:
 
   Throwback
     Subroutine turns on and off OK.
-    o2o Listeners set when using throwback OK.
+    o2o Listeners set back to trains when using throwback OK.
     Makes commits OK.
     Scroll through commits OK.
-    Vertical or horizontal display OK.
     Throwbacks one, some, or all xml OK.
     Set checkbox default to False OK.
-    o2o listeners set when using throwback OK.
 
 Catches Items:
   Catches pattern report button press no tracks selected OK.
@@ -155,13 +153,13 @@ Catches Items:
   Catches empty boxes added to jmri.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat() OK.
   Catches invalid track typed into set cars box OK.
   Catches on the fly edit of RS name or road.
-  Catches user add/remove train while TP export is enabled.
   Catches user edit train while TP export is enabled.
   Catches missing or corrupt TrainPlayer layout export files OK.
-  Catches new JMRI RR with o2o and j Plus active OK.
   Catches TrainPlayer error: track is not a spur but has an Industries entry OK.
+  Catches user add/remove train while TP export is enabled.  
 
 Version 3 ideas:
+  Add a new subroutine, streamlined trains window.
   Harden up Bundle against web errors, untranslated items.
   Harden Translator.translateSingle() from timeout errors.
   Replace RemoteCalls with listeners.
