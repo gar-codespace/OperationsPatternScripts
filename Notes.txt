@@ -2,9 +2,7 @@ Todo:
   How to publish DeepL?
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
   Duplication of PSE chunkPath.
-  Add console output to verify o2o set cars to track.
-  When jPlus is deactivated don't delete the config data, just turn it off
-  is config Main Script LD LN obsolete?
+  o2o need to check locations on Industries button press and Cars button press.
 
 Comments:
   Schedule does not prevent setting a car to a track.

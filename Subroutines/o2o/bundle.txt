@@ -11,8 +11,10 @@ Alert: No JMRI locations were found.
 Alert: No JMRI tracks were found.
 ALERT: Not a spur track:
 ALERT: Not a valid location:
+ALERT: Not a valid track:
 Alert: Schedule item not found for car:
 Alert: staging and non staging tracks at:
+Cars not imported. Import Locations recommended
 Import terminated without completion
 Track does not serve this car type
 Check TrainPlayer-Advanced Ops-Locales for semi colon.

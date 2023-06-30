@@ -70,18 +70,23 @@ def updateJmriLocations():
         return
     
     Divisionator().divisionist()
+
     print('JMRI locations updated from TrainPlayer data')
     _psLog.info('JMRI locations updated from TrainPlayer data')
 
 # This part does the tracks
     ScheduleAuteur().auteurist()
     Trackulator().trackist()
+
     print('JMRI tracks updated from TrainPlayer data')
     _psLog.info('JMRI tracks updated from TrainPlayer data')
 
 # This part does the rolling stock
-    RStockulator().updator()
-    RStockulator().scheduleApplicator()
+    Attributator().attributist()
+    rollingStockulator = RStockulator()
+    rollingStockulator.updator()
+    rollingStockulator.scheduleApplicator()
+
     print('JMRI rolling stock updated from TrainPlayer data')
     _psLog.info('JMRI rolling stock updated from TrainPlayer data')
 
@@ -107,12 +112,20 @@ def updateJmriTracks():
     Attributator().attributist()
     ScheduleAuteur().auteurist()
     Trackulator().trackist()
+
     print('JMRI tracks updated from TrainPlayer data')
     _psLog.info('JMRI tracks updated from TrainPlayer data')
 
 # This part does the rolling stock
-    RStockulator().updator()
-    RStockulator().scheduleApplicator()
+    rollingStockulator = RStockulator()
+    if not rollingStockulator.checker():
+        return
+    
+    Attributator().attributist()
+
+    rollingStockulator.updator()
+    rollingStockulator.scheduleApplicator()
+
     print('JMRI rolling stock updated from TrainPlayer data')
     _psLog.info('JMRI rolling stock updated from TrainPlayer data')
 
@@ -136,9 +149,15 @@ def updateJmriRollingingStock():
         PSE.openOutputFrame(message)
         return
 
+    rollingStockulator = RStockulator()
+    if not rollingStockulator.checker():
+        return
+    
     Attributator().attributist()
-    RStockulator().updator()
-    RStockulator().scheduleApplicator()
+
+    rollingStockulator.updator()
+    rollingStockulator.scheduleApplicator()
+
     print('JMRI rolling stock updated from TrainPlayer data')
     _psLog.info('JMRI rolling stock updated from TrainPlayer data')
 
@@ -1071,19 +1090,196 @@ class RStockulator:
 
         return
 
+    def checker(self):
+        """
+        Does some checks on the data.
+        """
+
+        self.getTpInventory()
+        self.splitTpList()
+        if not self.checkLocations():
+            return False
+        
+        return True
+
+    def getTpInventory(self):
+
+        try:
+            self.tpInventory = ModelEntities.getTpExport(self.tpRollingStockFileName)
+            self.tpInventory.pop(0) # Remove the date
+            self.tpInventory.pop(0) # Remove the key
+            _psLog.info('TrainPlayer Inventory file OK')
+        except:
+            print('Exception at: o2o.Model.getTpInventory')
+            _psLog.warning('TrainPlayer Inventory file not found')
+
+        return
+
+    def splitTpList(self):
+        """
+        self.tpInventory string format:
+        TP Car ; TP Type ; TP AAR; JMRI Location; JMRI Track; TP Load; TP Kernel, TP ID
+        TP Loco; TP Model; TP AAR; JMRI Location; JMRI Track; TP Load; TP Consist, TP ID
+
+        self.tpCars  dictionary format: {TP ID :  {type: TP Collection, aar: TP AAR, location: JMRI Location, track: JMRI Track, load: TP Load, kernel: TP Kernel, id: JMRI ID}}
+        self.tpLocos dictionary format: {TP ID :  [Model, AAR, JMRI Location, JMRI Track, 'unloadable', Consist, JMRI ID]}
+        """
+
+        _psLog.debug('splitTpList')
+
+        for item in self.tpInventory:
+            line = item.split(';')
+            if line[2].startswith('ET'):
+                continue
+            if line[2].startswith('E'):
+                self.tpLocos[line[7]] = {'model': line[1], 'aar': line[2], 'location': line[3], 'track': line[4], 'load': line[5], 'consist': line[6], 'id': line[0]}
+            else:
+                self.tpCars[line[7]] = {'type': line[1], 'aar': line[2], 'location': line[3], 'track': line[4], 'load': line[5], 'kernel': line[6], 'id': line[0]}
+
+        return
+    
+    def checkLocations(self):
+        """
+        Checks the validity of the RS location and track.
+        """
+
+        for id, data in self.tpLocos.items():
+            if not self.testTest(data):
+                return False
+            
+        for id, data in self.tpCars.items():
+            if not self.testTest(data):
+                return False
+            
+        return True
+    
+    def testTest(self, data):
+        """
+        Returns the result of testing the location and track.
+        """
+
+        if PSE.LM.getLocationByName(data['location']) == None:
+            print('ALERT: Not a valid location:' + ' ' + data['location'])
+            _psLog.critical('ALERT: Not a valid location:' + ' ' + data['location'])
+            PSE.openOutputFrame(PSE.BUNDLE['ALERT: Not a valid location:'] + ' ' + data['location'])
+            PSE.openOutputFrame(PSE.BUNDLE['Cars not imported. Import Locations recommended'])
+            return False
+        
+        if PSE.LM.getLocationByName(data['location']).getTrackByName(data['track'], None) == None:
+            _psLog.critical('ALERT: Not a valid track:' + ' ' + data['location'] + ':' + data['track'])
+            PSE.openOutputFrame(PSE.BUNDLE['ALERT: Not a valid track:'] + ' ' + data['location'] + ':' + data['track'])
+            PSE.openOutputFrame(PSE.BUNDLE['Cars not imported. Import Locations recommended'])
+            print('ALERT: Not a valid track:' + ' ' + data['location'] + ':' + data['track'])
+            return False
+        
+        return True
+
     def updator(self):
         """
         Mini controller to update JMRI rolling stock.
         """
 
-        self.getTpInventory()
-        self.splitTpList()
         self.parseTpRollingStock()
         self.deleteOldRollingStock()
         self.updateRollingStock()
 
         print(self.scriptName + '.updator ' + str(SCRIPT_REV))
         _psLog.info('Updated rolling stock')
+
+        return
+
+    def parseTpRollingStock(self):
+        """
+        Makes a list of obsolete cars and locos.
+        """
+
+        updatedLocoIds = []
+        for id, data in self.tpLocos.items():
+            updatedLocoIds.append(data['id'])
+
+        currentLocoIds = []
+        for item in self.jmriLocos:
+            currentLocoIds.append(item.getRoadName() + ' ' + item.getNumber())
+
+        updatedCarIds = []
+        for id, data in self.tpCars.items():
+            updatedCarIds.append(data['id'])
+
+        currentCarIds = []
+        for item in self.jmriCars:
+            currentCarIds.append(item.getRoadName() + ' ' + item.getNumber())
+
+        self.oldTpLocoIds = list(set(currentLocoIds).difference(set(updatedLocoIds)))
+        self.oldTpCarIds = list(set(currentCarIds).difference(set(updatedCarIds)))
+
+        return
+
+    def deleteOldRollingStock(self):
+
+        for loco in self.oldTpLocoIds:
+            locoId = loco.replace(' ', '')
+            PSE.EM.deregister(PSE.EM.getById(locoId))
+
+        for car in self.oldTpCarIds:
+            carId = car.replace(' ', '')
+            PSE.CM.deregister(PSE.CM.getById(carId))
+
+        return
+
+    def updateRollingStock(self):
+        """
+        Whether the RS is new or continuing, its 'base' attributes are updated.
+        """
+
+        _psLog.debug('setBaseCarAttribs')
+        for id, data in self.tpCars.items():
+            self.setBaseCarAttribs(data)
+
+        _psLog.debug('setBaseLocoAttribs')
+        for id, data in self.tpLocos.items():
+            self.setBaseLocoAttribs(data)
+
+        return
+
+    def setBaseLocoAttribs(self, locoData):
+        """
+        Sets only the consist, length, model, type, location, track.
+        self.tpLocos dictionary format: {TP ID :  [Model, AAR, JMRI Location, JMRI Track, 'unloadable', Consist, JMRI ID]}
+        """
+
+        locoId = locoData['id'].split()
+        loco = PSE.EM.newRS(locoId[0], locoId[1])
+
+        loco.setTypeName(locoData['aar'])
+        loco.setModel(locoData['model'])
+        loco.setLength(str(self.configFile['DL']))
+        consist = PSE.ZM.getConsistByName(locoData['consist'])
+        loco.setConsist(consist)
+
+        location = PSE.LM.getLocationByName(locoData['location'])
+        track = location.getTrackByName(locoData['track'], None)
+        loco.setLocation(location, track, True)
+
+        return
+
+    def setBaseCarAttribs(self, carData):
+        """
+        Sets only the kernel, length, type, location, track.
+        self.tpCars  dictionary format: {TP ID :  {type: TP Collection, aar: TP AAR, location: JMRI Location, track: JMRI Track, load: TP Load, kernel: TP Kernel, id: JMRI ID}}
+        """
+
+        carId = carData['id'].split()
+        car = PSE.CM.newRS(carId[0], carId[1])
+
+        car.setTypeName(carData['aar'])
+        car.setLoadName(carData['load'])
+        car.setLength(str(self.configFile['DL']))
+        kernel = PSE.KM.getKernelByName(carData['kernel'])
+        car.setKernel(kernel)
+
+        location = PSE.LM.getLocationByName(carData['location'])
+        track = location.getTrackByName(carData['track'], None)
+        car.setLocation(location, track, True)
 
         return
 
@@ -1171,137 +1367,5 @@ class RStockulator:
         for car in PSE.CM.getList():
             if car.getTrack().getTrackTypeName() == 'staging':
                 car.setLoadName('E')
-
-        return
-
-    def getTpInventory(self):
-
-        try:
-            self.tpInventory = ModelEntities.getTpExport(self.tpRollingStockFileName)
-            self.tpInventory.pop(0) # Remove the date
-            self.tpInventory.pop(0) # Remove the key
-            _psLog.info('TrainPlayer Inventory file OK')
-        except:
-            print('Exception at: o2o.Model.getTpInventory')
-            _psLog.warning('TrainPlayer Inventory file not found')
-
-        return
-
-    def splitTpList(self):
-        """
-        self.tpInventory string format:
-        TP Car ; TP Type ; TP AAR; JMRI Location; JMRI Track; TP Load; TP Kernel, TP ID
-        TP Loco; TP Model; TP AAR; JMRI Location; JMRI Track; TP Load; TP Consist, TP ID
-
-        self.tpCars  dictionary format: {TP ID :  {type: TP Collection, aar: TP AAR, location: JMRI Location, track: JMRI Track, load: TP Load, kernel: TP Kernel, id: JMRI ID}}
-        self.tpLocos dictionary format: {TP ID :  [Model, AAR, JMRI Location, JMRI Track, 'unloadable', Consist, JMRI ID]}
-        """
-
-        _psLog.debug('splitTpList')
-
-        for item in self.tpInventory:
-            line = item.split(';')
-            if line[2].startswith('ET'):
-                continue
-            if line[2].startswith('E'):
-                self.tpLocos[line[7]] = {'model': line[1], 'aar': line[2], 'location': line[3], 'track': line[4], 'load': line[5], 'consist': line[6], 'id': line[0]}
-            else:
-                self.tpCars[line[7]] = {'type': line[1], 'aar': line[2], 'location': line[3], 'track': line[4], 'load': line[5], 'kernel': line[6], 'id': line[0]}
-
-        return
-    
-    def parseTpRollingStock(self):
-        """
-        Makes a list of obsolete cars and locos.
-        """
-
-        updatedLocoIds = []
-        for id, data in self.tpLocos.items():
-            updatedLocoIds.append(data['id'])
-
-        currentLocoIds = []
-        for item in self.jmriLocos:
-            currentLocoIds.append(item.getRoadName() + ' ' + item.getNumber())
-
-        updatedCarIds = []
-        for id, data in self.tpCars.items():
-            updatedCarIds.append(data['id'])
-
-        currentCarIds = []
-        for item in self.jmriCars:
-            currentCarIds.append(item.getRoadName() + ' ' + item.getNumber())
-
-        self.oldTpLocoIds = list(set(currentLocoIds).difference(set(updatedLocoIds)))
-        self.oldTpCarIds = list(set(currentCarIds).difference(set(updatedCarIds)))
-
-        return
-
-    def deleteOldRollingStock(self):
-
-        for loco in self.oldTpLocoIds:
-            locoId = loco.replace(' ', '')
-            PSE.EM.deregister(PSE.EM.getById(locoId))
-
-        for car in self.oldTpCarIds:
-            carId = car.replace(' ', '')
-            PSE.CM.deregister(PSE.CM.getById(carId))
-
-        return
-
-    def updateRollingStock(self):
-        """
-        Whether the RS is new or continuing, its 'base' attributes are updated.
-        """
-
-        _psLog.debug('setBaseCarAttribs')
-        for id, data in self.tpCars.items():
-            self.setBaseCarAttribs(data)
-
-        _psLog.debug('setBaseLocoAttribs')
-        for id, data in self.tpLocos.items():
-            self.setBaseLocoAttribs(data)
-
-        return
-
-    def setBaseLocoAttribs(self, locoData):
-        """
-        Sets only the consist, length, model, type, location, track.
-        self.tpLocos dictionary format: {TP ID :  [Model, AAR, JMRI Location, JMRI Track, 'unloadable', Consist, JMRI ID]}
-        """
-
-        locoId = locoData['id'].split()
-        loco = PSE.EM.newRS(locoId[0], locoId[1])
-
-        loco.setTypeName(locoData['aar'])
-        loco.setModel(locoData['model'])
-        loco.setLength(str(self.configFile['DL']))
-        consist = PSE.ZM.getConsistByName(locoData['consist'])
-        loco.setConsist(consist)
-
-        location = PSE.LM.getLocationByName(locoData['location'])
-        track = location.getTrackByName(locoData['track'], None)
-        loco.setLocation(location, track, True)
-
-
-        return
-
-    def setBaseCarAttribs(self, carData):
-        """
-        Sets only the kernel, length, type, location, track.
-        self.tpCars  dictionary format: {TP ID :  {type: TP Collection, aar: TP AAR, location: JMRI Location, track: JMRI Track, load: TP Load, kernel: TP Kernel, id: JMRI ID}}
-        """
-
-        carId = carData['id'].split()
-        car = PSE.CM.newRS(carId[0], carId[1])
-
-        car.setTypeName(carData['aar'])
-        car.setLoadName(carData['load'])
-        car.setLength(str(self.configFile['DL']))
-        kernel = PSE.KM.getKernelByName(carData['kernel'])
-        car.setKernel(kernel)
-
-        location = PSE.LM.getLocationByName(carData['location'])
-        track = location.getTrackByName(carData['track'], None)
-        car.setLocation(location, track, True)
 
         return
