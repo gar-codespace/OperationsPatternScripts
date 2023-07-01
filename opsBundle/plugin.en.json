@@ -45,6 +45,7 @@
   "Import TrainPlayer's Advanced Ops": "Import TrainPlayer's Advanced Ops", 
   "Import terminated without completion": "Import terminated without completion", 
   "Industries": "Industries", 
+  "Industries not imported. Import Locations recommended": "Industries not imported. Import Locations recommended", 
   "Initialize": "Initialize", 
   "JMRI does not allow staging and non-staging track types at the same location.": "JMRI does not allow staging and non-staging track types at the same location.", 
   "Location": "Location", 

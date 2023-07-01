@@ -36,6 +36,7 @@ def getTrainPlayerRailroad():
 def initializeJmriRailroad():
     """
     Mini controller to initialize a JMRI railroad for TrainPlayer import.
+    Action on press of Import Initialize
     Does not change Trains and Routes.
     Called by:
     Controller.StartUp.initializeJmriRailroad
@@ -55,7 +56,8 @@ def initializeJmriRailroad():
 def updateJmriLocations():
     """
     Mini controller.
-    Applies changes made to the TrainPlayer/OC/Locations, Industries, and Cars tabs.
+    Action for the Import Locations button.
+    Changes are rippled through Industries, Cars and Railroad Details
     Does not change Trains and Routes.
     Schedules are rewritten from scratch.
     Locations uses LM to update everything.
@@ -98,20 +100,24 @@ def updateJmriLocations():
 def updateJmriTracks():
     """
     Mini controller.
+    Action for the Import Industries button.
+    Changes are rippled through Cars and Railroad Details
     Uses LM to update tracks and track attributes.
-    Also updates rolling stock.
     Called by:
     Controller.Startup.updateJmriTracks
     """
     
     if not PSE.getAllLocationNames():
-        message = PSE.BUNDLE['Alert: No JMRI locations were found.']
-        PSE.openOutputFrame(message)        
+        PSE.openOutputFrame(PSE.BUNDLE['Alert: No JMRI locations were found.'])
         return
 
+    trackulator = Trackulator()
+    if not trackulator.checker():
+        return
+    
     Attributator().attributist()
     ScheduleAuteur().auteurist()
-    Trackulator().trackist()
+    trackulator.trackist()
 
     print('JMRI tracks updated from TrainPlayer data')
     _psLog.info('JMRI tracks updated from TrainPlayer data')
@@ -121,7 +127,7 @@ def updateJmriTracks():
     if not rollingStockulator.checker():
         return
     
-    Attributator().attributist()
+    # Attributator().attributist()
 
     rollingStockulator.updator()
     rollingStockulator.scheduleApplicator()
@@ -137,7 +143,8 @@ def updateJmriTracks():
 def updateJmriRollingingStock():
     """
     Mini controller.
-    Applies changes made to TrainPlayer rolling stock.
+    Action for the Import Cars button.
+    Changes are rippled through Railroad Details
     Loads cars at spurs per schedule.
     Sets cars load at staging to E.
     Called by:
@@ -167,6 +174,9 @@ def updateJmriRollingingStock():
     return
 
 def updateJmriProperties():
+    """
+    Action on press of the Import Railroad Details button.
+    """
 
     Initiator().properties()
 
@@ -307,7 +317,9 @@ class Attributator:
         return
 
     def attributist(self):
-        """Mini controller to add rolling stock attributes to the RS xml files."""
+        """
+        Mini controller to add rolling stock attributes to the RS xml files.
+        """
 
         self.addRoads()
         self.addCarAar()
@@ -320,31 +332,6 @@ class Attributator:
         _psLog.info('New rolling stock attributes')
 
         return
-    
-    # def disposal(self):
-    #     """Runs when Initialize JMRI Railroad is selected"""
-
-    #     tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarRoads
-    #     TCM = PSE.JMRI.InstanceManager.getDefault(tc)
-    #     TCM.dispose()
-
-    #     tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarTypes
-    #     TCM = PSE.JMRI.InstanceManager.getDefault(tc)
-    #     TCM.dispose()
-
-    #     tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarLoads
-    #     TCM = PSE.JMRI.InstanceManager.getDefault(tc)
-    #     TCM.dispose()
-
-    #     tc = PSE.JMRI.jmrit.operations.rollingstock.engines.EngineModels
-    #     TCM = PSE.JMRI.InstanceManager.getDefault(tc)
-    #     TCM.dispose()
-
-    #     tc = PSE.JMRI.jmrit.operations.rollingstock.engines.EngineTypes
-    #     TCM = PSE.JMRI.InstanceManager.getDefault(tc)
-    #     TCM.dispose()
-
-    #     return
     
     def addRoads(self):
         """
@@ -925,6 +912,44 @@ class Trackulator:
 
         return
 
+    def checker(self):
+        """
+        Mini controller.
+        Checks that the locations that the tracks update to exist.
+        """
+
+        self.getCurrentRrData()
+        self.getUpdatedRrData()
+
+        if not self.testTest():
+            return False
+
+        return True
+
+    def testTest(self):
+        """
+        Returns the result of the locations check.
+        """
+
+        currentLocations = []
+        for id, data in self.currentRrData['locales'].items():
+            currentLocations.append(data['location'])
+
+        updatedLocations = []
+        for id, data in self.updatedRrData['locales'].items():
+            updatedLocations.append(data['location'])
+
+        testResult = list(set(updatedLocations).difference(currentLocations))
+        if len(testResult) == 0:
+            return True
+        else:
+            print('ALERT: Not a valid location:' + ' ' + str(testResult))
+            _psLog.critical('ALERT: Not a valid location:' + ' ' + str(testResult))
+            PSE.openOutputFrame(PSE.BUNDLE['ALERT: Not a valid location:'] + ' ' + str(testResult))
+            PSE.openOutputFrame(PSE.BUNDLE['Industries not imported. Import Locations recommended'])
+
+            return False
+    
     def trackist(self):
         """
         Mini controller.

@@ -14,6 +14,7 @@ ALERT: Not a valid location:
 ALERT: Not a valid track:
 Alert: Schedule item not found for car:
 Alert: staging and non staging tracks at:
+Industries not imported. Import Locations recommended
 Cars not imported. Import Locations recommended
 Import terminated without completion
 Track does not serve this car type

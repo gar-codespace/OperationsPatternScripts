@@ -154,7 +154,8 @@ Catches Items:
   Catches user edit train while TP export is enabled.
   Catches missing or corrupt TrainPlayer layout export files OK.
   Catches TrainPlayer error: track is not a spur but has an Industries entry OK.
-  Catches user add/remove train while TP export is enabled.  
+  Catches user add/remove train while TP export is enabled.
+  Catches o2o pressing import button that doesn't correspond to items actually updated.
 
 Version 3 ideas:
   Add a new subroutine, streamlined trains window.
