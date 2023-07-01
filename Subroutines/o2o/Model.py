@@ -60,32 +60,33 @@ def updateJmriLocations():
     Changes are rippled through Industries, Cars and Railroad Details
     Does not change Trains and Routes.
     Schedules are rewritten from scratch.
-    Locations uses LM to update everything.
     Called by:
     Controller.StartUp.updateJmriLocations
     """
 
 # This part does the locations    
-    Initiator().initialist()
-    Attributator().attributist()
     if not Locationator().locationist():
         return
     
+    Initiator().initialist()
     Divisionator().divisionist()
 
     print('JMRI locations updated from TrainPlayer data')
     _psLog.info('JMRI locations updated from TrainPlayer data')
 
 # This part does the tracks
+    Attributator().attributist()
     ScheduleAuteur().auteurist()
-    Trackulator().trackist()
-
+    trackulator = Trackulator()
+    trackulator.checker()
+    trackulator.trackist()
+    
     print('JMRI tracks updated from TrainPlayer data')
     _psLog.info('JMRI tracks updated from TrainPlayer data')
 
 # This part does the rolling stock
-    Attributator().attributist()
     rollingStockulator = RStockulator()
+    rollingStockulator.checker()
     rollingStockulator.updator()
     rollingStockulator.scheduleApplicator()
 
