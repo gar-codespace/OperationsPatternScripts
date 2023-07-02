@@ -2,6 +2,7 @@ Todo:
   How to publish DeepL?
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
   Duplication of PSE chunkPath.
+  o2o. When a new car type is added, check the box for it at all locations.
 
 Comments:
   Schedule does not prevent setting a car to a track.
