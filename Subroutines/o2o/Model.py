@@ -1260,20 +1260,20 @@ class RStockulator:
         _psLog.debug('setBaseCarAttribs')
         for id, data in self.tpCars.items():
             self.setBaseCarAttribs(data)
-
+    
         _psLog.debug('setBaseLocoAttribs')
         for id, data in self.tpLocos.items():
             self.setBaseLocoAttribs(data)
 
         return
-
+    
     def setBaseLocoAttribs(self, locoData):
         """
         Sets only the consist, length, model, type, location, track.
         self.tpLocos dictionary format: {TP ID :  [Model, AAR, JMRI Location, JMRI Track, 'unloadable', Consist, JMRI ID]}
         """
 
-        locoId = locoData['id'].split()
+        locoId = self.splitId(locoData['id'])
         loco = PSE.EM.newRS(locoId[0], locoId[1])
 
         loco.setTypeName(locoData['aar'])
@@ -1294,7 +1294,7 @@ class RStockulator:
         self.tpCars  dictionary format: {TP ID :  {type: TP Collection, aar: TP AAR, location: JMRI Location, track: JMRI Track, load: TP Load, kernel: TP Kernel, id: JMRI ID}}
         """
 
-        carId = carData['id'].split()
+        carId = self.splitId(carData['id'])
         car = PSE.CM.newRS(carId[0], carId[1])
 
         car.setTypeName(carData['aar'])
@@ -1309,6 +1309,24 @@ class RStockulator:
 
         return
 
+    def splitId(self, rsData):
+        """
+        Returns the road name and road number as a list.
+        """
+
+        dataId = rsData.split(' ')
+        try:
+            return [dataId[0], dataId[1]]
+        except IndexError:
+            roadName = ''
+            roadNumber = ''
+            for char in rsData:
+                if not char.isdigit():
+                    roadName = roadName + char
+                else:
+                    roadNumber = roadNumber + char
+            return [roadName, roadNumber]
+        
     def scheduleApplicator(self):
         """
         Mini controller sets the loads for cars at spurs.
