@@ -831,6 +831,7 @@ class Divisionator:
 
         self.parseDivisions()
         self.removeObsoleteDivisions()
+        self.assignDivisions()
         self.addNewDivisions()
         self.addDivisionToLocations()
         self.addUnreportedToUnknown()
@@ -854,21 +855,29 @@ class Divisionator:
 
     def removeObsoleteDivisions(self):
         """
-        First remove all divisions that are not in the TrainPlayer export.
-        Second, for every location check that the assigned division is valid.
-        If no, set the division to unassigned.
+        Remove all divisions that are not in the TrainPlayer export.
         """
 
         for division in self.obsoleteDivisions:
             obsolete = PSE.DM.getDivisionByName(division)
             PSE.DM.deregister(obsolete)
 
+        return
+    
+    def assignDivisions(self):
+        """        
+        For every location check that the assigned division is valid.
+        If no, set the division to unassigned.
+        """
+
         allDivisions = PSE.getAllDivisionNames()
         locations = PSE.getAllLocationNames()
         for location in locations:
             divisionName = PSE.LM.getLocationByName(location).getDivisionName()
             if divisionName not in allDivisions and PSE.DM.getNumberOfdivisions() != 0:
-                PSE.LM.getLocationByName(location).setDivision(PSE.DM.newDivision('Unassigned'))
+                divisionName = PSE.DM.newDivision(unicode(PSE.BUNDLE['Unassigned'], PSE.ENCODING))
+                
+                PSE.LM.getLocationByName(location).setDivision(divisionName)
             if divisionName not in allDivisions and PSE.DM.getNumberOfdivisions() == 0:
                 PSE.LM.getLocationByName(location).setDivision(None)
         return

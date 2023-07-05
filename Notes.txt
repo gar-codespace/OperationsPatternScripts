@@ -2,7 +2,7 @@ Todo:
   How to publish DeepL?
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
   Duplication of PSE chunkPath.
-  o2o. When a new car type is added, check the box for it at all locations.
+  Maybe add a PSE name fetcher like unicode(PSE.BUNDLE['fetch this name'], PSE.ENCODING) to centralize conversion.
 
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -121,7 +121,8 @@ Tested Items:
       Adds FD to car at industry if schedule has a valid FD OK.
       TrainPlayer names the location for unlabeled tracks as 'Unreported'.
       o2o then imports 'Unreported' translated into the current language.
-      The division 'Unknown is translated into the current language.
+      The location 'Unknown' is translated into the current language.
+      The division 'Unassigned' is added to the bundle.
       
 
     Export-
