@@ -80,21 +80,31 @@ def tpDirectoryExists():
 """o2o.Model"""
 
 
-def addCarTypesToSpurs():
-    """
-    Mini controller.
-    Checks the car types check box for car types used at each spur
-    """
 
-    _psLog.debug('addCarTypesToSpurs')
 
-    
-    deselectCarTypes()
-    selectCarTypes()
+def addTypesToTracks():
+
+
+    tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarTypes
+    TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+    typeList = TCM.getNames()
+
+    tc = PSE.JMRI.jmrit.operations.rollingstock.engines.EngineTypes
+    TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+
+    typeList += TCM.getNames()
+
+    for location in PSE.LM.getList():
+        for type in typeList:
+            location.addTypeName(type)      
+
+    for track in PSE.getAllTracks():
+        for type in typeList:
+            track.addTypeName(type)
 
     return
 
-def deselectCarTypes():
+def deselectCarTypesAtSpurs():
     """
     For each track in industries, deselect all the RS types,
     Called by:
@@ -112,7 +122,7 @@ def deselectCarTypes():
 
     return
 
-def selectCarTypes():
+def selectCarTypesAtSpurs():
     """
     Select just the RS types used by that track, leaving unused types deselected.
     Called by:

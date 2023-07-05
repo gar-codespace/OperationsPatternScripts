@@ -17,8 +17,6 @@ Comments:
   On TrainPlayer side, a check is added to validate industries has a locale entry.'.
   Generalized built train listeners into opsEntities.Listeners.
   Translate the plugin does not delete the config file.
-  TrainPlayer names the location for unlabeled tracks as 'Unreported'. o2o then imports this location as
-  'Unreported' so as with other locations, the name is not translated.
   Since the Patterns track dict is created when called, it is not necessary to save it into configFile['Patterns']['PT']
   o2o Initialize Railroad does not reset Throwback.
 
@@ -121,6 +119,10 @@ Tested Items:
       Resets built trains on Import OK.
       o2o Model deleteOldTracks(self): only deletes tracks with an ID that's not currently in the TP layout OK.
       Adds FD to car at industry if schedule has a valid FD OK.
+      TrainPlayer names the location for unlabeled tracks as 'Unreported'.
+      o2o then imports 'Unreported' translated into the current language.
+      The division 'Unknown is translated into the current language.
+      
 
     Export-
       When active, exports JMRI manifest to TP OK.

@@ -75,11 +75,14 @@ def updateJmriLocations():
     _psLog.info('JMRI locations updated from TrainPlayer data')
 
 # This part does the tracks
-    Attributator().attributist()
-    ScheduleAuteur().auteurist()
+    Attributator().updateRsAttributes()
+    ModelEntities.addTypesToTracks()
+    ScheduleAuteur().updateSchedules()
     trackulator = Trackulator()
     trackulator.checker()
     trackulator.trackist()
+    ModelEntities.deselectCarTypesAtSpurs()
+    ModelEntities.selectCarTypesAtSpurs()
     
     print('JMRI tracks updated from TrainPlayer data')
     _psLog.info('JMRI tracks updated from TrainPlayer data')
@@ -116,9 +119,12 @@ def updateJmriTracks():
     if not trackulator.checker():
         return
     
-    Attributator().attributist()
-    ScheduleAuteur().auteurist()
+    Attributator().updateRsAttributes()
+    ModelEntities.addTypesToTracks()
+    ScheduleAuteur().updateSchedules()
     trackulator.trackist()
+    ModelEntities.deselectCarTypesAtSpurs()
+    ModelEntities.selectCarTypesAtSpurs()
 
     print('JMRI tracks updated from TrainPlayer data')
     _psLog.info('JMRI tracks updated from TrainPlayer data')
@@ -128,7 +134,7 @@ def updateJmriTracks():
     if not rollingStockulator.checker():
         return
     
-    # Attributator().attributist()
+    # Attributator().updateRsAttributes()
 
     rollingStockulator.updator()
     rollingStockulator.scheduleApplicator()
@@ -161,8 +167,11 @@ def updateJmriRollingingStock():
     if not rollingStockulator.checker():
         return
     
-    Attributator().attributist()
-
+    Attributator().updateRsAttributes()
+    ModelEntities.addTypesToTracks()
+    ModelEntities.deselectCarTypesAtSpurs()
+    ModelEntities.selectCarTypesAtSpurs()
+    
     rollingStockulator.updator()
     rollingStockulator.scheduleApplicator()
 
@@ -317,9 +326,9 @@ class Attributator:
 
         return
     
-    def attributist(self):
+    def updateRsAttributes(self):
         """
-        Mini controller to add rolling stock attributes to the RS xml files.
+        Mini controller to update rolling stock attributes to the RS xml files.
         """
 
         self.addRoads()
@@ -480,7 +489,7 @@ class ScheduleAuteur:
 
         return
     
-    def auteurist(self):
+    def updateSchedules(self):
         """
         Mini controller.
         """
@@ -726,7 +735,9 @@ class Locationator:
         self.addNewLocations()
         self.deleteOldLocations()
 
-        PSE.LMX.save()
+        
+
+        # PSE.LMX.save()
 
         return True
     
@@ -981,7 +992,8 @@ class Trackulator:
         self.updateContinuingTracks()
         self.addNewTracks()
         self.deleteOldTracks()
-        ModelEntities.addCarTypesToSpurs()
+        # ModelEntities.deselectCarTypesAtSpurs()
+        # ModelEntities.selectCarTypesAtSpurs()
         self.addSchedulesToSpurs()
 
         return
