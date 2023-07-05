@@ -316,7 +316,7 @@ class Attributator:
         print(self.scriptName + ' ' + str(SCRIPT_REV))
 
         return
-
+    
     def attributist(self):
         """
         Mini controller to add rolling stock attributes to the RS xml files.
@@ -336,6 +336,7 @@ class Attributator:
     
     def addRoads(self):
         """
+        Delets all existing road names first.
         Add any new road name from the tpRailroadData.json file.
         Don't do this: newNames = list(set(self.tpRailroadData['roads']) - set(TCM.getNames()))
         Null lists cause the default list to be added.
@@ -346,13 +347,17 @@ class Attributator:
         tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarRoads
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
 
-        for xName in self.tpRailroadData['roads']:
-            TCM.addName(xName)
+        for road in TCM.getNames():
+            TCM.deleteName(road)
+
+        for road in self.tpRailroadData['roads']:
+            TCM.addName(road)
 
         return
-
+    
     def addCarAar(self):
         """
+        Deletes all existing car types first.
         Add any new type names using the aar names from the tpRailroadData.json file.
         """
 
@@ -361,8 +366,11 @@ class Attributator:
         tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarTypes
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
 
-        for xName in self.tpRailroadData['carAAR']:
-            TCM.addName(xName)
+        for type in TCM.getNames():
+            TCM.deleteName(type)
+
+        for type in self.tpRailroadData['carAAR']:
+            TCM.addName(type)
 
         return
 
@@ -413,6 +421,9 @@ class Attributator:
         tc = PSE.JMRI.jmrit.operations.rollingstock.engines.EngineModels
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
 
+        for model in TCM.getNames():
+            TCM.deleteName(model)
+
         for xName in self.tpRailroadData['locoModels']:
             xModel = xName[0]
             xType = xName[1]
@@ -431,7 +442,12 @@ class Attributator:
 
         tc = PSE.JMRI.jmrit.operations.rollingstock.engines.EngineTypes
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
-        
+
+
+        for type in TCM.getNames():
+            TCM.deleteName(type)
+
+
         for xName in self.tpRailroadData['locoTypes']:
             TCM.addName(xName)
 
