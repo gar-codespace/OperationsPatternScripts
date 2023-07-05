@@ -193,7 +193,9 @@ class TrainPlayerImporter:
         """
         _psLog.debug('getRrLocations')
 
-        locationList = ['Unreported']
+        # locationList = ['Unreported']
+        locationList = [PSE.BUNDLE[unicode('Unreported', PSE.ENCODING)]]
+        
 
         for lineItem in self.tpLocations:
             splitLine = lineItem.split(';')
@@ -212,7 +214,9 @@ class TrainPlayerImporter:
         _psLog.debug('getRrLocales')
 
         locales = {}
-        locales['00'] = {u'location': 'Unreported', u'track': '~', u'label': '~', u'type': 'class yard', u'capacity': '100'}
+        # uLocation = PSE.BUNDLE['Unreported']
+        uLocation = PSE.BUNDLE[unicode('Unreported', PSE.ENCODING)]
+        locales['00'] = {u'location': uLocation, u'track': '~', u'label': '~', u'type': 'class yard', u'capacity': '100'}
 
         for lineItem in self.tpLocations:
             splitLine = lineItem.split(';')

@@ -516,6 +516,21 @@ def occuranceTally(listOfOccurances):
 
     return dict
 
+def locationNameLookup(locationName):
+    """
+    A default location 'Unreported' is exported by Trainplayer for all RS not on a labeled track.
+    This method returns the translated word for 'Unreported'.
+    All other locations are passed through.
+    """
+
+    if locationName == 'Unreported':
+        
+        uLocation = BUNDLE[unicode('Unreported', ENCODING)]
+    else:
+        uLocation = locationName
+
+    return uLocation
+
 def getAllDivisionNames():
     """
     JMRI sorts the list.

@@ -875,11 +875,11 @@ class Divisionator:
         """
 
         if PSE.DM.getNumberOfdivisions() != 0:
-            location = PSE.LM.getLocationByName('Unreported')
-            # location = PSE.LM.getLocationByName(PSE.BUNDLE['Unreported'])
 
             division = PSE.DM.newDivision(PSE.BUNDLE['Unknown'])
 
+            locationName = PSE.locationNameLookup('Unreported')
+            location = PSE.LM.getLocationByName(locationName)
             location.setDivision(division)
 
         return
@@ -940,7 +940,7 @@ class Trackulator:
         for id, data in self.updatedRrData['locales'].items():
             updatedLocations.append(data['location'])
 
-        testResult = list(set(updatedLocations).difference(currentLocations))
+        testResult = list(set(currentLocations).difference(updatedLocations))
         if len(testResult) == 0:
             return True
         else:
@@ -1184,18 +1184,25 @@ class RStockulator:
         Returns the result of testing the location and track.
         """
 
-        if PSE.LM.getLocationByName(data['location']) == None:
+
+        locationName = PSE.locationNameLookup(data['location'])
+
+
+
+        if PSE.LM.getLocationByName(locationName) == None:
             print('ALERT: Not a valid location:' + ' ' + data['location'])
             _psLog.critical('ALERT: Not a valid location:' + ' ' + data['location'])
             PSE.openOutputFrame(PSE.BUNDLE['ALERT: Not a valid location:'] + ' ' + data['location'])
             PSE.openOutputFrame(PSE.BUNDLE['Cars not imported. Import Locations recommended'])
+            PSE.openOutputFrame('Yipee')
             return False
         
-        if PSE.LM.getLocationByName(data['location']).getTrackByName(data['track'], None) == None:
+        if PSE.LM.getLocationByName(locationName).getTrackByName(data['track'], None) == None:
             _psLog.critical('ALERT: Not a valid track:' + ' ' + data['location'] + ':' + data['track'])
             PSE.openOutputFrame(PSE.BUNDLE['ALERT: Not a valid track:'] + ' ' + data['location'] + ':' + data['track'])
             PSE.openOutputFrame(PSE.BUNDLE['Cars not imported. Import Locations recommended'])
             print('ALERT: Not a valid track:' + ' ' + data['location'] + ':' + data['track'])
+            PSE.openOutputFrame('Sipee')
             return False
         
         return True
@@ -1282,7 +1289,8 @@ class RStockulator:
         consist = PSE.ZM.getConsistByName(locoData['consist'])
         loco.setConsist(consist)
 
-        location = PSE.LM.getLocationByName(locoData['location'])
+        locationName = PSE.locationNameLookup(locoData['location'])
+        location = PSE.LM.getLocationByName(locationName)
         track = location.getTrackByName(locoData['track'], None)
         loco.setLocation(location, track, True)
 
@@ -1303,7 +1311,8 @@ class RStockulator:
         kernel = PSE.KM.getKernelByName(carData['kernel'])
         car.setKernel(kernel)
 
-        location = PSE.LM.getLocationByName(carData['location'])
+        locationName = PSE.locationNameLookup(carData['location'])
+        location = PSE.LM.getLocationByName(locationName)
         track = location.getTrackByName(carData['track'], None)
         car.setLocation(location, track, True)
 

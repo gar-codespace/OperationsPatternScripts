@@ -15,6 +15,7 @@
   "Alert: No JMRI locations were found.": "Alerte : Aucun site JMRI n'a \u00e9t\u00e9 trouv\u00e9.", 
   "Alert: No JMRI tracks were found.": "Alerte : Aucune piste JMRI n'a \u00e9t\u00e9 trouv\u00e9e.", 
   "Alert: Schedule item not found for car:": "Alerte : L'article du calendrier n'a pas \u00e9t\u00e9 trouv\u00e9 pour la voiture :", 
+  "Alert: rolling stock skipped, parsing error.": "Alerte : mat\u00e9riel roulant ignor\u00e9, erreur d'analyse.", 
   "Alert: staging and non staging tracks at:": "Alerte : pistes en transit et non en transit au :", 
   "Apply Schedule": "Appliquer le calendrier", 
   "Apply the destination tracks schedule": "Appliquer l'horaire des pistes de destination", 
