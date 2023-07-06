@@ -7,28 +7,30 @@ Support methods and package constants for all Pattern Script subroutines.
 """
 
 import jmri as JMRI
-import logging as LOGGING
 from java import io as JAVA_IO
+import java.awt as JAVA_AWT
 import java.nio.file as JAVA_NIO
 import java.beans as JAVA_BEANS
-from HTMLParser import HTMLParser as HTML_PARSER
-import apps as APPS
+import javax.swing as JAVX_SWING
 
+import logging as LOGGING
+import apps as APPS
+import time as TIME
+from HTMLParser import HTMLParser as HTML_PARSER
 from json import loads as jsonLoadS, dumps as jsonDumpS
 from codecs import open as codecsOpen
 
 """
 Ghost imports from MainScript:
     PSE.PLUGIN_ROOT = PLUGIN_ROOT
+    PSE.SCRIPT_DIR = SCRIPT_DIR
     PSE.JMRI = jmri
     PSE.SYS = sys
     PSE.OS_PATH = OS_PATH
-    PSE.JAVA_AWT = java.awt
-    PSE.JAVX_SWING = javax.swing
-    PSE.TIME = time
-    PSE.ENCODING = PSE.readConfigFile('CP')['SE']
-Ghost imports from PSE
-    buildThePlugin().BUNDLE = mainScript.Bundle.getBundleForLocale()
+    PSE.BUNDLE = mainScript/handle/Bundle.getBundleForLocale()
+    PSE.ENCODING = PSE.readConfigFile('Main Script')['CP']['SE']
+Ghost imports from Bundle:
+    PSE.BUNDLE_DIR = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle')
 """
 
 PROFILE_PATH = JMRI.util.FileUtil.getProfilePath()
