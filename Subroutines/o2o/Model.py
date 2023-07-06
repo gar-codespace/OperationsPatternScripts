@@ -47,6 +47,8 @@ def initializeJmriRailroad():
     PSE.LM.dispose()
     PSE.CM.dispose()
     PSE.EM.dispose()
+
+    PSE.remoteCalls('resetCalls')
     
     print('JMRI data has been initiallized')
     _psLog.info('JMRI data has been initiallized')
