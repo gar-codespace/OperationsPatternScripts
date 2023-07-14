@@ -54,15 +54,29 @@ def getCurrentRrData():
             locale['track'] = track.getName()
             locale['type'] = track.getTrackType()
             locale['capacity'] = track.getLength()
-            trackId = track.getComment().split(':')
 
-            locales[trackId[1]] = locale
+            trackId = getTrackId(track.getComment())
+            locales[trackId] = locale
 
     currentRrData['locations'] = locations
     currentRrData['locales'] = locales
 
     return currentRrData
 
+def getTrackId(trackComment):
+    """
+    Gets the TrainPlayer trackID from the JMRI track comment.
+    ID must be an integer.
+    """
+
+    try:
+        trackId = trackComment.split(':')
+        trackId = int(trackId[1])
+    except:
+        trackId = 999
+
+    return str(trackId)
+    
 def tpDirectoryExists():
     """Checks for the Reports folder in TraipPlayer."""
 

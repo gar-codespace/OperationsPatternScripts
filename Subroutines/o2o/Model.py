@@ -1023,8 +1023,6 @@ class Trackulator:
     
     def getTrackIds(self):
 
-        # print(self.currentRrData['locales'])
-
         for trackId in self.currentRrData['locales']:
             self.currentTrackIds.append(trackId)
 
@@ -1050,7 +1048,6 @@ class Trackulator:
         for continuingTrackId in self.continuingTrackIds:
             currentTrackData = self.currentRrData['locales'][continuingTrackId]
             updatedTrackData = self.updatedRrData['locales'][continuingTrackId]
-
 
             if currentTrackData['location'] == updatedTrackData['location']:
                 trackType = self.configFile['o2o']['TR'][updatedTrackData['type']]
@@ -1105,6 +1102,8 @@ class Trackulator:
     def deleteOldTracks(self):
 
         for oldTrackId in self.oldTrackIds:
+            if oldTrackId == '0':
+                continue
             oldTrackData = self.currentRrData['locales'][oldTrackId]
             location = PSE.LM.getLocationByName(oldTrackData['location'])
             track = location.getTrackByName(oldTrackData['track'], None)
@@ -1223,10 +1222,7 @@ class RStockulator:
         Returns the result of testing the location and track.
         """
 
-
         locationName = PSE.locationNameLookup(data['location'])
-
-
 
         if PSE.LM.getLocationByName(locationName) == None:
             print('ALERT: Not a valid location:' + ' ' + data['location'])
@@ -1241,7 +1237,6 @@ class RStockulator:
             PSE.openOutputFrame(PSE.BUNDLE['ALERT: Not a valid track:'] + ' ' + data['location'] + ':' + data['track'])
             PSE.openOutputFrame(PSE.BUNDLE['Cars not imported. Import Locations recommended'])
             print('ALERT: Not a valid track:' + ' ' + data['location'] + ':' + data['track'])
-            PSE.openOutputFrame('Sipee')
             return False
         
         return True
