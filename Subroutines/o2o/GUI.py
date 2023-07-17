@@ -16,23 +16,23 @@ class subroutineGui:
         """The *.setName value is the name of the action for the widget"""
 
         self.nrButton = PSE.JAVX_SWING.JButton()
-        self.nrButton.setText(PSE.BUNDLE['Initialize'])
+        self.nrButton.setText(PSE.getBundleItem('Initialize'))
         self.nrButton.setName('initializeJmriRailroad')
 
         self.ulButton = PSE.JAVX_SWING.JButton()
-        self.ulButton.setText(PSE.BUNDLE['Locations'])
+        self.ulButton.setText(PSE.getBundleItem('Locations'))
         self.ulButton.setName('updateJmriLocations')
 
         self.uiButton = PSE.JAVX_SWING.JButton()
-        self.uiButton.setText(PSE.BUNDLE['Industries'])
+        self.uiButton.setText(PSE.getBundleItem('Industries'))
         self.uiButton.setName('updateJmriTracks')
 
         self.ursButton = PSE.JAVX_SWING.JButton()
-        self.ursButton.setText(PSE.BUNDLE['Cars'])
+        self.ursButton.setText(PSE.getBundleItem('Cars'))
         self.ursButton.setName('updateJmriRollingingStock')
 
         self.lpButton = PSE.JAVX_SWING.JButton()
-        self.lpButton.setText(PSE.BUNDLE['Railroad Details'])
+        self.lpButton.setText(PSE.getBundleItem('Railroad Details'))
         self.lpButton.setName('updateJmriProperties')
 
         return
@@ -45,12 +45,12 @@ class subroutineGui:
         updateRrPanel = PSE.JAVX_SWING.JPanel()
         extendedRrPanel = PSE.JAVX_SWING.JPanel()
 
-        newRrPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE['Import Preperation'])
+        newRrPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Import Preperation'))
         newRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(40,0)))
         newRrPanel.add(self.nrButton)
         newRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(40,0)))
 
-        updateRrPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE["Import TrainPlayer's Advanced Ops"])
+        updateRrPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem("Import TrainPlayer's Advanced Ops"))
         updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(40,0)))
         updateRrPanel.add(self.ulButton)
         updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
@@ -59,7 +59,7 @@ class subroutineGui:
         updateRrPanel.add(self.ursButton)
         updateRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(40,0)))
 
-        extendedRrPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE['Import Personalized Settings'])
+        extendedRrPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Import Personalized Settings'))
         extendedRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(40,0)))
         extendedRrPanel.add(self.lpButton)
         extendedRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(40,0)))

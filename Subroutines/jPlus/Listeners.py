@@ -21,7 +21,7 @@ def actionListener(EVENT):
     subroutineName = __package__.split('.')[1]
 
     if configFile[subroutineName]['SV']: # Hide this subroutine
-        menuText = PSE.BUNDLE[u'Show'] + ' ' + __package__
+        menuText = PSE.getBundleItem('Show') + ' ' + __package__
         configFile[subroutineName].update({'SV':False})
         _psLog.info('Hide ' + __package__)
         print('Hide ' + __package__)
@@ -30,7 +30,7 @@ def actionListener(EVENT):
 
 
     else: # Show this subroutine
-        menuText = PSE.BUNDLE[u'Hide'] + ' ' + __package__
+        menuText = PSE.getBundleItem('Hide') + ' ' + __package__
         configFile[subroutineName].update({'SV':True})
         _psLog.info('Show ' + __package__)
         print('Show ' + __package__)

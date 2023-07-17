@@ -114,7 +114,7 @@ def updateJmriTracks():
     """
     
     if not PSE.getAllLocationNames():
-        PSE.openOutputFrame(PSE.BUNDLE['Alert: No JMRI locations were found.'])
+        PSE.openOutputFrame(PSE.getBundleItem('Alert: No JMRI locations were found.'))
         return
 
     trackulator = Trackulator()
@@ -161,7 +161,7 @@ def updateJmriRollingingStock():
     """
 
     if not PSE.getAllTracks():
-        message = PSE.BUNDLE['Alert: No JMRI tracks were found.']
+        message = PSE.getBundleItem('Alert: No JMRI tracks were found.')        
         PSE.openOutputFrame(message)
         return
 
@@ -549,7 +549,8 @@ class ScheduleAuteur:
 
         except AttributeError:
             _psLog.critical('ALERT: Not a valid location:' + ' ' + testDest)
-            PSE.openOutputFrame(PSE.BUNDLE['ALERT: Not a valid location:'] + ' ' + testDest)
+
+            PSE.openOutputFrame(PSE.getBundleItem('ALERT: Not a valid location:') + ' ' + testDest)
             PSE.openOutputFrame('Error at: TrainPlayer/Advanced Ops/Industries/Staging')
             return None
 
@@ -771,8 +772,8 @@ class Locationator:
         invalidLocations = list(set(stagingList).intersection(nonStagingList))
         if invalidLocations:
             _psLog.critical('Alert: staging and non staging tracks at:' + ' ' + str(invalidLocations))
-            PSE.openOutputFrame(PSE.BUNDLE['Alert: staging and non staging tracks at:'] + ' ' + str(invalidLocations))
-            PSE.openOutputFrame(PSE.BUNDLE['Import terminated without completion'])
+            PSE.openOutputFrame(PSE.getBundleItem('Alert: staging and non staging tracks at:') + ' ' + str(invalidLocations))
+            PSE.openOutputFrame(PSE.getBundleItem('Import terminated without completion'))
 
             return False
 
@@ -877,7 +878,7 @@ class Divisionator:
         for location in locations:
             divisionName = PSE.LM.getLocationByName(location).getDivisionName()
             if divisionName not in allDivisions and PSE.DM.getNumberOfdivisions() != 0:
-                divisionName = PSE.DM.newDivision(unicode(PSE.BUNDLE['Unassigned'], PSE.ENCODING))
+                divisionName = PSE.DM.newDivision(PSE.getBundleItem('Unassigned'))                
                 
                 PSE.LM.getLocationByName(location).setDivision(divisionName)
             if divisionName not in allDivisions and PSE.DM.getNumberOfdivisions() == 0:
@@ -901,7 +902,7 @@ class Divisionator:
             [location.setDivision(division) for location in PSE.LM.getList()]
 
         if PSE.DM.getNumberOfdivisions() > 1:
-            division = PSE.DM.newDivision(PSE.BUNDLE['Unassigned'])
+            division = PSE.DM.newDivision(PSE.getBundleItem('Unassigned'))            
             [location.setDivision(division) for location in PSE.LM.getList() if not location.getDivision()]
 
         return
@@ -914,7 +915,7 @@ class Divisionator:
 
         if PSE.DM.getNumberOfdivisions() != 0:
 
-            division = PSE.DM.newDivision(PSE.BUNDLE['Unknown'])
+            division = PSE.DM.newDivision(PSE.getBundleItem('Unknown'))            
 
             locationName = PSE.locationNameLookup('Unreported')
             location = PSE.LM.getLocationByName(locationName)
@@ -984,8 +985,8 @@ class Trackulator:
         else:
             print('ALERT: Not a valid location:' + ' ' + str(testResult))
             _psLog.critical('ALERT: Not a valid location:' + ' ' + str(testResult))
-            PSE.openOutputFrame(PSE.BUNDLE['ALERT: Not a valid location:'] + ' ' + str(testResult))
-            PSE.openOutputFrame(PSE.BUNDLE['Industries not imported. Import Locations recommended'])
+            PSE.openOutputFrame(PSE.getBundleItem('ALERT: Not a valid location:') + ' ' + str(testResult))
+            PSE.openOutputFrame(PSE.getBundleItem('Industries not imported. Import Locations recommended'))
 
             return False
     
@@ -1121,7 +1122,7 @@ class Trackulator:
             track = location.getTrackByName(data['b-track'], 'Spur')
             if not track:
                 _psLog.critical('ALERT: Not a spur track: ' + data['b-track'])
-                PSE.openOutputFrame(PSE.BUNDLE['ALERT: Not a spur track:'] + ' ' + data['b-track'])
+                PSE.openOutputFrame(PSE.getBundleItem('ALERT: Not a spur track:') + ' ' + data['b-track'])
                 continue
             scheduleName = data['c-schedule'].keys()[0]
             schedule = PSE.SM.getScheduleByName(scheduleName)
@@ -1227,15 +1228,15 @@ class RStockulator:
         if PSE.LM.getLocationByName(locationName) == None:
             print('ALERT: Not a valid location:' + ' ' + data['location'])
             _psLog.critical('ALERT: Not a valid location:' + ' ' + data['location'])
-            PSE.openOutputFrame(PSE.BUNDLE['ALERT: Not a valid location:'] + ' ' + data['location'])
-            PSE.openOutputFrame(PSE.BUNDLE['Cars not imported. Import Locations recommended'])
-            PSE.openOutputFrame('Yipee')
+            PSE.openOutputFrame(PSE.getBundleItem('ALERT: Not a valid location:') + ' ' + data['location'])
+            PSE.openOutputFrame(PSE.getBundleItem('Cars not imported. Import Locations recommended'))
+
             return False
         
         if PSE.LM.getLocationByName(locationName).getTrackByName(data['track'], None) == None:
             _psLog.critical('ALERT: Not a valid track:' + ' ' + data['location'] + ':' + data['track'])
-            PSE.openOutputFrame(PSE.BUNDLE['ALERT: Not a valid track:'] + ' ' + data['location'] + ':' + data['track'])
-            PSE.openOutputFrame(PSE.BUNDLE['Cars not imported. Import Locations recommended'])
+            PSE.openOutputFrame(PSE.getBundleItem('ALERT: Not a valid track:') + ' ' + data['location'] + ':' + data['track'])
+            PSE.openOutputFrame(PSE.getBundleItem('Cars not imported. Import Locations recommended'))
             print('ALERT: Not a valid track:' + ' ' + data['location'] + ':' + data['track'])
             return False
         
@@ -1425,8 +1426,8 @@ class RStockulator:
 
             if litmus == 0:
                 print('Alert: Schedule item not found for car: ' + car.getRoadName() + ' ' + car.getNumber() + ' ' + car.getTrackName())
-                PSE.openOutputFrame(PSE.BUNDLE['Alert: Schedule item not found for car:'] + ' ' + car.getRoadName() + ' ' + car.getNumber() + ' ' + car.getTrackName())
-                PSE.openOutputFrame(PSE.BUNDLE['Track does not serve this car type'])
+                PSE.openOutputFrame(PSE.getBundleItem('Alert: Schedule item not found for car:') + ' ' + car.getRoadName() + ' ' + car.getNumber() + ' ' + car.getTrackName())
+                PSE.openOutputFrame(PSE.getBundleItem('Track does not serve this car type'))
 
         return
 

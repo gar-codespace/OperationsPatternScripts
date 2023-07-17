@@ -53,7 +53,7 @@ def setRsToTrack():
 
     _psLog.debug('setRsButton')
 
-    reportTitle = PSE.BUNDLE['ops-switch-list']
+    reportTitle = PSE.getBundleItem('ops-switch-list')
     fileName = reportTitle + '.json'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
 
@@ -176,7 +176,8 @@ def makeTextSwitchList(switchList):
     PSE.makeReportItemWidthMatrix()
 
     reportHeader = View.makeTextReportHeader(switchList)
-    reportLocations = PSE.BUNDLE['Switch List'] + '\n\n'
+    reportLocations = PSE.getBundleItem('Switch List') + '\n\n'
+    
     reportLocations += View.makeTextReportLocations(switchList, trackTotals=False)
 
     return reportHeader + reportLocations
@@ -190,7 +191,7 @@ def switchListAsCsv(textBoxEntry):
 
     _psLog.debug('switchListAsCsv')
 #  Get json data
-    fileName = PSE.BUNDLE['ops-work-list'] + '.json'
+    fileName = PSE.getBundleItem('ops-work-list') + '.json'    
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
     trackPattern = PSE.genericReadReport(targetPath)
     trackPattern = PSE.loadJson(trackPattern)
@@ -201,7 +202,7 @@ def switchListAsCsv(textBoxEntry):
     trackPattern = makeMergedForm(trackPattern, textBoxEntry)
     trackPatternCsv = View.makeTrackPatternCsv(trackPattern)
 # Write CSV data
-    fileName = PSE.BUNDLE['ops-switch-list'] + '.csv'
+    fileName = PSE.getBundleItem('ops-switch-list') + '.csv'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'csvSwitchLists', fileName)
     PSE.genericWriteReport(targetPath, trackPatternCsv)
 

@@ -159,10 +159,9 @@ def writePatternReport(trackPattern):
     Controller.StartUp.patternReportButton
     """
 
-    fileName = PSE.BUNDLE['ops-pattern-report'] + '.json'
+    fileName = PSE.getBundleItem('ops-pattern-report') + '.json'    
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
 
-    
     trackPatternReport = PSE.dumpJson(trackPattern)
     PSE.genericWriteReport(targetPath, trackPatternReport)
 
@@ -172,7 +171,7 @@ def appendWorkList(mergedForm):
 
     tracks = mergedForm['locations'][0]['tracks'][0]
 
-    fileName = PSE.BUNDLE['ops-work-list'] + '.json'
+    fileName = PSE.getBundleItem('ops-work-list') + '.json'    
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
     currentWorkList = PSE.jsonLoadS(PSE.genericReadReport(targetPath))
 
@@ -191,7 +190,7 @@ def newWorkList():
 
     workList = initializeReportHeader()
 
-    fileName = PSE.BUNDLE['ops-work-list'] + '.json'
+    fileName = PSE.getBundleItem('ops-work-list') + '.json'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
     workList = PSE.dumpJson(workList)
     PSE.genericWriteReport(targetPath, workList)

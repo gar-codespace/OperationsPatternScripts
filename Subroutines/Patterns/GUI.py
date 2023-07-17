@@ -34,16 +34,16 @@ class subroutineGui:
         self.configFile = PSE.readConfigFile('Patterns')
 
         self.yardTracksOnly = PSE.JAVX_SWING.JCheckBox()
-        self.yardTracksOnly.setText(PSE.BUNDLE['Yard tracks only'] + ' ')
+        self.yardTracksOnly.setText(PSE.getBundleItem('Yard tracks only') + ' ')
         self.yardTracksOnly.setSelected(self.configFile['PA'])
         self.yardTracksOnly.setName('ytoCheckBox')
 
         self.ypButton = PSE.JAVX_SWING.JButton()
-        self.ypButton.setText(PSE.BUNDLE['Pattern Report'])
+        self.ypButton.setText(PSE.getBundleItem('Pattern Report'))
         self.ypButton.setName('ypButton')
 
         self.scButton = PSE.JAVX_SWING.JButton()
-        self.scButton.setText(PSE.BUNDLE['Set Rolling Stock to Track'])
+        self.scButton.setText(PSE.getBundleItem('Set Rolling Stock to Track'))
         self.scButton.setName('scButton')
 
         self.trackCheckBoxes = []
@@ -71,14 +71,14 @@ class subroutineGui:
         patternComboBox = PSE.JAVX_SWING.JPanel()
         patternComboBox.setAlignmentX(PSE.JAVX_SWING.JPanel.CENTER_ALIGNMENT)
 
-        divisionLabel = PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Division:'])
+        divisionLabel = PSE.JAVX_SWING.JLabel(PSE.getBundleItem('Division:'))        
         divisionList = self.configFile['AD']
         # divisionList.insert(0, '') # This is how JMRI does it.
         self.divisionComboBox = PSE.JAVX_SWING.JComboBox(divisionList)
         self.divisionComboBox.setName('jDivision')
         self.divisionComboBox.setSelectedItem(self.configFile['PD'])
 
-        locationLabel = PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Location:'])
+        locationLabel = PSE.JAVX_SWING.JLabel(PSE.getBundleItem('Location:'))
         locationList = self.configFile['AL']
         self.locationComboBox = PSE.JAVX_SWING.JComboBox(locationList)
         self.locationComboBox.setName('jLocations')
@@ -107,7 +107,7 @@ class subroutineGui:
         trackDict = self.getTrackDict()
 
         if trackDict:
-            rowLabel.text = PSE.BUNDLE['Track List:'] + ' '
+            rowLabel.text = PSE.getBundleItem('Track List:') + ' '
             for track, flag in sorted(trackDict.items()):
                 trackCheckBox = tracksPanel.add(PSE.JAVX_SWING.JCheckBox(track, flag))
                 self.trackCheckBoxes.append(trackCheckBox)
@@ -116,13 +116,9 @@ class subroutineGui:
         else:
             self.ypButton.setEnabled(False)
             self.scButton.setEnabled(False)
-            rowLabel.text = PSE.BUNDLE['There are no tracks for this selection']
+            rowLabel.text = PSE.getBundleItem('There are no tracks for this selection')            
 
         return tracksPanel
-
-
-
-
 
     def getTrackDict(self):
         """
@@ -260,7 +256,7 @@ def makeSetCarsFormHeader(setCarsFormData):
 
     headerTrackLabel = PSE.JAVX_SWING.JLabel()
     headerTrackLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
-    headerTrackLabel.setText(PSE.BUNDLE['Set Rolling Stock for track:'] + ' ' + trackName + ' ' + PSE.BUNDLE['at'] + ' ' + locationName)
+    headerTrackLabel.setText(PSE.getBundleItem('Set Rolling Stock for track:') + ' ' + trackName + ' ' + PSE.getBundleItem('at') + ' ' + locationName)
 
     headerValidLabel = PSE.JAVX_SWING.JLabel()
     headerValidLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
@@ -308,7 +304,7 @@ def makeSetCarsTrackButtons():
     trackButtonsWrapper = PSE.JAVX_SWING.JPanel()
     trackButtonsWrapper.setLayout(PSE.JAVX_SWING.BoxLayout(trackButtonsWrapper, PSE.JAVX_SWING.BoxLayout.Y_AXIS))
     trackButtonsWrapper.setMinimumSize(PSE.JAVA_AWT.Dimension(paneHeight, paneHeight))
-    trackButtonsWrapper.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE['Tracks at'] +  ' ' + location)
+    trackButtonsWrapper.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Tracks at') +  ' ' + location)
 
     trackButtonsWrapper.add(trackButtonsPane)
 
@@ -329,7 +325,7 @@ def makeSetCarsListOfInventory(setCarsFormData):
     if setCarsFormData['locations'][0]['tracks'][0]['locos']:
         locoFormBody = PSE.JAVX_SWING.JPanel()
         locoFormBody.setLayout(PSE.JAVX_SWING.BoxLayout(locoFormBody, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
-        locoFormBody.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE['Locomotives at'] +  ' ' + setCarsFormData['locations'][0]['tracks'][0]['trackName'])
+        locoFormBody.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Locomotives at') +  ' ' + setCarsFormData['locations'][0]['tracks'][0]['trackName'])
 
         setCarsLocoRows = setCarsEqptRows.makeSetCarsLocoRows()
         for loco in setCarsLocoRows:
@@ -339,8 +335,7 @@ def makeSetCarsListOfInventory(setCarsFormData):
     if setCarsFormData['locations'][0]['tracks'][0]['cars']:
         carFormBody = PSE.JAVX_SWING.JPanel()
         carFormBody.setLayout(PSE.JAVX_SWING.BoxLayout(carFormBody, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
-        carFormBody.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder( \
-                PSE.BUNDLE['Cars at'] +  ' ' + setCarsFormData['locations'][0]['tracks'][0]['trackName'])
+        carFormBody.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Cars at') +  ' ' + setCarsFormData['locations'][0]['tracks'][0]['trackName'])
 
         setCarsCarRows = setCarsEqptRows.makeSetCarsCarRows()
         for car in setCarsCarRows:
@@ -372,11 +367,9 @@ def makeSetCarsScheduleRow(setCarsFormData):
     scheduleObject = trackObject.getSchedule()
     if scheduleObject:
         schedulePanel = PSE.JAVX_SWING.JPanel()
-        schedulePanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(
-            PSE.BUNDLE['Schedule for'] + ' ' + trackName
-            )
+        schedulePanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Schedule for') + ' ' + trackName)
         scheduleButton = PSE.JAVX_SWING.JButton(scheduleObject.getName())
-        schedulePanel.add(PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Schedule:'] + ' '))
+        schedulePanel.add(PSE.JAVX_SWING.JLabel(PSE.getBundleItem('Schedule:') + ' '))
         schedulePanel.add(scheduleButton)
 
         return schedulePanel, scheduleButton
@@ -394,39 +387,22 @@ def MakeSetCarsFooter():
     _psLog.debug('MakeSetCarsFooter')
 
     makeWorkPanel = PSE.JAVX_SWING.JPanel()
-    makeWorkPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(
-        unicode(PSE.BUNDLE['Make Work'], PSE.ENCODING)
-        )
+    makeWorkPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Make Work'))
 # Switch List button
-    slButton = PSE.JAVX_SWING.JButton(
-        unicode(PSE.BUNDLE['Switch List'], PSE.ENCODING)
-        )
+    slButton = PSE.JAVX_SWING.JButton(PSE.getBundleItem('Switch List'))
 
-
-    makeWorkPanel.add(PSE.JAVX_SWING.Box.createRigidArea(
-        PSE.JAVA_AWT.Dimension(20,0))
-        )
+    makeWorkPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
     makeWorkPanel.add(slButton)
-    makeWorkPanel.add(PSE.JAVX_SWING.Box.createRigidArea(
-        PSE.JAVA_AWT.Dimension(20,0))
-        )
+    makeWorkPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
 
     reportWorkPanel = PSE.JAVX_SWING.JPanel()
-    reportWorkPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(
-        unicode(PSE.BUNDLE['Report Work'], PSE.ENCODING)
-        )
+    reportWorkPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Report Work'))
 # Set cars button
-    scButton = PSE.JAVX_SWING.JButton(
-        unicode(PSE.BUNDLE['Set Rolling Stock to Track'], PSE.ENCODING)
-        )
+    scButton = PSE.JAVX_SWING.JButton(PSE.getBundleItem('Set Rolling Stock to Track'))
 
-    reportWorkPanel.add(PSE.JAVX_SWING.Box.createRigidArea(
-        PSE.JAVA_AWT.Dimension(20,0))
-        )
+    reportWorkPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
     reportWorkPanel.add(scButton)
-    reportWorkPanel.add(PSE.JAVX_SWING.Box.createRigidArea(
-        PSE.JAVA_AWT.Dimension(20,0))
-        )
+    reportWorkPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
 
     combinedFooter = PSE.JAVX_SWING.JPanel()
     combinedFooter.add(makeWorkPanel)
@@ -534,7 +510,8 @@ class MakeSetCarsEqptRows():
                     label = PSE.JAVX_SWING.JLabel(car[translatedItem])
                 except: # The hazardous field is a boolean so work around it
                     print('Exception at: Patterns.GUI.MakeSetCarsEqptRows.makeSetCarsCarRows')
-                    label = PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Hazardous'])
+                    label = PSE.JAVX_SWING.JLabel(PSE.getBundleItem('Hazardous'))
+
                 box = makeSwingBox(self.reportWidth[translatedItem] * self.panelWidth, self.panelHeight)
                 box.add(label)
                 combinedInputLine.add(box)
@@ -559,7 +536,7 @@ def setCarsPopup():
 
     popupFrame = PSE.JMRI.util.JmriJFrame()
     popupFrame.setName('popupFrame')
-    popupFrame.setTitle(PSE.BUNDLE['Additional Choices'])
+    popupFrame.setTitle(PSE.getBundleItem('Additional Choices'))
     
     popupPanel = PSE.JAVX_SWING.JPanel()
     popupPanel.setName('popupPanel')
@@ -572,13 +549,13 @@ def setCarsPopup():
     checkBoxPanel.setName('checkBoxPanel')
 
     applySchedule = PSE.JAVX_SWING.JCheckBox()
-    applySchedule.setText(PSE.BUNDLE['Apply the destination tracks schedule'])
+    applySchedule.setText(PSE.getBundleItem('Apply the destination tracks schedule'))
     applySchedule.setSelected(configFile['AS'])
     applySchedule.setName('asCheckBox')
     widgets.append(applySchedule)
     
     ignoreTrackLength = PSE.JAVX_SWING.JCheckBox()
-    ignoreTrackLength.setText(PSE.BUNDLE['Ignore track length'])
+    ignoreTrackLength.setText(PSE.getBundleItem('Ignore track length'))
     ignoreTrackLength.setSelected(configFile['PI'])
     ignoreTrackLength.setName('itlCheckBox')
     widgets.append(ignoreTrackLength)
@@ -591,12 +568,12 @@ def setCarsPopup():
     buttonRow.setName('buttonRow')
 
     setCarsButton = PSE.JAVX_SWING.JButton()
-    setCarsButton.setText(PSE.BUNDLE['Set Cars'])
+    setCarsButton.setText(PSE.getBundleItem('Set Cars'))
     setCarsButton.setName('setCarsButton')
     widgets.append(setCarsButton)
 
     cancelButton = PSE.JAVX_SWING.JButton()
-    cancelButton.setText(PSE.BUNDLE['Cancel'])
+    cancelButton.setText(PSE.getBundleItem('Cancel'))
     cancelButton.setName('cancelButton')
     widgets.append(cancelButton)
 

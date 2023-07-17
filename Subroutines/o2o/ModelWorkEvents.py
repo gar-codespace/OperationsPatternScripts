@@ -42,7 +42,7 @@ class opsWorkListConversion:
 
     def workListGetter(self):
 
-        reportName = PSE.BUNDLE['ops-work-list']
+        reportName = PSE.getBundleItem('ops-work-list')        
         fileName = reportName + '.json'
         targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
 

@@ -54,9 +54,9 @@ def boilerplateErrors():
 
     _psLog.critical('Error: TrainPlayer export issue.')
 
-    a = PSE.BUNDLE['ALERT: TrainPlayer export issue.']
-    b = PSE.BUNDLE['From TrainPlayer, re-export layout to JMRI.']
-    c = PSE.BUNDLE['TrainPlayer layout not imported to JMRI.']
+    a = PSE.getBundleItem('ALERT: TrainPlayer export issue.')
+    b = PSE.getBundleItem('From TrainPlayer, re-export layout to JMRI.')
+    c = PSE.getBundleItem('TrainPlayer layout not imported to JMRI.')
     message = a + '\n' + b + '\n' + c + '\n'
 
     PSE.openOutputFrame(message)
@@ -92,7 +92,7 @@ class TrainPlayerImporter:
             _psLog.info('TrainPlayer Locations file OK')
         else:
             _psLog.critical('TrainPlayer Locations file not found')
-            PSE.openOutputFrame(PSE.BUNDLE['ALERT: TrainPlayer Locations file not found.'])
+            PSE.openOutputFrame(PSE.getBundleItem('ALERT: TrainPlayer Locations file not found.'))
             print('Not found: ' + self.o2oConfig['o2o']['RF']['TRL'])
             fileCheck = False
 
@@ -102,7 +102,7 @@ class TrainPlayerImporter:
             _psLog.info('TrainPlayer Industries file OK')
         else:
             _psLog.critical('TrainPlayer Industries file not found')
-            PSE.openOutputFrame(PSE.BUNDLE['ALERT: TrainPlayer Industries file not found.'])
+            PSE.openOutputFrame(PSE.getBundleItem('ALERT: TrainPlayer Industries file not found.'))
             print('Not found: ' + self.o2oConfig['o2o']['RF']['TRI'])
             fileCheck = False
 
@@ -112,7 +112,7 @@ class TrainPlayerImporter:
             _psLog.info('TrainPlayer Inventory file OK')
         else:
             _psLog.critical('TrainPlayer Inventory file not found')
-            PSE.openOutputFrame(PSE.BUNDLE['ALERT: TrainPlayer Inventory file not found.'])
+            PSE.openOutputFrame(PSE.getBundleItem('ALERT: TrainPlayer Inventory file not found.'))
             print('Not found: ' + self.o2oConfig['o2o']['RF']['TRR'])
             fileCheck = False
 
@@ -123,7 +123,7 @@ class TrainPlayerImporter:
 
         if [line.count(';') for line in self.tpLocations if line.count(';') != 5]:
             _psLog.critical('Error: Locations file formatting error.')
-            PSE.openOutputFrame(PSE.BUNDLE['Check TrainPlayer-Advanced Ops-Locales for semi colon.'])
+            PSE.openOutputFrame(PSE.getBundleItem('Check TrainPlayer-Advanced Ops-Locales for semi colon.'))
             print('Error: Locations file formatting error')
 
             return False
@@ -135,7 +135,7 @@ class TrainPlayerImporter:
 
         if [line.count(';') for line in self.tpIndustries if line.count(';') != 10]:
             _psLog.critical('Error: Industries file formatting error.')
-            PSE.openOutputFrame(PSE.BUNDLE['Check TrainPlayer-Advanced Ops-Industries for errors.'])
+            PSE.openOutputFrame(PSE.getBundleItem('Check TrainPlayer-Advanced Ops-Industries for errors.'))
             print('Error: Industries file formatting error')
 
             return False
@@ -193,9 +193,7 @@ class TrainPlayerImporter:
         """
         _psLog.debug('getRrLocations')
 
-        # locationList = ['Unreported']
-        locationList = [PSE.BUNDLE[unicode('Unreported', PSE.ENCODING)]]
-        
+        locationList = [PSE.getBundleItem('Unreported')]
 
         for lineItem in self.tpLocations:
             splitLine = lineItem.split(';')
@@ -214,8 +212,8 @@ class TrainPlayerImporter:
         _psLog.debug('getRrLocales')
 
         locales = {}
-        # uLocation = PSE.BUNDLE['Unreported']
-        uLocation = PSE.BUNDLE[unicode('Unreported', PSE.ENCODING)]
+        uLocation = PSE.getBundleItem('Unreported')
+        
         locales['00'] = {u'location': uLocation, u'track': '~', u'label': '~', u'type': 'class yard', u'capacity': '100'}
 
         for lineItem in self.tpLocations:

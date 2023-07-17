@@ -181,7 +181,8 @@ def getWorkEvents():
     ModelWorkEvents.o2oWorkEvents.getWorkEvents
     """
 
-    reportName = PSE.BUNDLE['o2o Work Events']
+    reportName = PSE.getBundleItem('o2o Work Events')
+
     fileName = reportName + '.json'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
 

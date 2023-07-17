@@ -82,7 +82,7 @@ def updateYearModeled():
     PSE.writeConfigFile(configFile)
 
     try: # PS plugin started with jPlus hidden
-        frameTitle = PSE.BUNDLE['Pattern Scripts']
+        frameTitle = PSE.getBundleItem('Pattern Scripts')        
         targetPanel = PSE.getComponentByName(frameTitle, 'yearModeled')
         targetPanel.setText(yr)
     except:

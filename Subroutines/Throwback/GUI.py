@@ -32,7 +32,7 @@ class subroutineGui:
         selectionFrame = PSE.JAVX_SWING.JPanel()
         selectionFrame.setName('selectionFrame')
         selectionFrame.setLayout(PSE.JAVX_SWING.BoxLayout(selectionFrame, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
-        selectionFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE[u'Total Commits'] + u' - ' + str(len(snapShot) - 1))
+        selectionFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Total Commits') + u' - ' + str(len(snapShot) - 1))
 
         tbText = PSE.JAVX_SWING.JTextField(20)
         tbText.setText(lastSnapShot[1])
@@ -44,7 +44,7 @@ class subroutineGui:
         inputRow.add(tbText)
 
         ssButton = PSE.JAVX_SWING.JButton()
-        ssButton.setText(PSE.BUNDLE[u'Add New Commit'])
+        ssButton.setText(PSE.getBundleItem('Add New Commit'))
         ssButton.setName('commit')
         self.controlWidgets.append(ssButton)
 
@@ -53,7 +53,7 @@ class subroutineGui:
         commitRow.add(ssButton)
 
         rsButton = PSE.JAVX_SWING.JButton()
-        rsButton.setText(PSE.BUNDLE[u'Delete All Commits'])
+        rsButton.setText(PSE.getBundleItem('Delete All Commits'))
         rsButton.setName('reset')
         self.controlWidgets.append(rsButton)
 
@@ -73,13 +73,13 @@ class subroutineGui:
         actionFrame = PSE.JAVX_SWING.JPanel()
         actionFrame.setName('actionFrame')
         actionFrame.setLayout(PSE.JAVX_SWING.BoxLayout(actionFrame, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
-        actionFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.BUNDLE[u'Action'])
+        actionFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Action'))
 
         commitRow = PSE.JAVX_SWING.JPanel()
         commitRow.setName('commitRow')
 
         pvButton = PSE.JAVX_SWING.JButton()
-        pvButton.setText(PSE.BUNDLE[u'Previous'])
+        pvButton.setText(PSE.getBundleItem('Previous'))
         pvButton.setName('previous')
         self.controlWidgets.append(pvButton)
 
@@ -92,7 +92,7 @@ class subroutineGui:
         self.displayWidgets.append(commitName)
 
         nxButton = PSE.JAVX_SWING.JButton()
-        nxButton.setText(PSE.BUNDLE[u'Next'])
+        nxButton.setText(PSE.getBundleItem('Next'))
         nxButton.setName('next')
         self.controlWidgets.append(nxButton)
 
@@ -108,31 +108,31 @@ class subroutineGui:
         checkboxRow.setName('checkboxRow')
 
         carsCheckBox = PSE.JAVX_SWING.JCheckBox()
-        carsCheckBox.setText(PSE.BUNDLE['Cars'])
+        carsCheckBox.setText(PSE.getBundleItem('Cars'))
         carsCheckBox.setSelected(False)
         carsCheckBox.setName('cCheckBox')
         self.displayWidgets.append(carsCheckBox)
 
         locosCheckBox = PSE.JAVX_SWING.JCheckBox()
-        locosCheckBox.setText(PSE.BUNDLE['Engines'])
+        locosCheckBox.setText(PSE.getBundleItem('Engines'))
         locosCheckBox.setSelected(False)
         locosCheckBox.setName('eCheckBox')
         self.displayWidgets.append(locosCheckBox)
 
         locationsCheckBox = PSE.JAVX_SWING.JCheckBox()
-        locationsCheckBox.setText(PSE.BUNDLE['Locations'])
+        locationsCheckBox.setText(PSE.getBundleItem('Locations'))
         locationsCheckBox.setSelected(False)
         locationsCheckBox.setName('lCheckBox')
         self.displayWidgets.append(locationsCheckBox)
 
         routesCheckBox = PSE.JAVX_SWING.JCheckBox()
-        routesCheckBox.setText(PSE.BUNDLE['Routes'])
+        routesCheckBox.setText(PSE.getBundleItem('Routes'))
         routesCheckBox.setSelected(False)
         routesCheckBox.setName('rCheckBox')
         self.displayWidgets.append(routesCheckBox)
 
         trainsCheckBox = PSE.JAVX_SWING.JCheckBox()
-        trainsCheckBox.setText(PSE.BUNDLE['Trains'])
+        trainsCheckBox.setText(PSE.getBundleItem('Trains'))
         trainsCheckBox.setSelected(False)
         trainsCheckBox.setName('tCheckBox')
         self.displayWidgets.append(trainsCheckBox)
@@ -151,7 +151,7 @@ class subroutineGui:
         actionRow.setName('actionRow')
 
         tbButton = PSE.JAVX_SWING.JButton()
-        tbButton.setText(PSE.BUNDLE[u'Throwback'])
+        tbButton.setText(PSE.getBundleItem('Throwback'))
         tbButton.setName('throwback')
         self.controlWidgets.append(tbButton)
 

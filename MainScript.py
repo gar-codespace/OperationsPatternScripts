@@ -65,7 +65,11 @@ def restartThePlugin():
     buildThePlugin(View())
 
     psButton = PSE.getPsButton()
-    psButton.setText(PSE.BUNDLE[u'Pattern Scripts'])
+
+
+    psButton.setText(PSE.getBundleItem('Pattern Scripts'))
+    
+
     PSE.APPS.Apps.buttonSpace().revalidate()
 
     _psLog.info('Pattern Scripts plugin restarted')
@@ -115,7 +119,8 @@ class View:
 
         self.psLog.debug('makePatternScriptsWindow')
 
-        toolsMenu = PSE.JAVX_SWING.JMenu(PSE.BUNDLE[u'Tools'])
+        toolsMenu = PSE.JAVX_SWING.JMenu(PSE.getBundleItem('Tools'))
+
         toolsMenu.add(PSE.JMRI.jmrit.operations.setup.OptionAction())
         toolsMenu.add(PSE.JMRI.jmrit.operations.setup.PrintOptionAction())
         toolsMenu.add(PSE.JMRI.jmrit.operations.setup.BuildReportOptionAction())
@@ -143,7 +148,7 @@ class View:
         self.psPluginMenuItems.append(rsMenuItem)
         toolsMenu.add(rsMenuItem)
 
-        helpMenu = PSE.JAVX_SWING.JMenu(PSE.BUNDLE[u'Help'])
+        helpMenu = PSE.JAVX_SWING.JMenu(PSE.getBundleItem('Help'))        
 
         itemText, itemName = self.setHmDropDownText()
         helpMenuItem = self.makeMenuItem(itemText, itemName)
@@ -173,7 +178,8 @@ class View:
 
         configPanel = PSE.readConfigFile('Main Script')['CP']
         self.psWindow.setName('patternScriptsWindow')
-        self.psWindow.setTitle(PSE.BUNDLE[u'Pattern Scripts'])
+        self.psWindow.setTitle(PSE.getBundleItem('Pattern Scripts'))
+
         self.psWindow.addWindowListener(Listeners.PatternScriptsWindow())
         self.psWindow.setJMenuBar(psMenuBar)
         # self.psWindow.add(self.scrollPanel)
@@ -209,7 +215,7 @@ class View:
         itemMethod - Set the drop down text for the Translate Plugin item.
         """
 
-        menuText = PSE.BUNDLE[u'Translate Plugin']
+        menuText = PSE.getBundleItem('Translate Plugin')        
 
         return menuText, 'ptItemSelected'
 
@@ -218,8 +224,7 @@ class View:
         itemMethod - Set the drop down text for the Restart From Default item.
         """
 
-        menuText = PSE.BUNDLE[u'Restart From Default']
-
+        menuText = PSE.getBundleItem('Restart From Default') 
         return menuText, 'rsItemSelected'
 
     def setHmDropDownText(self):
@@ -227,7 +232,7 @@ class View:
         itemMethod - Set the drop down text for the Log menu item.
         """
 
-        menuText = PSE.BUNDLE[u'Window Help...']
+        menuText = PSE.getBundleItem('Window Help...') 
 
         return menuText, 'helpItemSelected'
 
@@ -236,7 +241,7 @@ class View:
         itemMethod - Set the drop down text for the Log menu item.
         """
 
-        menuText = PSE.BUNDLE[u'View Log File']
+        menuText = PSE.getBundleItem('View Log File')
 
         return menuText, 'logItemSelected'
 
@@ -245,7 +250,7 @@ class View:
         itemMethod - Set the drop down text for the gitHub page item.
         """
 
-        menuText = PSE.BUNDLE[u'GitHub Web Page']
+        menuText = PSE.getBundleItem('GitHub Web Page')
 
         return menuText, 'ghItemSelected'
 
@@ -254,7 +259,7 @@ class View:
         itemMethod - Set the drop down text for the edit config file item.
         """
 
-        menuText = PSE.BUNDLE[u'Edit Config File']
+        menuText = PSE.getBundleItem('Edit Config File')
 
         return menuText, 'ecItemSelected'
 
@@ -263,7 +268,7 @@ class View:
         itemMethod - Set the drop down text for the operations folder item.
         """
 
-        menuText = PSE.BUNDLE[u'Operations Folder']
+        menuText = PSE.getBundleItem('Operations Folder')
 
         return menuText, 'ofItemSelected'
 
@@ -293,7 +298,8 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         psButton = PSE.JAVX_SWING.JButton()
         psButton.actionPerformed = self.patternScriptsButtonAction
         psButton.setName('psButton')
-        psButton.setText(PSE.BUNDLE[u'Pattern Scripts'])
+        psButton.setText(PSE.getBundleItem('Pattern Scripts'))
+        
         PSE.APPS.Apps.buttonSpace().add(psButton)
         PSE.APPS.Apps.buttonSpace().revalidate()
 

@@ -70,7 +70,7 @@ class CreateSetCarsForm:
             return True
         else:
             _psLog.critical('FAIL - CreateSetCarsForm.quickCheck.formIsValid')
-            PSE.openOutputFrame(PSE.BUNDLE['FAIL: CreateSetCarsForm.quickCheck.formIsValid'])
+            PSE.openOutputFrame(PSE.getBundleItem('FAIL: CreateSetCarsForm.quickCheck.formIsValid'))            
             return False
 
     def trackRowButton(self, MOUSE_CLICKED):
@@ -105,7 +105,7 @@ class CreateSetCarsForm:
 
     # Save the merged form as a text switch list
         switchList = SetCarsForm_Model.makeTextSwitchList(mergedForm)
-        fileName = PSE.BUNDLE['ops-switch-list'] + '.txt'
+        fileName = PSE.getBundleItem('ops-switch-list') + '.txt'        
         targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'switchLists', fileName)
         PSE.genericWriteReport(targetPath, switchList)
     # Display formatted data
@@ -173,7 +173,7 @@ class CreateSetCarsForm:
     def jsonSaver(self, mergedForm):
         """Saves the merged form as a json."""
 
-        reportTitle = PSE.BUNDLE['ops-switch-list']
+        reportTitle = PSE.getBundleItem('ops-switch-list')
         fileName = reportTitle + '.json'
         targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
         switchListReport = PSE.dumpJson(mergedForm)

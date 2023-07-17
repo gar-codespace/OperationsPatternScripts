@@ -2,7 +2,8 @@ Todo:
   How to publish DeepL?
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
   Duplication of PSE chunkPath.
-  Maybe add a PSE name fetcher like unicode(PSE.BUNDLE['fetch this name'], PSE.ENCODING) to centralize conversion.
+  Try to get all bundle items into View or GUI
+  Retest PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
 
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -40,6 +41,7 @@ Tested Items:
     ALERT messages open and display to the script output window OK.
     Add print statements to all try/except exceptions OK.
     formatText() works with utf-8 OK.
+    Added PSE.getBundleItem(item) to centralize bundle translation OK.
 
   Language Bundle
     Plugin and help bundles validate OK.

@@ -225,7 +225,7 @@ def getDetailsForLoco(locoObject):
         locoDetailDict['Consist'] = locoObject.getConsist().getName()
     except:
         print('Exception at: Patterns.ModelEntities.getDetailsForLoco')
-        locoDetailDict['Consist'] = PSE.BUNDLE['Single']
+        locoDetailDict['Consist'] = PSE.getBundleItem('Single')
     locoDetailDict['Set_To'] = u'[  ] '
     locoDetailDict[u'PUSO'] = u' '
     locoDetailDict[u' '] = u' ' # Catches KeyError - empty box added to getDropEngineMessageFormat

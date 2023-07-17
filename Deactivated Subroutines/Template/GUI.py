@@ -26,7 +26,9 @@ class subroutineGui:
         tpPanel = PSE.JAVX_SWING.JPanel()
 
         nrButton = PSE.JAVX_SWING.JButton()
-        nrButton.setText(PSE.BUNDLE['xyzzy'])
+        
+        nrButton.setText(PSE.getBundleItem('xyzzy'))
+        
         nrButton.setName('button')
         self.controlWidgets.append(nrButton)
 

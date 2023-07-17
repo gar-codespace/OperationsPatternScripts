@@ -33,13 +33,13 @@ class subroutineGui:
         inputGrid = PSE.JAVX_SWING.JPanel()
         inputGrid.setLayout(PSE.JAVA_AWT.GridLayout(4, 2, 10, 4))
 
-        a1 = PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Operating Railroad Name'], PSE.JAVX_SWING.JLabel.RIGHT)
+        a1 = PSE.JAVX_SWING.JLabel(PSE.getBundleItem('Operating Railroad Name'), PSE.JAVX_SWING.JLabel.RIGHT)
 
-        a3 = PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Operational Territory'], PSE.JAVX_SWING.JLabel.RIGHT)
+        a3 = PSE.JAVX_SWING.JLabel(PSE.getBundleItem('Operational Territory'), PSE.JAVX_SWING.JLabel.RIGHT)
         
-        a5 = PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Location'], PSE.JAVX_SWING.JLabel.RIGHT)
+        a5 = PSE.JAVX_SWING.JLabel(PSE.getBundleItem('Location'), PSE.JAVX_SWING.JLabel.RIGHT)
 
-        a7 = PSE.JAVX_SWING.JLabel(PSE.BUNDLE['Year Modeled'], PSE.JAVX_SWING.JLabel.RIGHT)
+        a7 = PSE.JAVX_SWING.JLabel(PSE.getBundleItem('Year Modeled'), PSE.JAVX_SWING.JLabel.RIGHT)
 
         a2 = PSE.JAVX_SWING.JTextField(self.configFile['Main Script']['LD']['OR'])
         a2.setName('operatingRoad')
@@ -81,7 +81,7 @@ class subroutineGui:
         """The *.setName value is the name of the action for the widget"""
 
         upButton = PSE.JAVX_SWING.JButton()
-        upButton.setText(PSE.BUNDLE[u'Update'])
+        upButton.setText(PSE.getBundleItem('Update'))
         upButton.setName('update')
 
         return upButton

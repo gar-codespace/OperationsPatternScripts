@@ -161,7 +161,7 @@ def repaintPatternScriptsWindow():
     All Show/Hide pulldowns.
     """
 
-    frameTitle = BUNDLE['Pattern Scripts']
+    frameTitle = getBundleItem('Pattern Scripts')
     targetPanel = getComponentByName(frameTitle, 'subroutinePanel')
     targetPanel.removeAll()
     targetPanel = addActiveSubroutines(targetPanel)
@@ -184,7 +184,7 @@ def restartSubroutineByName(subRoutineName):
     subroutineName: Subroutines.<subroutine>
     """
 
-    frameName = BUNDLE['Pattern Scripts']
+    frameName = getBundleItem('Pattern Scripts')
     subroutine = getComponentByName(frameName, subRoutineName)
     if subroutine:
 
@@ -261,7 +261,7 @@ def closePsWindow():
     
         """
 
-    frameName = BUNDLE['Pattern Scripts']
+    frameName = getBundleItem('Pattern Scripts')
     window = JMRI.util.JmriJFrame.getFrame(frameName)
 
     if window:
@@ -357,7 +357,7 @@ def closeSubordinateWindows(level):
     """
 
     console = APPS.Bundle().handleGetMessage('TitleConsole')
-    patternScripts = BUNDLE['Pattern Scripts']
+    patternScripts = getBundleItem('Pattern Scripts')
     trainsTable = JMRI.jmrit.operations.trains.Bundle().handleGetMessage('TitleTrainsTable')
     routesTable = JMRI.jmrit.operations.routes.Bundle().handleGetMessage('TitleRoutesTable')
     locationsTable = JMRI.jmrit.operations.locations.Bundle().handleGetMessage('TitleLocationsTable')
@@ -383,7 +383,7 @@ def closeSubordinateWindows(level):
 def closeTopLevelWindows():
 
     console = APPS.Bundle().handleGetMessage('TitleConsole')
-    patternScripts = BUNDLE['Pattern Scripts']
+    patternScripts = getBundleItem('Pattern Scripts')    
 
     keepTheseWindows = [console, 'PanelPro', patternScripts]
     
@@ -526,8 +526,8 @@ def locationNameLookup(locationName):
     """
 
     if locationName == 'Unreported':
-        
-        uLocation = BUNDLE[unicode('Unreported', ENCODING)]
+
+        uLocation = getBundleItem('Unreported')
     else:
         uLocation = locationName
 
@@ -726,15 +726,15 @@ def getShortLoadType(car):
     except:
         rs = CM.getByRoadAndNumber(car['road'], car['number']) # JMRI nomenclature
 
-    lt =  BUNDLE['unknown'].upper()[0]
+    lt =  getBundleItem('unknown').upper()[0]
     if rs.getLoadType() == 'empty' or rs.getLoadType() == 'Empty':
-        lt = BUNDLE['empty'].upper()[0]
+        lt = getBundleItem('empty').upper()[0]
 
     if rs.getLoadType() == 'load' or rs.getLoadType() == 'Load':
-        lt = BUNDLE['load'].upper()[0]
+        lt = getBundleItem('load').upper()[0]
 
     if rs.isCaboose() or rs.isPassenger():
-        lt = BUNDLE['occupied'].upper()[0]
+        lt = getBundleItem('occupied').upper()[0]
 
     return lt
     # return 'L'
@@ -752,6 +752,7 @@ def makeReportItemWidthMatrix():
     REPORT_ITEM_WIDTH_MATRIX = reportMatrix
 
     return
+
 
 """File Handling Methods"""
 
@@ -1173,6 +1174,13 @@ def getColorC():
 
 """Translation Methods"""
 
+def getBundleItem(item):
+    """
+    Centralized method for translation.
+    Retrieves the item from the bundle.
+    """
+
+    return unicode(BUNDLE[item], ENCODING)
 
 def translateMessageFormat():
     """

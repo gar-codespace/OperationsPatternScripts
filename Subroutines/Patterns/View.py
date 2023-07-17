@@ -29,9 +29,7 @@ class ManageGui:
         subroutineFrame.setName(__package__)
         subroutineFrame.setLayout(PSE.JAVX_SWING.BoxLayout(
                 subroutineFrame, PSE.JAVX_SWING.BoxLayout.Y_AXIS))
-        subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder( \
-                PSE.BUNDLE['Patterns Subroutine'] \
-                )
+        subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Patterns Subroutine'))
 
         return subroutineFrame
 
@@ -60,7 +58,7 @@ def patternReport():
     _psLog.debug('trackPatternButton')
 
 # Get the report
-    reportName = PSE.BUNDLE['ops-pattern-report']
+    reportName = PSE.getBundleItem('ops-pattern-report')    
     fileName = reportName + '.json'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
     trackPattern = PSE.genericReadReport(targetPath)
@@ -69,7 +67,8 @@ def patternReport():
     PSE.makeReportItemWidthMatrix()
     trackPattern = modifyTrackPatternReport(trackPattern)
     reportHeader = makeTextReportHeader(trackPattern)
-    reportLocations = PSE.BUNDLE['Pattern Report for Tracks'] + '\n\n'
+    reportLocations = PSE.getBundleItem('Pattern Report for Tracks') + '\n\n'
+
     reportLocations += makeTextReportLocations(trackPattern, trackTotals=True)
 # Save the modified report
     fileName = reportName + '.txt'
@@ -92,14 +91,15 @@ def trackPatternAsCsv():
     if not PSE.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
         return
 #  Get json data
-    fileName = PSE.BUNDLE['ops-pattern-report'] + '.json'
+    fileName = PSE.getBundleItem('ops-pattern-report')+ '.json'    
+
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
     trackPatternCsv = PSE.genericReadReport(targetPath)
     trackPatternCsv = PSE.loadJson(trackPatternCsv)
 # Process json data into CSV
     trackPatternCsv = makeTrackPatternCsv(trackPatternCsv)
 # Write CSV data
-    fileName = PSE.BUNDLE['ops-pattern-report'] + '.csv'
+    fileName = PSE.getBundleItem('ops-pattern-report') + '.csv'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'csvSwitchLists', fileName)
     PSE.genericWriteReport(targetPath, trackPatternCsv)
 
@@ -124,7 +124,7 @@ def setCarsToTrack(trackCheckBoxes):
 
         newFrame = SetCarsForm_Controller.CreateSetCarsForm(setCarsForm)
         newWindow = newFrame.makeFrame()
-        newWindow.setTitle(PSE.BUNDLE['Set Rolling Stock for track:'] + ' ' + trackCheckBox.text)
+        newWindow.setTitle(PSE.getBundleItem('Set Rolling Stock for track:') + ' ' + trackCheckBox.text)
         newWindow.setName('setCarsWindow')
         newWindow.pack()
 
@@ -207,10 +207,8 @@ def makeTextReportHeader(textWorkEventList):
     else:
         workLocation = patternLocation
 
-    textReportHeader    = textWorkEventList['railroadName'] + '\n\n' \
-                        + PSE.BUNDLE['Work Location:'] + ' ' + workLocation + '\n' \
-                        + textWorkEventList['date'] + '\n\n'
-
+    textReportHeader    = textWorkEventList['railroadName'] + '\n\n' + PSE.getBundleItem('Work Location:') + ' ' + workLocation + '\n' + textWorkEventList['date'] + '\n\n'
+    
     return textReportHeader
 
 def makeTextReportLocations(textWorkEventList, trackTotals):
@@ -229,7 +227,7 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
         trackTally = []
         trackName = track['trackName']
         trackLength = track['length']
-        reportSwitchList += PSE.BUNDLE['Track:'] + ' ' + trackName + '\n'
+        reportSwitchList += PSE.getBundleItem('Track:') + ' ' + trackName + '\n'
 
         for loco in track['locos']:
             lengthOfLocos += int(loco['Length']) + 4
@@ -243,19 +241,19 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
 
         if trackTotals:
             totalLength = lengthOfLocos + lengthOfCars
-            reportSwitchList += PSE.BUNDLE['Total Cars:'] + ' ' \
-                + str(len(track['cars'])) + ' ' + PSE.BUNDLE['Track Length:']  + ' ' \
-                + str(trackLength) +  ' ' + PSE.BUNDLE['Eqpt. Length:']  + ' ' \
-                + str(totalLength) + ' ' +  PSE.BUNDLE['Available:']  + ' '  \
+            reportSwitchList += PSE.getBundleItem('Total Cars:') + ' ' \
+                + str(len(track['cars'])) + ' ' + PSE.getBundleItem('Track Length:')  + ' ' \
+                + str(trackLength) +  ' ' + PSE.getBundleItem('Eqpt. Length:')  + ' ' \
+                + str(totalLength) + ' ' +  PSE.getBundleItem('Available:') + ' '  \
                 + str(trackLength - totalLength) \
                 + '\n\n'
-            reportSwitchList += PSE.BUNDLE['Track Totals for Cars:'] + '\n'
+            reportSwitchList += PSE.getBundleItem('Track Totals for Cars:') + '\n'
             for track, count in sorted(PSE.occuranceTally(trackTally).items()):
                 reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
         reportSwitchList += '\n'
 
     if trackTotals:
-        reportSwitchList += '\n' + PSE.BUNDLE['Report Totals for Cars:'] + '\n'
+        reportSwitchList += '\n' + PSE.getBundleItem('Report Totals for Cars:') + '\n'
         for track, count in sorted(PSE.occuranceTally(reportTally).items()):
             reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
 
