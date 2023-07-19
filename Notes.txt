@@ -4,6 +4,8 @@ Todo:
   Duplication of PSE chunkPath.
   Try to get all bundle items into View or GUI
   Retest PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
+  o2o update locations/industries/cars should not effect trains
+  o2o move reset AAR to the initialize button.
 
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -126,7 +128,8 @@ Tested Items:
       The location 'Unknown' is translated into the current language.
       The division 'Unassigned' is added to the bundle.
       Initialize button triggers remoteCalls(restartCalls).
-      o2o import will delete tracks and locations directly added using JMRI      
+      o2o import will delete tracks and locations directly added using JMRI
+      Only "Initialize" resets Road Names and Car Types OK.    
 
     Export-
       When active, exports JMRI manifest to TP OK.

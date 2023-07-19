@@ -48,6 +48,8 @@ def initializeJmriRailroad():
     PSE.CM.dispose()
     PSE.EM.dispose()
 
+    Initiator().xmlScrubber()
+
     PSE.remoteCalls('resetCalls')
     
     print('JMRI data has been initiallized')
@@ -229,6 +231,45 @@ class Initiator:
 
         return
     
+    def xmlScrubber(self):
+        """
+        Mini controller.
+        Resets Road Names, Car types.
+        Load Names is reset automatically.
+        """
+
+        self.resetCarTypes()
+        self.resetRoadNames()
+
+        return
+    
+    def resetCarTypes(self):
+
+        _psLog.debug('resetCarTypes')
+
+        tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarTypes
+        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+
+        for type in TCM.getNames():
+            TCM.deleteName(type)
+        TCM.addName('xyz')
+
+        return
+
+    def resetRoadNames(self):
+
+        _psLog.debug('resetRoadNames')
+
+        tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarRoads
+        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+
+        for road in TCM.getNames():
+            TCM.deleteName(road)
+
+        TCM.addName('xyz')
+
+        return
+
     def properties(self):
         """
         Mini controller to update railroad properties.
@@ -358,11 +399,10 @@ class Attributator:
         tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarRoads
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
 
-        for road in TCM.getNames():
-            TCM.deleteName(road)
-
         for road in self.tpRailroadData['roads']:
             TCM.addName(road)
+
+        TCM.deleteName('xyz')
 
         return
     
@@ -377,11 +417,9 @@ class Attributator:
         tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarTypes
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
 
-        for type in TCM.getNames():
-            TCM.deleteName(type)
-
         for type in self.tpRailroadData['carAAR']:
             TCM.addName(type)
+        TCM.deleteName('xyz')
 
         return
 
