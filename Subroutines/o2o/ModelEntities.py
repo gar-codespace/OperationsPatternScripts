@@ -97,6 +97,9 @@ def tpDirectoryExists():
 
 
 def addTypesToTracks():
+    """
+    Depricated
+    """
 
 
     tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarTypes

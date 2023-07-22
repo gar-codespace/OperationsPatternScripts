@@ -2,7 +2,15 @@
     "RN" : "o2o-Workevents",
     "SV" : true,
     "DL" : 40,
-    "PX": [
+    "EX" : [
+      "E",
+      "ES",
+      "ED",
+      "EE",
+      "ET"
+    ],
+    "PX" : [
+      "EP",
       "B",
       "BE",
       "BH",

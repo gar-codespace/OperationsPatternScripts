@@ -80,7 +80,7 @@ def updateJmriLocations():
 
 # This part does the tracks
     Attributator().updateRsAttributes()
-    ModelEntities.addTypesToTracks()
+    # ModelEntities.addTypesToTracks()
     ScheduleAuteur().updateSchedules()
     trackulator = Trackulator()
     trackulator.checker()
