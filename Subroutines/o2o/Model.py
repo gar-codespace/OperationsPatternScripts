@@ -1180,6 +1180,8 @@ class RStockulator:
         self.configFile = PSE.readConfigFile('o2o')
         self.tpRollingStockFileName = self.configFile['RF']['TRR']
 
+        self.TpRailroad = ModelEntities.getTpRailroadJson('tpRailroadData')
+
         self.jmriCars = PSE.CM.getList()
         self.jmriLocos = PSE.EM.getList()
 
@@ -1209,8 +1211,12 @@ class RStockulator:
 
         try:
             self.tpInventory = ModelEntities.getTpExport(self.tpRollingStockFileName)
-            self.tpInventory.pop(0) # Remove the date
-            self.tpInventory.pop(0) # Remove the key
+            # self.tpInventory.pop(0) # Remove the date
+            # self.tpInventory.pop(0)
+            # self.tpInventory.pop(0)
+            # self.tpInventory.pop(0) # Remove the key
+            # self.tpInventory.pop(0)
+            # self.tpInventory.pop(0)
             _psLog.info('TrainPlayer Inventory file OK')
         except:
             print('Exception at: o2o.Model.getTpInventory')
@@ -1379,6 +1385,12 @@ class RStockulator:
         car = PSE.CM.newRS(carId[0], carId[1])
 
         car.setTypeName(carData['aar'])
+
+        if carData['aar'] in self.TpRailroad['cabooseAar']:
+            car.setCaboose(True)
+        if carData['aar'] in self.TpRailroad['passAar']:
+            car.setPassenger(True)
+
         car.setLoadName(carData['load'])
         car.setLength(str(self.configFile['DL']))
         kernel = PSE.KM.getKernelByName(carData['kernel'])

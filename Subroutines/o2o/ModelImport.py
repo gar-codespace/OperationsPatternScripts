@@ -31,6 +31,7 @@ def importTpRailroad():
         return False
 
     trainPlayerImport.processFileHeaders()
+    trainPlayerImport.processTpInventory()
     trainPlayerImport.getLocationIds()
     trainPlayerImport.getRrLocations()
     trainPlayerImport.getRrLocales()
@@ -72,6 +73,11 @@ class TrainPlayerImporter:
         self.tpLocations = []
         self.tpIndustries = []
         self.tpInventory = []
+
+        self.tpEngineAar = []
+        self.tpCabooseAar = []
+        self.tpPassAar = []
+        self.tpMowAar = []
 
         reportName = 'tpRailroadData'
         fileName = reportName + '.json'
@@ -119,11 +125,11 @@ class TrainPlayerImporter:
         return fileCheck
 
     def checkLocationsFile(self):
-        """Each line in the locations file should have 5 semi colons."""
+        """Each line in the locations file should have 5 semicolons."""
 
         if [line.count(';') for line in self.tpLocations if line.count(';') != 5]:
             _psLog.critical('Error: Locations file formatting error.')
-            PSE.openOutputFrame(PSE.getBundleItem('Check TrainPlayer-Advanced Ops-Locales for semi colon.'))
+            PSE.openOutputFrame(PSE.getBundleItem('Check TrainPlayer-Advanced Ops-Locales for semicolon.'))
             print('Error: Locations file formatting error')
 
             return False
@@ -131,7 +137,7 @@ class TrainPlayerImporter:
         return True
 
     def checkIndustriesFile(self):
-        """Each line in the industries file should have 10 semi colons."""
+        """Each line in the industries file should have 10 semicolons."""
 
         if [line.count(';') for line in self.tpIndustries if line.count(';') != 10]:
             _psLog.critical('Error: Industries file formatting error.')
@@ -151,6 +157,11 @@ class TrainPlayerImporter:
         self.rr['buildDate'] = rrData[0]
         self.rr['layoutName'] = rrData[1]
 
+        self.tpEngineAar = self.tpLocations.pop(0).split(';')[0].split(' ')
+        self.tpCabooseAar = self.tpLocations.pop(0).split(';')[0].split(' ')
+        self.tpPassAar = self.tpLocations.pop(0).split(';')[0].split(' ')
+        self.tpMowAar = self.tpLocations.pop(0).split(';')[0].split(' ')
+
         rrData = self.tpLocations.pop(0).split(';') # Pop off the details line
         self.rr['operatingRoad'] = rrData[0]
         self.rr['territory'] = rrData[1]
@@ -167,12 +178,37 @@ class TrainPlayerImporter:
         self.tpIndustries.pop(0) # Remove key
         self.tpIndustries.sort()
 
-        self.tpInventory.pop(0) # Remove date
-        self.tpInventory.pop(0) # Remove key
+        return
+    
+    def processTpInventory(self):
+        """
+        Write the Random Roads AAR lists or the default from the config file into tpRailroadData.json
+        """
+
+        if self.tpEngineAar:
+            self.rr['engineAar'] = self.tpEngineAar
+        else:
+            self.rr['engineAar'] = self.o2oConfig['o2o']['EX']
+
+        if self.tpCabooseAar:
+            self.rr['cabooseAar'] = self.tpCabooseAar
+        else:
+            self.rr['cabooseAar'] = self.o2oConfig['o2o']['CX']
+
+        if self.tpPassAar:
+            self.rr['passAar'] = self.tpPassAar
+        else:
+            self.rr['passAar'] = self.o2oConfig['o2o']['PX']
+
+        if self.tpMowAar:
+            self.rr['mowAar'] = self.tpMowAar
+        else:
+            self.rr['mowAar'] = self.o2oConfig['o2o']['MX']
 
         return
 
     def getLocationIds(self):
+    
 
         _psLog.debug('getLocationIds')
 

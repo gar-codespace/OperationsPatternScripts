@@ -201,6 +201,7 @@ def getWorkEvents():
 def getTpExport(fileName):
     """
     Generic file getter, fileName includes .txt
+    Returns the text file as a list, each line is an element
     Called by:
     ModelImport.TrainPlayerImporter.getTpReportFiles
     """
