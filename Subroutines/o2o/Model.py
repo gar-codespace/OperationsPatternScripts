@@ -93,7 +93,7 @@ def updateJmriLocations():
 
 # This part does the rolling stock
     rollingStockulator = RStockulator()
-    rollingStockulator.checker()
+    rollingStockulator.validateRollingStockFile()
     rollingStockulator.updator()
     rollingStockulator.scheduleApplicator()
 
@@ -1195,36 +1195,48 @@ class RStockulator:
 
         return
 
-    def checker(self):
+    def validateRollingStockFile(self):
         """
-        Does some checks on the data.
+        Mini controller to check the validity of TrainPlayer Report - Rolling Stock.txt
         """
 
-        self.getTpInventory()
-        self.splitTpList()
-        if not self.checkLocations():
+        _psLog.debug('validateRollingStockFile')
+
+        if not self.getTpInventory():
             return False
+        if not self.checkInventoryFile():
+            return False
+        self.parseTpInventory()
         
         return True
-
+    
     def getTpInventory(self):
 
         try:
             self.tpInventory = ModelEntities.getTpExport(self.tpRollingStockFileName)
-            # self.tpInventory.pop(0) # Remove the date
-            # self.tpInventory.pop(0)
-            # self.tpInventory.pop(0)
-            # self.tpInventory.pop(0) # Remove the key
-            # self.tpInventory.pop(0)
-            # self.tpInventory.pop(0)
             _psLog.info('TrainPlayer Inventory file OK')
+            return True
         except:
+            PSE.openOutputFrame(PSE.getBundleItem('Alert: import error, Rolling Stock not imported.'))
             print('Exception at: o2o.Model.getTpInventory')
             _psLog.warning('TrainPlayer Inventory file not found')
+            return False
 
-        return
+    def checkInventoryFile(self):
+        """
+        Each line in the rolling stock file should have 7 semicolons.
+        """
 
-    def splitTpList(self):
+        if [line.count(';') for line in self.tpInventory if line.count(';') != 7]:
+            PSE.openOutputFrame(PSE.getBundleItem('Alert: import error, Rolling Stock not imported.'))
+            print('Exception at: o2o.Model.checkInventoryFile')
+            _psLog.critical('Error: Rolling Stock file formatting error.')
+
+            return False
+
+        return True
+
+    def parseTpInventory(self):
         """
         self.tpInventory string format:
         TP Car ; TP Type ; TP AAR; JMRI Location; JMRI Track; TP Load; TP Kernel, TP ID
@@ -1234,54 +1246,39 @@ class RStockulator:
         self.tpLocos dictionary format: {TP ID :  [Model, AAR, JMRI Location, JMRI Track, 'unloadable', Consist, JMRI ID]}
         """
 
-        _psLog.debug('splitTpList')
-
         for item in self.tpInventory:
             line = item.split(';')
             if line[2].startswith('ET'):
                 continue
+
+            location = line[3]
+            track = line[4]
+            if not self.testLocale(location, track):
+                print('ALERT: Not a valid locale: ' + line[0] + ', ' + location + ', ' + track)
+                _psLog.critical('ALERT: Not a valid locale: ' + line[0] + ', ' + location + ', ' + track)
+                PSE.openOutputFrame(PSE.getBundleItem('Alert: rolling stock skipped, parsing error.') + ' ' + line[0])
+                continue
+
             if line[2].startswith('E'):
                 self.tpLocos[line[7]] = {'model': line[1], 'aar': line[2], 'location': line[3], 'track': line[4], 'load': line[5], 'consist': line[6], 'id': line[0]}
             else:
                 self.tpCars[line[7]] = {'type': line[1], 'aar': line[2], 'location': line[3], 'track': line[4], 'load': line[5], 'kernel': line[6], 'id': line[0]}
 
         return
-    
-    def checkLocations(self):
-        """
-        Checks the validity of the RS location and track.
-        """
 
-        for id, data in self.tpLocos.items():
-            if not self.testTest(data):
-                return False
-            
-        for id, data in self.tpCars.items():
-            if not self.testTest(data):
-                return False
-            
-        return True
-    
-    def testTest(self, data):
+    def testLocale(self, location, track):
         """
         Returns the result of testing the location and track.
         """
 
-        locationName = PSE.locationNameLookup(data['location'])
+        locationName = PSE.locationNameLookup(location)
 
         if PSE.LM.getLocationByName(locationName) == None:
-            print('ALERT: Not a valid location:' + ' ' + data['location'])
-            _psLog.critical('ALERT: Not a valid location:' + ' ' + data['location'])
-            PSE.openOutputFrame(PSE.getBundleItem('ALERT: Not a valid location:') + ' ' + data['location'])
-            PSE.openOutputFrame(PSE.getBundleItem('Cars not imported. Import Locations recommended'))
 
             return False
         
-        if PSE.LM.getLocationByName(locationName).getTrackByName(data['track'], None) == None:
-            _psLog.critical('ALERT: Not a valid track:' + ' ' + data['location'] + ':' + data['track'])
-            PSE.openOutputFrame(PSE.getBundleItem('ALERT: Not a valid track:') + ' ' + data['location'] + ':' + data['track'])
-            PSE.openOutputFrame(PSE.getBundleItem('Cars not imported. Import Locations recommended'))
-            print('ALERT: Not a valid track:' + ' ' + data['location'] + ':' + data['track'])
+        if PSE.LM.getLocationByName(locationName).getTrackByName(track, None) == None:
+
             return False
         
         return True

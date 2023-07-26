@@ -30,7 +30,8 @@ def importTpRailroad():
         boilerplateErrors()
         return False
 
-    trainPlayerImport.processFileHeaders()
+    trainPlayerImport.processLocationsHeader()
+    trainPlayerImport.processIndustriesHeader()
     trainPlayerImport.processTpInventory()
     trainPlayerImport.getLocationIds()
     trainPlayerImport.getRrLocations()
@@ -87,7 +88,9 @@ class TrainPlayerImporter:
         return
 
     def getTpReportFiles(self):
-        """Returns true if all 3 files import ok."""
+        """
+        Returns true if all 3 files import ok.
+        """
 
         _psLog.debug('getTpReportFiles')
 
@@ -125,7 +128,9 @@ class TrainPlayerImporter:
         return fileCheck
 
     def checkLocationsFile(self):
-        """Each line in the locations file should have 5 semicolons."""
+        """
+        Each line in the locations file should have 5 semicolons.
+        """
 
         if [line.count(';') for line in self.tpLocations if line.count(';') != 5]:
             _psLog.critical('Error: Locations file formatting error.')
@@ -137,7 +142,9 @@ class TrainPlayerImporter:
         return True
 
     def checkIndustriesFile(self):
-        """Each line in the industries file should have 10 semicolons."""
+        """
+        Each line in the industries file should have 10 semicolons.
+        """
 
         if [line.count(';') for line in self.tpIndustries if line.count(';') != 10]:
             _psLog.critical('Error: Industries file formatting error.')
@@ -148,31 +155,40 @@ class TrainPlayerImporter:
 
         return True
 
-    def processFileHeaders(self):
-        """Process the header info from the TP report files."""
+    def processLocationsHeader(self):
+        """
+        Process the header info from TrainPlayer Report - Locations.txt.
+        """
 
-        _psLog.debug('processFileHeaders')
+        _psLog.debug('processLocationsHeader')
 
         rrData = self.tpLocations.pop(0).split(';') # Pop off the date and layout name
         self.rr['buildDate'] = rrData[0]
         self.rr['layoutName'] = rrData[1]
-
-        self.tpEngineAar = self.tpLocations.pop(0).split(';')[0].split(' ')
-        self.tpCabooseAar = self.tpLocations.pop(0).split(';')[0].split(' ')
-        self.tpPassAar = self.tpLocations.pop(0).split(';')[0].split(' ')
-        self.tpMowAar = self.tpLocations.pop(0).split(';')[0].split(' ')
 
         rrData = self.tpLocations.pop(0).split(';') # Pop off the details line
         self.rr['operatingRoad'] = rrData[0]
         self.rr['territory'] = rrData[1]
         self.rr['location'] = rrData[2]
         self.rr['year'] = rrData[3]
-
         self.rr['divisions'] = rrData[4].split(',')
-
         self.rr['scale'] = rrData[5]
 
-        self.tpLocations.pop(0) # Pop off the key
+        self.tpEngineAar = self.tpLocations.pop(0).split(';')[0].split(' ')
+        self.tpCabooseAar = self.tpLocations.pop(0).split(';')[0].split(' ')
+        self.tpPassAar = self.tpLocations.pop(0).split(';')[0].split(' ')
+        self.tpMowAar = self.tpLocations.pop(0).split(';')[0].split(' ')
+
+        self.tpLocations.pop(0) # Pop off the blank line
+
+        return
+
+    def processIndustriesHeader(self):
+        """
+        Process the header info from TrainPlayer Report - Industries.txt.
+        """
+
+        _psLog.debug('processIndustriesHeader')
 
         self.tpIndustries.pop(0) # Remove date
         self.tpIndustries.pop(0) # Remove key

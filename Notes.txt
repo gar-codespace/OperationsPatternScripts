@@ -4,6 +4,8 @@ Todo:
   Duplication of PSE chunkPath.
   Try to get all bundle items into View or GUI
   Retest PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
+  o2o rename testTest to something relavant.
+  Fix bundles Make ALERT and Alert consistant.
 
 Comments:
   Schedule does not prevent setting a car to a track.

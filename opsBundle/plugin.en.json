@@ -15,6 +15,7 @@
   "Alert: No JMRI locations were found.": "Alert: No JMRI locations were found.", 
   "Alert: No JMRI tracks were found.": "Alert: No JMRI tracks were found.", 
   "Alert: Schedule item not found for car:": "Alert: Schedule item not found for car:", 
+  "Alert: import error, Rolling Stock not imported.": "Alert: import error, Rolling Stock not imported.", 
   "Alert: rolling stock skipped, parsing error.": "Alert: rolling stock skipped, parsing error.", 
   "Alert: staging and non staging tracks at:": "Alert: staging and non staging tracks at:", 
   "Apply Schedule": "Apply Schedule", 

@@ -12,6 +12,7 @@ Alert: No JMRI tracks were found.
 ALERT: Not a spur track:
 ALERT: Not a valid location:
 ALERT: Not a valid track:
+Alert: import error, Rolling Stock not imported.
 Alert: rolling stock skipped, parsing error.
 Alert: Schedule item not found for car:
 Alert: staging and non staging tracks at:
