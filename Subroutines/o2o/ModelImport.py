@@ -121,7 +121,7 @@ class TrainPlayerImporter:
             _psLog.info('TrainPlayer Inventory file OK')
         else:
             _psLog.critical('TrainPlayer Inventory file not found')
-            PSE.openOutputFrame(PSE.getBundleItem('ALERT: TrainPlayer Inventory file not found.'))
+            PSE.openOutputFrame(PSE.getBundleItem('ALERT: TrainPlayer Rolling Stock file not found.'))
             print('Not found: ' + self.o2oConfig['o2o']['RF']['TRR'])
             fileCheck = False
 

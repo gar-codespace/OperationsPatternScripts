@@ -3,19 +3,19 @@ o2o Subroutine
 ALERT: One or more TrainPlayer export files are missing.
 ALERT: TrainPlayer Locations file not found.
 ALERT: TrainPlayer Industries file not found.
-ALERT: TrainPlayer Inventory file not found.
+ALERT: TrainPlayer Rolling Stock file not found.
 ALERT: Staging and non-staging tracks at same location:
 ALERT: TrainPlayer export issue.
-Alert: Create a new JMRI layout first.
-Alert: No JMRI locations were found.
-Alert: No JMRI tracks were found.
+ALERT: Create a new JMRI layout first.
+ALERT: No JMRI locations were found.
+ALERT: No JMRI tracks were found.
 ALERT: Not a spur track:
 ALERT: Not a valid location:
 ALERT: Not a valid track:
-Alert: import error, Rolling Stock not imported.
-Alert: rolling stock skipped, parsing error.
-Alert: Schedule item not found for car:
-Alert: staging and non staging tracks at:
+ALERT: import error, Rolling Stock not imported.
+ALERT: rolling stock skipped, parsing error.
+ALERT: Schedule item not found for car:
+ALERT: staging and non staging tracks at:
 Industries not imported. Import Locations recommended
 Cars not imported. Import Locations recommended
 Import terminated without completion

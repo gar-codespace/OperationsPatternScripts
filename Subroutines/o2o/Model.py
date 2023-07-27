@@ -79,11 +79,12 @@ def updateJmriLocations():
     _psLog.info('JMRI locations updated from TrainPlayer data')
 
 # This part does the tracks
-    Attributator().updateRsAttributes()
-    # ModelEntities.addTypesToTracks()
-    ScheduleAuteur().updateSchedules()
     trackulator = Trackulator()
-    trackulator.checker()
+    if not trackulator.testTracks():
+        return
+    Attributator().updateRsAttributes()
+    ModelEntities.addTypesToTracks()
+    ScheduleAuteur().updateSchedules()
     trackulator.trackist()
     ModelEntities.deselectCarTypesAtSpurs()
     ModelEntities.selectCarTypesAtSpurs()
@@ -93,12 +94,12 @@ def updateJmriLocations():
 
 # This part does the rolling stock
     rollingStockulator = RStockulator()
-    rollingStockulator.validateRollingStockFile()
-    rollingStockulator.updator()
-    rollingStockulator.scheduleApplicator()
+    if rollingStockulator.validateRollingStockFile():
+        rollingStockulator.updator()
+        rollingStockulator.scheduleApplicator()
 
-    print('JMRI rolling stock updated from TrainPlayer data')
-    _psLog.info('JMRI rolling stock updated from TrainPlayer data')
+        print('JMRI rolling stock updated from TrainPlayer data')
+        _psLog.info('JMRI rolling stock updated from TrainPlayer data')
 
 # This part does the extended header
     Initiator().properties()
@@ -116,11 +117,11 @@ def updateJmriTracks():
     """
     
     if not PSE.getAllLocationNames():
-        PSE.openOutputFrame(PSE.getBundleItem('Alert: No JMRI locations were found.'))
+        PSE.openOutputFrame(PSE.getBundleItem('ALERT: No JMRI locations were found.'))
         return
 
     trackulator = Trackulator()
-    if not trackulator.checker():
+    if not trackulator.testTracks():
         return
     
     Attributator().updateRsAttributes()
@@ -135,16 +136,12 @@ def updateJmriTracks():
 
 # This part does the rolling stock
     rollingStockulator = RStockulator()
-    if not rollingStockulator.checker():
-        return
-    
-    # Attributator().updateRsAttributes()
+    if rollingStockulator.validateRollingStockFile():
+        rollingStockulator.updator()
+        rollingStockulator.scheduleApplicator()
 
-    rollingStockulator.updator()
-    rollingStockulator.scheduleApplicator()
-
-    print('JMRI rolling stock updated from TrainPlayer data')
-    _psLog.info('JMRI rolling stock updated from TrainPlayer data')
+        print('JMRI rolling stock updated from TrainPlayer data')
+        _psLog.info('JMRI rolling stock updated from TrainPlayer data')
 
 # This part does the extended header
     Initiator().properties()
@@ -162,25 +159,23 @@ def updateJmriRollingingStock():
     Controller.Startup.updateJmriRollingingStock
     """
 
-    if not PSE.getAllTracks():
-        message = PSE.getBundleItem('Alert: No JMRI tracks were found.')        
-        PSE.openOutputFrame(message)
+    if not PSE.getAllTracks():     
+        PSE.openOutputFrame(PSE.getBundleItem('ALERT: No JMRI tracks were found.'))
         return
 
-    rollingStockulator = RStockulator()
-    if not rollingStockulator.checker():
-        return
-    
     Attributator().updateRsAttributes()
     ModelEntities.addTypesToTracks()
     ModelEntities.deselectCarTypesAtSpurs()
     ModelEntities.selectCarTypesAtSpurs()
     
-    rollingStockulator.updator()
-    rollingStockulator.scheduleApplicator()
+# This part does the rolling stock
+    rollingStockulator = RStockulator()
+    if rollingStockulator.validateRollingStockFile():
+        rollingStockulator.updator()
+        rollingStockulator.scheduleApplicator()
 
-    print('JMRI rolling stock updated from TrainPlayer data')
-    _psLog.info('JMRI rolling stock updated from TrainPlayer data')
+        print('JMRI rolling stock updated from TrainPlayer data')
+        _psLog.info('JMRI rolling stock updated from TrainPlayer data')
 
 # This part does the extended header
     Initiator().properties()
@@ -809,8 +804,8 @@ class Locationator:
 
         invalidLocations = list(set(stagingList).intersection(nonStagingList))
         if invalidLocations:
-            _psLog.critical('Alert: staging and non staging tracks at:' + ' ' + str(invalidLocations))
-            PSE.openOutputFrame(PSE.getBundleItem('Alert: staging and non staging tracks at:') + ' ' + str(invalidLocations))
+            _psLog.critical('ALERT: staging and non staging tracks at:' + ' ' + str(invalidLocations))
+            PSE.openOutputFrame(PSE.getBundleItem('ALERT: staging and non staging tracks at:') + ' ' + str(invalidLocations))
             PSE.openOutputFrame(PSE.getBundleItem('Import terminated without completion'))
 
             return False
@@ -973,8 +968,8 @@ class Trackulator:
 
         self.configFile = PSE.readConfigFile()
 
-        self.currentRrData = {}
-        self.updatedRrData = {}
+        self.currentRrData = ModelEntities.getCurrentRrData()
+        self.updatedRrData = ModelEntities.getTpRailroadJson('tpRailroadData')
 
         self.currentTrackIds = []
         self.updatedTrackIds = []
@@ -990,23 +985,9 @@ class Trackulator:
 
         return
 
-    def checker(self):
+    def testTracks(self):
         """
-        Mini controller.
-        Checks that the locations that the tracks update to exist.
-        """
-
-        self.getCurrentRrData()
-        self.getUpdatedRrData()
-
-        if not self.testTest():
-            return False
-
-        return True
-
-    def testTest(self):
-        """
-        Returns the result of the locations check.
+        Tests that no locations changes were made.
         """
 
         currentLocations = []
@@ -1034,31 +1015,16 @@ class Trackulator:
         Updates JMRI tracks and track attributes.
         """
 
-        self.getCurrentRrData()
-        self.getUpdatedRrData()
         self.getTrackIds()
 
         self.parseTrackIds()
         self.updateContinuingTracks()
         self.addNewTracks()
         self.deleteOldTracks()
-        # ModelEntities.deselectCarTypesAtSpurs()
-        # ModelEntities.selectCarTypesAtSpurs()
         self.addSchedulesToSpurs()
 
         return
-    
-    def getCurrentRrData(self):
 
-        self.currentRrData = ModelEntities.getCurrentRrData()
-
-        return
-
-    def getUpdatedRrData(self):
-
-        self.updatedRrData = ModelEntities.getTpRailroadJson('tpRailroadData')
-
-        return
     
     def getTrackIds(self):
 
@@ -1178,14 +1144,13 @@ class RStockulator:
         self.scriptName = SCRIPT_NAME + '.RStockulator'
 
         self.configFile = PSE.readConfigFile('o2o')
-        self.tpRollingStockFileName = self.configFile['RF']['TRR']
 
         self.TpRailroad = ModelEntities.getTpRailroadJson('tpRailroadData')
+        self.tpInventory = ModelEntities.getTpExport(self.configFile['RF']['TRR'])
 
         self.jmriCars = PSE.CM.getList()
         self.jmriLocos = PSE.EM.getList()
 
-        self.tpInventory = []
         self.tpCars = {}
         self.tpLocos = {}
 
@@ -1202,33 +1167,20 @@ class RStockulator:
 
         _psLog.debug('validateRollingStockFile')
 
-        if not self.getTpInventory():
-            return False
         if not self.checkInventoryFile():
             return False
         self.parseTpInventory()
         
         return True
-    
-    def getTpInventory(self):
-
-        try:
-            self.tpInventory = ModelEntities.getTpExport(self.tpRollingStockFileName)
-            _psLog.info('TrainPlayer Inventory file OK')
-            return True
-        except:
-            PSE.openOutputFrame(PSE.getBundleItem('Alert: import error, Rolling Stock not imported.'))
-            print('Exception at: o2o.Model.getTpInventory')
-            _psLog.warning('TrainPlayer Inventory file not found')
-            return False
 
     def checkInventoryFile(self):
         """
         Each line in the rolling stock file should have 7 semicolons.
         """
 
+        print('checkInventoryFile')
         if [line.count(';') for line in self.tpInventory if line.count(';') != 7]:
-            PSE.openOutputFrame(PSE.getBundleItem('Alert: import error, Rolling Stock not imported.'))
+            PSE.openOutputFrame(PSE.getBundleItem('ALERT: import error, Rolling Stock not imported.'))
             print('Exception at: o2o.Model.checkInventoryFile')
             _psLog.critical('Error: Rolling Stock file formatting error.')
 
@@ -1256,7 +1208,7 @@ class RStockulator:
             if not self.testLocale(location, track):
                 print('ALERT: Not a valid locale: ' + line[0] + ', ' + location + ', ' + track)
                 _psLog.critical('ALERT: Not a valid locale: ' + line[0] + ', ' + location + ', ' + track)
-                PSE.openOutputFrame(PSE.getBundleItem('Alert: rolling stock skipped, parsing error.') + ' ' + line[0])
+                PSE.openOutputFrame(PSE.getBundleItem('ALERT: rolling stock skipped, parsing error.') + ' ' + line[0])
                 continue
 
             if line[2].startswith('E'):
@@ -1472,8 +1424,8 @@ class RStockulator:
                     litmus = 1
 
             if litmus == 0:
-                print('Alert: Schedule item not found for car: ' + car.getRoadName() + ' ' + car.getNumber() + ' ' + car.getTrackName())
-                PSE.openOutputFrame(PSE.getBundleItem('Alert: Schedule item not found for car:') + ' ' + car.getRoadName() + ' ' + car.getNumber() + ' ' + car.getTrackName())
+                print('ALERT: Schedule item not found for car: ' + car.getRoadName() + ' ' + car.getNumber() + ' ' + car.getTrackName())
+                PSE.openOutputFrame(PSE.getBundleItem('ALERT: Schedule item not found for car:') + ' ' + car.getRoadName() + ' ' + car.getNumber() + ' ' + car.getTrackName())
                 PSE.openOutputFrame(PSE.getBundleItem('Track does not serve this car type'))
 
         return

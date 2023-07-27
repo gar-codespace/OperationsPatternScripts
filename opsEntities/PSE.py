@@ -526,12 +526,9 @@ def locationNameLookup(locationName):
     """
 
     if locationName == 'Unreported':
+        locationName = getBundleItem('Unreported')
 
-        uLocation = getBundleItem('Unreported')
-    else:
-        uLocation = locationName
-
-    return uLocation
+    return locationName
 
 def getAllDivisionNames():
     """
