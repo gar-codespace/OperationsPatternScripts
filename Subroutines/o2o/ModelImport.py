@@ -6,6 +6,7 @@ Use the TrainPlayer/Reports inventory, locations and industries text files to ge
 """
 
 from opsEntities import PSE
+from Subroutines.o2o import BuiltTrainExport
 from Subroutines.o2o import ModelEntities
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
@@ -13,9 +14,11 @@ SCRIPT_REV = 20230201
 
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.ModelImport')
 
+    
 def importTpRailroad():
     """Mini controller generates the tpRailroadData.json file"""
 
+    PSE.closeOutputFrame()
     trainPlayerImport = TrainPlayerImporter()
 # Import the three TrainPlayer export files
     if not trainPlayerImport.getTpReportFiles():
@@ -29,7 +32,11 @@ def importTpRailroad():
     if not trainPlayerImport.checkIndustriesFile():
         boilerplateErrors()
         return False
-
+# Test the integrity of the Rolling Stock file
+    if not trainPlayerImport.checkInventoryFile():
+        boilerplateErrors()
+        return False
+    
     trainPlayerImport.processLocationsHeader()
     trainPlayerImport.processIndustriesHeader()
     trainPlayerImport.processTpInventory()
@@ -50,16 +57,18 @@ def importTpRailroad():
 
     trainPlayerImport.writeTPLayoutData()
 
+    BuiltTrainExport.FindTrain().trainResetter()
+
     return True
 
 def boilerplateErrors():
 
-    _psLog.critical('Error: TrainPlayer export issue.')
+    _psLog.critical('ERROR: Missing or corrupt TrainPlayer export file.')
+    _psLog.critical('TrainPlayer railroad not imported')
 
-    a = PSE.getBundleItem('ALERT: TrainPlayer export issue.')
     b = PSE.getBundleItem('From TrainPlayer, re-export layout to JMRI.')
     c = PSE.getBundleItem('TrainPlayer layout not imported to JMRI.')
-    message = a + '\n' + b + '\n' + c + '\n'
+    message = b + '\n' + c + '\n'
 
     PSE.openOutputFrame(message)
 
@@ -89,7 +98,7 @@ class TrainPlayerImporter:
 
     def getTpReportFiles(self):
         """
-        Returns true if all 3 files import ok.
+        Returns true if all 3 TrainPlayer export files import ok.
         """
 
         _psLog.debug('getTpReportFiles')
@@ -98,31 +107,28 @@ class TrainPlayerImporter:
 
         self.tpLocations = ModelEntities.getTpExport(self.o2oConfig['o2o']['RF']['TRL'])
         if self.tpLocations:
-            _psLog.info('TrainPlayer Locations file OK')
+            _psLog.info('TrainPlayer Report - Locations.txt file found')
         else:
-            _psLog.critical('TrainPlayer Locations file not found')
-            PSE.openOutputFrame(PSE.getBundleItem('ALERT: TrainPlayer Locations file not found.'))
-            print('Not found: ' + self.o2oConfig['o2o']['RF']['TRL'])
+            _psLog.critical('TrainPlayer Report - Locations.txt file not found')
+            PSE.openOutputFrame(PSE.getBundleItem('ALERT: File not found:') + ' TrainPlayer Report - Locations.txt')
             fileCheck = False
 
 
         self.tpIndustries = ModelEntities.getTpExport(self.o2oConfig['o2o']['RF']['TRI'])
         if self.tpIndustries:
-            _psLog.info('TrainPlayer Industries file OK')
+            _psLog.info('TrainPlayer Report - Industries.txt file found')
         else:
-            _psLog.critical('TrainPlayer Industries file not found')
-            PSE.openOutputFrame(PSE.getBundleItem('ALERT: TrainPlayer Industries file not found.'))
-            print('Not found: ' + self.o2oConfig['o2o']['RF']['TRI'])
+            _psLog.critical('TrainPlayer Report - Industries.txt file not found')
+            PSE.openOutputFrame(PSE.getBundleItem('ALERT: File not found:') + ' TrainPlayer Report - Industries.txt')
             fileCheck = False
 
 
         self.tpInventory = ModelEntities.getTpExport(self.o2oConfig['o2o']['RF']['TRR'])
         if self.tpInventory:
-            _psLog.info('TrainPlayer Inventory file OK')
+            _psLog.info('TrainPlayer Report - Rolling Stock.txt file found')
         else:
             _psLog.critical('TrainPlayer Inventory file not found')
-            PSE.openOutputFrame(PSE.getBundleItem('ALERT: TrainPlayer Rolling Stock file not found.'))
-            print('Not found: ' + self.o2oConfig['o2o']['RF']['TRR'])
+            PSE.openOutputFrame(PSE.getBundleItem('ALERT: File not found:') + ' TrainPlayer Report - Rolling Stock.txt')
             fileCheck = False
 
         return fileCheck
@@ -135,7 +141,6 @@ class TrainPlayerImporter:
         if [line.count(';') for line in self.tpLocations if line.count(';') != 5]:
             _psLog.critical('Error: Locations file formatting error.')
             PSE.openOutputFrame(PSE.getBundleItem('Check TrainPlayer-Advanced Ops-Locales for semicolon.'))
-            print('Error: Locations file formatting error')
 
             return False
 
@@ -149,12 +154,24 @@ class TrainPlayerImporter:
         if [line.count(';') for line in self.tpIndustries if line.count(';') != 10]:
             _psLog.critical('Error: Industries file formatting error.')
             PSE.openOutputFrame(PSE.getBundleItem('Check TrainPlayer-Advanced Ops-Industries for errors.'))
-            print('Error: Industries file formatting error')
 
             return False
 
         return True
 
+    def checkInventoryFile(self):
+        """
+        Each line in the rolling stock file should have 7 semicolons.
+        """
+
+        if [line.count(';') for line in self.tpInventory if line.count(';') != 7]:
+            PSE.openOutputFrame(PSE.getBundleItem('ALERT: import error, Rolling Stock not imported.'))
+            _psLog.critical('Error: Rolling Stock file formatting error.')
+
+            return False
+
+        return True
+    
     def processLocationsHeader(self):
         """
         Process the header info from TrainPlayer Report - Locations.txt.
@@ -201,6 +218,8 @@ class TrainPlayerImporter:
         Write the Random Roads AAR lists or the default from the config file into tpRailroadData.json
         """
 
+        _psLog.debug('processTpInventory')
+
         if self.tpEngineAar:
             self.rr['engineAar'] = self.tpEngineAar
         else:
@@ -224,7 +243,9 @@ class TrainPlayerImporter:
         return
 
     def getLocationIds(self):
-    
+        """
+        Add location IDs to tpRailroadData.json.
+        """
 
         _psLog.debug('getLocationIds')
 
@@ -399,7 +420,9 @@ class TrainPlayerImporter:
         return
 
     def getAllTpLocoTypes(self):
-        """Don't include tenders"""
+        """
+        Don't include tenders
+        """
 
         _psLog.debug('getAllTpLocoTypes')
 

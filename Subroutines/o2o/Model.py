@@ -4,33 +4,15 @@
 """From tpRailroadData.json, a new JMRI railroad is created or updated."""
 
 from opsEntities import PSE
-from Subroutines.o2o import ModelImport
+# from Subroutines.o2o import ModelImport
 from Subroutines.o2o import ModelEntities
-from Subroutines.o2o import BuiltTrainExport
+# from Subroutines.o2o import BuiltTrainExport
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
 
 
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.Model')
-
-
-def getTrainPlayerRailroad():
-
-    if ModelImport.importTpRailroad():
-        print('TrainPlayer railroad data imported OK')
-        _psLog.info('TrainPlayer railroad data imported OK')
-        PSE.closeOutputFrame()
-        BuiltTrainExport.FindTrain().trainResetter()
-
-        return True
-
-    else:
-        print('TrainPlayer railroad not imported')
-        _psLog.critical('TrainPlayer railroad not imported')
-        _psLog.critical('JMRI railroad not updated')
-
-        return False
 
 
 def initializeJmriRailroad():
@@ -51,8 +33,7 @@ def initializeJmriRailroad():
     Initiator().xmlScrubber()
 
     PSE.remoteCalls('resetCalls')
-    
-    print('JMRI data has been initiallized')
+
     _psLog.info('JMRI data has been initiallized')
 
     return
@@ -75,7 +56,6 @@ def updateJmriLocations():
     Initiator().initialist()
     Divisionator().divisionist()
 
-    print('JMRI locations updated from TrainPlayer data')
     _psLog.info('JMRI locations updated from TrainPlayer data')
 
 # This part does the tracks
@@ -89,17 +69,11 @@ def updateJmriLocations():
     ModelEntities.deselectCarTypesAtSpurs()
     ModelEntities.selectCarTypesAtSpurs()
     
-    print('JMRI tracks updated from TrainPlayer data')
     _psLog.info('JMRI tracks updated from TrainPlayer data')
 
 # This part does the rolling stock
-    rollingStockulator = RStockulator()
-    if rollingStockulator.validateRollingStockFile():
-        rollingStockulator.updator()
-        rollingStockulator.scheduleApplicator()
-
-        print('JMRI rolling stock updated from TrainPlayer data')
-        _psLog.info('JMRI rolling stock updated from TrainPlayer data')
+    RStockulator().updater()
+    _psLog.info('JMRI rolling stock updated from TrainPlayer data')
 
 # This part does the extended header
     Initiator().properties()
@@ -131,17 +105,11 @@ def updateJmriTracks():
     ModelEntities.deselectCarTypesAtSpurs()
     ModelEntities.selectCarTypesAtSpurs()
 
-    print('JMRI tracks updated from TrainPlayer data')
     _psLog.info('JMRI tracks updated from TrainPlayer data')
 
 # This part does the rolling stock
-    rollingStockulator = RStockulator()
-    if rollingStockulator.validateRollingStockFile():
-        rollingStockulator.updator()
-        rollingStockulator.scheduleApplicator()
-
-        print('JMRI rolling stock updated from TrainPlayer data')
-        _psLog.info('JMRI rolling stock updated from TrainPlayer data')
+    RStockulator().updater()
+    _psLog.info('JMRI rolling stock updated from TrainPlayer data')
 
 # This part does the extended header
     Initiator().properties()
@@ -169,13 +137,8 @@ def updateJmriRollingingStock():
     ModelEntities.selectCarTypesAtSpurs()
     
 # This part does the rolling stock
-    rollingStockulator = RStockulator()
-    if rollingStockulator.validateRollingStockFile():
-        rollingStockulator.updator()
-        rollingStockulator.scheduleApplicator()
-
-        print('JMRI rolling stock updated from TrainPlayer data')
-        _psLog.info('JMRI rolling stock updated from TrainPlayer data')
+    RStockulator().updater()
+    _psLog.info('JMRI rolling stock updated from TrainPlayer data')
 
 # This part does the extended header
     Initiator().properties()
@@ -189,7 +152,6 @@ def updateJmriProperties():
 
     Initiator().properties()
 
-    print('JMRI railroad properties updated from TrainPlayer data')
     _psLog.info('JMRI railroad properties updated from TrainPlayer data')
 
     return
@@ -239,6 +201,9 @@ class Initiator:
         return
     
     def resetCarTypes(self):
+        """
+        If at least one car type is not added, JMRI will populate car types with a long list of defaults.
+        """
 
         _psLog.debug('resetCarTypes')
 
@@ -252,7 +217,9 @@ class Initiator:
         return
 
     def resetRoadNames(self):
-
+        """
+        If at least one road name is not added, JMRI will populate road names with a long list of defaults.
+        """
         _psLog.debug('resetRoadNames')
 
         tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarRoads
@@ -606,7 +573,6 @@ class ScheduleAuteur:
 
         if len(self.scheduleItems) != 0:
             _psLog.warning('Some schedule items were not applied.')
-            print('Some schedule items were not applied.')
 
         return
     
@@ -1002,7 +968,6 @@ class Trackulator:
         if len(testResult) == 0:
             return True
         else:
-            print('ALERT: Not a valid location:' + ' ' + str(testResult))
             _psLog.critical('ALERT: Not a valid location:' + ' ' + str(testResult))
             PSE.openOutputFrame(PSE.getBundleItem('ALERT: Not a valid location:') + ' ' + str(testResult))
             PSE.openOutputFrame(PSE.getBundleItem('Industries not imported. Import Locations recommended'))
@@ -1160,33 +1125,21 @@ class RStockulator:
 
         return
 
-    def validateRollingStockFile(self):
+    def updater(self):
         """
-        Mini controller to check the validity of TrainPlayer Report - Rolling Stock.txt
+        Mini controller.
+        Updates the Rolling Stock data set.
         """
 
-        _psLog.debug('validateRollingStockFile')
-
-        if not self.checkInventoryFile():
-            return False
-        self.parseTpInventory()
+        _psLog.debug('updater')
         
-        return True
+        self.parseTpInventory()
+        self.getOldRollingStock()
+        self.deleteOldRollingStock()
+        self.updateRollingStock()
+        self.scheduleApplicator()
 
-    def checkInventoryFile(self):
-        """
-        Each line in the rolling stock file should have 7 semicolons.
-        """
-
-        print('checkInventoryFile')
-        if [line.count(';') for line in self.tpInventory if line.count(';') != 7]:
-            PSE.openOutputFrame(PSE.getBundleItem('ALERT: import error, Rolling Stock not imported.'))
-            print('Exception at: o2o.Model.checkInventoryFile')
-            _psLog.critical('Error: Rolling Stock file formatting error.')
-
-            return False
-
-        return True
+        return
 
     def parseTpInventory(self):
         """
@@ -1206,9 +1159,9 @@ class RStockulator:
             location = line[3]
             track = line[4]
             if not self.testLocale(location, track):
-                print('ALERT: Not a valid locale: ' + line[0] + ', ' + location + ', ' + track)
                 _psLog.critical('ALERT: Not a valid locale: ' + line[0] + ', ' + location + ', ' + track)
-                PSE.openOutputFrame(PSE.getBundleItem('ALERT: rolling stock skipped, parsing error.') + ' ' + line[0])
+                PSE.openOutputFrame(PSE.getBundleItem('ALERT: Not a valid locale:') + line[0] + ', ' + location + ', ' + track)
+                PSE.openOutputFrame(PSE.getBundleItem('ALERT: rolling stock skipped, parsing error.'))
                 continue
 
             if line[2].startswith('E'):
@@ -1235,21 +1188,7 @@ class RStockulator:
         
         return True
 
-    def updator(self):
-        """
-        Mini controller to update JMRI rolling stock.
-        """
-
-        self.parseTpRollingStock()
-        self.deleteOldRollingStock()
-        self.updateRollingStock()
-
-        print(self.scriptName + '.updator ' + str(SCRIPT_REV))
-        _psLog.info('Updated rolling stock')
-
-        return
-
-    def parseTpRollingStock(self):
+    def getOldRollingStock(self):
         """
         Makes a list of obsolete cars and locos.
         """
@@ -1326,6 +1265,7 @@ class RStockulator:
 
     def setBaseCarAttribs(self, carData):
         """
+        Maybe add color to base attribs?
         Sets only the kernel, length, type, location, track.
         self.tpCars  dictionary format: {TP ID :  {type: TP Collection, aar: TP AAR, location: JMRI Location, track: JMRI Track, load: TP Load, kernel: TP Kernel, id: JMRI ID}}
         """
@@ -1375,11 +1315,11 @@ class RStockulator:
         Mini controller sets the loads for cars at spurs.
         """
 
+        _psLog.debug('scheduleApplicator')
+
         self.getAllSpurs()
         self.applySpursScheduleToCars()
         self.setCarsAtStaging()
-
-        print(self.scriptName + '.scheduleApplicator ' + str(SCRIPT_REV))
 
         return
     
@@ -1424,7 +1364,6 @@ class RStockulator:
                     litmus = 1
 
             if litmus == 0:
-                print('ALERT: Schedule item not found for car: ' + car.getRoadName() + ' ' + car.getNumber() + ' ' + car.getTrackName())
                 PSE.openOutputFrame(PSE.getBundleItem('ALERT: Schedule item not found for car:') + ' ' + car.getRoadName() + ' ' + car.getNumber() + ' ' + car.getTrackName())
                 PSE.openOutputFrame(PSE.getBundleItem('Track does not serve this car type'))
 
@@ -1439,7 +1378,6 @@ class RStockulator:
             spurSchedule = spur.getSchedule()
             items = spurSchedule.getItemsBySequenceList()
         except:
-             print('Exception at: o2o.Model.getShipList')
              _psLog.warning('No schedule for track: ' + spur.getName())
              return
         

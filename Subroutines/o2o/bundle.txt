@@ -1,40 +1,30 @@
 o2o
 o2o Subroutine
-ALERT: One or more TrainPlayer export files are missing.
-ALERT: TrainPlayer Locations file not found.
-ALERT: TrainPlayer Industries file not found.
-ALERT: TrainPlayer Rolling Stock file not found.
-ALERT: Staging and non-staging tracks at same location:
-ALERT: TrainPlayer export issue.
-ALERT: Create a new JMRI layout first.
+ALERT: File not found:
 ALERT: No JMRI locations were found.
 ALERT: No JMRI tracks were found.
 ALERT: Not a spur track:
+ALERT: Not a valid locale:
 ALERT: Not a valid location:
-ALERT: Not a valid track:
 ALERT: import error, Rolling Stock not imported.
 ALERT: rolling stock skipped, parsing error.
 ALERT: Schedule item not found for car:
 ALERT: staging and non staging tracks at:
 Industries not imported. Import Locations recommended
-Cars not imported. Import Locations recommended
 Import terminated without completion
 Track does not serve this car type
 Check TrainPlayer-Advanced Ops-Locales for semicolon.
 Check TrainPlayer-Advanced Ops-Industries for errors.
 From TrainPlayer, re-export layout to JMRI.
-JMRI does not allow staging and non-staging track types at the same location.
-No changes were made to your JMRI layout.
-ops-work-list
 TrainPlayer layout not imported to JMRI.
 Import Preperation
 Import TrainPlayer's Advanced Ops
 Import Personalized Settings
+ops-work-list
 Initialize
 Locations
 Industries
 Cars
-unknown
 Unreported
 Unknown
 Unassigned

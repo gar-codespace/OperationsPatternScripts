@@ -10,6 +10,7 @@ On the TrainPlayer side, the Quick Keys suite of scripts is used to import and e
 from opsEntities import PSE
 from Subroutines.o2o import Listeners
 from Subroutines.o2o import Model
+from Subroutines.o2o import ModelImport
 from Subroutines.o2o import View
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
@@ -91,7 +92,7 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        if not Model.getTrainPlayerRailroad():
+        if not ModelImport.importTpRailroad():
             return
         
         PSE.closeSubordinateWindows(level=1)
@@ -112,7 +113,7 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        if not Model.getTrainPlayerRailroad():
+        if not ModelImport.importTpRailroad():
             return
 
         PSE.closeSubordinateWindows(level=2)
@@ -134,7 +135,7 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        if not Model.getTrainPlayerRailroad():
+        if not ModelImport.importTpRailroad():
             return
 
         PSE.closeSubordinateWindows(level=2)
@@ -154,7 +155,7 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        if not Model.getTrainPlayerRailroad():
+        if not ModelImport.importTpRailroad():
             return
 
         PSE.closeSubordinateWindows(level=2)
@@ -174,7 +175,7 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        if not Model.getTrainPlayerRailroad():
+        if not ModelImport.importTpRailroad():
             return
         
         Model.updateJmriProperties()
