@@ -3,8 +3,8 @@
 
 """
 The o2o Subroutine creates a JMRI railroad from TrainPlayer data.
-It also exports a JMRI train's manifest and switch lists from the Patterns subroutine.
-On the TrainPlayer side, the Quick Keys suite of scripts is used to import and export the JMRI railroads' data.
+It also exports a JMRI trains' manifest and switch lists from the Patterns subroutine.
+On the TrainPlayer side, the Quick Keys suite of scripts is used to import from and export to the JMRI railroad.
 """
 
 from opsEntities import PSE
@@ -16,8 +16,8 @@ from Subroutines.o2o import View
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
 
-_psLog = PSE.LOGGING.getLogger('OPS.o2o.Controller')
 
+_psLog = PSE.LOGGING.getLogger('OPS.o2o.Controller')
 
 def getSubroutineDropDownItem():
     """Pattern Scripts/Tools/'Show or disable' Subroutines.<subroutine>"""
@@ -48,12 +48,13 @@ class StartUp:
     def __init__(self, subroutineFrame=None):
 
         self.subroutineFrame = subroutineFrame
-        self.configFile = PSE.readConfigFile()
 
         return
 
     def getSubroutineFrame(self):
-        """Gets the title border frame"""
+        """
+        Gets the title border frame
+        """
 
         self.subroutineFrame = View.ManageGui().makeSubroutineFrame()
         subroutineGui = self.getSubroutineGui()
@@ -64,7 +65,9 @@ class StartUp:
         return self.subroutineFrame
 
     def getSubroutineGui(self):
-        """Gets the GUI for this subroutine."""
+        """
+        Gets the GUI for this subroutine.
+        """
 
         subroutineGui, self.widgets = View.ManageGui().makeSubroutineGui()
         self.activateWidgets()
@@ -88,7 +91,9 @@ class StartUp:
         return
 
     def initializeJmriRailroad(self, EVENT):
-        """Creates a new JMRI railroad from the tpRailroadData.json file"""
+        """
+        Creates a new JMRI railroad from the tpRailroadData.json file
+        """
 
         _psLog.debug(EVENT)
 
@@ -97,8 +102,10 @@ class StartUp:
         
         PSE.closeSubordinateWindows(level=1)
 
+        PSE.resetBuiltTrains()
+
         PSE.remoteCalls('resetCalls')
-        
+
         Model.initializeJmriRailroad()
 
         PSE.restartAllSubroutines()
@@ -117,6 +124,8 @@ class StartUp:
             return
 
         PSE.closeSubordinateWindows(level=2)
+
+        PSE.resetBuiltTrains()
 
         Model.updateJmriLocations()
 
@@ -140,6 +149,8 @@ class StartUp:
 
         PSE.closeSubordinateWindows(level=2)
 
+        PSE.resetBuiltTrains()
+
         Model.updateJmriTracks()
 
         PSE.remoteCalls('refreshCalls')
@@ -151,7 +162,9 @@ class StartUp:
         return
     
     def updateJmriRollingingStock(self, EVENT):
-        """Writes new or updated car and engine data."""
+        """
+        Writes new or updated car and engine data.
+        """
 
         _psLog.debug(EVENT)
 
@@ -159,6 +172,8 @@ class StartUp:
             return
 
         PSE.closeSubordinateWindows(level=2)
+
+        PSE.resetBuiltTrains()
         
         Model.updateJmriRollingingStock()
 
@@ -171,7 +186,9 @@ class StartUp:
         return
 
     def updateJmriProperties(self, EVENT):
-        """Writes new or updated car and engine data."""
+        """
+        Writes new or updated extended railroad properties.
+        """
 
         _psLog.debug(EVENT)
 

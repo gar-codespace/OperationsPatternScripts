@@ -463,6 +463,17 @@ def updateWindowParams(window):
 """Utility Methods"""
 
 
+def resetBuiltTrains():
+    """
+    Resets all the trains that are built.
+    """
+
+    for train in TM.getTrainsByStatusList():
+        if train.isBuilt():
+            train.reset()
+
+    return
+
 def remoteCalls(call):
     """
     Applies 'call' to entries in ConfigFile()['Main Script']['CP']

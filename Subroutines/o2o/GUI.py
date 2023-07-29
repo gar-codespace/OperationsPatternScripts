@@ -10,6 +10,7 @@ from opsEntities import PSE
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
 
+
 class subroutineGui:
 
     def __init__(self):

@@ -1,25 +1,21 @@
 # coding=utf-8
 # © 2023 Greg Ritacco
 
-"""o2o"""
+"""
+Support methods for o2o Model* level modules.
+"""
 
 from opsEntities import PSE
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
 
+
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.ModelEntities')
-
-
-"""o2o.Model and o2o.ModelWorkEvents"""
-
 
 def getTpRailroadJson(reportName):
     """
-    Any of the TP exports imported into JMRI as a json file:
-    tpRailroadData
-    tpRollingStockData
-    tpLocaleData
+    Generic json getter even though tpRailroadData is the only file retrieved.
     """
 
     fileName = reportName + '.json'

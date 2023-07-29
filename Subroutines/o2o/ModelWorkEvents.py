@@ -1,7 +1,9 @@
 # coding=utf-8
 # © 2023 Greg Ritacco
 
-"""Creates the TrainPlayer JMRI Report - o2o Workevents.csv file from either PatternTracksSubroutine or BuiltTrainExport"""
+"""
+Creates the TrainPlayer JMRI Report - o2o Workevents.csv file from either PatternTracksSubroutine or BuiltTrainExport
+"""
 
 from opsEntities import PSE
 from Subroutines.o2o import ModelEntities
@@ -9,9 +11,8 @@ from Subroutines.o2o import ModelEntities
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
 
+
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.ModelWorkEvents')
-
-
 
 def o2oWorkListMaker():
     """Mini controller to convert the Patterns ops-work-list.json into an o2o work events file."""

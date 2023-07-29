@@ -2,18 +2,17 @@
 # © 2023 Greg Ritacco
 
 """
-Use the TrainPlayer/Reports inventory, locations and industries text files to generate the tpRailroadData.json file.
+Use the TrainPlayer/Reports: rolling stock, locations and industries text files to generate the tpRailroadData.json file.
 """
 
 from opsEntities import PSE
-from Subroutines.o2o import BuiltTrainExport
 from Subroutines.o2o import ModelEntities
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
 
-_psLog = PSE.LOGGING.getLogger('OPS.o2o.ModelImport')
 
+_psLog = PSE.LOGGING.getLogger('OPS.o2o.ModelImport')
     
 def importTpRailroad():
     """Mini controller generates the tpRailroadData.json file"""
@@ -56,8 +55,6 @@ def importTpRailroad():
     trainPlayerImport.getAllTpLocoConsists()
 
     trainPlayerImport.writeTPLayoutData()
-
-    BuiltTrainExport.FindTrain().trainResetter()
 
     return True
 
