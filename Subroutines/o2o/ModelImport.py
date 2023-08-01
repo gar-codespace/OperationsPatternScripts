@@ -177,23 +177,21 @@ class TrainPlayerImporter:
         _psLog.debug('processLocationsHeader')
 
         rrData = self.tpLocations.pop(0).split(';') # Pop off the date and layout name
-        self.rr['buildDate'] = rrData[0]
-        self.rr['layoutName'] = rrData[1]
+        self.rr['Extended_buildDate'] = rrData[0]
+        self.rr['Extended_layoutName'] = rrData[1]
 
         rrData = self.tpLocations.pop(0).split(';') # Pop off the details line
-        self.rr['operatingRoad'] = rrData[0]
-        self.rr['territory'] = rrData[1]
-        self.rr['location'] = rrData[2]
-        self.rr['year'] = rrData[3]
-        self.rr['divisions'] = rrData[4].split(',')
-        self.rr['scale'] = rrData[5]
+        self.rr['Extended_operatingRoad'] = rrData[0]
+        self.rr['Extended_territory'] = rrData[1]
+        self.rr['Extended_location'] = rrData[2]
+        self.rr['Extended_year'] = rrData[3]
+        self.rr['Extended_divisions'] = rrData[4].split(',')
+        self.rr['Extended_scale'] = rrData[5]
 
-        self.tpEngineAar = self.tpLocations.pop(0).split(';')[0].split(' ')
-        self.tpCabooseAar = self.tpLocations.pop(0).split(';')[0].split(' ')
-        self.tpPassAar = self.tpLocations.pop(0).split(';')[0].split(' ')
-        self.tpMowAar = self.tpLocations.pop(0).split(';')[0].split(' ')
-
-        self.tpLocations.pop(0) # Pop off the blank line
+    # A few blank lines were added to make expansion easy.
+        self.tpLocations.pop(0)
+        self.tpLocations.pop(0)
+        self.tpLocations.pop(0)
 
         return
 
@@ -206,6 +204,12 @@ class TrainPlayerImporter:
 
         self.tpIndustries.pop(0) # Remove date
         self.tpIndustries.pop(0) # Remove key
+
+    # A few blank lines were added to make expansion easy.
+        self.tpIndustries.pop(0)
+        self.tpIndustries.pop(0)
+        self.tpIndustries.pop(0)
+
         self.tpIndustries.sort()
 
         return
@@ -217,25 +221,40 @@ class TrainPlayerImporter:
 
         _psLog.debug('processTpInventory')
 
+        self.tpEngineAar = self.tpInventory.pop(0).split(';')[1].split(' ')
+        self.tpCabooseAar = self.tpInventory.pop(0).split(';')[1].split(' ')
+        self.tpMowAar = self.tpInventory.pop(0).split(';')[1].split(' ')
+        self.tpPassAar = self.tpInventory.pop(0).split(';')[1].split(' ')
+        self.tpExpressAAR = self.tpInventory.pop(0).split(';')[1].split(' ')
+    # A few blank lines were added to make expansion easy.
+        self.tpInventory.pop(0)
+        self.tpInventory.pop(0)
+        self.tpInventory.pop(0)
+
         if self.tpEngineAar:
-            self.rr['engineAar'] = self.tpEngineAar
+            self.rr['AAR_Engine'] = self.tpEngineAar
         else:
-            self.rr['engineAar'] = self.o2oConfig['o2o']['EX']
+            self.rr['AAR_Engine'] = self.o2oConfig['o2o']['EX']
 
         if self.tpCabooseAar:
-            self.rr['cabooseAar'] = self.tpCabooseAar
+            self.rr['AAR_Caboose'] = self.tpCabooseAar
         else:
-            self.rr['cabooseAar'] = self.o2oConfig['o2o']['CX']
-
-        if self.tpPassAar:
-            self.rr['passAar'] = self.tpPassAar
-        else:
-            self.rr['passAar'] = self.o2oConfig['o2o']['PX']
+            self.rr['AAR_Caboose'] = self.o2oConfig['o2o']['CX']
 
         if self.tpMowAar:
-            self.rr['mowAar'] = self.tpMowAar
+            self.rr['AAR_MOW'] = self.tpMowAar
         else:
-            self.rr['mowAar'] = self.o2oConfig['o2o']['MX']
+            self.rr['AAR_MOW'] = self.o2oConfig['o2o']['MX']
+
+        if self.tpPassAar:
+            self.rr['AAR_Passenger'] = self.tpPassAar
+        else:
+            self.rr['AAR_Passenger'] = self.o2oConfig['o2o']['PX']
+
+        if self.tpExpressAAR:
+            self.rr['AAR_Express'] = self.tpExpressAAR
+        else:
+            self.rr['AAR_Express'] = self.o2oConfig['o2o']['XX']
 
         return
 
@@ -252,7 +271,7 @@ class TrainPlayerImporter:
             splitLine = lineItem.split(';')
             tpLocationIds.append(splitLine[0])
 
-        self.rr['locationIds'] = tpLocationIds
+        self.rr['LocationRoster_locationIds'] = tpLocationIds
 
         return
 
@@ -269,7 +288,7 @@ class TrainPlayerImporter:
             splitLine = lineItem.split(';')
             locationList.append(splitLine[1])
 
-        self.rr['locations'] = list(set(locationList))
+        self.rr['LocationRoster_locations'] = list(set(locationList))
 
         return
 
@@ -290,7 +309,7 @@ class TrainPlayerImporter:
             splitLine = lineItem.split(';')
             locales[splitLine[0]] = {u'location': splitLine[1], u'track': splitLine[2], u'label': splitLine[3], u'type': splitLine[4], u'capacity': splitLine[5]}
 
-        self.rr['locales'] = locales
+        self.rr['LocationRoster_location'] = locales
 
         return
 
@@ -339,7 +358,7 @@ class TrainPlayerImporter:
 
             locale = line[0] + line[1]
             
-        self.rr['industries'] = industryDict
+        self.rr['LocationRoster_spurs'] = industryDict
 
         self.tpIndustries = tpBackup[:]
 
@@ -355,11 +374,15 @@ class TrainPlayerImporter:
             road, number = ModelEntities.parseCarId(splitItem[0])
             roadList.append(road)
 
-        self.rr['roads'] = list(set(roadList))
+        self.rr['CarRoster_roads'] = list(set(roadList))
 
         return
 
     def getAllTpCarAar(self):
+        """
+        In TrainPlayer they are car AAR.
+        In JMRI they are car types.
+        """
 
         _psLog.debug('getAllTpCarAar')
 
@@ -371,7 +394,7 @@ class TrainPlayerImporter:
             else:
                 allItems.append(splitItem[2])
 
-        self.rr['carAAR'] = list(set(allItems))
+        self.rr['CarRoster_types'] = list(set(allItems))
 
         return
 
@@ -387,7 +410,7 @@ class TrainPlayerImporter:
 
         aarNameLoadNameList = list(set(aarNameLoadNameList))
 
-        for aar in self.rr['carAAR']:
+        for aar in self.rr['CarRoster_types']:
             loadList = []
             for item in aarNameLoadNameList:
                 if item[0] == aar:
@@ -395,7 +418,7 @@ class TrainPlayerImporter:
 
             carLoads[aar] = list(set(loadList))
 
-        self.rr['carLoads'] = carLoads
+        self.rr['CarRoster_loads'] = carLoads
 
         return
 
@@ -412,7 +435,7 @@ class TrainPlayerImporter:
             else:
                 allItems.append(splitItem[6])
 
-        self.rr['carKernel'] = list(set(allItems))
+        self.rr['CarRoster_newKernels'] = list(set(allItems))
 
         return
 
@@ -431,7 +454,7 @@ class TrainPlayerImporter:
             if splitItem[2].startswith('E'):
                 allItems.append(splitItem[2])
 
-        self.rr['locoTypes'] = list(set(allItems))
+        self.rr['EngineRoster_types'] = list(set(allItems))
 
         return
 
@@ -452,7 +475,7 @@ class TrainPlayerImporter:
             if splitItem[2].startswith('E'):
                 allItems.append((splitItem[1][0:11], splitItem[2]))
 
-        self.rr['locoModels'] = list(set(allItems))
+        self.rr['EngineRoster_models'] = list(set(allItems))
 
         return
 
@@ -468,7 +491,7 @@ class TrainPlayerImporter:
             if splitItem[2].startswith('E'):
                 allItems.append(splitItem[6])
 
-        self.rr['locoConsists'] = list(set(allItems))
+        self.rr['EngineRoster_newConsists'] = list(set(allItems))
 
         return
 
