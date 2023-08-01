@@ -18,7 +18,7 @@ def activatedCalls():
     if configFile['Main Script']['CP'][__package__]:
         Listeners.addTrainsTableListener()
         Listeners.addBuiltTrainListener()
-        print('addBuiltTrainListener')
+        print('o2o.activatedCalls.addBuiltTrainListener')
 
     return
 
@@ -27,7 +27,7 @@ def deActivatedCalls():
 
     Listeners.removeTrainsTableListener()
     Listeners.removeBuiltTrainListener()
-    print('removeBuiltTrainListener')
+    print('o2o.deActivatedCalls.removeBuiltTrainListener')
 
     return
 
