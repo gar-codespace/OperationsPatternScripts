@@ -2,14 +2,14 @@
     "RN" : "o2o-Workevents",
     "SV" : true,
     "DL" : 40,
-    "EX" : [
+    "XE" : [
       "E",
       "ES",
       "ED",
       "EE",
       "ET"
     ],
-    "PX" : [
+    "XP" : [
       "EP",
       "CA",
       "CS",
@@ -47,12 +47,12 @@
       "MB",
       "MR"
     ],
-    "CX" : [
+    "XC" : [
       "N",
       "NM",
       "NE"
     ],
-    "MX" : [
+    "XM" : [
       "M",
       "MWB",
       "MWC",
@@ -82,7 +82,9 @@
     "RF" : {
       "TRL" : "TrainPlayer Report - Locations.txt",
       "TRI" : "TrainPlayer Report - Industries.txt",
-      "TRR" : "TrainPlayer Report - Rolling Stock.txt"
+      "TRR" : "TrainPlayer Report - Rolling Stock.txt",
+      "RRD" : "tpRailroadData",
+      "RSD" : "tpRollingStockData"
     },
     "RMF" : {
       "PUC" : ["Road", "Number", "Type", "Load Type", "Load", "Destination"],
@@ -107,5 +109,9 @@
       "locoColor": "FADED",
       "carColor": "DUST",
       "alertColor": "RASH"
-    }
+    },
+    "RC" : [
+      "Boxcar Red",
+      "Reefer Yellow"
+    ]
 }

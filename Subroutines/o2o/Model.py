@@ -2,6 +2,8 @@
 # © 2023 Greg Ritacco
 
 """
+Resets all the data in the car, engine and locations xml.
+Resets the ConfigFile.
 From tpRailroadData.json, a JMRI railroad is created or updated.
 """
 
@@ -16,8 +18,8 @@ _psLog = PSE.LOGGING.getLogger('OPS.o2o.Model')
 
 def initializeJmriRailroad():
     """
-    Mini controller to initialize a JMRI railroad for TrainPlayer import.
-    Action on press of Import Initialize
+    Mini controller.
+    Reset the JMRI railroad for TrainPlayer import.
     Does not change Trains and Routes.
     Called by:
     Controller.StartUp.initializeJmriRailroad
@@ -29,11 +31,17 @@ def initializeJmriRailroad():
     PSE.CM.dispose()
     PSE.EM.dispose()
 
-    Initiator().xmlScrubber()
+    resetData = Resetter()
+    resetData.setupResetter()
+    resetData.carResetter()
+    resetData.locoResetter()
+    resetData.configFileResetter()
+
+    Initializer().Initialize()
 
     PSE.remoteCalls('resetCalls')
 
-    _psLog.info('JMRI data has been initiallized')
+    _psLog.info('JMRI data has been reset')
 
     return
 
@@ -48,34 +56,44 @@ def updateJmriLocations():
     Controller.StartUp.updateJmriLocations
     """
 
-# This part does the locations    
-    if not Locationator().locationist():
+# This part does the locations
+    locationator = Locationator()
+    if not locationator.validate():
         return
     
-    Initiator().initialist()
+    Attributator().updateRsAttributes() # Put this here to add all types to all locations
+
+    locationator.updateLocations()
+    
     Divisionator().divisionist()
 
     _psLog.info('JMRI locations updated from TrainPlayer data')
 
 # This part does the tracks
     trackulator = Trackulator()
-    if not trackulator.testTracks():
+    if not trackulator.validate():
         return
-    Attributator().updateRsAttributes()
-    ModelEntities.addTypesToTracks()
+
     ScheduleAuteur().updateSchedules()
-    trackulator.trackist()
+    trackulator.updateTracks()
+
     ModelEntities.deselectCarTypesAtSpurs()
     ModelEntities.selectCarTypesAtSpurs()
-    
+
     _psLog.info('JMRI tracks updated from TrainPlayer data')
+    
 
 # This part does the rolling stock
-    RStockulator().updater()
+    rollingStockulator = RollingStockulator()
+    if not rollingStockulator.validate():
+        return
+    
+    rollingStockulator.updateRollingStock()
+
     _psLog.info('JMRI rolling stock updated from TrainPlayer data')
 
 # This part does the extended header
-    Initiator().properties()
+    ExtendedDetails().update()
 
     return
 
@@ -88,30 +106,32 @@ def updateJmriTracks():
     Called by:
     Controller.Startup.updateJmriTracks
     """
-    
-    if not PSE.getAllLocationNames():
-        PSE.openOutputFrame(PSE.getBundleItem('ALERT: No JMRI locations were found.'))
-        return
+
+    Attributator().updateRsAttributes()
 
     trackulator = Trackulator()
-    if not trackulator.testTracks():
+    if not trackulator.validate():
         return
     
-    Attributator().updateRsAttributes()
-    ModelEntities.addTypesToTracks()
     ScheduleAuteur().updateSchedules()
-    trackulator.trackist()
+    trackulator.updateTracks()
+    
     ModelEntities.deselectCarTypesAtSpurs()
     ModelEntities.selectCarTypesAtSpurs()
 
     _psLog.info('JMRI tracks updated from TrainPlayer data')
 
 # This part does the rolling stock
-    RStockulator().updater()
+    rollingStockulator = RollingStockulator()
+    if not rollingStockulator.validate():
+        return
+    
+    rollingStockulator.updateRollingStock()
+
     _psLog.info('JMRI rolling stock updated from TrainPlayer data')
 
 # This part does the extended header
-    Initiator().properties()
+    ExtendedDetails().update()
 
     return
 
@@ -126,21 +146,19 @@ def updateJmriRollingingStock():
     Controller.Startup.updateJmriRollingingStock
     """
 
-    if not PSE.getAllTracks():     
-        PSE.openOutputFrame(PSE.getBundleItem('ALERT: No JMRI tracks were found.'))
-        return
-
     Attributator().updateRsAttributes()
-    ModelEntities.addTypesToTracks()
-    ModelEntities.deselectCarTypesAtSpurs()
-    ModelEntities.selectCarTypesAtSpurs()
-    
+
 # This part does the rolling stock
-    RStockulator().updater()
+    rollingStockulator = RollingStockulator()
+    if not rollingStockulator.validate():
+        return
+    
+    rollingStockulator.updateRollingStock()
+
     _psLog.info('JMRI rolling stock updated from TrainPlayer data')
 
 # This part does the extended header
-    Initiator().properties()
+    ExtendedDetails().update()
     
     return
 
@@ -149,53 +167,79 @@ def updateJmriProperties():
     Action on press of the Import Railroad Details button.
     """
 
-    Initiator().properties()
+    ExtendedDetails().update()
 
     _psLog.info('JMRI railroad properties updated from TrainPlayer data')
 
     return
 
 
-class Initiator:
-    """Make tweeks to Operations.xml here."""
+class Resetter:
+    """
+    Reset XML details and Config File entries.
+    """
 
     def __init__(self):
 
-        self.scriptName = SCRIPT_NAME + '.Initiator'
-
-        self.OSU = PSE.JMRI.jmrit.operations.setup
+        self.scriptName = SCRIPT_NAME + '.Resetter'
 
         self.configFile =  PSE.readConfigFile()
-        self.TpRailroad = ModelEntities.getTpRailroadJson('tpRailroadData')
+        self.tpRailroad = ModelEntities.getTpRailroadJson('tpRailroadData')
 
         print(self.scriptName + ' ' + str(SCRIPT_REV))
 
         return
-
-    def initialist(self):
+    
+    def setupResetter(self):
         """
-        Mini controller to make settings changes,
-        some of which are personal.
+        Mini controller.
         """
 
-        self.setRailroadDetails()
-        self.tweakOperationsXml()
-        self.setReportMessageFormat()
-
-        _psLog.info('Layout details added')
-        _psLog.info('JMRI operations settings updated')
+        self.resetSetup()
 
         return
     
-    def xmlScrubber(self):
+    def carResetter(self):
         """
         Mini controller.
-        Resets Road Names, Car types.
-        Load Names is reset automatically.
         """
 
         self.resetCarTypes()
-        self.resetRoadNames()
+        self.resetCarRoadNames()
+        self.resetCarColors()
+        self.resetCarLengths()
+        self.resetCarKernels()
+
+        return
+    
+    def locoResetter(self):
+        """
+        Mini controller.
+        """
+
+        self.resetLocoLengths()
+        self.resetLocoConsists()
+        self.resetLocoModels()
+        self.resetLocoTypes()
+
+        return
+    
+    def configFileResetter(self):
+        """
+        Mini controller.
+        """
+
+        self.resetConfigFile()
+
+        return
+    
+    def setupResetter(self):
+        """
+        """
+
+        OSU = PSE.JMRI.jmrit.operations.setup
+        OSU.Setup.setYearModeled('')
+        OSU.Setup.setRailroadName('My JMRI Railroad')
 
         return
     
@@ -215,11 +259,11 @@ class Initiator:
 
         return
 
-    def resetRoadNames(self):
+    def resetCarRoadNames(self):
         """
         If at least one road name is not added, JMRI will populate road names with a long list of defaults.
         """
-        _psLog.debug('resetRoadNames')
+        _psLog.debug('resetCarRoadNames')
 
         tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarRoads
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
@@ -231,56 +275,159 @@ class Initiator:
 
         return
 
-    def properties(self):
+    def resetCarColors(self):
         """
-        Mini controller to update railroad properties.
         """
 
-        self.o2oDetailsToConFig()
-        self.setRailroadDetails()
+        _psLog.debug('resetCarColors')
 
-        _psLog.info('Layout details updated')
+        tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarColors
+        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+
+        for color in TCM.getNames():
+            TCM.deleteName(color)
+
+        for color in self.configFile['o2o']['RC']:
+            TCM.addName(color)
 
         return
 
-    def o2oDetailsToConFig(self):
+    def resetCarLengths(self):
         """
-        Optional railroad details from the TrainPlayer layout are added to the config file.
         """
 
-        self.configFile['Main Script']['LD'].update({'OR':self.TpRailroad['operatingRoad']})
-        self.configFile['Main Script']['LD'].update({'TR':self.TpRailroad['territory']})
-        self.configFile['Main Script']['LD'].update({'LO':self.TpRailroad['location']})
-        self.configFile['Main Script']['LD'].update({'YR':self.TpRailroad['year']})
-        self.configFile['Main Script']['LD'].update({'SC':self.TpRailroad['scale']})
-        self.configFile['Main Script']['LD'].update({'BD':self.TpRailroad['buildDate']})
+        _psLog.debug('resetCarLengths')
 
-        PSE.writeConfigFile(self.configFile)
-        self.configFile =  PSE.readConfigFile()
+        tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarLengths
+        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+
+        for length in TCM.getNames():
+            TCM.deleteName(length)
+
+        TCM.addName(str(self.configFile['o2o']['DL']))
+
+        return
+
+    def resetCarKernels(self):
+        """
+        """
+        _psLog.debug('resetCarKernels')
+
+        for kernel in PSE.KM.getNameList():
+            PSE.KM.deleteKernel(kernel)
+
+        return
+
+    def resetLocoLengths(self):
+        """
+        """
+
+        _psLog.debug('resetLocoLengths')
+
+        tc = PSE.JMRI.jmrit.operations.rollingstock.engines.EngineLengths
+        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+
+        for length in TCM.getNames():
+            TCM.deleteName(length)
+
+        TCM.addName(str(self.configFile['o2o']['DL']))
+
+        return
+
+    def resetLocoConsists(self):
+        """
+        """
+
+        _psLog.debug('resetLocoConsists')
+
+        for consist in PSE.ZM.getNameList():
+            PSE.ZM.deleteConsist(consist)
 
         return
     
-    def setRailroadDetails(self):
+    def resetLocoModels(self):
         """
-        Optional railroad details from the TrainPlayer layout are added to JMRI.
         """
 
-        _psLog.debug('setRailroadDetails')
+        _psLog.debug('resetLocoModels')
 
-    # Set the name
-        # self.OSU.Setup.setRailroadName(self.TpRailroad['layoutName'])
-    # Set the year
-        rrYear = self.configFile['Main Script']['LD']['YR']
-        if rrYear:
-            self.OSU.Setup.setYearModeled(rrYear)
+        tc = PSE.JMRI.jmrit.operations.rollingstock.engines.EngineModels
+        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
 
-        rrScale = self.configFile['Main Script']['LD']['SC']
-        if rrScale:
-            self.OSU.Setup.setScale(self.configFile['Main Script']['SR'][rrScale.upper()])
+        for model in TCM.getNames():
+            TCM.deleteName(model)
 
-        PSE.JMRI.jmrit.operations.setup.OperationsSettingsPanel().savePreferences()
+        TCM.addName('xyz')
 
         return
+    
+    def resetLocoTypes(self):
+        """
+        """
+
+        _psLog.debug('resetLocoTypes')
+
+        tc = PSE.JMRI.jmrit.operations.rollingstock.engines.EngineTypes
+        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+
+        for type in TCM.getNames():
+            TCM.deleteName(type)
+
+        TCM.addName('xyz')
+
+        return
+
+    def resetConfigFile(self):
+        """
+        """
+
+        _psLog.debug('resetConfigFile')
+
+        self.configFile['Main Script']['LD'].update({"BD":""})
+        self.configFile['Main Script']['LD'].update({"JN":""})
+        self.configFile['Main Script']['LD'].update({"LN":""})
+        self.configFile['Main Script']['LD'].update({"LO":""})
+        self.configFile['Main Script']['LD'].update({"OR":""})
+        self.configFile['Main Script']['LD'].update({"RN":""})
+        self.configFile['Main Script']['LD'].update({"SC":""})
+        self.configFile['Main Script']['LD'].update({"TR":""})
+        self.configFile['Main Script']['LD'].update({"YR":""})
+
+        PSE.writeConfigFile(self.configFile)
+
+        return
+
+class Initializer:
+    """Make tweeks to Operations.xml here."""
+
+    def __init__(self):
+
+        self.scriptName = SCRIPT_NAME + '.Initializer'
+
+        self.OSU = PSE.JMRI.jmrit.operations.setup
+
+        self.configFile =  PSE.readConfigFile()
+        self.tpRailroad = ModelEntities.getTpRailroadJson('tpRailroadData')
+
+        print(self.scriptName + ' ' + str(SCRIPT_REV))
+
+        return
+
+    def Initialize(self):
+        """
+        Mini controller.
+        Make settings changes.
+        Some of these are personal.
+        """
+
+        self.tweakOperationsXml()
+        self.setReportMessageFormat()
+
+        _psLog.info('Layout details added')
+        _psLog.info('JMRI operations settings updated')
+
+        return
+
 
     def tweakOperationsXml(self):
         """
@@ -309,6 +456,76 @@ class Initiator:
         self.OSU.Setup.setLocalManifestMessageFormat(self.configFile['o2o']['RMF']['MC'])
         self.OSU.Setup.setPickupEngineMessageFormat(self.configFile['o2o']['RMF']['PUL'])
         self.OSU.Setup.setDropEngineMessageFormat(self.configFile['o2o']['RMF']['SOL'])
+
+        return
+
+
+class ExtendedDetails:
+    """
+    Adds the extended details that are part of the Quick Keys export, if used.
+    """
+
+    def __init__(self):
+
+        self.scriptName = SCRIPT_NAME + '.ExtendedDetails'
+
+        self.configFile =  PSE.readConfigFile()
+
+        self.tpRailroad = ModelEntities.getTpRailroadJson('tpRailroadData')
+
+        print(self.scriptName + ' ' + str(SCRIPT_REV))
+
+        return
+    
+    def update(self):
+        """
+        Mini controller to update railroad properties.
+        """
+
+        self.o2oDetailsToConFig()
+        self.setRailroadDetails()
+
+        _psLog.info('Layout details updated')
+
+        return
+
+    def o2oDetailsToConFig(self):
+        """
+        Optional railroad details from the TrainPlayer layout are added to the config file.
+        """
+
+        self.configFile['Main Script']['LD'].update({'OR':self.tpRailroad['Extended_operatingRoad']})
+        self.configFile['Main Script']['LD'].update({'TR':self.tpRailroad['Extended_territory']})
+        self.configFile['Main Script']['LD'].update({'LO':self.tpRailroad['Extended_location']})
+        self.configFile['Main Script']['LD'].update({'YR':self.tpRailroad['Extended_year']})
+        self.configFile['Main Script']['LD'].update({'SC':self.tpRailroad['Extended_scale']})
+        self.configFile['Main Script']['LD'].update({'BD':self.tpRailroad['Extended_buildDate']})
+
+        PSE.writeConfigFile(self.configFile)
+        self.configFile =  PSE.readConfigFile()
+
+        return
+    
+    def setRailroadDetails(self):
+        """
+        Optional railroad details from the TrainPlayer layout are added to JMRI.
+        """
+
+        _psLog.debug('setRailroadDetails')
+
+    # Set the name
+        OSU = PSE.JMRI.jmrit.operations.setup
+        OSU.Setup.setRailroadName(self.tpRailroad['Extended_layoutName'])
+    # Set the year
+        rrYear = self.configFile['Main Script']['LD']['YR']
+        if rrYear:
+            OSU.Setup.setYearModeled(rrYear)
+
+        rrScale = self.configFile['Main Script']['LD']['SC']
+        if rrScale:
+            OSU.Setup.setScale(self.configFile['Main Script']['SR'][rrScale.upper()])
+
+        PSE.JMRI.jmrit.operations.setup.OperationsSettingsPanel().savePreferences()
 
         return
 
@@ -360,7 +577,7 @@ class Attributator:
         tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarRoads
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
 
-        for road in self.tpRailroadData['roads']:
+        for road in self.tpRailroadData['CarRoster_roads']:
             TCM.addName(road)
 
         TCM.deleteName('xyz')
@@ -378,7 +595,7 @@ class Attributator:
         tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarTypes
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
 
-        for type in self.tpRailroadData['carAAR']:
+        for type in self.tpRailroadData['CarRoster_types']:
             TCM.addName(type)
         TCM.deleteName('xyz')
 
@@ -395,8 +612,8 @@ class Attributator:
         tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarLoads
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
 
-        carLoads = self.tpRailroadData['carLoads']
-        for aar in self.tpRailroadData['carAAR']:
+        carLoads = self.tpRailroadData['CarRoster_loads']
+        for aar in self.tpRailroadData['CarRoster_types']:
             TCM.addType(aar)
             TCM.addName(aar, 'Empty')
             TCM.addName(aar, 'Load')
@@ -416,7 +633,7 @@ class Attributator:
 
         _psLog.debug('addCarKernels')
 
-        for xName in self.tpRailroadData['carKernel']:
+        for xName in self.tpRailroadData['CarRoster_newKernels']:
             PSE.KM.newKernel(xName)
 
         return
@@ -434,7 +651,7 @@ class Attributator:
         for model in TCM.getNames():
             TCM.deleteName(model)
 
-        for xName in self.tpRailroadData['locoModels']:
+        for xName in self.tpRailroadData['EngineRoster_models']:
             xModel = xName[0]
             xType = xName[1]
             TCM.addName(xModel)
@@ -458,7 +675,7 @@ class Attributator:
             TCM.deleteName(type)
 
 
-        for xName in self.tpRailroadData['locoTypes']:
+        for xName in self.tpRailroadData['EngineRoster_types']:
             TCM.addName(xName)
 
         return
@@ -470,7 +687,7 @@ class Attributator:
 
         _psLog.debug('addLocoConsist')
 
-        for xName in self.tpRailroadData['locoConsists']:
+        for xName in self.tpRailroadData['EngineRoster_newConsists']:
             PSE.ZM.newConsist(xName)
 
         return
@@ -483,7 +700,7 @@ class ScheduleAuteur:
 
     def __init__(self):
 
-        self.tpIndustries = ModelEntities.getTpRailroadJson('tpRailroadData')['industries']
+        self.tpIndustries = ModelEntities.getTpRailroadJson('tpRailroadData')['LocationRoster_spurs']
         self.allSchedules = []
         self.scheduleItems = []
         self.composedItems = []
@@ -709,8 +926,10 @@ class Locationator:
 
         self.configFile = PSE.readConfigFile()
 
-        self.currentRrData = {}
-        self.updatedRrData = {}
+        self.validationResult = True
+
+        self.currentRrData = ModelEntities.getCurrentRrData()
+        self.updatedRrData = ModelEntities.getTpRailroadJson('tpRailroadData')
 
         self.continuingLocations = []
         self.newLocations = []
@@ -720,48 +939,24 @@ class Locationator:
 
         return
     
-    def locationist(self):
+    def validate(self):
         """
         Mini controller.
-        Updates new or continuing locations and delets obsolete locations.
+        Add new validations here.
         """
 
-        self.getCurrentRrData()
-        self.getUpdatedRrData()
+        self.validateStaging()
 
-        if not self.validateUpdatedLocations():
-            return False
-        
-        self.parseLocations()
-        self.addNewLocations()
-        self.deleteOldLocations()
+        return self.validationResult
 
-        
-
-        # PSE.LMX.save()
-
-        return True
-    
-    def getCurrentRrData(self):
-
-        self.currentRrData = ModelEntities.getCurrentRrData()
-
-        return
-
-    def getUpdatedRrData(self):
-
-        self.updatedRrData = ModelEntities.getTpRailroadJson('tpRailroadData')
-
-        return
-    
-    def validateUpdatedLocations(self):
+    def validateStaging(self):
         """
         Check that staging locations don't have other track types.
         """
 
         stagingList = []
         nonStagingList = []
-        for index, locale in self.updatedRrData['locales'].items():
+        for _, locale in self.updatedRrData['LocationRoster_location'].items():
             if locale['type'] == 'staging':
                 stagingList.append(locale['location'])
             else:
@@ -773,7 +968,21 @@ class Locationator:
             PSE.openOutputFrame(PSE.getBundleItem('ALERT: staging and non staging tracks at:') + ' ' + str(invalidLocations))
             PSE.openOutputFrame(PSE.getBundleItem('Import terminated without completion'))
 
-            return False
+            self.validationResult = False
+        else:
+            _psLog.info('No conflicts at staging')
+
+        return
+    
+    def updateLocations(self):
+        """
+        Mini controller.
+        Updates new or continuing locations and delets obsolete locations.
+        """
+
+        self.parseLocations()
+        self.addNewLocations()
+        self.deleteOldLocations()
 
         return True
     
@@ -786,7 +995,7 @@ class Locationator:
         """
 
         currentLocations = self.currentRrData['locations']
-        updatedLocations = self.updatedRrData['locations']
+        updatedLocations = self.updatedRrData['LocationRoster_locations']
 
         self.newLocations = list(set(updatedLocations).difference(set(currentLocations)))
         self.oldLocations = list(set(currentLocations).difference(set(updatedLocations)))
@@ -843,7 +1052,7 @@ class Divisionator:
 
     def parseDivisions(self):
 
-        updateDivisions = ModelEntities.getTpRailroadJson('tpRailroadData')['divisions']
+        updateDivisions = ModelEntities.getTpRailroadJson('tpRailroadData')['Extended_divisions']
         if updateDivisions[0] == '':
             updateDivisions = []
         
@@ -933,6 +1142,8 @@ class Trackulator:
 
         self.configFile = PSE.readConfigFile()
 
+        self.validationResult = True
+
         self.currentRrData = ModelEntities.getCurrentRrData()
         self.updatedRrData = ModelEntities.getTpRailroadJson('tpRailroadData')
 
@@ -950,37 +1161,61 @@ class Trackulator:
 
         return
 
-    def testTracks(self):
+    def validate(self):
         """
+        Mini controller.
+        Add new validations here.
+        """
+
+        self.checkLocations()
+        self.testLocationChanges()
+
+        return self.validationResult
+    
+    def checkLocations(self):
+        """
+        Checks that there are locations to add tracks to.
+        """
+
+        if not PSE.getAllLocationNames():
+            PSE.openOutputFrame(PSE.getBundleItem('ALERT: No JMRI locations were found.'))
+            self.validationResult = False
+
+        return
+    
+    def testLocationChanges(self):
+        """
+        If the Industries button is pressed out of sequence.
         Tests that no locations changes were made.
         """
 
         currentLocations = []
-        for id, data in self.currentRrData['locales'].items():
+        for _, data in self.currentRrData['locales'].items():
             currentLocations.append(data['location'])
 
         updatedLocations = []
-        for id, data in self.updatedRrData['locales'].items():
+        for _, data in self.updatedRrData['LocationRoster_location'].items():
             updatedLocations.append(data['location'])
 
         testResult = list(set(currentLocations).difference(updatedLocations))
         if len(testResult) == 0:
-            return True
+            return
         else:
             _psLog.critical('ALERT: Not a valid location:' + ' ' + str(testResult))
             PSE.openOutputFrame(PSE.getBundleItem('ALERT: Not a valid location:') + ' ' + str(testResult))
             PSE.openOutputFrame(PSE.getBundleItem('Industries not imported. Import Locations recommended'))
 
-            return False
+            self.validationResult = False
+
+            return
     
-    def trackist(self):
+    def updateTracks(self):
         """
         Mini controller.
         Updates JMRI tracks and track attributes.
         """
 
         self.getTrackIds()
-
         self.parseTrackIds()
         self.updateContinuingTracks()
         self.addNewTracks()
@@ -995,7 +1230,7 @@ class Trackulator:
         for trackId in self.currentRrData['locales']:
             self.currentTrackIds.append(trackId)
 
-        for trackId in self.updatedRrData['locales']:
+        for trackId in self.updatedRrData['LocationRoster_location']:
             self.updatedTrackIds.append(trackId)
 
         return
@@ -1016,7 +1251,7 @@ class Trackulator:
 
         for continuingTrackId in self.continuingTrackIds:
             currentTrackData = self.currentRrData['locales'][continuingTrackId]
-            updatedTrackData = self.updatedRrData['locales'][continuingTrackId]
+            updatedTrackData = self.updatedRrData['LocationRoster_location'][continuingTrackId]
 
             if currentTrackData['location'] == updatedTrackData['location']:
                 trackType = self.configFile['o2o']['TR'][updatedTrackData['type']]
@@ -1049,7 +1284,7 @@ class Trackulator:
         o2oConfig = self.configFile['o2o']
 
         for newTrackId in self.newTrackIds:
-            newTrackData = self.updatedRrData['locales'][newTrackId]
+            newTrackData = self.updatedRrData['LocationRoster_location'][newTrackId]
             location = PSE.LM.getLocationByName(newTrackData['location'])
             trackType = o2oConfig['TR'][newTrackData['type']]
             track = location.addTrack(newTrackData['track'], trackType)
@@ -1085,7 +1320,7 @@ class Trackulator:
         Catches TrainPlayer error: track is not a spur but has an industries entry.
         """
 
-        for id, data in self.updatedRrData['industries'].items():
+        for _, data in self.updatedRrData['LocationRoster_spurs'].items():
             location = PSE.LM.getLocationByName(data['a-location'])
             track = location.getTrackByName(data['b-track'], 'Spur')
             if not track:
@@ -1098,19 +1333,27 @@ class Trackulator:
         return
 
 
-class RStockulator:
+class RollingStockulator:
     """
     All methods concerning rolling stock.
     """
 
     def __init__(self):
 
-        self.scriptName = SCRIPT_NAME + '.RStockulator'
+        self.scriptName = SCRIPT_NAME + '.RollingStockulator'
 
-        self.configFile = PSE.readConfigFile('o2o')
+        self.configFile = PSE.readConfigFile()
 
-        self.TpRailroad = ModelEntities.getTpRailroadJson('tpRailroadData')
-        self.tpInventory = ModelEntities.getTpExport(self.configFile['RF']['TRR'])
+        self.validationResult = True
+
+        self.tpRailroad = ModelEntities.getTpRailroadJson('tpRailroadData')
+
+        reportName = self.configFile['o2o']['RF']['RSD']
+        fileName = reportName + '.txt'
+        filePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
+        self.tpInventory =  PSE.genericReadReport(filePath)
+        self.tpInventory =  self.tpInventory.split('\n')
+        # self.tpInventory = ModelEntities.getTpExport(self.configFile['o2o']['RF']['TRR'])
 
         self.jmriCars = PSE.CM.getList()
         self.jmriLocos = PSE.EM.getList()
@@ -1122,20 +1365,40 @@ class RStockulator:
         self.carList = []
         self.shipList = []
 
+        print(self.scriptName + ' ' + str(SCRIPT_REV))
+
         return
 
-    def updater(self):
+    def validate(self):
         """
-        Mini controller.
-        Updates the Rolling Stock data set.
+        Add validations here.
         """
 
-        _psLog.debug('updater')
+        self.checkTracks()
+
+        return  self.validationResult
+    
+    def checkTracks(self):
+
+        if not PSE.getAllTracks():     
+            PSE.openOutputFrame(PSE.getBundleItem('ALERT: No JMRI tracks were found.'))
+            self.validationResult = False
+
+        return
+
+    
+    def updateRollingStock(self):
+        """
+        Mini controller.
+        Updates the Rolling Stock XML.
+        """
+
+        _psLog.debug('updateRollingStock')
         
         self.parseTpInventory()
         self.getOldRollingStock()
         self.deleteOldRollingStock()
-        self.updateRollingStock()
+        self.updateBaseAttributes()
         self.scheduleApplicator()
 
         return
@@ -1153,6 +1416,7 @@ class RStockulator:
         for item in self.tpInventory:
             line = item.split(';')
             if line[2].startswith('ET'):
+                # TrainPlayer tenders are not added to inventory
                 continue
 
             location = line[3]
@@ -1201,7 +1465,7 @@ class RStockulator:
             currentLocoIds.append(item.getRoadName() + ' ' + item.getNumber())
 
         updatedCarIds = []
-        for id, data in self.tpCars.items():
+        for _, data in self.tpCars.items():
             updatedCarIds.append(data['id'])
 
         currentCarIds = []
@@ -1225,40 +1489,20 @@ class RStockulator:
 
         return
 
-    def updateRollingStock(self):
+    def updateBaseAttributes(self):
         """
         Whether the RS is new or continuing, its 'base' attributes are updated.
         """
 
-        _psLog.debug('setBaseCarAttribs')
-        for id, data in self.tpCars.items():
+        _psLog.debug('updateBaseAttributes')
+
+        for _, data in self.tpCars.items():
             self.setBaseCarAttribs(data)
     
         _psLog.debug('setBaseLocoAttribs')
-        for id, data in self.tpLocos.items():
+
+        for _, data in self.tpLocos.items():
             self.setBaseLocoAttribs(data)
-
-        return
-    
-    def setBaseLocoAttribs(self, locoData):
-        """
-        Sets only the consist, length, model, type, location, track.
-        self.tpLocos dictionary format: {TP ID :  [Model, AAR, JMRI Location, JMRI Track, 'unloadable', Consist, JMRI ID]}
-        """
-
-        locoId = self.splitId(locoData['id'])
-        loco = PSE.EM.newRS(locoId[0], locoId[1])
-
-        loco.setTypeName(locoData['aar'])
-        loco.setModel(locoData['model'])
-        loco.setLength(str(self.configFile['DL']))
-        consist = PSE.ZM.getConsistByName(locoData['consist'])
-        loco.setConsist(consist)
-
-        locationName = PSE.locationNameLookup(locoData['location'])
-        location = PSE.LM.getLocationByName(locationName)
-        track = location.getTrackByName(locoData['track'], None)
-        loco.setLocation(location, track, True)
 
         return
 
@@ -1273,14 +1517,16 @@ class RStockulator:
         car = PSE.CM.newRS(carId[0], carId[1])
 
         car.setTypeName(carData['aar'])
+        car.setLoadName(carData['load'])
 
-        if carData['aar'] in self.TpRailroad['cabooseAar']:
+        if carData['aar'] in self.tpRailroad['AAR_Caboose']:
             car.setCaboose(True)
-        if carData['aar'] in self.TpRailroad['passAar']:
+        if carData['aar'] in self.tpRailroad['AAR_Passenger']:
+            car.setPassenger(True)
+        if carData['aar'] in self.tpRailroad['AAR_Express']:
             car.setPassenger(True)
 
-        car.setLoadName(carData['load'])
-        car.setLength(str(self.configFile['DL']))
+        car.setLength(str(self.configFile['o2o']['DL']))
         kernel = PSE.KM.getKernelByName(carData['kernel'])
         car.setKernel(kernel)
 
@@ -1288,6 +1534,28 @@ class RStockulator:
         location = PSE.LM.getLocationByName(locationName)
         track = location.getTrackByName(carData['track'], None)
         car.setLocation(location, track, True)
+
+        return
+    
+    def setBaseLocoAttribs(self, locoData):
+        """
+        Sets only the consist, length, model, type, location, track.
+        self.tpLocos dictionary format: {TP ID :  [Model, AAR, JMRI Location, JMRI Track, 'unloadable', Consist, JMRI ID]}
+        """
+
+        locoId = self.splitId(locoData['id'])
+        loco = PSE.EM.newRS(locoId[0], locoId[1])
+
+        loco.setTypeName(locoData['aar'])
+        loco.setModel(locoData['model'])
+        loco.setLength(str(self.configFile['o2o']['DL']))
+        consist = PSE.ZM.getConsistByName(locoData['consist'])
+        loco.setConsist(consist)
+
+        locationName = PSE.locationNameLookup(locoData['location'])
+        location = PSE.LM.getLocationByName(locationName)
+        track = location.getTrackByName(locoData['track'], None)
+        loco.setLocation(location, track, True)
 
         return
 

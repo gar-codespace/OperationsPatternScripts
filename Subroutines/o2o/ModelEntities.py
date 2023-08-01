@@ -90,8 +90,6 @@ def tpDirectoryExists():
 """o2o.Model"""
 
 
-
-
 def addTypesToTracks():
     """
     Depricated
@@ -124,11 +122,11 @@ def deselectCarTypesAtSpurs():
     Model.UpdateLocationsAndTracks.addCarTypesToSpurs
     """
 
-    industries = getTpRailroadJson('tpRailroadData')['industries']
+    spurs = getTpRailroadJson('tpRailroadData')['LocationRoster_spurs']
 
-    for id, industry in industries.items():
-        location = PSE.LM.getLocationByName(industry['a-location'])
-        track = location.getTrackByName(industry['b-track'], None)
+    for _, spur in spurs.items():
+        location = PSE.LM.getLocationByName(spur['a-location'])
+        track = location.getTrackByName(spur['b-track'], None)
 
         for typeName in track.getTypeNames():
             track.deleteTypeName(typeName)
@@ -142,9 +140,9 @@ def selectCarTypesAtSpurs():
     Model.UpdateLocationsAndTracks.addCarTypesToSpurs
     """
 
-    industries = getTpRailroadJson('tpRailroadData')['industries']
+    industries = getTpRailroadJson('tpRailroadData')['LocationRoster_spurs']
 
-    for id, industry in industries.items():
+    for _, industry in industries.items():
         track = PSE.LM.getLocationByName(industry['a-location']).getTrackByName(industry['b-track'], None)
         for schedule, details in industry['c-schedule'].items():
             for detail in details:

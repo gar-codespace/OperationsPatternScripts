@@ -17,7 +17,7 @@ class subroutineGui:
         """The *.setName value is the name of the action for the widget"""
 
         self.nrButton = PSE.JAVX_SWING.JButton()
-        self.nrButton.setText(PSE.getBundleItem('Initialize'))
+        self.nrButton.setText(PSE.getBundleItem('Initialize Railroad'))
         self.nrButton.setName('initializeJmriRailroad')
 
         self.ulButton = PSE.JAVX_SWING.JButton()

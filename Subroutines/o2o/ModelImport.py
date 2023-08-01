@@ -15,7 +15,11 @@ SCRIPT_REV = 20230201
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.ModelImport')
     
 def importTpRailroad():
-    """Mini controller generates the tpRailroadData.json file"""
+    """
+    Mini controller.
+    Generates the tpRailroadData.json file
+    Generates the tpRollingStockData.txt file
+    """
 
     PSE.closeOutputFrame()
     trainPlayerImport = TrainPlayerImporter()
@@ -54,7 +58,8 @@ def importTpRailroad():
     trainPlayerImport.getAllTpLocoModels()
     trainPlayerImport.getAllTpLocoConsists()
 
-    trainPlayerImport.writeTPLayoutData()
+    trainPlayerImport.writeLayoutData()
+    trainPlayerImport.writeRollingStockData()
 
     return True
 
@@ -75,7 +80,7 @@ class TrainPlayerImporter:
 
     def __init__(self):
 
-        self.o2oConfig =  PSE.readConfigFile()
+        self.configFile =  PSE.readConfigFile()
 
         self.tpLocations = []
         self.tpIndustries = []
@@ -86,10 +91,14 @@ class TrainPlayerImporter:
         self.tpPassAar = []
         self.tpMowAar = []
 
-        reportName = 'tpRailroadData'
+        reportName = self.configFile['o2o']['RF']['RRD']
         fileName = reportName + '.json'
         self.rrFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
         self.rr = {}
+
+        reportName = self.configFile['o2o']['RF']['RSD']
+        fileName = reportName + '.txt'
+        self.inventoryFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', fileName)
 
         return
 
@@ -102,7 +111,7 @@ class TrainPlayerImporter:
 
         fileCheck = True
 
-        self.tpLocations = ModelEntities.getTpExport(self.o2oConfig['o2o']['RF']['TRL'])
+        self.tpLocations = ModelEntities.getTpExport(self.configFile['o2o']['RF']['TRL'])
         if self.tpLocations:
             _psLog.info('TrainPlayer Report - Locations.txt file found')
         else:
@@ -111,7 +120,7 @@ class TrainPlayerImporter:
             fileCheck = False
 
 
-        self.tpIndustries = ModelEntities.getTpExport(self.o2oConfig['o2o']['RF']['TRI'])
+        self.tpIndustries = ModelEntities.getTpExport(self.configFile['o2o']['RF']['TRI'])
         if self.tpIndustries:
             _psLog.info('TrainPlayer Report - Industries.txt file found')
         else:
@@ -120,7 +129,7 @@ class TrainPlayerImporter:
             fileCheck = False
 
 
-        self.tpInventory = ModelEntities.getTpExport(self.o2oConfig['o2o']['RF']['TRR'])
+        self.tpInventory = ModelEntities.getTpExport(self.configFile['o2o']['RF']['TRR'])
         if self.tpInventory:
             _psLog.info('TrainPlayer Report - Rolling Stock.txt file found')
         else:
@@ -234,27 +243,27 @@ class TrainPlayerImporter:
         if self.tpEngineAar:
             self.rr['AAR_Engine'] = self.tpEngineAar
         else:
-            self.rr['AAR_Engine'] = self.o2oConfig['o2o']['EX']
+            self.rr['AAR_Engine'] = self.configFile['o2o']['XE']
 
         if self.tpCabooseAar:
             self.rr['AAR_Caboose'] = self.tpCabooseAar
         else:
-            self.rr['AAR_Caboose'] = self.o2oConfig['o2o']['CX']
+            self.rr['AAR_Caboose'] = self.configFile['o2o']['XC']
 
         if self.tpMowAar:
             self.rr['AAR_MOW'] = self.tpMowAar
         else:
-            self.rr['AAR_MOW'] = self.o2oConfig['o2o']['MX']
+            self.rr['AAR_MOW'] = self.configFile['o2o']['XM']
 
         if self.tpPassAar:
             self.rr['AAR_Passenger'] = self.tpPassAar
         else:
-            self.rr['AAR_Passenger'] = self.o2oConfig['o2o']['PX']
+            self.rr['AAR_Passenger'] = self.configFile['o2o']['XP']
 
         if self.tpExpressAAR:
             self.rr['AAR_Express'] = self.tpExpressAAR
         else:
-            self.rr['AAR_Express'] = self.o2oConfig['o2o']['XX']
+            self.rr['AAR_Express'] = self.configFile['o2o']['XX']
 
         return
 
@@ -495,11 +504,24 @@ class TrainPlayerImporter:
 
         return
 
-    def writeTPLayoutData(self):
+    def writeLayoutData(self):
 
-        _psLog.debug('writeTPLayoutData')
+        _psLog.debug('writeLayoutData')
 
-        formattedRrFile = PSE.dumpJson(self.rr)
-        PSE.genericWriteReport(self.rrFile, formattedRrFile)
+        PSE.genericWriteReport(self.rrFile, PSE.dumpJson(self.rr))
+
+        return
+    
+    def writeRollingStockData(self):
+
+        _psLog.debug('writeRollingStockData')
+
+        inventory = ''
+        for item in self.tpInventory:
+            inventory += item + '\n'
+
+        inventory = inventory[:-1]
+
+        PSE.genericWriteReport(self.inventoryFile, inventory)
 
         return
