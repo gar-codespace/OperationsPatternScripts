@@ -4,8 +4,7 @@ Todo:
   Duplication of PSE chunkPath.
   Retest PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
   Patterns switch list should say [Hold] for hold cars.
-  Maybe add color to o2o setBaseLocoAttribs() and cars too.
-  Some passenger cars should have a load of 'Occupied'.
+  Maybe add Load and Empty to o2o/bundle
 
 Comments:
   Schedule does not prevent setting a car to a track.

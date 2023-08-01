@@ -286,9 +286,9 @@ class Resetter:
 
         for color in TCM.getNames():
             TCM.deleteName(color)
-
-        for color in self.configFile['o2o']['RC']:
-            TCM.addName(color)
+            
+        color = PSE.getBundleItem('Generic')
+        TCM.addName(color)
 
         return
 
@@ -555,7 +555,10 @@ class Attributator:
         self.addRoads()
         self.addCarAar()
         self.addCarLoads()
+        self.addCabooseLoads()
+        self.addPassengerLoads()
         self.addCarKernels()
+
         self.addLocoModels()
         self.addLocoTypes()
         self.addLocoConsist()
@@ -625,7 +628,43 @@ class Attributator:
                 TCM.setLoadType(aar, load, 'load')
 
         return
+    
+    def addCabooseLoads(self):
+        """
+        Adds load name Occupied to cabeese.
+        """
 
+        _psLog.debug('addCabooseLoads')
+
+        tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarLoads
+        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+
+        load = PSE.getBundleItem('Occupied')
+
+        for car in self.tpRailroadData['AAR_Caboose']:
+            TCM.addName(car, load)
+            TCM.setLoadType(car, load, 'load')
+
+        return
+
+    def addPassengerLoads(self):
+        """
+        Adds load name Occupied to cabeese.
+        """
+
+        _psLog.debug('addPassengerLoads')
+
+        tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarLoads
+        TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+
+        load = PSE.getBundleItem('Occupied')
+
+        for car in self.tpRailroadData['AAR_Passenger']:
+            TCM.addName(car, load)
+            TCM.setLoadType(car, load, 'load')
+
+        return
+    
     def addCarKernels(self):
         """
         Add new kernels using those from tpRailroadData.json.
@@ -1513,16 +1552,22 @@ class RollingStockulator:
         self.tpCars  dictionary format: {TP ID :  {type: TP Collection, aar: TP AAR, location: JMRI Location, track: JMRI Track, load: TP Load, kernel: TP Kernel, id: JMRI ID}}
         """
 
+        load = PSE.getBundleItem('Occupied')
+        color = PSE.getBundleItem('Generic')
+
         carId = self.splitId(carData['id'])
         car = PSE.CM.newRS(carId[0], carId[1])
 
         car.setTypeName(carData['aar'])
         car.setLoadName(carData['load'])
+        car.setColor(color)
 
         if carData['aar'] in self.tpRailroad['AAR_Caboose']:
             car.setCaboose(True)
+            car.setLoadName(load)
         if carData['aar'] in self.tpRailroad['AAR_Passenger']:
             car.setPassenger(True)
+            car.setLoadName(load)
         if carData['aar'] in self.tpRailroad['AAR_Express']:
             car.setPassenger(True)
 
@@ -1543,6 +1588,8 @@ class RollingStockulator:
         self.tpLocos dictionary format: {TP ID :  [Model, AAR, JMRI Location, JMRI Track, 'unloadable', Consist, JMRI ID]}
         """
 
+        color = PSE.getBundleItem('Generic')
+
         locoId = self.splitId(locoData['id'])
         loco = PSE.EM.newRS(locoId[0], locoId[1])
 
@@ -1551,6 +1598,7 @@ class RollingStockulator:
         loco.setLength(str(self.configFile['o2o']['DL']))
         consist = PSE.ZM.getConsistByName(locoData['consist'])
         loco.setConsist(consist)
+        loco.setColor(color)
 
         locationName = PSE.locationNameLookup(locoData['location'])
         location = PSE.LM.getLocationByName(locationName)

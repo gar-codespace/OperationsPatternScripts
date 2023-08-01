@@ -29,7 +29,8 @@ Cars
 Unreported
 Unknown
 Unassigned
-empty
-load
-occupied
+Empty
+Load
+Occupied
+Generic
 Railroad Details
