@@ -69,8 +69,8 @@ class opsWorkListConversion:
     def parsePtRs(self, rs):
         """
         The load field is either Load(car) or Model(loco).
-        Pattern scripts have only one location,
-        so Location and Destination are the same.
+        Pattern scripts have only one location.
+        Location and Destination are the same.
         """
 
         parsedRS = {}
@@ -81,12 +81,16 @@ class opsWorkListConversion:
             parsedRS['Load Type'] = PSE.getShortLoadType(rs)
             parsedRS['Load'] = rs['Load']
         except:
-            print('Exception at: o2o.ModelWorkEvents.parsePtRs')
+            # print('Exception at: o2o.ModelWorkEvents.parsePtRs')
             parsedRS['Load'] = rs['Model']
         parsedRS['Location'] = rs['Location']
         parsedRS['Track'] = rs['Track']
         parsedRS['Destination'] = rs['Location']
-        parsedSetTo = self.parseSetTo(rs['Set_To'])
+
+        if self.parseSetTo(rs['Set_To']) == PSE.getBundleItem('Hold'):
+            parsedSetTo = rs['Track']
+        else:
+            parsedSetTo = self.parseSetTo(rs['Set_To'])
         parsedRS['Set_To'] = parsedSetTo
 
         return parsedRS
@@ -227,7 +231,7 @@ class jmriManifestConversion:
             parsedRS['Load Type'] = PSE.getShortLoadType(rs)
             parsedRS['Load'] = rs['load']
         except:
-            print('Exception at: o2o.ModelWorkEvents.parseRS')
+            # print('Exception at: o2o.ModelWorkEvents.parseRS')
             parsedRS['Load'] = rs['model']
 
         parsedRS['Location'] = rs['location']['userName']
@@ -309,13 +313,13 @@ class o2oWorkEvents:
         try:
             load = rs['Load']
         except:
-            print('Exception at: o2o.ModelWorkEvents.makeLine')
+            # print('Exception at: o2o.ModelWorkEvents.makeLine')
             load = rs['Model']
 
         try: # Locos don't use load type
             lt = rs['Load Type']
         except:
-            print('Exception at: o2o.ModelWorkEvents.makeLine')
+            # print('Exception at: o2o.ModelWorkEvents.makeLine')
             lt = u'X'
 
         pu = rs['Location'] + ';' + rs['Track']

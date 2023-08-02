@@ -55,7 +55,7 @@ class CreateSetCarsForm:
         try:
             self.buttonDict['scheduleButton'].actionPerformed = self.scheduleButton
         except:
-            print('Exception at: Patterns.Controller.CreateSetCarsForm.activateButtons')
+            print('Exception at: Patterns.SetCarsForm_Controller.CreateSetCarsForm.activateButtons.scheduleButton')
             pass
 
         self.buttonDict['footerButtons'][0].actionPerformed = self.switchListButton

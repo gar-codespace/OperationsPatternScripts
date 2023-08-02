@@ -52,27 +52,25 @@ def merge(switchList, userInputList):
     i = 0
     locos = switchList['locations'][0]['tracks'][0]['locos']
     for loco in locos:
-        setTrack = switchList['locations'][0]['tracks'][0]['trackName']
-        setTrack = PSE.formatText('[' + setTrack + ']', longestTrackString + 2)
-        loco.update({'Set_To': setTrack})
-
         userInput = unicode(userInputList[i], PSE.ENCODING)
         if userInput in allTracksAtLoc:
             setTrack = PSE.formatText('[' + userInput + ']', longestTrackString + 2)
-            loco.update({'Set_To': setTrack})
+        else:
+            setTrack = PSE.formatText('[' + PSE.getBundleItem('Hold') + ']', longestTrackString + 2)
+
+        loco.update({'Set_To': setTrack})
         i += 1
 
     cars = switchList['locations'][0]['tracks'][0]['cars']
     for car in cars:
-        setTrack = switchList['locations'][0]['tracks'][0]['trackName']
-        setTrack = PSE.formatText('[' + setTrack + ']', longestTrackString + 2)
-        car.update({'Set_To': setTrack})
-
         userInput = unicode(userInputList[i], PSE.ENCODING)
+
         if userInput in allTracksAtLoc:
             setTrack = PSE.formatText('[' + userInput + ']', longestTrackString + 2)
-            car.update({'Set_To': setTrack})
+        else:
+            setTrack = PSE.formatText('[' + PSE.getBundleItem('Hold') + ']', longestTrackString + 2)
 
+        car.update({'Set_To': setTrack})
         i += 1
 
     return switchList
@@ -214,7 +212,7 @@ def getDetailsForLoco(locoObject):
     try:
         locoDetailDict['Owner'] = locoObject.getOwner()
     except:
-        print('Exception at: Patterns.ModelEntities.getDetailsForLoco')
+        # print('Exception at: Patterns.ModelEntities.getDetailsForLoco')
         locoDetailDict['Owner'] = locoObject.getOwnerName()
     locoDetailDict['Comment'] = locoObject.getComment()
     locoDetailDict['Location'] = locoObject.getLocationName()
@@ -224,7 +222,7 @@ def getDetailsForLoco(locoObject):
     try:
         locoDetailDict['Consist'] = locoObject.getConsist().getName()
     except:
-        print('Exception at: Patterns.ModelEntities.getDetailsForLoco')
+        # print('Exception at: Patterns.ModelEntities.getDetailsForLoco')
         locoDetailDict['Consist'] = PSE.getBundleItem('Single')
     locoDetailDict['Set_To'] = u'[  ] '
     locoDetailDict[u'PUSO'] = u' '

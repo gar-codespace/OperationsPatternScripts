@@ -4,6 +4,8 @@ Todo:
   Duplication of PSE chunkPath.
   Retest PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
   Patterns switch list should say [Hold] for hold cars.
+  Work out o2o stuff in Patterns.SetCarsForm_Controller.
+  o2o.ModelWorkEvents needs to be refactored.
 
 Comments:
   Schedule does not prevent setting a car to a track.

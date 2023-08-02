@@ -170,24 +170,25 @@ def modifyTrackPatternReport(trackPattern):
 
     return trackPattern
 
-def getStandins(car, standins):
+def getStandins(rs, standins):
     """
     Replaces null destination and fd with the standin from the configFile
     Called by:
     modifyTrackPatternReport
     """
 
-    destStandin = car['Destination']
-    if not car['Destination']:
+    destStandin = rs['Destination']
+    if not rs['Destination']:
         destStandin = standins['DS']
 
     try: # No FD for locos
-        fdStandin = car['Final Dest']
-        if not car['Final Dest']:
+        fdStandin = rs['Final Dest']
+        if not rs['Final Dest']:
             fdStandin = standins['FD']
     except:
-        print('Exception at: Patterns.View.getStandins')
-        fdStandin = ''
+        # print('Exception at: Patterns.View.getStandins')
+        # fdStandin = ''
+        fdStandin = standins['FD']
 
     return destStandin, fdStandin
     
