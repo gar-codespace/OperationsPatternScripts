@@ -113,12 +113,12 @@ class StartUp:
             _psLog.warning('Error, re-select the location')
             return
 
-        trackPatternBody = Model.makeTrackPatternBody(self.widgets[3])
-        trackPatternReport = Model.makeTrackPatternReport(trackPatternBody)
-        Model.writePatternReport(trackPatternReport)
+        trackPattern = Model.makeTrackPattern(self.widgets[3])
+        Model.writePatternReport(trackPattern)
 
-        View.patternReport()
-        View.trackPatternAsCsv()
+
+        View.displayPatternReport()
+        # View.trackPatternAsCsv()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

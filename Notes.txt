@@ -2,9 +2,7 @@ Todo:
   How to publish DeepL?
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
   Duplication of PSE chunkPath.
-  Retest PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
   o2o.ModelWorkEvents needs to be refactored.
-  o2o.ModelWorkEvents parsePtRs and parseRS have duplication.
 
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -94,7 +92,8 @@ Tested Items:
     Toggle AS Apply schedule in config file works OK.
     getOwner() or getOwnerName() depending on version OK.
     Reports use jPlus data OK.
-    On generate switch list, firePropertyChange is executed to generate o2o list for TPOK.
+    On generate switch list, firePropertyChange is executed to generate o2o list for TP OK.
+    check on owner and ownerName in config file report width
 
   o2o
     Import-

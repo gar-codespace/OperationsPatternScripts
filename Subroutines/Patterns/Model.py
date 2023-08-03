@@ -121,36 +121,71 @@ def validSelection(trackCheckBoxes):
 
     return True
 
-def makeTrackPatternBody(trackCheckBoxes):
-    """Makes the body of a track pattern report."""
 
-    patternLocation = PSE.readConfigFile('Patterns')['PL']
+def makeTrackPattern(trackCheckBoxes):
+    """
+    """
+    configFile =  PSE.readConfigFile()
+    patternReport = {}
 
-    detailsForTrack = []
-    for widget in sorted(trackCheckBoxes):
-        if widget.selected:
-            detailsForTrack.append(ModelEntities.getGenericTrackDetails(patternLocation, widget.text))
+# Header
+    patternReport['railroadName'] = PSE.getRailroadName()
+    patternReport['railroadDescription'] = configFile['Patterns']['RD']
+    patternReport['trainName'] = configFile['Patterns']['TN']
+    patternReport['trainDescription'] = configFile['Patterns']['TD']
+    patternReport['trainComment'] = configFile['Patterns']['TC']
+    patternReport['division'] = configFile['Patterns']['PD']
+    patternReport['date'] = unicode(PSE.validTime(), PSE.ENCODING)
+    patternReport['location'] = configFile['Patterns']['PL']
+# Get selected tracks
+    selectedTracks = []
+    for checkBox in sorted(trackCheckBoxes):
+        if checkBox.selected:
+            selectedTracks.append(checkBox.text)
+# Get track data, tracks is a list of dictionaries.
+    tracks = []
+    for trackName in sorted(selectedTracks):
+        trackDetails = ModelEntities.getTrackDetails(configFile['Patterns']['PL'], trackName)
+        tracks.append(trackDetails)
 
-    trackPatternBody = {}
-    trackPatternBody['locationName'] = patternLocation
-    trackPatternBody['tracks'] = detailsForTrack
 
-    return trackPatternBody
+    patternReport['tracks'] = tracks
 
-def makeTrackPatternReport(trackPattern):
-    """Combine header and body into a complete report."""
 
-    trackPatternReport = initializeReportHeader()
-    # parseName = trackPatternReport['railroadName'].replace(';', '\n')
-    # trackPatternReport.update({'railroadName':parseName})
+    return patternReport
 
-    division = PSE.getDivisionForLocation(trackPatternReport['locations'][0]['locationName'])
-    trackPatternReport.update({'division':division})
 
-# put in as a list to maintain compatability with JSON File Format/JMRI manifest export.
-    trackPatternReport['locations'] = [trackPattern]
 
-    return trackPatternReport
+# def makeTrackPatternBody(trackCheckBoxes):
+#     """Makes the body of a track pattern report."""
+
+#     patternLocation = PSE.readConfigFile('Patterns')['PL']
+
+#     detailsForTrack = []
+#     for widget in sorted(trackCheckBoxes):
+#         if widget.selected:
+#             detailsForTrack.append(ModelEntities.getGenericTrackDetails(patternLocation, widget.text))
+
+#     trackPatternBody = {}
+#     trackPatternBody['locationName'] = patternLocation
+#     trackPatternBody['tracks'] = detailsForTrack
+
+#     return trackPatternBody
+
+# def makeTrackPatternReport(trackPattern):
+#     """Combine header and body into a complete report."""
+
+#     trackPatternReport = initializeReportHeader()
+#     # parseName = trackPatternReport['railroadName'].replace(';', '\n')
+#     # trackPatternReport.update({'railroadName':parseName})
+
+#     division = PSE.getDivisionForLocation(trackPatternReport['locations'][0]['locationName'])
+#     trackPatternReport.update({'division':division})
+
+# # put in as a list to maintain compatability with JSON File Format/JMRI manifest export.
+#     trackPatternReport['locations'] = [trackPattern]
+
+#     return trackPatternReport
 
 def writePatternReport(trackPattern):
     """

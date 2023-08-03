@@ -613,7 +613,7 @@ class Attributator:
         _psLog.debug('addCarLoads')
 
         empty = PSE.getBundleItem('Empty')
-        load = PSE.getBundleItem('Load')
+        load = PSE.getBundleItem('load')
 
         tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarLoads
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
@@ -622,9 +622,9 @@ class Attributator:
         for aar in self.tpRailroadData['CarRoster_types']:
             TCM.addType(aar)
             TCM.addName(aar, 'Empty')
-            TCM.addName(aar, 'Load')
+            TCM.addName(aar, 'load')
             TCM.setLoadType(aar, 'Empty', 'empty')
-            TCM.setLoadType(aar, 'Load', 'load')
+            TCM.setLoadType(aar, 'load', 'load')
 
             for loadName in carLoads[aar]:
                 TCM.addName(aar, loadName)

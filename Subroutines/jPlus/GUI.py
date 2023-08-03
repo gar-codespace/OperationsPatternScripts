@@ -37,7 +37,7 @@ class subroutineGui:
 
         a3 = PSE.JAVX_SWING.JLabel(PSE.getBundleItem('Operational Territory'), PSE.JAVX_SWING.JLabel.RIGHT)
         
-        a5 = PSE.JAVX_SWING.JLabel(PSE.getBundleItem('Location'), PSE.JAVX_SWING.JLabel.RIGHT)
+        a5 = PSE.JAVX_SWING.JLabel(PSE.getBundleItem('location'), PSE.JAVX_SWING.JLabel.RIGHT)
 
         a7 = PSE.JAVX_SWING.JLabel(PSE.getBundleItem('Year Modeled'), PSE.JAVX_SWING.JLabel.RIGHT)
 

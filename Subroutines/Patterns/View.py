@@ -47,37 +47,54 @@ class ManageGui:
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
     
 
-def patternReport():
+def displayPatternReport():
     """
-    Mini controller when the Track Pattern Report button is pressed.
-    Reformats and displays the Track Pattern Report.
+    Mini controller.
+    Formats and displays the Track Pattern Report.
     Called by:
     Controller.StartUp.patternReportButton
     """
 
     _psLog.debug('trackPatternButton')
 
-# Get the report
-    reportName = PSE.getBundleItem('ops-pattern-report')    
-    fileName = reportName + '.json'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
-    trackPattern = PSE.genericReadReport(targetPath)
-    trackPattern = PSE.loadJson(trackPattern)
-# Modify the report for display
-    PSE.makeReportItemWidthMatrix()
-    trackPattern = modifyTrackPatternReport(trackPattern)
-    reportHeader = makeTextReportHeader(trackPattern)
-    reportLocations = PSE.getBundleItem('Pattern Report for Tracks') + '\n\n'
+    reportName = PSE.getBundleItem('ops-pattern-report')
 
-    reportLocations += makeTextReportLocations(trackPattern, trackTotals=True)
-# Save the modified report
-    fileName = reportName + '.txt'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', fileName)
-    PSE.genericWriteReport(targetPath, reportHeader + reportLocations)
-# Display the modified report
+    trackPattern = getTrackPatternJson(reportName)
+
+    trackPatternForPrint = makeTrackPatternForPrint(trackPattern)
+
+    targetPath = writeReportForPrint(reportName, trackPatternForPrint)
+
     PSE.genericDisplayReport(targetPath)
 
     return
+
+def getTrackPatternJson(reportName):
+    
+    fileName = reportName + '.json'
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+    trackPattern = PSE.genericReadReport(targetPath)
+
+    return PSE.loadJson(trackPattern)
+
+def makeTrackPatternForPrint(trackPattern):
+
+    PSE.makeReportItemWidthMatrix()
+
+    trackPattern = insertStandins(trackPattern)
+    reportHeader = makeTextReportHeader(trackPattern)
+    reportLocations = PSE.getBundleItem('Pattern Report for Tracks') + '\n\n'
+    reportLocations += makeTextReportTracks(trackPattern['tracks'], trackTotals=True)
+
+    return reportHeader + reportLocations
+
+def writeReportForPrint(reportName, report):
+
+    fileName = reportName + '.txt'
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', fileName)
+    PSE.genericWriteReport(targetPath, report)
+
+    return targetPath
 
 def trackPatternAsCsv():
     """
@@ -120,7 +137,7 @@ def setCarsToTrack(trackCheckBoxes):
         trackPatternBody = Model.makeTrackPatternBody([trackCheckBox])
         setCarsForm = Model.makeTrackPatternReport(trackPatternBody)
     # Apply common formatting to report
-        setCarsForm = modifyTrackPatternReport(setCarsForm)
+        setCarsForm = insertStandins(setCarsForm)
 
         newFrame = SetCarsForm_Controller.CreateSetCarsForm(setCarsForm)
         newWindow = newFrame.makeFrame()
@@ -150,23 +167,25 @@ def setCarsToTrack(trackCheckBoxes):
 
     return
 
-def modifyTrackPatternReport(trackPattern):
-    """Modifies the track pattern report for the Set Cars window."""
+def insertStandins(trackPattern):
+    """
+    Substitutes in standins from the config file.
+    """
 
     standins = PSE.readConfigFile('Patterns')['RM']
 
-    tracks = trackPattern['locations'][0]['tracks']
+    tracks = trackPattern['tracks']
     for track in tracks:
         for loco in track['locos']:
             destStandin, fdStandin = getStandins(loco, standins)
-            loco.update({'Destination': destStandin})
+            loco.update({'destination': destStandin})
 
         for car in track['cars']:
             destStandin, fdStandin = getStandins(car, standins)
-            car.update({'Destination': destStandin})
-            car.update({'Final Dest': fdStandin})
+            car.update({'destination': destStandin})
+            car.update({'finalDest': fdStandin})
             shortLoadType = PSE.getShortLoadType(car)
-            car.update({'Load Type': shortLoadType})
+            car.update({'loadType': shortLoadType})
 
     return trackPattern
 
@@ -174,25 +193,23 @@ def getStandins(rs, standins):
     """
     Replaces null destination and fd with the standin from the configFile
     Called by:
-    modifyTrackPatternReport
+    insertStandins
     """
 
-    destStandin = rs['Destination']
-    if not rs['Destination']:
+    destStandin = rs['destination']
+    if not rs['destination']:
         destStandin = standins['DS']
 
     try: # No FD for locos
-        fdStandin = rs['Final Dest']
-        if not rs['Final Dest']:
+        fdStandin = rs['finalDest']
+        if not rs['finalDest']:
             fdStandin = standins['FD']
     except:
-        # print('Exception at: Patterns.View.getStandins')
-        # fdStandin = ''
         fdStandin = standins['FD']
 
     return destStandin, fdStandin
     
-def makeTextReportHeader(textWorkEventList):
+def makeTextReportHeader(patternReport):
     """
     Makes the header for generic text reports
     Called by:
@@ -201,18 +218,18 @@ def makeTextReportHeader(textWorkEventList):
     """
 
     patternLocation = PSE.readConfigFile('Patterns')['PL']
-    divisionName = textWorkEventList['division']
+    divisionName = patternReport['division']
     workLocation = ''
     if divisionName:
         workLocation = divisionName + ' - ' + patternLocation
     else:
         workLocation = patternLocation
 
-    textReportHeader    = textWorkEventList['railroadName'] + '\n\n' + PSE.getBundleItem('Work Location:') + ' ' + workLocation + '\n' + textWorkEventList['date'] + '\n\n'
+    textReportHeader    = patternReport['railroadName'] + '\n\n' + PSE.getBundleItem('Work Location:') + ' ' + workLocation + '\n' + patternReport['date'] + '\n\n'
     
     return textReportHeader
 
-def makeTextReportLocations(textWorkEventList, trackTotals):
+def makeTextReportTracks(trackList, trackTotals):
     """
     Makes the body for generic text reports
     Called by:
@@ -222,7 +239,7 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
 
     reportSwitchList = ''
     reportTally = [] # running total for all tracks
-    for track in textWorkEventList['locations'][0]['tracks']:
+    for track in trackList:
         lengthOfLocos = 0
         lengthOfCars = 0
         trackTally = []
@@ -231,14 +248,14 @@ def makeTextReportLocations(textWorkEventList, trackTotals):
         reportSwitchList += PSE.getBundleItem('Track:') + ' ' + trackName + '\n'
 
         for loco in track['locos']:
-            lengthOfLocos += int(loco['Length']) + 4
-            reportSwitchList += loco['Set_To'] + loopThroughRs('loco', loco) + '\n'
+            lengthOfLocos += int(loco['length']) + 4
+            reportSwitchList += loco['setTo'] + loopThroughRs('loco', loco) + '\n'
 
         for car in track['cars']:
-            lengthOfCars += int(car['Length']) + 4
-            reportSwitchList += car['Set_To'] + loopThroughRs('car', car) + '\n'
-            trackTally.append(car['Final Dest'])
-            reportTally.append(car['Final Dest'])
+            lengthOfCars += int(car['length']) + 4
+            reportSwitchList += car['setTo'] + loopThroughRs('car', car) + '\n'
+            trackTally.append(car['finalDest'])
+            reportTally.append(car['finalDest'])
 
         if trackTotals:
             totalLength = lengthOfLocos + lengthOfCars
@@ -264,7 +281,7 @@ def loopThroughRs(type, rsAttribs):
     """
     Creates a line containing the attrs in get * MessageFormat
     Called by:
-    makeTextReportLocations
+    makeTextReportTracks
     """
 
     reportWidth = PSE.REPORT_ITEM_WIDTH_MATRIX
@@ -279,7 +296,7 @@ def loopThroughRs(type, rsAttribs):
     for lookup in messageFormat:
         item = rosetta[lookup]
 
-        if 'Tab' in item:
+        if 'tab' in item:
             continue
 
         itemWidth = reportWidth[item]
@@ -312,22 +329,22 @@ def makeTrackPatternCsv(trackPattern):
             print('Exception at: Patterns.View.makeTrackPatternCsv')
             pass
         for loco in track['locos']:
-            trackPatternCsv +=  loco['Set_To'] + ',' \
-                            + loco['Road'] + ',' \
-                            + loco['Number'] + ',' \
-                            + loco['Type'] + ',' \
-                            + loco['Model'] + ',' \
-                            + loco['Length'] + ',' \
-                            + loco['Weight'] + ',' \
-                            + loco['Consist'] + ',' \
-                            + loco['Owner'] + ',' \
-                            + loco['Track'] + ',' \
-                            + loco['Location'] + ',' \
-                            + loco['Destination'] + ',' \
-                            + loco['Comment'] + ',' \
+            trackPatternCsv +=  loco['setTo'] + ',' \
+                            + loco['road'] + ',' \
+                            + loco['number'] + ',' \
+                            + loco['carType'] + ',' \
+                            + loco['model'] + ',' \
+                            + loco['length'] + ',' \
+                            + loco['weight'] + ',' \
+                            + loco['consist'] + ',' \
+                            + loco['owner'] + ',' \
+                            + loco['track'] + ',' \
+                            + loco['location'] + ',' \
+                            + loco['destination'] + ',' \
+                            + loco['comment'] + ',' \
                             + '\n'
     trackPatternCsv += 'SC,Set Cars\n'
-    trackPatternCsv += u'Set_To,Road,Number,Type,Length,Weight,Load,Load_Type,Hazardous,Color,Kernel,Kernel_Size,Owner,Track,Location,Destination,Dest&Track,Final_Dest,FD&Track,Comment,Drop_Comment,Pickup_Comment,RWE\n'
+    trackPatternCsv += u'Set_To,Road,Number,Type,Length,Weight,Load,Load_Type,Hazardous,Color,Kernel,Kernel_Size,Owner,Track,Location,Destination,dest&Track,Final_Dest,fd&Track,Comment,Drop_Comment,Pickup_Comment,RWE\n'
     for track in trackPattern['locations'][0]['tracks']: # There is only one location
         try:
             trackPatternCsv += u'TN,Track name,' + unicode(track['trackName'], PSE.ENCODING) + '\n'
@@ -335,29 +352,29 @@ def makeTrackPatternCsv(trackPattern):
             print('Exception at: Patterns.View.makeTrackPatternCsv')
             pass
         for car in track['cars']:
-            trackPatternCsv +=  car['Set_To'] + ',' \
-                            + car['Road'] + ',' \
-                            + car['Number'] + ',' \
-                            + car['Type'] + ',' \
-                            + car['Length'] + ',' \
-                            + car['Weight'] + ',' \
-                            + car['Load'] + ',' \
-                            + car['Load Type'] + ',' \
-                            + str(car['Hazardous']) + ',' \
-                            + car['Color'] + ',' \
-                            + car['Kernel'] + ',' \
-                            + car['Kernel Size'] + ',' \
-                            + car['Owner'] + ',' \
-                            + car['Track'] + ',' \
-                            + car['Location'] + ',' \
-                            + car['Destination'] + ',' \
-                            + car['Dest&Track'] + ',' \
-                            + car['Final Dest'] + ',' \
-                            + car['FD&Track'] + ',' \
-                            + car['Comment'] + ',' \
-                            + car['SetOut Msg'] + ',' \
-                            + car['PickUp Msg'] + ',' \
-                            + car['RWE'] \
+            trackPatternCsv +=  car['setTo'] + ',' \
+                            + car['road'] + ',' \
+                            + car['number'] + ',' \
+                            + car['carType'] + ',' \
+                            + car['length'] + ',' \
+                            + car['weight'] + ',' \
+                            + car['load'] + ',' \
+                            + car['loadType'] + ',' \
+                            + str(car['hazardous']) + ',' \
+                            + car['color'] + ',' \
+                            + car['kernel'] + ',' \
+                            + car['kernelSize'] + ',' \
+                            + car['owner'] + ',' \
+                            + car['track'] + ',' \
+                            + car['location'] + ',' \
+                            + car['destination'] + ',' \
+                            + car['dest&Track'] + ',' \
+                            + car['finalDest'] + ',' \
+                            + car['fd&Track'] + ',' \
+                            + car['comment'] + ',' \
+                            + car['setOutMsg'] + ',' \
+                            + car['pickupMsg'] + ',' \
+                            + car['rwe'] \
                             + '\n'
 
     return trackPatternCsv

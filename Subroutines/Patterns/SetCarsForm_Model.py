@@ -82,9 +82,9 @@ def moveRollingStock(switchList):
     locos = switchList['locations'][0]['tracks'][0]['locos']
     for loco in locos:
         i += 1
-        rollingStock = PSE.EM.getByRoadAndNumber(loco['Road'], loco['Number'])
+        rollingStock = PSE.EM.getByRoadAndNumber(loco['road'], loco['number'])
         if not rollingStock:
-            _psLog.warning('Not found; ' + car['Road'] + car['Number'])
+            _psLog.warning('Not found; ' + car['road'] + car['number'])
             continue
 
         setTo = loco['Set_To'][1:-1].split(']')[0]
@@ -95,7 +95,7 @@ def moveRollingStock(switchList):
         toTrack = toLocation.getTrackByName(setTo, None)
 
         setResult = rollingStock.setLocation(toLocation, toTrack)
-        if ignoreTrackLength and toTrack.isTypeNameAccepted(loco['Type']):
+        if ignoreTrackLength and toTrack.isTypeNameAccepted(loco['carType']):
             setResult = rollingStock.setLocation(toLocation, toTrack, True)
 
         if setResult == 'okay':
@@ -104,9 +104,9 @@ def moveRollingStock(switchList):
     cars = switchList['locations'][0]['tracks'][0]['cars']
     for car in cars:
         i += 1
-        rollingStock = PSE.CM.getByRoadAndNumber(car['Road'], car['Number'])
+        rollingStock = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
         if not rollingStock:
-            _psLog.warning('Not found; ' + car['Road'] + car['Number'])
+            _psLog.warning('Not found; ' + car['road'] + car['number'])
             continue
 
         setTo = car['Set_To'][1:-1].split(']')[0]
@@ -117,7 +117,7 @@ def moveRollingStock(switchList):
         toTrack = toLocation.getTrackByName(setTo, None)
 
         setResult = rollingStock.setLocation(toLocation, toTrack)
-        if ignoreTrackLength and toTrack.isTypeNameAccepted(car['Type']):
+        if ignoreTrackLength and toTrack.isTypeNameAccepted(car['carType']):
             setResult = rollingStock.setLocation(toLocation, toTrack, True)
 
         if setResult == 'okay':

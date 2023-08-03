@@ -57,7 +57,7 @@ class PTComboBox(PSE.JAVA_AWT.event.ActionListener):
 
     def actionPerformed(self, EVENT):
 
-        xModule = __import__(__package__, globals(), locals(), ['Model'], 0)
+        xModule = __import__(__package__, globals(), locals(), ['model'], 0)
         methodName = EVENT.getSource().getName()
         itemSelected = EVENT.getSource().getSelectedItem()
 

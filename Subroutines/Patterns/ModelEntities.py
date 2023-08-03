@@ -115,9 +115,10 @@ def testSelectedLocation(selectedItem=None):
     else:
         return allLocations[0]
 
-def getGenericTrackDetails(locationName, trackName):
+def getTrackDetails(locationName, trackName):
     """
-    The loco and car lists are sorted at this level, used to make the Track Pattern Report.json file
+    The loco and car lists are sorted at this level.
+    Used to make the Track Pattern Report.json file
     Called by:
     makeTrackPattern
     """
@@ -201,35 +202,37 @@ def getDetailsForLoco(locoObject):
 
     locoDetailDict = {}
 
-    locoDetailDict['Road'] = locoObject.getRoadName()
-    locoDetailDict['Number'] = locoObject.getNumber()
-    locoDetailDict['Type'] = locoObject.getTypeName()
-    locoDetailDict['Model'] = locoObject.getModel()
-    locoDetailDict['Length'] = locoObject.getLength()
-    locoDetailDict['Weight'] = locoObject.getWeightTons()
-    locoDetailDict['Color'] = locoObject.getColor()
+    locoDetailDict['road'] = locoObject.getRoadName()
+    locoDetailDict['number'] = locoObject.getNumber()
+    locoDetailDict['carType'] = locoObject.getTypeName()
+    locoDetailDict['model'] = locoObject.getModel()
+    locoDetailDict['length'] = locoObject.getLength()
+    locoDetailDict['weight'] = locoObject.getWeightTons()
+    locoDetailDict['color'] = locoObject.getColor()
     # Depending on which version of JMRI Ops Pro
     try:
-        locoDetailDict['Owner'] = locoObject.getOwner()
+        locoDetailDict['owner'] = locoObject.getOwner()
     except:
         # print('Exception at: Patterns.ModelEntities.getDetailsForLoco')
-        locoDetailDict['Owner'] = locoObject.getOwnerName()
-    locoDetailDict['Comment'] = locoObject.getComment()
-    locoDetailDict['Location'] = locoObject.getLocationName()
-    locoDetailDict['Track'] = locoObject.getTrackName()
-    locoDetailDict['Destination'] = locoObject.getDestinationName()
+        locoDetailDict['owner'] = locoObject.getOwnerName()
+    locoDetailDict['comment'] = locoObject.getComment()
+    locoDetailDict['division'] = locoObject.getDivisionName()
+    locoDetailDict['location'] = locoObject.getLocationName()
+    locoDetailDict['track'] = locoObject.getTrackName()
+    locoDetailDict['destination'] = locoObject.getDestinationName()
+    locoDetailDict['dccAddress'] = locoObject.getDccAddress()
 # Modifications used by this plugin
     try:
-        locoDetailDict['Consist'] = locoObject.getConsist().getName()
+        locoDetailDict['consist'] = locoObject.getConsist().getName()
     except:
         # print('Exception at: Patterns.ModelEntities.getDetailsForLoco')
-        locoDetailDict['Consist'] = PSE.getBundleItem('Single')
-    locoDetailDict['Set_To'] = u'[  ] '
-    locoDetailDict[u'PUSO'] = u' '
+        locoDetailDict['consist'] = PSE.getBundleItem('Single')
+    locoDetailDict['setTo'] = u'[  ] '
+    locoDetailDict[u'puso'] = u' '
     locoDetailDict[u' '] = u' ' # Catches KeyError - empty box added to getDropEngineMessageFormat
-    locoDetailDict['On_Train'] = False
+    locoDetailDict['onTrain'] = False
     if locoObject in getRsOnTrains(): # Flag to mark if RS is on a built train
-        locoDetailDict['On_Train'] = True
+        locoDetailDict['onTrain'] = True
 
     return locoDetailDict
 
@@ -307,39 +310,40 @@ def getDetailsForCar(carObject, kernelTally):
     except:
         kernelSize = 0
 
-    carDetailDict['Road'] = carObject.getRoadName()
-    carDetailDict['Number'] = carObject.getNumber()
-    carDetailDict['Type'] = carObject.getTypeName()
-    carDetailDict['Length'] = carObject.getLength()
-    carDetailDict['Weight'] = carObject.getWeightTons()
-    carDetailDict['Load Type'] = carObject.getLoadType()
-    carDetailDict['Load'] = carObject.getLoadName()
-    carDetailDict['Hazardous'] = carObject.isHazardous()
-    carDetailDict['Color'] = carObject.getColor()
-    carDetailDict['Kernel'] = carObject.getKernelName()
-    carDetailDict['Kernel Size'] = str(kernelSize)
+    carDetailDict['road'] = carObject.getRoadName()
+    carDetailDict['number'] = carObject.getNumber()
+    carDetailDict['carType'] = carObject.getTypeName()
+    carDetailDict['length'] = carObject.getLength()
+    carDetailDict['weight'] = carObject.getWeightTons()
+    carDetailDict['loadType'] = carObject.getLoadType()
+    carDetailDict['load'] = carObject.getLoadName()
+    carDetailDict['hazardous'] = carObject.isHazardous()
+    carDetailDict['color'] = carObject.getColor()
+    carDetailDict['kernel'] = carObject.getKernelName()
+    carDetailDict['kernelSize'] = str(kernelSize)
     # Depending on which version of JMRI Ops Pro
     try:
-        carDetailDict['Owner'] = carObject.getOwner()
+        carDetailDict['owner'] = carObject.getOwner()
     except:
-        carDetailDict['Owner'] = carObject.getOwnerName()
-    carDetailDict['Track'] = carObject.getTrackName()
-    carDetailDict['Location'] = carObject.getLocationName()
-    carDetailDict['Comment'] = carObject.getComment()
-    carDetailDict['Destination'] = carObject.getDestinationName()
-    carDetailDict['Dest&Track'] = carObject.getDestinationTrackName()
-    carDetailDict['Final Dest'] = carObject.getFinalDestinationName()
-    carDetailDict['FD&Track'] = carObject.getFinalDestinationTrackName()
-    carDetailDict['SetOut Msg'] = trackId.getCommentSetout()
-    carDetailDict['PickUp Msg'] = trackId.getCommentPickup()
-    carDetailDict['RWE'] = carObject.getReturnWhenEmptyDestinationName()
-    carDetailDict['RWL'] = carObject.getReturnWhenLoadedDestinationName()
+        carDetailDict['owner'] = carObject.getOwnerName()
+    carDetailDict['division'] = carObject.getDivisionName()
+    carDetailDict['location'] = carObject.getLocationName()
+    carDetailDict['track'] = carObject.getTrackName()
+    carDetailDict['comment'] = carObject.getComment()
+    carDetailDict['destination'] = carObject.getDestinationName()
+    carDetailDict['dest&Track'] = carObject.getDestinationTrackName()
+    carDetailDict['finalDest'] = carObject.getFinalDestinationName()
+    carDetailDict['fd&Track'] = carObject.getFinalDestinationTrackName()
+    carDetailDict['setOutMsg'] = trackId.getCommentSetout()
+    carDetailDict['pickupMsg'] = trackId.getCommentPickup()
+    carDetailDict['rwe'] = carObject.getReturnWhenEmptyDestinationName()
+    carDetailDict['rwl'] = carObject.getReturnWhenLoadedDestinationName()
 # Modifications used by this plugin
-    carDetailDict['Set_To'] = u'[  ] '
-    carDetailDict[u'PUSO'] = u' '
+    carDetailDict['setTo'] = u'[  ] '
+    carDetailDict[u'puso'] = u' '
     carDetailDict[u' '] = u' ' # Catches KeyError - empty box added to getLocalSwitchListMessageFormat
-    carDetailDict['On_Train'] = False
+    carDetailDict['onTrain'] = False
     if carObject in getRsOnTrains(): # Flag to mark if RS is on a built train
-        carDetailDict['On_Train'] = True
+        carDetailDict['onTrain'] = True
 
     return carDetailDict

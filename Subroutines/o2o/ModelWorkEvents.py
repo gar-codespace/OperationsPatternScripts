@@ -38,47 +38,30 @@ def parseRS(rs):
     """
 
     parsedRS = {}
-    try:
-        parsedRS['Road'] = rs['road']
-    except:
-        parsedRS['Road'] = rs['Road']
+    parsedRS['road'] = rs['road']
+    parsedRS['number'] = rs['number']
+    parsedRS['carType'] = rs['carType']
 
     try:
-        parsedRS['Number'] = rs['number']
+        parsedRS['loadType'] = PSE.getShortLoadType(rs)
+        parsedRS['load'] = rs['load']
     except:
-        parsedRS['Number'] = rs['Number']
+        parsedRS['load'] = rs['model']
 
     try:
-        parsedRS['Type'] = rs['carType']
+        parsedRS['location'] = rs['location']['userName']
     except:
-        parsedRS['Type'] = rs['Type']
+        parsedRS['location'] = rs['location']
 
     try:
-        parsedRS['Load Type'] = PSE.getShortLoadType(rs)
-        try:
-            parsedRS['Load'] = rs['load']
-        except:
-            parsedRS['Load'] = rs['Load']
+        parsedRS['track'] = rs['location']['track']['userName']
     except:
-        try:
-            parsedRS['Load'] = rs['model']
-        except:
-            parsedRS['Load'] = rs['Model']
+        parsedRS['track'] = rs['track']
 
     try:
-        parsedRS['Location'] = rs['location']['userName']
+        parsedRS['destination'] = rs['destination']['userName']
     except:
-        parsedRS['Location'] = rs['Location']
-
-    try:
-        parsedRS['Track'] = rs['location']['track']['userName']
-    except:
-        parsedRS['Track'] = rs['Track']
-
-    try:
-        parsedRS['Destination'] = rs['destination']['userName']
-    except:
-        parsedRS['Destination'] = rs['Location']
+        parsedRS['destination'] = rs['location']
 
     try:
         parsedRS['Set_To'] = rs['destination']['track']['userName']
@@ -88,7 +71,7 @@ def parseRS(rs):
 
     parsedSetTo = rs['Set_To'][1:-1].split(']')[0] # IE parse [Freight House] to Freight House
     if  parsedSetTo == PSE.getBundleItem('Hold'):
-        parsedSetTo = rs['Track']
+        parsedSetTo = rs['track']
 
     parsedRS['Set_To'] = parsedSetTo
 
@@ -126,12 +109,12 @@ class opsWorkListConversion:
             for car in track['cars']:
                 # parsed = self.parsePtRs(car)
                 parsed = parseRS(car)
-                parsed['PUSO'] = 'SC'
+                parsed['puso'] = 'SC'
                 self.cars.append(parsed)
             for loco in track['locos']:
                 # parsed = self.parsePtRs(loco)
                 parsed = parseRS(loco)
-                parsed['PUSO'] = 'SL'
+                parsed['puso'] = 'SL'
                 self.locos.append(parsed)
 
         return
@@ -144,22 +127,22 @@ class opsWorkListConversion:
     #     """
 
     #     parsedRS = {}
-    #     parsedRS['Road'] = rs['Road']
-    #     parsedRS['Number'] = rs['Number']
-    #     parsedRS['Type'] = rs['Type']
+    #     parsedRS['road'] = rs['road']
+    #     parsedRS['number'] = rs['number']
+    #     parsedRS['carType'] = rs['carType']
     #     try:
-    #         parsedRS['Load Type'] = PSE.getShortLoadType(rs)
-    #         parsedRS['Load'] = rs['Load']
+    #         parsedRS['loadType'] = PSE.getShortLoadType(rs)
+    #         parsedRS['load'] = rs['load']
     #     except:
     #         # print('Exception at: o2o.ModelWorkEvents.parsePtRs')
-    #         parsedRS['Load'] = rs['Model']
+    #         parsedRS['load'] = rs['model']
 
-    #     parsedRS['Location'] = rs['Location']
-    #     parsedRS['Track'] = rs['Track']
-    #     parsedRS['Destination'] = rs['Location']
+    #     parsedRS['location'] = rs['location']
+    #     parsedRS['track'] = rs['track']
+    #     parsedRS['destination'] = rs['location']
 
     #     if self.parseSetTo(rs['Set_To']) == PSE.getBundleItem('Hold'):
-    #         parsedSetTo = rs['Track']
+    #         parsedSetTo = rs['track']
     #     else:
     #         parsedSetTo = self.parseSetTo(rs['Set_To'])
     #     parsedRS['Set_To'] = parsedSetTo
@@ -262,22 +245,22 @@ class jmriManifestConversion:
             for car in location['cars']['add']:
                 # parsedRS = self.parseRS(car)
                 parsedRS = parseRS(car)
-                parsedRS['PUSO'] = u'PC'
+                parsedRS['puso'] = u'PC'
                 cars.append(parsedRS)
             for car in location['cars']['remove']:
                 parsedRS = self.parseRS(car)
-                parsedRS['PUSO'] = u'SC'
+                parsedRS['puso'] = u'SC'
                 cars.append(parsedRS)
 
             locos = []
             for loco in location['engines']['add']:
                 # parsedRS = self.parseRS(loco)
                 parsedRS = parseRS(loco)
-                parsedRS['PUSO'] = u'PL'
+                parsedRS['puso'] = u'PL'
                 locos.append(parsedRS)
             for loco in location['engines']['remove']:
                 parsedRS = self.parseRS(loco)
-                parsedRS['PUSO'] = u'SL'
+                parsedRS['puso'] = u'SL'
                 locos.append(parsedRS)
 
             self.o2oWorkEvents['locations'].append({'locationName': location['userName'], 'tracks': [{'trackName': 'xyz', 'cars': cars, 'locos': locos}]})
@@ -292,19 +275,19 @@ class jmriManifestConversion:
     #     """
 
     #     parsedRS = {}
-    #     parsedRS['Road'] = rs['road']
-    #     parsedRS['Number'] = rs['number']
-    #     parsedRS['Type'] = rs['carType']
+    #     parsedRS['road'] = rs['road']
+    #     parsedRS['number'] = rs['number']
+    #     parsedRS['carType'] = rs['carType']
     #     try:
-    #         parsedRS['Load Type'] = PSE.getShortLoadType(rs)
-    #         parsedRS['Load'] = rs['load']
+    #         parsedRS['loadType'] = PSE.getShortLoadType(rs)
+    #         parsedRS['load'] = rs['load']
     #     except:
     #         # print('Exception at: o2o.ModelWorkEvents.parseRS')
-    #         parsedRS['Load'] = rs['model']
+    #         parsedRS['load'] = rs['model']
 
-    #     parsedRS['Location'] = rs['location']['userName']
-    #     parsedRS['Track'] = rs['location']['track']['userName']
-    #     parsedRS['Destination'] = rs['destination']['userName']
+    #     parsedRS['location'] = rs['location']['userName']
+    #     parsedRS['track'] = rs['location']['track']['userName']
+    #     parsedRS['destination'] = rs['destination']['userName']
     #     parsedRS['Set_To'] = rs['destination']['track']['userName']
 
     #     return parsedRS
@@ -370,23 +353,23 @@ class o2oWorkEvents:
         format: PUSO, TP ID, Road, Number, Car Type, L/E/O, Load or Model, From, To
         """
 
-        ID = rs['Road'] + ' ' + rs['Number']
+        ID = rs['road'] + ' ' + rs['number']
         load = ''
         try:
-            load = rs['Load']
+            load = rs['load']
         except:
-            load = rs['Model']
+            load = rs['model']
 
         try: # Locos don't use load type
-            lt = rs['Load Type']
+            lt = rs['loadType']
         except:
             lt = u'X'
 
-        pu = rs['Location'] + ';' + rs['Track']
+        pu = rs['location'] + ';' + rs['track']
 
-        so = rs['Destination'] + ';' + rs['Set_To']
+        so = rs['destination'] + ';' + rs['Set_To']
 
-        return rs['PUSO'] + ',' + ID + ',' + rs['Road'] + ',' + rs['Number'] + ',' + rs['Type'] + ',' + lt + ',' + load + ',' + pu + ',' + so
+        return rs['puso'] + ',' + ID + ',' + rs['road'] + ',' + rs['number'] + ',' + rs['carType'] + ',' + lt + ',' + load + ',' + pu + ',' + so
 
     def saveList(self):
 

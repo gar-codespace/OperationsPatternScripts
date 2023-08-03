@@ -41,7 +41,7 @@ TRACK_NAME_CLICKED_ON = ''
 # Dealers choice, both work OK:
 J_BUNDLE = JMRI.jmrit.operations.setup.Setup()
 # SB = JMRI.jmrit.operations.setup.Bundle()
-# SB.handleGetMessage('Road')
+# SB.handleGetMessage('road')
 
 SCRIPT_NAME = 'OperationsPatternScripts.opsEntities.PSE'
 SCRIPT_REV = 20230201
@@ -730,7 +730,7 @@ def getShortLoadType(car):
     """
 
     try:
-        rs = CM.getByRoadAndNumber(car['Road'], car['Number']) # Pattern scripts nomenclature
+        rs = CM.getByRoadAndNumber(car['road'], car['number']) # Pattern scripts nomenclature
     except:
         rs = CM.getByRoadAndNumber(car['road'], car['number']) # JMRI nomenclature
 
@@ -738,7 +738,7 @@ def getShortLoadType(car):
     if rs.getLoadType() == 'empty' or rs.getLoadType() == 'Empty':
         lt = getBundleItem('empty').upper()[0]
 
-    if rs.getLoadType() == 'load' or rs.getLoadType() == 'Load':
+    if rs.getLoadType() == 'load' or rs.getLoadType() == 'load':
         lt = getBundleItem('load').upper()[0]
 
     if rs.isCaboose() or rs.isPassenger():
@@ -1193,7 +1193,7 @@ def getBundleItem(item):
 def translateMessageFormat():
     """
     The messageFormat is in the locale's language, it has to be hashed to the plugin fields.
-    Dealers choice, J_BUNDLE.ROAD or SB.handleGetMessage('Road').
+    Dealers choice, J_BUNDLE.ROAD or SB.handleGetMessage('road').
     Called by:
     PatternTracksSubroutine.ViewEntities.loopThroughRs
     PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
@@ -1201,43 +1201,42 @@ def translateMessageFormat():
 
     rosetta = {}
 #Common
-    # rosetta[SB.handleGetMessage('Road')] = 'Road'
-    # rosetta[SB.handleGetMessage('Number')] = 'Number'
-
-    rosetta[J_BUNDLE.ROAD] = 'Road'
-    rosetta[J_BUNDLE.NUMBER] = 'Number'
-    rosetta[J_BUNDLE.TYPE] = 'Type'
-    rosetta[J_BUNDLE.LENGTH] = 'Length'
-    rosetta[J_BUNDLE.WEIGHT] = 'Weight'
-    rosetta[J_BUNDLE.COLOR] = 'Color'
-    rosetta[J_BUNDLE.OWNER] = 'Owner'
-    rosetta[J_BUNDLE.TRACK] = 'Track'
-    rosetta[J_BUNDLE.LOCATION] = 'Location'
-    rosetta[J_BUNDLE.COMMENT] = 'Comment'
-    rosetta[J_BUNDLE.DESTINATION] = 'Destination'
-    rosetta[J_BUNDLE.DEST_TRACK] = 'Dest&Track'
-    rosetta[J_BUNDLE.TAB] = 'Tab'
-    rosetta[J_BUNDLE.TAB2] = 'Tab2'
-    rosetta[J_BUNDLE.TAB3] = 'Tab3'
+    rosetta[J_BUNDLE.ROAD] = 'road'
+    rosetta[J_BUNDLE.NUMBER] = 'number'
+    rosetta[J_BUNDLE.TYPE] = 'carType'
+    rosetta[J_BUNDLE.LENGTH] = 'length'
+    rosetta[J_BUNDLE.WEIGHT] = 'weight'
+    rosetta[J_BUNDLE.COLOR] = 'color'
+    rosetta[J_BUNDLE.DIVISION] = 'division'
+    rosetta[J_BUNDLE.LOCATION] = 'location'
+    rosetta[J_BUNDLE.TRACK] = 'track'
+    rosetta[J_BUNDLE.DESTINATION] = 'destination'
+    rosetta[J_BUNDLE.DEST_TRACK] = 'dest&Track'
+    rosetta[J_BUNDLE.OWNER] = 'owner'
+    rosetta[J_BUNDLE.COMMENT] = 'comment'
+    rosetta[J_BUNDLE.TAB] = 'tab'
+    rosetta[J_BUNDLE.TAB2] = 'tab2'
+    rosetta[J_BUNDLE.TAB3] = 'tab3'
 # Cars
-    rosetta[J_BUNDLE.LOAD] = 'Load'
-    rosetta[J_BUNDLE.LOAD_TYPE] = 'Load Type'
-    rosetta[J_BUNDLE.HAZARDOUS] = 'Hazardous'
-    rosetta[J_BUNDLE.KERNEL] = 'Kernel'
-    rosetta[J_BUNDLE.KERNEL_SIZE] = 'Kernel Size'
-    rosetta[J_BUNDLE.FINAL_DEST] = 'Final Dest'
-    rosetta[J_BUNDLE.FINAL_DEST_TRACK] = 'FD&Track'
-    rosetta[J_BUNDLE.DROP_COMMENT] = 'SetOut Msg'
-    rosetta[J_BUNDLE.PICKUP_COMMENT] = 'PickUp Msg'
-    rosetta[J_BUNDLE.RWE] = 'RWE'
-    # rosetta[J_BUNDLE.RWL] = 'RWL'
+    rosetta[J_BUNDLE.LOAD] = 'load'
+    rosetta[J_BUNDLE.LOAD_TYPE] = 'loadType'
+    rosetta[J_BUNDLE.HAZARDOUS] = 'hazardous'
+    rosetta[J_BUNDLE.KERNEL] = 'kernel'
+    rosetta[J_BUNDLE.KERNEL_SIZE] = 'kernelSize'
+    rosetta[J_BUNDLE.FINAL_DEST] = 'finalDest'
+    rosetta[J_BUNDLE.FINAL_DEST_TRACK] = 'fd&Track'
+    rosetta[J_BUNDLE.DROP_COMMENT] = 'setOutMsg'
+    rosetta[J_BUNDLE.PICKUP_COMMENT] = 'pickupMsg'
+    rosetta[J_BUNDLE.RWE] = 'rwe'
+    # rosetta[J_BUNDLE.RWL] = 'rwl'
 # Locos
-    rosetta[J_BUNDLE.MODEL] = 'Model'
-    rosetta[J_BUNDLE.CONSIST] = 'Consist'
+    rosetta[J_BUNDLE.MODEL] = 'model'
+    rosetta[J_BUNDLE.CONSIST] = 'consist'
+    rosetta[J_BUNDLE.DCC_ADDRESS] = 'dccAddress'
 # Unique to this plugin
-    rosetta['On_Train'] = 'On Train'
-    rosetta['Set_To'] = 'Set to'
-    rosetta['PUSO'] = 'PUSO'
+    rosetta['On_Train'] = 'onTrain'
+    rosetta['Set_To'] = 'setTo'
+    rosetta['puso'] = 'puso'
     rosetta[' '] = ' '
 
     return rosetta
