@@ -44,7 +44,5 @@ def resetCalls():
 def specificCalls():
     """Methods called to run specific tasks."""
 
-    ModelWorkEvents.o2oWorkListMaker()
-
     return
     

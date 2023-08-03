@@ -110,25 +110,10 @@ class CreateSetCarsForm:
         PSE.genericWriteReport(targetPath, switchList)
     # Display formatted data
         PSE.genericDisplayReport(targetPath)
-
-
-
-
-
-
-        
-
     # o2o stuff
         Model.appendWorkList(mergedForm)
-        PSE.remoteCalls('specificCalls')
-
-
-
-
-
-
-
-
+        PSE.TM.firePropertyChange('PatternsSwitchList', False, True)
+    # CSV output
         if PSE.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
             SetCarsForm_Model.switchListAsCsv(self.buttonDict['textBoxEntry'])
 

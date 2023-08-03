@@ -4,6 +4,7 @@ JAVAX action performed methods are in Controller.
 """
 
 from opsEntities import PSE
+from Subroutines.o2o import ModelWorkEvents
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
@@ -67,11 +68,16 @@ class o2oTrainsTable(PSE.JAVA_BEANS.PropertyChangeListener):
     def propertyChange(self, TRAIN_LIST):
 
         _psLog.debug(TRAIN_LIST)
+        print(SCRIPT_NAME + '.o2oTrainsTable ' + str(SCRIPT_REV))
 
         if TRAIN_LIST.propertyName == 'TrainsListLength':
-
             removeBuiltTrainListener()
             addBuiltTrainListener()
+            _psLog.info('Train roster changed')
+
+        if TRAIN_LIST.propertyName == 'PatternsSwitchList' and TRAIN_LIST.newValue == True:
+            ModelWorkEvents.o2oWorkListMaker()
+            _psLog.info('Patterns switch list generated')
 
         return
 
@@ -118,3 +124,25 @@ class o2oBuiltTrain(PSE.JAVA_BEANS.PropertyChangeListener):
             o2oWorkEvents.start()
 
         return
+
+
+class o2oSwitchList(PSE.JAVA_BEANS.PropertyChangeListener):
+    """
+    Starts ModelWorkEvents.o2oWorkListMaker() on trainBuilt.
+    """
+
+    def propertyChange(self, OPS_SWITCH_LIST):
+
+        _psLog.debug(OPS_SWITCH_LIST)
+
+        if OPS_SWITCH_LIST.propertyName == 'xyzzy' and OPS_SWITCH_LIST.newValue == True:
+            print('Yipee')
+            # ModelWorkEvents.o2oWorkListMaker()
+            # xModule = __import__(__package__, globals(), locals(), ['BuiltTrainExport'], 0)
+            # o2oWorkEvents = xModule.BuiltTrainExport.o2oWorkEventsBuilder()
+            # o2oWorkEvents.passInTrain(TRAIN_BUILT.getSource())
+            # o2oWorkEvents.start()
+
+        return
+
+    

@@ -3,9 +3,8 @@ Todo:
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
   Duplication of PSE chunkPath.
   Retest PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
-  Patterns switch list should say [Hold] for hold cars.
-  Work out o2o stuff in Patterns.SetCarsForm_Controller.
   o2o.ModelWorkEvents needs to be refactored.
+  o2o.ModelWorkEvents parsePtRs and parseRS have duplication.
 
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -93,8 +92,9 @@ Tested Items:
     Ignore Track Length works with schedules.
     Set cars to spur removes FD OK.
     Toggle AS Apply schedule in config file works OK.
-    getOwner() or getOwnerName() depending on version OK
+    getOwner() or getOwnerName() depending on version OK.
     Reports use jPlus data OK.
+    On generate switch list, firePropertyChange is executed to generate o2o list for TPOK.
 
   o2o
     Import-
