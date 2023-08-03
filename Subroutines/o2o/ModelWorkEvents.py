@@ -30,6 +30,70 @@ def o2oWorkListMaker():
 
     return
 
+def parseRS(rs):
+    """
+    Generic rolling stock parser.
+    Works with JMRI manifest output and Patterns switch list output.
+    The load field is either Load(car) or Model(loco).
+    """
+
+    parsedRS = {}
+    try:
+        parsedRS['Road'] = rs['road']
+    except:
+        parsedRS['Road'] = rs['Road']
+
+    try:
+        parsedRS['Number'] = rs['number']
+    except:
+        parsedRS['Number'] = rs['Number']
+
+    try:
+        parsedRS['Type'] = rs['carType']
+    except:
+        parsedRS['Type'] = rs['Type']
+
+    try:
+        parsedRS['Load Type'] = PSE.getShortLoadType(rs)
+        try:
+            parsedRS['Load'] = rs['load']
+        except:
+            parsedRS['Load'] = rs['Load']
+    except:
+        try:
+            parsedRS['Load'] = rs['model']
+        except:
+            parsedRS['Load'] = rs['Model']
+
+    try:
+        parsedRS['Location'] = rs['location']['userName']
+    except:
+        parsedRS['Location'] = rs['Location']
+
+    try:
+        parsedRS['Track'] = rs['location']['track']['userName']
+    except:
+        parsedRS['Track'] = rs['Track']
+
+    try:
+        parsedRS['Destination'] = rs['destination']['userName']
+    except:
+        parsedRS['Destination'] = rs['Location']
+
+    try:
+        parsedRS['Set_To'] = rs['destination']['track']['userName']
+        return parsedRS
+    except:
+        pass
+
+    parsedSetTo = rs['Set_To'][1:-1].split(']')[0] # IE parse [Freight House] to Freight House
+    if  parsedSetTo == PSE.getBundleItem('Hold'):
+        parsedSetTo = rs['Track']
+
+    parsedRS['Set_To'] = parsedSetTo
+
+    return parsedRS
+
 
 class opsWorkListConversion:
     """
@@ -60,65 +124,63 @@ class opsWorkListConversion:
 
         for track in self.opsWorkList['locations'][0]['tracks']:
             for car in track['cars']:
-                parsed = self.parsePtRs(car)
+                # parsed = self.parsePtRs(car)
+                parsed = parseRS(car)
                 parsed['PUSO'] = 'SC'
                 self.cars.append(parsed)
             for loco in track['locos']:
-                parsed = self.parsePtRs(loco)
+                # parsed = self.parsePtRs(loco)
+                parsed = parseRS(loco)
                 parsed['PUSO'] = 'SL'
                 self.locos.append(parsed)
 
         return
 
-    def parsePtRs(self, rs):
-        """
-        The load field is either Load(car) or Model(loco).
-        Pattern scripts have only one location.
-        Location and Destination are the same.
-        """
+    # def parsePtRs(self, rs):
+    #     """
+    #     The load field is either Load(car) or Model(loco).
+    #     Pattern scripts have only one location.
+    #     Location and Destination are the same.
+    #     """
 
-        parsedRS = {}
-        parsedRS['Road'] = rs['Road']
-        parsedRS['Number'] = rs['Number']
-        parsedRS['Type'] = rs['Type']
-        try:
-            parsedRS['Load Type'] = PSE.getShortLoadType(rs)
-            parsedRS['Load'] = rs['Load']
-        except:
-            # print('Exception at: o2o.ModelWorkEvents.parsePtRs')
-            parsedRS['Load'] = rs['Model']
-        parsedRS['Location'] = rs['Location']
-        parsedRS['Track'] = rs['Track']
-        parsedRS['Destination'] = rs['Location']
+    #     parsedRS = {}
+    #     parsedRS['Road'] = rs['Road']
+    #     parsedRS['Number'] = rs['Number']
+    #     parsedRS['Type'] = rs['Type']
+    #     try:
+    #         parsedRS['Load Type'] = PSE.getShortLoadType(rs)
+    #         parsedRS['Load'] = rs['Load']
+    #     except:
+    #         # print('Exception at: o2o.ModelWorkEvents.parsePtRs')
+    #         parsedRS['Load'] = rs['Model']
 
-        if self.parseSetTo(rs['Set_To']) == PSE.getBundleItem('Hold'):
-            parsedSetTo = rs['Track']
-        else:
-            parsedSetTo = self.parseSetTo(rs['Set_To'])
-        parsedRS['Set_To'] = parsedSetTo
+    #     parsedRS['Location'] = rs['Location']
+    #     parsedRS['Track'] = rs['Track']
+    #     parsedRS['Destination'] = rs['Location']
 
-        return parsedRS
+    #     if self.parseSetTo(rs['Set_To']) == PSE.getBundleItem('Hold'):
+    #         parsedSetTo = rs['Track']
+    #     else:
+    #         parsedSetTo = self.parseSetTo(rs['Set_To'])
+    #     parsedRS['Set_To'] = parsedSetTo
 
-    def parseSetTo(self, setTo):
-        """
-        format: [Freight House]   
-        """
+    #     return parsedRS
 
-        return setTo[1:-1].split(']')[0]
+    # def parseSetTo(self, setTo):
+    #     """
+    #     format: [Freight House]   
+    #     """
+
+    #     return setTo[1:-1].split(']')[0]
 
     def o2oWorkListUpdater(self):
 
 
         self.o2oWorkList['railroadName'] = PSE.getRailroadName()
-
-
-
-           
-
         self.o2oWorkList['railroadDescription'] = self.opsWorkList['railroadDescription']
         self.o2oWorkList['trainName'] = self.opsWorkList['trainName']
         self.o2oWorkList['trainDescription'] = self.opsWorkList['trainDescription']
-        # self.o2oWorkList['trainComment'] = self.opsWorkList['trainComment']
+
         self.o2oWorkList['date'] = self.opsWorkList['date']
 
         location = self.opsWorkList['locations'][0]['locationName']
@@ -176,21 +238,13 @@ class jmriManifestConversion:
 
         _psLog.debug('jmriManifestConversion.convertHeader')
 
-        # if self.configFile['Main Script']['CP'][__package__]:
-
         OSU = PSE.JMRI.jmrit.operations.setup
         extendedHeader = unicode(OSU.Setup.getRailroadName(), PSE.ENCODING)
         self.o2oWorkEvents['railroadName'] = extendedHeader
-        #     self.o2oWorkEvents['railroadName'] = PSE.getRailroadName()
-        # else:
-        #     self.o2oWorkEvents['railroadName'] = PSE.HTML_PARSER().unescape(self.jmriManifest['railroad'])
 
-
-        # self.o2oWorkEvents['railroadName'] = '"' + PSE.getRailroadName() + '"'
         self.o2oWorkEvents['railroadDescription'] = PSE.JMRI.jmrit.operations.setup.Setup.getComment()
         self.o2oWorkEvents['trainName'] = PSE.HTML_PARSER().unescape(self.jmriManifest['userName'])
         self.o2oWorkEvents['trainDescription'] = PSE.HTML_PARSER().unescape(self.jmriManifest['description'])
-        # self.o2oWorkEvents['trainComment'] = PSE.HTML_PARSER().unescape(self.jmriManifest['description'])
 
         epoch = PSE.convertJmriDateToEpoch(self.jmriManifest['date'])
         self.o2oWorkEvents['date'] = PSE.validTime(epoch)
@@ -206,7 +260,8 @@ class jmriManifestConversion:
 
             cars = []
             for car in location['cars']['add']:
-                parsedRS = self.parseRS(car)
+                # parsedRS = self.parseRS(car)
+                parsedRS = parseRS(car)
                 parsedRS['PUSO'] = u'PC'
                 cars.append(parsedRS)
             for car in location['cars']['remove']:
@@ -216,7 +271,8 @@ class jmriManifestConversion:
 
             locos = []
             for loco in location['engines']['add']:
-                parsedRS = self.parseRS(loco)
+                # parsedRS = self.parseRS(loco)
+                parsedRS = parseRS(loco)
                 parsedRS['PUSO'] = u'PL'
                 locos.append(parsedRS)
             for loco in location['engines']['remove']:
@@ -228,30 +284,30 @@ class jmriManifestConversion:
 
         return
 
-    def parseRS(self, rs):
-        """
-        The load field ie either Load or Model.
-        How to combine this with parsePtRs?
-        They do the sae thing.
-        """
+    # def parseRS(self, rs):
+    #     """
+    #     The load field ie either Load or Model.
+    #     How to combine this with parsePtRs?
+    #     They do the sae thing.
+    #     """
 
-        parsedRS = {}
-        parsedRS['Road'] = rs['road']
-        parsedRS['Number'] = rs['number']
-        parsedRS['Type'] = rs['carType']
-        try:
-            parsedRS['Load Type'] = PSE.getShortLoadType(rs)
-            parsedRS['Load'] = rs['load']
-        except:
-            # print('Exception at: o2o.ModelWorkEvents.parseRS')
-            parsedRS['Load'] = rs['model']
+    #     parsedRS = {}
+    #     parsedRS['Road'] = rs['road']
+    #     parsedRS['Number'] = rs['number']
+    #     parsedRS['Type'] = rs['carType']
+    #     try:
+    #         parsedRS['Load Type'] = PSE.getShortLoadType(rs)
+    #         parsedRS['Load'] = rs['load']
+    #     except:
+    #         # print('Exception at: o2o.ModelWorkEvents.parseRS')
+    #         parsedRS['Load'] = rs['model']
 
-        parsedRS['Location'] = rs['location']['userName']
-        parsedRS['Track'] = rs['location']['track']['userName']
-        parsedRS['Destination'] = rs['destination']['userName']
-        parsedRS['Set_To'] = rs['destination']['track']['userName']
+    #     parsedRS['Location'] = rs['location']['userName']
+    #     parsedRS['Track'] = rs['location']['track']['userName']
+    #     parsedRS['Destination'] = rs['destination']['userName']
+    #     parsedRS['Set_To'] = rs['destination']['track']['userName']
 
-        return parsedRS
+    #     return parsedRS
 
     def geto2oWorkEvents(self):
 
@@ -261,16 +317,11 @@ class jmriManifestConversion:
 class o2oWorkEvents:
     """
     This class makes the o2o work event list for TrainPlayer.
-    TrainPlayer rolling stock IDs are used to identify TP RS,
-    using tpRollingStockData.json as the LUT.
-    WHAT ?????
     """
 
     def __init__(self, workEvents):
 
         self.tpRollingStockData = ModelEntities.getTpRailroadJson('tpRollingStockData')
-        # self.inverseTpRollingStockData = {v:k for k,v in self.tpRollingStockData.items()}
-        # https://stackoverflow.com/questions/2568673/inverse-dictionary-lookup-in-python
 
         self.workEvents = workEvents
         self.o2oList = ''
@@ -284,11 +335,9 @@ class o2oWorkEvents:
 
         _psLog.debug('o2oWorkEvents.o2oHeader')
 
-        # self.o2oList = 'HN,' + self.workEvents['railroadName'] + '\n'
         self.o2oList = 'HN,' + PSE.getRailroadName().replace('\n', ';') + '\n'
         self.o2oList += 'HT,' + self.workEvents['trainName'] + '\n'
         self.o2oList += 'HD,' + self.workEvents['trainDescription'] + '\n'
-        # self.o2oList += 'HC,' + self.workEvents['trainComment'] + '\n'
         self.o2oList += 'HV,' + self.workEvents['date'] + '\n'
         self.o2oList += 'WT,' + str(len(self.workEvents['locations'])) + '\n'
 
@@ -296,7 +345,7 @@ class o2oWorkEvents:
 
     def o2oLocations(self):
         """
-        This has to work for both JMRI and o2o generated lists
+        This works for both JMRI and o2o generated lists.
         """
 
         _psLog.debug('o2oWorkEvents.o2oLocations')
@@ -318,23 +367,19 @@ class o2oWorkEvents:
     def makeLine(self, rs):
         """
         This makes a rolling stock line for the TP o2o file.
-        Identify the rolling stock by its TP car_ID
         format: PUSO, TP ID, Road, Number, Car Type, L/E/O, Load or Model, From, To
         """
 
         ID = rs['Road'] + ' ' + rs['Number']
-        # tpID = self.inverseTpRollingStockData[ID]
         load = ''
         try:
             load = rs['Load']
         except:
-            # print('Exception at: o2o.ModelWorkEvents.makeLine')
             load = rs['Model']
 
         try: # Locos don't use load type
             lt = rs['Load Type']
         except:
-            # print('Exception at: o2o.ModelWorkEvents.makeLine')
             lt = u'X'
 
         pu = rs['Location'] + ';' + rs['Track']

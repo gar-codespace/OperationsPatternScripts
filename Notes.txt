@@ -134,6 +134,7 @@ Tested Items:
       'Occupied' used bundle OK.
       Color name 'Generic' added to car roster colors OK.
       'Generic' uses bundle OK.
+      o2o.ModelWorkEvents parsePtRs and parseRS combined OK.
 
     Export-
       When active, exports JMRI manifest to TP OK.
