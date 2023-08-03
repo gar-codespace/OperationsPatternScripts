@@ -24,8 +24,8 @@ def formIsValid(setCarsForm, textBoxEntry):
 
     _psLog.debug('testValidityOfForm')
 
-    locoCount = len(setCarsForm['locations'][0]['tracks'][0]['locos'])
-    carCount = len(setCarsForm['locations'][0]['tracks'][0]['cars'])
+    locoCount = len(setCarsForm['track']['locos'])
+    carCount = len(setCarsForm['track']['cars'])
 
     if len(textBoxEntry) == locoCount + carCount:
         return True
@@ -75,11 +75,11 @@ def moveRollingStock(switchList):
     ignoreTrackLength = configFile['Patterns']['PI']
     applySchedule = configFile['Patterns']['AS']
     allTracksAtLoc = ModelEntities.getTrackNamesByLocation(None)
-    toLocation = PSE.LM.getLocationByName(unicode(switchList['locations'][0]['locationName'], PSE.ENCODING))
+    toLocation = configFile['Patterns']['PL']
 
     setCount = 0
     i = -1
-    locos = switchList['locations'][0]['tracks'][0]['locos']
+    locos = switchList['track']['locos']
     for loco in locos:
         i += 1
         rollingStock = PSE.EM.getByRoadAndNumber(loco['road'], loco['number'])
@@ -101,7 +101,7 @@ def moveRollingStock(switchList):
         if setResult == 'okay':
             setCount += 1
         
-    cars = switchList['locations'][0]['tracks'][0]['cars']
+    cars = switchList['track']['cars']
     for car in cars:
         i += 1
         rollingStock = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
@@ -176,9 +176,14 @@ def makeTextSwitchList(switchList):
     PSE.makeReportItemWidthMatrix()
 
     reportHeader = View.makeTextReportHeader(switchList)
+
     reportLocations = PSE.getBundleItem('Switch List') + '\n\n'
+
+    trackList = list(switchList['track'])
+
+    print(trackList)
     
-    reportLocations += View.makeTextReportLocations(switchList, trackTotals=False)
+    reportLocations += View.makeTextReportTracks(switchList, trackTotals=False)
 
     return reportHeader + reportLocations
 

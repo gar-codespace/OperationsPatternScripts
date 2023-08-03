@@ -13,6 +13,7 @@ Do Not Apply Schedule
 Eqpt. Length:
 FAIL: CreateSetCarsFormGui.quickCheck.formIsValid
 FAIL: Mismatched input list and car roster lengths
+FAIL: CreateSetCarsForm.quickCheck.formIsValid
 Hazardous
 Hold
 Ignore track length

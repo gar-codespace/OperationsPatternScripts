@@ -98,7 +98,7 @@ def updateConfigFile(controls):
 
     return controls
 
-def validSelection(trackCheckBoxes):
+def validateSelection(selectedTracks):
     """
     Catches on the fly user edit of JMRI location and tracknames.
     patternTracks and allTracksAtLoc should be the same.
@@ -107,7 +107,7 @@ def validSelection(trackCheckBoxes):
     Controller.StartUp.setCarsButton
     """
 
-    _psLog.debug('validSelection')
+    _psLog.debug('validateSelection')
     configFile = PSE.readConfigFile()
     patternLocation = configFile['Patterns']['PL']
 
@@ -115,77 +115,48 @@ def validSelection(trackCheckBoxes):
         return False
 
     allTracksAtLoc = ModelEntities.getTrackNamesByLocation(None)
-    subTracksAtLoc = [widget.text for widget in trackCheckBoxes]
-    if list(set(allTracksAtLoc).difference(set(subTracksAtLoc))): # Test if track names were changed.
-        return False
+    for track in selectedTracks:
+        if track not in allTracksAtLoc:
+            return False
 
     return True
 
+def makeTrackPattern(selectedTracks):
+    """
+    Mini controller.
+    """
 
-def makeTrackPattern(trackCheckBoxes):
-    """
-    """
+    patternReport = makeReportHeader()
+    patternReport['tracks'] = makeReportTracks(selectedTracks)
+
+    return patternReport
+
+def makeReportHeader():
+
+    configFile = PSE.readConfigFile()
+
+    reportHeader = {}
+    reportHeader['railroadName'] = PSE.getRailroadName()
+
+    reportHeader['railroadDescription'] = configFile['Patterns']['RD']
+    reportHeader['trainName'] = configFile['Patterns']['TN']
+    reportHeader['trainDescription'] = configFile['Patterns']['TD']
+    reportHeader['trainComment'] = configFile['Patterns']['TC']
+    reportHeader['division'] = configFile['Patterns']['PD']
+    reportHeader['date'] = unicode(PSE.validTime(), PSE.ENCODING)
+    reportHeader['location'] =configFile['Patterns']['PL']
+
+    return reportHeader
+
+def makeReportTracks(selectedTracks):
+
     configFile =  PSE.readConfigFile()
-    patternReport = {}
-
-# Header
-    patternReport['railroadName'] = PSE.getRailroadName()
-    patternReport['railroadDescription'] = configFile['Patterns']['RD']
-    patternReport['trainName'] = configFile['Patterns']['TN']
-    patternReport['trainDescription'] = configFile['Patterns']['TD']
-    patternReport['trainComment'] = configFile['Patterns']['TC']
-    patternReport['division'] = configFile['Patterns']['PD']
-    patternReport['date'] = unicode(PSE.validTime(), PSE.ENCODING)
-    patternReport['location'] = configFile['Patterns']['PL']
-# Get selected tracks
-    selectedTracks = []
-    for checkBox in sorted(trackCheckBoxes):
-        if checkBox.selected:
-            selectedTracks.append(checkBox.text)
-# Get track data, tracks is a list of dictionaries.
     tracks = []
     for trackName in sorted(selectedTracks):
         trackDetails = ModelEntities.getTrackDetails(configFile['Patterns']['PL'], trackName)
         tracks.append(trackDetails)
 
-
-    patternReport['tracks'] = tracks
-
-
-    return patternReport
-
-
-
-# def makeTrackPatternBody(trackCheckBoxes):
-#     """Makes the body of a track pattern report."""
-
-#     patternLocation = PSE.readConfigFile('Patterns')['PL']
-
-#     detailsForTrack = []
-#     for widget in sorted(trackCheckBoxes):
-#         if widget.selected:
-#             detailsForTrack.append(ModelEntities.getGenericTrackDetails(patternLocation, widget.text))
-
-#     trackPatternBody = {}
-#     trackPatternBody['locationName'] = patternLocation
-#     trackPatternBody['tracks'] = detailsForTrack
-
-#     return trackPatternBody
-
-# def makeTrackPatternReport(trackPattern):
-#     """Combine header and body into a complete report."""
-
-#     trackPatternReport = initializeReportHeader()
-#     # parseName = trackPatternReport['railroadName'].replace(';', '\n')
-#     # trackPatternReport.update({'railroadName':parseName})
-
-#     division = PSE.getDivisionForLocation(trackPatternReport['locations'][0]['locationName'])
-#     trackPatternReport.update({'division':division})
-
-# # put in as a list to maintain compatability with JSON File Format/JMRI manifest export.
-#     trackPatternReport['locations'] = [trackPattern]
-
-#     return trackPatternReport
+    return tracks
 
 def writePatternReport(trackPattern):
     """
@@ -202,9 +173,23 @@ def writePatternReport(trackPattern):
 
     return
 
+def resetWorkList():
+    """
+    The worklist is reset when the Set Cars button is pressed.
+    """
+
+    workList = makeReportHeader()
+
+    fileName = PSE.getBundleItem('ops-work-list') + '.json'
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+    workList = PSE.dumpJson(workList)
+    PSE.genericWriteReport(targetPath, workList)
+
+    return
+
 def appendWorkList(mergedForm):
 
-    tracks = mergedForm['locations'][0]['tracks'][0]
+    tracks = mergedForm['tracks'][0]
 
     fileName = PSE.getBundleItem('ops-work-list') + '.json'    
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
@@ -216,39 +201,6 @@ def appendWorkList(mergedForm):
     PSE.genericWriteReport(targetPath, currentWorkList)
 
     return
-
-def newWorkList():
-    """
-    The work list is all the switchlists combined.
-    Reset when the Set Cars button is pressed.
-    """
-
-    workList = initializeReportHeader()
-
-    fileName = PSE.getBundleItem('ops-work-list') + '.json'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
-    workList = PSE.dumpJson(workList)
-    PSE.genericWriteReport(targetPath, workList)
-
-    return
-
-def initializeReportHeader():
-
-    OSU = PSE.JMRI.jmrit.operations.setup
-    configFile = PSE.readConfigFile()
-
-    listHeader = {}
-    listHeader['railroadName'] = PSE.getRailroadName()
-
-    listHeader['railroadDescription'] = configFile['Patterns']['RD']
-    listHeader['trainName'] = configFile['Patterns']['TN']
-    listHeader['trainDescription'] = configFile['Patterns']['TD']
-    listHeader['trainComment'] = configFile['Patterns']['TC']
-    listHeader['division'] = configFile['Patterns']['PD']
-    listHeader['date'] = unicode(PSE.validTime(), PSE.ENCODING)
-    listHeader['locations'] = [{'locationName': configFile['Patterns']['PL'], 'tracks': [{'cars': [], 'locos': [], 'length': '', 'trackname': ''}]}]
-
-    return listHeader
 
 def jDivision(selectedItem):
     """Updates the Division: combo box and ripples the changes.

@@ -107,15 +107,15 @@ class StartUp:
         _psLog.debug(EVENT)
 
         Model.updateConfigFile(self.widgets)
+        selectedTracks = [trackCheckBox.text for trackCheckBox in self.widgets[3] if trackCheckBox.selected]
 
-        if not Model.validSelection(self.widgets[3]):
+        if not Model.validateSelection(selectedTracks):
             print('ERROR: re-select the location')
             _psLog.warning('Error, re-select the location')
             return
 
-        trackPattern = Model.makeTrackPattern(self.widgets[3])
+        trackPattern = Model.makeTrackPattern(selectedTracks)
         Model.writePatternReport(trackPattern)
-
 
         View.displayPatternReport()
         # View.trackPatternAsCsv()
@@ -130,14 +130,19 @@ class StartUp:
         _psLog.debug(EVENT)
 
         Model.updateConfigFile(self.widgets)
-        Model.newWorkList()
+        selectedTracks = [trackCheckBox.text for trackCheckBox in self.widgets[3] if trackCheckBox.selected]
 
-        if not Model.validSelection(self.widgets[3]):
+        if not Model.validateSelection(selectedTracks):
             print('ERROR: re-select the location')
-            _psLog.warning('Track not found, re-select the location')
+            _psLog.warning('Error, re-select the location')
             return
+        
+        Model.resetWorkList()
 
-        View.setCarsToTrack(self.widgets[3])
+        reportHeader = Model.makeReportHeader()
+        reportTracks = Model.makeReportTracks(selectedTracks)
+
+        View.setCarsToTrackWindow(reportHeader, reportTracks)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

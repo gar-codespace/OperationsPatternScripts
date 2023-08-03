@@ -50,7 +50,7 @@ def merge(switchList, userInputList):
     allTracksAtLoc = getTrackNamesByLocation(None)
 
     i = 0
-    locos = switchList['locations'][0]['tracks'][0]['locos']
+    locos = switchList['track']['locos']
     for loco in locos:
         userInput = unicode(userInputList[i], PSE.ENCODING)
         if userInput in allTracksAtLoc:
@@ -61,7 +61,7 @@ def merge(switchList, userInputList):
         loco.update({'Set_To': setTrack})
         i += 1
 
-    cars = switchList['locations'][0]['tracks'][0]['cars']
+    cars = switchList['track']['cars']
     for car in cars:
         userInput = unicode(userInputList[i], PSE.ENCODING)
 

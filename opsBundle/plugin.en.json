@@ -27,6 +27,7 @@
   "Empty": "Empty", 
   "Engines": "Engines", 
   "Eqpt. Length:": "Eqpt. Length:", 
+  "FAIL: CreateSetCarsForm.quickCheck.formIsValid": "FAIL: CreateSetCarsForm.quickCheck.formIsValid", 
   "FAIL: CreateSetCarsFormGui.quickCheck.formIsValid": "FAIL: CreateSetCarsFormGui.quickCheck.formIsValid", 
   "FAIL: Mismatched input list and car roster lengths": "FAIL: Mismatched input list and car roster lengths", 
   "From TrainPlayer, re-export layout to JMRI.": "From TrainPlayer, re-export layout to JMRI.", 

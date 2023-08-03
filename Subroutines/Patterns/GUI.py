@@ -159,7 +159,7 @@ class subroutineGui:
     #     patternLocation = self.configFile['PL']
     #     if not patternLocation:
     #         try:
-    #             patternLocation = PSE.LM.getLocationsByNameList()[0]
+    #             patternLocation = PSE.LM.getLocationsByNameList()
     #         except:
     #             return trackDict
     # # If there is a pattern location, make the dictionary
@@ -250,8 +250,8 @@ def makeSetCarsFormHeader(setCarsFormData):
     _psLog.debug('makeSetCarsFormHeader')
 
     splitName = setCarsFormData['railroadName'].split('\n')
-    trackName = setCarsFormData['locations'][0]['tracks'][0]['trackName'] # There's only one track
-    locationName = setCarsFormData['locations'][0]['locationName'] # There's only one location
+    trackName = setCarsFormData['track']['trackName'] # There's only one track
+    locationName = setCarsFormData['location'] # There's only one location
     validDate = setCarsFormData['date']
 
     headerTrackLabel = PSE.JAVX_SWING.JLabel()
@@ -322,20 +322,20 @@ def makeSetCarsListOfInventory(setCarsFormData):
 
     setCarsEqptRows = MakeSetCarsEqptRows(setCarsFormData)
 
-    if setCarsFormData['locations'][0]['tracks'][0]['locos']:
+    if setCarsFormData['track']['locos']:
         locoFormBody = PSE.JAVX_SWING.JPanel()
         locoFormBody.setLayout(PSE.JAVX_SWING.BoxLayout(locoFormBody, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
-        locoFormBody.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Locomotives at') +  ' ' + setCarsFormData['locations'][0]['tracks'][0]['trackName'])
+        locoFormBody.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Locomotives at') +  ' ' + setCarsFormData['track']['trackName'])
 
         setCarsLocoRows = setCarsEqptRows.makeSetCarsLocoRows()
         for loco in setCarsLocoRows:
             locoFormBody.add(loco)
         inventoryFormBody.add(locoFormBody)
 
-    if setCarsFormData['locations'][0]['tracks'][0]['cars']:
+    if setCarsFormData['track']['cars']:
         carFormBody = PSE.JAVX_SWING.JPanel()
         carFormBody.setLayout(PSE.JAVX_SWING.BoxLayout(carFormBody, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
-        carFormBody.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Cars at') +  ' ' + setCarsFormData['locations'][0]['tracks'][0]['trackName'])
+        carFormBody.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Cars at') +  ' ' + setCarsFormData['track']['trackName'])
 
         setCarsCarRows = setCarsEqptRows.makeSetCarsCarRows()
         for car in setCarsCarRows:
@@ -354,15 +354,14 @@ def makeSetCarsListOfInventory(setCarsFormData):
 
 def makeSetCarsScheduleRow(setCarsFormData):
     """
-    [0] is used to avoid for loop since there is only 1 location and track
     Used By:
     makeSetCarsForTrackForm
     """
 
     _psLog.debug('makeSetCarsScheduleRow')
 
-    trackLocation = setCarsFormData['locations'][0]['locationName']
-    trackName = setCarsFormData['locations'][0]['tracks'][0]['trackName']
+    trackLocation = PSE.readConfigFile('Patterns')['PL']
+    trackName = setCarsFormData['track']['trackName']
     trackObject = PSE.LM.getLocationByName(trackLocation).getTrackByName(trackName, None)
     scheduleObject = trackObject.getSchedule()
     if scheduleObject:
@@ -457,7 +456,7 @@ class MakeSetCarsEqptRows():
         """Creates the locomotive lines of the pattern report form"""
 
         listOfLocoRows = []
-        locos = self.setCarsFormData['locations'][0]['tracks'][0]['locos']
+        locos = self.setCarsFormData['track']['locos']
 
         for loco in locos:
             combinedInputLine = PSE.JAVX_SWING.JPanel()
@@ -471,7 +470,7 @@ class MakeSetCarsEqptRows():
             combinedInputLine.add(inputBox)
 
             for item in PSE.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat():
-                if 'Tab' in item:
+                if 'tab' in item:
                     continue
                 translatedItem = self.rosetta[item]
                 label = PSE.JAVX_SWING.JLabel(loco[translatedItem])
@@ -489,12 +488,12 @@ class MakeSetCarsEqptRows():
         """Creates the car lines of the pattern report form"""
 
         listOfCarRows = []
-        cars = self.setCarsFormData['locations'][0]['tracks'][0]['cars']
+        cars = self.setCarsFormData['track']['cars']
 
         for car in cars:
             combinedInputLine = PSE.JAVX_SWING.JPanel()
             combinedInputLine.setBackground(self.carColor)
-            if car['On_Train']:
+            if car['onTrain']:
                 combinedInputLine.setBackground(self.alertColor)
             inputText = PSE.JAVX_SWING.JTextField(5)
             self.textBoxEntry.append(inputText)
@@ -503,7 +502,7 @@ class MakeSetCarsEqptRows():
             combinedInputLine.add(inputBox)
 
             for item in PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
-                if 'Tab' in item:
+                if 'tab' in item:
                     continue
                 translatedItem = self.rosetta[item]
                 try:

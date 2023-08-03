@@ -122,26 +122,27 @@ def trackPatternAsCsv():
 
     return
     
-def setCarsToTrack(trackCheckBoxes):
+def setCarsToTrackWindow(reportHeader, reportTracks):
     """"Set Cars to Track button opens a window for each selected track."""
 
-    _psLog.debug('setCarsToTrack')
+    _psLog.debug('setCarsToTrackWindow')
 
-    patternLocation = PSE.readConfigFile('Patterns')['PL']
     PSE.makeReportItemWidthMatrix()
+    setCarsTracks = {}
+    setCarsTracks['tracks'] = reportTracks
+    setCarsTracks = insertStandins(setCarsTracks)
 
-    selectedTracks = [trackCheckBox for trackCheckBox in trackCheckBoxes if trackCheckBox.selected]
+
+
     windowOffset = 200
     i = 0
-    for trackCheckBox in selectedTracks:
-        trackPatternBody = Model.makeTrackPatternBody([trackCheckBox])
-        setCarsForm = Model.makeTrackPatternReport(trackPatternBody)
-    # Apply common formatting to report
-        setCarsForm = insertStandins(setCarsForm)
+    for track in setCarsTracks['tracks']:
 
+        setCarsForm = reportHeader
+        setCarsForm['track'] = track
         newFrame = SetCarsForm_Controller.CreateSetCarsForm(setCarsForm)
         newWindow = newFrame.makeFrame()
-        newWindow.setTitle(PSE.getBundleItem('Set Rolling Stock for track:') + ' ' + trackCheckBox.text)
+        newWindow.setTitle(PSE.getBundleItem('Set Rolling Stock for track:') + ' ' + track['trackName'])
         newWindow.setName('setCarsWindow')
         newWindow.pack()
 
@@ -161,9 +162,9 @@ def setCarsToTrack(trackCheckBoxes):
         windowOffset += 50
         i += 1
 
-        _psLog.info(u'Set Rolling Stock Window created for track ' + trackCheckBox.text)
+        _psLog.info(u'Set Rolling Stock Window created for track ' + track['trackName'])
 
-    _psLog.info(str(i) + ' Set Rolling Stock windows for ' + patternLocation + ' created')
+    _psLog.info(str(i) + ' Set Rolling Stock windows for ' + reportHeader['location'] + ' created')
 
     return
 

@@ -26,8 +26,8 @@ class CreateSetCarsForm:
     def __init__(self, setCarsForm):
 
         self.setCarsForm = setCarsForm
-        self.locationName = setCarsForm['locations'][0]['locationName']
-        self.trackName = setCarsForm['locations'][0]['tracks'][0]['trackName']
+        self.locationName = setCarsForm['location']
+        self.trackName = setCarsForm['track']['trackName']
         self.buttonDict = {}
 
         return
