@@ -59,7 +59,9 @@ def removeTrainsTableListener():
 
 
 class o2oTrainsTable(PSE.JAVA_BEANS.PropertyChangeListener):
-    """The trains table model gets this listener."""
+    """
+    The trains table model gets this listener.
+    """
 
     def __init__(self):
 

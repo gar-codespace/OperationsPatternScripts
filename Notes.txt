@@ -3,6 +3,8 @@ Todo:
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
   Duplication of PSE chunkPath.
   o2o.ModelWorkEvents needs to be refactored.
+  For Patterns/Divisions change 'Unassigned' to ''.
+  Patterns add listeners to Locations/Tracks.
 
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -94,6 +96,7 @@ Tested Items:
     Reports use jPlus data OK.
     On generate switch list, firePropertyChange is executed to generate o2o list for TP OK.
     check on owner and ownerName in config file report width
+    'AD' is depricated.
 
   o2o
     Import-

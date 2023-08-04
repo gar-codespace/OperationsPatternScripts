@@ -33,6 +33,9 @@ class subroutineGui:
 
         self.configFile = PSE.readConfigFile('Patterns')
 
+        self.divisionComboBox = PSE.DM.getComboBox()
+        self.locationComboBox = PSE.JAVX_SWING.JComboBox()
+
         self.yardTracksOnly = PSE.JAVX_SWING.JCheckBox()
         self.yardTracksOnly.setText(PSE.getBundleItem('Yard tracks only') + ' ')
         self.yardTracksOnly.setSelected(self.configFile['PA'])
@@ -56,45 +59,47 @@ class subroutineGui:
         tpPanel = PSE.JAVX_SWING.JPanel() # the Patterns panel
         tpPanel.setLayout(PSE.JAVX_SWING.BoxLayout(tpPanel, PSE.JAVX_SWING.BoxLayout.Y_AXIS))
 
-        tpPanel.add(self.makeLocationRow())
+        tpPanel.add(self.makeLocaleRow())
         tpPanel.add(self.makeTracksRow())
         tpPanel.add(self.makeButtonsRow())
 
         return tpPanel
 
-    def makeLocationRow(self):
+    def makeLocaleRow(self):
         """
-        Make widget row containing: 'Division:', combo box, 'Loaction:', combo box, 'Yard Tracks Only', 'Ignore Track Length'.
-        PSE.LM.getComboBox() includes box.addItem(null); which is unwanted
+        Make widget row containing: 'Division:', combo box, 'Loaction:', combo box, 'Yard Tracks Only', check box.
         """
 
-        patternComboBox = PSE.JAVX_SWING.JPanel()
-        patternComboBox.setAlignmentX(PSE.JAVX_SWING.JPanel.CENTER_ALIGNMENT)
+        localeRow = PSE.JAVX_SWING.JPanel()
+        localeRow.setAlignmentX(PSE.JAVX_SWING.JPanel.CENTER_ALIGNMENT)
 
-        divisionLabel = PSE.JAVX_SWING.JLabel(PSE.getBundleItem('Division:'))        
-        divisionList = self.configFile['AD']
-        # divisionList.insert(0, '') # This is how JMRI does it.
-        self.divisionComboBox = PSE.JAVX_SWING.JComboBox(divisionList)
+        divisionLabel = PSE.JAVX_SWING.JLabel(PSE.getBundleItem('Division:'))
+
+        self.divisionComboBox.setEditable(True)
         self.divisionComboBox.setName('jDivision')
-        self.divisionComboBox.setSelectedItem(self.configFile['PD'])
+        if self.configFile['PD'] in PSE.getAllDivisionNames():
+            self.divisionComboBox.setSelectedItem(self.configFile['PD'])
+        else:
+            self.divisionComboBox.setSelectedItem(None)
 
         locationLabel = PSE.JAVX_SWING.JLabel(PSE.getBundleItem('Location:'))
-        locationList = self.configFile['AL']
-        self.locationComboBox = PSE.JAVX_SWING.JComboBox(locationList)
+
+        for item in self.configFile['AL']:
+            self.locationComboBox.addItem(item)
         self.locationComboBox.setName('jLocations')
         self.locationComboBox.setSelectedItem(self.configFile['PL'])
 
-        patternComboBox.add(divisionLabel)
-        patternComboBox.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
-        patternComboBox.add(self.divisionComboBox)
-        patternComboBox.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
-        patternComboBox.add(locationLabel)
-        patternComboBox.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
-        patternComboBox.add(self.locationComboBox)
-        patternComboBox.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
-        patternComboBox.add(self.yardTracksOnly)
+        localeRow.add(divisionLabel)
+        localeRow.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
+        localeRow.add(self.divisionComboBox)
+        localeRow.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
+        localeRow.add(locationLabel)
+        localeRow.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
+        localeRow.add(self.locationComboBox)
+        localeRow.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
+        localeRow.add(self.yardTracksOnly)
 
-        return patternComboBox
+        return localeRow
 
     def makeTracksRow(self):
         """Make the row of check boxes, one for each track"""

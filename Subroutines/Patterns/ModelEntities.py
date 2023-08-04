@@ -89,18 +89,18 @@ def findLongestTrackString():
 
     return longestTrackString
 
-def testSelectedDivision(selectedItem=None):
-    """
-    Catches user edit of divisions
-    Called by:
-    Model.jDivision
-    """
+# def testSelectedDivision(selectedItem=None):
+#     """
+#     Catches user edit of divisions
+#     Called by:
+#     Model.jDivision
+#     """
 
-    allDivisions = PSE.getAllDivisionNames()
-    if selectedItem in allDivisions:
-        return selectedItem
-    else:
-        return allDivisions[0]
+#     allDivisions = PSE.getAllDivisionNames()
+#     if selectedItem in allDivisions:
+#         return selectedItem
+#     else:
+#         return allDivisions[0]
 
 def testSelectedLocation(selectedItem=None):
     """

@@ -2,7 +2,7 @@
 # © 2023 Greg Ritacco
 
 """
-The Patterns subroutins is inventory control for a single JMRI location.
+The Patterns subroutins is inventory control for any one JMRI location.
 Yard and track pattern reports can be run on tracks at the selected location.
 Cars can be moved from track to track at the selected location.
 This subroutine can be used in conjunction with o2o to create TrainPlayer switch lists.
@@ -20,7 +20,9 @@ SCRIPT_REV = 20230201
 _psLog = PSE.LOGGING.getLogger('OPS.PT.Controller')
 
 def getSubroutineDropDownItem():
-    """Pattern Scripts/Tools/'Show or disable' Subroutines.<subroutine>"""
+    """
+    Pattern Scripts/Tools/'Show or disable' Subroutines.<subroutine>
+    """
 
     configFile = PSE.readConfigFile()
     subroutineName = __package__.split('.')[1]
@@ -41,7 +43,9 @@ def getSubroutineDropDownItem():
 
 
 class StartUp:
-    """Start the Patterns subroutine."""
+    """
+    Start the Patterns subroutine.
+    """
 
     def __init__(self, subroutineFrame=None):
 
@@ -50,7 +54,9 @@ class StartUp:
         return
 
     def getSubroutineFrame(self):
-        """Gets the title border frame."""
+        """
+        Gets the title border frame.
+        """
 
         self.subroutineFrame = View.ManageGui().makeSubroutineFrame()
         subroutineGui = self.getSubroutineGui()
@@ -61,7 +67,9 @@ class StartUp:
         return self.subroutineFrame
 
     def getSubroutineGui(self):
-        """Gets the GUI for this subroutine."""
+        """
+        Gets the GUI for this subroutine.
+        """
 
         Model.initializeComboBoxes()
 
@@ -71,15 +79,19 @@ class StartUp:
         return subroutineGui
 
     def startUpTasks(self):
-        """Run these tasks when this subroutine is started."""
+        """
+        Run these tasks when this subroutine is started.
+        """
 
         return
 
     def activateWidgets(self):
-        """Puts actions on all the widgets that need actions."""
+        """
+        Puts actions on all the widgets that need actions.
+        """
 
-        self.widgets[0].addActionListener(Listeners.PTComboBox())
-        self.widgets[1].addActionListener(Listeners.PTComboBox())
+        self.widgets[0].addActionListener(Listeners.DivisionAction()) # Divisions
+        self.widgets[1].addActionListener(Listeners.LocationAction()) # Locations
         self.widgets[2].actionPerformed = self.yardTrackOnlyCheckBox
         self.widgets[4].actionPerformed = self.patternReportButton
         self.widgets[5].actionPerformed = self.setRsButton
@@ -109,11 +121,6 @@ class StartUp:
         Model.updateConfigFile(self.widgets)
         selectedTracks = [trackCheckBox.text for trackCheckBox in self.widgets[3] if trackCheckBox.selected]
 
-        if not Model.validateSelection(selectedTracks):
-            print('ERROR: re-select the location')
-            _psLog.warning('Error, re-select the location')
-            return
-
         trackPattern = Model.makeTrackPattern(selectedTracks)
         Model.writePatternReport(trackPattern)
 
@@ -125,18 +132,15 @@ class StartUp:
         return
 
     def setRsButton(self, EVENT):
-        """Opens a "Pattern Report for Track X" window for each checked track."""
+        """
+        Opens a "Pattern Report for Track X" window for each checked track.
+        """
 
         _psLog.debug(EVENT)
 
         Model.updateConfigFile(self.widgets)
         selectedTracks = [trackCheckBox.text for trackCheckBox in self.widgets[3] if trackCheckBox.selected]
-
-        if not Model.validateSelection(selectedTracks):
-            print('ERROR: re-select the location')
-            _psLog.warning('Error, re-select the location')
-            return
-        
+ 
         Model.resetWorkList()
 
         reportHeader = Model.makeReportHeader()

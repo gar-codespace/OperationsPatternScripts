@@ -554,13 +554,13 @@ def getAllDivisionNames():
 
     return divisionNames
 
-def getLocationNamesByDivision(divisionName=None):
+def getLocationNamesByDivision(divisionName):
 
     locationsByDivision = []
 
-    for locationName in getAllLocationNames():
-        if LM.getLocationByName(locationName).getDivisionName() == divisionName:
-            locationsByDivision.append(locationName)
+    for location in LM.getList():
+        if location.getDivisionName() == divisionName:
+            locationsByDivision.append(location.getName())
 
     return locationsByDivision
 

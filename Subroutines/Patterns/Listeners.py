@@ -4,6 +4,7 @@ JAVAX action performed methods are in Controller.
 """
 
 from opsEntities import PSE
+from Subroutines.Patterns import Model
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
@@ -12,7 +13,9 @@ SCRIPT_REV = 20230201
 _psLog = PSE.LOGGING.getLogger('OPS.PT.Listeners')
 
 def actionListener(EVENT):
-    """menu item-Tools/Show Subroutines.Patterns"""
+    """
+    menu item-Tools/Show Subroutines.Patterns
+    """
 
     _psLog.debug(EVENT)
 
@@ -44,11 +47,70 @@ def actionListener(EVENT):
 
     return
 
+def addDivisionListeners():
 
-class PTComboBox(PSE.JAVA_AWT.event.ActionListener):
+    PSE.DM.addPropertyChangeListener(DivisionComboBoxProperty())
+    print('o2o.activatedCalls.Listeners.DivisionComboBoxProperty')
+
+    for division in PSE.DM.getList():
+        division.addPropertyChangeListener(DivisionProperty())
+
+    return
+
+
+def removeDivisionListeners():
+
+    PSE.DM.removePropertyChangeListener(DivisionComboBoxProperty())
+    print('o2o.activatedCalls.Listeners.DivisionComboBoxProperty')
+
+    for division in PSE.DM.getList():
+        division.removePropertyChangeListener(DivisionProperty())
+
+    return
+
+
+class DivisionComboBoxProperty(PSE.JAVA_BEANS.PropertyChangeListener):
     """
-    Event triggered from any Patterns combo box use.
-    The method name is the name of the combo box.
+    Restarts the Patterns sub on a change to the divisions roster.
+    """
+
+    def __init__(self):
+
+        return
+    
+    def propertyChange(self, COMBO_BOX_UPDATE):
+
+        _psLog.debug(COMBO_BOX_UPDATE)
+        print(SCRIPT_NAME + '.DivisionComboBoxProperty ' + str(SCRIPT_REV))
+
+        if COMBO_BOX_UPDATE.propertyName == 'divisionsListLength':
+            PSE.restartSubroutineByName(__package__)
+
+        return
+    
+
+class DivisionProperty(PSE.JAVA_BEANS.PropertyChangeListener):
+    """
+    Restarts the Patterns sub on the change of a division name.
+    """
+
+    def __init__(self):
+
+        return
+    
+    def propertyChange(self, DIVISION_UPDATE):
+
+        _psLog.debug(DIVISION_UPDATE)
+
+        if DIVISION_UPDATE.propertyName == 'divisionName':
+            PSE.restartSubroutineByName(__package__)
+
+        return
+
+
+class DivisionAction(PSE.JAVA_AWT.event.ActionListener):
+    """
+    Action taken when an item in the Divisions combo box is selected.
     """
 
     def __init__(self):
@@ -57,19 +119,35 @@ class PTComboBox(PSE.JAVA_AWT.event.ActionListener):
 
     def actionPerformed(self, EVENT):
 
-        xModule = __import__(__package__, globals(), locals(), ['model'], 0)
-        methodName = EVENT.getSource().getName()
         itemSelected = EVENT.getSource().getSelectedItem()
+        Model.jDivision(itemSelected)
+        PSE.restartSubroutineByName(__package__)
 
-        getattr(xModule.Model, methodName)(itemSelected)
+        return
 
-        # PSE.restartSubroutineByName(__package__)
+
+class LocationAction(PSE.JAVA_AWT.event.ActionListener):
+    """
+    Action taken when an item is selected in the Locations combo box.
+    """
+
+    def __init__(self):
+
+        return
+
+    def actionPerformed(self, EVENT):
+
+        itemSelected = EVENT.getSource().getSelectedItem()
+        Model.jLocations(itemSelected)
+        PSE.restartSubroutineByName(__package__)
 
         return
 
 
 class TextBoxEntry(PSE.JAVA_AWT.event.MouseAdapter):
-    """When any of the 'Set Cars Form for Track X' text input boxes is clicked on."""
+    """
+    When any of the 'Set Cars Form for Track X' text input boxes is clicked on.
+    """
 
     def __init__(self):
 

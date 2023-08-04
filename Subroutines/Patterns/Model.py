@@ -34,52 +34,6 @@ def resetConfigFileItems():
 
     return
 
-def initializeComboBoxes():
-    """
-    Initializes the Patterns section of the configFile when used for the first time.
-    Called by:
-    Controller.StartUp.makeSubroutinePanel
-    """
-
-    _psLog.debug('initializeComboBoxes')
-
-    configFile = PSE.readConfigFile()
-
-    if PSE.DM.getNumberOfdivisions() == 0:
-        configFile['Patterns'].update({'AD': []})
-        configFile['Patterns'].update({'PD': ''})
-        locations = PSE.getAllLocationNames()
-        configFile['Patterns'].update({'AL': locations})
-
-        if configFile['Patterns']['PL'] == '':
-            try:
-                configFile['Patterns'].update({'PL': locations[0]})
-            except:
-                print('Exception at: Patterns.Model.initializeComboBoxes')
-                configFile['Patterns'].update({'PL': ''})
-
-
-
-    if PSE.DM.getNumberOfdivisions() > 0:
-        allDivisions = PSE.getAllDivisionNames()
-
-        configFile['Patterns'].update({'AD': allDivisions})
-        locations = PSE.getLocationNamesByDivision(configFile['Patterns']['PD'])
-        configFile['Patterns'].update({'AL': locations})
-        if configFile['Patterns']['PD'] == '':
-            configFile['Patterns'].update({'PD': allDivisions[0]})
-            try:
-                configFile['Patterns'].update({'PL': locations[0]})
-            except:
-                print('Exception at: Patterns.Model.initializeComboBoxes')
-                configFile['Patterns'].update({'PL': ''})
-
-    _psLog.info('Set initial location and tracks in config file')
-
-    PSE.writeConfigFile(configFile)
-
-    return
-
 def updateConfigFile(controls):
     """
     Updates the Patterns part of the config file
@@ -97,29 +51,6 @@ def updateConfigFile(controls):
     PSE.writeConfigFile(configFile)
 
     return controls
-
-def validateSelection(selectedTracks):
-    """
-    Catches on the fly user edit of JMRI location and tracknames.
-    patternTracks and allTracksAtLoc should be the same.
-    Called by:
-    Controller.StartUp.trackPatternButton
-    Controller.StartUp.setCarsButton
-    """
-
-    _psLog.debug('validateSelection')
-    configFile = PSE.readConfigFile()
-    patternLocation = configFile['Patterns']['PL']
-
-    if not PSE.LM.getLocationByName(patternLocation): # test if location was changed.
-        return False
-
-    allTracksAtLoc = ModelEntities.getTrackNamesByLocation(None)
-    for track in selectedTracks:
-        if track not in allTracksAtLoc:
-            return False
-
-    return True
 
 def makeTrackPattern(selectedTracks):
     """
@@ -203,29 +134,25 @@ def appendWorkList(mergedForm):
     return
 
 def jDivision(selectedItem):
-    """Updates the Division: combo box and ripples the changes.
-        jDivisions is also the name of the combobox.
-        """
+    """
+    Updates the config file based on changes to divisions.
+    """
 
     _psLog.debug('jDivision')
 
     configFile = PSE.readConfigFile()
-    newDivision = ModelEntities.testSelectedDivision(selectedItem)
-    newDivisionList = PSE.getAllDivisionNames()
+
+    selectedItem = str(selectedItem)
     newLocationList = PSE.getLocationNamesByDivision(selectedItem)
 
-    if not newLocationList:
-        # newLocationList = PSE.getAllLocationNames()
-        configFile['Patterns'].update({'PL': ''})
-    else:
-        configFile['Patterns'].update({'PL': newLocationList[0]})
-
-    configFile['Patterns'].update({'PD': newDivision})
-    configFile['Patterns'].update({'AD': newDivisionList})
+    configFile['Patterns'].update({'PD': selectedItem})
     configFile['Patterns'].update({'AL': newLocationList})
+    try:
+        configFile['Patterns'].update({'PL': newLocationList[0]})
+    except:
+        configFile['Patterns'].update({'PL': None})
 
     PSE.writeConfigFile(configFile)
-    PSE.restartSubroutineByName(__package__)
 
     return
 

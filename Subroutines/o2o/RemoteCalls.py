@@ -8,7 +8,6 @@ Keep this as light as possible.
 
 from opsEntities import PSE
 from Subroutines.o2o import Listeners
-from Subroutines.o2o import ModelWorkEvents
 
 
 def activatedCalls():
