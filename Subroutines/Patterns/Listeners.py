@@ -53,10 +53,10 @@ def addDivisionListeners():
     print('o2o.activatedCalls.Listeners.DivisionComboBoxProperty')
 
     for division in PSE.DM.getList():
+        PSE.DM.removePropertyChangeListener(DivisionComboBoxProperty())
         division.addPropertyChangeListener(DivisionProperty())
 
     return
-
 
 def removeDivisionListeners():
 
@@ -108,6 +108,51 @@ class DivisionProperty(PSE.JAVA_BEANS.PropertyChangeListener):
         return
 
 
+def addLocationListeners():
+
+    PSE.LM.addPropertyChangeListener(LocationComboBoxProperty())
+    print('o2o.activatedCalls.Listeners.LocationComboBoxProperty')
+
+    for location in PSE.LM.getList():
+        location.removePropertyChangeListener(LocationComboBoxProperty())
+        location.addPropertyChangeListener(LocationComboBoxProperty())
+
+    return
+
+def removeLocationListeners():
+
+    PSE.LM.removePropertyChangeListener(LocationComboBoxProperty())
+    print('o2o.activatedCalls.Listeners.LocationComboBoxProperty')
+
+    for location in PSE.LM.getList():
+        location.removePropertyChangeListener(LocationComboBoxProperty())
+
+    return
+
+
+class LocationComboBoxProperty(PSE.JAVA_BEANS.PropertyChangeListener):
+    """
+    Restarts the Patterns sub on a change to the locations roster.
+    """
+
+    def __init__(self):
+
+        return
+    
+    def propertyChange(self, COMBO_BOX_UPDATE):
+
+        _psLog.debug(COMBO_BOX_UPDATE)
+        print(SCRIPT_NAME + '.LocationComboBoxProperty ' + str(SCRIPT_REV))
+
+        if COMBO_BOX_UPDATE.propertyName == 'locationsListLength':
+            PSE.restartSubroutineByName(__package__)
+
+        if COMBO_BOX_UPDATE.propertyName == 'locationName':
+            PSE.restartSubroutineByName(__package__)
+
+        return
+    
+
 class DivisionAction(PSE.JAVA_AWT.event.ActionListener):
     """
     Action taken when an item in the Divisions combo box is selected.
@@ -120,7 +165,7 @@ class DivisionAction(PSE.JAVA_AWT.event.ActionListener):
     def actionPerformed(self, EVENT):
 
         itemSelected = EVENT.getSource().getSelectedItem()
-        Model.jDivision(itemSelected)
+        Model.divisionComboBox(itemSelected)
         PSE.restartSubroutineByName(__package__)
 
         return
@@ -138,7 +183,7 @@ class LocationAction(PSE.JAVA_AWT.event.ActionListener):
     def actionPerformed(self, EVENT):
 
         itemSelected = EVENT.getSource().getSelectedItem()
-        Model.jLocations(itemSelected)
+        Model.locationComboBox(itemSelected)
         PSE.restartSubroutineByName(__package__)
 
         return

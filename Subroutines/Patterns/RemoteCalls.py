@@ -17,6 +17,7 @@ def activatedCalls():
     """
 
     Listeners.addDivisionListeners()
+    Listeners.addLocationListeners()
 
     return
 
@@ -26,6 +27,7 @@ def deActivatedCalls():
     """
 
     Listeners.removeDivisionListeners()
+    Listeners.removeLocationListeners()
     
     PSE.closeOpsWindows('popupFrame')
     PSE.closeOpsWindows('setCarsWindow')

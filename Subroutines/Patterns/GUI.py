@@ -76,18 +76,23 @@ class subroutineGui:
         divisionLabel = PSE.JAVX_SWING.JLabel(PSE.getBundleItem('Division:'))
 
         self.divisionComboBox.setEditable(True)
+        patternDivision = self.configFile['PD']
+        if not patternDivision in PSE.getAllDivisionNames():
+            patternDivision = None
+        self.divisionComboBox.setSelectedItem(patternDivision)
         self.divisionComboBox.setName('jDivision')
-        if self.configFile['PD'] in PSE.getAllDivisionNames():
-            self.divisionComboBox.setSelectedItem(self.configFile['PD'])
-        else:
-            self.divisionComboBox.setSelectedItem(None)
 
         locationLabel = PSE.JAVX_SWING.JLabel(PSE.getBundleItem('Location:'))
 
-        for item in self.configFile['AL']:
-            self.locationComboBox.addItem(item)
+        for locationName in sorted(PSE.getLocationNamesByDivision(patternDivision)):
+            self.locationComboBox.addItem(locationName)
+
+        patternLocation = self.configFile['PL']
+        if not patternLocation in PSE.getLocationNamesByDivision(patternDivision):
+            patternLocation = None
+        self.configFile.update({'PL':patternLocation})
+        self.locationComboBox.setSelectedItem(patternLocation)
         self.locationComboBox.setName('jLocations')
-        self.locationComboBox.setSelectedItem(self.configFile['PL'])
 
         localeRow.add(divisionLabel)
         localeRow.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
@@ -132,54 +137,20 @@ class subroutineGui:
         """
 
         trackDict = {}
-    # Check for a pattern location 'PL'
-        if not self.configFile['PL']:
-            return trackDict
 
-    # for the selected pattern location, make the track dictionary
-        patternLocation = self.configFile['PL']
         yardTracksOnlyFlag = None
-
         if self.configFile['PA']:
             yardTracksOnlyFlag = 'Yard'
 
-        for track in PSE.LM.getLocationByName(patternLocation).getTracksByNameList(yardTracksOnlyFlag):
+        try:
+            trackList = PSE.LM.getLocationByName(self.configFile['PL']).getTracksByNameList(yardTracksOnlyFlag)
+        except:
+            trackList = []
+
+        for track in trackList:
             trackDict[unicode(track, PSE.ENCODING)] = False
 
         return trackDict
-    
-
-
-
-
-    # def getTrackDict(self):
-    #     """
-    #     Since the track dict is created when called,
-    #     it is not necessary to save it into configFile['Patterns']['PT']
-    #     """
-
-    #     trackDict = {}
-
-    # # Try to find a pattern location
-    #     patternLocation = self.configFile['PL']
-    #     if not patternLocation:
-    #         try:
-    #             patternLocation = PSE.LM.getLocationsByNameList()
-    #         except:
-    #             return trackDict
-    # # If there is a pattern location, make the dictionary
-    #     yardTracksOnlyFlag = self.configFile['PA']
-    #     if yardTracksOnlyFlag:
-    #         for track in PSE.LM.getLocationByName(patternLocation).getTracksByNameList('Yard'):
-    #             trackDict[unicode(track, PSE.ENCODING)] = False
-    #     else:
-    #         try:
-    #             for track in PSE.LM.getLocationByName(patternLocation).getTracksByNameList(None):
-    #                 trackDict[unicode(track, PSE.ENCODING)] = False
-    #         except:
-    #             pass
-
-    #     return trackDict
         
     def makeButtonsRow(self):
         """Make the row of action buttons: 'Track Pattern', 'Set Rolling Stock.' """

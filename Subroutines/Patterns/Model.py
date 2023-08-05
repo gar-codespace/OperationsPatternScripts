@@ -133,58 +133,34 @@ def appendWorkList(mergedForm):
 
     return
 
-def jDivision(selectedItem):
+def divisionComboBox(selectedItem):
     """
     Updates the config file based on changes to divisions.
     """
 
-    _psLog.debug('jDivision')
+    _psLog.debug('divisionComboBox')
 
     configFile = PSE.readConfigFile()
 
     selectedItem = str(selectedItem)
-    newLocationList = PSE.getLocationNamesByDivision(selectedItem)
-
     configFile['Patterns'].update({'PD': selectedItem})
-    configFile['Patterns'].update({'AL': newLocationList})
-    try:
-        configFile['Patterns'].update({'PL': newLocationList[0]})
-    except:
-        configFile['Patterns'].update({'PL': None})
+    configFile['Patterns'].update({'PL': None})
 
     PSE.writeConfigFile(configFile)
 
     return
 
-def jLocations(selectedItem):
-    """Updates the Locations: combobox and ripples the changes.
-        jLocations is also the name of the combobox.
-        """
+def locationComboBox(selectedItem):
+    """
+    """
 
-    _psLog.debug('jLocations')
+    _psLog.debug('locationComboBox')
 
     configFile = PSE.readConfigFile()
-    newLocation = ModelEntities.testSelectedLocation(selectedItem)
 
-
-
-
-
-
-    if PSE.DM.getNumberOfdivisions() == 0:
-        newLocationList = PSE.getAllLocationNames()
-    else:
-        newLocationList = PSE.getLocationNamesByDivision(configFile['Patterns']['PD'])
-
-
-
-
-
-
-    configFile['Patterns'].update({'PL': newLocation})
-    configFile['Patterns'].update({'AL': newLocationList})
+    selectedItem = str(selectedItem)
+    configFile['Patterns'].update({'PL': selectedItem})
 
     PSE.writeConfigFile(configFile)
-    PSE.restartSubroutineByName(__package__)
 
     return

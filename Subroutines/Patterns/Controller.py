@@ -71,7 +71,7 @@ class StartUp:
         Gets the GUI for this subroutine.
         """
 
-        Model.initializeComboBoxes()
+        # Model.initializeComboBoxes()
 
         subroutineGui, self.widgets = View.ManageGui().makeSubroutineGui()
         self.activateWidgets()
