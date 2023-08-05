@@ -1086,7 +1086,7 @@ class Divisionator:
         self.assignDivisions()
         self.addNewDivisions()
         self.addDivisionToLocations()
-        self.addUnreportedToUnknown()
+        self.addUnreportedToNull()
 
         _psLog.info('Divisions updated')
 
@@ -1124,14 +1124,13 @@ class Divisionator:
 
         allDivisions = PSE.getAllDivisionNames()
         locations = PSE.getAllLocationNames()
+
         for location in locations:
-            divisionName = PSE.LM.getLocationByName(location).getDivisionName()
-            if divisionName not in allDivisions and PSE.DM.getNumberOfdivisions() != 0:
-                divisionName = PSE.DM.newDivision(PSE.getBundleItem('Unassigned'))                
-                
-                PSE.LM.getLocationByName(location).setDivision(divisionName)
-            if divisionName not in allDivisions and PSE.DM.getNumberOfdivisions() == 0:
+            if PSE.DM.getNumberOfdivisions() == 1:
+                PSE.LM.getLocationByName(location).setDivision(allDivisions[0])
+            else:
                 PSE.LM.getLocationByName(location).setDivision(None)
+
         return
 
     def addNewDivisions(self):
@@ -1150,25 +1149,15 @@ class Divisionator:
             division = PSE.DM.getList()[0]
             [location.setDivision(division) for location in PSE.LM.getList()]
 
-        if PSE.DM.getNumberOfdivisions() > 1:
-            division = PSE.DM.newDivision(PSE.getBundleItem('Unassigned'))            
-            [location.setDivision(division) for location in PSE.LM.getList() if not location.getDivision()]
-
         return
 
-    def addUnreportedToUnknown(self):
+    def addUnreportedToNull(self):
         """
-        This method adds a division named Unknown.
-        Add the location named Unreported to the division named Unknown.
-        """
+        Add the location named 'Unreported' to the null division.
+        """       
 
-        if PSE.DM.getNumberOfdivisions() != 0:
-
-            division = PSE.DM.newDivision(PSE.getBundleItem('Unknown'))            
-
-            locationName = PSE.locationNameLookup('Unreported')
-            location = PSE.LM.getLocationByName(locationName)
-            location.setDivision(division)
+        location = PSE.LM.getLocationByName('Unreported')
+        location.setDivision(None)
 
         return
 
