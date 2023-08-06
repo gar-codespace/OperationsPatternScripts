@@ -5,6 +5,7 @@ Todo:
   o2o.ModelWorkEvents needs to be refactored.
   For Patterns/Divisions change 'Unassigned' to ''.
   Patterns add listeners to Locations/Tracks.
+  Turn on auto save in settings
 
 Comments:
   Schedule does not prevent setting a car to a track.

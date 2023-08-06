@@ -16,8 +16,7 @@ def activatedCalls():
     Methods called when this subroutine is activated.
     """
 
-    Listeners.addDivisionListeners()
-    Listeners.addLocationListeners()
+    Listeners.addPatternsListeners()
 
     return
 
@@ -26,8 +25,7 @@ def deActivatedCalls():
     ethods called when this subroutine is deactivated.
     """
 
-    Listeners.removeDivisionListeners()
-    Listeners.removeLocationListeners()
+    Listeners.removePatternListeners()
     
     PSE.closeOpsWindows('popupFrame')
     PSE.closeOpsWindows('setCarsWindow')

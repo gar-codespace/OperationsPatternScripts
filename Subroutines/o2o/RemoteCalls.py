@@ -6,27 +6,20 @@ Calls other subs make to this one
 Keep this as light as possible.
 """
 
-from opsEntities import PSE
 from Subroutines.o2o import Listeners
 
 
 def activatedCalls():
     """Methods called when this subroutine is activated."""
 
-    configFile = PSE.readConfigFile()
-    if configFile['Main Script']['CP'][__package__]:
-        Listeners.addTrainsTableListener()
-        Listeners.addBuiltTrainListener()
-        print('o2o.activatedCalls.addBuiltTrainListener')
+    Listeners.addTrainsListener()
 
     return
 
 def deActivatedCalls():
     """Methods called when this subroutine is deactivated."""
 
-    Listeners.removeTrainsTableListener()
-    Listeners.removeBuiltTrainListener()
-    print('o2o.deActivatedCalls.removeBuiltTrainListener')
+    Listeners.removeTrainsListener()
 
     return
 

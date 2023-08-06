@@ -31,14 +31,14 @@ class subroutineGui:
 
     def __init__(self):
 
-        self.configFile = PSE.readConfigFile('Patterns')
+        self.patternsConfigFile = PSE.readConfigFile('Patterns')
 
         self.divisionComboBox = PSE.DM.getComboBox()
         self.locationComboBox = PSE.JAVX_SWING.JComboBox()
 
         self.yardTracksOnly = PSE.JAVX_SWING.JCheckBox()
         self.yardTracksOnly.setText(PSE.getBundleItem('Yard tracks only') + ' ')
-        self.yardTracksOnly.setSelected(self.configFile['PA'])
+        self.yardTracksOnly.setSelected(self.patternsConfigFile['PA'])
         self.yardTracksOnly.setName('ytoCheckBox')
 
         self.ypButton = PSE.JAVX_SWING.JButton()
@@ -76,7 +76,7 @@ class subroutineGui:
         divisionLabel = PSE.JAVX_SWING.JLabel(PSE.getBundleItem('Division:'))
 
         self.divisionComboBox.setEditable(True)
-        patternDivision = self.configFile['PD']
+        patternDivision = self.patternsConfigFile['PD']
         if not patternDivision in PSE.getAllDivisionNames():
             patternDivision = None
         self.divisionComboBox.setSelectedItem(patternDivision)
@@ -87,10 +87,10 @@ class subroutineGui:
         for locationName in sorted(PSE.getLocationNamesByDivision(patternDivision)):
             self.locationComboBox.addItem(locationName)
 
-        patternLocation = self.configFile['PL']
+        patternLocation = self.patternsConfigFile['PL']
         if not patternLocation in PSE.getLocationNamesByDivision(patternDivision):
             patternLocation = None
-        self.configFile.update({'PL':patternLocation})
+        self.patternsConfigFile.update({'PL':patternLocation})
         self.locationComboBox.setSelectedItem(patternLocation)
         self.locationComboBox.setName('jLocations')
 
@@ -139,11 +139,11 @@ class subroutineGui:
         trackDict = {}
 
         yardTracksOnlyFlag = None
-        if self.configFile['PA']:
+        if self.patternsConfigFile['PA']:
             yardTracksOnlyFlag = 'Yard'
 
         try:
-            trackList = PSE.LM.getLocationByName(self.configFile['PL']).getTracksByNameList(yardTracksOnlyFlag)
+            trackList = PSE.LM.getLocationByName(self.patternsConfigFile['PL']).getTracksByNameList(yardTracksOnlyFlag)
         except:
             trackList = []
 

@@ -10,13 +10,13 @@ import jmri as JMRI
 from java import io as JAVA_IO
 import java.awt as JAVA_AWT
 import java.nio.file as JAVA_NIO
-import java.beans as JAVA_BEANS
+import java.beans as JAVA_BEANS # Called by the listeners
 import javax.swing as JAVX_SWING
 
 import logging as LOGGING
 import apps as APPS
 import time as TIME
-from HTMLParser import HTMLParser as HTML_PARSER
+from HTMLParser import HTMLParser as HTML_PARSER # Check if this is used any more
 from json import loads as jsonLoadS, dumps as jsonDumpS
 from codecs import open as codecsOpen
 
@@ -558,9 +558,14 @@ def getLocationNamesByDivision(divisionName):
 
     locationsByDivision = []
 
-    for location in LM.getList():
-        if location.getDivisionName() == divisionName:
-            locationsByDivision.append(location.getName())
+    if divisionName == None:
+        for location in LM.getList():
+            if not location.getDivisionName():
+                locationsByDivision.append(location.getName())
+    else:
+        for location in LM.getList():
+            if location.getDivisionName() == divisionName:
+                locationsByDivision.append(location.getName())
 
     return locationsByDivision
 

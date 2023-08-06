@@ -45,106 +45,68 @@ def actionListener(EVENT):
 
     return
 
-def addTrainsTableListener():
 
-    PSE.TM.addPropertyChangeListener(o2oTrainsTable())
+def addTrainsListener():
+
+    PSE.TM.addPropertyChangeListener(TrainsPropertyChange())
+
+    trainList = PSE.TM.getTrainsByIdList()
+    for train in trainList:
+        train.addPropertyChangeListener(TrainsPropertyChange())
+
+    print('o2o.activatedCalls.Listeners.addTrainsTableListener')
+    print('o2o.activatedCalls.Listeners.addBuiltTrainListener')
 
     return
 
-def removeTrainsTableListener():
+def removeTrainsListener():
 
-    PSE.TM.removePropertyChangeListener(o2oTrainsTable())
+    PSE.TM.removePropertyChangeListener(TrainsPropertyChange())
+
+    trainList = PSE.TM.getTrainsByIdList()
+    for train in trainList:
+        train.removePropertyChangeListener(TrainsPropertyChange())
+
+    print('o2o.activatedCalls.Listeners.removeTrainsTableListener')
+    print('o2o.activatedCalls.Listeners.removeBuiltTrainListener')
 
     return
 
 
-class o2oTrainsTable(PSE.JAVA_BEANS.PropertyChangeListener):
+class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     """
-    The trains table model gets this listener.
+    Events that are triggered with changes to JMRI Trains.
     """
 
     def __init__(self):
 
         return
 
-    def propertyChange(self, TRAIN_LIST):
+    def propertyChange(self, PROPERTY_CHANGE_EVENT):
 
-        _psLog.debug(TRAIN_LIST)
-        print(SCRIPT_NAME + '.o2oTrainsTable ' + str(SCRIPT_REV))
+        if PROPERTY_CHANGE_EVENT.propertyName == 'TrainsListLength':
+            removeTrainsListener()
+            addTrainsListener()
 
-        if TRAIN_LIST.propertyName == 'TrainsListLength':
-            removeBuiltTrainListener()
-            addBuiltTrainListener()
-            _psLog.info('Train roster changed')
+            _psLog.debug(PROPERTY_CHANGE_EVENT)
+            print(SCRIPT_NAME + '.TrainsPropertyChange.TrainsListLength ' + str(SCRIPT_REV))
 
-        if TRAIN_LIST.propertyName == 'PatternsSwitchList' and TRAIN_LIST.newValue == True:
-            ModelWorkEvents.o2oWorkListMaker()
-            _psLog.info('Patterns switch list generated')
-
-        return
-
-
-def addBuiltTrainListener():
-    """
-    Adds o2oBuiltTrain to every train in the roster.
-    """
-
-    removeBuiltTrainListener()
-
-    trainList = PSE.TM.getTrainsByIdList()
-    for train in trainList:
-        train.addPropertyChangeListener(o2oBuiltTrain())
-    return
-
-def removeBuiltTrainListener():
-    """
-    Removes o2oBuiltTrain from every train in the roster.
-    """
-        
-    trainList = PSE.TM.getTrainsByIdList()
-    for train in trainList:
-        for listener in train.getPropertyChangeListeners():
-            if listener.getClass() == o2oBuiltTrain:
-                train.removePropertyChangeListener(listener)
-
-    return
-
-
-class o2oBuiltTrain(PSE.JAVA_BEANS.PropertyChangeListener):
-    """
-    Starts o2oWorkEventsBuilder on trainBuilt.
-    """
-
-    def propertyChange(self, TRAIN_BUILT):
-
-        _psLog.debug(TRAIN_BUILT)
-
-        if TRAIN_BUILT.propertyName == 'TrainBuilt' and TRAIN_BUILT.newValue == True:
+        if PROPERTY_CHANGE_EVENT.propertyName == 'TrainBuilt' and PROPERTY_CHANGE_EVENT.newValue == True:
             xModule = __import__(__package__, globals(), locals(), ['BuiltTrainExport'], 0)
             o2oWorkEvents = xModule.BuiltTrainExport.o2oWorkEventsBuilder()
-            o2oWorkEvents.passInTrain(TRAIN_BUILT.getSource())
+            o2oWorkEvents.passInTrain(PROPERTY_CHANGE_EVENT.getSource())
             o2oWorkEvents.start()
 
-        return
+            _psLog.debug(PROPERTY_CHANGE_EVENT)
+            print(SCRIPT_NAME + '.TrainsPropertyChange.TrainBuilt ' + str(SCRIPT_REV))
 
+        if PROPERTY_CHANGE_EVENT.propertyName == 'PatternsSwitchList' and PROPERTY_CHANGE_EVENT.newValue == True:
+            ModelWorkEvents.o2oWorkListMaker()
+            _psLog.debug('Patterns switch list generated')
+            o2oWorkEvents.passInTrain(PROPERTY_CHANGE_EVENT.getSource())
+            o2oWorkEvents.start()
 
-class o2oSwitchList(PSE.JAVA_BEANS.PropertyChangeListener):
-    """
-    Starts ModelWorkEvents.o2oWorkListMaker() on trainBuilt.
-    """
-
-    def propertyChange(self, OPS_SWITCH_LIST):
-
-        _psLog.debug(OPS_SWITCH_LIST)
-
-        if OPS_SWITCH_LIST.propertyName == 'xyzzy' and OPS_SWITCH_LIST.newValue == True:
-            print('Yipee')
-            # ModelWorkEvents.o2oWorkListMaker()
-            # xModule = __import__(__package__, globals(), locals(), ['BuiltTrainExport'], 0)
-            # o2oWorkEvents = xModule.BuiltTrainExport.o2oWorkEventsBuilder()
-            # o2oWorkEvents.passInTrain(TRAIN_BUILT.getSource())
-            # o2oWorkEvents.start()
+            _psLog.debug(PROPERTY_CHANGE_EVENT)
+            print(SCRIPT_NAME + '.TrainsPropertyChange.PatternsSwitchList ' + str(SCRIPT_REV))
 
         return
-
-    

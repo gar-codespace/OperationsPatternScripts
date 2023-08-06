@@ -104,6 +104,8 @@ class o2oWorkEventsBuilder(jmri.jmrit.automat.AbstractAutomaton):
         self.standAloneLogging = StandAloneLogging()
         self.o2oLog = PSE.LOGGING.getLogger('TP.o2oWorkEventsBuilder')
 
+        print('here')
+
         return
 
     def getNewestTrain(self):
