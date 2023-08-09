@@ -3,16 +3,16 @@
 
 """
 The Patterns subroutins is inventory control for any one JMRI location.
-Yard and track pattern reports can be run on tracks at the selected location.
+Track pattern reports can be run on tracks at the selected location.
 Cars can be moved from track to track at the selected location.
 This subroutine can be used in conjunction with o2o to create TrainPlayer switch lists.
 """
 
 from opsEntities import PSE
+from Subroutines.Patterns import SetCarsForm_Controller
 from Subroutines.Patterns import Model
 from Subroutines.Patterns import View
 from Subroutines.Patterns import Listeners
-from Subroutines.Patterns import SetCarsForm_Controller
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
