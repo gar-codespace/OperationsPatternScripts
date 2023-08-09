@@ -113,8 +113,7 @@ class StartUp:
 
     def patternReportButton(self, EVENT):
         """
-        Displays a Pattern Report from values in the configFile.
-        The selected tracks are read directly from the track check boxes row.
+        Displays a Pattern Report in a note window.
         """
 
         _psLog.debug(EVENT)
@@ -123,11 +122,13 @@ class StartUp:
         selectedTracks = [trackCheckBox.text for trackCheckBox in self.widgets[3] if trackCheckBox.selected]
         selectedTracks.sort()
 
+        PSE.makeReportItemWidthMatrix()
+
         trackPattern = Model.makeTrackPattern(selectedTracks)
         Model.writePatternReport(trackPattern)
 
-        View.displayPatternReport()
-        # View.trackPatternAsCsv()
+        Model.patternReportForPrint()
+        # Model.trackPatternAsCsv()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -144,9 +145,9 @@ class StartUp:
         selectedTracks = [trackCheckBox.text for trackCheckBox in self.widgets[3] if trackCheckBox.selected]
         selectedTracks.sort()
  
-        Model.resetWorkList()
-
         PSE.makeReportItemWidthMatrix()
+
+        Model.resetWorkList()
 
         windowOffset = 200
         for track in selectedTracks:

@@ -3,8 +3,6 @@ Todo:
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
   Duplication of PSE chunkPath.
   o2o.ModelWorkEvents needs to be refactored.
-  For Patterns/Divisions change 'Unassigned' to ''.
-  Patterns add listeners to Locations/Tracks.
   Turn on auto save in settings
 
 Comments:

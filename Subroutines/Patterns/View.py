@@ -47,80 +47,80 @@ class ManageGui:
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
     
 
-def displayPatternReport():
-    """
-    Mini controller.
-    Formats and displays the Track Pattern Report.
-    Called by:
-    Controller.StartUp.patternReportButton
-    """
+# def displayPatternReport():
+#     """
+#     Mini controller.
+#     Formats and displays the Track Pattern Report.
+#     Called by:
+#     Controller.StartUp.patternReportButton
+#     """
 
-    _psLog.debug('trackPatternButton')
+#     _psLog.debug('trackPatternButton')
 
-    reportName = PSE.getBundleItem('ops-pattern-report')
+#     reportName = PSE.getBundleItem('ops-pattern-report')
 
-    trackPattern = getTrackPatternJson(reportName)
+#     trackPattern = getTrackPatternJson(reportName)
 
-    trackPatternForPrint = makeTrackPatternForPrint(trackPattern)
+#     trackPatternForPrint = makeTrackPatternForPrint(trackPattern)
 
-    targetPath = writeReportForPrint(reportName, trackPatternForPrint)
+#     targetPath = writeReportForPrint(reportName, trackPatternForPrint)
 
-    PSE.genericDisplayReport(targetPath)
+#     PSE.genericDisplayReport(targetPath)
 
-    return
+#     return
 
-def getTrackPatternJson(reportName):
+# def getTrackPatternJson(reportName):
     
-    fileName = reportName + '.json'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
-    trackPattern = PSE.genericReadReport(targetPath)
+#     fileName = reportName + '.json'
+#     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+#     trackPattern = PSE.genericReadReport(targetPath)
 
-    return PSE.loadJson(trackPattern)
+#     return PSE.loadJson(trackPattern)
 
-def makeTrackPatternForPrint(trackPattern):
+# def makeTrackPatternForPrint(trackPattern):
 
-    PSE.makeReportItemWidthMatrix()
+#     PSE.makeReportItemWidthMatrix()
 
-    trackPattern = Model.insertStandins(trackPattern)
-    reportHeader = makeTextReportHeader(trackPattern)
-    reportLocations = PSE.getBundleItem('Pattern Report for Tracks') + '\n\n'
-    reportLocations += makeTextReportTracks(trackPattern['tracks'], trackTotals=True)
+#     trackPattern = Model.insertStandins(trackPattern)
+#     reportHeader = makeTextReportHeader(trackPattern)
+#     reportLocations = PSE.getBundleItem('Pattern Report for Tracks') + '\n\n'
+#     reportLocations += makeTextReportTracks(trackPattern['tracks'], trackTotals=True)
 
-    return reportHeader + reportLocations
+#     return reportHeader + reportLocations
 
-def writeReportForPrint(reportName, report):
+# def writeReportForPrint(reportName, report):
 
-    fileName = reportName + '.txt'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', fileName)
-    PSE.genericWriteReport(targetPath, report)
+#     fileName = reportName + '.txt'
+#     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', fileName)
+#     PSE.genericWriteReport(targetPath, report)
 
-    return targetPath
+#     return targetPath
 
-def trackPatternAsCsv():
-    """
-    ops-pattern-report.json is written as a CSV file
-    Called by:
-    Controller.StartUp.trackPatternButton
-    """
+# def trackPatternAsCsv():
+#     """
+#     ops-pattern-report.json is written as a CSV file
+#     Called by:
+#     Controller.StartUp.trackPatternButton
+#     """
 
-    _psLog.debug('trackPatternAsCsv')
+#     _psLog.debug('trackPatternAsCsv')
 
-    if not PSE.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
-        return
-#  Get json data
-    fileName = PSE.getBundleItem('ops-pattern-report')+ '.json'    
+#     if not PSE.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
+#         return
+# #  Get json data
+#     fileName = PSE.getBundleItem('ops-pattern-report')+ '.json'    
 
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
-    trackPatternCsv = PSE.genericReadReport(targetPath)
-    trackPatternCsv = PSE.loadJson(trackPatternCsv)
-# Process json data into CSV
-    trackPatternCsv = makeTrackPatternCsv(trackPatternCsv)
-# Write CSV data
-    fileName = PSE.getBundleItem('ops-pattern-report') + '.csv'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'csvSwitchLists', fileName)
-    PSE.genericWriteReport(targetPath, trackPatternCsv)
+#     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+#     trackPatternCsv = PSE.genericReadReport(targetPath)
+#     trackPatternCsv = PSE.loadJson(trackPatternCsv)
+# # Process json data into CSV
+#     trackPatternCsv = makeTrackPatternCsv(trackPatternCsv)
+# # Write CSV data
+#     fileName = PSE.getBundleItem('ops-pattern-report') + '.csv'
+#     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'csvSwitchLists', fileName)
+#     PSE.genericWriteReport(targetPath, trackPatternCsv)
 
-    return
+#     return
     
 # def setCarsToTrackWindow(reportHeader, reportTracks):
 #     """"Set Cars to Track button opens a window for each selected track."""
@@ -210,172 +210,172 @@ def trackPatternAsCsv():
 
 #     return destStandin, fdStandin
     
-def makeTextReportHeader(patternReport):
-    """
-    Makes the header for generic text reports
-    Called by:
-    View.ManageGui.trackPatternButton'
-    ViewSetCarsForm.switchListButton
-    """
+# def makeTextReportHeader(patternReport):
+#     """
+#     Makes the header for generic text reports
+#     Called by:
+#     View.ManageGui.trackPatternButton'
+#     ViewSetCarsForm.switchListButton
+#     """
 
-    patternLocation = PSE.readConfigFile('Patterns')['PL']
-    divisionName = patternReport['division']
-    workLocation = ''
-    if divisionName:
-        workLocation = divisionName + ' - ' + patternLocation
-    else:
-        workLocation = patternLocation
+#     patternLocation = PSE.readConfigFile('Patterns')['PL']
+#     divisionName = patternReport['division']
+#     workLocation = ''
+#     if divisionName:
+#         workLocation = divisionName + ' - ' + patternLocation
+#     else:
+#         workLocation = patternLocation
 
-    textReportHeader    = patternReport['railroadName'] + '\n\n' + PSE.getBundleItem('Work Location:') + ' ' + workLocation + '\n' + patternReport['date'] + '\n\n'
+#     textReportHeader    = patternReport['railroadName'] + '\n\n' + PSE.getBundleItem('Work Location:') + ' ' + workLocation + '\n' + patternReport['date'] + '\n\n'
     
-    return textReportHeader
+#     return textReportHeader
 
-def makeTextReportTracks(trackList, trackTotals):
-    """
-    Makes the body for generic text reports
-    Called by:
-    View.ManageGui.trackPatternButton'
-    ViewSetCarsForm.switchListButton
-    """
+# def makeTextReportTracks(trackList, trackTotals):
+#     """
+#     Makes the body for generic text reports
+#     Called by:
+#     View.ManageGui.trackPatternButton'
+#     ViewSetCarsForm.switchListButton
+#     """
 
-    reportSwitchList = ''
-    reportTally = [] # running total for all tracks
-    for track in trackList:
-        lengthOfLocos = 0
-        lengthOfCars = 0
-        trackTally = []
-        trackName = track['trackName']
-        trackLength = track['length']
-        reportSwitchList += PSE.getBundleItem('Track:') + ' ' + trackName + '\n'
+#     reportSwitchList = ''
+#     reportTally = [] # running total for all tracks
+#     for track in trackList:
+#         lengthOfLocos = 0
+#         lengthOfCars = 0
+#         trackTally = []
+#         trackName = track['trackName']
+#         trackLength = track['length']
+#         reportSwitchList += PSE.getBundleItem('Track:') + ' ' + trackName + '\n'
 
-        for loco in track['locos']:
-            lengthOfLocos += int(loco['length']) + 4
-            reportSwitchList += loco['setTo'] + loopThroughRs('loco', loco) + '\n'
+#         for loco in track['locos']:
+#             lengthOfLocos += int(loco['length']) + 4
+#             reportSwitchList += loco['setTo'] + loopThroughRs('loco', loco) + '\n'
 
-        for car in track['cars']:
-            lengthOfCars += int(car['length']) + 4
-            reportSwitchList += car['setTo'] + loopThroughRs('car', car) + '\n'
-            trackTally.append(car['finalDest'])
-            reportTally.append(car['finalDest'])
+#         for car in track['cars']:
+#             lengthOfCars += int(car['length']) + 4
+#             reportSwitchList += car['setTo'] + loopThroughRs('car', car) + '\n'
+#             trackTally.append(car['finalDest'])
+#             reportTally.append(car['finalDest'])
 
-        if trackTotals:
-            totalLength = lengthOfLocos + lengthOfCars
-            reportSwitchList += PSE.getBundleItem('Total Cars:') + ' ' \
-                + str(len(track['cars'])) + ' ' + PSE.getBundleItem('Track Length:')  + ' ' \
-                + str(trackLength) +  ' ' + PSE.getBundleItem('Eqpt. Length:')  + ' ' \
-                + str(totalLength) + ' ' +  PSE.getBundleItem('Available:') + ' '  \
-                + str(trackLength - totalLength) \
-                + '\n\n'
-            reportSwitchList += PSE.getBundleItem('Track Totals for Cars:') + '\n'
-            for track, count in sorted(PSE.occuranceTally(trackTally).items()):
-                reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
-        reportSwitchList += '\n'
+#         if trackTotals:
+#             totalLength = lengthOfLocos + lengthOfCars
+#             reportSwitchList += PSE.getBundleItem('Total Cars:') + ' ' \
+#                 + str(len(track['cars'])) + ' ' + PSE.getBundleItem('Track Length:')  + ' ' \
+#                 + str(trackLength) +  ' ' + PSE.getBundleItem('Eqpt. Length:')  + ' ' \
+#                 + str(totalLength) + ' ' +  PSE.getBundleItem('Available:') + ' '  \
+#                 + str(trackLength - totalLength) \
+#                 + '\n\n'
+#             reportSwitchList += PSE.getBundleItem('Track Totals for Cars:') + '\n'
+#             for track, count in sorted(PSE.occuranceTally(trackTally).items()):
+#                 reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
+#         reportSwitchList += '\n'
 
-    if trackTotals:
-        reportSwitchList += '\n' + PSE.getBundleItem('Report Totals for Cars:') + '\n'
-        for track, count in sorted(PSE.occuranceTally(reportTally).items()):
-            reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
+#     if trackTotals:
+#         reportSwitchList += '\n' + PSE.getBundleItem('Report Totals for Cars:') + '\n'
+#         for track, count in sorted(PSE.occuranceTally(reportTally).items()):
+#             reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
 
-    return reportSwitchList
+#     return reportSwitchList
 
-def loopThroughRs(type, rsAttribs):
-    """
-    Creates a line containing the attrs in get * MessageFormat
-    Called by:
-    makeTextReportTracks
-    """
+# def loopThroughRs(type, rsAttribs):
+#     """
+#     Creates a line containing the attrs in get * MessageFormat
+#     Called by:
+#     makeTextReportTracks
+#     """
 
-    reportWidth = PSE.REPORT_ITEM_WIDTH_MATRIX
-    switchListRow = ''
-    rosetta = PSE.translateMessageFormat()
+#     reportWidth = PSE.REPORT_ITEM_WIDTH_MATRIX
+#     switchListRow = ''
+#     rosetta = PSE.translateMessageFormat()
 
-    if type == 'loco':
-        messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
-    if type == 'car':
-        messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
+#     if type == 'loco':
+#         messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
+#     if type == 'car':
+#         messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
 
-    for lookup in messageFormat:
-        item = rosetta[lookup]
+#     for lookup in messageFormat:
+#         item = rosetta[lookup]
 
-        if 'tab' in item:
-            continue
+#         if 'tab' in item:
+#             continue
 
-        itemWidth = reportWidth[item]
-        switchListRow += PSE.formatText(rsAttribs[item], itemWidth)
+#         itemWidth = reportWidth[item]
+#         switchListRow += PSE.formatText(rsAttribs[item], itemWidth)
 
-    return switchListRow
+#     return switchListRow
 
-def makeTrackPatternCsv(trackPattern):
-    """
-    The double quote for the railroadName entry is added to keep the j Pluse extended data intact.
-    CSV writer does not support utf-8.
-    Called by:
-    Model.writeTrackPatternCsv
-    """
+# def makeTrackPatternCsv(trackPattern):
+#     """
+#     The double quote for the railroadName entry is added to keep the j Pluse extended data intact.
+#     CSV writer does not support utf-8.
+#     Called by:
+#     Model.writeTrackPatternCsv
+#     """
 
-    trackPatternCsv = u'Operator,Description,Parameters\n' \
-                    u'RT,Report Type,' + trackPattern['trainDescription'] + '\n' \
-                    u'RN,Railroad Name,"' + trackPattern['railroadName'] + '"\n' \
-                    u'RD,Railroad Division,"' + trackPattern['division'] + '"\n' \
-                    u'LN,Location Name,' + trackPattern['locations'][0]['locationName'] + '\n' \
-                    u'PRNTR,Printer Name,\n' \
-                    u'YPC,Yard Pattern Comment,' + trackPattern['trainComment'] + '\n' \
-                    u'VT,Valid,' + trackPattern['date'] + '\n'
-    trackPatternCsv += 'SE,Set Engines\n'
-    trackPatternCsv += u'setTo,Road,Number,Type,Model,Length,Weight,Consist,Owner,Track,Location,Destination,Comment\n'
-    for track in trackPattern['locations'][0]['tracks']: # There is only one location
-        try:
-            trackPatternCsv += u'TN,Track name,' + unicode(track['trackName'], PSE.ENCODING) + '\n'
-        except:
-            print('Exception at: Patterns.View.makeTrackPatternCsv')
-            pass
-        for loco in track['locos']:
-            trackPatternCsv +=  loco['setTo'] + ',' \
-                            + loco['road'] + ',' \
-                            + loco['number'] + ',' \
-                            + loco['carType'] + ',' \
-                            + loco['model'] + ',' \
-                            + loco['length'] + ',' \
-                            + loco['weight'] + ',' \
-                            + loco['consist'] + ',' \
-                            + loco['owner'] + ',' \
-                            + loco['track'] + ',' \
-                            + loco['location'] + ',' \
-                            + loco['destination'] + ',' \
-                            + loco['comment'] + ',' \
-                            + '\n'
-    trackPatternCsv += 'SC,Set Cars\n'
-    trackPatternCsv += u'setTo,Road,Number,Type,Length,Weight,Load,Load_Type,Hazardous,Color,Kernel,Kernel_Size,Owner,Track,Location,Destination,dest&Track,Final_Dest,fd&Track,Comment,Drop_Comment,Pickup_Comment,RWE\n'
-    for track in trackPattern['locations'][0]['tracks']: # There is only one location
-        try:
-            trackPatternCsv += u'TN,Track name,' + unicode(track['trackName'], PSE.ENCODING) + '\n'
-        except:
-            print('Exception at: Patterns.View.makeTrackPatternCsv')
-            pass
-        for car in track['cars']:
-            trackPatternCsv +=  car['setTo'] + ',' \
-                            + car['road'] + ',' \
-                            + car['number'] + ',' \
-                            + car['carType'] + ',' \
-                            + car['length'] + ',' \
-                            + car['weight'] + ',' \
-                            + car['load'] + ',' \
-                            + car['loadType'] + ',' \
-                            + str(car['hazardous']) + ',' \
-                            + car['color'] + ',' \
-                            + car['kernel'] + ',' \
-                            + car['kernelSize'] + ',' \
-                            + car['owner'] + ',' \
-                            + car['track'] + ',' \
-                            + car['location'] + ',' \
-                            + car['destination'] + ',' \
-                            + car['dest&Track'] + ',' \
-                            + car['finalDest'] + ',' \
-                            + car['fd&Track'] + ',' \
-                            + car['comment'] + ',' \
-                            + car['setOutMsg'] + ',' \
-                            + car['pickupMsg'] + ',' \
-                            + car['rwe'] \
-                            + '\n'
+#     trackPatternCsv = u'Operator,Description,Parameters\n' \
+#                     u'RT,Report Type,' + trackPattern['trainDescription'] + '\n' \
+#                     u'RN,Railroad Name,"' + trackPattern['railroadName'] + '"\n' \
+#                     u'RD,Railroad Division,"' + trackPattern['division'] + '"\n' \
+#                     u'LN,Location Name,' + trackPattern['locations'][0]['locationName'] + '\n' \
+#                     u'PRNTR,Printer Name,\n' \
+#                     u'YPC,Yard Pattern Comment,' + trackPattern['trainComment'] + '\n' \
+#                     u'VT,Valid,' + trackPattern['date'] + '\n'
+#     trackPatternCsv += 'SE,Set Engines\n'
+#     trackPatternCsv += u'setTo,Road,Number,Type,Model,Length,Weight,Consist,Owner,Track,Location,Destination,Comment\n'
+#     for track in trackPattern['locations'][0]['tracks']: # There is only one location
+#         try:
+#             trackPatternCsv += u'TN,Track name,' + unicode(track['trackName'], PSE.ENCODING) + '\n'
+#         except:
+#             print('Exception at: Patterns.View.makeTrackPatternCsv')
+#             pass
+#         for loco in track['locos']:
+#             trackPatternCsv +=  loco['setTo'] + ',' \
+#                             + loco['road'] + ',' \
+#                             + loco['number'] + ',' \
+#                             + loco['carType'] + ',' \
+#                             + loco['model'] + ',' \
+#                             + loco['length'] + ',' \
+#                             + loco['weight'] + ',' \
+#                             + loco['consist'] + ',' \
+#                             + loco['owner'] + ',' \
+#                             + loco['track'] + ',' \
+#                             + loco['location'] + ',' \
+#                             + loco['destination'] + ',' \
+#                             + loco['comment'] + ',' \
+#                             + '\n'
+#     trackPatternCsv += 'SC,Set Cars\n'
+#     trackPatternCsv += u'setTo,Road,Number,Type,Length,Weight,Load,Load_Type,Hazardous,Color,Kernel,Kernel_Size,Owner,Track,Location,Destination,dest&Track,Final_Dest,fd&Track,Comment,Drop_Comment,Pickup_Comment,RWE\n'
+#     for track in trackPattern['locations'][0]['tracks']: # There is only one location
+#         try:
+#             trackPatternCsv += u'TN,Track name,' + unicode(track['trackName'], PSE.ENCODING) + '\n'
+#         except:
+#             print('Exception at: Patterns.View.makeTrackPatternCsv')
+#             pass
+#         for car in track['cars']:
+#             trackPatternCsv +=  car['setTo'] + ',' \
+#                             + car['road'] + ',' \
+#                             + car['number'] + ',' \
+#                             + car['carType'] + ',' \
+#                             + car['length'] + ',' \
+#                             + car['weight'] + ',' \
+#                             + car['load'] + ',' \
+#                             + car['loadType'] + ',' \
+#                             + str(car['hazardous']) + ',' \
+#                             + car['color'] + ',' \
+#                             + car['kernel'] + ',' \
+#                             + car['kernelSize'] + ',' \
+#                             + car['owner'] + ',' \
+#                             + car['track'] + ',' \
+#                             + car['location'] + ',' \
+#                             + car['destination'] + ',' \
+#                             + car['dest&Track'] + ',' \
+#                             + car['finalDest'] + ',' \
+#                             + car['fd&Track'] + ',' \
+#                             + car['comment'] + ',' \
+#                             + car['setOutMsg'] + ',' \
+#                             + car['pickupMsg'] + ',' \
+#                             + car['rwe'] \
+#                             + '\n'
 
-    return trackPatternCsv
+#     return trackPatternCsv
