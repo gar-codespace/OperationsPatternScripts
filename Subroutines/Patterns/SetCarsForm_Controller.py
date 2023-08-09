@@ -17,27 +17,49 @@ SCRIPT_REV = 20230201
 
 _psLog = PSE.LOGGING.getLogger('OPS.PT.ControllerSetCarsForm')
 
-class CreateSetCarsForm:
+
+class CreateSetCarsFrame:
     """
-    Creates an instance of each 'Set Cars Form for Track X' window,
-    [0] is used to avoid for-loops since there is only 1 location and track
+    Creates an instance of each 'Set Cars Form for Track X' window.
     """
 
-    def __init__(self, setCarsForm):
+    def __init__(self, selectedTrack):
 
-        self.setCarsForm = setCarsForm
-        self.locationName = setCarsForm['location']
-        self.trackName = setCarsForm['track']['trackName']
+        self.header = Model.makeReportHeader()
+        self.track = Model.makeReportTracks([selectedTrack])
+
+        self.locationName = self.header['location']
+        self.trackName = selectedTrack
+
+        self.setCarsForm = {}
+        self.setCarsTracks = {}
         self.buttonDict = {}
+        self.mergedForm = {}
+
+        self.makeForm()
 
         return
 
+    def makeForm(self):
+
+        self.setCarsForm = self.header
+
+        self.setCarsForm['tracks'] = [self.track][0]
+        self.setCarsForm = Model.insertStandins(self.setCarsForm)
+
+        return
+    
     def makeFrame(self):
 
         setCarsFrame = SetCarsForm_View.ManageSetCarsGui(self.setCarsForm)
         setCarsFrame.makeSetCarsFrame()
 
         setCarsForTrackWindow = setCarsFrame.getSetCarsForTrackWindow()
+
+        setCarsForTrackWindow.setTitle(PSE.getBundleItem('Set Rolling Stock for track:') + ' ' + self.track[0]['trackName'])
+        setCarsForTrackWindow.setName('setCarsWindow')
+        setCarsForTrackWindow.pack()
+
         self.buttonDict = setCarsFrame.getButtonDict()
 
         self.activateButtons()
@@ -55,7 +77,7 @@ class CreateSetCarsForm:
         try:
             self.buttonDict['scheduleButton'].actionPerformed = self.scheduleButton
         except:
-            print('Exception at: Patterns.SetCarsForm_Controller.CreateSetCarsForm.activateButtons.scheduleButton')
+            print('Exception at: Patterns.SetCarsForm_Controller.CreateSetCarsFrame.activateButtons.scheduleButton')
             pass
 
         self.buttonDict['footerButtons'][0].actionPerformed = self.switchListButton
@@ -69,8 +91,8 @@ class CreateSetCarsForm:
             _psLog.info('PASS - form validated')
             return True
         else:
-            _psLog.critical('FAIL - CreateSetCarsForm.quickCheck.formIsValid')
-            PSE.openOutputFrame(PSE.getBundleItem('FAIL: CreateSetCarsForm.quickCheck.formIsValid'))            
+            _psLog.critical('FAIL - CreateSetCarsFrame.quickCheck.formIsValid')
+            PSE.openOutputFrame(PSE.getBundleItem('FAIL: CreateSetCarsFrame.quickCheck.formIsValid'))            
             return False
 
     def trackRowButton(self, MOUSE_CLICKED):
@@ -101,21 +123,16 @@ class CreateSetCarsForm:
             return
 
         mergedForm = SetCarsForm_Model.makeMergedForm(self.setCarsForm, self.buttonDict['textBoxEntry'])
-        self.jsonSaver(mergedForm)
+ 
+        SetCarsForm_Model.switchListForPrint(mergedForm)
 
-    # Save the merged form as a text switch list
-        switchList = SetCarsForm_Model.makeTextSwitchList(mergedForm)
-        fileName = PSE.getBundleItem('ops-switch-list') + '.txt'        
-        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'switchLists', fileName)
-        PSE.genericWriteReport(targetPath, switchList)
-    # Display formatted data
-        PSE.genericDisplayReport(targetPath)
+        # SetCarsForm_Model.saveSwitchListJson(mergedForm)
     # o2o stuff
-        Model.appendWorkList(mergedForm)
-        PSE.TM.firePropertyChange('PatternsSwitchList', False, True)
+        # Model.appendWorkList(mergedForm)
+        # PSE.TM.firePropertyChange('PatternsSwitchList', False, True)
     # CSV output
         if PSE.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
-            SetCarsForm_Model.switchListAsCsv(self.buttonDict['textBoxEntry'])
+            SetCarsForm_Model.switchListAsCsv(mergedForm)
 
         MOUSE_CLICKED.getSource().setBackground(PSE.JAVA_AWT.Color.GREEN)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
@@ -133,8 +150,8 @@ class CreateSetCarsForm:
         if not self.quickCheck():
             return
 
-        mergedForm = SetCarsForm_Model.makeMergedForm(self.setCarsForm, self.buttonDict['textBoxEntry'])
-        self.jsonSaver(mergedForm)
+        self.mergedForm = SetCarsForm_Model.makeMergedForm(self.setCarsForm, self.buttonDict['textBoxEntry'])
+        # self.jsonSaver(mergedForm)
 
     # Open the pop up window
         PSE.closeOpsWindows('popupFrame')
@@ -152,17 +169,6 @@ class CreateSetCarsForm:
         self.setCarsWindow = MOUSE_CLICKED.getSource().getTopLevelAncestor()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-
-        return
-
-    def jsonSaver(self, mergedForm):
-        """Saves the merged form as a json."""
-
-        reportTitle = PSE.getBundleItem('ops-switch-list')
-        fileName = reportTitle + '.json'
-        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
-        switchListReport = PSE.dumpJson(mergedForm)
-        PSE.genericWriteReport(targetPath, switchListReport)
 
         return
 
@@ -196,7 +202,7 @@ class CreateSetCarsForm:
 
     def setCarsButton(self, MOUSE_CLICKED):
 
-        SetCarsForm_Model.setRsToTrack()
+        SetCarsForm_Model.moveRollingStock(self.mergedForm)
 
         popupWindow = MOUSE_CLICKED.getSource().getTopLevelAncestor()
         popupWindow.setVisible(False)

@@ -81,7 +81,7 @@ def makeTrackPatternForPrint(trackPattern):
 
     PSE.makeReportItemWidthMatrix()
 
-    trackPattern = insertStandins(trackPattern)
+    trackPattern = Model.insertStandins(trackPattern)
     reportHeader = makeTextReportHeader(trackPattern)
     reportLocations = PSE.getBundleItem('Pattern Report for Tracks') + '\n\n'
     reportLocations += makeTextReportTracks(trackPattern['tracks'], trackTotals=True)
@@ -122,93 +122,93 @@ def trackPatternAsCsv():
 
     return
     
-def setCarsToTrackWindow(reportHeader, reportTracks):
-    """"Set Cars to Track button opens a window for each selected track."""
+# def setCarsToTrackWindow(reportHeader, reportTracks):
+#     """"Set Cars to Track button opens a window for each selected track."""
 
-    _psLog.debug('setCarsToTrackWindow')
+#     _psLog.debug('setCarsToTrackWindow')
 
-    PSE.makeReportItemWidthMatrix()
-    setCarsTracks = {}
-    setCarsTracks['tracks'] = reportTracks
-    setCarsTracks = insertStandins(setCarsTracks)
+#     PSE.makeReportItemWidthMatrix()
+#     setCarsTracks = {}
+#     setCarsTracks['tracks'] = reportTracks
+#     setCarsTracks = insertStandins(setCarsTracks)
 
 
 
-    windowOffset = 200
-    i = 0
-    for track in setCarsTracks['tracks']:
+#     windowOffset = 200
+#     i = 0
+#     for track in setCarsTracks['tracks']:
 
-        setCarsForm = reportHeader
-        setCarsForm['track'] = track
-        newFrame = SetCarsForm_Controller.CreateSetCarsForm(setCarsForm)
-        newWindow = newFrame.makeFrame()
-        newWindow.setTitle(PSE.getBundleItem('Set Rolling Stock for track:') + ' ' + track['trackName'])
-        newWindow.setName('setCarsWindow')
-        newWindow.pack()
+#         setCarsForm = reportHeader
+#         setCarsForm['tracks'] = [track] # Conforms to track pattern format
+#         newFrame = SetCarsForm_Controller.CreateSetCarsForm(setCarsForm)
+#         newWindow = newFrame.makeFrame()
+#         newWindow.setTitle(PSE.getBundleItem('Set Rolling Stock for track:') + ' ' + track['trackName'])
+#         newWindow.setName('setCarsWindow')
+#         newWindow.pack()
 
-        newWidth = newWindow.getWidth()
-        if newWidth > 800:
-            newWidth = 800
+#         newWidth = newWindow.getWidth()
+#         if newWidth > 800:
+#             newWidth = 800
 
-        newHeight = newWindow.getHeight()
-        if newHeight > 800:
-            newHeight = 800
+#         newHeight = newWindow.getHeight()
+#         if newHeight > 800:
+#             newHeight = 800
 
-        newDimension = PSE.JAVA_AWT.Dimension(newWidth, newHeight)
-        newWindow.setSize(newDimension)
-        newWindow.setLocation(windowOffset, 100)
-        newWindow.setVisible(True)
+#         newDimension = PSE.JAVA_AWT.Dimension(newWidth, newHeight)
+#         newWindow.setSize(newDimension)
+#         newWindow.setLocation(windowOffset, 100)
+#         newWindow.setVisible(True)
 
-        windowOffset += 50
-        i += 1
+#         windowOffset += 50
+#         i += 1
 
-        _psLog.info(u'Set Rolling Stock Window created for track ' + track['trackName'])
+#         _psLog.info(u'Set Rolling Stock Window created for track ' + track['trackName'])
 
-    _psLog.info(str(i) + ' Set Rolling Stock windows for ' + reportHeader['location'] + ' created')
+#     _psLog.info(str(i) + ' Set Rolling Stock windows for ' + reportHeader['location'] + ' created')
 
-    return
+#     return
 
-def insertStandins(trackPattern):
-    """
-    Substitutes in standins from the config file.
-    """
+# def insertStandins(trackPattern):
+#     """
+#     Substitutes in standins from the config file.
+#     """
 
-    standins = PSE.readConfigFile('Patterns')['RM']
+#     standins = PSE.readConfigFile('Patterns')['RM']
 
-    tracks = trackPattern['tracks']
-    for track in tracks:
-        for loco in track['locos']:
-            destStandin, fdStandin = getStandins(loco, standins)
-            loco.update({'destination': destStandin})
+#     tracks = trackPattern['tracks']
+#     for track in tracks:
+#         for loco in track['locos']:
+#             destStandin, fdStandin = getStandins(loco, standins)
+#             loco.update({'destination': destStandin})
 
-        for car in track['cars']:
-            destStandin, fdStandin = getStandins(car, standins)
-            car.update({'destination': destStandin})
-            car.update({'finalDest': fdStandin})
-            shortLoadType = PSE.getShortLoadType(car)
-            car.update({'loadType': shortLoadType})
+#         for car in track['cars']:
+#             destStandin, fdStandin = getStandins(car, standins)
+#             car.update({'destination': destStandin})
+#             car.update({'finalDest': fdStandin})
+#             shortLoadType = PSE.getShortLoadType(car)
+#             car.update({'loadType': shortLoadType})
 
-    return trackPattern
+#     return trackPattern
 
-def getStandins(rs, standins):
-    """
-    Replaces null destination and fd with the standin from the configFile
-    Called by:
-    insertStandins
-    """
+# def getStandins(rs, standins):
+#     """
+#     Replaces null destination and fd with the standin from the configFile
+#     Called by:
+#     insertStandins
+#     """
 
-    destStandin = rs['destination']
-    if not rs['destination']:
-        destStandin = standins['DS']
+#     destStandin = rs['destination']
+#     if not rs['destination']:
+#         destStandin = standins['DS']
 
-    try: # No FD for locos
-        fdStandin = rs['finalDest']
-        if not rs['finalDest']:
-            fdStandin = standins['FD']
-    except:
-        fdStandin = standins['FD']
+#     try: # No FD for locos
+#         fdStandin = rs['finalDest']
+#         if not rs['finalDest']:
+#             fdStandin = standins['FD']
+#     except:
+#         fdStandin = standins['FD']
 
-    return destStandin, fdStandin
+#     return destStandin, fdStandin
     
 def makeTextReportHeader(patternReport):
     """
@@ -322,7 +322,7 @@ def makeTrackPatternCsv(trackPattern):
                     u'YPC,Yard Pattern Comment,' + trackPattern['trainComment'] + '\n' \
                     u'VT,Valid,' + trackPattern['date'] + '\n'
     trackPatternCsv += 'SE,Set Engines\n'
-    trackPatternCsv += u'Set_To,Road,Number,Type,Model,Length,Weight,Consist,Owner,Track,Location,Destination,Comment\n'
+    trackPatternCsv += u'setTo,Road,Number,Type,Model,Length,Weight,Consist,Owner,Track,Location,Destination,Comment\n'
     for track in trackPattern['locations'][0]['tracks']: # There is only one location
         try:
             trackPatternCsv += u'TN,Track name,' + unicode(track['trackName'], PSE.ENCODING) + '\n'
@@ -345,7 +345,7 @@ def makeTrackPatternCsv(trackPattern):
                             + loco['comment'] + ',' \
                             + '\n'
     trackPatternCsv += 'SC,Set Cars\n'
-    trackPatternCsv += u'Set_To,Road,Number,Type,Length,Weight,Load,Load_Type,Hazardous,Color,Kernel,Kernel_Size,Owner,Track,Location,Destination,dest&Track,Final_Dest,fd&Track,Comment,Drop_Comment,Pickup_Comment,RWE\n'
+    trackPatternCsv += u'setTo,Road,Number,Type,Length,Weight,Load,Load_Type,Hazardous,Color,Kernel,Kernel_Size,Owner,Track,Location,Destination,dest&Track,Final_Dest,fd&Track,Comment,Drop_Comment,Pickup_Comment,RWE\n'
     for track in trackPattern['locations'][0]['tracks']: # There is only one location
         try:
             trackPatternCsv += u'TN,Track name,' + unicode(track['trackName'], PSE.ENCODING) + '\n'

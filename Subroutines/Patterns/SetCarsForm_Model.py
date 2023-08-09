@@ -15,6 +15,8 @@ SCRIPT_REV = 20230201
 
 _psLog = PSE.LOGGING.getLogger('OPS.PT.ModelSetCarsForm')
 
+
+
 def formIsValid(setCarsForm, textBoxEntry):
     """
     Checks that both submitted forms are the same length
@@ -24,8 +26,8 @@ def formIsValid(setCarsForm, textBoxEntry):
 
     _psLog.debug('testValidityOfForm')
 
-    locoCount = len(setCarsForm['track']['locos'])
-    carCount = len(setCarsForm['track']['cars'])
+    locoCount = len(setCarsForm['tracks'][0]['locos'])
+    carCount = len(setCarsForm['tracks'][0]['cars'])
 
     if len(textBoxEntry) == locoCount + carCount:
         return True
@@ -44,30 +46,34 @@ def makeMergedForm(setCarsForm, buttonDict):
 
     return mergedForm
 
-def setRsToTrack():
+# def saveSwitchListJson(mergedForm):
+
+#     reportTitle = PSE.getBundleItem('ops-switch-list')
+#     fileName = reportTitle + '.json'
+#     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+#     switchListReport = PSE.dumpJson(mergedForm)
+#     PSE.genericWriteReport(targetPath, switchListReport)
+
+#     return
+
+def switchListForPrint(mergedForm):
     """
-    Subject to track length and RS type restrictions.
-    Called by:
-    ControllerSetCarsForm.CreateSetCarsForm.setRsButton
+    PSE.genericDisplayReport has to display a file,
+    so the merged form needs to be saved first.
     """
 
-    _psLog.debug('setRsButton')
-
-    reportTitle = PSE.getBundleItem('ops-switch-list')
-    fileName = reportTitle + '.json'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
-
-    switchList = PSE.genericReadReport(targetPath)
-    switchList = PSE.loadJson(switchList)
-
-    moveRollingStock(switchList)
+# Save the merged form as a text switch list
+    switchList = makeTextSwitchList(mergedForm)
+    fileName = PSE.getBundleItem('ops-switch-list') + '.txt'        
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'switchLists', fileName)
+    PSE.genericWriteReport(targetPath, switchList)
+# Display formatted data
+    PSE.genericDisplayReport(targetPath)
 
     return
 
 def moveRollingStock(switchList):
     """
-    Similar to:
-    ViewEntities.merge
     """
 
     configFile = PSE.readConfigFile()
@@ -75,11 +81,11 @@ def moveRollingStock(switchList):
     ignoreTrackLength = configFile['Patterns']['PI']
     applySchedule = configFile['Patterns']['AS']
     allTracksAtLoc = ModelEntities.getTrackNamesByLocation(None)
-    toLocation = configFile['Patterns']['PL']
+    toLocation = PSE.LM.getLocationByName(configFile['Patterns']['PL'])
 
     setCount = 0
     i = -1
-    locos = switchList['track']['locos']
+    locos = switchList['tracks'][0]['locos']
     for loco in locos:
         i += 1
         rollingStock = PSE.EM.getByRoadAndNumber(loco['road'], loco['number'])
@@ -87,9 +93,8 @@ def moveRollingStock(switchList):
             _psLog.warning('Not found; ' + car['road'] + car['number'])
             continue
 
-        setTo = loco['Set_To'][1:-1].split(']')[0]
-
-        if not setTo in allTracksAtLoc:
+        setTo = loco['setTo'][1:-1].split(']')[0]
+        if setTo == PSE.getBundleItem('Hold') or setTo not in allTracksAtLoc:
             continue
 
         toTrack = toLocation.getTrackByName(setTo, None)
@@ -101,7 +106,7 @@ def moveRollingStock(switchList):
         if setResult == 'okay':
             setCount += 1
         
-    cars = switchList['track']['cars']
+    cars = switchList['tracks'][0]['cars']
     for car in cars:
         i += 1
         rollingStock = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
@@ -109,11 +114,10 @@ def moveRollingStock(switchList):
             _psLog.warning('Not found; ' + car['road'] + car['number'])
             continue
 
-        setTo = car['Set_To'][1:-1].split(']')[0]
-        
-        if not setTo in allTracksAtLoc:
+        setTo = car['setTo'][1:-1].split(']')[0]
+        if setTo == PSE.getBundleItem('Hold') or setTo not in allTracksAtLoc:
             continue
-
+        
         toTrack = toLocation.getTrackByName(setTo, None)
 
         setResult = rollingStock.setLocation(toLocation, toTrack)
@@ -179,15 +183,13 @@ def makeTextSwitchList(switchList):
 
     reportLocations = PSE.getBundleItem('Switch List') + '\n\n'
 
-    trackList = list(switchList['track'])
-
-    print(trackList)
+    trackList = [switchList['tracks'][0]]
     
-    reportLocations += View.makeTextReportTracks(switchList, trackTotals=False)
+    reportLocations += View.makeTextReportTracks(trackList, trackTotals=False)
 
     return reportHeader + reportLocations
 
-def switchListAsCsv(textBoxEntry):
+def switchListAsCsv(mergedForm):
     """
     Track Pattern Report json is written as a CSV file
     Called by:
@@ -196,19 +198,19 @@ def switchListAsCsv(textBoxEntry):
 
     _psLog.debug('switchListAsCsv')
 #  Get json data
-    fileName = PSE.getBundleItem('ops-work-list') + '.json'    
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
-    trackPattern = PSE.genericReadReport(targetPath)
-    trackPattern = PSE.loadJson(trackPattern)
-# Process json data into CSV
-    userInputList = ModelEntities.makeUserInputList(textBoxEntry)
-    trackPattern = ModelEntities.merge(trackPattern, userInputList)
+#     fileName = PSE.getBundleItem('ops-work-list') + '.json'    
+#     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+#     trackPattern = PSE.genericReadReport(targetPath)
+#     trackPattern = PSE.loadJson(trackPattern)
+# # Process json data into CSV
+#     userInputList = ModelEntities.makeUserInputList(textBoxEntry)
+#     trackPattern = ModelEntities.merge(trackPattern, userInputList)
 
-    trackPattern = makeMergedForm(trackPattern, textBoxEntry)
-    trackPatternCsv = View.makeTrackPatternCsv(trackPattern)
-# Write CSV data
-    fileName = PSE.getBundleItem('ops-switch-list') + '.csv'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'csvSwitchLists', fileName)
-    PSE.genericWriteReport(targetPath, trackPatternCsv)
+#     trackPattern = makeMergedForm(trackPattern, textBoxEntry)
+#     trackPatternCsv = View.makeTrackPatternCsv(trackPattern)
+# # Write CSV data
+#     fileName = PSE.getBundleItem('ops-switch-list') + '.csv'
+#     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'csvSwitchLists', fileName)
+#     PSE.genericWriteReport(targetPath, trackPatternCsv)
 
     return

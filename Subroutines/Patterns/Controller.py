@@ -12,6 +12,7 @@ from opsEntities import PSE
 from Subroutines.Patterns import Model
 from Subroutines.Patterns import View
 from Subroutines.Patterns import Listeners
+from Subroutines.Patterns import SetCarsForm_Controller
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
@@ -120,6 +121,7 @@ class StartUp:
 
         Model.updateConfigFile(self.widgets)
         selectedTracks = [trackCheckBox.text for trackCheckBox in self.widgets[3] if trackCheckBox.selected]
+        selectedTracks.sort()
 
         trackPattern = Model.makeTrackPattern(selectedTracks)
         Model.writePatternReport(trackPattern)
@@ -140,13 +142,33 @@ class StartUp:
 
         Model.updateConfigFile(self.widgets)
         selectedTracks = [trackCheckBox.text for trackCheckBox in self.widgets[3] if trackCheckBox.selected]
+        selectedTracks.sort()
  
         Model.resetWorkList()
 
-        reportHeader = Model.makeReportHeader()
-        reportTracks = Model.makeReportTracks(selectedTracks)
+        PSE.makeReportItemWidthMatrix()
 
-        View.setCarsToTrackWindow(reportHeader, reportTracks)
+        windowOffset = 200
+        for track in selectedTracks:
+
+            setCarsFrame = SetCarsForm_Controller.CreateSetCarsFrame(track).makeFrame()
+
+            newWidth = setCarsFrame.getWidth()
+            if newWidth > 800:
+                newWidth = 800
+
+            newHeight = setCarsFrame.getHeight()
+            if newHeight > 800:
+                newHeight = 800
+
+            newDimension = PSE.JAVA_AWT.Dimension(newWidth, newHeight)
+            setCarsFrame.setSize(newDimension)
+            setCarsFrame.setLocation(windowOffset, 100)
+            setCarsFrame.setVisible(True)
+
+            windowOffset += 50
+
+            _psLog.info(u'Set Rolling Stock Window created for track ' + track)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

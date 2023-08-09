@@ -1239,8 +1239,8 @@ def translateMessageFormat():
     rosetta[J_BUNDLE.CONSIST] = 'consist'
     rosetta[J_BUNDLE.DCC_ADDRESS] = 'dccAddress'
 # Unique to this plugin
-    rosetta['On_Train'] = 'onTrain'
-    rosetta['Set_To'] = 'setTo'
+    rosetta['onTrain'] = 'onTrain'
+    rosetta['setTo'] = 'setTo'
     rosetta['puso'] = 'puso'
     rosetta[' '] = ' '
 

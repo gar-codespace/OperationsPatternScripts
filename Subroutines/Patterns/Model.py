@@ -14,6 +14,48 @@ SCRIPT_REV = 20230201
 
 _psLog = PSE.LOGGING.getLogger('OPS.PT.Model')
 
+def insertStandins(trackPattern):
+    """
+    Substitutes in standins from the config file.
+    """
+
+    standins = PSE.readConfigFile('Patterns')['RM']
+
+    tracks = trackPattern['tracks']
+    for track in tracks:
+        for loco in track['locos']:
+            destStandin, fdStandin = getStandins(loco, standins)
+            loco.update({'destination': destStandin})
+
+        for car in track['cars']:
+            destStandin, fdStandin = getStandins(car, standins)
+            car.update({'destination': destStandin})
+            car.update({'finalDest': fdStandin})
+            shortLoadType = PSE.getShortLoadType(car)
+            car.update({'loadType': shortLoadType})
+
+    return trackPattern
+
+def getStandins(rs, standins):
+    """
+    Replaces null destination and fd with the standin from the configFile
+    Called by:
+    insertStandins
+    """
+
+    destStandin = rs['destination']
+    if not rs['destination']:
+        destStandin = standins['DS']
+
+    try: # No FD for locos
+        fdStandin = rs['finalDest']
+        if not rs['finalDest']:
+            fdStandin = standins['FD']
+    except:
+        fdStandin = standins['FD']
+
+    return destStandin, fdStandin
+
 def resetConfigFileItems():
     """
     Called from PSE.remoteCalls('resetCalls')
@@ -68,26 +110,22 @@ def makeReportHeader():
 
     reportHeader = {}
     reportHeader['railroadName'] = PSE.getRailroadName()
-
     reportHeader['railroadDescription'] = configFile['Patterns']['RD']
     reportHeader['trainName'] = configFile['Patterns']['TN']
     reportHeader['trainDescription'] = configFile['Patterns']['TD']
     reportHeader['trainComment'] = configFile['Patterns']['TC']
     reportHeader['division'] = configFile['Patterns']['PD']
     reportHeader['date'] = unicode(PSE.validTime(), PSE.ENCODING)
-    reportHeader['location'] =configFile['Patterns']['PL']
+    reportHeader['location'] = configFile['Patterns']['PL']
 
     return reportHeader
 
 def makeReportTracks(selectedTracks):
+    """
+    Tracks is a list of dictionaries.
+    """
 
-    configFile =  PSE.readConfigFile()
-    tracks = []
-    for trackName in sorted(selectedTracks):
-        trackDetails = ModelEntities.getTrackDetails(configFile['Patterns']['PL'], trackName)
-        tracks.append(trackDetails)
-
-    return tracks
+    return ModelEntities.getDetailsForTracks(selectedTracks)
 
 def writePatternReport(trackPattern):
     """
@@ -110,6 +148,7 @@ def resetWorkList():
     """
 
     workList = makeReportHeader()
+    workList['tracks'] = []
 
     fileName = PSE.getBundleItem('ops-work-list') + '.json'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
@@ -120,13 +159,22 @@ def resetWorkList():
 
 def appendWorkList(mergedForm):
 
-    tracks = mergedForm['tracks'][0]
+
+
+
+
+
+
+
+
+
+    tracks = mergedForm['track']
 
     fileName = PSE.getBundleItem('ops-work-list') + '.json'    
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
     currentWorkList = PSE.jsonLoadS(PSE.genericReadReport(targetPath))
 
-    currentWorkList['locations'][0]['tracks'].append(tracks)
+    currentWorkList['tracks'].append(tracks)
     currentWorkList = PSE.dumpJson(currentWorkList)
 
     PSE.genericWriteReport(targetPath, currentWorkList)

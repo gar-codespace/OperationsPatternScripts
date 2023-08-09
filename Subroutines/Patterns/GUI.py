@@ -226,7 +226,7 @@ def makeSetCarsFormHeader(setCarsFormData):
     _psLog.debug('makeSetCarsFormHeader')
 
     splitName = setCarsFormData['railroadName'].split('\n')
-    trackName = setCarsFormData['track']['trackName'] # There's only one track
+    trackName = setCarsFormData['tracks'][0]['trackName'] # There's only one track
     locationName = setCarsFormData['location'] # There's only one location
     validDate = setCarsFormData['date']
 
@@ -298,20 +298,20 @@ def makeSetCarsListOfInventory(setCarsFormData):
 
     setCarsEqptRows = MakeSetCarsEqptRows(setCarsFormData)
 
-    if setCarsFormData['track']['locos']:
+    if setCarsFormData['tracks'][0]['locos']:
         locoFormBody = PSE.JAVX_SWING.JPanel()
         locoFormBody.setLayout(PSE.JAVX_SWING.BoxLayout(locoFormBody, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
-        locoFormBody.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Locomotives at') +  ' ' + setCarsFormData['track']['trackName'])
+        locoFormBody.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Locomotives at') +  ' ' + setCarsFormData['tracks'][0]['trackName'])
 
         setCarsLocoRows = setCarsEqptRows.makeSetCarsLocoRows()
         for loco in setCarsLocoRows:
             locoFormBody.add(loco)
         inventoryFormBody.add(locoFormBody)
 
-    if setCarsFormData['track']['cars']:
+    if setCarsFormData['tracks'][0]['cars']:
         carFormBody = PSE.JAVX_SWING.JPanel()
         carFormBody.setLayout(PSE.JAVX_SWING.BoxLayout(carFormBody, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
-        carFormBody.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Cars at') +  ' ' + setCarsFormData['track']['trackName'])
+        carFormBody.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Cars at') +  ' ' + setCarsFormData['tracks'][0]['trackName'])
 
         setCarsCarRows = setCarsEqptRows.makeSetCarsCarRows()
         for car in setCarsCarRows:
@@ -337,7 +337,7 @@ def makeSetCarsScheduleRow(setCarsFormData):
     _psLog.debug('makeSetCarsScheduleRow')
 
     trackLocation = PSE.readConfigFile('Patterns')['PL']
-    trackName = setCarsFormData['track']['trackName']
+    trackName = setCarsFormData['tracks'][0]['trackName']
     trackObject = PSE.LM.getLocationByName(trackLocation).getTrackByName(trackName, None)
     scheduleObject = trackObject.getSchedule()
     if scheduleObject:
@@ -432,12 +432,12 @@ class MakeSetCarsEqptRows():
         """Creates the locomotive lines of the pattern report form"""
 
         listOfLocoRows = []
-        locos = self.setCarsFormData['track']['locos']
+        locos = self.setCarsFormData['tracks'][0]['locos']
 
         for loco in locos:
             combinedInputLine = PSE.JAVX_SWING.JPanel()
             combinedInputLine.setBackground(self.locoColor)
-            if loco['On_Train']:
+            if loco['onTrain']:
                 combinedInputLine.setBackground(self.alertColor)
             inputText = PSE.JAVX_SWING.JTextField(5)
             self.textBoxEntry.append(inputText)
@@ -464,7 +464,7 @@ class MakeSetCarsEqptRows():
         """Creates the car lines of the pattern report form"""
 
         listOfCarRows = []
-        cars = self.setCarsFormData['track']['cars']
+        cars = self.setCarsFormData['tracks'][0]['cars']
 
         for car in cars:
             combinedInputLine = PSE.JAVX_SWING.JPanel()

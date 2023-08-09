@@ -64,16 +64,16 @@ def parseRS(rs):
         parsedRS['destination'] = rs['location']
 
     try:
-        parsedRS['Set_To'] = rs['destination']['track']['userName']
+        parsedRS['setTo'] = rs['destination']['track']['userName']
         return parsedRS
     except:
         pass
 
-    parsedSetTo = rs['Set_To'][1:-1].split(']')[0] # IE parse [Freight House] to Freight House
+    parsedSetTo = rs['setTo'][1:-1].split(']')[0] # IE parse [Freight House] to Freight House
     if  parsedSetTo == PSE.getBundleItem('Hold'):
         parsedSetTo = rs['track']
 
-    parsedRS['Set_To'] = parsedSetTo
+    parsedRS['setTo'] = parsedSetTo
 
     return parsedRS
 
@@ -105,7 +105,7 @@ class opsWorkListConversion:
 
     def rsGetter(self):
 
-        for track in self.opsWorkList['locations'][0]['tracks']:
+        for track in self.opsWorkList['tracks']:
             for car in track['cars']:
                 # parsed = self.parsePtRs(car)
                 parsed = parseRS(car)
@@ -119,42 +119,42 @@ class opsWorkListConversion:
 
         return
 
-    # def parsePtRs(self, rs):
-    #     """
-    #     The load field is either Load(car) or Model(loco).
-    #     Pattern scripts have only one location.
-    #     Location and Destination are the same.
-    #     """
+    def parsePtRs(self, rs):
+        """
+        The load field is either Load(car) or Model(loco).
+        Pattern scripts have only one location.
+        Location and Destination are the same.
+        """
 
-    #     parsedRS = {}
-    #     parsedRS['road'] = rs['road']
-    #     parsedRS['number'] = rs['number']
-    #     parsedRS['carType'] = rs['carType']
-    #     try:
-    #         parsedRS['loadType'] = PSE.getShortLoadType(rs)
-    #         parsedRS['load'] = rs['load']
-    #     except:
-    #         # print('Exception at: o2o.ModelWorkEvents.parsePtRs')
-    #         parsedRS['load'] = rs['model']
+        parsedRS = {}
+        parsedRS['road'] = rs['road']
+        parsedRS['number'] = rs['number']
+        parsedRS['carType'] = rs['carType']
+        try:
+            parsedRS['loadType'] = PSE.getShortLoadType(rs)
+            parsedRS['load'] = rs['load']
+        except:
+            # print('Exception at: o2o.ModelWorkEvents.parsePtRs')
+            parsedRS['load'] = rs['model']
 
-    #     parsedRS['location'] = rs['location']
-    #     parsedRS['track'] = rs['track']
-    #     parsedRS['destination'] = rs['location']
+        parsedRS['location'] = rs['location']
+        parsedRS['track'] = rs['track']
+        parsedRS['destination'] = rs['location']
 
-    #     if self.parseSetTo(rs['Set_To']) == PSE.getBundleItem('Hold'):
-    #         parsedSetTo = rs['track']
-    #     else:
-    #         parsedSetTo = self.parseSetTo(rs['Set_To'])
-    #     parsedRS['Set_To'] = parsedSetTo
+        if self.parseSetTo(rs['setTo']) == PSE.getBundleItem('Hold'):
+            parsedSetTo = rs['track']
+        else:
+            parsedSetTo = self.parseSetTo(rs['setTo'])
+        parsedRS['setTo'] = parsedSetTo
 
-    #     return parsedRS
+        return parsedRS
 
-    # def parseSetTo(self, setTo):
-    #     """
-    #     format: [Freight House]   
-    #     """
+    def parseSetTo(self, setTo):
+        """
+        format: [Freight House]   
+        """
 
-    #     return setTo[1:-1].split(']')[0]
+        return setTo[1:-1].split(']')[0]
 
     def o2oWorkListUpdater(self):
 
@@ -163,14 +163,15 @@ class opsWorkListConversion:
         self.o2oWorkList['railroadDescription'] = self.opsWorkList['railroadDescription']
         self.o2oWorkList['trainName'] = self.opsWorkList['trainName']
         self.o2oWorkList['trainDescription'] = self.opsWorkList['trainDescription']
-
         self.o2oWorkList['date'] = self.opsWorkList['date']
+        self.o2oWorkList['location'] = self.opsWorkList['location']
+        self.o2oWorkList['tracks'] = self.opsWorkList['tracks']
 
-        location = self.opsWorkList['locations'][0]['locationName']
 
-        self.o2oWorkList['locations'] = [{'locationName':location,'tracks':[{'trackName':'', 'length':'', 'cars':[], 'locos':[]}]}]
-        self.o2oWorkList['locations'][0]['tracks'][0]['cars'] = self.cars
-        self.o2oWorkList['locations'][0]['tracks'][0]['locos'] = self.locos
+
+        # self.o2oWorkList['locations'] = [{'locationName':location,'tracks':[{'trackName':'', 'length':'', 'cars':[], 'locos':[]}]}]
+        # self.o2oWorkList['locations'][0]['tracks'][0]['cars'] = self.cars
+        # self.o2oWorkList['locations'][0]['tracks'][0]['locos'] = self.locos
 
         return
 
@@ -288,7 +289,7 @@ class jmriManifestConversion:
     #     parsedRS['location'] = rs['location']['userName']
     #     parsedRS['track'] = rs['location']['track']['userName']
     #     parsedRS['destination'] = rs['destination']['userName']
-    #     parsedRS['Set_To'] = rs['destination']['track']['userName']
+    #     parsedRS['setTo'] = rs['destination']['track']['userName']
 
     #     return parsedRS
 
@@ -367,7 +368,7 @@ class o2oWorkEvents:
 
         pu = rs['location'] + ';' + rs['track']
 
-        so = rs['destination'] + ';' + rs['Set_To']
+        so = rs['destination'] + ';' + rs['setTo']
 
         return rs['puso'] + ',' + ID + ',' + rs['road'] + ',' + rs['number'] + ',' + rs['carType'] + ',' + lt + ',' + load + ',' + pu + ',' + so
 
