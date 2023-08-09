@@ -10,6 +10,8 @@ from opsEntities import PSE
 from Subroutines.Patterns import Model
 from Subroutines.Patterns import Listeners
 
+SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
+SCRIPT_REV = 20230201
 
 def activatedCalls():
     """

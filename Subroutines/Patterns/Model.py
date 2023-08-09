@@ -11,7 +11,6 @@ from Subroutines.Patterns import ModelEntities
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
 
-
 _psLog = PSE.LOGGING.getLogger('OPS.PT.Model')
 
 def insertStandins(trackPattern):
@@ -120,107 +119,12 @@ def makeReportHeader():
 
     return reportHeader
 
-def makeTextReportHeader(patternReport):
-    """
-    Makes the header for generic text reports
-    Called by:
-    View.ManageGui.trackPatternButton'
-    ViewSetCarsForm.switchListButton
-    """
-
-    patternLocation = PSE.readConfigFile('Patterns')['PL']
-    divisionName = patternReport['division']
-    workLocation = ''
-    if divisionName:
-        workLocation = divisionName + ' - ' + patternLocation
-    else:
-        workLocation = patternLocation
-
-    textReportHeader    = patternReport['railroadName'] + '\n\n' + PSE.getBundleItem('Work Location:') + ' ' + workLocation + '\n' + patternReport['date'] + '\n\n'
-    
-    return textReportHeader
-
 def makeReportTracks(selectedTracks):
     """
     Tracks is a list of dictionaries.
     """
 
     return ModelEntities.getDetailsForTracks(selectedTracks)
-
-def makeTextReportTracks(trackList, trackTotals):
-    """
-    Makes the body for generic text reports
-    Called by:
-    View.ManageGui.trackPatternButton'
-    ViewSetCarsForm.switchListButton
-    """
-
-    reportSwitchList = ''
-    reportTally = [] # running total for all tracks
-    for track in trackList:
-        lengthOfLocos = 0
-        lengthOfCars = 0
-        trackTally = []
-        trackName = track['trackName']
-        trackLength = track['length']
-        reportSwitchList += PSE.getBundleItem('Track:') + ' ' + trackName + '\n'
-
-        for loco in track['locos']:
-            lengthOfLocos += int(loco['length']) + 4
-            reportSwitchList += loco['setTo'] + loopThroughRs('loco', loco) + '\n'
-
-        for car in track['cars']:
-            lengthOfCars += int(car['length']) + 4
-            reportSwitchList += car['setTo'] + loopThroughRs('car', car) + '\n'
-            trackTally.append(car['finalDest'])
-            reportTally.append(car['finalDest'])
-
-        if trackTotals:
-            totalLength = lengthOfLocos + lengthOfCars
-            reportSwitchList += PSE.getBundleItem('Total Cars:') + ' ' \
-                + str(len(track['cars'])) + ' ' + PSE.getBundleItem('Track Length:')  + ' ' \
-                + str(trackLength) +  ' ' + PSE.getBundleItem('Eqpt. Length:')  + ' ' \
-                + str(totalLength) + ' ' +  PSE.getBundleItem('Available:') + ' '  \
-                + str(trackLength - totalLength) \
-                + '\n\n'
-            reportSwitchList += PSE.getBundleItem('Track Totals for Cars:') + '\n'
-            for track, count in sorted(PSE.occuranceTally(trackTally).items()):
-                reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
-        reportSwitchList += '\n'
-
-    if trackTotals:
-        reportSwitchList += '\n' + PSE.getBundleItem('Report Totals for Cars:') + '\n'
-        for track, count in sorted(PSE.occuranceTally(reportTally).items()):
-            reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
-
-    return reportSwitchList
-
-def loopThroughRs(type, rsAttribs):
-    """
-    Creates a line containing the attrs in get * MessageFormat
-    Called by:
-    makeTextReportTracks
-    """
-
-    reportWidth = PSE.REPORT_ITEM_WIDTH_MATRIX
-    switchListRow = ''
-    rosetta = PSE.translateMessageFormat()
-
-    if type == 'loco':
-        messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
-    if type == 'car':
-        messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
-
-    for lookup in messageFormat:
-        item = rosetta[lookup]
-
-        if 'tab' in item:
-            continue
-
-        itemWidth = reportWidth[item]
-        switchListRow += PSE.formatText(rsAttribs[item], itemWidth)
-
-    return switchListRow
 
 def writePatternReport(trackPattern):
     """
@@ -285,9 +189,9 @@ def getPatternReport(reportName):
 def makePatternReportForPrint(trackPattern):
 
     trackPattern = insertStandins(trackPattern)
-    reportHeader = makeTextReportHeader(trackPattern)
+    reportHeader = ModelEntities.makeTextReportHeader(trackPattern)
     reportLocations = PSE.getBundleItem('Pattern Report for Tracks') + '\n\n'
-    reportLocations += makeTextReportTracks(trackPattern['tracks'], trackTotals=True)
+    reportLocations += ModelEntities.makeTextReportTracks(trackPattern['tracks'], trackTotals=True)
 
     return reportHeader + reportLocations
 

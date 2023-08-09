@@ -6,16 +6,12 @@ Methods for the Set Cars Form for Track X form
 """
 
 from opsEntities import PSE
-from Subroutines.Patterns import View
 from Subroutines.Patterns import ModelEntities
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
 
-
 _psLog = PSE.LOGGING.getLogger('OPS.PT.ModelSetCarsForm')
-
-
 
 def formIsValid(setCarsForm, textBoxEntry):
     """
@@ -45,16 +41,6 @@ def makeMergedForm(setCarsForm, buttonDict):
     mergedForm = ModelEntities.merge(setCarsForm, inputList)
 
     return mergedForm
-
-# def saveSwitchListJson(mergedForm):
-
-#     reportTitle = PSE.getBundleItem('ops-switch-list')
-#     fileName = reportTitle + '.json'
-#     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
-#     switchListReport = PSE.dumpJson(mergedForm)
-#     PSE.genericWriteReport(targetPath, switchListReport)
-
-#     return
 
 def switchListForPrint(mergedForm):
     """
@@ -179,13 +165,13 @@ def makeTextSwitchList(switchList):
 
     PSE.makeReportItemWidthMatrix()
 
-    reportHeader = View.makeTextReportHeader(switchList)
+    reportHeader = ModelEntities.makeTextReportHeader(switchList)
 
     reportLocations = PSE.getBundleItem('Switch List') + '\n\n'
 
     trackList = [switchList['tracks'][0]]
     
-    reportLocations += View.makeTextReportTracks(trackList, trackTotals=False)
+    reportLocations += ModelEntities.makeTextReportTracks(trackList, trackTotals=False)
 
     return reportHeader + reportLocations
 

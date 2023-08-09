@@ -14,7 +14,6 @@ from Subroutines.Patterns import Listeners
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
 
-
 _psLog = PSE.LOGGING.getLogger('OPS.PT.ControllerSetCarsForm')
 
 
@@ -151,7 +150,6 @@ class CreateSetCarsFrame:
             return
 
         self.mergedForm = SetCarsForm_Model.makeMergedForm(self.setCarsForm, self.buttonDict['textBoxEntry'])
-        # self.jsonSaver(mergedForm)
 
     # Open the pop up window
         PSE.closeOpsWindows('popupFrame')
