@@ -9,7 +9,6 @@ from Subroutines.o2o import BuiltTrainExport
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
 
-
 _psLog = PSE.LOGGING.getLogger('OPS.JP.Listeners')
 
 def actionListener(EVENT):
@@ -75,7 +74,7 @@ def removeTrainsListener():
 
 class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     """
-    Events that are triggered with changes to JMRI Trains.
+    Events that are triggered with changes to JMRI Trains and OPS switch lists.
     """
 
     def __init__(self):

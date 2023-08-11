@@ -1,7 +1,7 @@
 """
 Exports a JMRI manifest into a csv.
 Exports a OPS switch list into a csv.
-Bothe exports are formated for import into the TrainPlayer Quick Keys script suite.
+Both exports are formated for import into the TrainPlayer Quick Keys script suite.
 Called by listeners attached to the Train Manager.
 Can also be called as a stand alone script.
 """
@@ -116,7 +116,7 @@ def convertOpsSwitckList():
 def convertJmriManifest():
     """
     Mini controller.
-    Converts the JMRI manifest into an o2o work events file.
+    Converts a JMRI manifest to a Quick Keys work events list.
     Called by: Listeners - PROPERTY_CHANGE_EVENT.propertyName == 'TrainBuilt'
     """
 
@@ -127,9 +127,10 @@ def convertJmriManifest():
 
     return
 
-class o2oWorkEventsBuilder(jmri.jmrit.automat.AbstractAutomaton):
+class ConvertJmriManifestStandAlone(jmri.jmrit.automat.AbstractAutomaton):
     """
-    Runs when a JMRI train is built.
+    Converts a JMRI manifest to a Quick Keys work events list.
+    This is the stand alone version.
     """
 
     def init(self):
@@ -213,7 +214,7 @@ if __name__ == "__builtin__":
     PSE.BUNDLE = Bundle.getBundleForLocale()
     PSE.ENCODING = 'utf-8'
 
-    tpManifest = o2oWorkEventsBuilder()
+    tpManifest = ConvertJmriManifestStandAlone()
     newestTrain = tpManifest.getNewestTrain()
     if newestTrain:
         tpManifest.passInTrain(newestTrain)

@@ -1,3 +1,5 @@
+Patterns
+Patterns Subroutine
 Additional Choices
 Apply Schedule
 Apply the destination tracks schedule
@@ -27,8 +29,6 @@ ops-work-list
 Pattern Report
 Pattern Report for Tracks
 Pattern Tracks
-Patterns
-Patterns Subroutine
 Report Totals for Cars:
 Report Work
 Restart with default settings

@@ -8,7 +8,6 @@ Keep this as light as possible.
 
 from Subroutines.o2o import Listeners
 
-
 def activatedCalls():
     """Methods called when this subroutine is activated."""
 

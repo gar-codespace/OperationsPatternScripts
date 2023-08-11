@@ -1,37 +1,37 @@
 o2o
 o2o Subroutine
 ALERT: File not found:
+ALERT: import error, Rolling Stock not imported.
 ALERT: No JMRI locations were found.
 ALERT: No JMRI tracks were found.
 ALERT: Not a spur track:
 ALERT: Not a valid locale:
 ALERT: Not a valid location:
-ALERT: import error, Rolling Stock not imported.
 ALERT: rolling stock skipped, parsing error.
 ALERT: Schedule item not found for car:
 ALERT: staging and non staging tracks at:
-Industries not imported. Import Locations recommended
-Import terminated without completion
-Track does not serve this car type
-Check TrainPlayer-Advanced Ops-Locales for semicolon.
-Check TrainPlayer-Advanced Ops-Industries for errors.
-From TrainPlayer, re-export layout to JMRI.
-TrainPlayer layout not imported to JMRI.
-Import Preperation
-Import TrainPlayer's Advanced Ops
-Import Personalized Settings
-ops-work-list
-o2o-work-list
-Initialize Railroad
-Reset Railroad Data
-Locations
-Industries
 Cars
-Unreported
-Unknown
-Unassigned
+Check TrainPlayer-Advanced Ops-Industries for errors.
+Check TrainPlayer-Advanced Ops-Locales for semicolon.
 Empty
-Load
-Occupied
+From TrainPlayer, re-export layout to JMRI.
 Generic
+Import Personalized Settings
+Import Preperation
+Import terminated without completion
+Import TrainPlayer's Advanced Ops
+Industries
+Industries not imported. Import Locations recommended
+Initialize Railroad
+Load
+Locations
+o2o-work-list
+Occupied
+ops-work-list
 Railroad Details
+Reset Railroad Data
+Track does not serve this car type
+TrainPlayer layout not imported to JMRI.
+Unassigned
+Unknown
+Unreported

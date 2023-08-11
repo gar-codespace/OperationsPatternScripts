@@ -2,7 +2,6 @@ Todo:
   How to publish DeepL?
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
   Duplication of PSE chunkPath.
-  o2o.ModelWorkEvents needs to be refactored.
   Turn on auto save in settings
   Have both the layout name and extended layout name in the config file
 Comments:
