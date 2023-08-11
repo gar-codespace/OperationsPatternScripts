@@ -1,52 +1,54 @@
-Patterns
-Pattern Tracks
 Additional Choices
 Apply Schedule
 Apply the destination tracks schedule
 at
 Available:
-Cars at
 Cancel
-Set Cars
+Cars at
 Division:
 Do Not Apply Schedule
+empty
 Eqpt. Length:
+FAIL: CreateSetCarsForm.quickCheck.formIsValid
 FAIL: CreateSetCarsFormGui.quickCheck.formIsValid
 FAIL: Mismatched input list and car roster lengths
-FAIL: CreateSetCarsForm.quickCheck.formIsValid
 Hazardous
 Hold
 Ignore track length
+load
 Location:
 Locomotives at
 Make Work
+occupied
+ops-pattern-report
+ops-pattern-report
+ops-switch-list
+ops-work-list
+Pattern Report
 Pattern Report for Tracks
+Pattern Tracks
+Patterns
+Patterns Subroutine
 Report Totals for Cars:
 Report Work
 Restart with default settings
 Schedule for
 Schedule:
+Set Cars
 Set Rolling Stock for track:
 Set Rolling Stock to Track
 Single
-ops-switch-list
-ops-pattern-report
-Switch List
-There are no yard tracks for this location
++ Switch List
 There are no tracks for this selection
+There are no yard tracks for this location
 Total Cars:
+Track Inquiry
 Track Length:
 Track List:
-ops-pattern-report
-Pattern Report
-Patterns Subroutine
 Track Totals for Cars:
 Track:
 Tracks at
 unknown
-empty
-load
-occupied
-ops-work-list
 Work Location:
 Yard tracks only
+

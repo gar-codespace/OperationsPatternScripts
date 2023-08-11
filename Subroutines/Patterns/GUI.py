@@ -41,7 +41,7 @@ class subroutineGui:
         self.yardTracksOnly.setName('ytoCheckBox')
 
         self.ypButton = PSE.JAVX_SWING.JButton()
-        self.ypButton.setText(PSE.getBundleItem('Pattern Report'))
+        self.ypButton.setText(PSE.getBundleItem('Track Inquiry'))
         self.ypButton.setName('ypButton')
 
         self.scButton = PSE.JAVX_SWING.JButton()
@@ -363,7 +363,7 @@ def MakeSetCarsFooter():
     makeWorkPanel = PSE.JAVX_SWING.JPanel()
     makeWorkPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Make Work'))
 # Switch List button
-    slButton = PSE.JAVX_SWING.JButton(PSE.getBundleItem('Switch List'))
+    slButton = PSE.JAVX_SWING.JButton(PSE.getBundleItem('+ Switch List'))
 
     makeWorkPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
     makeWorkPanel.add(slButton)

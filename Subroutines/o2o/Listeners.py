@@ -5,6 +5,7 @@ JAVAX action performed methods are in Controller.
 
 from opsEntities import PSE
 from Subroutines.o2o import ModelWorkEvents
+from Subroutines.o2o import BuiltTrainExport
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
@@ -101,10 +102,8 @@ class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
             print(SCRIPT_NAME + '.TrainsPropertyChange.TrainBuilt ' + str(SCRIPT_REV))
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'PatternsSwitchList' and PROPERTY_CHANGE_EVENT.newValue == True:
-            ModelWorkEvents.o2oWorkListMaker()
-            _psLog.debug('Patterns switch list generated')
-            o2oWorkEvents.passInTrain(PROPERTY_CHANGE_EVENT.getSource())
-            o2oWorkEvents.start()
+
+            BuiltTrainExport.o2oWorkListMaker()
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
             print(SCRIPT_NAME + '.TrainsPropertyChange.PatternsSwitchList ' + str(SCRIPT_REV))

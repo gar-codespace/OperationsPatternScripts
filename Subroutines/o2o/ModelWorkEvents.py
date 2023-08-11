@@ -16,7 +16,8 @@ _psLog = PSE.LOGGING.getLogger('OPS.o2o.ModelWorkEvents')
 
 def o2oWorkListMaker():
     """
-    Mini controller to convert the Patterns ops-work-list.json into an o2o work events file.
+    Mini controller.
+    Converts the Patterns ops-work-list.json into an o2o work events file.
     """
 
     o2oWorkList = opsWorkListConversion().convert()
@@ -91,7 +92,18 @@ class opsWorkListConversion:
         self.locos = []
 
         return
+    
+    def convert(self):
+        """
+        Mini controller to convert the work list.
+        """
 
+        self.workListGetter()
+        self.rsGetter()
+        self.o2oWorkListUpdater()
+
+        return self.o2oWorkList
+    
     def workListGetter(self):
 
         reportName = PSE.getBundleItem('ops-work-list')        
@@ -164,27 +176,16 @@ class opsWorkListConversion:
         self.o2oWorkList['trainName'] = self.opsWorkList['trainName']
         self.o2oWorkList['trainDescription'] = self.opsWorkList['trainDescription']
         self.o2oWorkList['date'] = self.opsWorkList['date']
-        self.o2oWorkList['location'] = self.opsWorkList['location']
-        self.o2oWorkList['tracks'] = self.opsWorkList['tracks']
+        # self.o2oWorkList['location'] = self.opsWorkList['location']
+        # self.o2oWorkList['tracks'] = self.opsWorkList['tracks']
+        self.o2oWorkList['locations'] = [{'locationName':self.opsWorkList['location'],'tracks':[{'trackName':'', 'length':'', 'cars':self.cars, 'locos':self.locos}]}]
 
 
 
-        # self.o2oWorkList['locations'] = [{'locationName':location,'tracks':[{'trackName':'', 'length':'', 'cars':[], 'locos':[]}]}]
         # self.o2oWorkList['locations'][0]['tracks'][0]['cars'] = self.cars
         # self.o2oWorkList['locations'][0]['tracks'][0]['locos'] = self.locos
 
         return
-
-    def convert(self):
-        """
-        Mini controller to convert the work list.
-        """
-
-        self.workListGetter()
-        self.rsGetter()
-        self.o2oWorkListUpdater()
-
-        return self.o2oWorkList
 
 
 class jmriManifestConversion:
@@ -315,6 +316,17 @@ class o2oWorkEvents:
 
         return
 
+    def makeList(self):
+        """
+        Mini controller.
+        """
+        
+        self.o2oHeader()
+        self.o2oLocations()
+        self.saveList()
+
+        return
+    
     def o2oHeader(self):
 
         _psLog.debug('o2oWorkEvents.o2oHeader')

@@ -126,7 +126,8 @@ class StartUp:
         trackPattern = Model.makeTrackPattern(selectedTracks)
         Model.writePatternReport(trackPattern)
 
-        Model.patternReportForPrint()
+        reportName = PSE.getBundleItem('ops-pattern-report')
+        Model.getReportForPrint(reportName)
         # Model.trackPatternAsCsv()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

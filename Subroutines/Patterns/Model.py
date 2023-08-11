@@ -13,6 +13,26 @@ SCRIPT_REV = 20230201
 
 _psLog = PSE.LOGGING.getLogger('OPS.PT.Model')
 
+def resetConfigFileItems():
+    """
+    Called from PSE.remoteCalls('resetCalls')
+    """
+
+    configFile = PSE.readConfigFile()
+
+    configFile['Patterns'].update({'AD':[]})
+    configFile['Patterns'].update({'PD':''})
+
+    configFile['Patterns'].update({'AL':[]})
+    configFile['Patterns'].update({'PL':''})
+
+    configFile['Patterns'].update({'PT':{}})
+    configFile['Patterns'].update({'PA':False})
+
+    PSE.writeConfigFile(configFile)
+
+    return
+
 def insertStandins(trackPattern):
     """
     Substitutes in standins from the config file.
@@ -54,26 +74,6 @@ def getStandins(rs, standins):
         fdStandin = standins['FD']
 
     return destStandin, fdStandin
-
-def resetConfigFileItems():
-    """
-    Called from PSE.remoteCalls('resetCalls')
-    """
-
-    configFile = PSE.readConfigFile()
-
-    configFile['Patterns'].update({'AD':[]})
-    configFile['Patterns'].update({'PD':''})
-
-    configFile['Patterns'].update({'AL':[]})
-    configFile['Patterns'].update({'PL':''})
-
-    configFile['Patterns'].update({'PT':{}})
-    configFile['Patterns'].update({'PA':False})
-
-    PSE.writeConfigFile(configFile)
-
-    return
 
 def updateConfigFile(controls):
     """
@@ -149,42 +149,41 @@ def resetWorkList():
     workList = makeReportHeader()
     workList['tracks'] = []
 
-    fileName = PSE.getBundleItem('ops-work-list') + '.json'
+    fileName = PSE.getBundleItem('ops-switch-list') + '.json'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
     workList = PSE.dumpJson(workList)
     PSE.genericWriteReport(targetPath, workList)
 
     return
 
-def patternReportForPrint():
+def getReportForPrint(reportName):
     """
     Mini controller.
-    Formats and displays the Track Pattern Report.
+    Formats and displays the Track Pattern or Switch List report.
     Called by:
     Controller.StartUp.patternReportButton
+    ControllerSetCarsForm.CreateSetCarsFrame.switchListButton
     """
 
-    _psLog.debug('trackPatternButton')
+    _psLog.debug('getReportForPrint')
 
-    reportName = PSE.getBundleItem('ops-pattern-report')
+    report = getReport(reportName)
 
-    trackPattern = getPatternReport(reportName)
+    reportForPrint = makePatternReportForPrint(report)
 
-    trackPatternForPrint = makePatternReportForPrint(trackPattern)
-
-    targetPath = writeReportForPrint(reportName, trackPatternForPrint)
+    targetPath = writeReportForPrint(reportName, reportForPrint)
 
     PSE.genericDisplayReport(targetPath)
 
     return
 
-def getPatternReport(reportName):
+def getReport(reportName):
     
     fileName = reportName + '.json'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
-    trackPattern = PSE.genericReadReport(targetPath)
+    report = PSE.genericReadReport(targetPath)
 
-    return PSE.loadJson(trackPattern)
+    return PSE.loadJson(report)
 
 def makePatternReportForPrint(trackPattern):
 
@@ -228,7 +227,6 @@ def trackPatternAsCsv():
     PSE.genericWriteReport(targetPath, trackPatternCsv)
 
     return
-
 
 def makeTrackPatternCsv(trackPattern):
     """
@@ -304,28 +302,6 @@ def makeTrackPatternCsv(trackPattern):
                             + '\n'
 
     return trackPatternCsv
-
-
-
-
-
-
-
-
-def appendWorkList(mergedForm):
-
-    tracks = mergedForm['track']
-
-    fileName = PSE.getBundleItem('ops-work-list') + '.json'    
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
-    currentWorkList = PSE.jsonLoadS(PSE.genericReadReport(targetPath))
-
-    currentWorkList['tracks'].append(tracks)
-    currentWorkList = PSE.dumpJson(currentWorkList)
-
-    PSE.genericWriteReport(targetPath, currentWorkList)
-
-    return
 
 def divisionComboBox(selectedItem):
     """

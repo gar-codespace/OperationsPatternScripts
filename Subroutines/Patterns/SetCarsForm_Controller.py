@@ -122,16 +122,16 @@ class CreateSetCarsFrame:
             return
 
         mergedForm = SetCarsForm_Model.makeMergedForm(self.setCarsForm, self.buttonDict['textBoxEntry'])
- 
-        SetCarsForm_Model.switchListForPrint(mergedForm)
 
-        # SetCarsForm_Model.saveSwitchListJson(mergedForm)
-    # o2o stuff
-        # Model.appendWorkList(mergedForm)
+        SetCarsForm_Model.appendSwitchList(mergedForm)
+
+        reportName = PSE.getBundleItem('ops-switch-list')
+        Model.getReportForPrint(reportName)
+
+    # Plays well with others
         # PSE.TM.firePropertyChange('PatternsSwitchList', False, True)
     # CSV output
-        if PSE.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
-            SetCarsForm_Model.switchListAsCsv(mergedForm)
+        # Model.trackPatternAsCsv()
 
         MOUSE_CLICKED.getSource().setBackground(PSE.JAVA_AWT.Color.GREEN)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

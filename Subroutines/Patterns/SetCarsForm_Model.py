@@ -13,6 +13,23 @@ SCRIPT_REV = 20230201
 
 _psLog = PSE.LOGGING.getLogger('OPS.PT.ModelSetCarsForm')
 
+def appendSwitchList(mergedForm):
+    """
+    Appends switch lists into one form to make the ops-switch-list file.
+    Also used by o2o.
+    """
+
+    fileName = PSE.getBundleItem('ops-switch-list') + '.json'    
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+    currentWorkList = PSE.jsonLoadS(PSE.genericReadReport(targetPath))
+
+    currentWorkList['tracks'].append(mergedForm['tracks'][0])
+
+    currentWorkList = PSE.dumpJson(currentWorkList)
+    PSE.genericWriteReport(targetPath, currentWorkList)
+
+    return
+
 def formIsValid(setCarsForm, textBoxEntry):
     """
     Checks that both submitted forms are the same length
@@ -41,22 +58,6 @@ def makeMergedForm(setCarsForm, buttonDict):
     mergedForm = ModelEntities.merge(setCarsForm, inputList)
 
     return mergedForm
-
-def switchListForPrint(mergedForm):
-    """
-    PSE.genericDisplayReport has to display a file,
-    so the merged form needs to be saved first.
-    """
-
-# Save the merged form as a text switch list
-    switchList = makeTextSwitchList(mergedForm)
-    fileName = PSE.getBundleItem('ops-switch-list') + '.txt'        
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'switchLists', fileName)
-    PSE.genericWriteReport(targetPath, switchList)
-# Display formatted data
-    PSE.genericDisplayReport(targetPath)
-
-    return
 
 def moveRollingStock(switchList):
     """
@@ -151,52 +152,5 @@ def scheduleUpdate(toTrack, rollingStock):
     rollingStock.setLoadName(schedule.getItemByType(carType).getShipLoadName())
     rollingStock.setDestination(schedule.getItemByType(carType).getDestination(), schedule.getItemByType(carType).getDestinationTrack(), True) # force set dest
     schedule.getItemByType(carType).setHits(schedule.getItemByType(carType).getHits() + 1)
-
-    return
-
-def makeTextSwitchList(switchList):
-    """
-    Formats and displays the Switch List report.
-    Called by:
-    ControllerSetCarsForm.CreateSetCarsForm.switchListButton
-    """
-
-    _psLog.debug('maksSwitchList')
-
-    PSE.makeReportItemWidthMatrix()
-
-    reportHeader = ModelEntities.makeTextReportHeader(switchList)
-
-    reportLocations = PSE.getBundleItem('Switch List') + '\n\n'
-
-    trackList = [switchList['tracks'][0]]
-    
-    reportLocations += ModelEntities.makeTextReportTracks(trackList, trackTotals=False)
-
-    return reportHeader + reportLocations
-
-def switchListAsCsv(mergedForm):
-    """
-    Track Pattern Report json is written as a CSV file
-    Called by:
-    ControllerSetCarsForm.CreateSetCarsForm.switchListButton
-    """
-
-    _psLog.debug('switchListAsCsv')
-#  Get json data
-#     fileName = PSE.getBundleItem('ops-work-list') + '.json'    
-#     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
-#     trackPattern = PSE.genericReadReport(targetPath)
-#     trackPattern = PSE.loadJson(trackPattern)
-# # Process json data into CSV
-#     userInputList = ModelEntities.makeUserInputList(textBoxEntry)
-#     trackPattern = ModelEntities.merge(trackPattern, userInputList)
-
-#     trackPattern = makeMergedForm(trackPattern, textBoxEntry)
-#     trackPatternCsv = View.makeTrackPatternCsv(trackPattern)
-# # Write CSV data
-#     fileName = PSE.getBundleItem('ops-switch-list') + '.csv'
-#     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'csvSwitchLists', fileName)
-#     PSE.genericWriteReport(targetPath, trackPatternCsv)
 
     return

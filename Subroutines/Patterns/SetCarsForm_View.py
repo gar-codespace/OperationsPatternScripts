@@ -1,10 +1,11 @@
 # coding=utf-8
 # © 2023 Greg Ritacco
 
-"""Display methods for the Set Cars Form for Track X form"""
+"""
+Display methods for the Set Cars Form for Track X form
+"""
 
 from opsEntities import PSE
-from Subroutines.Patterns import View
 from Subroutines.Patterns import GUI
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__

@@ -21,6 +21,7 @@ Import Preperation
 Import TrainPlayer's Advanced Ops
 Import Personalized Settings
 ops-work-list
+o2o-work-list
 Initialize Railroad
 Reset Railroad Data
 Locations

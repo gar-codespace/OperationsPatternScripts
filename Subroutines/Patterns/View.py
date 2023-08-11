@@ -24,8 +24,7 @@ class ManageGui:
 
         subroutineFrame = PSE.JAVX_SWING.JPanel() # the Track Pattern panel
         subroutineFrame.setName(__package__)
-        subroutineFrame.setLayout(PSE.JAVX_SWING.BoxLayout(
-                subroutineFrame, PSE.JAVX_SWING.BoxLayout.Y_AXIS))
+        subroutineFrame.setLayout(PSE.JAVX_SWING.BoxLayout(subroutineFrame, PSE.JAVX_SWING.BoxLayout.Y_AXIS))
         subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Patterns Subroutine'))
 
         return subroutineFrame

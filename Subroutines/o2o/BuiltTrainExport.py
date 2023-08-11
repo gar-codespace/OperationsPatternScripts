@@ -94,6 +94,23 @@ class FindTrain:
         return PSE.loadJson(manifest)['date']
 
 
+def o2oWorkListMaker():
+    """
+    Mini controller.
+    Converts the Patterns ops-work-list.json into an o2o work events file.
+    """
+
+    # o2oWorkList = ModelWorkEvents.opsWorkListConversion().convert()
+
+    print(o2oWorkList)
+
+    # ModelWorkEvents.o2oWorkEvents(o2oWorkList).makeList()
+
+    print(SCRIPT_NAME + '.o2oWorkListMaker ' + str(SCRIPT_REV))
+
+    return
+
+
 class o2oWorkEventsBuilder(jmri.jmrit.automat.AbstractAutomaton):
     """Runs when a JMRI train is built"""
 
