@@ -16,7 +16,7 @@ import javax.swing as JAVX_SWING
 import logging as LOGGING
 import apps as APPS
 import time as TIME
-from HTMLParser import HTMLParser as HTML_PARSER # Check if this is used any more
+from HTMLParser import HTMLParser as HTML_PARSER
 from json import loads as jsonLoadS, dumps as jsonDumpS
 from codecs import open as codecsOpen
 

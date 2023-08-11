@@ -1,6 +1,9 @@
 """
-Exports a JMRI manifest into a csv for import into the TrainPlayer Quick Keys script suite.
-Callable from the pattern scripts subroutine or stand alone.
+Exports a JMRI manifest into a csv.
+Exports a OPS switch list into a csv.
+Bothe exports are formated for import into the TrainPlayer Quick Keys script suite.
+Called by listeners attached to the Train Manager.
+Can also be called as a stand alone script.
 """
 
 import jmri
@@ -15,7 +18,9 @@ SCRIPT_DIR = 'OperationsPatternScripts'
 
 
 class StandAloneLogging():
-    """Called when this script is used by itself"""
+    """
+    Called when this script is used by itself.
+    """
 
     def __init__(self):
 
@@ -42,7 +47,8 @@ class StandAloneLogging():
 
 
 class FindTrain:
-    """ """
+    """
+    """
 
     def __init__(self):
 
@@ -53,7 +59,9 @@ class FindTrain:
         return
         
     def findNewestTrain(self):
-        """If more than 1 train is built, pick the newest one"""
+        """
+        If more than 1 train is built, pick the newest one.
+        """
 
         self.o2oLog.debug('findNewestTrain')
 
@@ -80,13 +88,6 @@ class FindTrain:
 
         return self.builtTrainList
 
-    # def resetBuildTrains(self):
-
-    #     for train in self.builtTrainList:
-    #         train.reset()
-
-    #     return
-
     def getTrainBuiltDate(self, train):
 
         manifest = jmri.util.FileUtil.readFile(jmri.jmrit.operations.trains.JsonManifest(train).getFile())
@@ -94,25 +95,42 @@ class FindTrain:
         return PSE.loadJson(manifest)['date']
 
 
-def o2oWorkListMaker():
+def convertOpsSwitckList():
     """
     Mini controller.
-    Converts the Patterns ops-work-list.json into an o2o work events file.
+    Converts the Patterns ops-switch-list.json into an o2o work events file.
+    Called by: Listeners - PROPERTY_CHANGE_EVENT.propertyName == 'PatternsSwitchList' 
     """
 
-    # o2oWorkList = ModelWorkEvents.opsWorkListConversion().convert()
+    opsSwitchList = ModelWorkEvents.opsSwitchListConversion()
+    if not opsSwitchList.validate():
+        return
+    
+    tpWorkEventsList = opsSwitchList.convert()
+    ModelWorkEvents.o2oWorkEvents(tpWorkEventsList).makeList()
 
-    print(o2oWorkList)
-
-    # ModelWorkEvents.o2oWorkEvents(o2oWorkList).makeList()
-
-    print(SCRIPT_NAME + '.o2oWorkListMaker ' + str(SCRIPT_REV))
+    print(SCRIPT_NAME + '.convertOpsSwitckList ' + str(SCRIPT_REV))
 
     return
 
+def convertJmriManifest():
+    """
+    Mini controller.
+    Converts the JMRI manifest into an o2o work events file.
+    Called by: Listeners - PROPERTY_CHANGE_EVENT.propertyName == 'TrainBuilt'
+    """
+
+    newestTrain = FindTrain().findNewestTrain()
+
+    tpWorkEventsList = ModelWorkEvents.jmriManifestConversion(newestTrain).convert()
+    ModelWorkEvents.o2oWorkEvents(tpWorkEventsList).makeList()
+
+    return
 
 class o2oWorkEventsBuilder(jmri.jmrit.automat.AbstractAutomaton):
-    """Runs when a JMRI train is built"""
+    """
+    Runs when a JMRI train is built.
+    """
 
     def init(self):
 

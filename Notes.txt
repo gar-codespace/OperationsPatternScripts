@@ -4,7 +4,7 @@ Todo:
   Duplication of PSE chunkPath.
   o2o.ModelWorkEvents needs to be refactored.
   Turn on auto save in settings
-
+  Have both the layout name and extended layout name in the config file
 Comments:
   Schedule does not prevent setting a car to a track.
   Setting JmriJFrame(True, True) has no effect, size and position are manually saved.
