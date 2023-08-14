@@ -9,7 +9,7 @@ from Subroutines.o2o import ModelWorkEvents
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
 
-_psLog = PSE.LOGGING.getLogger('OPS.JP.Listeners')
+_psLog = PSE.LOGGING.getLogger('OPS.o2o.Listeners')
 
 def actionListener(EVENT):
     """menu item-Tools Show/Hide Subroutines.o2o."""
@@ -53,8 +53,8 @@ def addTrainsListener():
     for train in trainList:
         train.addPropertyChangeListener(TrainsPropertyChange())
 
-    print('o2o.activatedCalls.Listeners.addTrainsTableListener')
-    print('o2o.activatedCalls.Listeners.addBuiltTrainListener')
+    print('o2o.Listeners.addTrainsListener')
+    _psLog.debug('o2o.Listeners.addTrainsListener')
 
     return
 
@@ -66,8 +66,8 @@ def removeTrainsListener():
     for train in trainList:
         train.removePropertyChangeListener(TrainsPropertyChange())
 
-    print('o2o.activatedCalls.Listeners.removeTrainsTableListener')
-    print('o2o.activatedCalls.Listeners.removeBuiltTrainListener')
+    print('o2o.Listeners.removeTrainsTableListener')
+    _psLog.debug('o2o.Listeners.removeTrainsTableListener')
 
     return
 

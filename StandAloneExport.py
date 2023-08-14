@@ -28,6 +28,7 @@ PSE.OS_PATH = OS_PATH
 from opsEntities import PSE
 from Subroutines.o2o import ModelWorkEvents
 from Subroutines.o2o import ModelEntities
+from Subroutines.o2o import Listeners
 from opsBundle import Bundle
 
 Bundle.BUNDLE_DIR = PSE.OS_PATH.join(PLUGIN_ROOT, 'opsBundle')
@@ -46,14 +47,14 @@ class StandAloneLogging():
 
     def __init__(self):
 
-        fileName = 'BuiltTrainExportLog.txt'
-        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH , 'operations', 'buildstatus', fileName)
+        # fileName = 'StandAloneExportLog.txt'
+        # targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH , 'operations', 'buildstatus', fileName)
 
         self.logger = PSE.Logger(targetPath)
         self.o2oLog = PSE.LOGGING.getLogger('TP.StandAlone')
 
         return
-
+    
     def startLogging(self):
 
         self.logger.startLogger('TP')
@@ -76,64 +77,35 @@ class ConvertJmriManifestStandAlone(jmri.jmrit.automat.AbstractAutomaton):
 
     def init(self):
 
-        self.SCRIPT_NAME = 'OperationsPatternScripts.o2oSubroutine.BuiltTrainExport.o2oWorkEventsBuilder'
+        fileName = 'OPS StandAloneExport.txt'
+        logFileTarget = PSE.OS_PATH.join(PSE.PROFILE_PATH , 'operations', 'buildstatus', fileName)
+        self.logger = PSE.Logger(logFileTarget)
+        self.logger.startLogger('OPS')
 
-        self.standAloneLogging = StandAloneLogging()
-        self.o2oLog = PSE.LOGGING.getLogger('TP.o2oWorkEventsBuilder')
-
-        print('here')
-
-        return
-
-    def getNewestTrain(self):
-
-        return FindTrain().findNewestTrain()
-
-    def passInTrain(self, train):
-
-        self.train = train
+        self.console = PSE.APPS.SystemConsole.getConsole()
+        self.trainsWindow = PSE.JMRI.jmrit.operations.trains.TrainsTableFrame()
 
         return
 
     def handle(self):
 
-        self.standAloneLogging.startLogging()
+        self.psLog = PSE.LOGGING.getLogger('OPS.StandAloneExport')
+        self.logger.initialLogMessage(self.psLog)
 
+        Listeners.addTrainsListener()
 
+        self.console.setVisible(True)
+        self.trainsWindow.setVisible(True)
 
-        if not ModelEntities.tpDirectoryExists():
-            self.o2oLog.warning('TrainPlayer Reports directory not found')
-            self.o2oLog.warning('TrainPlayer manifest export did not complete')
+        self.psLog.info('ConvertJmriManifestStandAlone')
 
-            return False
-
-        self.o2oLog.debug('ModelWorkEvents.jmriManifestConversion')
-
-        self.train.setPrinted(True)
-
-        o2o = ModelWorkEvents.jmriManifestConversion(self.train)
-        o2o.jmriManifestGetter()
-        o2o.convertHeader()
-        o2o.convertBody()
-        o2oWorkEvents = o2o.geto2oWorkEvents()
-    # Common post processor for ModelWorkEvents.ConvertPtMergedForm.o2oButton and BuiltTrainExport.o2oWorkEventsBuilder.handle
-        o2o = ModelWorkEvents.o2oWorkEvents(o2oWorkEvents)
-        o2o.o2oHeader()
-        o2o.o2oLocations()
-        o2o.saveList()
-
-        self.o2oLog.info('Export JMRI manifest to TrainPlayer: ' + self.train.getName())
-        self.o2oLog.info('Export to TrainPlayer script location: ' + PLUGIN_ROOT)
-
-
-        print(self.SCRIPT_NAME + ' ' + str(SCRIPT_REV))
-
-
-        self.standAloneLogging.stopLogging()
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return False
 
-ConvertJmriManifestStandAlone().satrt()
+
+if __name__ == "__builtin__":
+    ConvertJmriManifestStandAlone().start()
 
 
 

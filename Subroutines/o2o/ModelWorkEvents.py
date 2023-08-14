@@ -328,8 +328,6 @@ class o2oWorkEvents:
 
     def __init__(self, workEvents):
 
-        self.tpRollingStockData = ModelEntities.getTpRailroadJson('tpRollingStockData')
-
         self.workEvents = workEvents
         self.o2oList = ''
 
