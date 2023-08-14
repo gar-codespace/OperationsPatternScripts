@@ -1,9 +1,6 @@
 """
-Exports a JMRI manifest into a csv.
-Exports a OPS switch list into a csv.
-Both exports are formated for import into the TrainPlayer Quick Keys script suite.
-Called by listeners attached to the Train Manager.
-Can also be called as a stand alone script.
+Exports a JMRI manifest into a TrainPlayer Quick Keys compatable csv.
+Called by o2o listeners attached to the Train Manager.
 """
 
 import jmri
@@ -18,16 +15,12 @@ PLUGIN_ROOT = OS_PATH.join(jmri.util.FileUtil.getPreferencesPath(), SCRIPT_DIR)
 sys.path.append(PLUGIN_ROOT)
 from opsEntities import PSE
 
-
 PSE.PLUGIN_ROOT = PLUGIN_ROOT
 PSE.SCRIPT_DIR = SCRIPT_DIR
 PSE.JMRI = jmri
 PSE.SYS = sys
 PSE.OS_PATH = OS_PATH
 
-from opsEntities import PSE
-from Subroutines.o2o import ModelWorkEvents
-from Subroutines.o2o import ModelEntities
 from Subroutines.o2o import Listeners
 from opsBundle import Bundle
 
@@ -41,39 +34,7 @@ SCRIPT_NAME ='OperationsPatternScripts.StandAloneExport'
 SCRIPT_REV = 20230201
 
 
-class StandAloneLogging():
-    """
-    """
-
-    def __init__(self):
-
-        # fileName = 'StandAloneExportLog.txt'
-        # targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH , 'operations', 'buildstatus', fileName)
-
-        self.logger = PSE.Logger(targetPath)
-        self.o2oLog = PSE.LOGGING.getLogger('TP.StandAlone')
-
-        return
-    
-    def startLogging(self):
-
-        self.logger.startLogger('TP')
-        self.logger.initialLogMessage(self.o2oLog)
-
-        return
-
-    def stopLogging(self):
-
-        self.logger.stopLogger('TP')
-
-        return
-
-
-class ConvertJmriManifestStandAlone(jmri.jmrit.automat.AbstractAutomaton):
-    """
-    Converts a JMRI manifest to a Quick Keys work events list.
-    This is the stand alone version.
-    """
+class StandAloneExport(jmri.jmrit.automat.AbstractAutomaton):
 
     def init(self):
 
@@ -105,7 +66,4 @@ class ConvertJmriManifestStandAlone(jmri.jmrit.automat.AbstractAutomaton):
 
 
 if __name__ == "__builtin__":
-    ConvertJmriManifestStandAlone().start()
-
-
-
+    StandAloneExport().start()
