@@ -2,8 +2,9 @@ Todo:
   How to publish DeepL?
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
   Duplication of PSE chunkPath.
-  Turn on auto save in settings
-  Have both the layout name and extended layout name in the config file
+  Have both the layout name and extended layout name in the config file.
+  Add 'Use Extended Header' checkbox to jPlus.
+  
 Comments:
   Schedule does not prevent setting a car to a track.
   Setting JmriJFrame(True, True) has no effect, size and position are manually saved.
@@ -41,6 +42,7 @@ Tested Items:
     Add print statements to all try/except exceptions OK.
     formatText() works with utf-8 OK.
     Added PSE.getBundleItem(item) to centralize bundle translation OK.
+    Turn on auto save in settings OK.
 
   Language Bundle
     Plugin and help bundles validate OK.

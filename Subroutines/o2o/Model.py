@@ -457,6 +457,7 @@ class Initializer:
         self.OSU.Setup.setCarTypes(self.configFile['Main Script']['TO']['SCT'])
         self.OSU.Setup.setStagingTryNormalBuildEnabled(self.configFile['Main Script']['TO']['TNB'])
         self.OSU.Setup.setManifestEditorEnabled(self.configFile['Main Script']['TO']['SME'])
+        self.OSU.Setup.setAutoSaveEnabled(self.configFile['Main Script']['TO']['ASE'])
 
         return
 

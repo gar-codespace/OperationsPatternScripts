@@ -228,8 +228,6 @@ def addActiveSubroutines(targetPanel):
 
     configFile = readConfigFile()
 
-
-
 # Catch dynamic add or removal of a subroutine
     for subroutine in getSubroutineDirs():
         subroutineName = 'Subroutines.' + subroutine
@@ -251,15 +249,11 @@ def addActiveSubroutines(targetPanel):
             subroutineFrame = startUp.getSubroutineFrame()
             targetPanel.add(subroutineFrame)
 
-
     targetPanel.add(JAVX_SWING.Box.createVerticalGlue())
 
     return targetPanel
 
 def closePsWindow():
-    """Called by:
-    
-        """
 
     frameName = getBundleItem('Pattern Scripts')
     window = JMRI.util.JmriJFrame.getFrame(frameName)
@@ -295,7 +289,9 @@ def getComponentByName(frameTitle, componentName):
     return
 
 def crawler(frame):
-    """Recursively returns all the components in a frame."""
+    """
+    Recursively returns all the components in a frame.
+    """
 
     for component in frame.getComponents():
         CRAWLER.append(component)
