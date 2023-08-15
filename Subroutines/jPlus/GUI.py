@@ -70,10 +70,24 @@ class subroutineGui:
 
         jPlusPanel.add(inputGrid)
         jPlusPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(0,5)))
+
+        updatePanel = PSE.JAVX_SWING.JPanel()
         
         upButton = self.updateButton()
         self.controlWidgets['UP'] = upButton
-        jPlusPanel.add(upButton)
+
+        flag = self.configFile['Main Script']['CP']['EH']
+        message = PSE.getBundleItem('Use Extended Header')
+        useExtended = PSE.JAVX_SWING.JCheckBox(message, flag)
+        useExtended.setName('useExtended')
+        self.controlWidgets['UX'] = useExtended
+
+
+        updatePanel.add(upButton)
+        updatePanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(10,0)))
+        updatePanel.add(useExtended)
+
+        jPlusPanel.add(updatePanel)
 
         return jPlusPanel
 

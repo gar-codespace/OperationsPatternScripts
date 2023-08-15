@@ -51,7 +51,7 @@ def updateJmriLocations():
     """
     Mini controller.
     Action for the Import Locations button.
-    Changes are rippled through Industries, Cars and Railroad Details
+    Changes are rippled through Industries, Cars and Extended Header
     Does not change Trains and Routes.
     Schedules are rewritten from scratch.
     Called by:
@@ -107,7 +107,7 @@ def updateJmriTracks():
     """
     Mini controller.
     Action for the Import Industries button.
-    Changes are rippled through Cars and Railroad Details
+    Changes are rippled through Cars and Extended Header
     Uses LM to update tracks and track attributes.
     Called by:
     Controller.Startup.updateJmriTracks
@@ -149,7 +149,7 @@ def updateJmriRollingingStock():
     """
     Mini controller.
     Action for the Import Cars button.
-    Changes are rippled through Railroad Details
+    Changes are rippled through Extended Header
     Loads cars at spurs per schedule.
     Sets cars load at staging to E.
     Called by:
@@ -178,7 +178,7 @@ def updateJmriRollingingStock():
 
 def updateJmriProperties():
     """
-    Action on press of the Import Railroad Details button.
+    Action on press of the Import Extended Header button.
     """
 
     ExtendedDetails().update()
@@ -506,7 +506,7 @@ class ExtendedDetails:
 
     def o2oDetailsToConFig(self):
         """
-        Optional railroad details from the TrainPlayer layout are added to the config file.
+        Optional Extended Headers from the TrainPlayer layout are added to the config file.
         """
 
         self.configFile['Main Script']['LD'].update({'OR':self.tpRailroad['Extended_operatingRoad']})
@@ -523,7 +523,7 @@ class ExtendedDetails:
     
     def setRailroadDetails(self):
         """
-        Optional railroad details from the TrainPlayer layout are added to JMRI.
+        Optional Extended Header from the TrainPlayer layout are added to JMRI.
         """
 
         _psLog.debug('setRailroadDetails')

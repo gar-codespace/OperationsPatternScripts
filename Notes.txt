@@ -2,8 +2,6 @@ Todo:
   How to publish DeepL?
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
   Duplication of PSE chunkPath.
-  Have both the layout name and extended layout name in the config file.
-  Add 'Use Extended Header' checkbox to jPlus.
   
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -57,6 +55,7 @@ Tested Items:
     jPlus seperated from JMRI reports and web server for now.
     Extended RR details works with Patterns report OK.
     Plays well with o2o.
+    Implement 'Use Extended Header' checkBox OK.
 
   Patterns
     Subroutine turns on and off OK.

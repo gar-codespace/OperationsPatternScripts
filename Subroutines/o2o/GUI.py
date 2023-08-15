@@ -33,7 +33,7 @@ class subroutineGui:
         self.ursButton.setName('updateJmriRollingingStock')
 
         self.lpButton = PSE.JAVX_SWING.JButton()
-        self.lpButton.setText(PSE.getBundleItem('Railroad Details'))
+        self.lpButton.setText(PSE.getBundleItem('Extended Header'))
         self.lpButton.setName('updateJmriProperties')
 
         return

@@ -73,7 +73,7 @@ class StartUp:
     def startUpTasks(self):
         """Run these tasks when this subroutine is started."""
 
-        Model.extendedHeaderActivator(True)
+        # Model.extendedHeaderActivator(True)
 
         return
 
@@ -84,6 +84,11 @@ class StartUp:
         """
 
         widget = self.widgets['control']['UP']
+        name = widget.getName()
+
+        widget.actionPerformed = getattr(self, name)
+
+        widget = self.widgets['control']['UX']
         name = widget.getName()
 
         widget.actionPerformed = getattr(self, name)
@@ -103,13 +108,33 @@ class StartUp:
         configFile = PSE.readConfigFile()
         for id, widget in self.widgets['panel'].items():
             configFile['Main Script']['LD'].update({id:widget.getText()})
+
+        configFile['Main Script']['CP'].update({'EH':True})
+
         PSE.writeConfigFile(configFile)
 
         OSU = PSE.JMRI.jmrit.operations.setup
         OSU.Setup.setYearModeled(configFile['Main Script']['LD']['YR'])
 
         PSE.remoteCalls('refreshCalls')
+        PSE.restartSubroutineByName(__package__)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+        return
+
+    def useExtended(self, EVENT):
+        """
+        The Use Extended Header checkbox.
+        """
+
+        _psLog.debug(EVENT)
+
+        configFile = PSE.readConfigFile()            
+        configFile['Main Script']['CP'].update({'EH':EVENT.getSource().selected})
+        PSE.writeConfigFile(configFile)
+
+        PSE.remoteCalls('refreshCalls')
+        PSE.restartSubroutineByName(__package__)
 
         return
