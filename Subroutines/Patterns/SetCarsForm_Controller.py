@@ -129,7 +129,7 @@ class CreateSetCarsFrame:
         Model.getReportForPrint(reportName)
 
     # Plays well with others
-        PSE.TM.firePropertyChange('PatternsSwitchList', False, True)
+        PSE.TM.firePropertyChange('o2oSwitchList', False, True)
     # CSV output
         # Model.trackPatternAsCsv()
 

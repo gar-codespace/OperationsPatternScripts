@@ -15,11 +15,11 @@ SCRIPT_REV = 20230201
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.ModelWorkEvents')
 
 
-def convertOpsSwitckList():
+def convertOpsSwitchList():
     """
     Mini controller.
     Converts the Patterns ops-switch-list.json into an o2o work events file.
-    Called by: Listeners - PROPERTY_CHANGE_EVENT.propertyName == 'PatternsSwitchList' 
+    Called by: Listeners - PROPERTY_CHANGE_EVENT.propertyName == 'o2oSwitchList' 
     """
 
     opsSwitchList = opsSwitchListConversion()
@@ -29,7 +29,7 @@ def convertOpsSwitckList():
     tpWorkEventsList = opsSwitchList.convert()
     o2oWorkEvents(tpWorkEventsList).makeList()
 
-    print(SCRIPT_NAME + '.convertOpsSwitckList ' + str(SCRIPT_REV))
+    print(SCRIPT_NAME + '.convertOpsSwitchList ' + str(SCRIPT_REV))
 
     return
 

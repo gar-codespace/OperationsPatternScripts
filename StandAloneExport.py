@@ -1,6 +1,6 @@
 """
 Exports a JMRI manifest into a TrainPlayer Quick Keys compatable csv.
-Called by o2o listeners attached to the Train Manager.
+Called by o2o listeners attached to each train via the Train Manager.
 """
 
 import jmri
@@ -53,6 +53,7 @@ class StandAloneExport(jmri.jmrit.automat.AbstractAutomaton):
         self.psLog = PSE.LOGGING.getLogger('OPS.StandAloneExport')
         self.logger.initialLogMessage(self.psLog)
 
+        Listeners.addTrainsTableListener()
         Listeners.addTrainsListener()
 
         self.console.setVisible(True)

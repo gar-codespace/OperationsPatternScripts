@@ -11,6 +11,7 @@ from Subroutines.o2o import Listeners
 def activatedCalls():
     """Methods called when this subroutine is activated."""
 
+    Listeners.removeTrainsListener()
     Listeners.addTrainsListener()
 
     return

@@ -45,26 +45,28 @@ def actionListener(EVENT):
     return
 
 
-def addTrainsListener():
+def addTrainsTableListener():
 
     PSE.TM.addPropertyChangeListener(TrainsPropertyChange())
 
-    trainList = PSE.TM.getTrainsByIdList()
-    for train in trainList:
-        train.addPropertyChangeListener(TrainsPropertyChange())
+    print('o2o.Listeners.addTrainsTableListener')
+    _psLog.debug('o2o.Listeners.addTrainsTableListener')
 
-    print('o2o.Listeners.addTrainsListener')
-    _psLog.debug('o2o.Listeners.addTrainsListener')
+    return
+
+def addTrainsListener():
+
+    for train in PSE.TM.getTrainsByIdList():
+        train.addPropertyChangeListener(TrainsPropertyChange())
 
     return
 
 def removeTrainsListener():
 
-    PSE.TM.removePropertyChangeListener(TrainsPropertyChange())
-
-    trainList = PSE.TM.getTrainsByIdList()
-    for train in trainList:
-        train.removePropertyChangeListener(TrainsPropertyChange())
+    for train in PSE.TM.getTrainsByIdList():
+        for listener in train.getPropertyChangeListeners():
+            if isinstance(listener, TrainsPropertyChange):
+                train.removePropertyChangeListener(listener)
 
     print('o2o.Listeners.removeTrainsTableListener')
     _psLog.debug('o2o.Listeners.removeTrainsTableListener')
@@ -74,7 +76,7 @@ def removeTrainsListener():
 
 class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     """
-    Events that are triggered with changes to JMRI Trains and OPS switch lists.
+    Events that are triggered with changes to JMRI Trains and OPS/o2o switch lists.
     """
 
     def __init__(self):
@@ -83,25 +85,39 @@ class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
 
     def propertyChange(self, PROPERTY_CHANGE_EVENT):
 
+        sourceName = str(PROPERTY_CHANGE_EVENT.source)
+        propertyName = PROPERTY_CHANGE_EVENT.getPropertyName()
+        logMessage = 'o2o.Listeners.TrainsPropertyChange- ' + sourceName + ' ' + propertyName
+
         if PROPERTY_CHANGE_EVENT.propertyName == 'TrainsListLength':
+            """
+            Called when a new train is added or an existing train is removed.
+            """
+
             removeTrainsListener()
             addTrainsListener()
 
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
-            print(SCRIPT_NAME + '.TrainsPropertyChange.TrainsListLength ' + str(SCRIPT_REV))
+            _psLog.debug(logMessage)
+            print(logMessage)
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'TrainBuilt' and PROPERTY_CHANGE_EVENT.newValue == True:
+            """
+            Called when a train is built.
+            """
 
             ModelWorkEvents.convertJmriManifest()
 
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
-            print(SCRIPT_NAME + '.TrainsPropertyChange.TrainBuilt ' + str(SCRIPT_REV))
+            _psLog.debug(logMessage)
+            print(logMessage)
 
-        if PROPERTY_CHANGE_EVENT.propertyName == 'PatternsSwitchList' and PROPERTY_CHANGE_EVENT.newValue == True:
+        if PROPERTY_CHANGE_EVENT.propertyName == 'o2oSwitchList' and PROPERTY_CHANGE_EVENT.newValue == True:
+            """
+            Called when the o2o Set Cars window Switch List button is pressed.
+            """
 
-            ModelWorkEvents.convertOpsSwitckList()
+            ModelWorkEvents.convertOpsSwitchList()
 
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
-            print(SCRIPT_NAME + '.TrainsPropertyChange.PatternsSwitchList ' + str(SCRIPT_REV))
+            _psLog.debug(logMessage)
+            print(logMessage)
 
         return

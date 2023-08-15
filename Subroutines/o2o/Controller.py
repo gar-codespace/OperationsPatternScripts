@@ -76,6 +76,8 @@ class StartUp:
     def startUpTasks(self):
         """Run these tasks when this subroutine is started."""
 
+        Listeners.addTrainsTableListener()
+
         return
 
     def activateWidgets(self):
