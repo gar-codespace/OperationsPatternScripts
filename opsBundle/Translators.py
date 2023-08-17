@@ -18,6 +18,8 @@ SCRIPT_REV = 20230201
 class UseDeepL:
     """
     Specifics for using DeepL
+    Format:
+    https://api-free.deepl.com/v2/translate?auth_key=e331f340-8f59-dc09-0df7-44c5cab582f4%3Afx&text=Locomotives+at&source_lang=en&target_lang=de&split_sentences=0
     """
 
     def __init__(self):
@@ -28,6 +30,12 @@ class UseDeepL:
         self.SOURCE_LANG = 'en'
 
         return
+    
+    def testTheService(self):
+
+        testURL = self.getTheUrl('test')
+
+        return testURL
 
     def getTheUrl(self, item):
 

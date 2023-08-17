@@ -5,7 +5,7 @@
 Choose or create a language translation bundle for the current locale.
 """
 
-from urllib2 import urlopen
+from urllib2 import urlopen, HTTPError
 import re
 
 from opsEntities import PSE
@@ -265,18 +265,25 @@ def updateHelpFileForLocale():
 
 def validateKeyFile():
     """
-    Checks that the keys.py file exists
+    Checks that the keys.py file is valid.
     Called by:
-    Main.View
+    Main Script.View
     """
 
+    returnValue = True
+
     itemTarget =  PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'Keys.py')
-    if PSE.JAVA_IO.File(itemTarget).isFile():
-        return True
-    else:
+    if not PSE.JAVA_IO.File(itemTarget).isFile():
         _psLog.warning('Authentication key file not found')
         print('Authentication key file not found')
-        return False
+        returnValue = False
+
+    translator = Translator()
+    translator.setTranslationService()
+    if not translator.testTranslationService():
+        returnValue = False
+    
+    return returnValue
 
 def translateBundles():
     """
@@ -395,6 +402,21 @@ class Translator:
         """
 
         self.translationService = getattr(Translators, self.translatorChoice)()
+
+        return
+    
+    def testTranslationService(self):
+        """
+        On start of the plugin, test that the translation service is available.
+        """
+
+        url = self.translationService.testTheService()
+        try:
+            response = urlopen(url)
+            response.close()
+            _psLog.info('PASS: Translation service check')
+        except HTTPError as error:
+            _psLog.warning('FAIL: Translation service check: ' + error.code)
 
         return
 

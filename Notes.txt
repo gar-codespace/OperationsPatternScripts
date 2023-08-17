@@ -1,8 +1,8 @@
 Todo:
   How to publish DeepL?
-  Authenticate the DeepL key in translators.
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
   Duplication of PSE chunkPath.
+  Refactor Bundle.
   
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -42,6 +42,7 @@ Tested Items:
     formatText() works with utf-8 OK.
     Added PSE.getBundleItem(item) to centralize bundle translation OK.
     Turn on auto save in settings OK.
+    Authenticate the DeepL key in translators OK.
 
   Language Bundle
     Plugin and help bundles validate OK.
