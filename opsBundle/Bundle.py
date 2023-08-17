@@ -5,11 +5,11 @@
 Choose or create a language translation bundle for the current locale.
 """
 
-from urllib2 import urlopen, HTTPError
-import re
-
 from opsEntities import PSE
 from opsBundle import Translators
+
+from urllib2 import urlopen, HTTPError
+import re
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
@@ -22,7 +22,7 @@ _psLog = PSE.LOGGING.getLogger('OPS.OB.Bundle')
 class CreateStubFile:
     """
     Copy of the JMRI Java version of CreateStubFile.
-    The stub file will substitute english if the help file if the current locale doesn't exist.
+    The stub file will substitute english in the help file if the current locale doesn't exist.
     """
 
     def __init__(self):
@@ -92,9 +92,7 @@ class CreateStubFile:
         return
 
 
-"""
-Bundle and Help methods
-"""
+"""Bundle and Help methods"""
 
 
 def setupBundle():
@@ -162,12 +160,15 @@ def getBundleForLocale():
         try:
             compositeBundle[item] = localeBundle[item]
         except:
-            print('Exception at: Bundle.getBundleForLocale')
+            print('Bundle item not found: ' + translation)
             compositeBundle[item] = translation
 
     return compositeBundle
 
 def getAllBundles():
+    """
+    Gets the bundle file for each subroutine.
+    """
 
     targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle', 'bundle.txt')
     pluginBundle = PSE.genericReadReport(targetPath)
@@ -186,8 +187,8 @@ def getAllBundles():
 
 def makeDefaultHelpFile():
     """
-    Gather up all the help.html.txt files and combine them into Help.en.htm
-    l"""
+    Gather up all the help.html.txt files and combine them into Help.en.html
+    """
 
     targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsSupport', 'header.html')
     helpHtml = PSE.genericReadReport(targetPath)
@@ -209,7 +210,7 @@ def makeDefaultHelpFile():
 
 def validateHelpForLocale():
     """
-    Checks taht a help html exists for the current locale.
+    Checks that a help html exists for the current locale.
     If not, copy the default english version as the current locales' help file.
     """
 
@@ -386,8 +387,8 @@ class Translator:
 
     def __init__(self):
 
-        controlPanel = PSE.readConfigFile('Main Script')['CP']
-        self.translatorChoice = controlPanel['TS'][controlPanel['TC']]
+        self.controlPanel = PSE.readConfigFile('Main Script')['CP']
+        self.translatorChoice = self.controlPanel['TS'][self.controlPanel['TC']]
 
         self.translationDict = {}
         self.tempResult = []
@@ -415,10 +416,11 @@ class Translator:
             response = urlopen(url)
             response.close()
             _psLog.info('PASS: Translation service check')
+            return True
         except HTTPError as error:
-            _psLog.warning('FAIL: Translation service check: ' + error.code)
-
-        return
+            errorCode = self.controlPanel['EC'][str(error.code)]
+            _psLog.warning('FAIL: Translation service check: ' + errorCode)
+            return False
 
     def translateSingle(self, singleItem):
         """

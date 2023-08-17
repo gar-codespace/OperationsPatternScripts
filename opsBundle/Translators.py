@@ -10,7 +10,10 @@ The Translation Choice is configFile('CP')['TC']
 from urllib import urlencode
 
 from opsEntities import PSE
-from opsBundle import Keys
+try:
+    from opsBundle import Keys
+except ImportError:
+    print('Keys module not found')
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
@@ -26,7 +29,11 @@ class UseDeepL:
 
         self.BASE_URL = 'https://api-free.deepl.com/v2/translate?'
         self.DOCUMENT_URL = 'https://api-free.deepl.com/v2/document?'
-        self.AUTH_KEY = Keys.DEEPL_KEY
+        try:
+            self.AUTH_KEY = Keys.DEEPL_KEY
+        except:
+            self.AUTH_KEY = ''
+
         self.SOURCE_LANG = 'en'
 
         return

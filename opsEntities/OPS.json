@@ -69,8 +69,13 @@
       "PX" : 0,
       "PY" : 0,
       "OC" : true,
-      "RV" : 20230805,
-      "GP" : "https://github.com/gar-codespace/OperationsPatternScripts"
+      "RV" : 20230807,
+      "GP" : "https://github.com/gar-codespace/OperationsPatternScripts",
+      "EC" : {
+        "400" : "400 - Bad Request: Unable to translate the current language.",
+        "402" : "402 - Requested page not found",
+        "403" : "403 - Forbidden. The key is invalid."
+      }
       },
     "TO" : {
       "SME" : true,

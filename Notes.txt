@@ -2,7 +2,6 @@ Todo:
   How to publish DeepL?
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
   Duplication of PSE chunkPath.
-  Refactor Bundle.
   
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -176,12 +175,11 @@ Catches Items:
 
 Version 3 ideas:
   Add a new subroutine, streamlined trains window.
+  Possibly process event messages to ease reading the log file.
   Harden up Bundle against web errors, untranslated items.
   Harden Translator.translateSingle() from timeout errors.
-  Replace RemoteCalls with listeners.
   How to use locale modifier, IE en-GB.
-  Test formatText with ascii and others
-  All the subroutine actionListener() are very similar. Can this duplication be eliminated?
+  Test formatText with ascii and others.
   020.ModelWorkEvents.*.parsePtRs and o2o.ModelWorkEvents.*.parseRS do the same things in a different way, can they be merged?
   Implement mergeConfigFiles() maybe?
   jPlus integration into JMRI reports and web server.
