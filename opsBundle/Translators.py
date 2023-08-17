@@ -10,17 +10,15 @@ The Translation Choice is configFile('CP')['TC']
 from urllib import urlencode
 
 from opsEntities import PSE
-try:
-    from opsBundle import Keys
-except:
-    print('Exception at: Translators.from opsBundle import Keys')
-    pass
+from opsBundle import Keys
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
 
 class UseDeepL:
-    """Specifics for using DeepL"""
+    """
+    Specifics for using DeepL
+    """
 
     def __init__(self):
 

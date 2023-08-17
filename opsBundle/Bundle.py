@@ -1,7 +1,9 @@
 # coding=utf-8
 # © 2023 Greg Ritacco
 
-"""Choose or create a language translation bundle for the current locale"""
+"""
+Choose or create a language translation bundle for the current locale.
+"""
 
 from urllib2 import urlopen
 import re
@@ -20,7 +22,7 @@ _psLog = PSE.LOGGING.getLogger('OPS.OB.Bundle')
 class CreateStubFile:
     """
     Copy of the JMRI Java version of CreateStubFile.
-    The stub file will substitute english if the help file for the current locale doesn't exist.
+    The stub file will substitute english if the help file if the current locale doesn't exist.
     """
 
     def __init__(self):
@@ -73,13 +75,14 @@ class CreateStubFile:
         _psLog.debug('CreateStubFile.writeStubFile')
 
         stubFilePath = PSE.OS_PATH.join(self.stubLocation, 'psStub.html')
-
         PSE.genericWriteReport(stubFilePath, self.newStubFile)
 
         return
 
     def make(self):
-        """Mini controller guides the new stub file process."""
+        """
+        Mini controller.
+        """
 
         self.validateStubLocation()
         self.getHelpFileURI()
@@ -89,11 +92,15 @@ class CreateStubFile:
         return
 
 
-"""Bundle and Help methods"""
+"""
+Bundle and Help methods
+"""
 
 
 def setupBundle():
-    """Mini controller to set up the bundles."""
+    """
+    Mini controller to set up the bundles.
+    """
 
 # Plugin bundle stuff
     
@@ -113,7 +120,9 @@ def setupBundle():
 
 
 def makeDefaultPluginBundle():
-    """Makes the default english plugin bundle without using the translator."""
+    """
+    Makes the default english plugin bundle without using the translator.
+    """
 
     defaultBundle = {}
     allBundles = getAllBundles()
@@ -176,7 +185,9 @@ def getAllBundles():
 
 
 def makeDefaultHelpFile():
-    """Gather up all the help.html.txt files and combine them into Help.en.html"""
+    """
+    Gather up all the help.html.txt files and combine them into Help.en.htm
+    l"""
 
     targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsSupport', 'header.html')
     helpHtml = PSE.genericReadReport(targetPath)
@@ -268,7 +279,9 @@ def validateKeyFile():
         return False
 
 def translateBundles():
-    """Makes the plugin.<locale>.json file from getAllBundles()"""
+    """
+    Makes the plugin.<locale>.json file from getAllBundles()
+    """
 
     if PSE.psLocale()[:2] == 'en':
         return
@@ -360,7 +373,9 @@ def batchTranslator(textBundle):
 
 
 class Translator:
-    """Choice of translators from PSE.readConfigFile('CP')['TS']"""
+    """
+    Choice of translators from PSE.readConfigFile('CP')['TS']
+    """
 
     def __init__(self):
 
@@ -384,7 +399,9 @@ class Translator:
         return
 
     def translateSingle(self, singleItem):
-        """Translate items one at a time."""
+        """
+        Translate items one at a time.
+        """
 
         encodedItem = unicode(singleItem, PSE.ENCODING)
         url = self.translationService.getTheUrl(encodedItem)
@@ -395,7 +412,9 @@ class Translator:
         return translation
 
     def translateItems(self, bundleFile):
-        """Based on https://gist.github.com/snim2/561630"""
+        """
+        Based on https://gist.github.com/snim2/561630
+        """
 
     # Meter the items to be translated
         i = 0
@@ -432,7 +451,9 @@ class Translator:
 
 
 class MakeBundleItem(PSE.JMRI.jmrit.automat.AbstractAutomaton):
-    """Homebrew version of concurrency."""
+    """
+    Homebrew version of concurrency.
+    """
 
     def init(self):
 
@@ -447,7 +468,9 @@ class MakeBundleItem(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         return
 
     def handle(self):
-        """Harden this against errors"""
+        """
+        Harden this against errors.
+        """
 
         translation = {}
         response = None
@@ -478,7 +501,8 @@ def translateUtility():
     Utility to translate the TrainPlayer side bundle files.
     Translates one line at a time, so it's slow.
     Preserves line order.
-    Translate other text files that need it."""
+    Translate other text files that need it.
+    """
 
     controlPanel = PSE.readConfigFile('Main Script')['CP']
     translatorChoice = controlPanel['TS'][controlPanel['TC']]
@@ -507,6 +531,3 @@ def translateUtility():
         PSE.genericWriteReport(destination, translatedFile)
 
     return
-
-
-

@@ -1,5 +1,6 @@
 Todo:
   How to publish DeepL?
+  Authenticate the DeepL key in translators.
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
   Duplication of PSE chunkPath.
   
