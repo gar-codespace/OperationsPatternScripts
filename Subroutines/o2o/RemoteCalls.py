@@ -9,32 +9,42 @@ Keep this as light as possible.
 from Subroutines.o2o import Listeners
 
 def activatedCalls():
-    """Methods called when this subroutine is activated."""
+    """
+    Methods called when this subroutine is activated.
+    """
 
     Listeners.removeTrainsListener()
     Listeners.addTrainsListener()
 
     return
 
-def deActivatedCalls():
-    """Methods called when this subroutine is deactivated."""
+def deactivatedCalls():
+    """
+    Methods called when this subroutine is deactivated.
+    """
 
     Listeners.removeTrainsListener()
 
     return
 
 def refreshCalls():
-    """Methods called when the subroutine needs to be refreshed."""
+    """
+    ethods called when the subroutine needs to be refreshed.
+    """
 
     return
 
 def resetCalls():
-    """Methods called to reset this subroutine."""
+    """
+    Methods called to reset this subroutine.
+    """
 
     return
     
 def specificCalls():
-    """Methods called to run specific tasks."""
+    """
+    Methods called to run specific tasks.
+    """
 
     return
     

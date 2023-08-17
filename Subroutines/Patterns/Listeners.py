@@ -114,8 +114,8 @@ def removePatternListeners():
     for location in PSE.LM.getList():
         location.removePropertyChangeListener(ComboBoxPropertyChange())
 
-    print('Patterns.deActivatedCalls.Listeners.removeDivisionListeners')
-    print('Patterns.deActivatedCalls.Listeners.removeLocationListeners')
+    print('Patterns.deactivatedCalls.Listeners.removeDivisionListeners')
+    print('Patterns.deactivatedCalls.Listeners.removeLocationListeners')
     return
     
 

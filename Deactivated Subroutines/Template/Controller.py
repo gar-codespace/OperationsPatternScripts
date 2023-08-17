@@ -23,11 +23,11 @@ _psLog = PSE.LOGGING.getLogger('OPS.XX.Controller')
 def getSubroutineDropDownItem():
     """Pattern Scripts/Tools/'Show or disable' Subroutines.<subroutine>"""
 
-    configFile = PSE.readConfigFile()
     subroutineName = __package__.split('.')[1]
 
     menuItem = PSE.JAVX_SWING.JMenuItem()
 
+    configFile = PSE.readConfigFile()
     if configFile[subroutineName]['SV']:
         menuText = PSE.getBundleItem('Hide') + ' ' + __package__
     else:
@@ -37,8 +37,6 @@ def getSubroutineDropDownItem():
     menuItem.setText(menuText)
     menuItem.removeActionListener(Listeners.actionListener)
     menuItem.addActionListener(Listeners.actionListener)
-
-    PSE.writeConfigFile(configFile)
 
     return menuItem
 

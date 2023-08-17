@@ -15,6 +15,17 @@ SCRIPT_REV = 20230201
 
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.Model')
 
+def resetBuiltTrains():
+    """
+    Resets all the trains that are built.
+    """
+
+    for train in TM.getTrainsByStatusList():
+        if train.isBuilt():
+            train.reset()
+
+    return
+
 def initializeJmriRailroad():
     """
     Mini controller.
@@ -24,7 +35,7 @@ def initializeJmriRailroad():
     Controller.StartUp.initializeJmriRailroad
     """
 
-    PSE.remoteCalls('deActivatedCalls')
+    PSE.remoteCalls('deactivatedCalls')
 
     PSE.DM.dispose()
     PSE.SM.dispose()
@@ -58,7 +69,7 @@ def updateJmriLocations():
     Controller.StartUp.updateJmriLocations
     """
 
-    PSE.remoteCalls('deActivatedCalls')
+    PSE.remoteCalls('deactivatedCalls')
 
 # This part does the locations
     locationator = Locationator()
@@ -113,7 +124,7 @@ def updateJmriTracks():
     Controller.Startup.updateJmriTracks
     """
 
-    PSE.remoteCalls('deActivatedCalls')
+    PSE.remoteCalls('deactivatedCalls')
 
     Attributator().updateRsAttributes()
 
@@ -156,7 +167,7 @@ def updateJmriRollingingStock():
     Controller.Startup.updateJmriRollingingStock
     """
 
-    PSE.remoteCalls('deActivatedCalls')
+    PSE.remoteCalls('deactivatedCalls')
 
     Attributator().updateRsAttributes()
 

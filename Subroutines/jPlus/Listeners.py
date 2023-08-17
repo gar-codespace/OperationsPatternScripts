@@ -13,7 +13,9 @@ _psLog = PSE.LOGGING.getLogger('OPS.JP.Listeners')
 
 
 def actionListener(EVENT):
-    """menu item-Tools/Show Subroutines.jPlus."""
+    """
+    menu item-Tools/Show Subroutines.jPlus.
+    """
 
     _psLog.debug(EVENT)
 

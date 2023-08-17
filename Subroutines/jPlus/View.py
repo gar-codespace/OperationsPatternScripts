@@ -17,12 +17,12 @@ class ManageGui:
 
     def __init__(self):
 
-        self.configFile = PSE.readConfigFile()
-
         return
 
     def makeSubroutineFrame(self):
-        """Make the frame that all the jPlus controls are added to"""
+        """
+        Make the frame that all the jPlus controls are added to.
+        """
 
         subroutineFrame = PSE.JAVX_SWING.JPanel() # the track pattern panel
         subroutineFrame.setName(__package__)
@@ -31,7 +31,9 @@ class ManageGui:
         return subroutineFrame
 
     def makeSubroutineGui(self):
-        """Make the jPlus GUI."""
+        """
+        Make the jPlus GUI.
+        """
 
         _psLog.debug('jPlusSubroutine.View.makeSubroutineGui')
 

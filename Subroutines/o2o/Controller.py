@@ -21,11 +21,11 @@ _psLog = PSE.LOGGING.getLogger('OPS.o2o.Controller')
 def getSubroutineDropDownItem():
     """Pattern Scripts/Tools/'Show or disable' Subroutines.<subroutine>"""
 
-    configFile = PSE.readConfigFile()
     subroutineName = __package__.split('.')[1]
 
     menuItem = PSE.JAVX_SWING.JMenuItem()
 
+    configFile = PSE.readConfigFile()
     if configFile[subroutineName]['SV']:
         menuText = PSE.getBundleItem('Hide') + ' ' + __package__
     else:
@@ -35,8 +35,6 @@ def getSubroutineDropDownItem():
     menuItem.setText(menuText)
     menuItem.removeActionListener(Listeners.actionListener)
     menuItem.addActionListener(Listeners.actionListener)
-
-    PSE.writeConfigFile(configFile)
 
     return menuItem
 
@@ -103,7 +101,7 @@ class StartUp:
         
         PSE.closeSubordinateWindows(level=1)
 
-        PSE.resetBuiltTrains()
+        Model.resetBuiltTrains()
 
         PSE.remoteCalls('resetCalls')
 
@@ -126,7 +124,7 @@ class StartUp:
 
         PSE.closeSubordinateWindows(level=2)
 
-        PSE.resetBuiltTrains()
+        Model.resetBuiltTrains()
 
         Model.updateJmriLocations()
 
@@ -150,7 +148,7 @@ class StartUp:
 
         PSE.closeSubordinateWindows(level=2)
 
-        PSE.resetBuiltTrains()
+        Model.resetBuiltTrains()
 
         Model.updateJmriTracks()
 
@@ -174,7 +172,7 @@ class StartUp:
 
         PSE.closeSubordinateWindows(level=2)
 
-        PSE.resetBuiltTrains()
+        Model.resetBuiltTrains()
         
         Model.updateJmriRollingingStock()
 

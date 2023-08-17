@@ -23,7 +23,9 @@ class subroutineGui:
         return
 
     def guiMaker(self):
-        """Make the GUI here."""
+        """
+        Make the GUI here.
+        """
 
         jPlusPanel = PSE.JAVX_SWING.JPanel()
         jPlusPanel.setName('jPlus')
@@ -82,7 +84,6 @@ class subroutineGui:
         useExtended.setName('useExtended')
         self.controlWidgets['UX'] = useExtended
 
-
         updatePanel.add(upButton)
         updatePanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(10,0)))
         updatePanel.add(useExtended)
@@ -92,7 +93,9 @@ class subroutineGui:
         return jPlusPanel
 
     def updateButton(self):
-        """The *.setName value is the name of the action for the widget"""
+        """
+        The *.setName value is the name of the action for the widget.
+        """
 
         upButton = PSE.JAVX_SWING.JButton()
         upButton.setText(PSE.getBundleItem('Update'))

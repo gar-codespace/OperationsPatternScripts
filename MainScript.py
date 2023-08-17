@@ -37,9 +37,8 @@ PSE.ENCODING = PSE.readConfigFile('Main Script')['CP']['SE']
 def buildThePlugin(view):
     """
     Mini controller to build and display the PS Plugin Window.
-        Called by:
-        restartThePlugin
-        patternScriptsButtonAction
+    Called by:
+    patternScriptsButtonAction
     """
 
     view.makeSubroutinePanel()
@@ -66,9 +65,7 @@ def restartThePlugin():
 
     psButton = PSE.getPsButton()
 
-
     psButton.setText(PSE.getBundleItem('Pattern Scripts'))
-    
 
     PSE.APPS.Apps.buttonSpace().revalidate()
 
@@ -107,13 +104,16 @@ class View:
 
         return
 
-    # def makeScrollPanel(self):
+    def makeScrollPanel(self):
+        """
+        Currently not implemented.
+        """
 
-    #     self.scrollPanel = PSE.JAVX_SWING.JScrollPane(self.subroutinePanel)
-    #     self.scrollPanel.border = PSE.JAVX_SWING.BorderFactory.createLineBorder(PSE.JAVA_AWT.Color.GRAY)
-    #     self.scrollPanel.setName('scrollPanel')
+        self.scrollPanel = PSE.JAVX_SWING.JScrollPane(self.subroutinePanel)
+        self.scrollPanel.border = PSE.JAVX_SWING.BorderFactory.createLineBorder(PSE.JAVA_AWT.Color.GRAY)
+        self.scrollPanel.setName('scrollPanel')
 
-    #     return
+        return
 
     def makePatternScriptsWindow(self):
 
@@ -327,7 +327,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         Bundle.setupBundle()
 
-        PSE.validateSubroutines()
+        # PSE.validateSubroutines()
 
         self.addPatternScriptsButton()
 

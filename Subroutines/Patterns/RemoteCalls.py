@@ -22,7 +22,7 @@ def activatedCalls():
 
     return
 
-def deActivatedCalls():
+def deactivatedCalls():
     """
     ethods called when this subroutine is deactivated.
     """

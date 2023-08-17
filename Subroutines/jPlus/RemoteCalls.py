@@ -11,12 +11,10 @@ from Subroutines.jPlus import Model
 
 def activatedCalls():
     """Methods called when this subroutine is activated."""
-
-    # Model.extendedHeaderActivator(False)
     
     return
 
-def deActivatedCalls():
+def deactivatedCalls():
     """Methods called when this subroutine is deactivated."""
 
     Model.extendedHeaderActivator(False)

@@ -17,15 +17,16 @@ SCRIPT_REV = 20230201
 
 _psLog = PSE.LOGGING.getLogger('OPS.TB.Controller')
 
-    
 def getSubroutineDropDownItem():
-    """Pattern Scripts/Tools/'Show or disable' Subroutines.<subroutine>"""
+    """
+    Pattern Scripts/Tools/'Show or disable' Subroutines.<subroutine>
+    """
 
-    configFile = PSE.readConfigFile()
     subroutineName = __package__.split('.')[1]
 
     menuItem = PSE.JAVX_SWING.JMenuItem()
 
+    configFile = PSE.readConfigFile()
     if configFile[subroutineName]['SV']:
         menuText = PSE.getBundleItem('Hide') + ' ' + __package__        
     else:
@@ -36,13 +37,13 @@ def getSubroutineDropDownItem():
     menuItem.removeActionListener(Listeners.actionListener)
     menuItem.addActionListener(Listeners.actionListener)
 
-    PSE.writeConfigFile(configFile)
-
     return menuItem
 
 
 class StartUp:
-    """Start the Throwback subroutine."""
+    """
+    Start the Throwback subroutine.
+    """
 
     def __init__(self, subroutineFrame=None):
 
@@ -51,7 +52,9 @@ class StartUp:
         return
 
     def getSubroutineFrame(self):
-        """Gets the title border frame"""
+        """
+        Gets the title border frame.
+        """
 
         self.subroutineFrame = View.ManageGui().makeSubroutineFrame()
         subroutineGui = self.getSubroutineGui()
@@ -62,7 +65,9 @@ class StartUp:
         return self.subroutineFrame
 
     def getSubroutineGui(self):
-        """Gets the GUI for this subroutine."""
+        """
+        Gets the GUI for this subroutine.
+        """
 
         subroutineGui, self.widgets = View.ManageGui().makeSubroutineGui()
         self.activateWidgets()
@@ -70,12 +75,11 @@ class StartUp:
         return subroutineGui
 
     def startUpTasks(self):
-        """Run these tasks when this subroutine is started."""
-
-        configFile = PSE.readConfigFile()
-        if configFile['Main Script']['CP'][__package__]:
-            Model.createFolder()
+        """
+        Run these tasks when this subroutine is started.
+        """
             
+        Model.createFolder()
         Model.countCommits()
 
         return
@@ -92,7 +96,9 @@ class StartUp:
         return
 
     def commit(self, EVENT):
-        """Makes a throwback set point."""
+        """
+        Makes a throwback set point.
+        """
 
         _psLog.debug(EVENT)
 
@@ -111,7 +117,9 @@ class StartUp:
         return
 
     def previous(self, EVENT):
-        """Move to the previous commit."""
+        """
+        Move to the previous commit.
+        """
 
         _psLog.debug(EVENT)
 
@@ -126,7 +134,9 @@ class StartUp:
         return
 
     def next(self, EVENT):
-        """Move to the next commit."""
+        """
+        Move to the next commit.
+        """
 
         _psLog.debug(EVENT)
 
@@ -141,11 +151,11 @@ class StartUp:
         return
 
     def throwback(self, EVENT):
-        """Execute a throwback."""
+        """
+        Execute a throwback.
+        """
 
         _psLog.debug(EVENT)
-
-        # PSE.remoteCalls('resetCalls')
 
         Model.throwbackCommit(self.widgets['display'])
 
@@ -156,7 +166,9 @@ class StartUp:
         return
 
     def reset(self, EVENT):
-        """Reset throwback."""
+        """
+        Reset throwback.
+        """
 
         _psLog.debug(EVENT)
         

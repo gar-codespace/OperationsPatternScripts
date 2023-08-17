@@ -9,7 +9,6 @@ The info can be input directly or imported from TrainPlayer if using o2o.
 from opsEntities import PSE
 
 from Subroutines.jPlus import Listeners
-from Subroutines.jPlus import Model
 from Subroutines.jPlus import View
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
@@ -21,11 +20,11 @@ _psLog = PSE.LOGGING.getLogger('OPS.JP.Controller')
 def getSubroutineDropDownItem():
     """Pattern Scripts/Tools/'Show or disable' Subroutines.<subroutine>"""
 
-    configFile = PSE.readConfigFile()
     subroutineName = __package__.split('.')[1]
 
     menuItem = PSE.JAVX_SWING.JMenuItem()
 
+    configFile = PSE.readConfigFile()
     if configFile[subroutineName]['SV']:
         menuText = PSE.getBundleItem('Hide') + ' ' + __package__
     else:
@@ -36,13 +35,13 @@ def getSubroutineDropDownItem():
     menuItem.removeActionListener(Listeners.actionListener)
     menuItem.addActionListener(Listeners.actionListener)
 
-    PSE.writeConfigFile(configFile)
-
     return menuItem
 
 
 class StartUp:
-    """Start the jPlus subroutine"""
+    """
+    Start the jPlus subroutine
+    """
 
     def __init__(self, subroutineFrame=None):
 
@@ -51,7 +50,9 @@ class StartUp:
         return
 
     def getSubroutineFrame(self):
-        """Gets the title border frame"""
+        """
+        Gets the title border frame
+        """
 
         self.subroutineFrame = View.ManageGui().makeSubroutineFrame()
         subroutineGui = self.getSubroutineGui()
@@ -62,7 +63,9 @@ class StartUp:
         return self.subroutineFrame
 
     def getSubroutineGui(self):
-        """Gets the GUI for this subroutine."""
+        """
+        Gets the GUI for this subroutine.
+        """
 
         subroutineGui, self.widgets = View.ManageGui().makeSubroutineGui()
 
@@ -71,9 +74,9 @@ class StartUp:
         return subroutineGui
 
     def startUpTasks(self):
-        """Run these tasks when this subroutine is started."""
-
-        # Model.extendedHeaderActivator(True)
+        """
+        Run these tasks when this subroutine is started.
+        """
 
         return
 

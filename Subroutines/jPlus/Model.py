@@ -1,16 +1,16 @@
 # coding=utf-8
 # © 2023 Greg Ritacco
 
-"""jPlus"""
+"""
+jPlus
+"""
 
 from opsEntities import PSE
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
 
-
 _psLog = PSE.LOGGING.getLogger('OPS.JP.Model')
-
 
 def resetConfigFileItems():
 
@@ -35,6 +35,8 @@ def extendedRailroadDetails():
     Called on jPlus refresh
     """
 
+    _psLog.debug('extendedRailroadDetails')
+
     configFile = PSE.readConfigFile()
     layoutDetails = configFile['Main Script']['LD']
     OSU = PSE.JMRI.jmrit.operations.setup
@@ -52,6 +54,8 @@ def makeCompositRailroadName(layoutDetails):
     Uses jPlus layout properties to make a composite name for other OPS subroutines.
     """
 
+    _psLog.debug('makeCompositRailroadName')
+
     operatingRoad = layoutDetails['OR']
     territory = layoutDetails['TR']
     location = layoutDetails['LO']
@@ -60,44 +64,34 @@ def makeCompositRailroadName(layoutDetails):
 
     return compositeName
 
-
-
 def updateYearModeled():
     """
     Writes the JMRI year modeled from settings into the jPlus Year Modeled text box.
     Called by:
     """
-    
-    configFile = PSE.readConfigFile()
-    try:
-        configFile['Main Script']['CP']['Subroutines.jPlus']
-    except:
-        print('Exception at: jPlus.Model.updateYearModeled')
-        return
+
+    _psLog.debug('updateYearModeled')
 
     OSU = PSE.JMRI.jmrit.operations.setup
-    yr = OSU.Setup.getYearModeled()
+    jmriYear = OSU.Setup.getYearModeled()
 
-    configFile['Main Script']['LD'].update({'YR':yr})
+    configFile = PSE.readConfigFile()
+    configFile['Main Script']['LD'].update({'YR':jmriYear})
     PSE.writeConfigFile(configFile)
 
-    try: # PS plugin started with jPlus hidden
-        frameTitle = PSE.getBundleItem('Pattern Scripts')        
-        targetPanel = PSE.getComponentByName(frameTitle, 'yearModeled')
-        targetPanel.setText(yr)
-    except:
-        print('Exception at: jPlus.Model.updateYearModeled')
-        pass
+    frameTitle = PSE.getBundleItem('Pattern Scripts')        
+    targetPanel = PSE.getComponentByName(frameTitle, 'yearModeled')
+    targetPanel.setText(jmriYear)
 
     return
 
-def extendedHeaderActivator(toggle):
+def extendedHeaderActivator(state):
     """
     Sets configFile['Main Script]['CP']['EH"] to true or false.
     """
 
     configFile = PSE.readConfigFile()
-    configFile['Main Script']['CP'].update({'EH':toggle})
+    configFile['Main Script']['CP'].update({'EH':state})
     PSE.writeConfigFile(configFile)
 
     return

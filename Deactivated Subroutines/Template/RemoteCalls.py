@@ -12,12 +12,9 @@ from opsEntities import PSE
 def activatedCalls():
     """Methods called when this subroutine is activated."""
 
-    # configFile = PSE.readConfigFile()
-    # if configFile['Main Script']['CP'][__package__]:
-
     return
 
-def deActivatedCalls():
+def deactivatedCalls():
     """Methods called when this subroutine is deactivated."""
 
     return

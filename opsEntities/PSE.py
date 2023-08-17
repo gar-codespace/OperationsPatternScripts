@@ -206,38 +206,42 @@ def restartSubroutineByName(subRoutineName):
         
     return
 
-def validateSubroutines():
-    """Checks that each active subroutine has a True/False entry in ['Main Scripts']['CP']."""
+# def validateSubroutines():
+#     """
+#     Checks that each active subroutine has a True/False entry in ['Main Scripts']['CP'].
+#     """
 
-    configFile = readConfigFile()
+#     configFile = readConfigFile()
 
-    for subroutine in getSubroutineDirs():
-        subroutineName = 'Subroutines.' + subroutine
-        try:
-            configFile['Main Script']['CP'][subroutineName]
-        except:
-            print('Exception at: PSE.validateSubroutines')
-            configFile['Main Script']['CP'][subroutineName] = True
+#     for subroutine in getSubroutineDirs():
+#         subroutineName = 'Subroutines.' + subroutine
+#         try:
+#             configFile['Main Script']['CP'][subroutineName]
+#         except:
+#             print('Exception at: PSE.validateSubroutines')
+#             configFile['Main Script']['CP'][subroutineName] = True
 
-    writeConfigFile(configFile)
+#     writeConfigFile(configFile)
 
-    return
+#     return
 
 def addActiveSubroutines(targetPanel):
-    """Adds the activated subroutines to the subroutinePanel of Pattern Scripts."""
+    """
+    Adds the activated subroutines to the subroutinePanel of Pattern Scripts.
+    """
 
-    configFile = readConfigFile()
+#     configFile = readConfigFile()
 
-# Catch dynamic add or removal of a subroutine
-    for subroutine in getSubroutineDirs():
-        subroutineName = 'Subroutines.' + subroutine
-        try:
-            configFile['Main Script']['CP'][subroutineName]
-        except:
-            print('Exception at: PSE.addActiveSubroutines')
-            configFile['Main Script']['CP'][subroutineName] = True
+# # Catch dynamic add or removal of a subroutine
+#     for subroutine in getSubroutineDirs():
+#         subroutineName = 'Subroutines.' + subroutine
+#         try:
+#             configFile['Main Script']['CP'][subroutineName]
+#         except:
+#             print('Exception at: PSE.addActiveSubroutines')
+#             configFile['Main Script']['CP'][subroutineName] = True
 
-    writeConfigFile(configFile)
+#     writeConfigFile(configFile)
     configFile = readConfigFile()
 
     for subroutine in getSubroutineDirs():
@@ -349,7 +353,6 @@ def closeOutputFrame():
 def closeSubordinateWindows(level):
     """
     Close all but the top level windows.
-    Called by:
     """
 
     console = APPS.Bundle().handleGetMessage('TitleConsole')
@@ -407,20 +410,20 @@ def getPsButton():
         else:
             return None
 
-def closeSetCarsWindows():
-    """
-    Close all the Set Cars windows when the Pattern Scripts window is closed.
-    Called by:
-    MainScript.Controller.closePsWindow
-    Listeners.PatternScriptsWindow.windowClosing
-    """
+# def closeSetCarsWindows():
+#     """
+#     Close all the Set Cars windows when the Pattern Scripts window is closed.
+#     Called by:
+#     MainScript.Controller.closePsWindow
+#     Listeners.PatternScriptsWindow.windowClosing
+#     """
 
-    for frame in JMRI.util.JmriJFrame.getFrameList():
-        if frame.getName() == 'setCarsWindow':
-            frame.setVisible(False)
-            frame.dispose()
+#     for frame in JMRI.util.JmriJFrame.getFrameList():
+#         if frame.getName() == 'setCarsWindow':
+#             frame.setVisible(False)
+#             frame.dispose()
 
-    return
+#     return
 
 def closeOpsWindows(windowName):
     """
@@ -459,22 +462,11 @@ def updateWindowParams(window):
 """Utility Methods"""
 
 
-def resetBuiltTrains():
-    """
-    Resets all the trains that are built.
-    """
-
-    for train in TM.getTrainsByStatusList():
-        if train.isBuilt():
-            train.reset()
-
-    return
-
 def remoteCalls(call):
     """
     Applies 'call' to entries in ConfigFile()['Main Script']['CP']
     'call' is one of the remote calls in each subroutine RemoteCalls module.
-    activatedCalls, deActivatedCalls, refreshCalls Etc.
+    activatedCalls, deactivatedCalls, refreshCalls Etc.
     """
 
     cpItems = readConfigFile()['Main Script']['CP']
@@ -883,8 +875,8 @@ def validateConfigFile():
         makeNewConfigFile()
 # Is it the right version?
     validateConfigFileVersion()
-# Are the current subroutines activated?
-    activateCurrentSubroutines()
+# Are the current subroutines active?
+    # turnOnSubroutines()
 # Does it have all the needed components?
     validateConfigFileComponents()
 
@@ -913,7 +905,9 @@ def validateConfigFileVersion():
         return False
 
 def validateConfigFileComponents():
-    """Checks that each subroutine in the Subroutines folder has a configFile component."""
+    """
+    Checks that each subroutine in the Subroutines folder has a configFile component.
+    """
 
     configFile = readConfigFile()
 
@@ -929,35 +923,37 @@ def validateConfigFileComponents():
 
     return
 
-def activateCurrentSubroutines():
-    """Checks that each active subroutine has a config file entry."""
+# def turnOnSubroutines():
+#     """
+#     Checks that each active subroutine has a config file entry.
+#     """
 
-    configFile = readConfigFile()
+#     configFile = readConfigFile()
 
-    for subroutine in getSubroutineDirs():
-        configFile['Main Script']['CP']['Subroutines.' + subroutine] = True
+#     for subroutine in getSubroutineDirs():
+#         configFile['Main Script']['CP']['Subroutines.' + subroutine] = True
 
-    writeConfigFile(configFile)
+#     writeConfigFile(configFile)
 
-    return
+#     return
 
-def deactivateSubroutines():
-    """
-    All the subroutines listed in the configFile are set to False.
-    validateConfigFileComponents sets those subs in the Subroutines folder to true.
-    """
+# def turnOffSubroutines():
+#     """
+#     All the subroutines listed in the configFile are set to False.
+#     turnOnSubroutines sets those subs in the Subroutines folder to true.
+#     """
 
-    configFile = readConfigFile()
-    cpItems = configFile['Main Script']['CP']
-    for item, value in cpItems.items():
-        if 'Subroutines.' in item:
-            cpItems.update({item: False})
+#     configFile = readConfigFile()
+#     cpItems = configFile['Main Script']['CP']
+#     for item, value in cpItems.items():
+#         if 'Subroutines.' in item:
+#             cpItems.update({item: False})
 
-    configFile['Main Script']['CP'].update({'EH':False})
+#     configFile['Main Script']['CP'].update({'EH':False})
 
-    writeConfigFile(configFile)
+#     writeConfigFile(configFile)
 
-    return
+#     return
 
 def getSubroutineDirs():
     """Returns a list of subroutine names in the Subroutines directory."""

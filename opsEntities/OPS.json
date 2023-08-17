@@ -69,7 +69,8 @@
       "PX" : 0,
       "PY" : 0,
       "OC" : true,
-      "RV" : 20230802
+      "RV" : 20230805,
+      "GP" : "https://github.com/gar-codespace/OperationsPatternScripts"
       },
     "TO" : {
       "SME" : true,

@@ -1,5 +1,5 @@
 """
-Main script listeners.
+Main Script listeners.
 """
 
 from opsEntities import PSE
@@ -20,9 +20,6 @@ def ptItemSelected(TRANSLATE_PLUGIN_EVENT):
     _psLog.debug(TRANSLATE_PLUGIN_EVENT)
 
     Bundle.translateBundles()
-
-    # Bundle.translateHelpHtml()
-    # Bundle.translateUtility()
 
     xModule = __import__('MainScript')
     xModule.restartThePlugin()
@@ -80,8 +77,13 @@ def ghItemSelected(OPEN_GH_EVENT):
 
     _psLog.debug(OPEN_GH_EVENT)
 
-    ghURL = 'https://github.com/gar-codespace/OperationsPatternScripts'
-    PSE.JMRI.util.HelpUtil.openWebPage(ghURL)
+    gitHubUrl = PSE.readConfigFile('Main Script')['CP']['GP']
+
+    try:
+        PSE.JMRI.util.HelpUtil.openWebPage(gitHubUrl)
+    except PSE.JMRI.JmriException as e:
+        print('Git Hub page error: ' + e.getMessage())
+        _psLog.warning('Git Hub page error: ' + e.getMessage())
 
     return
 
@@ -128,11 +130,7 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
 
         _psLog.debug(WINDOW_CLOSED)
 
-        button = PSE.getPsButton()
-        button.setEnabled(True)
-
-
-        # WINDOW_CLOSED.getSource().removeWindowListener(self)
+        PSE.getPsButton().setEnabled(True)
 
         return
 
@@ -141,8 +139,8 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         PSE.updateWindowParams(WINDOW_CLOSING.getSource())
         WINDOW_CLOSING.getSource().removeWindowListener(PatternScriptsWindow())
         WINDOW_CLOSING.getSource().dispose()
-        PSE.remoteCalls('deActivatedCalls')
-        PSE.deactivateSubroutines()
+        PSE.remoteCalls('deactivatedCalls')
+        # PSE.turnOffSubroutines()
             
         return
 
@@ -150,8 +148,7 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
 
         _psLog.debug(WINDOW_OPENED)
 
-        button = PSE.getPsButton()
-        button.setEnabled(False)
+        PSE.getPsButton().setEnabled(False)
 
         PSE.remoteCalls('activatedCalls')
 

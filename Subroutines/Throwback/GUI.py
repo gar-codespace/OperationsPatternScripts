@@ -10,10 +10,13 @@ from opsEntities import PSE
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
 
+
 class subroutineGui:
 
     def __init__(self):
-        """The *.setName value is the name of the action for the widget"""
+        """
+        The *.setName value is the name of the action for the widget.
+        """
 
         self.controlWidgets = []
         self.displayWidgets = []

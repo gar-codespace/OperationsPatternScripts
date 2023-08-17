@@ -7,27 +7,37 @@ Keep this as light as possible.
 """
 
 def activatedCalls():
-    """Methods called when this subroutine is activated."""
+    """
+    Methods called when this subroutine is activated.
+    """
 
     return
 
-def deActivatedCalls():
-    """Methods called when this subroutine is deactivated."""
+def deactivatedCalls():
+    """
+    Methods called when this subroutine is deactivated.
+    """
 
     return
 
 def refreshCalls():
-    """Methods called when the subroutine needs to be refreshed."""
+    """
+    Methods called when the subroutine needs to be refreshed.
+    """
 
     return
 
 def resetCalls():
-    """Methods called to reset this subroutine."""
+    """
+    Methods called to reset this subroutine.
+    """
 
     return
     
 def specificCalls():
-    """Methods called to run specific tasks."""
+    """
+    Methods called to run specific tasks.
+    """
 
     return
     

@@ -1,14 +1,14 @@
 Throwback
 Throwback Subroutine
 Action
-Snap Shot
-Previous
-Next
-Delete All Commits
 Add New Commit
-Total Commits
 Cars
+Delete All Commits
 Engines
 Locations
+Next
+Previous
 Routes
+Snap Shot
+Total Commits
 Trains

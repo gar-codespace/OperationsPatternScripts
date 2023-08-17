@@ -98,7 +98,6 @@ class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
             addTrainsListener()
 
             _psLog.debug(logMessage)
-            print(logMessage)
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'TrainBuilt' and PROPERTY_CHANGE_EVENT.newValue == True:
             """
@@ -108,7 +107,6 @@ class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
             ModelWorkEvents.convertJmriManifest()
 
             _psLog.debug(logMessage)
-            print(logMessage)
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'o2oSwitchList' and PROPERTY_CHANGE_EVENT.newValue == True:
             """
@@ -118,6 +116,5 @@ class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
             ModelWorkEvents.convertOpsSwitchList()
 
             _psLog.debug(logMessage)
-            print(logMessage)
 
         return
