@@ -95,7 +95,7 @@ class View:
 
     def makeSubroutinePanel(self):
         """
-        Add the subroutines to this.
+        The subroutines are added to this panel.
         """
 
         self.subroutinePanel.setName('subroutinePanel')

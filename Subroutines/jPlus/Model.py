@@ -40,7 +40,6 @@ def updateRailroadDetails(widgets):
 
     PSE.writeConfigFile(configFile)
 
-
     return
 
 def extendedRailroadDetails():

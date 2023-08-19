@@ -20,7 +20,7 @@ def resetBuiltTrains():
     Resets all the trains that are built.
     """
 
-    for train in TM.getTrainsByStatusList():
+    for train in PSE.TM.getTrainsByStatusList():
         if train.isBuilt():
             train.reset()
 

@@ -3,7 +3,6 @@ Listeners for the jPlus subroutine.
 JAVAX action performed methods are in Controller.
 """
 
-from Subroutines.jPlus import Model
 from opsEntities import PSE
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__

@@ -2,7 +2,6 @@ Todo:
   How to publish DeepL?
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
   Duplication of PSE chunkPath.
-  Is  self.configFile['Main Script']['BD'] relevant?
   
 Comments:
   Schedule does not prevent setting a car to a track.
