@@ -517,7 +517,7 @@ class ExtendedDetails:
 
     def o2oDetailsToConFig(self):
         """
-        Optional Extended Headers from the TrainPlayer layout are added to the config file.
+        Optional Extended Header data from the TrainPlayer layout are added to the config file.
         """
 
         self.configFile['Main Script']['LD'].update({'OR':self.tpRailroad['Extended_operatingRoad']})
@@ -526,6 +526,9 @@ class ExtendedDetails:
         self.configFile['Main Script']['LD'].update({'YR':self.tpRailroad['Extended_year']})
         self.configFile['Main Script']['LD'].update({'SC':self.tpRailroad['Extended_scale']})
         self.configFile['Main Script']['LD'].update({'BD':self.tpRailroad['Extended_buildDate']})
+        self.configFile['Main Script']['LD'].update({'LN':self.tpRailroad['Extended_layoutName']})
+        
+        self.configFile['Main Script']['LD'].update({'JN':PSE.makeCompositRailroadName(self.configFile['Main Script']['LD'])})
 
         PSE.writeConfigFile(self.configFile)
         self.configFile =  PSE.readConfigFile()
@@ -534,19 +537,20 @@ class ExtendedDetails:
     
     def setRailroadDetails(self):
         """
-        Optional Extended Header from the TrainPlayer layout are added to JMRI.
+        Writes the o2o railroad name, scale and year data from o2o to JMRI settings.
         """
 
         _psLog.debug('setRailroadDetails')
 
-    # Set the name
         OSU = PSE.JMRI.jmrit.operations.setup
-        OSU.Setup.setRailroadName(self.tpRailroad['Extended_layoutName'])
+    # Set the railroad name
+        rrName = self.configFile['Main Script']['LD']['LN']
+        OSU.Setup.setRailroadName(rrName)
     # Set the year
         rrYear = self.configFile['Main Script']['LD']['YR']
         if rrYear:
             OSU.Setup.setYearModeled(rrYear)
-
+    # Set the scale
         rrScale = self.configFile['Main Script']['LD']['SC']
         if rrScale:
             OSU.Setup.setScale(self.configFile['Main Script']['SR'][rrScale.upper()])

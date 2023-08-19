@@ -601,22 +601,38 @@ def getAllTracks():
 
     return trackList
 
-def getRailroadName():
+def getJmriRailroadName():
+
+    OSU = JMRI.jmrit.operations.setup
+
+    return unicode(OSU.Setup.getRailroadName(), ENCODING)
+
+def getExtendedRailroadName():
     """
-    Returns either a standard or extended railroad name or the JMRI railroad name.
+    Returns either the extended railroad name or the JMRI railroad name.
     """
     configFile = readConfigFile()
-    OSU = JMRI.jmrit.operations.setup
-    railroadName = unicode(OSU.Setup.getRailroadName(), ENCODING)
     
+    railroadName = getJmriRailroadName()
     if configFile['Main Script']['CP']['EH']:
-        
-        if configFile['Main Script']['LD']['RN']:
-            railroadName = configFile['Main Script']['LD']['RN']
-        if configFile['Main Script']['LD']['JN']:
-            railroadName = configFile['Main Script']['LD']['JN']
+        railroadName = configFile['Main Script']['LD']['JN']
 
     return railroadName
+
+def makeCompositRailroadName(layoutDetails):
+    """
+    Uses configFile['Main Script']['LD'] data to make a composite name for other OPS subroutines.
+    """
+
+    _psLog.debug('makeCompositRailroadName')
+
+    operatingRoad = layoutDetails['OR']
+    territory = layoutDetails['TR']
+    location = layoutDetails['LO']
+
+    compositeName = operatingRoad + '\n' + territory + '\n' + location
+
+    return compositeName
 
 
 """Formatting Methods"""
@@ -1020,10 +1036,12 @@ def makeNewConfigFile():
             configChunk = loadJson(genericReadReport(chunkPath))
             configFile[subroutine] = configChunk
 
-    fileName = 'configFile.json'
-    targetPath = OS_PATH.join(PROFILE_PATH, 'operations', fileName)
-    targetFile = dumpJson(configFile)
-    genericWriteReport(targetPath, targetFile)
+    writeConfigFile(configFile)
+
+    # fileName = 'configFile.json'
+    # targetPath = OS_PATH.join(PROFILE_PATH, 'operations', fileName)
+    # targetFile = dumpJson(configFile)
+    # genericWriteReport(targetPath, targetFile)
 
     return
 

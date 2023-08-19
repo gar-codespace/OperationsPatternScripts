@@ -2,6 +2,7 @@ Todo:
   How to publish DeepL?
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
   Duplication of PSE chunkPath.
+  Is  self.configFile['Main Script']['BD'] relevant?
   
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -180,7 +181,6 @@ Version 3 ideas:
   Harden Translator.translateSingle() from timeout errors.
   How to use locale modifier, IE en-GB.
   Test formatText with ascii and others.
-  020.ModelWorkEvents.*.parsePtRs and o2o.ModelWorkEvents.*.parseRS do the same things in a different way, can they be merged?
   Implement mergeConfigFiles() maybe?
   jPlus integration into JMRI reports and web server.
   Start working on adding Patterns to the web server.

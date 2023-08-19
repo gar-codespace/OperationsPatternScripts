@@ -108,7 +108,7 @@ def makeReportHeader():
     configFile = PSE.readConfigFile()
 
     reportHeader = {}
-    reportHeader['railroadName'] = PSE.getRailroadName()
+    reportHeader['railroadName'] = PSE.getExtendedRailroadName()
     reportHeader['railroadDescription'] = configFile['Patterns']['RD']
     reportHeader['trainName'] = configFile['Patterns']['TN']
     reportHeader['trainDescription'] = configFile['Patterns']['TD']

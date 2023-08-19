@@ -9,6 +9,7 @@ The info can be input directly or imported from TrainPlayer if using o2o.
 from opsEntities import PSE
 
 from Subroutines.jPlus import Listeners
+from Subroutines.jPlus import Model
 from Subroutines.jPlus import View
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
@@ -16,7 +17,6 @@ SCRIPT_REV = 20230201
 
 _psLog = PSE.LOGGING.getLogger('OPS.JP.Controller')
 
-    
 def getSubroutineDropDownItem():
     """Pattern Scripts/Tools/'Show or disable' Subroutines.<subroutine>"""
 
@@ -109,12 +109,9 @@ class StartUp:
         _psLog.debug(EVENT)
 
         configFile = PSE.readConfigFile()
-        for id, widget in self.widgets['panel'].items():
-            configFile['Main Script']['LD'].update({id:widget.getText()})
 
-        configFile['Main Script']['CP'].update({'EH':True})
-
-        PSE.writeConfigFile(configFile)
+        Model.updateRailroadDetails(self.widgets['panel'])
+        Model.extendedRailroadDetails()
 
         OSU = PSE.JMRI.jmrit.operations.setup
         OSU.Setup.setYearModeled(configFile['Main Script']['LD']['YR'])

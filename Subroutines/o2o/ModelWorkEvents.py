@@ -351,7 +351,7 @@ class o2oWorkEvents:
 
         _psLog.debug('o2oWorkEvents.o2oHeader')
 
-        self.o2oList = 'HN,' + PSE.getRailroadName().replace('\n', ';') + '\n'
+        self.o2oList = 'HN,' + PSE.getExtendedRailroadName().replace('\n', ';') + '\n'
         self.o2oList += 'HT,' + self.workEvents['trainName'] + '\n'
         self.o2oList += 'HD,' + self.workEvents['trainDescription'] + '\n'
         self.o2oList += 'HV,' + self.workEvents['date'] + '\n'

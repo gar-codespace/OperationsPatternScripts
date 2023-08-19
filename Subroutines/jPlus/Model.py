@@ -28,6 +28,21 @@ def resetConfigFileItems():
 
     return
 
+def updateRailroadDetails(widgets):
+
+    configFile = PSE.readConfigFile()
+    for id, widget in widgets.items():
+        configFile['Main Script']['LD'].update({id:widget.getText()})
+
+    configFile['Main Script']['LD'].update({'LN':PSE.getJmriRailroadName()})
+
+    configFile['Main Script']['CP'].update({'EH':True})
+
+    PSE.writeConfigFile(configFile)
+
+
+    return
+
 def extendedRailroadDetails():
     """
     Two additional details:
@@ -43,26 +58,11 @@ def extendedRailroadDetails():
 
     layoutDetails.update({'RN':OSU.Setup.getRailroadName()})
 
-    layoutDetails.update({'JN':makeCompositRailroadName(layoutDetails)})
+    layoutDetails.update({'JN':PSE.makeCompositRailroadName(layoutDetails)})
 
     PSE.writeConfigFile(configFile)
 
     return
-
-def makeCompositRailroadName(layoutDetails):
-    """
-    Uses jPlus layout properties to make a composite name for other OPS subroutines.
-    """
-
-    _psLog.debug('makeCompositRailroadName')
-
-    operatingRoad = layoutDetails['OR']
-    territory = layoutDetails['TR']
-    location = layoutDetails['LO']
-
-    compositeName = operatingRoad + '\n' + territory + '\n' + location
-
-    return compositeName
 
 def updateYearModeled():
     """
