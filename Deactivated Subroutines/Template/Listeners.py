@@ -13,7 +13,9 @@ _psLog = PSE.LOGGING.getLogger('OPS.XX.Listeners')
 
 
 def actionListener(EVENT):
-    """menu item-Tools/Show Subroutines.Template"""
+    """
+    menu item-Tools/Show Subroutines.Template
+    """
 
     _psLog.debug(EVENT)
 
@@ -21,7 +23,6 @@ def actionListener(EVENT):
     subroutineName = __package__.split('.')[1]
 
     if configFile[subroutineName]['SV']: # Hide this subroutine
-
         menuText = PSE.getBundleItem('Show') + ' ' + __package__
         configFile[subroutineName].update({'SV':False})
         _psLog.info('Hide ' + __package__)

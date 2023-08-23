@@ -10,6 +10,7 @@ Describe what this subroutine does.
 """
 
 from opsEntities import PSE
+
 from Subroutines.Template import Listeners
 from Subroutines.Template import Model
 from Subroutines.Template import View
@@ -35,7 +36,6 @@ def getSubroutineDropDownItem():
 
     menuItem.setName(__package__)
     menuItem.setText(menuText)
-    menuItem.removeActionListener(Listeners.actionListener)
     menuItem.addActionListener(Listeners.actionListener)
 
     return menuItem
@@ -44,30 +44,23 @@ def getSubroutineDropDownItem():
 class StartUp:
     """Start the subroutine."""
 
-    def __init__(self, subroutineFrame=None):
+    def __init__(self):
 
-        self.subroutineFrame = subroutineFrame
+        self.configFile = PSE.readConfigFile()
 
         return
 
-    def getSubroutineFrame(self):
+    def getSubroutine(self):
         """Gets the title border frame"""
 
-        self.subroutineFrame = View.ManageGui().makeSubroutineFrame()
-        subroutineGui = self.getSubroutineGui()
-        self.subroutineFrame.add(subroutineGui)
+        subroutine, self.widgets = View.ManageGui().makeSubroutine()
+        subroutineName = __package__.split('.')[1]
+        subroutine.setVisible(self.configFile[subroutineName]['SV'])
+        self.activateWidgets()
 
         _psLog.info(__package__ + ' makeFrame completed')
 
-        return self.subroutineFrame
-
-    def getSubroutineGui(self):
-        """Gets the GUI for this subroutine."""
-
-        subroutineGui, self.widgets = View.ManageGui().makeSubroutineGui()
-        self.activateWidgets()
-
-        return subroutineGui
+        return subroutine
 
     def startUpTasks(self):
         """Run these tasks when this subroutine is started."""
@@ -86,9 +79,11 @@ class StartUp:
         return
 
     def button(self, EVENT):
-        """Whatever it is this button does."""
+        """
+        Whatever it is this button does.
+        """
 
-        PSE.restartSubroutineByName(__package__)
+        PSE.remoteCalls('refreshCalls')
 
         _psLog.debug(EVENT)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

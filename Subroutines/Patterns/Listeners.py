@@ -49,7 +49,6 @@ def actionListener(EVENT):
 
 class ComboBoxPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     """
-    Restarts the Patterns sub on a change to the JMRI Locations roster.
     """
 
     def __init__(self):
@@ -58,29 +57,29 @@ class ComboBoxPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     
     def propertyChange(self, PROPERTY_CHANGE_EVENT):
 
-        if PROPERTY_CHANGE_EVENT.propertyName == 'divisionsListLength' and PROPERTY_CHANGE_EVENT.newValue == True:
-            PSE.restartSubroutineByName(__package__)
+        if PROPERTY_CHANGE_EVENT.propertyName == 'divisionsListLength':
+            PSE.remoteCalls('refreshCalls')
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
-            print(SCRIPT_NAME + '.ComboBoxPropertyChange.divisionsListLength ' + str(SCRIPT_REV))
+            print(SCRIPT_NAME + '.ComboBoxPropertyChange.divisionsListLength')
 
-        if PROPERTY_CHANGE_EVENT.propertyName == 'divisionName' and PROPERTY_CHANGE_EVENT.newValue == True:
-            PSE.restartSubroutineByName(__package__)
-
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
-            print(SCRIPT_NAME + '.ComboBoxPropertyChange.divisionName ' + str(SCRIPT_REV))
-
-        if PROPERTY_CHANGE_EVENT.propertyName == 'locationsListLength' and PROPERTY_CHANGE_EVENT.newValue == True:
-            PSE.restartSubroutineByName(__package__)
+        if PROPERTY_CHANGE_EVENT.propertyName == 'divisionName':
+            PSE.remoteCalls('refreshCalls')
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
-            print(SCRIPT_NAME + '.ComboBoxPropertyChange.locationsListLength ' + str(SCRIPT_REV))
+            print(SCRIPT_NAME + '.ComboBoxPropertyChange.divisionName')
 
-        if PROPERTY_CHANGE_EVENT.propertyName == 'locationName' and PROPERTY_CHANGE_EVENT.newValue == True:
-            PSE.restartSubroutineByName(__package__)
+        if PROPERTY_CHANGE_EVENT.propertyName == 'locationsListLength':
+            PSE.remoteCalls('refreshCalls')
+
+            _psLog.debug(PROPERTY_CHANGE_EVENT)
+            print(SCRIPT_NAME + '.ComboBoxPropertyChange.locationsListLength')
+
+        if PROPERTY_CHANGE_EVENT.propertyName == 'locationName':
+            PSE.remoteCalls('refreshCalls')
             
             _psLog.debug(PROPERTY_CHANGE_EVENT)
-            print(SCRIPT_NAME + '.ComboBoxPropertyChange.locationName ' + str(SCRIPT_REV))
+            print(SCRIPT_NAME + '.ComboBoxPropertyChange.locationName')
 
         return
     
@@ -91,11 +90,9 @@ def addPatternsListeners():
     PSE.LM.addPropertyChangeListener(ComboBoxPropertyChange())
 
     for division in PSE.DM.getList():
-        PSE.DM.removePropertyChangeListener(ComboBoxPropertyChange())
         division.addPropertyChangeListener(ComboBoxPropertyChange())
 
     for location in PSE.LM.getList():
-        location.removePropertyChangeListener(ComboBoxPropertyChange())
         location.addPropertyChangeListener(ComboBoxPropertyChange())
         
     print('Patterns.activatedCalls.Listeners.addDivisionsListeners')
@@ -130,9 +127,7 @@ class DivisionAction(PSE.JAVA_AWT.event.ActionListener):
 
     def actionPerformed(self, EVENT):
 
-        itemSelected = EVENT.getSource().getSelectedItem()
-        Model.divisionComboBox(itemSelected)
-        PSE.restartSubroutineByName(__package__)
+        Model.divisionComboBoxManager(EVENT)
 
         return
 
@@ -148,9 +143,7 @@ class LocationAction(PSE.JAVA_AWT.event.ActionListener):
 
     def actionPerformed(self, EVENT):
 
-        itemSelected = EVENT.getSource().getSelectedItem()
-        Model.locationComboBox(itemSelected)
-        PSE.restartSubroutineByName(__package__)
+        Model.locationComboBoxManager(EVENT)
 
         return
 

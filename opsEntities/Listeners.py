@@ -150,7 +150,7 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
 
         PSE.getPsButton().setEnabled(False)
 
-        PSE.remoteCalls('activatedCalls')
+        PSE.remoteCalls('refreshCalls')
 
         return
 
@@ -158,7 +158,7 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
 
         _psLog.debug(WINDOW_ACTIVATED)
 
-        PSE.remoteCalls('refreshCalls')
+        # PSE.remoteCalls('refreshCalls')
 
         return
 

@@ -33,7 +33,6 @@ def getSubroutineDropDownItem():
 
     menuItem.setName(__package__)
     menuItem.setText(menuText)
-    menuItem.removeActionListener(Listeners.actionListener)
     menuItem.addActionListener(Listeners.actionListener)
 
     return menuItem
@@ -42,34 +41,25 @@ def getSubroutineDropDownItem():
 class StartUp:
     """Start the o2o subroutine"""
 
-    def __init__(self, subroutineFrame=None):
+    def __init__(self):
 
-        self.subroutineFrame = subroutineFrame
+        self.configFile = PSE.readConfigFile()
 
         return
 
-    def getSubroutineFrame(self):
+    def getSubroutine(self):
         """
-        Gets the title border frame
-        """
-
-        self.subroutineFrame = View.ManageGui().makeSubroutineFrame()
-        subroutineGui = self.getSubroutineGui()
-        self.subroutineFrame.add(subroutineGui)
-
-        _psLog.info('o2o makeFrame completed')
-
-        return self.subroutineFrame
-
-    def getSubroutineGui(self):
-        """
-        Gets the GUI for this subroutine.
+        Returns the subroutine and activates the widgets.
         """
 
-        subroutineGui, self.widgets = View.ManageGui().makeSubroutineGui()
+        subroutine, self.widgets = View.ManageGui().makeSubroutine()
+        subroutineName = __package__.split('.')[1]
+        subroutine.setVisible(self.configFile[subroutineName]['SV'])
         self.activateWidgets()
 
-        return subroutineGui
+        _psLog.info(__package__ + ' makeFrame completed')
+
+        return subroutine
 
     def startUpTasks(self):
         """Run these tasks when this subroutine is started."""
@@ -107,7 +97,7 @@ class StartUp:
 
         Model.initializeJmriRailroad()
 
-        PSE.restartAllSubroutines()
+        PSE.remoteCalls('refreshCalls')
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
         return
@@ -129,8 +119,6 @@ class StartUp:
         Model.updateJmriLocations()
 
         PSE.remoteCalls('refreshCalls')
-
-        PSE.restartAllSubroutines()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -154,7 +142,7 @@ class StartUp:
 
         PSE.remoteCalls('refreshCalls')
 
-        PSE.restartAllSubroutines()
+        # PSE.refreshAllSubroutines()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -178,7 +166,7 @@ class StartUp:
 
         PSE.remoteCalls('refreshCalls')
 
-        PSE.restartAllSubroutines()
+        # PSE.refreshAllSubroutines()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -198,7 +186,7 @@ class StartUp:
         
         PSE.remoteCalls('refreshCalls')
 
-        PSE.restartAllSubroutines()
+        # PSE.refreshAllSubroutines()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

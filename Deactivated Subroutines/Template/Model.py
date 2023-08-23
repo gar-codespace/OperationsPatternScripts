@@ -24,3 +24,9 @@ def resetConfigFileItems():
     # PSE.writeConfigFile(configFile)
 
     return
+
+def refreshSubroutine():
+
+    configFile = PSE.readConfigFile()
+
+    return

@@ -17,28 +17,23 @@ class ManageGui:
 
     def __init__(self):
 
-        self.configFile = PSE.readConfigFile('Template')
-
         return
 
-    def makeSubroutineFrame(self):
-        """Make the frame that all the template controls are added to"""
+    def makeSubroutine(self):
+        """
+        Makes the complete subroutine.
+        """
 
-        subroutineFrame = PSE.JAVX_SWING.JPanel() # the track pattern panel
+        subroutineFrame = PSE.JAVX_SWING.JPanel() 
         subroutineFrame.setName(__package__)
         subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Template Subroutine'))
 
-        return subroutineFrame
-
-    def makeSubroutineGui(self):
-        """Make the Template GUI."""
-
-        _psLog.debug('Template.View.makeSubroutineGui')
-
         subroutineGui = GUI.subroutineGui()
         gui = subroutineGui.guiMaker()
-        widgets = subroutineGui.guiWidgetGetter()
 
-        return gui, widgets
+        subroutineFrame.add(gui)
+        widgets = subroutineGui.guiWidgetGetter()
+    
+        return subroutineFrame, widgets
 
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

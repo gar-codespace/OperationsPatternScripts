@@ -6,6 +6,7 @@ Calls other subs make to this one
 Keep this as light as possible.
 """
 
+from Subroutines.o2o import Model
 from Subroutines.o2o import Listeners
 
 def activatedCalls():
@@ -29,8 +30,10 @@ def deactivatedCalls():
 
 def refreshCalls():
     """
-    ethods called when the subroutine needs to be refreshed.
+    Methods called when the subroutine needs to be refreshed.
     """
+
+    Model.refreshSubroutine()
 
     return
 

@@ -19,25 +19,21 @@ class ManageGui:
 
         return
 
-    def makeSubroutineFrame(self):
-        """Make the frame that all the Track Pattern controls are added to"""
+    def makeSubroutine(self):
+        """
+        Makes the complete subroutine.
+        """
 
-        subroutineFrame = PSE.JAVX_SWING.JPanel() # the Track Pattern panel
+        subroutineFrame = PSE.JAVX_SWING.JPanel()
         subroutineFrame.setName(__package__)
-        subroutineFrame.setLayout(PSE.JAVX_SWING.BoxLayout(subroutineFrame, PSE.JAVX_SWING.BoxLayout.Y_AXIS))
-        subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Patterns Subroutine'))
-
-        return subroutineFrame
-
-    def makeSubroutineGui(self):
-        """Make the Patterns GUI."""
-
-        _psLog.debug('PatternTracksSubroutine.View.makeSubroutineGui')
+        subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('jPlus Subroutine'))        
 
         subroutineGui = GUI.subroutineGui()
         gui = subroutineGui.guiMaker()
-        widgets = subroutineGui.guiWidgetGetter()
 
-        return gui, widgets
+        subroutineFrame.add(gui)
+        widgets = subroutineGui.guiWidgetGetter()
+    
+        return subroutineFrame, widgets
 
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

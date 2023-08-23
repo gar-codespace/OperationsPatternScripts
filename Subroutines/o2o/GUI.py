@@ -14,7 +14,9 @@ SCRIPT_REV = 20230201
 class subroutineGui:
 
     def __init__(self):
-        """The *.setName value is the name of the action for the widget"""
+        """
+        The *.setName value is the name of the action for the widget.
+        """
 
         self.nrButton = PSE.JAVX_SWING.JButton()
         self.nrButton.setText(PSE.getBundleItem('Initialize Railroad'))
@@ -39,7 +41,9 @@ class subroutineGui:
         return
 
     def guiMaker(self):
-        """Make the GUI here."""
+        """
+        Make the GUI here.
+        """
 
         tpPanel = PSE.JAVX_SWING.JPanel()
         newRrPanel = PSE.JAVX_SWING.JPanel()

@@ -281,8 +281,8 @@ def validateKeyFile():
 
     translator = Translator()
     translator.setTranslationService()
-    if not translator.testTranslationService():
-        returnValue = False
+    # if not translator.testTranslationService():
+    #     returnValue = False
     
     return returnValue
 

@@ -19,28 +19,21 @@ class ManageGui:
 
         return
 
-    def makeSubroutineFrame(self):
+    def makeSubroutine(self):
         """
-        Make the frame that all the throwback controls are added to.
+        Makes the complete subroutine.
         """
 
-        subroutineFrame = PSE.JAVX_SWING.JPanel() # the track pattern panel
+        subroutineFrame = PSE.JAVX_SWING.JPanel()
         subroutineFrame.setName(__package__)
-        subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Throwback Subroutine'))
-
-        return subroutineFrame
-
-    def makeSubroutineGui(self):
-        """
-        Make the throwback GUI.
-        """
-
-        _psLog.debug('ThrowbackSubroutine.View.makeSubroutineGui')
+        subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Throwback Subroutine'))        
 
         subroutineGui = GUI.subroutineGui()
         gui = subroutineGui.guiMaker()
-        widgets = subroutineGui.guiWidgetGetter()
 
-        return gui, widgets
+        subroutineFrame.add(gui)
+        widgets = subroutineGui.guiWidgetGetter()
+    
+        return subroutineFrame, widgets
 
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

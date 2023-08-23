@@ -34,7 +34,6 @@ def getSubroutineDropDownItem():
 
     menuItem.setName(__package__)
     menuItem.setText(menuText)
-    menuItem.removeActionListener(Listeners.actionListener)
     menuItem.addActionListener(Listeners.actionListener)
 
     return menuItem
@@ -47,32 +46,23 @@ class StartUp:
 
     def __init__(self, subroutineFrame=None):
 
-        self.subroutineFrame = subroutineFrame
+        self.configFile = PSE.readConfigFile()
 
         return
 
-    def getSubroutineFrame(self):
+    def getSubroutine(self):
         """
-        Gets the title border frame.
+        Returns the subroutine and activates the widgets.
         """
 
-        self.subroutineFrame = View.ManageGui().makeSubroutineFrame()
-        subroutineGui = self.getSubroutineGui()
-        self.subroutineFrame.add(subroutineGui)
+        subroutine, self.widgets = View.ManageGui().makeSubroutine()
+        subroutineName = __package__.split('.')[1]
+        subroutine.setVisible(self.configFile[subroutineName]['SV'])
+        self.activateWidgets()
 
         _psLog.info(__package__ + ' makeFrame completed')
 
-        return self.subroutineFrame
-
-    def getSubroutineGui(self):
-        """
-        Gets the GUI for this subroutine.
-        """
-
-        subroutineGui, self.widgets = View.ManageGui().makeSubroutineGui()
-        self.activateWidgets()
-
-        return subroutineGui
+        return subroutine
 
     def startUpTasks(self):
         """
@@ -111,8 +101,6 @@ class StartUp:
                 widget.setText(lastSS[-1][0])
             if widget.getName() == 'commitName':
                 widget.setText(lastSS[-1][1])
-    
-        PSE.restartSubroutineByName(__package__)
 
         return
 
@@ -159,8 +147,6 @@ class StartUp:
 
         Model.throwbackCommit(self.widgets['display'])
 
-        PSE.restartAllSubroutines()
-
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
@@ -170,12 +156,16 @@ class StartUp:
         Reset throwback.
         """
 
-        _psLog.debug(EVENT)
-        
-        Model.resetThrowBack()
-        
-        PSE.restartSubroutineByName(__package__)
+        firstPress = PSE.getBundleItem('Delete All Commits')
+        secondPress = PSE.getBundleItem('Confirm Delete')
 
-        print('Reset Throwback')
+        if EVENT.getSource().text == firstPress:
+            EVENT.getSource().setText(secondPress)
+        else:
+            Model.resetThrowBack()
+            Model.refreshSubroutine()
+            EVENT.getSource().setText(firstPress)
+            _psLog.info('Throwback subroutine reset')          
+            print('Throwback subroutine reset')
 
         return

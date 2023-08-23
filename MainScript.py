@@ -41,7 +41,7 @@ def buildThePlugin(view):
     patternScriptsButtonAction
     """
 
-    view.makeSubroutinePanel()
+    view.makeSubroutinesPanel()
     # view.makeScrollPanel()
     view.makePatternScriptsWindow()
 
@@ -79,7 +79,7 @@ class View:
 
         self.psLog = PSE.LOGGING.getLogger('OPS.Main.View')
 
-        self.cpConfig = PSE.readConfigFile('Main Script')['CP']
+        self.configFile = PSE.readConfigFile()
 
         self.psWindow = PSE.JMRI.util.JmriJFrame()
 
@@ -87,22 +87,28 @@ class View:
         # self.subroutinePanel = PSE.JAVX_SWING.JPanel()
         # self.subroutinePanel.setLayout(PSE.JAVX_SWING.BoxLayout( self.subroutinePanel, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
         self.subroutinePanel = PSE.JAVX_SWING.Box(PSE.JAVX_SWING.BoxLayout.PAGE_AXIS)
+        self.subroutinePanel.setName('subroutinePanel')
 
         self.psPluginMenuItems = []
         self.subroutineMenuItems = []
 
         return
 
-    def makeSubroutinePanel(self):
+    def makeSubroutinesPanel(self):
         """
-        The subroutines are added to this panel.
+        The subroutines are added to self.subroutinePanel.
         """
 
-        self.subroutinePanel.setName('subroutinePanel')
+        for subroutine in PSE.getSubroutineDirs():
+            subroutineName = 'Subroutines.' + subroutine
+            package = __import__(subroutineName, fromlist=['Controller'], level=-1)
+            startUp = package.Controller.StartUp()
+            startUp.startUpTasks()
+            self.subroutinePanel.add(startUp.getSubroutine())
+            # if self.configFile[subroutine]['SV']:
+            #     self.subroutinePanel.add(startUp.getSubroutineFrame())
 
-        self.subroutinePanel = PSE.addActiveSubroutines(self.subroutinePanel)
-
-        return
+        return    
 
     def makeScrollPanel(self):
         """
@@ -314,6 +320,8 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         Bundle.setupBundle()
 
         buildThePlugin(View())
+
+        PSE.remoteCalls('activatedCalls')
 
         return
 

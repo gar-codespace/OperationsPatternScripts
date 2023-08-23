@@ -32,7 +32,6 @@ def getSubroutineDropDownItem():
 
     menuItem.setName(__package__)
     menuItem.setText(menuText)
-    menuItem.removeActionListener(Listeners.actionListener)
     menuItem.addActionListener(Listeners.actionListener)
 
     return menuItem
@@ -43,35 +42,25 @@ class StartUp:
     Start the jPlus subroutine
     """
 
-    def __init__(self, subroutineFrame=None):
+    def __init__(self):
 
-        self.subroutineFrame = subroutineFrame
+        self.configFile = PSE.readConfigFile()
 
         return
 
-    def getSubroutineFrame(self):
+    def getSubroutine(self):
         """
-        Gets the title border frame
-        """
-
-        self.subroutineFrame = View.ManageGui().makeSubroutineFrame()
-        subroutineGui = self.getSubroutineGui()
-        self.subroutineFrame.add(subroutineGui)
-
-        _psLog.info('jPlusSubroutine makeFrame completed')
-
-        return self.subroutineFrame
-
-    def getSubroutineGui(self):
-        """
-        Gets the GUI for this subroutine.
+        Returns the subroutine and activates the widgets.
         """
 
-        subroutineGui, self.widgets = View.ManageGui().makeSubroutineGui()
-
+        subroutine, self.widgets = View.ManageGui().makeSubroutine()
+        subroutineName = __package__.split('.')[1]
+        subroutine.setVisible(self.configFile[subroutineName]['SV'])
         self.activateWidgets()
 
-        return subroutineGui
+        _psLog.info(__package__ + ' makeFrame completed')
+
+        return subroutine
 
     def startUpTasks(self):
         """
@@ -81,20 +70,12 @@ class StartUp:
         return
 
     def activateWidgets(self):
-        """
-        The widget.getName() value is the name of the action for the widget.
-        IE 'update'
-        """
 
         widget = self.widgets['control']['UP']
-        name = widget.getName()
-
-        widget.actionPerformed = getattr(self, name)
+        widget.actionPerformed = self.update
 
         widget = self.widgets['control']['UX']
-        name = widget.getName()
-
-        widget.actionPerformed = getattr(self, name)
+        widget.actionPerformed = self.useExtended
 
         return
 
@@ -103,21 +84,14 @@ class StartUp:
         Update button.
         Writes the text box entries to the configFile.
         Updates JMRI year modeled.
-        Sets the jPlus expanded header.
+        Sets the jPlus extended header.
         """
 
         _psLog.debug(EVENT)
 
-        configFile = PSE.readConfigFile()
-
         Model.updateRailroadDetails(self.widgets['panel'])
         Model.extendedRailroadDetails()
-
-        OSU = PSE.JMRI.jmrit.operations.setup
-        OSU.Setup.setYearModeled(configFile['Main Script']['LD']['YR'])
-
         PSE.remoteCalls('refreshCalls')
-        PSE.restartSubroutineByName(__package__)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -133,8 +107,5 @@ class StartUp:
         configFile = PSE.readConfigFile()            
         configFile['Main Script']['CP'].update({'EH':EVENT.getSource().selected})
         PSE.writeConfigFile(configFile)
-
-        PSE.remoteCalls('refreshCalls')
-        PSE.restartSubroutineByName(__package__)
 
         return

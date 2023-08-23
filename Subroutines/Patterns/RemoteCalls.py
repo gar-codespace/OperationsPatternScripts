@@ -18,6 +18,7 @@ def activatedCalls():
     Methods called when this subroutine is activated.
     """
 
+    Listeners.removePatternListeners()
     Listeners.addPatternsListeners()
 
     return
@@ -39,7 +40,8 @@ def refreshCalls():
     Methods called when the subroutine needs to be refreshed.
     """
 
-    
+    Model.refreshSubroutine()
+
     return
 
 def resetCalls():

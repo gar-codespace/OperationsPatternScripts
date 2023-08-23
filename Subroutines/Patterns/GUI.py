@@ -19,11 +19,12 @@ def makeSwingBox(xWidth, yHeight):
     swingBox.setPreferredSize(PSE.JAVA_AWT.Dimension(width=xWidth, height=yHeight))
 
     return swingBox
-
+    
 
 class subroutineGui:
     """
-    Makes the Patterns subroutine panel
+    Makes the Patterns subroutine panel.
+    The Controller manages the combo boxes.
     Called by:
     View.ManageGui.makeSubroutinePanel
     """
@@ -32,8 +33,13 @@ class subroutineGui:
 
         self.patternsConfigFile = PSE.readConfigFile('Patterns')
 
-        self.divisionComboBox = PSE.DM.getComboBox()
+    # The Divisions combo box content is managed by the Controller
+        self.divisionComboBox = PSE.JAVX_SWING.JComboBox()
+        self.divisionComboBox.setName('jDivisions')
+
+    # The Locations combo box content is managed by the Controller
         self.locationComboBox = PSE.JAVX_SWING.JComboBox()
+        self.locationComboBox.setName('jLocations')
 
         self.yardTracksOnly = PSE.JAVX_SWING.JCheckBox()
         self.yardTracksOnly.setText(PSE.getBundleItem('Yard tracks only') + ' ')
@@ -58,40 +64,33 @@ class subroutineGui:
         tpPanel = PSE.JAVX_SWING.JPanel() # the Patterns panel
         tpPanel.setLayout(PSE.JAVX_SWING.BoxLayout(tpPanel, PSE.JAVX_SWING.BoxLayout.Y_AXIS))
 
+        rowLabel = PSE.JAVX_SWING.JLabel()
+        rowLabel.setName('jTracksPanelLabel')
+        # rowLabel.setVisible(False)
+
+        checkBox = PSE.JAVX_SWING.JCheckBox('test')
+        checkBox.setName('jTrackCheckBox')
+        checkBox.setVisible(False)
+
         tpPanel.add(self.makeLocaleRow())
         tpPanel.add(self.makeTracksRow())
         tpPanel.add(self.makeButtonsRow())
+        tpPanel.add(rowLabel)
+        tpPanel.add(checkBox)
 
         return tpPanel
 
     def makeLocaleRow(self):
         """
         Make widget row containing: 'Division:', combo box, 'Loaction:', combo box, 'Yard Tracks Only', check box.
+        Since the Locations combo box needs to be custom, it became moot to use DM.getComboBox().
         """
 
         localeRow = PSE.JAVX_SWING.JPanel()
         localeRow.setAlignmentX(PSE.JAVX_SWING.JPanel.CENTER_ALIGNMENT)
 
         divisionLabel = PSE.JAVX_SWING.JLabel(PSE.getBundleItem('Division:'))
-
-        self.divisionComboBox.setEditable(True)
-        patternDivision = self.patternsConfigFile['PD']
-        if not patternDivision in PSE.getAllDivisionNames():
-            patternDivision = None
-        self.divisionComboBox.setSelectedItem(patternDivision)
-        self.divisionComboBox.setName('jDivision')
-
         locationLabel = PSE.JAVX_SWING.JLabel(PSE.getBundleItem('Location:'))
-
-        for locationName in sorted(PSE.getLocationNamesByDivision(patternDivision)):
-            self.locationComboBox.addItem(locationName)
-
-        patternLocation = self.patternsConfigFile['PL']
-        if not patternLocation in PSE.getLocationNamesByDivision(patternDivision):
-            patternLocation = None
-        self.patternsConfigFile.update({'PL':patternLocation})
-        self.locationComboBox.setSelectedItem(patternLocation)
-        self.locationComboBox.setName('jLocations')
 
         localeRow.add(divisionLabel)
         localeRow.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
@@ -106,53 +105,65 @@ class subroutineGui:
         return localeRow
 
     def makeTracksRow(self):
-        """Make the row of check boxes, one for each track"""
+        """
+        """
 
         tracksPanel = PSE.JAVX_SWING.JPanel()
+        tracksPanel.setName('jTracksPanel')
+
+        # rowLabel = PSE.JAVX_SWING.JLabel()
+        # rowLabel.setName('jTracksPanelLabel')
+        # checkBox = PSE.JAVX_SWING.JCheckBox('test')
+        # checkBox.setName('jTrackCheckBox')
+        # self.trackCheckBoxes.append(checkBox)
+
+        # tracksPanel.add(rowLabel)
+        # tracksPanel.add(checkBox)
+
+
         # tracksPanel.setAlignmentX(PSE.JAVX_SWING.JPanel.CENTER_ALIGNMENT)
-        rowLabel = PSE.JAVX_SWING.JLabel()
-        tracksPanel.add(rowLabel)
 
-        trackDict = self.getTrackDict()
+        # trackDict = self.getTrackDict()
 
-        if trackDict:
-            rowLabel.text = PSE.getBundleItem('Track List:') + ' '
-            for track, flag in sorted(trackDict.items()):
-                trackCheckBox = tracksPanel.add(PSE.JAVX_SWING.JCheckBox(track, flag))
-                self.trackCheckBoxes.append(trackCheckBox)
-            self.ypButton.setEnabled(True)
-            self.scButton.setEnabled(True)
-        else:
-            self.ypButton.setEnabled(False)
-            self.scButton.setEnabled(False)
-            rowLabel.text = PSE.getBundleItem('There are no tracks for this selection')            
+        # if trackDict:
+        #     rowLabel.text = PSE.getBundleItem('Track List:') + ' '
+        #     for track, flag in sorted(trackDict.items()):
+        #         trackCheckBox = tracksPanel.add(PSE.JAVX_SWING.JCheckBox(track, flag))
+        #     self.ypButton.setEnabled(True)
+        #     self.scButton.setEnabled(True)
+        # else:
+        #     self.ypButton.setEnabled(False)
+        #     self.scButton.setEnabled(False)
+        #     rowLabel.text = PSE.getBundleItem('There are no tracks for this selection')            
 
         return tracksPanel
 
-    def getTrackDict(self):
-        """
-        Since the track dict is created when called,
-        it is not necessary to save it into configFile['Patterns']['PT']
-        """
+    # def getTrackDict(self):
+    #     """
+    #     Since the track dict is created when called,
+    #     it is not necessary to save it into configFile['Patterns']['PT']
+    #     """
 
-        trackDict = {}
+    #     trackDict = {}
 
-        yardTracksOnlyFlag = None
-        if self.patternsConfigFile['PA']:
-            yardTracksOnlyFlag = 'Yard'
+    #     yardTracksOnlyFlag = None
+    #     if self.patternsConfigFile['PA']:
+    #         yardTracksOnlyFlag = 'Yard'
 
-        try:
-            trackList = PSE.LM.getLocationByName(self.patternsConfigFile['PL']).getTracksByNameList(yardTracksOnlyFlag)
-        except:
-            trackList = []
+    #     try:
+    #         trackList = PSE.LM.getLocationByName(self.patternsConfigFile['PL']).getTracksByNameList(yardTracksOnlyFlag)
+    #     except:
+    #         trackList = []
 
-        for track in trackList:
-            trackDict[unicode(track, PSE.ENCODING)] = False
+    #     for track in trackList:
+    #         trackDict[unicode(track, PSE.ENCODING)] = False
 
-        return trackDict
+    #     return trackDict
         
     def makeButtonsRow(self):
-        """Make the row of action buttons: 'Track Pattern', 'Set Rolling Stock.' """
+        """
+        Make the row of action buttons: 'Track Pattern', 'Set Rolling Stock.'
+        """
 
         trackButtonsPanel = PSE.JAVX_SWING.JPanel()
         trackButtonsPanel.setAlignmentX(PSE.JAVX_SWING.JPanel.CENTER_ALIGNMENT)

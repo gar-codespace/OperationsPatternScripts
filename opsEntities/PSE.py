@@ -161,50 +161,93 @@ def repaintPatternScriptsWindow():
     All Show/Hide pulldowns.
     """
 
-    frameTitle = getBundleItem('Pattern Scripts')
-    targetPanel = getComponentByName(frameTitle, 'subroutinePanel')
-    targetPanel.removeAll()
-    targetPanel = addActiveSubroutines(targetPanel)
-    targetPanel.validate()
-    targetPanel.repaint()
-
-    return
-
-def restartAllSubroutines():
-
-    for subroutine in getSubroutineDirs():
-        subroutine = 'Subroutines.' + subroutine
-        restartSubroutineByName(subroutine)
-
-    return
-
-def restartSubroutineByName(subRoutineName):
-    """
-    Finds the named subroutine in the plugin and restarts it.
-    subroutineName: Subroutines.<subroutine>
-    """
-
+    configFile = readConfigFile()
     frameName = getBundleItem('Pattern Scripts')
-    subroutine = getComponentByName(frameName, subRoutineName)
-    if subroutine:
 
-        package = __import__(subRoutineName, globals(), locals(), ['Controller'], 0)
-        # restart = package.Controller.StartUp(subroutine)
-        restart = package.Controller.StartUp()
-        subroutinePanel = restart.getSubroutineGui()
-        restart.startUpTasks()
+    for subroutineName in getSubroutineDirs():
+        subroutine = 'Subroutines.' + subroutineName
+        targetPanel = getComponentByName(frameName, subroutine)
+        targetPanel.setVisible(configFile[subroutineName]['SV'])
 
-        subroutine.removeAll()
-        subroutine.add(subroutinePanel)
-
-        subroutine.validate()
-        subroutine.repaint()
-
-        print('Restarted: ' + subRoutineName)
-    else:
-        print('Not currently active: ' + subRoutineName)
-        
     return
+
+# def refreshAllSubroutines():
+
+#     for subroutine in getSubroutineDirs():
+#         subroutine = 'Subroutines.' + subroutine
+#         refreshSubroutineByName(subroutine)
+#         # restartSubroutineByName(subroutine)
+
+#     return
+
+# def refreshSubroutineByName(subRoutineName):
+
+#     package = __import__(subRoutineName, globals(), locals(), ['Model'], 0)
+#     package.refreshSubroutine()
+
+#     return
+
+# def restartSubroutineByName(subRoutineName):
+#     """
+#     Finds the named subroutine in the plugin and restarts it.
+#     subroutineName: Subroutines.<subroutine>
+#     """
+
+#     print('restartSubroutineByName')
+
+#     frameName = getBundleItem('Pattern Scripts')
+#     frame = JMRI.util.JmriJFrame.getFrame(frameName)
+#     subroutine = getComponentByName(frameName, subRoutineName)
+
+#     print(frame.getComponents())
+
+
+
+#     # frame.removeAll()
+#     frame.remove(subroutine)
+#     frame.validate()
+#     frame.repaint()
+
+
+
+
+    # if subroutine:
+
+    #     package = __import__(subRoutineName, globals(), locals(), ['Controller'], 0)
+    #     # restart = package.Controller.StartUp(subroutine)
+    #     restart = package.Controller.StartUp()
+    #     restart.startUpTasks()
+    #     # try:
+    #     #     subroutinePanel = restart.getSubroutineGui()
+    #     # except:
+    #     #     subroutinePanel = restart.getSubroutineFrame()
+
+    #     subroutine.removeAll()
+    #     subroutinePanel = restart.getSubroutineFrame()
+    #     # subroutine.add(subroutinePanel)
+
+    #     subroutine.validate()
+    #     subroutine.repaint()
+
+    #     print('Restarted: ' + subRoutineName)
+    # else:
+    #     print('Not currently active: ' + subRoutineName)
+        
+    # return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # def validateSubroutines():
 #     """
@@ -225,37 +268,37 @@ def restartSubroutineByName(subRoutineName):
 
 #     return
 
-def addActiveSubroutines(targetPanel):
-    """
-    Adds the activated subroutines to the subroutinePanel of Pattern Scripts.
-    """
+# def addActiveSubroutines(targetPanel):
+#     """
+#     Adds the activated subroutines to the subroutinePanel of Pattern Scripts.
+#     """
 
+# #     configFile = readConfigFile()
+
+# # # Catch dynamic add or removal of a subroutine
+# #     for subroutine in getSubroutineDirs():
+# #         subroutineName = 'Subroutines.' + subroutine
+# #         try:
+# #             configFile['Main Script']['CP'][subroutineName]
+# #         except:
+# #             print('Exception at: PSE.addActiveSubroutines')
+# #             configFile['Main Script']['CP'][subroutineName] = True
+
+# #     writeConfigFile(configFile)
 #     configFile = readConfigFile()
 
-# # Catch dynamic add or removal of a subroutine
 #     for subroutine in getSubroutineDirs():
 #         subroutineName = 'Subroutines.' + subroutine
-#         try:
-#             configFile['Main Script']['CP'][subroutineName]
-#         except:
-#             print('Exception at: PSE.addActiveSubroutines')
-#             configFile['Main Script']['CP'][subroutineName] = True
+#         package = __import__(subroutineName, fromlist=['Controller'], level=-1)
+#         startUp = package.Controller.StartUp()
+#         startUp.startUpTasks()
+#         if configFile[subroutine]['SV']:
+#             subroutineFrame = startUp.getSubroutineFrame()
+#             targetPanel.add(subroutineFrame)
 
-#     writeConfigFile(configFile)
-    configFile = readConfigFile()
+#     targetPanel.add(JAVX_SWING.Box.createVerticalGlue())
 
-    for subroutine in getSubroutineDirs():
-        subroutineName = 'Subroutines.' + subroutine
-        package = __import__(subroutineName, fromlist=['Controller'], level=-1)
-        startUp = package.Controller.StartUp()
-        startUp.startUpTasks()
-        if configFile[subroutine]['SV']:
-            subroutineFrame = startUp.getSubroutineFrame()
-            targetPanel.add(subroutineFrame)
-
-    targetPanel.add(JAVX_SWING.Box.createVerticalGlue())
-
-    return targetPanel
+#     return targetPanel
 
 def closePsWindow():
 
@@ -464,24 +507,15 @@ def updateWindowParams(window):
 
 def remoteCalls(call):
     """
-    Applies 'call' to entries in ConfigFile()['Main Script']['CP']
     'call' is one of the remote calls in each subroutine RemoteCalls module.
     activatedCalls, deactivatedCalls, refreshCalls Etc.
     """
 
-    cpItems = readConfigFile()['Main Script']['CP']
+    for subroutine in getSubroutineDirs():
+        subroutine = 'Subroutines.' + subroutine
+        package = __import__(subroutine, fromlist=['RemoteCalls'], level=-1)
+        getattr(package.RemoteCalls, call)()
 
-    # for item, value in cpItems.items():
-    for item in cpItems:
-        if 'Subroutines.' in item:
-            try:
-                package = __import__(item, fromlist=['RemoteCalls'], level=-1)
-                getattr(package.RemoteCalls, call)()
-            except ImportError:
-                pass
-                # print(item + ' not found')
-
-        # package = __import__(xModule, globals(), locals(), fromlist=['RemoteCalls'], level=-1)
     return
 
 def psLocale():

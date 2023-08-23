@@ -5,6 +5,8 @@
 Patterns
 """
 
+from copy import deepcopy
+
 from opsEntities import PSE
 from Subroutines.Patterns import ModelEntities
 
@@ -33,6 +35,155 @@ def resetConfigFileItems():
 
     return
 
+def refreshSubroutine():
+
+    divisionComboBoxManager()
+
+    return
+
+def divisionComboBoxManager(EVENT=None):
+    """
+    Ripples the changes to the location combo box manager.
+    """
+
+    _psLog.debug('divisionComboBox')
+
+    configFile = PSE.readConfigFile()
+
+    if EVENT:
+        itemSelected = EVENT.getSource().getSelectedItem()
+        if not itemSelected:
+            itemSelected = None
+
+        configFile['Patterns'].update({'PD': itemSelected})
+        PSE.writeConfigFile(configFile)
+    else:
+        frameName = PSE.getBundleItem('Pattern Scripts')
+        frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
+        component = PSE.getComponentByName(frame, 'jDivisions')
+        component.removeAllItems()
+        component.addItem(None)
+
+        for divisionName in PSE.getAllDivisionNames():
+            component.addItem(divisionName)
+
+        component.setSelectedItem(configFile['Patterns']['PD'])
+
+    locationComboBoxManager()
+
+    return
+
+def locationComboBoxManager(EVENT=None):
+    """
+    Ripples the changes to the track row manager.
+    """
+
+    _psLog.debug('locationComboBoxManager')
+
+    configFile = PSE.readConfigFile()
+
+    if EVENT:
+        itemSelected = EVENT.getSource().getSelectedItem()
+        if not itemSelected:
+            itemSelected = None
+
+        configFile['Patterns'].update({'PL': itemSelected})
+        PSE.writeConfigFile(configFile)
+    else:
+        frameName = PSE.getBundleItem('Pattern Scripts')
+        frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
+        component = PSE.getComponentByName(frame, 'jLocations')
+        component.removeAllItems()
+        component.addItem(None)
+
+        for locationName in PSE.getLocationNamesByDivision(configFile['Patterns']['PD']):
+            component.addItem(locationName)
+
+        component.setSelectedItem(configFile['Patterns']['PL'])
+
+    trackRowManager()
+
+    return
+
+def trackRowManager():
+    """
+    Creates a row of check boxes, one for each track.
+    If no tracks for the selected location, displays a message.
+    """
+
+    _psLog.debug('trackRowManager')
+
+    configFile = PSE.readConfigFile()
+
+    frameName = PSE.getBundleItem('Pattern Scripts')
+    frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
+    component = PSE.getComponentByName(frame, 'jTracksPanel')
+    
+    label = PSE.getComponentByName(frame, 'jTracksPanelLabel')
+    checkBox = PSE.getComponentByName(frame, 'jTrackCheckBox')
+
+    component.removeAll()
+    trackDict = getTrackDict()
+    if trackDict:
+        for track, flag in trackDict.items():
+            trackCheckBox = deepcopy(checkBox)
+            trackCheckBox.actionPerformed = trackCheckBoxAction
+            trackCheckBox.setText(track)
+            trackCheckBox.setSelected(flag)
+            trackCheckBox.setVisible(True)
+            component.add(trackCheckBox)
+    else:
+        trackLabel = deepcopy(label)
+        trackLabel.setText(PSE.getBundleItem('There are no tracks for this selection'))
+        trackLabel.setVisible(True)
+        component.add(trackLabel)
+
+    configFile['Patterns'].update({'PT':trackDict})
+    PSE.writeConfigFile(configFile)
+
+    frame.validate()
+    frame.repaint()
+
+    return
+
+def trackCheckBoxAction(EVENT):
+    """
+    Action listener attached to each track check box.
+    """
+
+    _psLog.debug(EVENT)
+
+    configFile = PSE.readConfigFile() 
+    configFile['Patterns']['PT'].update({EVENT.getSource().text:EVENT.getSource().selected})
+
+    PSE.writeConfigFile(configFile)
+    
+    return
+    
+def getTrackDict():
+    """
+    Returns a dictionary of 'Track Name':False pairs.
+    Used to create the row of track check boxes.
+    """
+
+    configFile = PSE.readConfigFile()
+
+    trackDict = {}
+
+    yardTracksOnlyFlag = None
+    if configFile['Patterns']['PA']:
+        yardTracksOnlyFlag = 'Yard'
+
+    try:
+        trackList = PSE.LM.getLocationByName(configFile['Patterns']['PL']).getTracksByNameList(yardTracksOnlyFlag)
+    except:
+        trackList = []
+
+    for track in trackList:
+        trackDict[unicode(track, PSE.ENCODING)] = False
+
+    return trackDict
+    
 def insertStandins(trackPattern):
     """
     Substitutes in standins from the config file.
@@ -75,23 +226,23 @@ def getStandins(rs, standins):
 
     return destStandin, fdStandin
 
-def updateConfigFile(controls):
-    """
-    Updates the Patterns part of the config file
-    Called by:
-    Controller.StartUp.trackPatternButton
-    Controller.StartUp.setCarsButton
-    """
+# def updateConfigFile(controls):
+#     """
+#     Updates the Patterns part of the config file
+#     Called by:
+#     Controller.StartUp.trackPatternButton
+#     Controller.StartUp.setCarsButton
+#     """
 
-    _psLog.debug('updateConfigFile')
+#     _psLog.debug('updateConfigFile')
 
-    configFile = PSE.readConfigFile()
-    configFile['Patterns'].update({"PL": controls[1].getSelectedItem()})
-    configFile['Patterns'].update({"PA": controls[2].selected})
+#     configFile = PSE.readConfigFile()
+#     configFile['Patterns'].update({"PL": controls[1].getSelectedItem()})
+#     configFile['Patterns'].update({"PA": controls[2].selected})
 
-    PSE.writeConfigFile(configFile)
+#     PSE.writeConfigFile(configFile)
 
-    return controls
+#     return controls
 
 def makeTrackPattern(selectedTracks):
     """
@@ -238,7 +389,6 @@ def makeTrackPatternCsv(trackPattern):
 
     trackPatternCsv = u'Operator,Description,Parameters\n' \
                     u'RT,Report Type,' + trackPattern['trainDescription'] + '\n' \
-                    u'RN,Railroad Name,"' + trackPattern['railroadName'] + '"\n' \
                     u'RD,Railroad Division,"' + trackPattern['division'] + '"\n' \
                     u'LN,Location Name,' + trackPattern['locations'][0]['locationName'] + '\n' \
                     u'PRNTR,Printer Name,\n' \
@@ -302,35 +452,3 @@ def makeTrackPatternCsv(trackPattern):
                             + '\n'
 
     return trackPatternCsv
-
-def divisionComboBox(selectedItem):
-    """
-    Updates the config file based on changes to divisions.
-    """
-
-    _psLog.debug('divisionComboBox')
-
-    configFile = PSE.readConfigFile()
-
-    selectedItem = str(selectedItem)
-    configFile['Patterns'].update({'PD': selectedItem})
-    configFile['Patterns'].update({'PL': None})
-
-    PSE.writeConfigFile(configFile)
-
-    return
-
-def locationComboBox(selectedItem):
-    """
-    """
-
-    _psLog.debug('locationComboBox')
-
-    configFile = PSE.readConfigFile()
-
-    selectedItem = str(selectedItem)
-    configFile['Patterns'].update({'PL': selectedItem})
-
-    PSE.writeConfigFile(configFile)
-
-    return

@@ -10,33 +10,42 @@ from Subroutines.jPlus import Model
 
 
 def activatedCalls():
-    """Methods called when this subroutine is activated."""
+    """
+    Methods called when this subroutine is activated.
+    """
     
     return
 
 def deactivatedCalls():
-    """Methods called when this subroutine is deactivated."""
+    """
+    Methods called when this subroutine is deactivated.
+    """
 
-    Model.extendedHeaderActivator(False)
+    # Model.extendedHeaderActivator(False)
 
     return
 
 def refreshCalls():
-    """Methods called when the subroutine needs to be refreshed."""
+    """
+    Methods called when the subroutine needs to be refreshed.
+    """
 
-    Model.updateYearModeled()
-    Model.extendedRailroadDetails()
+    Model.refreshSubroutine()
     
     return
 
 def resetCalls():
-    """Methods called to reset this subroutine."""
+    """
+    Methods called to reset this subroutine.
+    """
 
     Model.resetConfigFileItems()
 
     return
         
 def specificCalls():
-    """Methods called to run specific tasks."""
+    """
+    Methods called to run specific tasks.
+    """
 
     return

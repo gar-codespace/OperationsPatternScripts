@@ -6,7 +6,7 @@ Calls other subs make to this one
 Keep this as light as possible.
 """
 
-from opsEntities import PSE
+from Subroutines.Template import Model
 
 
 def activatedCalls():
@@ -22,14 +22,14 @@ def deactivatedCalls():
 def refreshCalls():
     """Methods called when the subroutine needs to be refreshed."""
 
-    PSE.restartSubroutineByName(__package__)
+    Model.refreshSubroutine()
     
     return
 
 def resetCalls():
     """Methods called to reset this subroutine."""
 
-   # Model.resetConfigFileItems()
+    Model.resetConfigFileItems()
    
     return
     

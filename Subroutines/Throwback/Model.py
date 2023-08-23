@@ -14,6 +14,14 @@ _psLog = PSE.LOGGING.getLogger('OPS.TB.Model')
 
 SNAP_SHOT_INDEX = 0
 
+def resetConfigFileItems():
+
+    return
+
+def refreshSubroutine():
+
+    return
+
 def createFolder():
     """
     Creates a 'throwback' folder in operations.
@@ -146,6 +154,18 @@ def throwbackCommit(displayWidgets):
     return
 
 def resetThrowBack():
+
+    frameName = PSE.getBundleItem('Pattern Scripts')
+    frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
+
+    component = PSE.getComponentByName(frame, 'tbText')
+    component.setText('')
+
+    component = PSE.getComponentByName(frame, 'timeStamp')
+    component.setText('')
+
+    component = PSE.getComponentByName(frame, 'commitName')
+    component.setText('')
 
     configFile = PSE.readConfigFile()
     configFile['Throwback'].update({'SS':[['', '']]})

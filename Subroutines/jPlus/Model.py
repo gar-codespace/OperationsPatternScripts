@@ -22,9 +22,37 @@ def resetConfigFileItems():
     configFile['Main Script']['LD']['TR'] = ''
     configFile['Main Script']['LD']['YR'] = ''
     configFile['Main Script']['LD']['JN'] = ''
-    configFile['Main Script']['LD']['RN'] = ''
 
     PSE.writeConfigFile(configFile)
+
+    return
+
+def refreshSubroutine():
+
+    configFile = PSE.readConfigFile()
+
+    frameName = PSE.getBundleItem('Pattern Scripts')
+    frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
+
+    component = PSE.getComponentByName(frame, 'operatingRoad')
+    value = configFile['Main Script']['LD']['OR']
+    component.setText(value)
+
+    component = PSE.getComponentByName(frame, 'territory')
+    value = configFile['Main Script']['LD']['TR']
+    component.setText(value)
+
+    component = PSE.getComponentByName(frame, 'location')
+    value = configFile['Main Script']['LD']['LO']
+    component.setText(value)
+
+    component = PSE.getComponentByName(frame, 'yearModeled')
+    value = configFile['Main Script']['LD']['YR']
+    component.setText(value)
+
+    component = PSE.getComponentByName(frame, 'useExtended')
+    flag = configFile['Main Script']['CP']['EH']
+    component.setSelected(flag)
 
     return
 
@@ -45,7 +73,7 @@ def updateRailroadDetails(widgets):
 def extendedRailroadDetails():
     """
     Two additional details:
-    Railroad Name ['RN'] and jPlus Composite Name ['JN'] are added to ['Main Script']['LD']
+    The jPlus Composite Name ['JN'] is added to ['Main Script']['LD']
     Called on jPlus refresh
     """
 
@@ -54,10 +82,11 @@ def extendedRailroadDetails():
     configFile = PSE.readConfigFile()
     layoutDetails = configFile['Main Script']['LD']
     OSU = PSE.JMRI.jmrit.operations.setup
-
-    layoutDetails.update({'RN':OSU.Setup.getRailroadName()})
+    OSU.Setup.setYearModeled(configFile['Main Script']['LD']['YR'])
 
     layoutDetails.update({'JN':PSE.makeCompositRailroadName(layoutDetails)})
+
+    configFile['Main Script']['CP'].update({'EH':True})
 
     PSE.writeConfigFile(configFile)
 

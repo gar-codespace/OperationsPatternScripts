@@ -14,9 +14,6 @@ SCRIPT_REV = 20230201
 class subroutineGui:
 
     def __init__(self):
-        """
-        The *.setName value is the name of the action for the widget.
-        """
 
         self.controlWidgets = []
         self.displayWidgets = []
@@ -25,7 +22,9 @@ class subroutineGui:
         return
 
     def guiMaker(self):
-        """Make the GUI here."""
+        """
+        Make the GUI here.
+        """
 
         snapShot = self.configFile['Throwback']['SS']
 

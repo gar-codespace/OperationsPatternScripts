@@ -15,6 +15,20 @@ SCRIPT_REV = 20230201
 
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.Model')
 
+def resetConfigFileItems():
+
+    # configFile =  PSE.readConfigFile()
+
+    # PSE.writeConfigFile(configFile)
+
+    return
+
+def refreshSubroutine():
+
+    # configFile = PSE.readConfigFile()
+
+    return
+
 def resetBuiltTrains():
     """
     Resets all the trains that are built.
@@ -35,7 +49,7 @@ def initializeJmriRailroad():
     Controller.StartUp.initializeJmriRailroad
     """
 
-    PSE.remoteCalls('deactivatedCalls')
+    # PSE.remoteCalls('deactivatedCalls')
 
     PSE.DM.dispose()
     PSE.SM.dispose()
@@ -51,8 +65,8 @@ def initializeJmriRailroad():
 
     Initializer().Initialize()
 
-    PSE.remoteCalls('resetCalls')
-    PSE.remoteCalls('activatedCalls')
+    # PSE.remoteCalls('resetCalls')
+    # PSE.remoteCalls('activatedCalls')
 
     _psLog.info('JMRI data has been reset')
 
@@ -69,7 +83,7 @@ def updateJmriLocations():
     Controller.StartUp.updateJmriLocations
     """
 
-    PSE.remoteCalls('deactivatedCalls')
+    # PSE.remoteCalls('deactivatedCalls')
 
 # This part does the locations
     locationator = Locationator()
@@ -110,7 +124,7 @@ def updateJmriLocations():
 # This part does the extended header
     ExtendedDetails().update()
 
-    PSE.remoteCalls('activatedCalls')
+    # PSE.remoteCalls('activatedCalls')
 
     return
 
@@ -124,7 +138,7 @@ def updateJmriTracks():
     Controller.Startup.updateJmriTracks
     """
 
-    PSE.remoteCalls('deactivatedCalls')
+    # PSE.remoteCalls('deactivatedCalls')
 
     Attributator().updateRsAttributes()
 
@@ -152,7 +166,7 @@ def updateJmriTracks():
 # This part does the extended header
     ExtendedDetails().update()
 
-    PSE.remoteCalls('activatedCalls')
+    # PSE.remoteCalls('activatedCalls')
 
     return
 
@@ -167,7 +181,7 @@ def updateJmriRollingingStock():
     Controller.Startup.updateJmriRollingingStock
     """
 
-    PSE.remoteCalls('deactivatedCalls')
+    # PSE.remoteCalls('deactivatedCalls')
 
     Attributator().updateRsAttributes()
 
@@ -183,7 +197,7 @@ def updateJmriRollingingStock():
 # This part does the extended header
     ExtendedDetails().update()
 
-    PSE.remoteCalls('activatedCalls')
+    # PSE.remoteCalls('activatedCalls')
     
     return
 
@@ -413,7 +427,6 @@ class Resetter:
         self.configFile['Main Script']['LD'].update({"LN":""})
         self.configFile['Main Script']['LD'].update({"LO":""})
         self.configFile['Main Script']['LD'].update({"OR":""})
-        self.configFile['Main Script']['LD'].update({"RN":""})
         self.configFile['Main Script']['LD'].update({"SC":""})
         self.configFile['Main Script']['LD'].update({"TR":""})
         self.configFile['Main Script']['LD'].update({"YR":""})

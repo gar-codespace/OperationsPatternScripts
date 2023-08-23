@@ -36,7 +36,6 @@ def getSubroutineDropDownItem():
 
     menuItem.setName(__package__)
     menuItem.setText(menuText)
-    menuItem.removeActionListener(Listeners.actionListener)
     menuItem.addActionListener(Listeners.actionListener)
 
     return menuItem
@@ -47,40 +46,29 @@ class StartUp:
     Start the Patterns subroutine.
     """
 
-    def __init__(self, subroutineFrame=None):
+    def __init__(self):
 
-        self.subroutineFrame = subroutineFrame
+        self.configFile = PSE.readConfigFile()
 
         return
 
-    def getSubroutineFrame(self):
+    def getSubroutine(self):
         """
-        Gets the title border frame.
-        """
-
-        self.subroutineFrame = View.ManageGui().makeSubroutineFrame()
-        subroutineGui = self.getSubroutineGui()
-        self.subroutineFrame.add(subroutineGui)
-
-        _psLog.info('Patterns makeFrame completed')
-
-        return self.subroutineFrame
-
-    def getSubroutineGui(self):
-        """
-        Gets the GUI for this subroutine.
+        Returns the subroutine and activates the widgets.
         """
 
-        # Model.initializeComboBoxes()
-
-        subroutineGui, self.widgets = View.ManageGui().makeSubroutineGui()
+        subroutine, self.widgets = View.ManageGui().makeSubroutine()
+        subroutineName = __package__.split('.')[1]
+        subroutine.setVisible(self.configFile[subroutineName]['SV'])
         self.activateWidgets()
 
-        return subroutineGui
+        _psLog.info(__package__ + ' makeFrame completed')
+
+        return subroutine
 
     def startUpTasks(self):
         """
-        Run these tasks when this subroutine is started.
+        Seed the GUI with values stored in the config file.
         """
 
         return
@@ -106,7 +94,7 @@ class StartUp:
         configFile['Patterns'].update({'PA': self.widgets[2].selected})
         PSE.writeConfigFile(configFile)
 
-        PSE.restartSubroutineByName(__package__)
+        Model.trackRowManager()
         
         return
 
@@ -117,8 +105,10 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        Model.updateConfigFile(self.widgets)
-        selectedTracks = [trackCheckBox.text for trackCheckBox in self.widgets[3] if trackCheckBox.selected]
+        # Model.updateConfigFile(self.widgets)
+        # selectedTracks = [trackCheckBox.text for trackCheckBox in self.widgets[3] if trackCheckBox.selected]
+        configFile = PSE.readConfigFile()
+        selectedTracks = [track for track, flag in configFile['Patterns']['PT'].items() if flag]
         selectedTracks.sort()
 
         PSE.makeReportItemWidthMatrix()
@@ -141,8 +131,10 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        Model.updateConfigFile(self.widgets)
-        selectedTracks = [trackCheckBox.text for trackCheckBox in self.widgets[3] if trackCheckBox.selected]
+        # Model.updateConfigFile(self.widgets)
+        # selectedTracks = [trackCheckBox.text for trackCheckBox in self.widgets[3] if trackCheckBox.selected]
+        configFile = PSE.readConfigFile()
+        selectedTracks = [track for track, flag in configFile['Patterns']['PT'].items() if flag]
         selectedTracks.sort()
  
         PSE.makeReportItemWidthMatrix()
