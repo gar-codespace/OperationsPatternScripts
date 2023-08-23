@@ -22,18 +22,12 @@ class ManageGui:
     def makeSubroutine(self):
         """
         Makes the complete subroutine.
-        """
+        """       
 
-        subroutineFrame = PSE.JAVX_SWING.JPanel()
-        subroutineFrame.setName(__package__)
-        subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Throwback Subroutine'))        
-
-        subroutineGui = GUI.subroutineGui()
-        gui = subroutineGui.guiMaker()
-
-        subroutineFrame.add(gui)
-        widgets = subroutineGui.guiWidgetGetter()
+        subroutine = GUI.subroutineGui()
+        gui = subroutine.guiMaker()
+        widgets = subroutine.guiWidgetGetter()
     
-        return subroutineFrame, widgets
+        return gui, widgets
 
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

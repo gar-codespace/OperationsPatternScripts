@@ -24,44 +24,10 @@ class ManageGui:
         Makes the complete subroutine.
         """
 
-        subroutineFrame = PSE.JAVX_SWING.JPanel()
-        subroutineFrame.setName(__package__)
-        subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('jPlus Subroutine'))        
-
-        subroutineGui = GUI.subroutineGui()
-        gui = subroutineGui.guiMaker()
-
-        subroutineFrame.add(gui)
-        widgets = subroutineGui.guiWidgetGetter()
+        subroutine = GUI.subroutineGui()
+        gui = subroutine.guiMaker()
+        widgets = subroutine.guiWidgetGetter()
     
-        return subroutineFrame, widgets
-
-
-
-
-
-    # def makeSubroutineFrame(self):
-    #     """
-    #     Make the frame that all the jPlus controls are added to.
-    #     """
-
-    #     subroutineFrame = PSE.JAVX_SWING.JPanel() # the track pattern panel
-    #     subroutineFrame.setName(__package__)
-    #     subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('jPlus Subroutine'))        
-
-    #     return subroutineFrame
-
-    # def makeSubroutineGui(self):
-    #     """
-    #     Make the jPlus GUI.
-    #     """
-
-    #     _psLog.debug('jPlusSubroutine.View.makeSubroutineGui')
-
-    #     subroutineGui = GUI.subroutineGui()
-    #     gui = subroutineGui.guiMaker()
-    #     widgets = subroutineGui.guiWidgetGetter()
-
-    #     return gui, widgets
+        return gui, widgets
 
     print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

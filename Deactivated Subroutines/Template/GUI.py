@@ -20,6 +20,17 @@ class subroutineGui:
 
         return
 
+    def getGuiFrame(self):
+        """
+        The title border panel the whole GUI is set into.
+        """
+
+        subroutineFrame = PSE.JAVX_SWING.JPanel()
+        subroutineFrame.setName(__package__)
+        subroutineFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Template Subroutine'))
+
+        return subroutineFrame
+    
     def guiMaker(self):
         """Make the GUI here."""
 
@@ -35,7 +46,10 @@ class subroutineGui:
         tpPanel.add(nrButton)
         # tpPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
 
-        return tpPanel
+        guiFrame = self.getGuiFrame()
+        guiFrame.add(tpPanel)
+        
+        return guiFrame
 
     def guiWidgetGetter(self):
         """
