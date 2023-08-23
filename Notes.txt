@@ -2,8 +2,8 @@ Todo:
   How to publish DeepL?
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
   Duplication of PSE chunkPath.
-  Test plugin without an internet connection. Bundle.validateKeyFile
   Listeners.removePatternListeners() does not work.
+  jPlus does not interact with settings.
   
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -44,6 +44,7 @@ Tested Items:
     Added PSE.getBundleItem(item) to centralize bundle translation OK.
     Turn on auto save in settings OK.
     Authenticate the DeepL key in translators OK.
+    Harden translator.testTranslationService() for web connection OK.
 
   Language Bundle
     Plugin and help bundles validate OK.
