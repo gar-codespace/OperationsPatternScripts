@@ -635,11 +635,24 @@ def getAllTracks():
 
     return trackList
 
-def getJmriRailroadName():
+def getOpsProSettingsItems():
+    """
+    From JMRI settings, get railroad name, year modeled, and scale.
+    """
+
+    items = {}
+    scaleRubric = readConfigFile('Main Script')['SR']
+    scaleRubric = {sIndex:sScale for sScale, sIndex in scaleRubric.items()}
 
     OSU = JMRI.jmrit.operations.setup
+    scale = scaleRubric[OSU.Setup.getScale()]
 
-    return unicode(OSU.Setup.getRailroadName(), ENCODING)
+
+    items['YR'] = OSU.Setup.getYearModeled()
+    items['LN'] = OSU.Setup.getRailroadName()
+    items['SC'] = scale
+
+    return items
 
 def getExtendedRailroadName():
     """

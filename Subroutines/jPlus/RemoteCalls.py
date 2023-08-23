@@ -21,8 +21,6 @@ def deactivatedCalls():
     Methods called when this subroutine is deactivated.
     """
 
-    # Model.extendedHeaderActivator(False)
-
     return
 
 def refreshCalls():

@@ -17,15 +17,9 @@ _psLog = PSE.LOGGING.getLogger('OPS.o2o.Model')
 
 def resetConfigFileItems():
 
-    # configFile =  PSE.readConfigFile()
-
-    # PSE.writeConfigFile(configFile)
-
     return
 
 def refreshSubroutine():
-
-    # configFile = PSE.readConfigFile()
 
     return
 

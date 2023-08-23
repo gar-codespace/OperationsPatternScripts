@@ -91,6 +91,8 @@ class StartUp:
 
         Model.updateRailroadDetails(self.widgets['panel'])
         Model.extendedRailroadDetails()
+        Model.pushDetailsToJmri()
+        Model.refreshOperationsSettingsFrame()
         PSE.remoteCalls('refreshCalls')
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

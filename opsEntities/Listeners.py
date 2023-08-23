@@ -160,7 +160,7 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
 
         _psLog.debug(WINDOW_ACTIVATED)
 
-        # PSE.remoteCalls('refreshCalls')
+        PSE.remoteCalls('refreshCalls')
 
         return
 

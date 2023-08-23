@@ -20,7 +20,7 @@ def resetConfigFileItems():
     configFile['Main Script']['LD']['OR'] = ''
     configFile['Main Script']['LD']['SC'] = ''
     configFile['Main Script']['LD']['TR'] = ''
-    configFile['Main Script']['LD']['YR'] = ''
+    configFile['Main Script']['LD']['yearModeled'] = ''
     configFile['Main Script']['LD']['JN'] = ''
 
     PSE.writeConfigFile(configFile)
@@ -28,6 +28,9 @@ def resetConfigFileItems():
     return
 
 def refreshSubroutine():
+    """
+    Pulls config file and ops pro settings data into the jPlus frame.
+    """
 
     configFile = PSE.readConfigFile()
 
@@ -46,23 +49,31 @@ def refreshSubroutine():
     value = configFile['Main Script']['LD']['LO']
     component.setText(value)
 
-    component = PSE.getComponentByName(frame, 'yearModeled')
-    value = configFile['Main Script']['LD']['YR']
-    component.setText(value)
-
     component = PSE.getComponentByName(frame, 'useExtended')
     flag = configFile['Main Script']['CP']['EH']
     component.setSelected(flag)
 
+    opsProSettingsItems = PSE.getOpsProSettingsItems()
+    component = PSE.getComponentByName(frame, 'yearModeled')
+    component.setText(opsProSettingsItems['YR'])
+
+    configFile['Main Script']['LD'].update({'YR':opsProSettingsItems['YR']})
+    configFile['Main Script']['LD'].update({'LN':opsProSettingsItems['LN']})
+    configFile['Main Script']['LD'].update({'SC':opsProSettingsItems['SC']})
+    PSE.writeConfigFile(configFile)
+
+    print(PSE.getOpsProSettingsItems())
+
     return
 
 def updateRailroadDetails(widgets):
+    """
+    Pushes data in the jPlus frame into the config file.
+    """
 
     configFile = PSE.readConfigFile()
     for id, widget in widgets.items():
         configFile['Main Script']['LD'].update({id:widget.getText()})
-
-    configFile['Main Script']['LD'].update({'LN':PSE.getJmriRailroadName()})
 
     configFile['Main Script']['CP'].update({'EH':True})
 
@@ -72,54 +83,52 @@ def updateRailroadDetails(widgets):
 
 def extendedRailroadDetails():
     """
-    Two additional details:
-    The jPlus Composite Name ['JN'] is added to ['Main Script']['LD']
-    Called on jPlus refresh
+    Creates the composite railroad name from jPlus fields. 
+    The jPlus composite name ['JN'] is added to ['Main Script']['LD']
+    Sets 'use extended header' to True.
     """
 
     _psLog.debug('extendedRailroadDetails')
 
     configFile = PSE.readConfigFile()
+
     layoutDetails = configFile['Main Script']['LD']
-    OSU = PSE.JMRI.jmrit.operations.setup
-    OSU.Setup.setYearModeled(configFile['Main Script']['LD']['YR'])
+    compositeRailroadName = PSE.makeCompositRailroadName(layoutDetails)
 
-    layoutDetails.update({'JN':PSE.makeCompositRailroadName(layoutDetails)})
-
+    configFile['Main Script']['LD'].update({'JN':compositeRailroadName})
     configFile['Main Script']['CP'].update({'EH':True})
 
     PSE.writeConfigFile(configFile)
 
     return
 
-def updateYearModeled():
+def pushDetailsToJmri():
     """
-    Writes the JMRI year modeled from settings into the jPlus Year Modeled text box.
-    Called by:
+    Pushes year modeled to JMRI settings.
     """
 
-    _psLog.debug('updateYearModeled')
-
-    OSU = PSE.JMRI.jmrit.operations.setup
-    jmriYear = OSU.Setup.getYearModeled()
+    _psLog.debug('pushDetailsToJmri')
 
     configFile = PSE.readConfigFile()
-    configFile['Main Script']['LD'].update({'YR':jmriYear})
-    PSE.writeConfigFile(configFile)
 
-    frameTitle = PSE.getBundleItem('Pattern Scripts')        
-    targetPanel = PSE.getComponentByName(frameTitle, 'yearModeled')
-    targetPanel.setText(jmriYear)
+    OSU = PSE.JMRI.jmrit.operations.setup
+    OSU.Setup.setYearModeled(configFile['Main Script']['LD']['YR'])
+
+    PSE.JMRI.jmrit.operations.setup.OperationsSettingsPanel().savePreferences()
 
     return
 
-def extendedHeaderActivator(state):
+def refreshOperationsSettingsFrame():
     """
-    Sets configFile['Main Script]['CP']['EH"] to true or false.
+    Kind of a BS way to do this but I can't find any listeners.
     """
 
-    configFile = PSE.readConfigFile()
-    configFile['Main Script']['CP'].update({'EH':state})
-    PSE.writeConfigFile(configFile)
+    title = PSE.JMRI.jmrit.operations.setup.Bundle().handleGetMessage('TitleOperationsSetup')
+    for frame in PSE.JMRI.util.JmriJFrame.getFrameList():
+        if frame.getTitle() == title:
+            frame.setVisible(False)
+            frame.dispose()
+            x = PSE.JMRI.jmrit.operations.setup.OperationsSettingsFrame()
+            x.setVisible(True)
 
     return

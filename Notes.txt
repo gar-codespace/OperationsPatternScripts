@@ -2,7 +2,7 @@ Todo:
   How to publish DeepL?
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
   Duplication of PSE chunkPath.
-  jPlus does not interact with settings.
+  jPlus update button calls refresh twice.
   
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -59,6 +59,7 @@ Tested Items:
     Extended RR details works with Patterns report OK.
     Plays well with o2o.
     Implement 'Use Extended Header' checkBox OK.
+    Improve jPlus and JMRI OperationsSettingsPanel interoperability OK.
 
   Patterns
     Subroutine turns on and off OK.
