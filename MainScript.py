@@ -321,8 +321,6 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         buildThePlugin(View())
 
-        PSE.remoteCalls('activatedCalls')
-
         return
 
     def handle(self):

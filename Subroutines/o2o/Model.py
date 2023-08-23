@@ -49,8 +49,6 @@ def initializeJmriRailroad():
     Controller.StartUp.initializeJmriRailroad
     """
 
-    # PSE.remoteCalls('deactivatedCalls')
-
     PSE.DM.dispose()
     PSE.SM.dispose()
     PSE.LM.dispose()
@@ -64,9 +62,6 @@ def initializeJmriRailroad():
     resetData.configFileResetter()
 
     Initializer().Initialize()
-
-    # PSE.remoteCalls('resetCalls')
-    # PSE.remoteCalls('activatedCalls')
 
     _psLog.info('JMRI data has been reset')
 
@@ -82,8 +77,6 @@ def updateJmriLocations():
     Called by:
     Controller.StartUp.updateJmriLocations
     """
-
-    # PSE.remoteCalls('deactivatedCalls')
 
 # This part does the locations
     locationator = Locationator()
@@ -124,8 +117,6 @@ def updateJmriLocations():
 # This part does the extended header
     ExtendedDetails().update()
 
-    # PSE.remoteCalls('activatedCalls')
-
     return
 
 def updateJmriTracks():
@@ -137,8 +128,6 @@ def updateJmriTracks():
     Called by:
     Controller.Startup.updateJmriTracks
     """
-
-    # PSE.remoteCalls('deactivatedCalls')
 
     Attributator().updateRsAttributes()
 
@@ -166,8 +155,6 @@ def updateJmriTracks():
 # This part does the extended header
     ExtendedDetails().update()
 
-    # PSE.remoteCalls('activatedCalls')
-
     return
 
 def updateJmriRollingingStock():
@@ -180,8 +167,6 @@ def updateJmriRollingingStock():
     Called by:
     Controller.Startup.updateJmriRollingingStock
     """
-
-    # PSE.remoteCalls('deactivatedCalls')
 
     Attributator().updateRsAttributes()
 
@@ -196,8 +181,6 @@ def updateJmriRollingingStock():
 
 # This part does the extended header
     ExtendedDetails().update()
-
-    # PSE.remoteCalls('activatedCalls')
     
     return
 

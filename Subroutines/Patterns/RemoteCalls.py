@@ -18,7 +18,6 @@ def activatedCalls():
     Methods called when this subroutine is activated.
     """
 
-    Listeners.removePatternListeners()
     Listeners.addPatternsListeners()
 
     return

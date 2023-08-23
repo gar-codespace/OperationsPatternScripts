@@ -2,7 +2,6 @@ Todo:
   How to publish DeepL?
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
   Duplication of PSE chunkPath.
-  Listeners.removePatternListeners() does not work.
   jPlus does not interact with settings.
   
 Comments:
@@ -100,6 +99,7 @@ Tested Items:
     On generate switch list, firePropertyChange is executed to generate o2o list for TP OK.
     check on owner and ownerName in config file report width
     'AD' is depricated.
+    Adds and removes Divisions and Locations listeners OK.
 
   o2o
     Import-

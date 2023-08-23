@@ -47,7 +47,7 @@ def actionListener(EVENT):
     return
 
 
-class ComboBoxPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
+class DivisionsLocationsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     """
     """
 
@@ -61,58 +61,77 @@ class ComboBoxPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
             PSE.remoteCalls('refreshCalls')
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
-            print(SCRIPT_NAME + '.ComboBoxPropertyChange.divisionsListLength')
+            print(SCRIPT_NAME + '.DivisionsLocationsPropertyChange.divisionsListLength')
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'divisionName':
             PSE.remoteCalls('refreshCalls')
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
-            print(SCRIPT_NAME + '.ComboBoxPropertyChange.divisionName')
+            print(SCRIPT_NAME + '.DivisionsLocationsPropertyChange.divisionName')
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'locationsListLength':
             PSE.remoteCalls('refreshCalls')
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
-            print(SCRIPT_NAME + '.ComboBoxPropertyChange.locationsListLength')
+            print(SCRIPT_NAME + '.DivisionsLocationsPropertyChange.locationsListLength')
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'locationName':
             PSE.remoteCalls('refreshCalls')
             
             _psLog.debug(PROPERTY_CHANGE_EVENT)
-            print(SCRIPT_NAME + '.ComboBoxPropertyChange.locationName')
+            print(SCRIPT_NAME + '.DivisionsLocationsPropertyChange.locationName')
 
         return
     
 
 def addPatternsListeners():
-
-    PSE.DM.addPropertyChangeListener(ComboBoxPropertyChange())
-    PSE.LM.addPropertyChangeListener(ComboBoxPropertyChange())
+    """
+    Adds DivisionsLocationsPropertyChange to divisions and locations.
+    """
+# Divisions
+    PSE.DM.addPropertyChangeListener(DivisionsLocationsPropertyChange())
+    _psLog.debug('Add divisions list length listener')
 
     for division in PSE.DM.getList():
-        division.addPropertyChangeListener(ComboBoxPropertyChange())
+        division.addPropertyChangeListener(DivisionsLocationsPropertyChange())
+        _psLog.debug('Add division name change listener')
+# Locations
+    PSE.LM.addPropertyChangeListener(DivisionsLocationsPropertyChange())
+    _psLog.debug('Add locations list length listener')
 
     for location in PSE.LM.getList():
-        location.addPropertyChangeListener(ComboBoxPropertyChange())
-        
-    print('Patterns.activatedCalls.Listeners.addDivisionsListeners')
-    print('Patterns.activatedCalls.Listeners.addLocationsListeners')
+        location.addPropertyChangeListener(DivisionsLocationsPropertyChange())
+        _psLog.debug('Add location name change listener')
 
     return
 
 def removePatternListeners():
-
-    PSE.DM.removePropertyChangeListener(ComboBoxPropertyChange())
-    PSE.LM.removePropertyChangeListener(ComboBoxPropertyChange())
+    """
+    Removes DivisionsLocationsPropertyChange from divisions and locations.
+    """
+# Divisions
+    for listener in PSE.DM.getPropertyChangeListeners():
+        if isinstance(listener, DivisionsLocationsPropertyChange):
+            PSE.DM.removePropertyChangeListener(listener)
+            _psLog.debug('Remove divisions list length listener')
 
     for division in PSE.DM.getList():
-        division.removePropertyChangeListener(ComboBoxPropertyChange())
+        for listener in division.getPropertyChangeListeners():
+            if isinstance(listener, DivisionsLocationsPropertyChange):
+                division.removePropertyChangeListener(listener)
+                _psLog.debug('Remove division name change listener')
+# Locations
+    for listener in PSE.LM.getPropertyChangeListeners():
+        if isinstance(listener, DivisionsLocationsPropertyChange):
+            PSE.LM.removePropertyChangeListener(listener)
+            _psLog.debug('Remove locations list length listener')
 
     for location in PSE.LM.getList():
-        location.removePropertyChangeListener(ComboBoxPropertyChange())
+        for listener in location.getPropertyChangeListeners():
+            if isinstance(listener, DivisionsLocationsPropertyChange):
+                location.removePropertyChangeListener(listener)
+                _psLog.debug('Remove location name change listener')
 
-    print('Patterns.deactivatedCalls.Listeners.removeDivisionListeners')
-    print('Patterns.deactivatedCalls.Listeners.removeLocationListeners')
     return
     
 
