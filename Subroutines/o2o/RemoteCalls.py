@@ -14,7 +14,7 @@ def activatedCalls():
     Methods called when this subroutine is activated.
     """
 
-    Listeners.removeTrainsListener()
+    Listeners.addTrainsTableListener()
     Listeners.addTrainsListener()
 
     return
@@ -24,6 +24,7 @@ def deactivatedCalls():
     Methods called when this subroutine is deactivated.
     """
 
+    Listeners.removeTrainsTableListener()
     Listeners.removeTrainsListener()
 
     return

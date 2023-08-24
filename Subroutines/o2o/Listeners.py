@@ -55,21 +55,40 @@ def addTrainsTableListener():
     return
 
 def addTrainsListener():
+    """
+    Adds a listener to each train.
+    """
 
     for train in PSE.TM.getTrainsByIdList():
         train.addPropertyChangeListener(TrainsPropertyChange())
 
+    print('o2o.Listeners.addTrainsListener')
+    _psLog.debug('o2o.Listeners.addTrainsListener')
+
+    return
+
+def removeTrainsTableListener():
+
+    for listener in PSE.TM.getPropertyChangeListeners():
+        if isinstance(listener, TrainsPropertyChange):
+            PSE.TM.removePropertyChangeListener(listener)
+            print('o2o.Listeners.removeTrainsTableListener')
+            _psLog.debug('o2o.Listeners.removeTrainsTableListener')
+
     return
 
 def removeTrainsListener():
+    """
+    Removes the listener attached to each train.
+    """
 
     for train in PSE.TM.getTrainsByIdList():
         for listener in train.getPropertyChangeListeners():
             if isinstance(listener, TrainsPropertyChange):
                 train.removePropertyChangeListener(listener)
 
-    print('o2o.Listeners.removeTrainsTableListener')
-    _psLog.debug('o2o.Listeners.removeTrainsTableListener')
+    print('o2o.Listeners.removeTrainsListener')
+    _psLog.debug('o2o.Listeners.removeTrainsListener')
 
     return
 

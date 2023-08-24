@@ -140,7 +140,7 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         WINDOW_CLOSING.getSource().removeWindowListener(PatternScriptsWindow())
         WINDOW_CLOSING.getSource().dispose()
         PSE.remoteCalls('deactivatedCalls')
-        # PSE.turnOffSubroutines()
+        print('deactivatedCalls')
             
         return
 
@@ -151,8 +151,10 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         PSE.getPsButton().setEnabled(False)
 
         PSE.remoteCalls('activatedCalls')
+        print('activatedCalls')
 
-        PSE.remoteCalls('refreshCalls')
+        # PSE.remoteCalls('refreshCalls')
+        # print('refreshCalls')
 
         return
 
@@ -161,6 +163,7 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         _psLog.debug(WINDOW_ACTIVATED)
 
         PSE.remoteCalls('refreshCalls')
+        print('refreshCalls')
 
         return
 

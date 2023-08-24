@@ -62,8 +62,6 @@ def refreshSubroutine():
     configFile['Main Script']['LD'].update({'SC':opsProSettingsItems['SC']})
     PSE.writeConfigFile(configFile)
 
-    print(PSE.getOpsProSettingsItems())
-
     return
 
 def updateRailroadDetails(widgets):
