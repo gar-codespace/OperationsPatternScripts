@@ -15,7 +15,9 @@ _psLog = PSE.LOGGING.getLogger('OPS.OE.Listeners')
 
 
 def ptItemSelected(TRANSLATE_PLUGIN_EVENT):
-    """Pattern Scripts/Tools/Translate Plugin"""
+    """
+    Pattern Scripts/Tools/Translate Plugin.
+    """
 
     _psLog.debug(TRANSLATE_PLUGIN_EVENT)
 
@@ -29,7 +31,9 @@ def ptItemSelected(TRANSLATE_PLUGIN_EVENT):
     return
 
 def ecItemSelected(OPEN_EC_EVENT):
-    """Pattern Scripts/Help/Edit Config File"""
+    """
+    Pattern Scripts/Help/Edit Config File.
+    """
 
     _psLog.debug(OPEN_EC_EVENT)
 
@@ -43,7 +47,9 @@ def ecItemSelected(OPEN_EC_EVENT):
     return
 
 def rsItemSelected(RESTART_PLUGIN_EVENT):
-    """Pattern Scripts/Tools/Restart From Default"""
+    """
+    Pattern Scripts/Tools/Restart From Default.
+    """
 
     _psLog.debug(RESTART_PLUGIN_EVENT)
 
@@ -59,7 +65,9 @@ def rsItemSelected(RESTART_PLUGIN_EVENT):
 
 
 def helpItemSelected(OPEN_HELP_EVENT):
-    """Pattern Scripts/Help/Window help..."""
+    """
+    Pattern Scripts/Help/Window help...
+    """
 
     _psLog.debug(OPEN_HELP_EVENT)
 
@@ -73,7 +81,9 @@ def helpItemSelected(OPEN_HELP_EVENT):
     return
 
 def ghItemSelected(OPEN_GH_EVENT):
-    """Pattern Scripts/Help/GitHub Page"""
+    """
+    Pattern Scripts/Help/GitHub Page.
+    """
 
     _psLog.debug(OPEN_GH_EVENT)
 
@@ -88,7 +98,9 @@ def ghItemSelected(OPEN_GH_EVENT):
     return
 
 def ofItemSelected(OPEN_OF_EVENT):
-    """Pattern Scripts/Help/Operations Folder"""
+    """
+    Pattern Scripts/Help/Operations Folder.
+    """
 
     _psLog.debug(OPEN_OF_EVENT)
 
@@ -103,7 +115,9 @@ def ofItemSelected(OPEN_OF_EVENT):
     return
 
 def logItemSelected(OPEN_LOG_EVENT):
-    """Pattern Scripts/Help/View Log"""
+    """
+    Pattern Scripts/Help/View Log.
+    """
 
     _psLog.debug(OPEN_LOG_EVENT)
 
@@ -118,7 +132,14 @@ def logItemSelected(OPEN_LOG_EVENT):
 
 
 class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
-    """Listener to respond to the plugin window operations."""
+    """
+    Listener to respond to the plugin window operations.
+    There's a bit of naming confusion here.
+    AWT.windowActivated means the window is the selected one on the desktop.
+    OPS.activatedCalls means the subroutines are activated, whether displayed or not.
+    Therefore opening the PatternScriptsWindow activates the subroutines.
+    Selecting the PatternScriptsWindow refreshes the subroutines.
+    """
 
     def __init__(self):
         
@@ -137,10 +158,11 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
     def windowClosing(self, WINDOW_CLOSING):
 
         PSE.updateWindowParams(WINDOW_CLOSING.getSource())
-        WINDOW_CLOSING.getSource().removeWindowListener(PatternScriptsWindow())
+
+        # WINDOW_CLOSING.getSource().removeWindowListener(PatternScriptsWindow())
         WINDOW_CLOSING.getSource().dispose()
+
         PSE.remoteCalls('deactivatedCalls')
-        print('deactivatedCalls')
             
         return
 
@@ -151,10 +173,6 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         PSE.getPsButton().setEnabled(False)
 
         PSE.remoteCalls('activatedCalls')
-        print('activatedCalls')
-
-        # PSE.remoteCalls('refreshCalls')
-        # print('refreshCalls')
 
         return
 
@@ -163,7 +181,6 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         _psLog.debug(WINDOW_ACTIVATED)
 
         PSE.remoteCalls('refreshCalls')
-        print('refreshCalls')
 
         return
 

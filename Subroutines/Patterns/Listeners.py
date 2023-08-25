@@ -50,9 +50,9 @@ def actionListener(EVENT):
 class DivisionsLocationsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     """
     A property change listener attached to:
-    The division table
+    The divisions table
     Each division
-    The location table
+    The locations table
     Each location
     """
 
@@ -63,29 +63,31 @@ class DivisionsLocationsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     def propertyChange(self, PROPERTY_CHANGE_EVENT):
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'divisionsListLength':
-            removeDivisionsListener()
-            addDivisionsListener()
-            PSE.remoteCalls('refreshCalls')
+            Model.divComboUpdater()
+            Model.locComboUpdater()
+            # Model.trackRowManager()
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
             print(SCRIPT_NAME + '.divisionsListLength')
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'divisionName':
-            PSE.remoteCalls('refreshCalls')
+            Model.divComboUpdater()
+            Model.locComboUpdater()
+            # Model.trackRowManager()
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
             print(SCRIPT_NAME + '.divisionName')
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'locationsListLength':
-            removeLocationsListener()
-            addLocationsListener()
-            PSE.remoteCalls('refreshCalls')
+            Model.locComboUpdater()
+            # Model.trackRowManager()
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
             print(SCRIPT_NAME + '.locationsListLength')
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'locationName':
-            PSE.remoteCalls('refreshCalls')
+            Model.locComboUpdater()
+            # Model.trackRowManager()
             
             _psLog.debug(PROPERTY_CHANGE_EVENT)
             print(SCRIPT_NAME + '.locationName')
@@ -185,11 +187,13 @@ class DivisionAction(PSE.JAVA_AWT.event.ActionListener):
 
     def __init__(self):
 
-        return
+        pass
 
     def actionPerformed(self, EVENT):
 
-        Model.divisionComboBoxManager(EVENT)
+        Model.divComboSelected(EVENT)
+        Model.locComboUpdater()
+        Model.trackRowManager()
 
         return
 
@@ -201,11 +205,12 @@ class LocationAction(PSE.JAVA_AWT.event.ActionListener):
 
     def __init__(self):
 
-        return
+        pass
 
     def actionPerformed(self, EVENT):
 
-        Model.locationComboBoxManager(EVENT)
+        Model.locComboSelected(EVENT)
+        Model.trackRowManager()
 
         return
 
@@ -217,7 +222,7 @@ class TextBoxEntry(PSE.JAVA_AWT.event.MouseAdapter):
 
     def __init__(self):
 
-        return
+        pass
 
     def mouseClicked(self, MOUSE_CLICKED):
 

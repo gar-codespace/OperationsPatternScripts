@@ -93,7 +93,7 @@ class StartUp:
         Model.extendedRailroadDetails()
         Model.pushDetailsToJmri()
         Model.refreshOperationsSettingsFrame()
-        PSE.remoteCalls('refreshCalls')
+        Model.refreshSubroutine()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

@@ -69,7 +69,9 @@ _psLog = LOGGING.getLogger('OPS.OE.PSE')
 
 
 class Logger:
-    """Homebrew logging."""
+    """
+    Homebrew logging.
+    """
 
     def __init__(self, logPath):
 
@@ -103,9 +105,6 @@ class Logger:
         log.critical('Initialize log file - CRITICAL level test message')
 
         return
-
-
-"""Logging Methods"""
 
 
 def makePatternLog():
@@ -170,135 +169,6 @@ def repaintPatternScriptsWindow():
         targetPanel.setVisible(configFile[subroutineName]['SV'])
 
     return
-
-# def refreshAllSubroutines():
-
-#     for subroutine in getSubroutineDirs():
-#         subroutine = 'Subroutines.' + subroutine
-#         refreshSubroutineByName(subroutine)
-#         # restartSubroutineByName(subroutine)
-
-#     return
-
-# def refreshSubroutineByName(subRoutineName):
-
-#     package = __import__(subRoutineName, globals(), locals(), ['Model'], 0)
-#     package.refreshSubroutine()
-
-#     return
-
-# def restartSubroutineByName(subRoutineName):
-#     """
-#     Finds the named subroutine in the plugin and restarts it.
-#     subroutineName: Subroutines.<subroutine>
-#     """
-
-#     print('restartSubroutineByName')
-
-#     frameName = getBundleItem('Pattern Scripts')
-#     frame = JMRI.util.JmriJFrame.getFrame(frameName)
-#     subroutine = getComponentByName(frameName, subRoutineName)
-
-#     print(frame.getComponents())
-
-
-
-#     # frame.removeAll()
-#     frame.remove(subroutine)
-#     frame.validate()
-#     frame.repaint()
-
-
-
-
-    # if subroutine:
-
-    #     package = __import__(subRoutineName, globals(), locals(), ['Controller'], 0)
-    #     # restart = package.Controller.StartUp(subroutine)
-    #     restart = package.Controller.StartUp()
-    #     restart.startUpTasks()
-    #     # try:
-    #     #     subroutinePanel = restart.getSubroutineGui()
-    #     # except:
-    #     #     subroutinePanel = restart.getSubroutineFrame()
-
-    #     subroutine.removeAll()
-    #     subroutinePanel = restart.getSubroutineFrame()
-    #     # subroutine.add(subroutinePanel)
-
-    #     subroutine.validate()
-    #     subroutine.repaint()
-
-    #     print('Restarted: ' + subRoutineName)
-    # else:
-    #     print('Not currently active: ' + subRoutineName)
-        
-    # return
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# def validateSubroutines():
-#     """
-#     Checks that each active subroutine has a True/False entry in ['Main Scripts']['CP'].
-#     """
-
-#     configFile = readConfigFile()
-
-#     for subroutine in getSubroutineDirs():
-#         subroutineName = 'Subroutines.' + subroutine
-#         try:
-#             configFile['Main Script']['CP'][subroutineName]
-#         except:
-#             print('Exception at: PSE.validateSubroutines')
-#             configFile['Main Script']['CP'][subroutineName] = True
-
-#     writeConfigFile(configFile)
-
-#     return
-
-# def addActiveSubroutines(targetPanel):
-#     """
-#     Adds the activated subroutines to the subroutinePanel of Pattern Scripts.
-#     """
-
-# #     configFile = readConfigFile()
-
-# # # Catch dynamic add or removal of a subroutine
-# #     for subroutine in getSubroutineDirs():
-# #         subroutineName = 'Subroutines.' + subroutine
-# #         try:
-# #             configFile['Main Script']['CP'][subroutineName]
-# #         except:
-# #             print('Exception at: PSE.addActiveSubroutines')
-# #             configFile['Main Script']['CP'][subroutineName] = True
-
-# #     writeConfigFile(configFile)
-#     configFile = readConfigFile()
-
-#     for subroutine in getSubroutineDirs():
-#         subroutineName = 'Subroutines.' + subroutine
-#         package = __import__(subroutineName, fromlist=['Controller'], level=-1)
-#         startUp = package.Controller.StartUp()
-#         startUp.startUpTasks()
-#         if configFile[subroutine]['SV']:
-#             subroutineFrame = startUp.getSubroutineFrame()
-#             targetPanel.add(subroutineFrame)
-
-#     targetPanel.add(JAVX_SWING.Box.createVerticalGlue())
-
-#     return targetPanel
 
 def closePsWindow():
 
@@ -452,21 +322,6 @@ def getPsButton():
             return component
         else:
             return None
-
-# def closeSetCarsWindows():
-#     """
-#     Close all the Set Cars windows when the Pattern Scripts window is closed.
-#     Called by:
-#     MainScript.Controller.closePsWindow
-#     Listeners.PatternScriptsWindow.windowClosing
-#     """
-
-#     for frame in JMRI.util.JmriJFrame.getFrameList():
-#         if frame.getName() == 'setCarsWindow':
-#             frame.setVisible(False)
-#             frame.dispose()
-
-#     return
 
 def closeOpsWindows(windowName):
     """
@@ -659,8 +514,9 @@ def getExtendedRailroadName():
     Returns either the extended railroad name or the JMRI railroad name.
     """
     configFile = readConfigFile()
+    OSU = JMRI.jmrit.operations.setup
     
-    railroadName = getJmriRailroadName()
+    railroadName = OSU.Setup.getRailroadName()
     if configFile['Main Script']['CP']['EH']:
         railroadName = configFile['Main Script']['LD']['JN']
 
@@ -985,38 +841,6 @@ def validateConfigFileComponents():
     writeConfigFile(configFile)
 
     return
-
-# def turnOnSubroutines():
-#     """
-#     Checks that each active subroutine has a config file entry.
-#     """
-
-#     configFile = readConfigFile()
-
-#     for subroutine in getSubroutineDirs():
-#         configFile['Main Script']['CP']['Subroutines.' + subroutine] = True
-
-#     writeConfigFile(configFile)
-
-#     return
-
-# def turnOffSubroutines():
-#     """
-#     All the subroutines listed in the configFile are set to False.
-#     turnOnSubroutines sets those subs in the Subroutines folder to true.
-#     """
-
-#     configFile = readConfigFile()
-#     cpItems = configFile['Main Script']['CP']
-#     for item, value in cpItems.items():
-#         if 'Subroutines.' in item:
-#             cpItems.update({item: False})
-
-#     configFile['Main Script']['CP'].update({'EH':False})
-
-#     writeConfigFile(configFile)
-
-#     return
 
 def getSubroutineDirs():
     """Returns a list of subroutine names in the Subroutines directory."""

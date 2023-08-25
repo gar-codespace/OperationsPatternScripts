@@ -10,31 +10,43 @@ from Subroutines.Template import Model
 
 
 def activatedCalls():
-    """Methods called when this subroutine is activated."""
+    """
+    Methods called when this subroutine is activated.
+    """
+
+    Model.initializeSubroutine()
 
     return
 
 def deactivatedCalls():
-    """Methods called when this subroutine is deactivated."""
+    """
+    Methods called when this subroutine is deactivated.
+    """
 
     return
 
 def refreshCalls():
-    """Methods called when the subroutine needs to be refreshed."""
+    """
+    Methods called when the subroutine needs to be refreshed.
+    """
 
     Model.refreshSubroutine()
     
     return
 
 def resetCalls():
-    """Methods called to reset this subroutine."""
+    """
+    Methods called to reset this subroutine.
+    """
 
     Model.resetConfigFileItems()
    
     return
     
 def specificCalls():
-    """Methods called to run specific tasks."""
+    """
+    Methods called to run specific tasks.
+    """
 
     return
     

@@ -15,6 +15,24 @@ SCRIPT_REV = 20230201
 
 _psLog = PSE.LOGGING.getLogger('OPS.PT.Model')
 
+def initializeSubroutine():
+    """
+    Called from PSE.remoteCalls('activatedCalls')
+    After the subroutine is built, set it to its' initial values.
+    """
+
+    configFile = PSE.readConfigFile()
+
+    divComboBox = divComboUpdater()
+    divComboBox.setSelectedItem(configFile['Patterns']['PD'])
+
+    locComboBox = locComboUpdater()
+    locComboBox.setSelectedItem(configFile['Patterns']['PL'])
+
+    trackRowManager()
+
+    return
+    
 def resetConfigFileItems():
     """
     Called from PSE.remoteCalls('resetCalls')
@@ -36,72 +54,87 @@ def resetConfigFileItems():
     return
 
 def refreshSubroutine():
-
-    divisionComboBoxManager()
+    """
+    Called from PSE.remoteCalls('refreshCalls')
+    """
 
     return
 
-def divisionComboBoxManager(EVENT=None):
+def divComboUpdater():
     """
-    Ripples the changes to the location combo box manager.
+    Updates the contents of the divisions combo box when the listerers detect a change.
     """
 
-    _psLog.debug('divisionComboBox')
+    _psLog.debug('divComboUpdater')
+    configFile = PSE.readConfigFile()
+
+    frameName = PSE.getBundleItem('Pattern Scripts')
+    frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
+    component = PSE.getComponentByName(frame, 'jDivisions')
+
+    component.removeAllItems()
+    component.addItem(None)
+    for divisionName in PSE.getAllDivisionNames():
+        component.addItem(divisionName)
+
+    configFile['Patterns'].update({'PD':None})
+    PSE.writeConfigFile(configFile)
+
+    return component
+
+def locComboUpdater():
+    """
+    Updates the contents of the locations combo box when the listerers detect a change.
+    """
+
+    _psLog.debug('locComboUpdater')
+    configFile = PSE.readConfigFile()
+
+    frameName = PSE.getBundleItem('Pattern Scripts')
+    frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
+
+    component = PSE.getComponentByName(frame, 'jLocations')
+    component.removeAllItems()
+    component.addItem(None)
+    for locationName in PSE.getLocationNamesByDivision(configFile['Patterns']['PD']):
+        component.addItem(locationName)
+
+    configFile['Patterns'].update({'PL':None})
+    PSE.writeConfigFile(configFile)
+
+    return component
+
+def divComboSelected(EVENT):
+    """
+    """
+
+    _psLog.debug('divComboSelected')
 
     configFile = PSE.readConfigFile()
 
-    if EVENT:
-        itemSelected = EVENT.getSource().getSelectedItem()
-        if not itemSelected:
-            itemSelected = None
+    itemSelected = EVENT.getSource().getSelectedItem()
+    if not itemSelected:
+        itemSelected = None
 
-        configFile['Patterns'].update({'PD': itemSelected})
-        PSE.writeConfigFile(configFile)
-    else:
-        frameName = PSE.getBundleItem('Pattern Scripts')
-        frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
-        component = PSE.getComponentByName(frame, 'jDivisions')
-        component.removeAllItems()
-        component.addItem(None)
-
-        for divisionName in PSE.getAllDivisionNames():
-            component.addItem(divisionName)
-
-        component.setSelectedItem(configFile['Patterns']['PD'])
-
-    locationComboBoxManager()
+    configFile['Patterns'].update({'PD': itemSelected})
+    PSE.writeConfigFile(configFile)
 
     return
 
-def locationComboBoxManager(EVENT=None):
+def locComboSelected(EVENT):
     """
-    Ripples the changes to the track row manager.
     """
 
-    _psLog.debug('locationComboBoxManager')
+    _psLog.debug('locComboSelected')
 
     configFile = PSE.readConfigFile()
 
-    if EVENT:
-        itemSelected = EVENT.getSource().getSelectedItem()
-        if not itemSelected:
-            itemSelected = None
+    itemSelected = EVENT.getSource().getSelectedItem()
+    if not itemSelected:
+        itemSelected = None
 
-        configFile['Patterns'].update({'PL': itemSelected})
-        PSE.writeConfigFile(configFile)
-    else:
-        frameName = PSE.getBundleItem('Pattern Scripts')
-        frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
-        component = PSE.getComponentByName(frame, 'jLocations')
-        component.removeAllItems()
-        component.addItem(None)
-
-        for locationName in PSE.getLocationNamesByDivision(configFile['Patterns']['PD']):
-            component.addItem(locationName)
-
-        component.setSelectedItem(configFile['Patterns']['PL'])
-
-    trackRowManager()
+    configFile['Patterns'].update({'PL': itemSelected})
+    PSE.writeConfigFile(configFile)
 
     return
 

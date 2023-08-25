@@ -18,6 +18,8 @@ def activatedCalls():
     Methods called when this subroutine is activated.
     """
 
+    Model.initializeSubroutine()
+
     Listeners.addDivisionsTableListener()
     Listeners.addLocationsTableListener()
     Listeners.addDivisionsListener()
@@ -27,7 +29,7 @@ def activatedCalls():
 
 def deactivatedCalls():
     """
-    ethods called when this subroutine is deactivated.
+    Methods called when this subroutine is deactivated.
     """
 
     Listeners.removeDivisionsTableListener()
@@ -44,7 +46,7 @@ def refreshCalls():
     """
     Methods called when the subroutine needs to be refreshed.
     """
-
+    
     Model.refreshSubroutine()
 
     return

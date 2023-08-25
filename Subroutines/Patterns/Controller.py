@@ -68,7 +68,7 @@ class StartUp:
 
     def startUpTasks(self):
         """
-        Seed the GUI with values stored in the config file.
+        Run these items when the subroutine starts.
         """
 
         return
