@@ -127,11 +127,10 @@ class CreateSetCarsFrame:
 
         reportName = PSE.getBundleItem('ops-switch-list')
         Model.getReportForPrint(reportName)
+        Model.trackPatternAsCsv(reportName)
 
     # Plays well with others
         PSE.TM.firePropertyChange('o2oSwitchList', False, True)
-    # CSV output
-        # Model.trackPatternAsCsv()
 
         MOUSE_CLICKED.getSource().setBackground(PSE.JAVA_AWT.Color.GREEN)
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

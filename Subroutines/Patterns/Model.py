@@ -158,7 +158,7 @@ def trackRowManager():
     component.removeAll()
     trackDict = getTrackDict()
     if trackDict:
-        for track, flag in trackDict.items():
+        for track, flag in sorted(trackDict.items()):
             trackCheckBox = deepcopy(checkBox)
             trackCheckBox.actionPerformed = trackCheckBoxAction
             trackCheckBox.setText(track)
@@ -258,24 +258,6 @@ def getStandins(rs, standins):
         fdStandin = standins['FD']
 
     return destStandin, fdStandin
-
-# def updateConfigFile(controls):
-#     """
-#     Updates the Patterns part of the config file
-#     Called by:
-#     Controller.StartUp.trackPatternButton
-#     Controller.StartUp.setCarsButton
-#     """
-
-#     _psLog.debug('updateConfigFile')
-
-#     configFile = PSE.readConfigFile()
-#     configFile['Patterns'].update({"PL": controls[1].getSelectedItem()})
-#     configFile['Patterns'].update({"PA": controls[2].selected})
-
-#     PSE.writeConfigFile(configFile)
-
-#     return controls
 
 def makeTrackPattern(selectedTracks):
     """
@@ -386,7 +368,7 @@ def writeReportForPrint(reportName, report):
 
     return targetPath
 
-def trackPatternAsCsv():
+def trackPatternAsCsv(reportName):
     """
     ops-pattern-report.json is written as a CSV file
     Called by:
@@ -398,7 +380,7 @@ def trackPatternAsCsv():
     if not PSE.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
         return
 #  Get json data
-    fileName = PSE.getBundleItem('ops-pattern-report')+ '.json'    
+    fileName = reportName + '.json'    
 
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
     trackPatternCsv = PSE.genericReadReport(targetPath)
@@ -406,7 +388,7 @@ def trackPatternAsCsv():
 # Process json data into CSV
     trackPatternCsv = makeTrackPatternCsv(trackPatternCsv)
 # Write CSV data
-    fileName = PSE.getBundleItem('ops-pattern-report') + '.csv'
+    fileName = reportName + '.csv'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'csvSwitchLists', fileName)
     PSE.genericWriteReport(targetPath, trackPatternCsv)
 
@@ -420,16 +402,16 @@ def makeTrackPatternCsv(trackPattern):
     Model.writeTrackPatternCsv
     """
 
-    trackPatternCsv = u'Operator,Description,Parameters\n' \
-                    u'RT,Report Type,' + trackPattern['trainDescription'] + '\n' \
-                    u'RD,Railroad Division,"' + trackPattern['division'] + '"\n' \
-                    u'LN,Location Name,' + trackPattern['locations'][0]['locationName'] + '\n' \
-                    u'PRNTR,Printer Name,\n' \
-                    u'YPC,Yard Pattern Comment,' + trackPattern['trainComment'] + '\n' \
-                    u'VT,Valid,' + trackPattern['date'] + '\n'
+    trackPatternCsv = u'Operator,Description,Parameters\n'
+    trackPatternCsv += u'RT,Report Type,' + trackPattern['trainDescription'] + '\n'
+    trackPatternCsv += u'RD,Railroad Division,' + str(trackPattern['division']) + '\n'
+    trackPatternCsv += u'LN,Location Name,' + trackPattern['location'] + '\n'
+    trackPatternCsv += u'PRNTR,Printer Name,\n'
+    trackPatternCsv += u'YPC,Yard Pattern Comment,' + trackPattern['trainComment'] + '\n'
+    trackPatternCsv += u'VT,Valid,' + trackPattern['date'] + '\n'
     trackPatternCsv += 'SE,Set Engines\n'
     trackPatternCsv += u'setTo,Road,Number,Type,Model,Length,Weight,Consist,Owner,Track,Location,Destination,Comment\n'
-    for track in trackPattern['locations'][0]['tracks']: # There is only one location
+    for track in trackPattern['tracks']:
         try:
             trackPatternCsv += u'TN,Track name,' + unicode(track['trackName'], PSE.ENCODING) + '\n'
         except:
@@ -452,7 +434,7 @@ def makeTrackPatternCsv(trackPattern):
                             + '\n'
     trackPatternCsv += 'SC,Set Cars\n'
     trackPatternCsv += u'setTo,Road,Number,Type,Length,Weight,Load,Load_Type,Hazardous,Color,Kernel,Kernel_Size,Owner,Track,Location,Destination,dest&Track,Final_Dest,fd&Track,Comment,Drop_Comment,Pickup_Comment,RWE\n'
-    for track in trackPattern['locations'][0]['tracks']: # There is only one location
+    for track in trackPattern['tracks']:
         try:
             trackPatternCsv += u'TN,Track name,' + unicode(track['trackName'], PSE.ENCODING) + '\n'
         except:
