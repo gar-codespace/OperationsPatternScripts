@@ -2,8 +2,9 @@ Throwback
 Throwback Subroutine
 Action
 Add New Commit
+Cancel
 Cars
-Confirm Delete
+Confirm
 Delete All Commits
 Engines
 Locations

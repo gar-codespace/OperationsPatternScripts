@@ -151,21 +151,40 @@ class StartUp:
 
         return
 
+    def getWidget(self, name):
+
+        for widget in self.widgets['control']:
+            if widget.getName() == name:
+                return widget
+
     def reset(self, EVENT):
         """
         Reset throwback.
         """
 
         firstPress = PSE.getBundleItem('Delete All Commits')
-        secondPress = PSE.getBundleItem('Confirm Delete')
+        secondPress = PSE.getBundleItem('Confirm')
 
         if EVENT.getSource().text == firstPress:
             EVENT.getSource().setText(secondPress)
+            self.getWidget('cancel').setVisible(True)
         else:
             Model.resetThrowBack()
             Model.refreshSubroutine()
             EVENT.getSource().setText(firstPress)
+            self.getWidget('cancel').setVisible(False)
+
             _psLog.info('Throwback subroutine reset')          
             print('Throwback subroutine reset')
+
+        return
+    
+    def cancel(self, EVENT):
+        """
+        Cancel the reset.
+        """
+
+        EVENT.getSource().setVisible(False)
+        self.getWidget('reset').setText(PSE.getBundleItem('Delete All Commits'))
 
         return

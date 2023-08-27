@@ -70,9 +70,16 @@ class subroutineGui:
         rsButton.setName('reset')
         self.controlWidgets.append(rsButton)
 
+        caButton = PSE.JAVX_SWING.JButton()
+        caButton.setText(PSE.getBundleItem('Cancel'))
+        caButton.setName('cancel')
+        caButton.setVisible(False)
+        self.controlWidgets.append(caButton)
+
         resetRow = PSE.JAVX_SWING.JPanel()
         resetRow.setName('resetRow')
         resetRow.add(rsButton)
+        resetRow.add(caButton)
 
         selectionFrame.add(inputRow)
         selectionFrame.add(commitRow)
