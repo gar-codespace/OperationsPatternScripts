@@ -17,7 +17,7 @@ class ManageGui:
 
     def __init__(self):
 
-        return
+        pass
 
     def makeSubroutine(self):
         """

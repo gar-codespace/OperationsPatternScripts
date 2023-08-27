@@ -431,9 +431,10 @@ def getAllDivisionNames():
 
     return divisionNames
 
-def getLocationNamesByDivision(divisionName):
+def getLocationNamesByDivision():
 
     locationsByDivision = []
+    divisionName = readConfigFile()['Patterns']['PD']
 
     if divisionName == None:
         for location in LM.getList():
@@ -908,11 +909,6 @@ def makeNewConfigFile():
             configFile[subroutine] = configChunk
 
     writeConfigFile(configFile)
-
-    # fileName = 'configFile.json'
-    # targetPath = OS_PATH.join(PROFILE_PATH, 'operations', fileName)
-    # targetFile = dumpJson(configFile)
-    # genericWriteReport(targetPath, targetFile)
 
     return
 

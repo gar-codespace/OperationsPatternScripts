@@ -100,7 +100,7 @@ class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
 
     def __init__(self):
 
-        return
+        pass
 
     def propertyChange(self, PROPERTY_CHANGE_EVENT):
 
