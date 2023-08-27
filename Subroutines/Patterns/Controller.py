@@ -118,7 +118,7 @@ class StartUp:
 
         reportName = PSE.getBundleItem('ops-pattern-report')
         Model.getReportForPrint(reportName)
-        # Model.trackPatternAsCsv()
+        Model.trackPatternAsCsv()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

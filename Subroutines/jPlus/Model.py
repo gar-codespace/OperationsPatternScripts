@@ -66,7 +66,7 @@ def refreshSubroutine():
 
 def updateRailroadDetails(widgets):
     """
-    Pushes data in the jPlus frame into the config file.
+    Pushes data from the jPlus frame into the config file.
     """
 
     configFile = PSE.readConfigFile()
