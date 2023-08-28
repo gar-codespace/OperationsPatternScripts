@@ -453,7 +453,9 @@ class MakeSetCarsEqptRows():
         return
 
     def makeSetCarsLocoRows(self):
-        """Creates the locomotive lines of the pattern report form"""
+        """
+        Creates the locomotive lines of the pattern report form
+        """
 
         listOfLocoRows = []
         locos = self.setCarsFormData['tracks'][0]['locos']
@@ -485,7 +487,9 @@ class MakeSetCarsEqptRows():
         return listOfLocoRows
 
     def makeSetCarsCarRows(self):
-        """Creates the car lines of the pattern report form"""
+        """
+        Creates the car lines of the pattern report form
+        """
 
         listOfCarRows = []
         cars = self.setCarsFormData['tracks'][0]['cars']
@@ -504,16 +508,20 @@ class MakeSetCarsEqptRows():
             for item in PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
                 if 'tab' in item:
                     continue
+            # Special case handling for the hazardous flag
                 translatedItem = self.rosetta[item]
-                try:
-                    label = PSE.JAVX_SWING.JLabel(car[translatedItem])
-                except: # The hazardous field is a boolean so work around it
-                    print('Exception at: Patterns.GUI.MakeSetCarsEqptRows.makeSetCarsCarRows')
-                    label = PSE.JAVX_SWING.JLabel(PSE.getBundleItem('hazardous'))
+                if translatedItem == 'hazardous' and car['hazardous']:
+                    labelName = PSE.getBundleItem('Hazardous')
+                elif translatedItem == 'hazardous' and not car['hazardous']:
+                    labelName = ''
+                else:
+                    labelName = car[translatedItem]
 
+                label = PSE.JAVX_SWING.JLabel(labelName)
                 box = makeSwingBox(self.reportWidth[translatedItem] * self.panelWidth, self.panelHeight)
                 box.add(label)
                 combinedInputLine.add(box)
+
             combinedInputLine.add(PSE.JAVX_SWING.Box.createHorizontalGlue())
             listOfCarRows.append(combinedInputLine)
 

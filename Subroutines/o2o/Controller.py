@@ -89,7 +89,7 @@ class StartUp:
         if not ModelImport.importTpRailroad():
             return
         
-        PSE.closeSubordinateWindows(level=1)
+        PSE.closeWindowByLevel(level=1)
 
         Model.resetBuiltTrains()
 
@@ -112,7 +112,7 @@ class StartUp:
         if not ModelImport.importTpRailroad():
             return
 
-        PSE.closeSubordinateWindows(level=2)
+        PSE.closeWindowByLevel(level=2)
 
         Model.resetBuiltTrains()
 
@@ -134,7 +134,7 @@ class StartUp:
         if not ModelImport.importTpRailroad():
             return
 
-        PSE.closeSubordinateWindows(level=2)
+        PSE.closeWindowByLevel(level=2)
 
         Model.resetBuiltTrains()
 
@@ -158,7 +158,7 @@ class StartUp:
         if not ModelImport.importTpRailroad():
             return
 
-        PSE.closeSubordinateWindows(level=2)
+        PSE.closeWindowByLevel(level=2)
 
         Model.resetBuiltTrains()
         

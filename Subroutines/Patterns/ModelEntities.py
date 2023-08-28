@@ -102,7 +102,16 @@ def loopThroughRs(type, rsAttribs):
             continue
 
         itemWidth = reportWidth[item]
-        switchListRow += PSE.formatText(rsAttribs[item], itemWidth)
+    # Special case handling for the hazardous flag
+        if item == 'hazardous' and rsAttribs['hazardous']:
+            labelName = PSE.getBundleItem('Hazardous')
+        elif item == 'hazardous' and not rsAttribs['hazardous']:
+            labelName = ' '
+        else:
+            labelName = rsAttribs[item]
+
+        rowItem = PSE.formatText(labelName, itemWidth)
+        switchListRow += rowItem
 
     return switchListRow
 

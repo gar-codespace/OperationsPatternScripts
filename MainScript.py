@@ -57,7 +57,7 @@ def restartThePlugin():
 
     _psLog = PSE.LOGGING.getLogger('OPS.Main.restartThePlugin')
     
-    PSE.closeOpsWindows('patternScriptsWindow')
+    PSE.closeWindowByName('patternScriptsWindow')
 
     Bundle.setupBundle()
 
@@ -285,7 +285,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         """
         """
 
-        PSE.makeBuildStatusFolder()
+        PSE.makeReportFolders()
 
         logFileTarget = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'buildstatus', 'PatternScriptsLog.txt')
 
@@ -328,8 +328,6 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         startTime = PSE.TIME.time()
         self.psLog = PSE.LOGGING.getLogger('OPS.Main.Controller')
         self.logger.initialLogMessage(self.psLog)
-
-        PSE.makeReportFolders()
 
         Bundle.setupBundle()
 

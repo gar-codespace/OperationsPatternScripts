@@ -2,6 +2,9 @@ Todo:
   How to publish DeepL?
   lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
   Duplication of PSE chunkPath.
+  PatternsSubroutine.ModelEntities.loopThroughRs and PatternsSubroutine.GUI.makeSetCarsCarRows have duplicates.
+  o2o.ModelWorkEvents.parseRS and o2o.ModelWorkEvents.parsePtRs have duplicates.
+  o2o locations and industries buttons should reset the patterns combo boxes
   
 Comments:
   Schedule does not prevent setting a car to a track.

@@ -89,30 +89,30 @@ def tpDirectoryExists():
 """o2o.Model"""
 
 
-def addTypesToTracks():
-    """
-    Depricated
-    """
+# def addTypesToTracks():
+#     """
+#     Depricated
+#     """
 
 
-    tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarTypes
-    TCM = PSE.JMRI.InstanceManager.getDefault(tc)
-    typeList = TCM.getNames()
+#     tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarTypes
+#     TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+#     typeList = TCM.getNames()
 
-    tc = PSE.JMRI.jmrit.operations.rollingstock.engines.EngineTypes
-    TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+#     tc = PSE.JMRI.jmrit.operations.rollingstock.engines.EngineTypes
+#     TCM = PSE.JMRI.InstanceManager.getDefault(tc)
 
-    typeList += TCM.getNames()
+#     typeList += TCM.getNames()
 
-    for location in PSE.LM.getList():
-        for type in typeList:
-            location.addTypeName(type)      
+#     for location in PSE.LM.getList():
+#         for type in typeList:
+#             location.addTypeName(type)      
 
-    for track in PSE.getAllTracks():
-        for type in typeList:
-            track.addTypeName(type)
+#     for track in PSE.getAllTracks():
+#         for type in typeList:
+#             track.addTypeName(type)
 
-    return
+#     return
 
 def deselectCarTypesAtSpurs():
     """

@@ -20,7 +20,10 @@ def importTpRailroad():
     Generates the tpRollingStockData.txt file
     """
 
-    PSE.closeOutputFrame()
+    bundle = PSE.JMRI.jmrit.jython.Bundle()
+    frameName = bundle.handleGetMessage('TitleOutputFrame')
+    PSE.closeWindowByName(frameName)
+
     trainPlayerImport = TrainPlayerImporter()
 # Import the three TrainPlayer export files
     if not trainPlayerImport.getTpReportFiles():

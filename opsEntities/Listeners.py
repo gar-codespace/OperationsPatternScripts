@@ -39,10 +39,7 @@ def ecItemSelected(OPEN_EC_EVENT):
 
     configTarget = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'configFile.json')
 
-    if PSE.JAVA_IO.File(configTarget).isFile():
-        PSE.genericDisplayReport(configTarget)
-    else:
-        _psLog.warning('Not found: ' + configTarget)
+    PSE.genericDisplayReport(configTarget)
 
     return
 

@@ -170,18 +170,6 @@ def repaintPatternScriptsWindow():
 
     return
 
-def closePsWindow():
-
-    frameName = getBundleItem('Pattern Scripts')
-    window = JMRI.util.JmriJFrame.getFrame(frameName)
-
-    if window:
-        updateWindowParams(window)
-        window.setVisible(False)
-        window.dispose()
-
-    return
-
 def getComponentByName(frameTitle, componentName):
     """
     Gets a frame by title.
@@ -251,21 +239,22 @@ def openOutputFrame(message):
 
     return
 
-def closeOutputFrame():
+def closeWindowByName(windowName):
+    """
+    Close all the windows of a certain name.
+    Called by:
+    """
 
-    bundle = JMRI.jmrit.jython.Bundle()
-    frameName = bundle.handleGetMessage('TitleOutputFrame')
-    frame = JMRI.util.JmriJFrame.getFrame(frameName)
-
-    if frame:
-        frame.setVisible(False)
-        frame.dispose()
+    for frame in JMRI.util.JmriJFrame.getFrameList():
+        if frame.getName() == windowName:
+            frame.setVisible(False)
+            frame.dispose()
 
     return
 
-def closeSubordinateWindows(level):
+def closeWindowByLevel(level):
     """
-    Close all but the top level windows.
+    Closes a group of windows depending upon the level chosen.
     """
 
     console = APPS.Bundle().handleGetMessage('TitleConsole')
@@ -292,22 +281,6 @@ def closeSubordinateWindows(level):
 
     return
 
-def closeTopLevelWindows():
-
-    console = APPS.Bundle().handleGetMessage('TitleConsole')
-    patternScripts = getBundleItem('Pattern Scripts')    
-
-    keepTheseWindows = [console, 'PanelPro', patternScripts]
-    
-    for frame in JMRI.util.JmriJFrame.getFrameList():
-        if frame.getTitle() in keepTheseWindows:
-            continue
-        else:
-            frame.setVisible(False)
-            frame.dispose()
-
-    return
-
 def getPsButton():
     """
     Gets the Pattern Scripts button on the PanelPro frame.
@@ -323,27 +296,10 @@ def getPsButton():
         else:
             return None
 
-def closeOpsWindows(windowName):
-    """
-    Close all the windows of a certain name.
-    Called by:
-    MainScript.Controller.closePsWindow
-    Listeners.PatternScriptsWindow.windowClosing
-    controllerSetCarsForm.setRsButton
-    """
-
-    for frame in JMRI.util.JmriJFrame.getFrameList():
-        if frame.getName() == windowName:
-            frame.setVisible(False)
-            frame.dispose()
-
-    return
-
 def updateWindowParams(window):
     """
     Setting JmriJFrame(True, True) has no effect that I can figure.
     Called by:
-    MainScript.Controller.closePsWindow
     Listeners.PatternScriptsWindow.windowClosing
     """
 
@@ -421,8 +377,6 @@ def locationNameLookup(locationName):
 def getAllDivisionNames():
     """
     JMRI sorts the list.
-    Called by:
-    Model.updatePatternLocation
     """
 
     divisionNames = []
@@ -432,6 +386,9 @@ def getAllDivisionNames():
     return divisionNames
 
 def getLocationNamesByDivision():
+    """
+    Returned list is sorted.
+    """
 
     locationsByDivision = []
     divisionName = readConfigFile()['Patterns']['PD']
@@ -445,29 +402,14 @@ def getLocationNamesByDivision():
             if location.getDivisionName() == divisionName:
                 locationsByDivision.append(location.getName())
 
-    return locationsByDivision
-
-def getDivisionForLocation(locationName):
-
-    location = LM.getLocationByName(locationName)
-    division = location.getDivision()
-    if division:
-        divisionName = division.getName()
-    else:
-        divisionName = ''
-
-    return divisionName
+    return sorted(locationsByDivision)
 
 def getAllLocationNames():
     """
     JMRI sorts the list, returns list of location names.
     Called by:
-    o2o.Model.UpdateLocationsAndTracks
-    PSE.getAllTrackIds
-    Podel.updatePatternLocation
-    Model.updateLocations
-    ModelEntities.testSelectedItem
-    o2oSubroutine.Model.UpdateLocationsAndTracks.addNewLocations
+    o2oSubroutine.Model.Divisionator.assignDivisions
+    o2oSubroutine.Model.Trackulator.checkLocations
     """
 
     locationNames = []
@@ -480,9 +422,8 @@ def getAllTracks():
     """
     All track objects for all locations.
     Called by:
-    Model.UpdateLocationsAndTracks
-    ModelEntities.setNonSpurTrackLength
-    Model.updatePatternLocation
+    o2oSubroutine.Model.RollingStockulator.checkTracks
+    o2oSubroutine.Model.RollingStockulator.getAllSpurs
     """
 
     trackList = []
@@ -503,7 +444,6 @@ def getOpsProSettingsItems():
     OSU = JMRI.jmrit.operations.setup
     scale = scaleRubric[OSU.Setup.getScale()]
 
-
     items['YR'] = OSU.Setup.getYearModeled()
     items['LN'] = OSU.Setup.getRailroadName()
     items['SC'] = scale
@@ -514,6 +454,7 @@ def getExtendedRailroadName():
     """
     Returns either the extended railroad name or the JMRI railroad name.
     """
+
     configFile = readConfigFile()
     OSU = JMRI.jmrit.operations.setup
     
@@ -618,12 +559,9 @@ def formatText(item, length):
     """
     Truncate each item to its defined length in configFile.json and add a space at the end.
     Called by:
-    PatternTracksSubroutine.ViewEntities.merge
-    PatternTracksSubroutine.ViewEntities.loopThroughRs
+    PatternsSubroutine.ModelEntities.ETC
     """
-
-    if isinstance(item, bool): # Hazardous is a boolean
-        item = 'HazMat'
+        
     if len(item) < length:
         xItem = item.ljust(length)
     else:
@@ -637,9 +575,8 @@ def getShortLoadType(car):
     JMRI defines custom load type as empty but default load type as Empty, hence the 'or' statement.
     Load, Empty, Occupied and Unknown are translated by the bundle.
     Called by:
-    ViewEntities.modifyTrackPatternReport
-    ModelWorkEvent.o2oSwitchListConversion.parsePtRs
-    ModelWorkEvents.jmriManifestConversion.parseRS
+    o2oSubroutine.ModelWorkEvents
+    PatternsSubroutine.Model
     """
 
     try:
@@ -661,7 +598,9 @@ def getShortLoadType(car):
     # return 'L'
 
 def makeReportItemWidthMatrix():
-    """The attribute widths (AW) for each of the rolling stock attributes is defined in the report matrix (RM) of the config file."""
+    """
+    The attribute widths (AW) for each of the rolling stock attributes is defined in the report matrix (RM) of the config file.
+    """
 
     reportMatrix = {}
     attributeWidths = readConfigFile('Patterns')['RM']['AW']
@@ -678,19 +617,6 @@ def makeReportItemWidthMatrix():
 """File Handling Methods"""
 
 
-def makeBuildStatusFolder():
-    """
-    The buildStatus folder is created first so the log file can be written.
-    Called by:
-    MainScript.Controller
-    """
-
-    targetDirectory = OS_PATH.join(PROFILE_PATH, 'operations', 'buildstatus')
-    if not JAVA_IO.File(targetDirectory).isDirectory():
-        JAVA_IO.File(targetDirectory).mkdirs()
-
-    return
-
 def makeReportFolders():
     """
     Checks/creates the folders this plugin writes to.
@@ -699,7 +625,7 @@ def makeReportFolders():
     """
 
     opsDirectory = OS_PATH.join(PROFILE_PATH, 'operations')
-    directories = ['csvManifests', 'csvSwitchLists', 'jsonManifests', 'switchLists', 'manifests']
+    directories = ['buildstatus', 'csvManifests', 'csvSwitchLists', 'jsonManifests', 'switchLists', 'manifests']
     x = 0
     for directory in directories:
         targetDirectory = OS_PATH.join(opsDirectory, directory)
@@ -759,8 +685,8 @@ def genericDisplayReport(genericReportPath):
     """
 
     targetFile = JAVA_IO.File(genericReportPath)
-    JMRI.util.HelpUtil.openWindowsFile(targetFile)
 
+    JMRI.util.HelpUtil.openWindowsFile(targetFile)
     # JAVA_AWT.Desktop.getDesktop().edit(targetFile)
     # Windows 11 throws error with json file
 
@@ -844,7 +770,9 @@ def validateConfigFileComponents():
     return
 
 def getSubroutineDirs():
-    """Returns a list of subroutine names in the Subroutines directory."""
+    """
+    Returns a list of subroutine names in the Subroutines directory.
+    """
 
     subroutines = []
 
@@ -859,7 +787,10 @@ def getSubroutineDirs():
     return subroutines
 
 def mergeConfigFiles():
-    """Implemented in v3"""
+    """
+    Implemented in v3
+    """
+
     return
 
 def readConfigFile(subConfig=None):
@@ -996,7 +927,7 @@ def deleteConfigFile():
 """Color Handling Methods"""
 
 
-def getGenericColor(colorName):
+def getSpecificColor(colorName):
     """
     Called by:
     PSE.getCarColor
@@ -1022,7 +953,7 @@ def getColorA():
 
     try:
         colorName = readConfigFile('Main Script')['CD']['colorA']
-        color = getGenericColor(colorName)
+        color = getSpecificColor(colorName)
         return color
     except:
         print('Exception at: PSE.getColorA')
@@ -1038,7 +969,7 @@ def getColorB():
 
     try:
         colorName = readConfigFile('Main Script')['CD']['colorB']
-        color = getGenericColor(colorName)
+        color = getSpecificColor(colorName)
         return color
     except:
         print('Exception at: PSE.getColorB')
@@ -1054,7 +985,7 @@ def getColorC():
 
     try:
         colorName = readConfigFile('Main Script')['CD']['colorC']
-        color = getGenericColor(colorName)
+        color = getSpecificColor(colorName)
         return color
     except:
         print('Exception at: PSE.getColorC')
@@ -1070,7 +1001,11 @@ def getBundleItem(item):
     Retrieves the item from the bundle.
     """
 
-    return unicode(BUNDLE[item], ENCODING)
+    try:
+        return unicode(BUNDLE[item], ENCODING)
+    except KeyError:
+        return ''
+
 
 def translateMessageFormat():
     """

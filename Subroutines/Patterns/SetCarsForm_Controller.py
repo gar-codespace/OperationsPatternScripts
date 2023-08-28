@@ -151,7 +151,7 @@ class CreateSetCarsFrame:
         self.mergedForm = SetCarsForm_Model.makeMergedForm(self.setCarsForm, self.buttonDict['textBoxEntry'])
 
     # Open the pop up window
-        PSE.closeOpsWindows('popupFrame')
+        PSE.closeWindowByName('popupFrame')
 
         popup = SetCarsForm_View.ManagePopUp()
         popupFrame = popup.getPopupFrame()

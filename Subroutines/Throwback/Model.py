@@ -102,7 +102,7 @@ def throwbackCommit(displayWidgets):
     PSE.<x>.writeOperationsFile() also does a backup.
     """
 
-    PSE.closeTopLevelWindows()
+    PSE.closeWindowByLevel(1)
 
     throwbackRestorePoint = PSE.readConfigFile('Throwback')['SS'][SNAP_SHOT_INDEX]
 

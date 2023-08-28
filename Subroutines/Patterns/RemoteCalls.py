@@ -37,8 +37,8 @@ def deactivatedCalls():
     Listeners.removeDivisionsListener()
     Listeners.removeLocationsListener()
     
-    PSE.closeOpsWindows('popupFrame')
-    PSE.closeOpsWindows('setCarsWindow')
+    PSE.closeWindowByName('popupFrame')
+    PSE.closeWindowByName('setCarsWindow')
 
     return
 
