@@ -4,7 +4,7 @@ Todo:
   Duplication of PSE chunkPath.
   PatternsSubroutine.ModelEntities.loopThroughRs and PatternsSubroutine.GUI.makeSetCarsCarRows have duplicates.
   o2o.ModelWorkEvents.parseRS and o2o.ModelWorkEvents.parsePtRs have duplicates.
-  o2o locations and industries buttons should reset the patterns combo boxes
+  o2o Import Locations should not reset a locations division if the location is unchanged.
   
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -143,6 +143,7 @@ Tested Items:
       Color name 'Generic' added to car roster colors OK.
       'Generic' uses bundle OK.
       o2o.ModelWorkEvents parsePtRs and parseRS combined OK.
+      o2o locations and industries buttons resets the patterns combo boxes OK.
 
     Export-
       When active, exports JMRI manifest to TP OK.

@@ -120,6 +120,8 @@ class StartUp:
 
         PSE.remoteCalls('refreshCalls')
 
+        PSE.LM.firePropertyChange('divisionsListLength', False, True)
+
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
@@ -142,7 +144,7 @@ class StartUp:
 
         PSE.remoteCalls('refreshCalls')
 
-        # PSE.refreshAllSubroutines()
+        PSE.LM.firePropertyChange('divisionsListLength', False, True)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
