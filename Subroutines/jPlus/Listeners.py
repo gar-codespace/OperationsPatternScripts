@@ -48,6 +48,16 @@ def actionListener(EVENT):
     return
 
 
+def addSubroutineListeners():
+
+    PSE.LM.addPropertyChangeListener(ExtendedDataPropertyChange())
+
+    print('jPlus.Listeners.addSubroutineListeners')
+    _psLog.debug('jPlus.Listeners.addSubroutineListeners')
+
+    return
+
+
 class ExtendedDataPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     """
     A property change listener attached to:
