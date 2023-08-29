@@ -21,15 +21,14 @@ def makeTextReportHeader(patternReport):
     patternLocation = PSE.readConfigFile('Patterns')['PL']
     divisionName = patternReport['division']
     workLocation = ''
-    if divisionName:
+    if divisionName and patternLocation:
         workLocation = divisionName + ' - ' + patternLocation
-    else:
+    elif patternLocation:
         workLocation = patternLocation
 
-    textReportHeader    = patternReport['railroadName'] + '\n\n' + PSE.getBundleItem('Work Location:') + ' ' + workLocation + '\n' + patternReport['date'] + '\n\n'
+    textReportHeader = patternReport['railroadName'] + '\n\n' + PSE.getBundleItem('Work Location:') + ' ' + workLocation + '\n' + patternReport['date'] + '\n\n'
     
     return textReportHeader
-
 
 def makeTextReportTracks(trackList, trackTotals):
     """
@@ -396,7 +395,6 @@ class RollingStockParser:
                 print('No engines or list not sorted')
 
         return
-
 
     def sortCarList(self):
         """

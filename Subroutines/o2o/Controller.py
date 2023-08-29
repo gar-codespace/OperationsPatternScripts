@@ -93,11 +93,7 @@ class StartUp:
 
         Model.resetBuiltTrains()
 
-        PSE.remoteCalls('resetCalls')
-
         Model.initializeJmriRailroad()
-
-        # PSE.remoteCalls('refreshCalls')
 
         PSE.LM.firePropertyChange('o2oUpdate', False, True)
 
@@ -142,8 +138,6 @@ class StartUp:
 
         Model.updateJmriTracks()
 
-        PSE.remoteCalls('refreshCalls')
-
         PSE.LM.firePropertyChange('o2oUpdate', False, True)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
@@ -165,10 +159,6 @@ class StartUp:
         Model.resetBuiltTrains()
         
         Model.updateJmriRollingingStock()
-
-        PSE.remoteCalls('refreshCalls')
-
-        # PSE.refreshAllSubroutines()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
