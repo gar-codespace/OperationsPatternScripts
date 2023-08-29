@@ -4,6 +4,7 @@ JAVAX action performed methods are in Controller.
 """
 
 from opsEntities import PSE
+from Subroutines.jPlus import Model
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230201
@@ -45,3 +46,23 @@ def actionListener(EVENT):
     EVENT.getSource().setText(menuText)
 
     return
+
+
+class ExtendedDataPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
+    """
+    A property change listener attached to:
+    """
+
+    def __init__(self):
+
+        pass
+    
+    def propertyChange(self, PROPERTY_CHANGE_EVENT):
+
+        if PROPERTY_CHANGE_EVENT.propertyName == 'o2oUpdate':
+            Model.refreshSubroutine()
+
+            _psLog.debug(PROPERTY_CHANGE_EVENT)
+            print(SCRIPT_NAME + '.o2oUpdate')
+
+        return

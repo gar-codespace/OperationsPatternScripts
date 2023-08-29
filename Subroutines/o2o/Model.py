@@ -1103,7 +1103,7 @@ class Divisionator:
 
         self.parseDivisions()
         self.removeObsoleteDivisions()
-        self.assignDivisions()
+        self.checkAssignedDivisions()
         self.addNewDivisions()
         self.addDivisionToLocations()
         self.addUnreportedToNull()
@@ -1136,18 +1136,18 @@ class Divisionator:
 
         return
     
-    def assignDivisions(self):
+    def checkAssignedDivisions(self):
         """        
         For every location check that the assigned division is valid.
-        If no, set the division to unassigned.
+        If not, set the division to None.
         """
 
         allDivisions = PSE.getAllDivisionNames()
-        locations = PSE.getAllLocationNames()
+        allLocations = PSE.getAllLocationNames()
 
-        for location in locations:
-            if PSE.DM.getNumberOfdivisions() == 1:
-                PSE.LM.getLocationByName(location).setDivision(allDivisions[0])
+        for location in allLocations:
+            if PSE.LM.getLocationByName(location).getDivisionName() in allDivisions:
+                continue
             else:
                 PSE.LM.getLocationByName(location).setDivision(None)
 

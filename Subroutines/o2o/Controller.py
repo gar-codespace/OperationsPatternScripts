@@ -97,7 +97,9 @@ class StartUp:
 
         Model.initializeJmriRailroad()
 
-        PSE.remoteCalls('refreshCalls')
+        # PSE.remoteCalls('refreshCalls')
+
+        PSE.LM.firePropertyChange('o2oUpdate', False, True)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
         return
@@ -120,7 +122,7 @@ class StartUp:
 
         PSE.remoteCalls('refreshCalls')
 
-        PSE.LM.firePropertyChange('divisionsListLength', False, True)
+        PSE.LM.firePropertyChange('o2oUpdate', False, True)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -144,7 +146,7 @@ class StartUp:
 
         PSE.remoteCalls('refreshCalls')
 
-        PSE.LM.firePropertyChange('divisionsListLength', False, True)
+        PSE.LM.firePropertyChange('o2oUpdate', False, True)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -186,7 +188,8 @@ class StartUp:
         
         Model.updateJmriProperties()
         
-        PSE.remoteCalls('refreshCalls')
+        # PSE.remoteCalls('refreshCalls')
+        PSE.LM.firePropertyChange('o2oUpdate', False, True)
 
         # PSE.refreshAllSubroutines()
 

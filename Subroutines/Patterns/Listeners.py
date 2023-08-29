@@ -62,6 +62,13 @@ class DivisionsLocationsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     
     def propertyChange(self, PROPERTY_CHANGE_EVENT):
 
+        if PROPERTY_CHANGE_EVENT.propertyName == 'o2oUpdate':
+            Model.divComboUpdater()
+            Model.locComboUpdater()
+
+            _psLog.debug(PROPERTY_CHANGE_EVENT)
+            print(SCRIPT_NAME + '.o2oUpdate')
+
         if PROPERTY_CHANGE_EVENT.propertyName == 'divisionsListLength':
             Model.divComboUpdater()
             Model.locComboUpdater()
