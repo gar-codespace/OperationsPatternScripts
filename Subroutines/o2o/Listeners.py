@@ -4,6 +4,7 @@ JAVAX action performed methods are in Controller.
 """
 
 from opsEntities import PSE
+from Subroutines.o2o import Model
 from Subroutines.o2o import ModelWorkEvents
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
@@ -44,12 +45,30 @@ def actionListener(EVENT):
 
     return
 
+def addSubroutineListeners():
+
+    addTrainsTableListener()
+    addTrainsListener()
+
+    print('o2o.Listeners.addSubroutineListeners')
+    _psLog.debug('o2o.Listeners.addSubroutineListeners')
+
+    return
+
+def removeSubroutineListeners():
+
+    removeTrainsTableListener()
+    removeTrainsListener()
+
+    print('o2o.Listeners.removeSubroutineListeners')
+    _psLog.debug('o2o.Listeners.removeSubroutineListeners')
+
+    return
 
 def addTrainsTableListener():
 
-    PSE.TM.addPropertyChangeListener(TrainsPropertyChange())
+    PSE.TM.addPropertyChangeListener(o2oPropertyChange())
 
-    print('o2o.Listeners.addTrainsTableListener')
     _psLog.debug('o2o.Listeners.addTrainsTableListener')
 
     return
@@ -60,9 +79,8 @@ def addTrainsListener():
     """
 
     for train in PSE.TM.getTrainsByIdList():
-        train.addPropertyChangeListener(TrainsPropertyChange())
+        train.addPropertyChangeListener(o2oPropertyChange())
 
-    print('o2o.Listeners.addTrainsListener')
     _psLog.debug('o2o.Listeners.addTrainsListener')
 
     return
@@ -70,9 +88,9 @@ def addTrainsListener():
 def removeTrainsTableListener():
 
     for listener in PSE.TM.getPropertyChangeListeners():
-        if isinstance(listener, TrainsPropertyChange):
+        if isinstance(listener, o2oPropertyChange):
             PSE.TM.removePropertyChangeListener(listener)
-            print('o2o.Listeners.removeTrainsTableListener')
+
             _psLog.debug('o2o.Listeners.removeTrainsTableListener')
 
     return
@@ -84,16 +102,34 @@ def removeTrainsListener():
 
     for train in PSE.TM.getTrainsByIdList():
         for listener in train.getPropertyChangeListeners():
-            if isinstance(listener, TrainsPropertyChange):
+            if isinstance(listener, o2oPropertyChange):
                 train.removePropertyChangeListener(listener)
 
-    print('o2o.Listeners.removeTrainsListener')
     _psLog.debug('o2o.Listeners.removeTrainsListener')
 
     return
 
 
-class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
+class OpsWindowPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
+    """
+    A property change listener attached to:
+    """
+
+    def __init__(self):
+
+        pass
+
+    def propertyChange(self, PROPERTY_CHANGE_EVENT):
+
+        if PROPERTY_CHANGE_EVENT.propertyName == 'opsWindowActivated':
+            Model.refreshSubroutine()
+
+            _psLog.debug(PROPERTY_CHANGE_EVENT)
+
+        return    
+
+
+class o2oPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     """
     Events that are triggered with changes to JMRI Trains and OPS/o2o switch lists.
     """
@@ -106,7 +142,7 @@ class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
 
         sourceName = str(PROPERTY_CHANGE_EVENT.source)
         propertyName = PROPERTY_CHANGE_EVENT.getPropertyName()
-        logMessage = 'o2o.Listeners.TrainsPropertyChange- ' + sourceName + ' ' + propertyName
+        logMessage = 'o2o.Listeners.o2oPropertyChange- ' + sourceName + ' ' + propertyName
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'TrainsListLength':
             """

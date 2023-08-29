@@ -131,18 +131,11 @@ def logItemSelected(OPEN_LOG_EVENT):
 class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
     """
     Listener to respond to the plugin window operations.
-    There's a bit of naming confusion here.
-    AWT.windowActivated means the window is the selected one on the desktop.
-    OPS.activatedCalls means the subroutines are activated, whether displayed or not.
-    Therefore opening the PatternScriptsWindow activates the subroutines.
-    Selecting the PatternScriptsWindow refreshes the subroutines.
     """
 
     def __init__(self):
         
-        self.configFile = PSE.readConfigFile()
-        
-        return
+        pass
 
     def windowClosed(self, WINDOW_CLOSED):
 
@@ -154,12 +147,14 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
 
     def windowClosing(self, WINDOW_CLOSING):
 
+        _psLog.debug(WINDOW_CLOSING)
+
         PSE.updateWindowParams(WINDOW_CLOSING.getSource())
+        PSE.closeWindowByName('popupFrame')
+        PSE.closeWindowByName('setCarsWindow')
+        PSE.remoteCalls('shutdownCalls')
 
-        # WINDOW_CLOSING.getSource().removeWindowListener(PatternScriptsWindow())
         WINDOW_CLOSING.getSource().dispose()
-
-        PSE.remoteCalls('deactivatedCalls')
             
         return
 
@@ -167,9 +162,9 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
 
         _psLog.debug(WINDOW_OPENED)
 
+        PSE.remoteCalls('startupCalls')
+        
         PSE.getPsButton().setEnabled(False)
-
-        PSE.remoteCalls('activatedCalls')
 
         return
 
@@ -177,7 +172,7 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
 
         _psLog.debug(WINDOW_ACTIVATED)
 
-        PSE.remoteCalls('refreshCalls')
+        WINDOW_ACTIVATED.getSource().firePropertyChange('opsWindowActivated', False, True)
 
         return
 

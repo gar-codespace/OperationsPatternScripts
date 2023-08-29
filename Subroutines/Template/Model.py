@@ -15,20 +15,20 @@ _psLog = PSE.LOGGING.getLogger('OPS.XX.Model')
 
 def initializeSubroutine():
     """
-    Called from PSE.remoteCalls('activatedCalls')
-    After the subroutine is built, set it to its' initial values.
     """
 
     return
 
 def resetConfigFileItems():
-    """Called from PSE.remoteCalls('resetCalls')"""
+    """
+    """
 
     return
 
 def refreshSubroutine():
     """
-    Called from PSE.remoteCalls('refreshCalls')
     """
+    
+    print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
     return

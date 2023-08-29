@@ -6,29 +6,23 @@ Calls other subs make to this one
 Keep this as light as possible.
 """
 
-# from Subroutines.jPlus import Model
 from Subroutines.jPlus import Listeners
 
-def activatedCalls():
+def startupCalls():
     """
-    Methods called when this subroutine is activated.
+    Methods called when the plugin is started.
     """
-
-    Listeners.addSubroutineListeners()
     
-    return
-
-def deactivatedCalls():
-    """
-    Methods called when this subroutine is deactivated.
-    """
+    Listeners.addSubroutineListeners()
 
     return
 
-def refreshCalls():
+def shutdownCalls():
     """
-    Methods called when the subroutine needs to be refreshed.
+    Methods called when the plugin is shut down.
     """
+
+    Listeners.removeSubroutineListeners()
     
     return
 

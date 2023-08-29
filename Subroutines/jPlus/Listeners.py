@@ -47,18 +47,51 @@ def actionListener(EVENT):
 
     return
 
-
 def addSubroutineListeners():
 
-    PSE.LM.addPropertyChangeListener(ExtendedDataPropertyChange())
+    frameName = PSE.getBundleItem('Pattern Scripts')
+    frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
+    frame.addPropertyChangeListener(OpsWindowPropertyChange())
+
+    PSE.LM.addPropertyChangeListener(jPlusPropertyChange())
 
     print('jPlus.Listeners.addSubroutineListeners')
     _psLog.debug('jPlus.Listeners.addSubroutineListeners')
 
     return
 
+def removeSubroutineListeners():
 
-class ExtendedDataPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
+    for listener in PSE.LM.getPropertyChangeListeners():
+        if isinstance(listener, jPlusPropertyChange):
+            PSE.LM.removePropertyChangeListener(listener)
+
+            print('jPlus.Listeners.removeSubroutineListeners')
+            _psLog.debug('jPlus.Listeners.removeSubroutineListeners')
+
+    return
+
+
+class OpsWindowPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
+    """
+    A property change listener attached to:
+    """
+
+    def __init__(self):
+
+        pass
+
+    def propertyChange(self, PROPERTY_CHANGE_EVENT):
+
+        if PROPERTY_CHANGE_EVENT.propertyName == 'opsWindowActivated' and PROPERTY_CHANGE_EVENT.newValue == True:
+            Model.refreshSubroutine()
+
+            _psLog.debug(PROPERTY_CHANGE_EVENT)
+
+        return
+
+
+class jPlusPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     """
     A property change listener attached to:
     """
@@ -73,6 +106,5 @@ class ExtendedDataPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
             Model.refreshSubroutine()
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
-            print(SCRIPT_NAME + '.o2oUpdate')
 
         return

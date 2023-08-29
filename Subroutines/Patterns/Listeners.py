@@ -46,8 +46,57 @@ def actionListener(EVENT):
 
     return
 
+def addSubroutineListeners():
+    """
+    Mini controller.
+    """
 
-class DivisionsLocationsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
+    addDivisionsTableListener()
+    addLocationsTableListener()
+    addDivisionsListener()
+    addLocationsListener()
+
+    print('Patterns.Listeners.addSubroutineListeners')
+    _psLog.debug('Patterns.Listeners.addSubroutineListeners')
+
+    return
+
+def removeSubroutineListeners():
+    """
+    Mini controller.
+    """
+
+    removeDivisionsTableListener()
+    removeLocationsTableListener()
+    removeDivisionsListener()
+    removeLocationsListener()
+
+    print('Patterns.Listeners.removeSubroutineListeners')
+    _psLog.debug('Patterns.Listeners.removeSubroutineListeners')
+
+    return
+
+
+class OpsWindowPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
+    """
+    A property change listener attached to:
+    """
+
+    def __init__(self):
+
+        pass
+
+    def propertyChange(self, PROPERTY_CHANGE_EVENT):
+
+        if PROPERTY_CHANGE_EVENT.propertyName == 'opsWindowActivated':
+            Model.refreshSubroutine()
+
+            _psLog.debug(PROPERTY_CHANGE_EVENT)
+
+        return
+    
+
+class PatternsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     """
     A property change listener attached to:
     The divisions table
@@ -62,59 +111,54 @@ class DivisionsLocationsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     
     def propertyChange(self, PROPERTY_CHANGE_EVENT):
 
+        if PROPERTY_CHANGE_EVENT.propertyName == 'opsWindowActivated' and PROPERTY_CHANGE_EVENT.newValue == True:
+            print('opsWindowActivated')
+            Model.refreshSubroutine()
+
+            _psLog.debug(PROPERTY_CHANGE_EVENT)
+
         if PROPERTY_CHANGE_EVENT.propertyName == 'o2oUpdate':
             Model.divComboUpdater()
             Model.locComboUpdater()
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
-            print(SCRIPT_NAME + '.o2oUpdate')
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'divisionsListLength':
             Model.divComboUpdater()
             Model.locComboUpdater()
-            # Model.trackRowManager()
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
-            print(SCRIPT_NAME + '.divisionsListLength')
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'divisionName':
             Model.divComboUpdater()
             Model.locComboUpdater()
-            # Model.trackRowManager()
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
-            print(SCRIPT_NAME + '.divisionName')
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'locationsListLength':
             Model.locComboUpdater()
-            # Model.trackRowManager()
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
-            print(SCRIPT_NAME + '.locationsListLength')
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'locationName':
             Model.locComboUpdater()
-            # Model.trackRowManager()
             
             _psLog.debug(PROPERTY_CHANGE_EVENT)
-            print(SCRIPT_NAME + '.locationName')
 
         return
 
 def addDivisionsTableListener():
 
-    PSE.DM.addPropertyChangeListener(DivisionsLocationsPropertyChange())
+    PSE.DM.addPropertyChangeListener(PatternsPropertyChange())
 
-    print('Patterns.Listeners.addDivisionsTableListener')
     _psLog.debug('Patterns.Listeners.addDivisionsTableListener')
 
     return
 
 def addLocationsTableListener():
 
-    PSE.LM.addPropertyChangeListener(DivisionsLocationsPropertyChange())
+    PSE.LM.addPropertyChangeListener(PatternsPropertyChange())
 
-    print('Patterns.Listeners.addLocationsTableListener')
     _psLog.debug('Patterns.Listeners.addLocationsTableListener')
 
     return
@@ -122,9 +166,8 @@ def addLocationsTableListener():
 def addDivisionsListener():
 
     for division in PSE.DM.getList():
-        division.addPropertyChangeListener(DivisionsLocationsPropertyChange())
+        division.addPropertyChangeListener(PatternsPropertyChange())
 
-    print('Patterns.Listeners.addDivisionsListener')
     _psLog.debug('Add division name change listener')
 
     return
@@ -132,10 +175,9 @@ def addDivisionsListener():
 def addLocationsListener():
 
     for location in PSE.LM.getList():
-        location.addPropertyChangeListener(DivisionsLocationsPropertyChange())
+        location.addPropertyChangeListener(PatternsPropertyChange())
         _psLog.debug('Add location name change listener')
 
-    print('Patterns.Listeners.addLocationsListener')
     _psLog.debug('Patterns.Listeners.addLocationsListener')
 
     return
@@ -143,10 +185,9 @@ def addLocationsListener():
 def removeDivisionsTableListener():
 
     for listener in PSE.DM.getPropertyChangeListeners():
-        if isinstance(listener, DivisionsLocationsPropertyChange):
+        if isinstance(listener, PatternsPropertyChange):
             PSE.DM.removePropertyChangeListener(listener)
 
-            print('Patterns.Listeners.removeDivisionsTableListener')
             _psLog.debug('Patterns.Listeners.removeDivisionsTableListener')
 
     return
@@ -154,10 +195,9 @@ def removeDivisionsTableListener():
 def removeLocationsTableListener():
 
     for listener in PSE.LM.getPropertyChangeListeners():
-        if isinstance(listener, DivisionsLocationsPropertyChange):
+        if isinstance(listener, PatternsPropertyChange):
             PSE.LM.removePropertyChangeListener(listener)
 
-            print('Patterns.Listeners.removeLocationsTableListener')
             _psLog.debug('Patterns.Listeners.removeLocationsTableListener')
 
     return
@@ -166,10 +206,9 @@ def removeDivisionsListener():
 
     for division in PSE.DM.getList():
         for listener in division.getPropertyChangeListeners():
-            if isinstance(listener, DivisionsLocationsPropertyChange):
+            if isinstance(listener, PatternsPropertyChange):
                 division.removePropertyChangeListener(listener)
 
-    print('Patterns.Listeners.removeDivisionsListener')
     _psLog.debug('Patterns.Listeners.removeDivisionsListener')
 
     return
@@ -178,11 +217,10 @@ def removeLocationsListener():
 
     for location in PSE.LM.getList():
         for listener in location.getPropertyChangeListeners():
-            if isinstance(listener, DivisionsLocationsPropertyChange):
+            if isinstance(listener, PatternsPropertyChange):
                 location.removePropertyChangeListener(listener)
 
     _psLog.debug('Patterns.Listeners.removeLocationsListener')
-    print('Patterns.Listeners.removeLocationsListener')
 
     return
 

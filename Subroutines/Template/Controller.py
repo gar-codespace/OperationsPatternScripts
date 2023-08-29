@@ -83,9 +83,8 @@ class StartUp:
         Whatever it is this button does.
         """
 
-        PSE.remoteCalls('refreshCalls')
+        Model.refreshSubroutine()
 
         _psLog.debug(EVENT)
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return

@@ -120,8 +120,6 @@ class StartUp:
 
         Model.updateJmriLocations()
 
-        PSE.remoteCalls('refreshCalls')
-
         PSE.LM.firePropertyChange('o2oUpdate', False, True)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))

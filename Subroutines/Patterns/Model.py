@@ -17,7 +17,6 @@ _psLog = PSE.LOGGING.getLogger('OPS.PT.Model')
 
 def initializeSubroutine():
     """
-    Called from PSE.remoteCalls('activatedCalls')
     After the subroutine is built, set it to its' initial values.
     """
 

@@ -5,6 +5,9 @@ Todo:
   PatternsSubroutine.ModelEntities.loopThroughRs and PatternsSubroutine.GUI.makeSetCarsCarRows have duplicates.
   o2o.ModelWorkEvents.parseRS and o2o.ModelWorkEvents.parsePtRs have duplicates.
   o2o Import Locations should not reset a locations division if the location is unchanged.
+  Patterns nothing selected press either button causes error.
+  Throwback/Locations does not restore the extended data for jPlus.
+  o2o buttons are not resetting jPlus.
   
 Comments:
   Schedule does not prevent setting a car to a track.

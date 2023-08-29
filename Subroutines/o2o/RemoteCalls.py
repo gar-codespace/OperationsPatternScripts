@@ -9,32 +9,21 @@ Keep this as light as possible.
 from Subroutines.o2o import Model
 from Subroutines.o2o import Listeners
 
-def activatedCalls():
+def startupCalls():
     """
-    Methods called when this subroutine is activated.
+    Methods called when the plugin is started.
     """
 
-    Listeners.addTrainsTableListener()
-    Listeners.addTrainsListener()
+    Listeners.addSubroutineListeners()
 
     return
 
-def deactivatedCalls():
+def shutdownCalls():
     """
-    Methods called when this subroutine is deactivated.
-    """
-
-    Listeners.removeTrainsTableListener()
-    Listeners.removeTrainsListener()
-
-    return
-
-def refreshCalls():
-    """
-    Methods called when the subroutine needs to be refreshed.
+    Methods called when the plugin is shut down.
     """
 
-    Model.refreshSubroutine()
+    Listeners.removeSubroutineListeners()
 
     return
 

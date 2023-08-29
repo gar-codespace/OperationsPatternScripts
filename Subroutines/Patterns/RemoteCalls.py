@@ -6,48 +6,25 @@ Calls other subs make to this one
 Keep this as light as possible.
 """
 
-from opsEntities import PSE
 from Subroutines.Patterns import Model
 from Subroutines.Patterns import Listeners
 
-SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
-SCRIPT_REV = 20230201
-
-def activatedCalls():
+def startupCalls():
     """
-    Methods called when this subroutine is activated.
+    Methods called when the plugin is started.
     """
 
     Model.initializeSubroutine()
-
-    Listeners.addDivisionsTableListener()
-    Listeners.addLocationsTableListener()
-    Listeners.addDivisionsListener()
-    Listeners.addLocationsListener()
-
+    Listeners.addSubroutineListeners()
+    
     return
 
-def deactivatedCalls():
+def shutdownCalls():
     """
-    Methods called when this subroutine is deactivated.
+    Methods called when the plugin is shut down.
     """
 
-    Listeners.removeDivisionsTableListener()
-    Listeners.removeLocationsTableListener()
-    Listeners.removeDivisionsListener()
-    Listeners.removeLocationsListener()
-    
-    PSE.closeWindowByName('popupFrame')
-    PSE.closeWindowByName('setCarsWindow')
-
-    return
-
-def refreshCalls():
-    """
-    Methods called when the subroutine needs to be refreshed.
-    """
-    
-    Model.refreshSubroutine()
+    Listeners.removeSubroutineListeners()
 
     return
 

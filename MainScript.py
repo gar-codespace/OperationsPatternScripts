@@ -331,8 +331,6 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         Bundle.setupBundle()
 
-        # PSE.validateSubroutines()
-
         self.addPatternScriptsButton()
 
         PSE.openSystemConsole()

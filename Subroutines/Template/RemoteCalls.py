@@ -6,6 +6,8 @@ Calls other subs make to this one
 Keep this as light as possible.
 """
 
+# from Subroutines.Template import Listeners
+
 def startupCalls():
     """
     Methods called when the plugin is started.
@@ -24,7 +26,7 @@ def resetCalls():
     """
     Methods called to reset this subroutine.
     """
-
+   
     return
     
 def specificCalls():
