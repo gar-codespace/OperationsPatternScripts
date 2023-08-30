@@ -6,30 +6,38 @@ Calls other subs make to this one
 Keep this as light as possible.
 """
 
+# from Subroutines.Template import Model
+# from Subroutines.Template import Listeners
+
 def startupCalls():
     """
-    Methods called when the plugin is started.
+    Called when the plugin is started.
     """
+
+    # Model.initializeSubroutine()
+    # Listeners.addSubroutineListeners()
 
     return
 
 def shutdownCalls():
     """
-    Methods called when the plugin is shut down.
+    Called when the plugin is shut down.
     """
+
+    # Listeners.removeSubroutineListeners()
 
     return
 
 def resetCalls():
     """
-    Methods called to reset this subroutine.
+    Depricated.
     """
 
     return
     
-def specificCalls():
+def nonSpecificCalls():
     """
-    Methods called to run specific tasks.
+    Catchall if the others are not appropriate
     """
 
     return

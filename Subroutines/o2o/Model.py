@@ -15,6 +15,12 @@ SCRIPT_REV = 20230201
 
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.Model')
 
+def initializeSubroutine():
+    """
+    """
+
+    return
+
 def resetConfigFileItems():
 
     return

@@ -112,7 +112,7 @@ def removeTrainsListener():
 
 class OpsWindowPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     """
-    A property change listener attached to:
+    A property change listener attached to the Operations Pattern Scripts window.
     """
 
     def __init__(self):

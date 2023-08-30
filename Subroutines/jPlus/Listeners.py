@@ -62,6 +62,13 @@ def addSubroutineListeners():
 
 def removeSubroutineListeners():
 
+    frameName = PSE.getBundleItem('Pattern Scripts')
+    frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
+
+    for listener in frame.getPropertyChangeListeners():
+        if isinstance(listener, OpsWindowPropertyChange):
+            PSE.LM.removePropertyChangeListener(listener)
+
     for listener in PSE.LM.getPropertyChangeListeners():
         if isinstance(listener, jPlusPropertyChange):
             PSE.LM.removePropertyChangeListener(listener)
@@ -74,7 +81,7 @@ def removeSubroutineListeners():
 
 class OpsWindowPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     """
-    A property change listener attached to:
+    A property change listener attached to the Operations Pattern Scripts window.
     """
 
     def __init__(self):
@@ -93,7 +100,7 @@ class OpsWindowPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
 
 class jPlusPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     """
-    A property change listener attached to:
+    A property change listener attached to the Location Manager.
     """
 
     def __init__(self):
@@ -102,7 +109,7 @@ class jPlusPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     
     def propertyChange(self, PROPERTY_CHANGE_EVENT):
 
-        if PROPERTY_CHANGE_EVENT.propertyName == 'o2oUpdate':
+        if PROPERTY_CHANGE_EVENT.propertyName == 'extendedDetails':
             Model.refreshSubroutine()
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)

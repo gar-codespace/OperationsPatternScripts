@@ -12,24 +12,21 @@ SCRIPT_REV = 20230201
 
 _psLog = PSE.LOGGING.getLogger('OPS.JP.Model')
 
+def initializeSubroutine():
+    """
+    """
+
+    return
+
 def resetConfigFileItems():
-
-    configFile =  PSE.readConfigFile()
-    configFile['Main Script']['LD']['BD'] = ''
-    configFile['Main Script']['LD']['LO'] = ''
-    configFile['Main Script']['LD']['OR'] = ''
-    configFile['Main Script']['LD']['SC'] = ''
-    configFile['Main Script']['LD']['TR'] = ''
-    configFile['Main Script']['LD']['yearModeled'] = ''
-    configFile['Main Script']['LD']['JN'] = ''
-
-    PSE.writeConfigFile(configFile)
-
+    """
+    """
+    
     return
 
 def refreshSubroutine():
     """
-    Pulls config file and ops pro settings data into the jPlus frame.
+    Pulls configFile LD settings data into the jPlus frame.
     """
 
     configFile = PSE.readConfigFile()
@@ -53,14 +50,14 @@ def refreshSubroutine():
     flag = configFile['Main Script']['CP']['EH']
     component.setSelected(flag)
 
-    opsProSettingsItems = PSE.getOpsProSettingsItems()
     component = PSE.getComponentByName(frame, 'yearModeled')
-    component.setText(opsProSettingsItems['YR'])
+    value = configFile['Main Script']['LD']['YR']
+    component.setText(value)
 
-    configFile['Main Script']['LD'].update({'YR':opsProSettingsItems['YR']})
-    configFile['Main Script']['LD'].update({'LN':opsProSettingsItems['LN']})
-    configFile['Main Script']['LD'].update({'SC':opsProSettingsItems['SC']})
-    PSE.writeConfigFile(configFile)
+    # configFile['Main Script']['LD'].update({'YR':opsProSettingsItems['YR']})
+    # configFile['Main Script']['LD'].update({'LN':opsProSettingsItems['LN']})
+    # configFile['Main Script']['LD'].update({'SC':opsProSettingsItems['SC']})
+    # PSE.writeConfigFile(configFile)
 
     return
 

@@ -11,7 +11,7 @@ from Subroutines.Patterns import Listeners
 
 def startupCalls():
     """
-    Methods called when the plugin is started.
+    Called when the plugin is started.
     """
 
     Model.initializeSubroutine()
@@ -21,7 +21,7 @@ def startupCalls():
 
 def shutdownCalls():
     """
-    Methods called when the plugin is shut down.
+    Called when the plugin is shut down.
     """
 
     Listeners.removeSubroutineListeners()
@@ -30,16 +30,16 @@ def shutdownCalls():
 
 def resetCalls():
     """
-    Methods called to reset this subroutine.
+    Depricated.
     """
 
     Model.resetConfigFileItems()
     
     return
 
-def specificCalls():
+def nonSpecificCalls():
     """
-    Methods called to run specific tasks.
+    Catchall if the others are not appropriate
     """
 
     return

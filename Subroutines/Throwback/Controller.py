@@ -147,6 +147,8 @@ class StartUp:
 
         Model.throwbackCommit(self.widgets['display'])
 
+        PSE.LM.firePropertyChange('extendedDetails', False, True)
+
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return

@@ -13,7 +13,7 @@ _psLog = PSE.LOGGING.getLogger('OPS.TB.Listeners')
 
 def actionListener(EVENT):
     """
-    menu item-Tools/Show Subroutines.Template
+    menu item-Tools/Show Subroutines.Throwback
     """
 
     _psLog.debug(EVENT)
@@ -46,10 +46,24 @@ def actionListener(EVENT):
 
     return
 
+def addSubroutineListeners():
+
+    print('Throwback.Listeners.addSubroutineListeners')
+    _psLog.debug('Throwback.Listeners.addSubroutineListeners')
+
+    return
+
+def removeSubroutineListeners():
+
+    print('Throwback.Listeners.removeSubroutineListeners')
+    _psLog.debug('Throwback.Listeners.removeSubroutineListeners')
+
+    return
+
 
 class OpsWindowPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     """
-    A property change listener attached to:
+    A property change listener attached to the Operations Pattern Scripts window.
     """
 
     def __init__(self):
@@ -59,7 +73,7 @@ class OpsWindowPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     def propertyChange(self, PROPERTY_CHANGE_EVENT):
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'opsWindowActivated':
-            Model.refreshSubroutine()
+            # Model.refreshSubroutine()
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
 

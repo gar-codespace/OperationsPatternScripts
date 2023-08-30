@@ -79,7 +79,7 @@ def removeSubroutineListeners():
 
 class OpsWindowPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     """
-    A property change listener attached to:
+    A property change listener attached to the Operations Pattern Scripts window.
     """
 
     def __init__(self):
@@ -117,11 +117,15 @@ class PatternsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
-        if PROPERTY_CHANGE_EVENT.propertyName == 'o2oUpdate':
+        if PROPERTY_CHANGE_EVENT.propertyName == 'jmriDataSets':
             Model.divComboUpdater()
             Model.locComboUpdater()
 
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
+        # if PROPERTY_CHANGE_EVENT.propertyName == 'extendedDetails':
+        #     Model.divComboUpdater()
+        #     Model.locComboUpdater()
+
+            # _psLog.debug(PROPERTY_CHANGE_EVENT)
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'divisionsListLength':
             Model.divComboUpdater()

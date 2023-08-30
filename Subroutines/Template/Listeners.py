@@ -48,10 +48,24 @@ def actionListener(EVENT):
 
     return
 
+def addSubroutineListeners():
+
+    print('Template.Listeners.addSubroutineListeners')
+    _psLog.debug('Template.Listeners.addSubroutineListeners')
+
+    return
+
+def removeSubroutineListeners():
+
+    print('Template.Listeners.removeSubroutineListeners')
+    _psLog.debug('Template.Listeners.removeSubroutineListeners')
+
+    return
+
 
 class OpsWindowPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     """
-    A property change listener attached to:
+    A property change listener attached to the Operations Pattern Scripts window.:
     """
 
     def __init__(self):

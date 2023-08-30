@@ -4,7 +4,6 @@ Todo:
   Duplication of PSE chunkPath.
   PatternsSubroutine.ModelEntities.loopThroughRs and PatternsSubroutine.GUI.makeSetCarsCarRows have duplicates.
   o2o.ModelWorkEvents.parseRS and o2o.ModelWorkEvents.parsePtRs have duplicates.
-  Patterns nothing selected press either button causes error.
   Throwback/Locations does not restore the extended data for jPlus.
   
 Comments:

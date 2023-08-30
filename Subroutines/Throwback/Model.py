@@ -14,6 +14,12 @@ _psLog = PSE.LOGGING.getLogger('OPS.TB.Model')
 
 SNAP_SHOT_INDEX = 0
 
+def initializeSubroutine():
+    """
+    """
+
+    return
+
 def resetConfigFileItems():
 
     return
@@ -94,6 +100,11 @@ def makeCommit(displayWidgets):
             PSE.JAVA_NIO.Files.copy(copyFrom, copyTo, PSE.JAVA_NIO.StandardCopyOption.REPLACE_EXISTING)
             PSE.JAVA_IO.File(targetFile).setReadOnly()
 
+# Save the extended data as well
+    fileName = ts + '.D.json.o2o'
+    targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', fileName)
+    PSE.genericWriteReport(targetFile, PSE.dumpJson(configFile['Main Script']['LD']))
+
     return
 
 def throwbackCommit(displayWidgets):
@@ -104,7 +115,9 @@ def throwbackCommit(displayWidgets):
 
     PSE.closeWindowByLevel(1)
 
-    throwbackRestorePoint = PSE.readConfigFile('Throwback')['SS'][SNAP_SHOT_INDEX]
+    configFile = PSE.readConfigFile()
+
+    throwbackRestorePoint = configFile['Throwback']['SS'][SNAP_SHOT_INDEX]
 
     for widget in displayWidgets:
         if widget.getName() == 'lCheckBox' and widget.selected:
@@ -114,6 +127,12 @@ def throwbackCommit(displayWidgets):
             PSE.LMX.readFile(targetFile)
             PSE.LMX.writeOperationsFile()
             _psLog.info('Throwback: ' + widget.getText() + ' to ' + throwbackRestorePoint[1])
+
+    # Restore the extended data as well
+        fileName = throwbackRestorePoint[0] + '.D.json.o2o'
+        targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', fileName)
+        configFile['Main Script'].update({'LD':PSE.loadJson(PSE.genericReadReport(targetFile))})
+        PSE.writeConfigFile(configFile)
 
     for widget in displayWidgets:
         if widget.getName() == 'rCheckBox' and widget.selected:

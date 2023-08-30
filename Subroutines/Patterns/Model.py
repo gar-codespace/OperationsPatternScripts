@@ -34,21 +34,7 @@ def initializeSubroutine():
     
 def resetConfigFileItems():
     """
-    Called from PSE.remoteCalls('resetCalls')
     """
-
-    configFile = PSE.readConfigFile()
-
-    configFile['Patterns'].update({'AD':[]})
-    configFile['Patterns'].update({'PD':''})
-
-    configFile['Patterns'].update({'AL':[]})
-    configFile['Patterns'].update({'PL':''})
-
-    configFile['Patterns'].update({'PT':{}})
-    configFile['Patterns'].update({'PA':False})
-
-    PSE.writeConfigFile(configFile)
 
     return
 

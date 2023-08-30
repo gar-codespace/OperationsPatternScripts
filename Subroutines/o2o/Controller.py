@@ -62,9 +62,9 @@ class StartUp:
         return subroutine
 
     def startUpTasks(self):
-        """Run these tasks when this subroutine is started."""
-
-        # Listeners.addTrainsTableListener()
+        """
+        Run these tasks when this subroutine is started.
+        """
 
         return
 
@@ -92,10 +92,10 @@ class StartUp:
         PSE.closeWindowByLevel(level=1)
 
         Model.resetBuiltTrains()
-
         Model.initializeJmriRailroad()
 
-        PSE.LM.firePropertyChange('o2oUpdate', False, True)
+        PSE.LM.firePropertyChange('jmriDataSets', False, True)
+        PSE.LM.firePropertyChange('extendedDetails', False, True)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
         return
@@ -113,10 +113,10 @@ class StartUp:
         PSE.closeWindowByLevel(level=2)
 
         Model.resetBuiltTrains()
-
         Model.updateJmriLocations()
 
-        PSE.LM.firePropertyChange('o2oUpdate', False, True)
+        PSE.LM.firePropertyChange('jmriDataSets', False, True)
+        PSE.LM.firePropertyChange('extendedDetails', False, True)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -135,10 +135,10 @@ class StartUp:
         PSE.closeWindowByLevel(level=2)
 
         Model.resetBuiltTrains()
-
         Model.updateJmriTracks()
 
-        PSE.LM.firePropertyChange('o2oUpdate', False, True)
+        PSE.LM.firePropertyChange('jmriDataSets', False, True)
+        PSE.LM.firePropertyChange('extendedDetails', False, True)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -157,7 +157,6 @@ class StartUp:
         PSE.closeWindowByLevel(level=2)
 
         Model.resetBuiltTrains()
-        
         Model.updateJmriRollingingStock()
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
@@ -166,7 +165,7 @@ class StartUp:
 
     def updateJmriProperties(self, EVENT):
         """
-        Writes new or updated extended railroad properties.
+        Writes the extended railroad details.
         """
 
         _psLog.debug(EVENT)
@@ -175,11 +174,8 @@ class StartUp:
             return
         
         Model.updateJmriProperties()
-        
-        # PSE.remoteCalls('refreshCalls')
-        PSE.LM.firePropertyChange('o2oUpdate', False, True)
 
-        # PSE.refreshAllSubroutines()
+        PSE.LM.firePropertyChange('extendedDetails', False, True)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

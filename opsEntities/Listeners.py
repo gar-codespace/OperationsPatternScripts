@@ -152,6 +152,7 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         PSE.updateWindowParams(WINDOW_CLOSING.getSource())
         PSE.closeWindowByName('popupFrame')
         PSE.closeWindowByName('setCarsWindow')
+        
         PSE.remoteCalls('shutdownCalls')
 
         WINDOW_CLOSING.getSource().dispose()
