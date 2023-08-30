@@ -60,7 +60,6 @@ def removeSubroutineListeners():
     removeTrainsTableListener()
     removeTrainsListener()
 
-    print('o2o.Listeners.removeSubroutineListeners')
     _psLog.debug('o2o.Listeners.removeSubroutineListeners')
 
     return
@@ -91,6 +90,7 @@ def removeTrainsTableListener():
         if isinstance(listener, o2oPropertyChange):
             PSE.TM.removePropertyChangeListener(listener)
 
+            print('o2o.Listeners.removeTrainsTableListener.o2oPropertyChange')
             _psLog.debug('o2o.Listeners.removeTrainsTableListener')
 
     return
@@ -105,6 +105,7 @@ def removeTrainsListener():
             if isinstance(listener, o2oPropertyChange):
                 train.removePropertyChangeListener(listener)
 
+    print('o2o.Listeners.removeTrainsListener.o2oPropertyChange')
     _psLog.debug('o2o.Listeners.removeTrainsListener')
 
     return

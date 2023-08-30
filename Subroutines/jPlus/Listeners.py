@@ -68,12 +68,13 @@ def removeSubroutineListeners():
     for listener in frame.getPropertyChangeListeners():
         if isinstance(listener, OpsWindowPropertyChange):
             PSE.LM.removePropertyChangeListener(listener)
+            print('jPlus.Listeners.removeSubroutnieListeners.OpsWindowPropertyChange')
 
     for listener in PSE.LM.getPropertyChangeListeners():
         if isinstance(listener, jPlusPropertyChange):
             PSE.LM.removePropertyChangeListener(listener)
+            print('jPlus.Listeners.removeSubroutnieListenersjPlusPropertyChange')
 
-            print('jPlus.Listeners.removeSubroutineListeners')
             _psLog.debug('jPlus.Listeners.removeSubroutineListeners')
 
     return

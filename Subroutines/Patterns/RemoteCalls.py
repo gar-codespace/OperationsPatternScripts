@@ -32,8 +32,6 @@ def resetCalls():
     """
     Depricated.
     """
-
-    Model.resetConfigFileItems()
     
     return
 

@@ -71,7 +71,7 @@ def removeSubroutineListeners():
     removeDivisionsListener()
     removeLocationsListener()
 
-    print('Patterns.Listeners.removeSubroutineListeners')
+    # print('Patterns.Listeners.removeSubroutineListeners')
     _psLog.debug('Patterns.Listeners.removeSubroutineListeners')
 
     return
@@ -192,7 +192,8 @@ def removeDivisionsTableListener():
         if isinstance(listener, PatternsPropertyChange):
             PSE.DM.removePropertyChangeListener(listener)
 
-            _psLog.debug('Patterns.Listeners.removeDivisionsTableListener')
+            print('Patterns.Listeners.removeDivisionsTableListener.PatternsPropertyChange')
+            _psLog.debug('Patterns.Listeners.removeSubroutineListeners')
 
     return
 
@@ -202,6 +203,7 @@ def removeLocationsTableListener():
         if isinstance(listener, PatternsPropertyChange):
             PSE.LM.removePropertyChangeListener(listener)
 
+            print('Patterns.Listeners.removeLocationsTableListener.PatternsPropertyChange')
             _psLog.debug('Patterns.Listeners.removeLocationsTableListener')
 
     return
@@ -213,6 +215,7 @@ def removeDivisionsListener():
             if isinstance(listener, PatternsPropertyChange):
                 division.removePropertyChangeListener(listener)
 
+    print('Patterns.Listeners.removeDivisionsListener.PatternsPropertyChange')
     _psLog.debug('Patterns.Listeners.removeDivisionsListener')
 
     return
@@ -224,6 +227,7 @@ def removeLocationsListener():
             if isinstance(listener, PatternsPropertyChange):
                 location.removePropertyChangeListener(listener)
 
+    print('Patterns.Listeners.removeLocationsListener.PatternsPropertyChange')
     _psLog.debug('Patterns.Listeners.removeLocationsListener')
 
     return

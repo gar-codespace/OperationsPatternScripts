@@ -4,7 +4,6 @@ Todo:
   Duplication of PSE chunkPath.
   PatternsSubroutine.ModelEntities.loopThroughRs and PatternsSubroutine.GUI.makeSetCarsCarRows have duplicates.
   o2o.ModelWorkEvents.parseRS and o2o.ModelWorkEvents.parsePtRs have duplicates.
-  Throwback/Locations does not restore the extended data for jPlus.
   
 Comments:
   Schedule does not prevent setting a car to a track.
@@ -19,7 +18,6 @@ Comments:
   On TrainPlayer side, a check is added to validate industries has a locale entry.'.
   Generalized built train listeners into opsEntities.Listeners.
   Translate the plugin does not delete the config file.
-  Since the Patterns track dict is created when called, it is not necessary to save it into configFile['Patterns']['PT']
   o2o Initialize Railroad does not reset Throwback.
 
 Tested Items:
@@ -163,6 +161,7 @@ Tested Items:
     Scroll through commits OK.
     Throwbacks one, some, or all xml OK.
     Set checkbox default to False OK.
+    Makes and restores the extended data for jPlus OK.
 
 Catches Items:
   Catches pattern report button press no tracks selected OK.

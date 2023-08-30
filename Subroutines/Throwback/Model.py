@@ -15,8 +15,6 @@ _psLog = PSE.LOGGING.getLogger('OPS.TB.Model')
 SNAP_SHOT_INDEX = 0
 
 def initializeSubroutine():
-    """
-    """
 
     return
 
@@ -104,6 +102,8 @@ def makeCommit(displayWidgets):
     fileName = ts + '.D.json.o2o'
     targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', fileName)
     PSE.genericWriteReport(targetFile, PSE.dumpJson(configFile['Main Script']['LD']))
+
+    print('Commit made at: ' + ts)
 
     return
 
