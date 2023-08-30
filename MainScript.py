@@ -5,7 +5,6 @@ Copyright 2021, 2022, 2023 Greg Ritacco
 No restrictions on use, but I would appreciate the reference.
 """
 
-
 import jmri
 import sys
 from os import path as OS_PATH
@@ -31,8 +30,11 @@ SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
 SCRIPT_REV = 20230201
 
 PSE.validateConfigFile()
-PSE.ENCODING = PSE.readConfigFile('Main Script')['CP']['SE']
 
+configFile = PSE.readConfigFile()
+encodingSelection = configFile['Main Script']['CP']['ES']
+PSE.ENCODING = configFile['Main Script']['CP']['EO'][encodingSelection]
+# ['EO'] is encoding options
 
 def buildThePlugin(view):
     """

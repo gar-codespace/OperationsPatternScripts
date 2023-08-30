@@ -4,6 +4,8 @@ Todo:
   Duplication of PSE chunkPath.
   PatternsSubroutine.ModelEntities.loopThroughRs and PatternsSubroutine.GUI.makeSetCarsCarRows have duplicates.
   o2o.ModelWorkEvents.parseRS and o2o.ModelWorkEvents.parsePtRs have duplicates.
+  Test other languages.
+  Add config file validation to StandAloneExport.
   
 Comments:
   Schedule does not prevent setting a car to a track.

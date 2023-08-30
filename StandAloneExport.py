@@ -28,7 +28,10 @@ Bundle.BUNDLE_DIR = PSE.OS_PATH.join(PLUGIN_ROOT, 'opsBundle')
 
 PSE.PLUGIN_ROOT = PLUGIN_ROOT
 PSE.BUNDLE = Bundle.getBundleForLocale()
-PSE.ENCODING = 'utf-8'
+
+configFile = PSE.readConfigFile()
+encodingSelection = configFile['Main Script']['CP']['ES']
+PSE.ENCODING = configFile['Main Script']['CP']['EO'][encodingSelection]
 
 SCRIPT_NAME ='OperationsPatternScripts.StandAloneExport'
 SCRIPT_REV = 20230201

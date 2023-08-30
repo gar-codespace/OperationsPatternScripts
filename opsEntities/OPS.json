@@ -64,12 +64,19 @@
       "AP" : true,
       "EH" : false,
       "SE" : "utf-8",
+      "ES" : "CA",
+      "EO" : {
+        "CA" : "utf-8",
+        "CB" : "ascii",
+        "CC" : "utf-16",
+        "CD" : "ISO-8859"
+      },
       "PH" : 280,
       "PW" : 1000,
       "PX" : 0,
       "PY" : 0,
       "OC" : true,
-      "RV" : 20230807,
+      "RV" : 20230808,
       "GP" : "https://github.com/gar-codespace/OperationsPatternScripts",
       "EC" : {
         "400" : "400 - Bad Request: Unable to translate the current language.",
