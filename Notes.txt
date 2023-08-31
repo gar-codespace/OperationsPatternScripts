@@ -4,8 +4,9 @@ Todo:
   Duplication of PSE chunkPath.
   PatternsSubroutine.ModelEntities.loopThroughRs and PatternsSubroutine.GUI.makeSetCarsCarRows have duplicates.
   o2o.ModelWorkEvents.parseRS and o2o.ModelWorkEvents.parsePtRs have duplicates.
-  Test other languages.
   Add config file validation to StandAloneExport.
+  Depricate rosetta?
+  Conform Patterns['AW] to JMRI standard. IE finalDest should be Final_Dest, include Rosetta.
   
 Comments:
   Schedule does not prevent setting a car to a track.

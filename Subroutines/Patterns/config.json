@@ -19,10 +19,10 @@
     "PH" : 16,
     "RF": 8,
     "RM" : {
-      "DS" : "No Waybill",
-      "DT" : "*Not Consigned",
-      "FD" : "Any Line",
-      "FT" : "*Any Line",
+      "DS" : "Not Assigned",
+      "DT" : "Not Scheduled",
+      "FD" : "Unconsigned",
+      "FT" : "No Waybill",
       "SL": [
         "model"
       ],

@@ -508,8 +508,8 @@ class MakeSetCarsEqptRows():
             for item in PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
                 if 'tab' in item:
                     continue
-            # Special case handling for the hazardous flag
                 translatedItem = self.rosetta[item]
+            # Special case handling for the hazardous flag
                 if translatedItem == 'hazardous' and car['hazardous']:
                     labelName = PSE.getBundleItem('Hazardous')
                 elif translatedItem == 'hazardous' and not car['hazardous']:

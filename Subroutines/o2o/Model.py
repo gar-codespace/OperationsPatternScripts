@@ -471,13 +471,40 @@ class Initializer:
     def setReportMessageFormat(self):
         """
         Sets the default message format as defined in the configFile.
+        https://github.com/JMRI/JMRI/blob/master/java/src/jmri/jmrit/operations/setup/Setup.java
         """
 
-        self.OSU.Setup.setPickupManifestMessageFormat(self.configFile['o2o']['RMF']['PUC'])
-        self.OSU.Setup.setDropManifestMessageFormat(self.configFile['o2o']['RMF']['SOC'])
-        self.OSU.Setup.setLocalManifestMessageFormat(self.configFile['o2o']['RMF']['MC'])
-        self.OSU.Setup.setPickupEngineMessageFormat(self.configFile['o2o']['RMF']['PUL'])
-        self.OSU.Setup.setDropEngineMessageFormat(self.configFile['o2o']['RMF']['SOL'])
+        SB = PSE.JMRI.jmrit.operations.setup.Bundle()
+
+        messageList = []
+        for item in self.configFile['o2o']['RMF']['MC']:
+            translatedItem = SB.handleGetMessage(self.configFile['o2o']['RMO'][item])
+            messageList.append(translatedItem)
+        self.OSU.Setup.setLocalManifestMessageFormat(messageList)
+
+        messageList = []
+        for item in self.configFile['o2o']['RMF']['PUC']:
+            translatedItem = SB.handleGetMessage(self.configFile['o2o']['RMO'][item])
+            messageList.append(translatedItem)
+        self.OSU.Setup.setPickupManifestMessageFormat(messageList)
+
+        messageList = []
+        for item in self.configFile['o2o']['RMF']['SOC']:
+            translatedItem = SB.handleGetMessage(self.configFile['o2o']['RMO'][item])
+            messageList.append(translatedItem)
+        self.OSU.Setup.setDropManifestMessageFormat(messageList)
+
+        messageList = []
+        for item in self.configFile['o2o']['RMF']['PUL']:
+            translatedItem = SB.handleGetMessage(self.configFile['o2o']['RMO'][item])
+            messageList.append(translatedItem)
+        self.OSU.Setup.setPickupEngineMessageFormat(messageList)
+
+        messageList = []
+        for item in self.configFile['o2o']['RMF']['SOL']:
+            translatedItem = SB.handleGetMessage(self.configFile['o2o']['RMO'][item])
+            messageList.append(translatedItem)
+        self.OSU.Setup.setDropEngineMessageFormat(messageList)
 
         return
 
@@ -1182,7 +1209,8 @@ class Divisionator:
         Add the location named 'Unreported' to the null division.
         """       
 
-        location = PSE.LM.getLocationByName('Unreported')
+        # location = PSE.LM.getLocationByName('Unreported')
+        location = PSE.LM.getLocationByName(PSE.getBundleItem('Unreported'))
         location.setDivision(None)
 
         return

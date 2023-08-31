@@ -22,6 +22,7 @@
   "Cars at": "Voitures \u00e0", 
   "Check TrainPlayer-Advanced Ops-Industries for errors.": "V\u00e9rifiez que TrainPlayer-Advanced Ops-Industries ne contient pas d'erreurs.", 
   "Check TrainPlayer-Advanced Ops-Locales for semicolon.": "V\u00e9rifier le point-virgule dans TrainPlayer-Advanced Ops-Locales.", 
+  "Confirm": "Confirmer", 
   "Delete All Commits": "Supprimer tous les commentaires", 
   "Division:": "Division :", 
   "Do Not Apply Schedule": "Ne pas appliquer le calendrier", 
@@ -48,7 +49,6 @@
   "Industries": "Industries", 
   "Industries not imported. Import Locations recommended": "Industries non import\u00e9es Lieux d'importation recommand\u00e9s", 
   "Initialize Railroad": "Initialiser le chemin de fer", 
-  "Load": "Chargement", 
   "Location": "Localisation", 
   "Location:": "Localisation :", 
   "Locations": "Localisation des sites", 
@@ -83,6 +83,8 @@
   "Show": "Afficher", 
   "Single": "Unique", 
   "Snap Shot": "Instantan\u00e9", 
+  "Template": "Mod\u00e8le", 
+  "Template Subroutine": "Sous-routine de mod\u00e8le", 
   "There are no tracks for this selection": "Il n'y a pas de pistes pour cette s\u00e9lection", 
   "There are no yard tracks for this location": "Il n'y a pas de voies de triage \u00e0 cet endroit", 
   "Throwback": "Retour en arri\u00e8re", 
@@ -93,7 +95,7 @@
   "Track Inquiry": "Enqu\u00eate sur les voies ferr\u00e9es", 
   "Track Length:": "Longueur de la piste :", 
   "Track List:": "Liste des pistes :", 
-  "Track Totals for Cars:": "Suivi des totaux pour les voitures :", 
+  "Track Totals for Cars:": "Suivre les totaux pour les voitures :", 
   "Track does not serve this car type": "La piste ne dessert pas ce type de voiture", 
   "Track:": "Poursuivre :", 
   "Tracks at": "Pistes \u00e0", 
@@ -123,5 +125,6 @@
   "ops-pattern-report": "ops-pattern-report", 
   "ops-switch-list": "ops-switch-list", 
   "ops-work-list": "liste de travail ops", 
-  "unknown": "inconnue"
+  "unknown": "inconnue", 
+  "xyzzy": "xyzzy"
 }
