@@ -579,10 +579,14 @@ def getShortLoadType(car):
     PatternsSubroutine.Model
     """
 
-    try:
-        rs = CM.getByRoadAndNumber(car['road'], car['number']) # Pattern scripts nomenclature
-    except:
-        rs = CM.getByRoadAndNumber(car['road'], car['number']) # JMRI nomenclature
+    setupBundle = JMRI.jmrit.operations.setup.Bundle()
+
+    # try:
+    #     rs = CM.getByRoadAndNumber(car[setupBundle.handleGetMessage('Road')], car[setupBundle.handleGetMessage('Number')]) # Pattern scripts nomenclature
+    # except:
+    #     rs = CM.getByRoadAndNumber(car['road'], car['number']) # JMRI nomenclature
+
+    rs = CM.getByRoadAndNumber(car[setupBundle.handleGetMessage('Road')], car[setupBundle.handleGetMessage('Number')])
 
     lt =  getBundleItem('unknown').upper()[0]
     if rs.getLoadType() == 'empty' or rs.getLoadType() == 'Empty':
@@ -1018,38 +1022,38 @@ def translateMessageFormat():
 
     rosetta = {}
 #Common
-    rosetta[J_BUNDLE.ROAD] = 'road'
-    rosetta[J_BUNDLE.NUMBER] = 'number'
-    rosetta[J_BUNDLE.TYPE] = 'carType'
-    rosetta[J_BUNDLE.LENGTH] = 'length'
-    rosetta[J_BUNDLE.WEIGHT] = 'weight'
-    rosetta[J_BUNDLE.COLOR] = 'color'
-    rosetta[J_BUNDLE.DIVISION] = 'division'
-    rosetta[J_BUNDLE.LOCATION] = 'location'
-    rosetta[J_BUNDLE.TRACK] = 'track'
-    rosetta[J_BUNDLE.DESTINATION] = 'destination'
-    rosetta[J_BUNDLE.DEST_TRACK] = 'dest&Track'
-    rosetta[J_BUNDLE.OWNER] = 'owner'
-    rosetta[J_BUNDLE.COMMENT] = 'comment'
-    rosetta[J_BUNDLE.TAB] = 'tab'
-    rosetta[J_BUNDLE.TAB2] = 'tab2'
-    rosetta[J_BUNDLE.TAB3] = 'tab3'
-# Cars
-    rosetta[J_BUNDLE.LOAD] = 'load'
-    rosetta[J_BUNDLE.LOAD_TYPE] = 'loadType'
-    rosetta[J_BUNDLE.HAZARDOUS] = 'hazardous'
-    rosetta[J_BUNDLE.KERNEL] = 'kernel'
-    rosetta[J_BUNDLE.KERNEL_SIZE] = 'kernelSize'
-    rosetta[J_BUNDLE.FINAL_DEST] = 'finalDest'
-    rosetta[J_BUNDLE.FINAL_DEST_TRACK] = 'fd&Track'
-    rosetta[J_BUNDLE.DROP_COMMENT] = 'setOutMsg'
-    rosetta[J_BUNDLE.PICKUP_COMMENT] = 'pickupMsg'
-    rosetta[J_BUNDLE.RWE] = 'rwe'
-    # rosetta[J_BUNDLE.RWL] = 'rwl'
+    rosetta[J_BUNDLE.ROAD] = 'Road'
+    rosetta[J_BUNDLE.NUMBER] = 'Number'
+    rosetta[J_BUNDLE.TYPE] = 'Type'
+    rosetta[J_BUNDLE.LENGTH] = 'Length'
+    rosetta[J_BUNDLE.COLOR] = 'Color'
+    rosetta[J_BUNDLE.WEIGHT] = 'Weight'
+    rosetta[J_BUNDLE.COMMENT] = 'Comment'
+    rosetta[J_BUNDLE.DIVISION] = 'Division'
+    rosetta[J_BUNDLE.LOCATION] = 'Location'
+    rosetta[J_BUNDLE.TRACK] = 'Track'
+    rosetta[J_BUNDLE.DESTINATION] = 'Destination'
+    rosetta[J_BUNDLE.OWNER] = 'Owner'
+    rosetta[J_BUNDLE.TAB] = 'Tab'
+    rosetta[J_BUNDLE.TAB2] = 'Tab2'
+    rosetta[J_BUNDLE.TAB3] = 'Tab3'
 # Locos
-    rosetta[J_BUNDLE.MODEL] = 'model'
-    rosetta[J_BUNDLE.CONSIST] = 'consist'
-    rosetta[J_BUNDLE.DCC_ADDRESS] = 'dccAddress'
+    rosetta[J_BUNDLE.MODEL] = 'Model'
+    rosetta[J_BUNDLE.DCC_ADDRESS] = 'DCC_Address'
+    rosetta[J_BUNDLE.CONSIST] = 'Consist'
+# Cars
+    rosetta[J_BUNDLE.LOAD_TYPE] = 'Load_Type'
+    rosetta[J_BUNDLE.LOAD] = 'Load'
+    rosetta[J_BUNDLE.HAZARDOUS] = 'Hazardous'
+    rosetta[J_BUNDLE.KERNEL] = 'Kernel'
+    rosetta[J_BUNDLE.KERNEL_SIZE] = 'Kernel_Size'
+    rosetta[J_BUNDLE.DEST_TRACK] = 'Dest&Track'
+    rosetta[J_BUNDLE.FINAL_DEST] = 'Final_Dest'
+    rosetta[J_BUNDLE.FINAL_DEST_TRACK] = 'FD&Track'
+    rosetta[J_BUNDLE.DROP_COMMENT] = 'SetOut_Msg'
+    rosetta[J_BUNDLE.PICKUP_COMMENT] = 'PickUp_Msg'
+    rosetta[J_BUNDLE.RWE] = 'RWE'
+    # rosetta[J_BUNDLE.RWL] = 'RWL'
 # Unique to this plugin
     rosetta['onTrain'] = 'onTrain'
     rosetta['setTo'] = 'setTo'

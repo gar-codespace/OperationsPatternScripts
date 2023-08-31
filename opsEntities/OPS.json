@@ -76,7 +76,7 @@
       "PX" : 0,
       "PY" : 0,
       "OC" : true,
-      "RV" : 20230809,
+      "RV" : 20230811,
       "GP" : "https://github.com/gar-codespace/OperationsPatternScripts",
       "EC" : {
         "400" : "400 - Bad Request: Unable to translate the current language.",

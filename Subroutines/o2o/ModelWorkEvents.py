@@ -178,21 +178,23 @@ class opsSwitchListConversion:
         Location and Destination are the same.
         """
 
+        setupBundle = PSE.JMRI.jmrit.operations.setup.Bundle()
+
         parsedRS = {}
-        parsedRS['road'] = rs['road']
-        parsedRS['number'] = rs['number']
-        parsedRS['carType'] = rs['carType']
-        parsedRS['destination'] = rs['location']
-        parsedRS['location'] = rs['location']
-        parsedRS['track'] = rs['track']
+        parsedRS['road'] = rs[setupBundle.handleGetMessage('Road')]
+        parsedRS['number'] = rs[setupBundle.handleGetMessage('Number')]
+        parsedRS['carType'] = rs[setupBundle.handleGetMessage('Type')]
+        parsedRS['destination'] = rs[setupBundle.handleGetMessage('Location')]
+        parsedRS['location'] = rs[setupBundle.handleGetMessage('Location')]
+        parsedRS['track'] = rs[setupBundle.handleGetMessage('Track')]
         try:
             parsedRS['loadType'] = PSE.getShortLoadType(rs)
-            parsedRS['load'] = rs['load']
+            parsedRS['load'] = rs[setupBundle.handleGetMessage('Load')]
         except:
-            parsedRS['load'] = rs['model']
+            parsedRS['load'] = rs[setupBundle.handleGetMessage('Model')]
 
         if self.parseSetTo(rs['setTo']) == PSE.getBundleItem('Hold'):
-            parsedSetTo = rs['track']
+            parsedSetTo = rs[setupBundle.handleGetMessage('Track')]
         else:
             parsedSetTo = self.parseSetTo(rs['setTo'])
         parsedRS['setTo'] = parsedSetTo

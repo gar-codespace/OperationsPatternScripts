@@ -127,7 +127,7 @@ class CreateSetCarsFrame:
 
         reportName = PSE.getBundleItem('ops-switch-list')
         Model.getReportForPrint(reportName)
-        Model.trackPatternAsCsv(reportName)
+        # Model.trackPatternAsCsv(reportName)
 
     # Plays well with others
         PSE.TM.firePropertyChange('o2oSwitchList', False, True)

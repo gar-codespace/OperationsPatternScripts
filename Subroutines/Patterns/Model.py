@@ -207,18 +207,19 @@ def insertStandins(trackPattern):
     Substitutes in standins from the config file.
     """
 
-    standins = PSE.readConfigFile('Patterns')['RM']
+    setupBundle = PSE.JMRI.jmrit.operations.setup.Bundle()
+    standins = PSE.readConfigFile('Patterns')['SI']
 
     tracks = trackPattern['tracks']
     for track in tracks:
         for loco in track['locos']:
             destStandin, fdStandin = getStandins(loco, standins)
-            loco.update({'destination': destStandin})
+            loco.update({setupBundle.handleGetMessage('Destination'): destStandin})
 
         for car in track['cars']:
             destStandin, fdStandin = getStandins(car, standins)
-            car.update({'destination': destStandin})
-            car.update({'finalDest': fdStandin})
+            car.update({setupBundle.handleGetMessage('Destination'): destStandin})
+            car.update({setupBundle.handleGetMessage('Final_Dest'): fdStandin})
             shortLoadType = PSE.getShortLoadType(car)
             car.update({'loadType': shortLoadType})
 
@@ -231,13 +232,15 @@ def getStandins(rs, standins):
     insertStandins
     """
 
-    destStandin = rs['destination']
-    if not rs['destination']:
+    setupBundle = PSE.JMRI.jmrit.operations.setup.Bundle()
+
+    destStandin = rs[setupBundle.handleGetMessage('Destination')]
+    if not rs[setupBundle.handleGetMessage('Destination')]:
         destStandin = standins['DS']
 
     try: # No FD for locos
-        fdStandin = rs['finalDest']
-        if not rs['finalDest']:
+        fdStandin = rs[setupBundle.handleGetMessage('Final_Dest')]
+        if not rs[setupBundle.handleGetMessage('Final_Dest')]:
             fdStandin = standins['FD']
     except:
         fdStandin = standins['FD']

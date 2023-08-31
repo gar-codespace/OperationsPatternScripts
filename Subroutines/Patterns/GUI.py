@@ -491,6 +491,8 @@ class MakeSetCarsEqptRows():
         Creates the car lines of the pattern report form
         """
 
+        setupBundle = PSE.JMRI.jmrit.operations.setup.Bundle()
+
         listOfCarRows = []
         cars = self.setCarsFormData['tracks'][0]['cars']
 
@@ -499,26 +501,51 @@ class MakeSetCarsEqptRows():
             combinedInputLine.setBackground(self.carColor)
             if car['onTrain']:
                 combinedInputLine.setBackground(self.alertColor)
+
             inputText = PSE.JAVX_SWING.JTextField(5)
             self.textBoxEntry.append(inputText)
             inputBox = makeSwingBox(self.panelWidth * 6, self.panelHeight)
             inputBox.add(inputText)
             combinedInputLine.add(inputBox)
 
-            for item in PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
-                if 'tab' in item:
+            messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
+            for lookup in messageFormat:
+                item = self.rosetta[lookup]
+                if 'Tab' in item:
                     continue
-                translatedItem = self.rosetta[item]
             # Special case handling for the hazardous flag
-                if translatedItem == 'hazardous' and car['hazardous']:
-                    labelName = PSE.getBundleItem('Hazardous')
-                elif translatedItem == 'hazardous' and not car['hazardous']:
-                    labelName = ''
+                if item == 'Hazardous' and car[setupBundle.handleGetMessage('Hazardous')]:
+                    labelName = lookup
+                elif item == 'Hazardous' and not car[setupBundle.handleGetMessage('Hazardous')]:
+                    labelName = ' '
                 else:
-                    labelName = car[translatedItem]
+                    labelName = car[lookup]
+
+
+
+
+
+
+
+
+            # for item in PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
+            #     if 'tab' in item:
+            #         continue
+            #     translatedItem = self.rosetta[item]
+
+
+
+
+            # # Special case handling for the hazardous flag
+            #     if translatedItem == 'hazardous' and car['hazardous']:
+            #         labelName = PSE.getBundleItem('Hazardous')
+            #     elif translatedItem == 'hazardous' and not car['hazardous']:
+            #         labelName = ''
+            #     else:
+            #         labelName = car[translatedItem]
 
                 label = PSE.JAVX_SWING.JLabel(labelName)
-                box = makeSwingBox(self.reportWidth[translatedItem] * self.panelWidth, self.panelHeight)
+                box = makeSwingBox(self.reportWidth[item] * self.panelWidth, self.panelHeight)
                 box.add(label)
                 combinedInputLine.add(box)
 

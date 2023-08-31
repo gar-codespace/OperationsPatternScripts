@@ -36,7 +36,10 @@ def makeTextReportTracks(trackList, trackTotals):
     Called by:
     View.ManageGui.trackPatternButton'
     ViewSetCarsForm.switchListButton
+    setupBundle.handleGetMessage('Length')
     """
+
+    setupBundle = PSE.JMRI.jmrit.operations.setup.Bundle()
 
     reportSwitchList = ''
     reportTally = [] # running total for all tracks
@@ -49,14 +52,17 @@ def makeTextReportTracks(trackList, trackTotals):
         reportSwitchList += PSE.getBundleItem('Track:') + ' ' + trackName + '\n'
 
         for loco in track['locos']:
-            lengthOfLocos += int(loco['length']) + 4
+            lengthOfLocos += int(loco[setupBundle.handleGetMessage('Length')]) + 4
             reportSwitchList += loco['setTo'] + loopThroughRs('loco', loco) + '\n'
 
         for car in track['cars']:
-            lengthOfCars += int(car['length']) + 4
+            lengthOfCars += int(car[setupBundle.handleGetMessage('Length')]) + 4
             reportSwitchList += car['setTo'] + loopThroughRs('car', car) + '\n'
-            trackTally.append(car['finalDest'])
-            reportTally.append(car['finalDest'])
+
+            # trackTally.append(car['finalDest'])
+            # reportTally.append(car['finalDest'])
+            trackTally.append(car[setupBundle.handleGetMessage('Final_Dest')])
+            reportTally.append(car[setupBundle.handleGetMessage('Final_Dest')])
 
         if trackTotals:
             totalLength = lengthOfLocos + lengthOfCars
@@ -96,18 +102,16 @@ def loopThroughRs(type, rsAttribs):
 
     for lookup in messageFormat:
         item = rosetta[lookup]
-
-        if 'tab' in item:
+        if 'Tab' in item:
             continue
-
         itemWidth = reportWidth[item]
     # Special case handling for the hazardous flag
-        if item == 'hazardous' and rsAttribs['hazardous']:
-            labelName = PSE.getBundleItem('Hazardous')
-        elif item == 'hazardous' and not rsAttribs['hazardous']:
+        if item == 'Hazardous' and rsAttribs[lookup]:
+            labelName = lookup
+        elif item == 'Hazardous' and not rsAttribs[lookup]:
             labelName = ' '
         else:
-            labelName = rsAttribs[item]
+            labelName = rsAttribs[lookup]
 
         rowItem = PSE.formatText(labelName, itemWidth)
         switchListRow += rowItem
@@ -218,6 +222,8 @@ class RollingStockParser:
     def __init__(self):
 
         self.configFile = PSE.readConfigFile()
+        self.setupBundle = PSE.JMRI.jmrit.operations.setup.Bundle()
+
         self.locationName = self.configFile['Patterns']['PL']
         self.location = PSE.LM.getLocationByName(self.locationName)
 
@@ -309,22 +315,22 @@ class RollingStockParser:
         rsDetailDict = {}
 
     # Common items for all JMRI RS
-        rsDetailDict['road'] = rs.getRoadName()
-        rsDetailDict['number'] = rs.getNumber()
-        rsDetailDict['carType'] = rs.getTypeName()
-        rsDetailDict['length'] = rs.getLength()
-        rsDetailDict['color'] = rs.getColor()
-        rsDetailDict['weight'] = rs.getWeightTons()
-        rsDetailDict['comment'] = rs.getComment()
-        rsDetailDict['division'] = rs.getDivisionName()
-        rsDetailDict['location'] = rs.getLocationName()
-        rsDetailDict['track'] = rs.getTrackName()
-        rsDetailDict['destination'] = rs.getDestinationName()
+        rsDetailDict[self.setupBundle.handleGetMessage('Road')] = rs.getRoadName()
+        rsDetailDict[self.setupBundle.handleGetMessage('Number')] = rs.getNumber()
+        rsDetailDict[self.setupBundle.handleGetMessage('Type')] = rs.getTypeName()
+        rsDetailDict[self.setupBundle.handleGetMessage('Length')] = rs.getLength()
+        rsDetailDict[self.setupBundle.handleGetMessage('Color')] = rs.getColor()
+        rsDetailDict[self.setupBundle.handleGetMessage('Weight')] = rs.getWeightTons()
+        rsDetailDict[self.setupBundle.handleGetMessage('Comment')] = rs.getComment()
+        rsDetailDict[self.setupBundle.handleGetMessage('Division')] = rs.getDivisionName()
+        rsDetailDict[self.setupBundle.handleGetMessage('Location')] = rs.getLocationName()
+        rsDetailDict[self.setupBundle.handleGetMessage('Track')] = rs.getTrackName()
+        rsDetailDict[self.setupBundle.handleGetMessage('Destination')] = rs.getDestinationName()
         try: # Depending on which version of JMRI Ops Pro
-            rsDetailDict['owner'] = rs.getOwner()
+            rsDetailDict[self.setupBundle.handleGetMessage('Owner')] = rs.getOwner()
         except:
             # print('Exception at: Patterns.ModelEntities.getDetailsForLoco')
-            rsDetailDict['owner'] = rs.getOwnerName()
+            rsDetailDict[self.setupBundle.handleGetMessage('Owner')] = rs.getOwnerName()
     # Common items for all OPS RS
         rsDetailDict['setTo'] = u'[  ] '
         rsDetailDict[u'puso'] = u' '
@@ -342,19 +348,20 @@ class RollingStockParser:
 
         locoDetailDict = {}
 
-        locoDetailDict['model'] = locoObject.getModel()
-        locoDetailDict['dccAddress'] = locoObject.getDccAddress()
+        locoDetailDict[self.setupBundle.handleGetMessage('Model')] = locoObject.getModel()
+        locoDetailDict[self.setupBundle.handleGetMessage('DCC_Address')] = locoObject.getDccAddress()
     # Modifications used by this plugin
         try:
-            locoDetailDict['consist'] = locoObject.getConsist().getName()
+            locoDetailDict[self.setupBundle.handleGetMessage('Consist')] = locoObject.getConsist().getName()
         except:
-            locoDetailDict['consist'] = PSE.getBundleItem('Single')
+            locoDetailDict[self.setupBundle.handleGetMessage('Consist')] = PSE.getBundleItem('Single')
 
         return locoDetailDict
 
     def getDetailsForCar(self, carObject):
         """
         Mimics jmri.jmrit.operations.setup.Setup.getCarAttributes()
+        self.setupBundle.handleGetMessage('RWE')
         """
 
         track = self.location.getTrackByName(carObject.getTrackName(), None)
@@ -365,18 +372,21 @@ class RollingStockParser:
 
         carDetailDict = {}
 
-        carDetailDict['loadType'] = carObject.getLoadType()
-        carDetailDict['load'] = carObject.getLoadName()
-        carDetailDict['hazardous'] = carObject.isHazardous()
-        carDetailDict['kernel'] = carObject.getKernelName()
-        carDetailDict['kernelSize'] = str(kernelSize)
-        carDetailDict['dest&Track'] = carObject.getDestinationTrackName()
-        carDetailDict['finalDest'] = carObject.getFinalDestinationName()
-        carDetailDict['fd&Track'] = carObject.getFinalDestinationTrackName()
-        carDetailDict['setOutMsg'] = track.getCommentSetout()
-        carDetailDict['pickupMsg'] = track.getCommentPickup()
-        carDetailDict['rwe'] = carObject.getReturnWhenEmptyDestinationName()
-        carDetailDict['rwl'] = carObject.getReturnWhenLoadedDestinationName()
+        carDetailDict[self.setupBundle.handleGetMessage('Load_Type')] = carObject.getLoadType()
+        carDetailDict[self.setupBundle.handleGetMessage('Load')] = carObject.getLoadName()
+        carDetailDict[self.setupBundle.handleGetMessage('Hazardous')] = carObject.isHazardous()
+        carDetailDict[self.setupBundle.handleGetMessage('Kernel')] = carObject.getKernelName()
+        carDetailDict[self.setupBundle.handleGetMessage('Kernel_Size')] = str(kernelSize)
+        carDetailDict[self.setupBundle.handleGetMessage('Dest&Track')] = carObject.getDestinationTrackName()
+        carDetailDict[self.setupBundle.handleGetMessage('Final_Dest')] = carObject.getFinalDestinationName()
+        carDetailDict[self.setupBundle.handleGetMessage('FD&Track')] = carObject.getFinalDestinationTrackName()
+        carDetailDict[self.setupBundle.handleGetMessage('SetOut_Msg')] = track.getCommentSetout()
+        carDetailDict[self.setupBundle.handleGetMessage('PickUp_Msg')] = track.getCommentPickup()
+        carDetailDict[self.setupBundle.handleGetMessage('RWE')] = carObject.getReturnWhenEmptyDestinationName()
+        try:
+            carDetailDict[self.setupBundle.handleGetMessage('RWL')] = carObject.getReturnWhenLoadedDestinationName()
+        except:
+            carDetailDict['RWL'] = carObject.getReturnWhenLoadedDestinationName()
 
         return carDetailDict
 
