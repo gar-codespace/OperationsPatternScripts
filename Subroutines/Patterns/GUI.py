@@ -471,12 +471,15 @@ class MakeSetCarsEqptRows():
             inputBox.add(inputText)
             combinedInputLine.add(inputBox)
 
-            for item in PSE.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat():
-                if 'tab' in item:
+            messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
+            for lookup in messageFormat:
+                item = self.rosetta[lookup]
+                if 'Tab' in item:
                     continue
-                translatedItem = self.rosetta[item]
-                label = PSE.JAVX_SWING.JLabel(loco[translatedItem])
-                box = makeSwingBox(self.reportWidth[translatedItem] * self.panelWidth, self.panelHeight)
+
+                labelName = loco[lookup]
+                label = PSE.JAVX_SWING.JLabel(labelName)
+                box = makeSwingBox(self.reportWidth[item] * self.panelWidth, self.panelHeight)
                 box.add(label)
                 combinedInputLine.add(box)
 
@@ -513,6 +516,7 @@ class MakeSetCarsEqptRows():
                 item = self.rosetta[lookup]
                 if 'Tab' in item:
                     continue
+
             # Special case handling for the hazardous flag
                 if item == 'Hazardous' and car[setupBundle.handleGetMessage('Hazardous')]:
                     labelName = lookup
@@ -520,29 +524,6 @@ class MakeSetCarsEqptRows():
                     labelName = ' '
                 else:
                     labelName = car[lookup]
-
-
-
-
-
-
-
-
-            # for item in PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat():
-            #     if 'tab' in item:
-            #         continue
-            #     translatedItem = self.rosetta[item]
-
-
-
-
-            # # Special case handling for the hazardous flag
-            #     if translatedItem == 'hazardous' and car['hazardous']:
-            #         labelName = PSE.getBundleItem('Hazardous')
-            #     elif translatedItem == 'hazardous' and not car['hazardous']:
-            #         labelName = ''
-            #     else:
-            #         labelName = car[translatedItem]
 
                 label = PSE.JAVX_SWING.JLabel(labelName)
                 box = makeSwingBox(self.reportWidth[item] * self.panelWidth, self.panelHeight)

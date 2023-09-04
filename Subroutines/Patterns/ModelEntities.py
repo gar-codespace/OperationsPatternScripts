@@ -403,10 +403,12 @@ class RollingStockParser:
         Sort order of PSE.readConfigFile('RM')['SL'] is top down
         """
 
+        setupBundle = PSE.JMRI.jmrit.operations.setup.Bundle()
+
         sortLocos = self.configFile['Patterns']['RM']['SL']
         for sortKey in sortLocos:
             try:
-                translatedkey = (sortKey)
+                translatedkey = (setupBundle.handleGetMessage(sortKey))
                 self.locoDetails.sort(key=lambda row: row[translatedkey])
             except:
                 print('No engines or list not sorted')
@@ -419,10 +421,12 @@ class RollingStockParser:
         Sort order of PSE.readConfigFile('Patterns')['RM']['SC'] is top down
         """
 
+        setupBundle = PSE.JMRI.jmrit.operations.setup.Bundle()
+
         sortCars = self.configFile['Patterns']['RM']['SC']
         for sortKey in sortCars:
             try:
-                translatedkey = (sortKey)
+                translatedkey = (setupBundle.handleGetMessage(sortKey))
                 self.carDetails.sort(key=lambda row: row[translatedkey])
             except:
                 print('No cars or list not sorted')

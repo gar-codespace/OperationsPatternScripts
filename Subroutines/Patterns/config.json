@@ -27,11 +27,11 @@
     },
     "RM" : {
       "SL": [
-        "model"
+        "Model"
       ],
       "SC": [
-        "loadType",
-        "fd&Track"
+        "Load_Type",
+        "FD&Track"
       ],
       "AW": {
         " ": 1, 
