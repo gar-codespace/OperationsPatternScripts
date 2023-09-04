@@ -22,7 +22,8 @@
       "DS" : "Not Assigned",
       "DT" : "Not Scheduled",
       "FD" : "Unconsigned",
-      "FT" : "No Waybill"
+      "FT" : "No Waybill",
+      "EH" : "Available"
     },
     "RM" : {
       "SL": [

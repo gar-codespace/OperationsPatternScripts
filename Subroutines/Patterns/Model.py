@@ -213,39 +213,63 @@ def insertStandins(trackPattern):
     tracks = trackPattern['tracks']
     for track in tracks:
         for loco in track['locos']:
-            destStandin, fdStandin = getStandins(loco, standins)
-            loco.update({setupBundle.handleGetMessage('Destination'): destStandin})
+            destination = loco[setupBundle.handleGetMessage('Destination')]
+            if not destination:
+                destination = extendedDestionationHandling(loco, standins)
+
+            loco.update({setupBundle.handleGetMessage('Destination'): destination})
 
         for car in track['cars']:
-            destStandin, fdStandin = getStandins(car, standins)
-            car.update({setupBundle.handleGetMessage('Destination'): destStandin})
-            car.update({setupBundle.handleGetMessage('Final_Dest'): fdStandin})
+            destination = car[setupBundle.handleGetMessage('Destination')]
+            finalDestination = car[setupBundle.handleGetMessage('Final_Dest')]
+
+            if not destination:
+                destination = extendedDestionationHandling(car, standins)
+
+            if not finalDestination:
+                finalDestination = extendedFinalDestionationHandling(car, standins)
+
             shortLoadType = PSE.getShortLoadType(car)
+
+            car.update({setupBundle.handleGetMessage('Destination'): destination})
+            car.update({setupBundle.handleGetMessage('Final_Dest'): finalDestination})
             car.update({'loadType': shortLoadType})
 
     return trackPattern
 
-def getStandins(rs, standins):
+def extendedDestionationHandling(rs, standins):
     """
-    Replaces null destination and fd with the standin from the configFile
-    Called by:
-    insertStandins
+    Special case handling foe Engine, Caboose, and Passenger.
     """
 
-    setupBundle = PSE.JMRI.jmrit.operations.setup.Bundle()
+    destination = standins['DS']
+    if rs['isEngine']:
+        destination = standins['EH']
 
-    destStandin = rs[setupBundle.handleGetMessage('Destination')]
-    if not rs[setupBundle.handleGetMessage('Destination')]:
-        destStandin = standins['DS']
+    if rs['isCaboose']:
+        destination = standins['EH']
 
-    try: # No FD for locos
-        fdStandin = rs[setupBundle.handleGetMessage('Final_Dest')]
-        if not rs[setupBundle.handleGetMessage('Final_Dest')]:
-            fdStandin = standins['FD']
-    except:
-        fdStandin = standins['FD']
+    if rs['isPassenger']:
+        destination = standins['EH']
 
-    return destStandin, fdStandin
+    return destination
+
+def extendedFinalDestionationHandling(rs, standins):
+    """
+    Special case handling foe Engine, Caboose, and Passenger.
+    """
+
+    finalDestination = standins['DS']
+    if rs['isEngine']:
+        pass
+
+    if rs['isCaboose']:
+        finalDestination = standins['EH']
+
+    if rs['isPassenger']:
+        finalDestination = standins['EH']
+
+    return finalDestination
 
 def makeTrackPattern(selectedTracks):
     """

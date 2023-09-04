@@ -355,13 +355,16 @@ class RollingStockParser:
             locoDetailDict[self.setupBundle.handleGetMessage('Consist')] = locoObject.getConsist().getName()
         except:
             locoDetailDict[self.setupBundle.handleGetMessage('Consist')] = PSE.getBundleItem('Single')
+    # OPS car attributes
+        locoDetailDict['isCaboose'] = False
+        locoDetailDict['isPassenger'] = False
+        locoDetailDict['isEngine'] = True
 
         return locoDetailDict
 
     def getDetailsForCar(self, carObject):
         """
         Mimics jmri.jmrit.operations.setup.Setup.getCarAttributes()
-        self.setupBundle.handleGetMessage('RWE')
         """
 
         track = self.location.getTrackByName(carObject.getTrackName(), None)
@@ -371,7 +374,7 @@ class RollingStockParser:
             kernelSize = 0
 
         carDetailDict = {}
-
+    # JMRI car attributes
         carDetailDict[self.setupBundle.handleGetMessage('Load_Type')] = carObject.getLoadType()
         carDetailDict[self.setupBundle.handleGetMessage('Load')] = carObject.getLoadName()
         carDetailDict[self.setupBundle.handleGetMessage('Hazardous')] = carObject.isHazardous()
@@ -387,6 +390,10 @@ class RollingStockParser:
             carDetailDict[self.setupBundle.handleGetMessage('RWL')] = carObject.getReturnWhenLoadedDestinationName()
         except:
             carDetailDict['RWL'] = carObject.getReturnWhenLoadedDestinationName()
+    # OPS car attributes
+        carDetailDict['isCaboose'] = carObject.isCaboose()
+        carDetailDict['isPassenger'] = carObject.isPassenger()
+        carDetailDict['isEngine'] = False
 
         return carDetailDict
 

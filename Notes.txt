@@ -6,8 +6,8 @@ Todo:
   o2o.ModelWorkEvents.parseRS and o2o.ModelWorkEvents.parsePtRs have duplicates.
   Add config file validation to StandAloneExport.
   Depricate rosetta?
-  Conform Patterns['AW] to JMRI standard. IE finalDest should be Final_Dest, include Rosetta.
   Caboose, engines, pass and MOW should not show FD ETC, they should show assigned train name or Not Assigned in the destination field
+  Car and Engine lists are not sorting.
   
 Comments:
   Schedule does not prevent setting a car to a track.
