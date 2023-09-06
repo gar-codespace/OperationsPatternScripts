@@ -1,7 +1,7 @@
 Todo:
   How to publish DeepL?
   Depricate rosetta?
-  Finish extendedDestionationHandling and extendedFinalDestionationHandling.
+  Update help html.
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.
@@ -185,18 +185,20 @@ Catches Items:
   Catches o2o pressing import button that doesn't correspond to items actually updated.
 
 Version 3 ideas:
-  Add a new subroutine, streamlined trains window.
+  Finish extendedDestionationHandling and extendedFinalDestionationHandling.
   Possibly process event messages to ease reading the log file.
   Harden up Bundle against web errors, untranslated items.
   Harden Translator.translateSingle() from timeout errors.
   How to use locale modifier, IE en-GB.
   Test formatText with ascii and others.
   Implement mergeConfigFiles() maybe?
-  jPlus integration into JMRI reports and web server.
+
   Start working on adding Patterns to the web server.
-    Set Rolling Stock to Track button creates a train.
+    jPlus integration into JMRI reports and web server.
+    Set Rolling Stock to Track button creates a train (switch list as a train).
+    Add a new subroutine, streamlined trains window that only displayes the switch lists as trains.
     Switch List button on Set Cars form adds work to the train and builds the train.
-    The switch list train will display on the web server page.
+    The switch list as a train will display on the web server page.
     Use the conductor feature on the train to report work done and terminate the train.
     A train listener detects the terminated switch list train and deletes it.
 
