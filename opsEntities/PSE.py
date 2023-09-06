@@ -581,11 +581,6 @@ def getShortLoadType(car):
 
     setupBundle = JMRI.jmrit.operations.setup.Bundle()
 
-    # try:
-    #     rs = CM.getByRoadAndNumber(car[setupBundle.handleGetMessage('Road')], car[setupBundle.handleGetMessage('Number')]) # Pattern scripts nomenclature
-    # except:
-    #     rs = CM.getByRoadAndNumber(car['road'], car['number']) # JMRI nomenclature
-
     rs = CM.getByRoadAndNumber(car[setupBundle.handleGetMessage('Road')], car[setupBundle.handleGetMessage('Number')])
 
     lt =  getBundleItem('unknown').upper()[0]
@@ -680,7 +675,6 @@ def genericWriteReport(filePath, genericReport):
 
 def genericDisplayReport(genericReportPath):
     """
-    Dealer's choice, the JMRI or Java version, well, maybe not.
     Called by:
     MainScript.Controller.logItemSelected
     MainScript.Controller.ecItemSelected
@@ -691,6 +685,7 @@ def genericDisplayReport(genericReportPath):
     targetFile = JAVA_IO.File(genericReportPath)
 
     JMRI.util.HelpUtil.openWindowsFile(targetFile)
+# Does not work on Windows 11
     # JAVA_AWT.Desktop.getDesktop().edit(targetFile)
     # Windows 11 throws error with json file
 
