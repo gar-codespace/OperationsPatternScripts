@@ -120,59 +120,13 @@ class subroutineGui:
 
     def makeTracksRow(self):
         """
+        The track row is populated by Model.trackRowManager()
         """
 
         tracksPanel = PSE.JAVX_SWING.JPanel()
-        tracksPanel.setName('jTracksPanel')
-
-        # rowLabel = PSE.JAVX_SWING.JLabel()
-        # rowLabel.setName('jTracksPanelLabel')
-        # checkBox = PSE.JAVX_SWING.JCheckBox('test')
-        # checkBox.setName('jTrackCheckBox')
-        # self.trackCheckBoxes.append(checkBox)
-
-        # tracksPanel.add(rowLabel)
-        # tracksPanel.add(checkBox)
-
-
-        # tracksPanel.setAlignmentX(PSE.JAVX_SWING.JPanel.CENTER_ALIGNMENT)
-
-        # trackDict = self.getTrackDict()
-
-        # if trackDict:
-        #     rowLabel.text = PSE.getBundleItem('Track List:') + ' '
-        #     for track, flag in sorted(trackDict.items()):
-        #         trackCheckBox = tracksPanel.add(PSE.JAVX_SWING.JCheckBox(track, flag))
-        #     self.ypButton.setEnabled(True)
-        #     self.scButton.setEnabled(True)
-        # else:
-        #     self.ypButton.setEnabled(False)
-        #     self.scButton.setEnabled(False)
-        #     rowLabel.text = PSE.getBundleItem('There are no tracks for this selection')            
+        tracksPanel.setName('jTracksPanel')            
 
         return tracksPanel
-
-    # def getTrackDict(self):
-    #     """
-    #     Since the track dict is created when called,
-    #     it is not necessary to save it into configFile['Patterns']['PT']
-    #     """
-
-    #     trackDict = {}
-
-    #     yardTracksOnlyFlag = None
-    #     if self.patternsConfigFile['PA']:
-    #         yardTracksOnlyFlag = 'Yard'
-
-    #     try:
-    #         trackList = PSE.LM.getLocationByName(self.patternsConfigFile['PL']).getTracksByNameList(yardTracksOnlyFlag)
-    #     except:
-    #         trackList = []
-
-    #     for track in trackList:
-    #         trackDict[unicode(track, PSE.ENCODING)] = False
-
-    #     return trackDict
         
     def makeButtonsRow(self):
         """

@@ -25,18 +25,11 @@ def actionListener(EVENT):
         configFile[subroutineName].update({'SV':False})
         _psLog.info('Hide ' + __package__)
         print('Hide ' + __package__)
-    # Do subroutine specific stuff here
-
-
-
     else: # Show this subroutine
         menuText = PSE.getBundleItem('Hide') + ' ' + __package__
         configFile[subroutineName].update({'SV':True})
         _psLog.info('Show ' + __package__)
         print('Show ' + __package__)
-    # Do subroutine specific stuff here
-
-
 
     PSE.writeConfigFile(configFile)
     PSE.repaintPatternScriptsWindow()
@@ -164,7 +157,7 @@ class o2oPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
 
             _psLog.debug(logMessage)
 
-        if PROPERTY_CHANGE_EVENT.propertyName == 'o2oSwitchList' and PROPERTY_CHANGE_EVENT.newValue == True:
+        if PROPERTY_CHANGE_EVENT.propertyName == 'patternsSwitchList' and PROPERTY_CHANGE_EVENT.newValue == True:
             """
             Called when the o2o Set Cars window Switch List button is pressed.
             """

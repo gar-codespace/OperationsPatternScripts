@@ -26,18 +26,11 @@ def actionListener(EVENT):
         configFile[subroutineName].update({'SV':False})
         _psLog.info('Hide ' + __package__)
         print('Hide ' + __package__)
-    # Do subroutine specific stuff here
-
-
-
     else: # Show this subroutine
         menuText = PSE.getBundleItem('Hide') + ' ' + __package__
         configFile[subroutineName].update({'SV':True})
         _psLog.info('Show ' + __package__)
         print('Show ' + __package__)
-    # Do subroutine specific stuff here
-
-
 
     PSE.writeConfigFile(configFile)
     PSE.repaintPatternScriptsWindow()
@@ -71,7 +64,6 @@ def removeSubroutineListeners():
     removeDivisionsListener()
     removeLocationsListener()
 
-    # print('Patterns.Listeners.removeSubroutineListeners')
     _psLog.debug('Patterns.Listeners.removeSubroutineListeners')
 
     return
@@ -120,12 +112,6 @@ class PatternsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
         if PROPERTY_CHANGE_EVENT.propertyName == 'jmriDataSets':
             Model.divComboUpdater()
             Model.locComboUpdater()
-
-        # if PROPERTY_CHANGE_EVENT.propertyName == 'extendedDetails':
-        #     Model.divComboUpdater()
-        #     Model.locComboUpdater()
-
-            # _psLog.debug(PROPERTY_CHANGE_EVENT)
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'divisionsListLength':
             Model.divComboUpdater()

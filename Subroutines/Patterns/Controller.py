@@ -105,8 +105,6 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        # Model.updateConfigFile(self.widgets)
-        # selectedTracks = [trackCheckBox.text for trackCheckBox in self.widgets[3] if trackCheckBox.selected]
         configFile = PSE.readConfigFile()
         selectedTracks = [track for track, flag in configFile['Patterns']['PT'].items() if flag]
         selectedTracks.sort()
@@ -131,8 +129,6 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        # Model.updateConfigFile(self.widgets)
-        # selectedTracks = [trackCheckBox.text for trackCheckBox in self.widgets[3] if trackCheckBox.selected]
         configFile = PSE.readConfigFile()
         selectedTracks = [track for track, flag in configFile['Patterns']['PT'].items() if flag]
         selectedTracks.sort()
@@ -146,13 +142,8 @@ class StartUp:
 
             setCarsFrame = SetCarsForm_Controller.CreateSetCarsFrame(track).makeFrame()
 
-            newWidth = setCarsFrame.getWidth()
-            if newWidth > 800:
-                newWidth = 800
-
-            newHeight = setCarsFrame.getHeight()
-            if newHeight > 800:
-                newHeight = 800
+            newWidth = min(800, setCarsFrame.getWidth())
+            newHeight = min(800, setCarsFrame.getHeight())
 
             newDimension = PSE.JAVA_AWT.Dimension(newWidth, newHeight)
             setCarsFrame.setSize(newDimension)

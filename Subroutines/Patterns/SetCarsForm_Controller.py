@@ -129,10 +129,10 @@ class CreateSetCarsFrame:
         Model.getReportForPrint(reportName)
         # Model.trackPatternAsCsv(reportName)
 
-    # Plays well with others
-        PSE.TM.firePropertyChange('o2oSwitchList', False, True)
-
         MOUSE_CLICKED.getSource().setBackground(PSE.JAVA_AWT.Color.GREEN)
+    # Plays well with others
+        PSE.TM.firePropertyChange('patternsSwitchList', False, True)
+
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return

@@ -40,7 +40,6 @@ def resetConfigFileItems():
 
 def refreshSubroutine():
     """
-    Called from PSE.remoteCalls('refreshCalls')
     """
 
     return

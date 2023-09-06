@@ -19,7 +19,7 @@ def convertOpsSwitchList():
     """
     Mini controller.
     Converts the Patterns ops-switch-list.json into an o2o work events file.
-    Called by: Listeners - PROPERTY_CHANGE_EVENT.propertyName == 'o2oSwitchList' 
+    Called by: Listeners - PROPERTY_CHANGE_EVENT.propertyName == 'patternsSwitchList' 
     """
 
     opsSwitchList = opsSwitchListConversion()

@@ -59,8 +59,6 @@ def makeTextReportTracks(trackList, trackTotals):
             lengthOfCars += int(car[setupBundle.handleGetMessage('Length')]) + 4
             reportSwitchList += car['setTo'] + loopThroughRs('car', car) + '\n'
 
-            # trackTally.append(car['finalDest'])
-            # reportTally.append(car['finalDest'])
             trackTally.append(car[setupBundle.handleGetMessage('Final_Dest')])
             reportTally.append(car[setupBundle.handleGetMessage('Final_Dest')])
 
@@ -188,11 +186,12 @@ def findLongestTrackString():
     merge
     """
 
-    longestTrackString = 6 # 6 is the length of [Hold]
+    hold = '[' + PSE.getBundleItem('Hold') + ']'
+    longestTrackString = len(hold)
+
     location = PSE.LM.getLocationByName(PSE.readConfigFile('Patterns')['PL'])
     for track in location.getTracksList():
-        if len(track.getName()) > longestTrackString:
-            longestTrackString = len(track.getName())
+        longestTrackString = max(longestTrackString, len(track.getName()))
 
     return longestTrackString
 
