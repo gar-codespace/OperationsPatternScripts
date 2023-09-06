@@ -576,21 +576,24 @@ def getShortLoadType(car):
     Load, Empty, Occupied and Unknown are translated by the bundle.
     Called by:
     o2oSubroutine.ModelWorkEvents
-    PatternsSubroutine.Model
+    PatternsSubroutine.Model`
     """
 
     setupBundle = JMRI.jmrit.operations.setup.Bundle()
 
-    rs = CM.getByRoadAndNumber(car[setupBundle.handleGetMessage('Road')], car[setupBundle.handleGetMessage('Number')])
+    try: # car is sent in from Patterns
+        carObject = CM.getByRoadAndNumber(car[setupBundle.handleGetMessage('Road')], car[setupBundle.handleGetMessage('Number')])
+    except KeyError: # car is sent in from JMRI manifest json
+        carObject = CM.getByRoadAndNumber(car['road'], car['number'])
 
     lt =  getBundleItem('unknown').upper()[0]
-    if rs.getLoadType() == 'empty' or rs.getLoadType() == 'Empty':
+    if carObject.getLoadType() == 'empty' or carObject.getLoadType() == 'Empty':
         lt = getBundleItem('empty').upper()[0]
 
-    if rs.getLoadType() == 'load' or rs.getLoadType() == 'load':
+    if carObject.getLoadType() == 'load' or carObject.getLoadType() == 'Load':
         lt = getBundleItem('load').upper()[0]
 
-    if rs.isCaboose() or rs.isPassenger():
+    if carObject.isCaboose() or carObject.isPassenger():
         lt = getBundleItem('occupied').upper()[0]
 
     return lt

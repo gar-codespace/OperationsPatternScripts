@@ -310,6 +310,7 @@ class jmriManifestConversion:
         parsedRS['track'] = rs['location']['track']['userName']
         parsedRS['destination'] = rs['destination']['userName']
         parsedRS['setTo'] = rs['destination']['track']['userName']
+
         try:
             parsedRS['loadType'] = PSE.getShortLoadType(rs)
             parsedRS['load'] = rs['load']

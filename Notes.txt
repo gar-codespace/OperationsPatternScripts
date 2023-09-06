@@ -1,11 +1,13 @@
 Todo:
   How to publish DeepL?
-  lots of duplication in o2o.ScheduleAuteur symetric and asymetric.
-  Duplication of PSE chunkPath.
-  PatternsSubroutine.ModelEntities.loopThroughRs and PatternsSubroutine.GUI.makeSetCarsCarRows have duplicates.
-  o2o.ModelWorkEvents.parseRS and o2o.ModelWorkEvents.parsePtRs have duplicates.
   Depricate rosetta?
   Finish extendedDestionationHandling and extendedFinalDestionationHandling.
+
+Duplicate code:
+  o2o.ScheduleAuteur symetric and asymetric.
+  PSE chunkPath.
+  PatternsSubroutine.ModelEntities.loopThroughRs and PatternsSubroutine.GUI.makeSetCarsCarRows.
+  o2o.ModelWorkEvents.parseRS and o2o.ModelWorkEvents.parsePtRs.
   
 Comments:
   Schedule does not prevent setting a car to a track.
