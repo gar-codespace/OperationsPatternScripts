@@ -413,6 +413,8 @@ def makeTrackPatternCsv(trackPattern):
     Model.writeTrackPatternCsv
     """
 
+    setupBundle = PSE.JMRI.jmrit.operations.setup.Bundle()
+
     trackPatternCsv = u'Operator,Description,Parameters\n'
     trackPatternCsv += u'RT,Report Type,' + trackPattern['trainDescription'] + '\n'
     trackPatternCsv += u'RD,Railroad Division,' + str(trackPattern['division']) + '\n'
@@ -430,18 +432,20 @@ def makeTrackPatternCsv(trackPattern):
             pass
         for loco in track['locos']:
             trackPatternCsv +=  loco['setTo'] + ',' \
-                            + loco['road'] + ',' \
-                            + loco['number'] + ',' \
-                            + loco['carType'] + ',' \
-                            + loco['model'] + ',' \
-                            + loco['length'] + ',' \
-                            + loco['weight'] + ',' \
-                            + loco['consist'] + ',' \
-                            + loco['owner'] + ',' \
-                            + loco['track'] + ',' \
-                            + loco['location'] + ',' \
-                            + loco['destination'] + ',' \
-                            + loco['comment'] + ',' \
+                            + loco[setupBundle.handleGetMessage('Road')] + ',' \
+                            + loco[setupBundle.handleGetMessage('Number')] + ',' \
+                            + loco[setupBundle.handleGetMessage('Type')] + ',' \
+                            + loco[setupBundle.handleGetMessage('Model')] + ',' \
+                            + loco[setupBundle.handleGetMessage('Length')] + ',' \
+                            + loco[setupBundle.handleGetMessage('Division')] + ',' \
+                            + loco[setupBundle.handleGetMessage('Weight')] + ',' \
+                            + loco[setupBundle.handleGetMessage('Consist')] + ',' \
+                            + loco[setupBundle.handleGetMessage('Color')] + ',' \
+                            + loco[setupBundle.handleGetMessage('Owner')] + ',' \
+                            + loco[setupBundle.handleGetMessage('Track')] + ',' \
+                            + loco[setupBundle.handleGetMessage('Location')] + ',' \
+                            + loco[setupBundle.handleGetMessage('Destination')] + ',' \
+                            + loco[setupBundle.handleGetMessage('Comment')] + ',' \
                             + '\n'
     trackPatternCsv += 'SC,Set Cars\n'
     trackPatternCsv += u'setTo,Road,Number,Type,Length,Weight,Load,Load_Type,Hazardous,Color,Kernel,Kernel_Size,Owner,Track,Location,Destination,dest&Track,Final_Dest,fd&Track,Comment,Drop_Comment,Pickup_Comment,RWE\n'
@@ -453,28 +457,29 @@ def makeTrackPatternCsv(trackPattern):
             pass
         for car in track['cars']:
             trackPatternCsv +=  car['setTo'] + ',' \
-                            + car['road'] + ',' \
-                            + car['number'] + ',' \
-                            + car['carType'] + ',' \
-                            + car['length'] + ',' \
-                            + car['weight'] + ',' \
-                            + car['load'] + ',' \
-                            + car['loadType'] + ',' \
-                            + str(car['hazardous']) + ',' \
-                            + car['color'] + ',' \
-                            + car['kernel'] + ',' \
-                            + car['kernelSize'] + ',' \
-                            + car['owner'] + ',' \
-                            + car['track'] + ',' \
-                            + car['location'] + ',' \
-                            + car['destination'] + ',' \
-                            + car['dest&Track'] + ',' \
-                            + car['finalDest'] + ',' \
-                            + car['fd&Track'] + ',' \
-                            + car['comment'] + ',' \
-                            + car['setOutMsg'] + ',' \
-                            + car['pickupMsg'] + ',' \
-                            + car['rwe'] \
+                            + car[setupBundle.handleGetMessage('Road')] + ',' \
+                            + car[setupBundle.handleGetMessage('Number')] + ',' \
+                            + car[setupBundle.handleGetMessage('Type')] + ',' \
+                            + car[setupBundle.handleGetMessage('Length')] + ',' \
+                            + car[setupBundle.handleGetMessage('Weight')] + ',' \
+                            + car[setupBundle.handleGetMessage('Load')] + ',' \
+                            + car[setupBundle.handleGetMessage('Load_Type')] + ',' \
+                            + str(car[setupBundle.handleGetMessage('Hazardous')]) + ',' \
+                            + car[setupBundle.handleGetMessage('Color')] + ',' \
+                            + car[setupBundle.handleGetMessage('Kernel')] + ',' \
+                            + car[setupBundle.handleGetMessage('Kernel_Size')] + ',' \
+                            + car[setupBundle.handleGetMessage('Owner')] + ',' \
+                            + car[setupBundle.handleGetMessage('Track')] + ',' \
+                            + car[setupBundle.handleGetMessage('Division')] + ',' \
+                            + car[setupBundle.handleGetMessage('Location')] + ',' \
+                            + car[setupBundle.handleGetMessage('Destination')] + ',' \
+                            + car[setupBundle.handleGetMessage('Dest&Track')] + ',' \
+                            + car[setupBundle.handleGetMessage('Final_Dest')] + ',' \
+                            + car[setupBundle.handleGetMessage('FD&Track')] + ',' \
+                            + car[setupBundle.handleGetMessage('Comment')] + ',' \
+                            + car[setupBundle.handleGetMessage('SetOut_Msg')] + ',' \
+                            + car[setupBundle.handleGetMessage('PickUp_Msg')] + ',' \
+                            + car[setupBundle.handleGetMessage('RWE')] \
                             + '\n'
 
     return trackPatternCsv

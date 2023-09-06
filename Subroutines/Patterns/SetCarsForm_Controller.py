@@ -127,7 +127,7 @@ class CreateSetCarsFrame:
 
         reportName = PSE.getBundleItem('ops-switch-list')
         Model.getReportForPrint(reportName)
-        # Model.trackPatternAsCsv(reportName)
+        Model.trackPatternAsCsv(reportName)
 
         MOUSE_CLICKED.getSource().setBackground(PSE.JAVA_AWT.Color.GREEN)
     # Plays well with others
