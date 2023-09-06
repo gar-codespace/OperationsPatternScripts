@@ -4,7 +4,6 @@ Todo:
   Duplication of PSE chunkPath.
   PatternsSubroutine.ModelEntities.loopThroughRs and PatternsSubroutine.GUI.makeSetCarsCarRows have duplicates.
   o2o.ModelWorkEvents.parseRS and o2o.ModelWorkEvents.parsePtRs have duplicates.
-  Add config file validation to StandAloneExport.
   Depricate rosetta?
   Finish extendedDestionationHandling and extendedFinalDestionationHandling.
   
@@ -145,6 +144,7 @@ Tested Items:
       'Generic' uses bundle OK.
       o2o.ModelWorkEvents parsePtRs and parseRS combined OK.
       o2o locations and industries buttons resets the patterns combo boxes OK.
+      Add config file validation to StandAloneExport OK.
 
     Export-
       When active, exports JMRI manifest to TP OK.

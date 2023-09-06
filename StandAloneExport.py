@@ -49,6 +49,8 @@ class StandAloneExport(jmri.jmrit.automat.AbstractAutomaton):
         self.console = PSE.APPS.SystemConsole.getConsole()
         self.trainsWindow = PSE.JMRI.jmrit.operations.trains.TrainsTableFrame()
 
+        PSE.validateConfigFile()
+
         return
 
     def handle(self):

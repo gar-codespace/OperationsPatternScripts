@@ -33,8 +33,7 @@ PSE.validateConfigFile()
 
 configFile = PSE.readConfigFile()
 encodingSelection = configFile['Main Script']['CP']['ES']
-PSE.ENCODING = configFile['Main Script']['CP']['EO'][encodingSelection]
-# ['EO'] is encoding options
+PSE.ENCODING = configFile['Main Script']['CP']['EO'][encodingSelection] # ['EO'] is encoding options
 
 def buildThePlugin(view):
     """
