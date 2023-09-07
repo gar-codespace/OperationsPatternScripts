@@ -1,6 +1,5 @@
 Todo:
   How to publish DeepL?
-  Depricate rosetta?
   Update help html.
 
 Duplicate code:

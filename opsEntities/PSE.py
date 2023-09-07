@@ -38,10 +38,11 @@ BUNDLE = {}
 REPORT_ITEM_WIDTH_MATRIX = {}
 TRACK_NAME_CLICKED_ON = ''
 
-# Dealers choice, both work OK:
+"""
+The formatting is a little different so don't use this:
 J_BUNDLE = JMRI.jmrit.operations.setup.Setup()
-# SB = JMRI.jmrit.operations.setup.Bundle()
-# SB.handleGetMessage('road')
+"""
+SB = JMRI.jmrit.operations.setup.Bundle()
 
 SCRIPT_NAME = 'OperationsPatternScripts.opsEntities.PSE'
 SCRIPT_REV = 20230201
@@ -579,10 +580,8 @@ def getShortLoadType(car):
     PatternsSubroutine.Model`
     """
 
-    setupBundle = JMRI.jmrit.operations.setup.Bundle()
-
     try: # car is sent in from Patterns
-        carObject = CM.getByRoadAndNumber(car[setupBundle.handleGetMessage('Road')], car[setupBundle.handleGetMessage('Number')])
+        carObject = CM.getByRoadAndNumber(car[SB.handleGetMessage('Road')], car[SB.handleGetMessage('Number')])
     except KeyError: # car is sent in from JMRI manifest json
         carObject = CM.getByRoadAndNumber(car['road'], car['number'])
 
@@ -597,21 +596,44 @@ def getShortLoadType(car):
         lt = getBundleItem('occupied').upper()[0]
 
     return lt
-    # return 'L'
 
 def makeReportItemWidthMatrix():
     """
     The attribute widths (AW) for each of the rolling stock attributes is defined in the report matrix (RM) of the config file.
     """
 
+    # reportMatrix = {}
+    # attributeWidths = readConfigFile('Patterns')['US']['AW']
+
+    # for aKey, aValue in attributeWidths.items():
+    #     reportMatrix[aKey] = aValue
+
+    # global REPORT_ITEM_WIDTH_MATRIX
+    # REPORT_ITEM_WIDTH_MATRIX = reportMatrix
+
+
+
+
+
     reportMatrix = {}
     attributeWidths = readConfigFile('Patterns')['US']['AW']
 
     for aKey, aValue in attributeWidths.items():
-        reportMatrix[aKey] = aValue
+        try: # Include translated JMRI fields
+            reportMatrix[SB.handleGetMessage(aKey)] = aValue
+        except: # Include custom OPS fields
+            reportMatrix[aKey] = aValue
 
     global REPORT_ITEM_WIDTH_MATRIX
     REPORT_ITEM_WIDTH_MATRIX = reportMatrix
+
+
+
+
+
+
+
+
 
     return
 
@@ -1011,46 +1033,43 @@ def getBundleItem(item):
 
 def translateMessageFormat():
     """
+    DEPRICATED
     The messageFormat is in the locale's language, it has to be hashed to the plugin fields.
-    Dealers choice, J_BUNDLE.ROAD or SB.handleGetMessage('road').
-    Called by:
-    PatternTracksSubroutine.ViewEntities.loopThroughRs
-    PatternTracksSubroutine.ViewSetCarsForm.MakeSetCarsEqptRows
     """
 
     rosetta = {}
 #Common
-    rosetta[J_BUNDLE.ROAD] = 'Road'
-    rosetta[J_BUNDLE.NUMBER] = 'Number'
-    rosetta[J_BUNDLE.TYPE] = 'Type'
-    rosetta[J_BUNDLE.LENGTH] = 'Length'
-    rosetta[J_BUNDLE.COLOR] = 'Color'
-    rosetta[J_BUNDLE.WEIGHT] = 'Weight'
-    rosetta[J_BUNDLE.COMMENT] = 'Comment'
-    rosetta[J_BUNDLE.DIVISION] = 'Division'
-    rosetta[J_BUNDLE.LOCATION] = 'Location'
-    rosetta[J_BUNDLE.TRACK] = 'Track'
-    rosetta[J_BUNDLE.DESTINATION] = 'Destination'
-    rosetta[J_BUNDLE.OWNER] = 'Owner'
-    rosetta[J_BUNDLE.TAB] = 'Tab'
-    rosetta[J_BUNDLE.TAB2] = 'Tab2'
-    rosetta[J_BUNDLE.TAB3] = 'Tab3'
+    rosetta[SB.handleGetMessage('Road')] = 'Road'
+    rosetta[SB.handleGetMessage('Number')] = 'Number'
+    rosetta[SB.handleGetMessage('Type')] = 'Type'
+    rosetta[SB.handleGetMessage('Length')] = 'Length'
+    rosetta[SB.handleGetMessage('Color')] = 'Color'
+    rosetta[SB.handleGetMessage('Weight')] = 'Weight'
+    rosetta[SB.handleGetMessage('Comment')] = 'Comment'
+    rosetta[SB.handleGetMessage('Division')] = 'Division'
+    rosetta[SB.handleGetMessage('Location')] = 'Location'
+    rosetta[SB.handleGetMessage('Track')] = 'Track'
+    rosetta[SB.handleGetMessage('Destination')] = 'Destination'
+    rosetta[SB.handleGetMessage('Owner')] = 'Owner'
+    rosetta[SB.handleGetMessage('Tab')] = 'Tab'
+    rosetta[SB.handleGetMessage('Tab2')] = 'Tab2'
+    rosetta[SB.handleGetMessage('Tab3')] = 'Tab3'
 # Locos
-    rosetta[J_BUNDLE.MODEL] = 'Model'
-    rosetta[J_BUNDLE.DCC_ADDRESS] = 'DCC_Address'
-    rosetta[J_BUNDLE.CONSIST] = 'Consist'
+    rosetta[SB.handleGetMessage('Model')] = 'Model'
+    rosetta[SB.handleGetMessage('DCC_Address')] = 'DCC_Address'
+    rosetta[SB.handleGetMessage('Consist')] = 'Consist'
 # Cars
-    rosetta[J_BUNDLE.LOAD_TYPE] = 'Load_Type'
-    rosetta[J_BUNDLE.LOAD] = 'Load'
-    rosetta[J_BUNDLE.HAZARDOUS] = 'Hazardous'
-    rosetta[J_BUNDLE.KERNEL] = 'Kernel'
-    rosetta[J_BUNDLE.KERNEL_SIZE] = 'Kernel_Size'
-    rosetta[J_BUNDLE.DEST_TRACK] = 'Dest&Track'
-    rosetta[J_BUNDLE.FINAL_DEST] = 'Final_Dest'
-    rosetta[J_BUNDLE.FINAL_DEST_TRACK] = 'FD&Track'
-    rosetta[J_BUNDLE.DROP_COMMENT] = 'SetOut_Msg'
-    rosetta[J_BUNDLE.PICKUP_COMMENT] = 'PickUp_Msg'
-    rosetta[J_BUNDLE.RWE] = 'RWE'
+    rosetta[SB.handleGetMessage('Load_Type')] = 'Load_Type'
+    rosetta[SB.handleGetMessage('Load')] = 'Load'
+    rosetta[SB.handleGetMessage('Hazardous')] = 'Hazardous'
+    rosetta[SB.handleGetMessage('Kernel')] = 'Kernel'
+    rosetta[SB.handleGetMessage('Kernel_Size')] = 'Kernel_Size'
+    rosetta[SB.handleGetMessage('Dest&Track')] = 'Dest&Track'
+    rosetta[SB.handleGetMessage('Final_Dest')] = 'Final_Dest'
+    rosetta[SB.handleGetMessage('Track')] = 'FD&Track'
+    rosetta[SB.handleGetMessage('SetOut_Msg')] = 'SetOut_Msg'
+    rosetta[SB.handleGetMessage('PickUp_Msg')] = 'PickUp_Msg'
+    rosetta[SB.handleGetMessage('RWE')] = 'RWE'
     # rosetta[J_BUNDLE.RWL] = 'RWL'
 # Unique to this plugin
     rosetta['onTrain'] = 'onTrain'

@@ -474,35 +474,33 @@ class Initializer:
         https://github.com/JMRI/JMRI/blob/master/java/src/jmri/jmrit/operations/setup/Setup.java
         """
 
-        SB = PSE.JMRI.jmrit.operations.setup.Bundle()
-
         messageList = []
         for item in self.configFile['o2o']['RMF']['MC']:
-            translatedItem = SB.handleGetMessage(self.configFile['o2o']['RMO'][item])
+            translatedItem = PSE.SB.handleGetMessage(self.configFile['o2o']['RMO'][item])
             messageList.append(translatedItem)
         self.OSU.Setup.setLocalManifestMessageFormat(messageList)
 
         messageList = []
         for item in self.configFile['o2o']['RMF']['PUC']:
-            translatedItem = SB.handleGetMessage(self.configFile['o2o']['RMO'][item])
+            translatedItem = PSE.SB.handleGetMessage(self.configFile['o2o']['RMO'][item])
             messageList.append(translatedItem)
         self.OSU.Setup.setPickupManifestMessageFormat(messageList)
 
         messageList = []
         for item in self.configFile['o2o']['RMF']['SOC']:
-            translatedItem = SB.handleGetMessage(self.configFile['o2o']['RMO'][item])
+            translatedItem = PSE.SB.handleGetMessage(self.configFile['o2o']['RMO'][item])
             messageList.append(translatedItem)
         self.OSU.Setup.setDropManifestMessageFormat(messageList)
 
         messageList = []
         for item in self.configFile['o2o']['RMF']['PUL']:
-            translatedItem = SB.handleGetMessage(self.configFile['o2o']['RMO'][item])
+            translatedItem = PSE.SB.handleGetMessage(self.configFile['o2o']['RMO'][item])
             messageList.append(translatedItem)
         self.OSU.Setup.setPickupEngineMessageFormat(messageList)
 
         messageList = []
         for item in self.configFile['o2o']['RMF']['SOL']:
-            translatedItem = SB.handleGetMessage(self.configFile['o2o']['RMO'][item])
+            translatedItem = PSE.SB.handleGetMessage(self.configFile['o2o']['RMO'][item])
             messageList.append(translatedItem)
         self.OSU.Setup.setDropEngineMessageFormat(messageList)
 

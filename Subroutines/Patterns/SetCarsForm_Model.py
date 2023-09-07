@@ -63,7 +63,6 @@ def moveRollingStock(switchList):
     """
     """
 
-    setupBundle = PSE.JMRI.jmrit.operations.setup.Bundle()
     configFile = PSE.readConfigFile()
 
     ignoreTrackLength = configFile['Patterns']['PI']
@@ -76,9 +75,9 @@ def moveRollingStock(switchList):
     locos = switchList['tracks'][0]['locos']
     for loco in locos:
         i += 1
-        rollingStock = PSE.EM.getByRoadAndNumber(loco[setupBundle.handleGetMessage('Road')], loco[setupBundle.handleGetMessage('Number')])
+        rollingStock = PSE.EM.getByRoadAndNumber(loco[PSE.SB.handleGetMessage('Road')], loco[PSE.SB.handleGetMessage('Number')])
         if not rollingStock:
-            _psLog.warning('Not found; ' + car[setupBundle.handleGetMessage('Road')] + car[setupBundle.handleGetMessage('Number')])
+            _psLog.warning('Not found; ' + car[PSE.SB.handleGetMessage('Road')] + car[PSE.SB.handleGetMessage('Number')])
             continue
 
         setTo = loco['setTo'][1:-1].split(']')[0]
@@ -88,7 +87,7 @@ def moveRollingStock(switchList):
         toTrack = toLocation.getTrackByName(setTo, None)
 
         setResult = rollingStock.setLocation(toLocation, toTrack)
-        if ignoreTrackLength and toTrack.isTypeNameAccepted(loco[setupBundle.handleGetMessage('Type')]):
+        if ignoreTrackLength and toTrack.isTypeNameAccepted(loco[PSE.SB.handleGetMessage('Type')]):
             setResult = rollingStock.setLocation(toLocation, toTrack, True)
 
         if setResult == 'okay':
@@ -97,9 +96,9 @@ def moveRollingStock(switchList):
     cars = switchList['tracks'][0]['cars']
     for car in cars:
         i += 1
-        rollingStock = PSE.CM.getByRoadAndNumber(car[setupBundle.handleGetMessage('Road')], car[setupBundle.handleGetMessage('Number')])
+        rollingStock = PSE.CM.getByRoadAndNumber(car[PSE.SB.handleGetMessage('Road')], car[PSE.SB.handleGetMessage('Number')])
         if not rollingStock:
-            _psLog.warning('Not found; ' + car[setupBundle.handleGetMessage('Road')] + car[setupBundle.handleGetMessage('Number')])
+            _psLog.warning('Not found; ' + car[PSE.SB.handleGetMessage('Road')] + car[PSE.SB.handleGetMessage('Number')])
             continue
 
         setTo = car['setTo'][1:-1].split(']')[0]
@@ -109,7 +108,7 @@ def moveRollingStock(switchList):
         toTrack = toLocation.getTrackByName(setTo, None)
 
         setResult = rollingStock.setLocation(toLocation, toTrack)
-        if ignoreTrackLength and toTrack.isTypeNameAccepted(car[setupBundle.handleGetMessage('Type')]):
+        if ignoreTrackLength and toTrack.isTypeNameAccepted(car[PSE.SB.handleGetMessage('Type')]):
             setResult = rollingStock.setLocation(toLocation, toTrack, True)
 
         if setResult == 'okay':

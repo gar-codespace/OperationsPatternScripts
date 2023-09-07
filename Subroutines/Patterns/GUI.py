@@ -399,7 +399,6 @@ class MakeSetCarsEqptRows():
         self.setCarsFormData = setCarsFormData
         self.textBoxEntry = []
 
-        self.rosetta = PSE.translateMessageFormat()
         self.carColor = PSE.getColorA()
         self.locoColor = PSE.getColorB()
         self.alertColor = PSE.getColorC()
@@ -426,12 +425,10 @@ class MakeSetCarsEqptRows():
             combinedInputLine.add(inputBox)
 
             messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
-            for lookup in messageFormat:
-                item = self.rosetta[lookup]
+            for item in messageFormat:
                 if 'Tab' in item:
                     continue
-
-                labelName = loco[lookup]
+                labelName = loco[item]
                 label = PSE.JAVX_SWING.JLabel(labelName)
                 box = makeSwingBox(self.reportWidth[item] * self.panelWidth, self.panelHeight)
                 box.add(label)
@@ -447,8 +444,6 @@ class MakeSetCarsEqptRows():
         """
         Creates the car lines of the pattern report form
         """
-
-        setupBundle = PSE.JMRI.jmrit.operations.setup.Bundle()
 
         listOfCarRows = []
         cars = self.setCarsFormData['tracks'][0]['cars']
@@ -466,18 +461,16 @@ class MakeSetCarsEqptRows():
             combinedInputLine.add(inputBox)
 
             messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
-            for lookup in messageFormat:
-                item = self.rosetta[lookup]
+            for item in messageFormat:
                 if 'Tab' in item:
                     continue
-
             # Special case handling for the hazardous flag
-                if item == 'Hazardous' and car[setupBundle.handleGetMessage('Hazardous')]:
-                    labelName = lookup
-                elif item == 'Hazardous' and not car[setupBundle.handleGetMessage('Hazardous')]:
+                if item == PSE.SB.handleGetMessage('Hazardous') and car[item]:
+                    labelName = item
+                elif item == PSE.SB.handleGetMessage('Hazardous') and not car[item]:
                     labelName = ' '
                 else:
-                    labelName = car[lookup]
+                    labelName = car[item]
 
                 label = PSE.JAVX_SWING.JLabel(labelName)
                 box = makeSwingBox(self.reportWidth[item] * self.panelWidth, self.panelHeight)

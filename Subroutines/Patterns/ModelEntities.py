@@ -36,10 +36,8 @@ def makeTextReportTracks(trackList, trackTotals):
     Called by:
     View.ManageGui.trackPatternButton'
     ViewSetCarsForm.switchListButton
-    setupBundle.handleGetMessage('Length')
+    PSE.SB.handleGetMessage('Length')
     """
-
-    setupBundle = PSE.JMRI.jmrit.operations.setup.Bundle()
 
     reportSwitchList = ''
     reportTally = [] # running total for all tracks
@@ -52,15 +50,15 @@ def makeTextReportTracks(trackList, trackTotals):
         reportSwitchList += PSE.getBundleItem('Track:') + ' ' + trackName + '\n'
 
         for loco in track['locos']:
-            lengthOfLocos += int(loco[setupBundle.handleGetMessage('Length')]) + 4
+            lengthOfLocos += int(loco[PSE.SB.handleGetMessage('Length')]) + 4
             reportSwitchList += loco['setTo'] + loopThroughRs('loco', loco) + '\n'
 
         for car in track['cars']:
-            lengthOfCars += int(car[setupBundle.handleGetMessage('Length')]) + 4
+            lengthOfCars += int(car[PSE.SB.handleGetMessage('Length')]) + 4
             reportSwitchList += car['setTo'] + loopThroughRs('car', car) + '\n'
 
-            trackTally.append(car[setupBundle.handleGetMessage('Final_Dest')])
-            reportTally.append(car[setupBundle.handleGetMessage('Final_Dest')])
+            trackTally.append(car[PSE.SB.handleGetMessage('Final_Dest')])
+            reportTally.append(car[PSE.SB.handleGetMessage('Final_Dest')])
 
         if trackTotals:
             totalLength = lengthOfLocos + lengthOfCars
@@ -85,34 +83,52 @@ def makeTextReportTracks(trackList, trackTotals):
 def loopThroughRs(type, rsAttribs):
     """
     Creates a line containing the attrs in get * MessageFormat
+    The message format is in the locales language.
     Called by:
     makeTextReportTracks
     """
 
     reportWidth = PSE.REPORT_ITEM_WIDTH_MATRIX
     switchListRow = ''
-    rosetta = PSE.translateMessageFormat()
 
     if type == 'loco':
         messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
     if type == 'car':
         messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
 
-    for lookup in messageFormat:
-        item = rosetta[lookup]
+    for item in messageFormat:
         if 'Tab' in item:
             continue
-        itemWidth = reportWidth[item]
     # Special case handling for the hazardous flag
-        if item == 'Hazardous' and rsAttribs[lookup]:
-            labelName = lookup
-        elif item == 'Hazardous' and not rsAttribs[lookup]:
+        if item == PSE.SB.handleGetMessage('Hazardous') and rsAttribs[item]:
+            labelName = item
+        elif item == PSE.SB.handleGetMessage('Hazardous') and not rsAttribs[item]:
             labelName = ' '
         else:
-            labelName = rsAttribs[lookup]
+            labelName = rsAttribs[item]
 
+        itemWidth = reportWidth[item]
         rowItem = PSE.formatText(labelName, itemWidth)
         switchListRow += rowItem
+
+
+
+
+    # for lookup in messageFormat:
+    #     item = rosetta[lookup]
+    #     if 'Tab' in item:
+    #         continue
+    #     itemWidth = reportWidth[item]
+    # # Special case handling for the hazardous flag
+    #     if item == 'Hazardous' and rsAttribs[lookup]:
+    #         labelName = lookup
+    #     elif item == 'Hazardous' and not rsAttribs[lookup]:
+    #         labelName = ' '
+    #     else:
+    #         labelName = rsAttribs[lookup]
+
+    #     rowItem = PSE.formatText(labelName, itemWidth)
+    #     switchListRow += rowItem
 
     return switchListRow
 
@@ -221,7 +237,6 @@ class RollingStockParser:
     def __init__(self):
 
         self.configFile = PSE.readConfigFile()
-        self.setupBundle = PSE.JMRI.jmrit.operations.setup.Bundle()
 
         self.locationName = self.configFile['Patterns']['PL']
         self.location = PSE.LM.getLocationByName(self.locationName)
@@ -314,22 +329,22 @@ class RollingStockParser:
         rsDetailDict = {}
 
     # Common items for all JMRI RS
-        rsDetailDict[self.setupBundle.handleGetMessage('Road')] = rs.getRoadName()
-        rsDetailDict[self.setupBundle.handleGetMessage('Number')] = rs.getNumber()
-        rsDetailDict[self.setupBundle.handleGetMessage('Type')] = rs.getTypeName()
-        rsDetailDict[self.setupBundle.handleGetMessage('Length')] = rs.getLength()
-        rsDetailDict[self.setupBundle.handleGetMessage('Color')] = rs.getColor()
-        rsDetailDict[self.setupBundle.handleGetMessage('Weight')] = rs.getWeightTons()
-        rsDetailDict[self.setupBundle.handleGetMessage('Comment')] = rs.getComment()
-        rsDetailDict[self.setupBundle.handleGetMessage('Division')] = rs.getDivisionName()
-        rsDetailDict[self.setupBundle.handleGetMessage('Location')] = rs.getLocationName()
-        rsDetailDict[self.setupBundle.handleGetMessage('Track')] = rs.getTrackName()
-        rsDetailDict[self.setupBundle.handleGetMessage('Destination')] = rs.getDestinationName()
+        rsDetailDict[PSE.SB.handleGetMessage('Road')] = rs.getRoadName()
+        rsDetailDict[PSE.SB.handleGetMessage('Number')] = rs.getNumber()
+        rsDetailDict[PSE.SB.handleGetMessage('Type')] = rs.getTypeName()
+        rsDetailDict[PSE.SB.handleGetMessage('Length')] = rs.getLength()
+        rsDetailDict[PSE.SB.handleGetMessage('Color')] = rs.getColor()
+        rsDetailDict[PSE.SB.handleGetMessage('Weight')] = rs.getWeightTons()
+        rsDetailDict[PSE.SB.handleGetMessage('Comment')] = rs.getComment()
+        rsDetailDict[PSE.SB.handleGetMessage('Division')] = rs.getDivisionName()
+        rsDetailDict[PSE.SB.handleGetMessage('Location')] = rs.getLocationName()
+        rsDetailDict[PSE.SB.handleGetMessage('Track')] = rs.getTrackName()
+        rsDetailDict[PSE.SB.handleGetMessage('Destination')] = rs.getDestinationName()
         try: # Depending on which version of JMRI Ops Pro
-            rsDetailDict[self.setupBundle.handleGetMessage('Owner')] = rs.getOwner()
+            rsDetailDict[PSE.SB.handleGetMessage('Owner')] = rs.getOwner()
         except:
             # print('Exception at: Patterns.ModelEntities.getDetailsForLoco')
-            rsDetailDict[self.setupBundle.handleGetMessage('Owner')] = rs.getOwnerName()
+            rsDetailDict[PSE.SB.handleGetMessage('Owner')] = rs.getOwnerName()
     # Common items for all OPS RS
         rsDetailDict['setTo'] = u'[  ] '
         rsDetailDict[u'puso'] = u' '
@@ -347,13 +362,13 @@ class RollingStockParser:
 
         locoDetailDict = {}
 
-        locoDetailDict[self.setupBundle.handleGetMessage('Model')] = locoObject.getModel()
-        locoDetailDict[self.setupBundle.handleGetMessage('DCC_Address')] = locoObject.getDccAddress()
+        locoDetailDict[PSE.SB.handleGetMessage('Model')] = locoObject.getModel()
+        locoDetailDict[PSE.SB.handleGetMessage('DCC_Address')] = locoObject.getDccAddress()
     # Modifications used by this plugin
         try:
-            locoDetailDict[self.setupBundle.handleGetMessage('Consist')] = locoObject.getConsist().getName()
+            locoDetailDict[PSE.SB.handleGetMessage('Consist')] = locoObject.getConsist().getName()
         except:
-            locoDetailDict[self.setupBundle.handleGetMessage('Consist')] = PSE.getBundleItem('Single')
+            locoDetailDict[PSE.SB.handleGetMessage('Consist')] = PSE.getBundleItem('Single')
     # OPS car attributes
         locoDetailDict['isCaboose'] = False
         locoDetailDict['isPassenger'] = False
@@ -374,19 +389,19 @@ class RollingStockParser:
 
         carDetailDict = {}
     # JMRI car attributes
-        carDetailDict[self.setupBundle.handleGetMessage('Load_Type')] = carObject.getLoadType()
-        carDetailDict[self.setupBundle.handleGetMessage('Load')] = carObject.getLoadName()
-        carDetailDict[self.setupBundle.handleGetMessage('Hazardous')] = carObject.isHazardous()
-        carDetailDict[self.setupBundle.handleGetMessage('Kernel')] = carObject.getKernelName()
-        carDetailDict[self.setupBundle.handleGetMessage('Kernel_Size')] = str(kernelSize)
-        carDetailDict[self.setupBundle.handleGetMessage('Dest&Track')] = carObject.getDestinationTrackName()
-        carDetailDict[self.setupBundle.handleGetMessage('Final_Dest')] = carObject.getFinalDestinationName()
-        carDetailDict[self.setupBundle.handleGetMessage('FD&Track')] = carObject.getFinalDestinationTrackName()
-        carDetailDict[self.setupBundle.handleGetMessage('SetOut_Msg')] = track.getCommentSetout()
-        carDetailDict[self.setupBundle.handleGetMessage('PickUp_Msg')] = track.getCommentPickup()
-        carDetailDict[self.setupBundle.handleGetMessage('RWE')] = carObject.getReturnWhenEmptyDestinationName()
+        carDetailDict[PSE.SB.handleGetMessage('Load_Type')] = carObject.getLoadType()
+        carDetailDict[PSE.SB.handleGetMessage('Load')] = carObject.getLoadName()
+        carDetailDict[PSE.SB.handleGetMessage('Hazardous')] = carObject.isHazardous()
+        carDetailDict[PSE.SB.handleGetMessage('Kernel')] = carObject.getKernelName()
+        carDetailDict[PSE.SB.handleGetMessage('Kernel_Size')] = str(kernelSize)
+        carDetailDict[PSE.SB.handleGetMessage('Dest&Track')] = carObject.getDestinationTrackName()
+        carDetailDict[PSE.SB.handleGetMessage('Final_Dest')] = carObject.getFinalDestinationName()
+        carDetailDict[PSE.SB.handleGetMessage('FD&Track')] = carObject.getFinalDestinationTrackName()
+        carDetailDict[PSE.SB.handleGetMessage('SetOut_Msg')] = track.getCommentSetout()
+        carDetailDict[PSE.SB.handleGetMessage('PickUp_Msg')] = track.getCommentPickup()
+        carDetailDict[PSE.SB.handleGetMessage('RWE')] = carObject.getReturnWhenEmptyDestinationName()
         try:
-            carDetailDict[self.setupBundle.handleGetMessage('RWL')] = carObject.getReturnWhenLoadedDestinationName()
+            carDetailDict[PSE.SB.handleGetMessage('RWL')] = carObject.getReturnWhenLoadedDestinationName()
         except:
             carDetailDict['RWL'] = carObject.getReturnWhenLoadedDestinationName()
     # OPS car attributes
@@ -402,12 +417,10 @@ class RollingStockParser:
         Sort order of PSE.readConfigFile('US')['SL'] is top down
         """
 
-        setupBundle = PSE.JMRI.jmrit.operations.setup.Bundle()
-
         sortLocos = self.configFile['Patterns']['US']['SL']
         for sortKey in sortLocos:
             try:
-                translatedkey = (setupBundle.handleGetMessage(sortKey))
+                translatedkey = (PSE.SB.handleGetMessage(sortKey))
                 self.locoDetails.sort(key=lambda row: row[translatedkey])
             except:
                 print('No engines or list not sorted')
@@ -420,12 +433,10 @@ class RollingStockParser:
         Sort order of PSE.readConfigFile('Patterns')['US']['SC'] is top down
         """
 
-        setupBundle = PSE.JMRI.jmrit.operations.setup.Bundle()
-
         sortCars = self.configFile['Patterns']['US']['SC']
         for sortKey in sortCars:
             try:
-                translatedkey = (setupBundle.handleGetMessage(sortKey))
+                translatedkey = (PSE.SB.handleGetMessage(sortKey))
                 self.carDetails.sort(key=lambda row: row[translatedkey])
             except:
                 print('No cars or list not sorted')

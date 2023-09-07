@@ -118,7 +118,7 @@ def refreshOperationsSettingsFrame():
     Kind of a BS way to do this but I can't find any listeners.
     """
 
-    title = PSE.JMRI.jmrit.operations.setup.Bundle().handleGetMessage('TitleOperationsSetup')
+    title = PSE.SB.handleGetMessage('TitleOperationsSetup')
     for frame in PSE.JMRI.util.JmriJFrame.getFrameList():
         if frame.getTitle() == title:
             frame.setVisible(False)
