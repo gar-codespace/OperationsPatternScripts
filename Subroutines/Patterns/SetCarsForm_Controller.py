@@ -76,8 +76,7 @@ class CreateSetCarsFrame:
         try:
             self.buttonDict['scheduleButton'].actionPerformed = self.scheduleButton
         except:
-            print('Exception at: Patterns.SetCarsForm_Controller.CreateSetCarsFrame.activateButtons.scheduleButton')
-            pass
+            print('No schedule or schedule not found for this track.')
 
         self.buttonDict['footerButtons'][0].actionPerformed = self.switchListButton
         self.buttonDict['footerButtons'][1].actionPerformed = self.setRsButton

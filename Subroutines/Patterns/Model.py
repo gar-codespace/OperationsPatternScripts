@@ -426,7 +426,7 @@ def makeTrackPatternCsv(trackPattern):
             trackPatternCsv += u'TN,Track name,' + unicode(track['trackName'], PSE.ENCODING) + '\n'
         except:
             print('Exception at: Patterns.View.makeTrackPatternCsv')
-            pass
+            
         for loco in track['locos']:
             trackPatternCsv +=  loco['setTo'] + ',' \
                             + loco[PSE.SB.handleGetMessage('Road')] + ',' \
@@ -451,7 +451,7 @@ def makeTrackPatternCsv(trackPattern):
             trackPatternCsv += u'TN,Track name,' + unicode(track['trackName'], PSE.ENCODING) + '\n'
         except:
             print('Exception at: Patterns.View.makeTrackPatternCsv')
-            pass
+
         for car in track['cars']:
             trackPatternCsv +=  car['setTo'] + ',' \
                             + car[PSE.SB.handleGetMessage('Road')] + ',' \

@@ -9,7 +9,7 @@ Cancel
 Cars at
 Division:
 Do Not Apply Schedule
-empty
+Empty
 Eqpt. Length:
 FAIL: CreateSetCarsForm.quickCheck.formIsValid
 FAIL: CreateSetCarsFormGui.quickCheck.formIsValid
@@ -17,11 +17,11 @@ FAIL: Mismatched input list and car roster lengths
 Hazardous
 Hold
 Ignore track length
-load
+Load
 Location:
 Locomotives at
 Make Work
-occupied
+Occupied
 ops-pattern-report
 ops-pattern-report
 ops-switch-list
@@ -48,7 +48,7 @@ Track List:
 Track Totals for Cars:
 Track:
 Tracks at
-unknown
+Unknown
 Work Location:
 Yard tracks only
 

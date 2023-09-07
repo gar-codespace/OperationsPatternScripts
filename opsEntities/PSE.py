@@ -573,7 +573,7 @@ def formatText(item, length):
 def getShortLoadType(car):
     """
     Replaces empty and load with E, L, or O for occupied.
-    JMRI defines custom load type as empty but default load type as Empty, hence the 'or' statement.
+    JMRI defines custom load type as empty but default load type as E, hence the 'or' statement.
     Load, Empty, Occupied and Unknown are translated by the bundle.
     Called by:
     o2oSubroutine.ModelWorkEvents
@@ -585,15 +585,15 @@ def getShortLoadType(car):
     except KeyError: # car is sent in from JMRI manifest json
         carObject = CM.getByRoadAndNumber(car['road'], car['number'])
 
-    lt =  getBundleItem('unknown').upper()[0]
-    if carObject.getLoadType() == 'empty' or carObject.getLoadType() == 'Empty':
-        lt = getBundleItem('empty').upper()[0]
+    lt =  getBundleItem('Unknown').upper()[0]
+    if carObject.getLoadType() == 'empty' or carObject.getLoadType() == 'E':
+        lt = getBundleItem('Empty').upper()[0]
 
-    if carObject.getLoadType() == 'load' or carObject.getLoadType() == 'Load':
-        lt = getBundleItem('load').upper()[0]
+    if carObject.getLoadType() == 'load' or carObject.getLoadType() == 'L':
+        lt = getBundleItem('Load').upper()[0]
 
     if carObject.isCaboose() or carObject.isPassenger():
-        lt = getBundleItem('occupied').upper()[0]
+        lt = getBundleItem('Occupied').upper()[0]
 
     return lt
 
@@ -601,19 +601,6 @@ def makeReportItemWidthMatrix():
     """
     The attribute widths (AW) for each of the rolling stock attributes is defined in the report matrix (RM) of the config file.
     """
-
-    # reportMatrix = {}
-    # attributeWidths = readConfigFile('Patterns')['US']['AW']
-
-    # for aKey, aValue in attributeWidths.items():
-    #     reportMatrix[aKey] = aValue
-
-    # global REPORT_ITEM_WIDTH_MATRIX
-    # REPORT_ITEM_WIDTH_MATRIX = reportMatrix
-
-
-
-
 
     reportMatrix = {}
     attributeWidths = readConfigFile('Patterns')['US']['AW']
@@ -626,14 +613,6 @@ def makeReportItemWidthMatrix():
 
     global REPORT_ITEM_WIDTH_MATRIX
     REPORT_ITEM_WIDTH_MATRIX = reportMatrix
-
-
-
-
-
-
-
-
 
     return
 

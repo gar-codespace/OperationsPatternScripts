@@ -24,7 +24,7 @@ Import TrainPlayer's Advanced Ops
 Industries
 Industries not imported. Import Locations recommended
 Initialize Railroad
-load
+Load
 Locations
 o2o-work-list
 Occupied

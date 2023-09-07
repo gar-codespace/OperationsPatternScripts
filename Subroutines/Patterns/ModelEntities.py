@@ -343,7 +343,6 @@ class RollingStockParser:
         try: # Depending on which version of JMRI Ops Pro
             rsDetailDict[PSE.SB.handleGetMessage('Owner')] = rs.getOwner()
         except:
-            # print('Exception at: Patterns.ModelEntities.getDetailsForLoco')
             rsDetailDict[PSE.SB.handleGetMessage('Owner')] = rs.getOwnerName()
     # Common items for all OPS RS
         rsDetailDict['setTo'] = u'[  ] '
