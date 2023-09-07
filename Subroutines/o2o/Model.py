@@ -457,14 +457,14 @@ class Initializer:
 
         _psLog.debug('tweakOperationsXml')
 
-        self.OSU.Setup.setMainMenuEnabled(self.configFile['Main Script']['TO']['SME'])
-        self.OSU.Setup.setCloseWindowOnSaveEnabled(self.configFile['Main Script']['TO']['CWS'])
-        self.OSU.Setup.setBuildAggressive(self.configFile['Main Script']['TO']['SBA'])
-        self.OSU.Setup.setStagingTrackImmediatelyAvail(self.configFile['Main Script']['TO']['SIA'])
-        self.OSU.Setup.setCarTypes(self.configFile['Main Script']['TO']['SCT'])
-        self.OSU.Setup.setStagingTryNormalBuildEnabled(self.configFile['Main Script']['TO']['TNB'])
-        self.OSU.Setup.setManifestEditorEnabled(self.configFile['Main Script']['TO']['SME'])
-        self.OSU.Setup.setAutoSaveEnabled(self.configFile['Main Script']['TO']['ASE'])
+        self.OSU.Setup.setMainMenuEnabled(self.configFile['o2o']['TO']['SME'])
+        self.OSU.Setup.setCloseWindowOnSaveEnabled(self.configFile['o2o']['TO']['CWS'])
+        self.OSU.Setup.setBuildAggressive(self.configFile['o2o']['TO']['SBA'])
+        self.OSU.Setup.setStagingTrackImmediatelyAvail(self.configFile['o2o']['TO']['SIA'])
+        self.OSU.Setup.setCarTypes(self.configFile['o2o']['TO']['SCT'])
+        self.OSU.Setup.setStagingTryNormalBuildEnabled(self.configFile['o2o']['TO']['TNB'])
+        self.OSU.Setup.setManifestEditorEnabled(self.configFile['o2o']['TO']['SME'])
+        self.OSU.Setup.setAutoSaveEnabled(self.configFile['o2o']['TO']['ASE'])
 
         return
 

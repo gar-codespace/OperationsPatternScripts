@@ -18,14 +18,12 @@
     "PW" : 260,
     "PH" : 16,
     "RF" : 8,
-    "SI" : {
+    "US" : {
       "DS" : "Not Assigned",
       "DT" : "Not Scheduled",
       "FD" : "Unconsigned",
       "FT" : "No Waybill",
-      "EH" : "Available"
-    },
-    "RM" : {
+      "EH" : "Available",
       "SL": [
         "Model"
       ],

@@ -245,7 +245,7 @@ class TrainPlayerImporter:
         if self.tpEngineAar:
             self.rr['AAR_Engine'] = self.tpEngineAar
         else:
-            self.rr['AAR_Engine'] = self.configFile['o2o']['XE']
+            self.rr['AAR_Engine'] = self.configFile['o2o']['US']['XE']
 
         if self.tpCabooseAar:
             self.rr['AAR_Caboose'] = self.tpCabooseAar
@@ -260,12 +260,12 @@ class TrainPlayerImporter:
         if self.tpPassAar:
             self.rr['AAR_Passenger'] = self.tpPassAar
         else:
-            self.rr['AAR_Passenger'] = self.configFile['o2o']['XP']
+            self.rr['AAR_Passenger'] = self.configFile['o2o']['US']['XP']
 
         if self.tpExpressAAR:
             self.rr['AAR_Express'] = self.tpExpressAAR
         else:
-            self.rr['AAR_Express'] = self.configFile['o2o']['XX']
+            self.rr['AAR_Express'] = self.configFile['o2o']['US']['XX']
 
         return
 

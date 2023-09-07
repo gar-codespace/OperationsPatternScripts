@@ -14,125 +14,84 @@
 <p><A HREF="https://youtu.be/5YleSgJGN9k">The Throwback subroutine - Run what-if scenarios with convenient return-to points</A></p>
 <h2>Pattern Scripts plugin</h2>
 <h3>Introduction</h3>
-<p>The Pattern Scripts plugin can be thought of as a framework for hosting subroutines for JMRI Operations Pro that require a user interface. This plugin comes with four subroutines; jPlus, Patterns, o2o and Throwback. A template is also included to serve as scaffolding for someone wishing to add their own subroutine.</p>
-<p>Although the subroutines are somewhat interdependent, they may be added or removed individually as needed.</p>
-<p>Additionally, each subroutine can be activated or deactivated as needed, fron the Tools menu pulldown.</p>
-<p>Each of the subroutines' features are only available when the subroutine is active and the Pattern Scripts window is open. For example, extended railroad details will only appear in reports when the Pattern Scripts window is open and the jPlus subroutine is displayed. This is an easy way to turn features on or off.</p>
+<p>The Pattern Scripts plugin can be thought of as a framework for hosting subroutines (or scripts) for JMRI Operations Pro that require a user interface. This plugin comes with four subroutines; jPlus, Patterns, o2o and Throwback. A template is also included to serve as scaffolding for someone wishing to add their own subroutine.</p>
+<p>Subroutines may be added or removed individually as needed.</p>
+<p>Additionally, each subroutine can be shown or hidden as needed, fron the Tools menu pulldown.</p>
+<p>Each of the subroutines' features are only available when the plugin is running and the subroutine has been included.
+For example, extended railroad details will only appear in reports when the Pattern Scripts plugin has been started, and jPlus has been included.
+To deactivate the plugins features, close (not hide) the window.</p>
 <h3>Organization</h3>
 <p>The following chart shows the code structure of this plugin.</P>
 <img src="./img/Code_Structure.png" alt="<Code Structure Image>">
 <h3>Plugin Layout</h3>
 <p>OperationsPatternScripts.MainScript.View.makePatternScriptsWindow()</p>
 <img src="./img/Plugin_Layout.png" alt="<Plugin Layout Image>">
-<h3>PatternConfig.json</h3>
+<h3>configFile.json</h3>
 <p>Each JMRI profile gets its own configuration file, which is named configFile.json. It is found in the operations folder, and is used to provide custom settings for each profile and record user inputs.</p>
-<p><font color="DarkRed">The description of each element is in dark red.</font></p>
-<p><font color="green">User editable keys are described in green.</font></p>
-<p>Select Tools/Edit Config File. If a mistake is made editing the configFile, the plugin will delete the file and provide a new one to start over with. Worst case the plugin may crash. If that should happed select Tools/Restart From Default.</p>
-<h4>Pattern Scripts plugin settings in PatternConfig.json</h4>
+<p>Select Tools/Edit Config File. The values that are user editable are in subsections labeled "US" for User Settings. Other values should not be edited.
+If a mistake is made editing the configFile, the plugin will delete the file and provide a new one to start over using default values.
+Worst case, the plugin may crash. If that should happed select Tools/Restart From Default.</p>
+<h4>User Settings for the Main Script section of configFile.json</h4>
 <pre>
-  {
-    "Main Script": {
-      "CD": {  <font color="DarkRed">Color Definitions.</font>
-        "<font color="green">BLANCH</font>": { <font color="DarkRed">Any of these colors can be changed.</font>
-          "A": <font color="green">255</font>, <font color="DarkRed">Alpha value.</font>
-          "B": <font color="green">225</font>, <font color="DarkRed">Blue value.</font>
-          "D": <font color="green">Light grey</font>, <font color="DarkRed">Vague Description.</font>
-          "G": <font color="green">225</font>, <font color="DarkRed">Green value.</font>
-          "R": <font color="green">225</font> <font color="DarkRed">Red value.</font>
-        }, 
-        "DUST": {
-          "A": 255, 
-          "B": 218, 
-          "D": "Light tan", 
-          "G": 242, 
-          "R": 252
-        }, 
-        "FADED": {
-          "A": 255, 
-          "B": 245, 
-          "D": "Light purple", 
-          "G": 225, 
-          "R": 237
-        }, 
+  The following are user editable values for the plugin.
+  For colors, any of the A, B, G, R values can be changed, between 0 and 255.
+  Also, new colors may be added.
+      
+  "US" : {
+    "OC" : true, Open Console. Opens the system console when the plugin starts.
+    "CD": { Color definitions, a set of predefined colors.
+        "BLANCH": { The name of the color.
+          "A": 210, The alpha (transparency) value.
+          "B": 255, The blue component value.
+          "D": "Lighten a bit", A description of the color.
+          "G": 255, The green component value.
+          "R": 255 The red component value.
+        },
         "GLOOM": {
-          "A": 10, 
-          "B": 0, 
-          "D": "Darken a bit", 
-          "G": 0, 
+          "A": 10,
+          "B": 0,
+          "D": "Darken a bit",
+          "G": 0,
           "R": 0
-        }, 
-        "LICHEN": {
-          "A": 255, 
-          "B": 244, 
-          "D": "Light green", 
-          "G": 255, 
-          "R": 236
-        }, 
-        "PALE": {
-          "A": 255, 
-          "B": 250, 
-          "D": "Light blue", 
-          "G": 243, 
+        },
+        "DUST": {
+          "A": 255,
+          "B": 218,
+          "D": "Light tan",
+          "G": 242,
+          "R": 252
+        },
+        "FADED": {
+          "A": 255,
+          "B": 245,
+          "D": "Light purple",
+          "G": 225,
           "R": 237
-        }, 
+        },
+        "LICHEN": {
+          "A": 255,
+          "B": 244,
+          "D": "Light green",
+          "G": 255,
+          "R": 236
+        },
+        "PALE": {
+          "A": 255,
+          "B": 250,
+          "D": "Light blue",
+          "G": 243,
+          "R": 237
+        },
         "RASH": {
-          "A": 255, 
-          "B": 224, 
-          "D": "Light red", 
-          "G": 208, 
+          "A": 255,
+          "B": 224,
+          "D": "Light red",
+          "G": 208,
           "R": 240
-        }, 
-        "colorA": "<font color="green">DUST</font>",  <font color="DarkRed">The name of the color chosen for colorA.</font>
-        "colorB": "<font color="green">FADED</font>",  <font color="DarkRed">The name of the color chosen for colorB.</font> 
-        "colorC": "<font color="green">RASH</font>",  <font color="DarkRed">The name of the color chosen for colorC.</font>
-      }, 
-      "CP": { <font color="DarkRed">Control Panel.</font>
-        "AP": true,  <font color="DarkRed">Reserved.</font>
-        "DR": true,  <font color="DarkRed">Reserved.</font>
-        "OC": <font color="green">true</font>,  <font color="DarkRed">Open System Console Window upon starting the plugin.</font>
-        "PH": <font color="green">280</font>,  <font color="DarkRed">Default plugin panel height.</font>
-        "PW": <font color="green">1000</font>,  <font color="DarkRed">Default plugin panel width.</font>
-        "PX": 0,     <font color="DarkRed">Plugin location, X axis.</font>
-        "PY": 0,     <font color="DarkRed">Plugin location, Y axis.</font>
-        "RV": 20230101,  <font color="DarkRed">Revision control.</font>
-        "SE": "utf-8",  <font color="DarkRed">Script encoding.</font>
-        "TC": "UD",  <font color="DarkRed">Translation Choice.</font>
-        "TS": {  <font color="DarkRed">Translation Services.</font>
-          "UD": "UseDeepL", 
-          "UX": "UseSomethingElse"
-        }
-      }, 
-      "LD": {  <font color="DarkRed">Layout Details.</font>
-        "BD": "",  <font color="DarkRed">Build Date.</font>
-        "LN": "",  <font color="DarkRed">Layout Name.</font>
-        "LO": "",  <font color="DarkRed">Location Modeled.</font>
-        "ML": "",  <font color="DarkRed">Maximum Train Length.</font>
-        "OR": "",  <font color="DarkRed">Operating Railroad.</font>
-        "SC": "",  <font color="DarkRed">Model Railroad Scale.</font>
-        "TR": "",  <font color="DarkRed">Territory Modeled.</font>
-        "YR": ""   <font color="DarkRed">Year Modeled</font>
-      }, 
-      "SR": {  <font color="DarkRed">Scale Rubric.</font>
-        "G": 11, 
-        "HO": 6, 
-        "HON3": 4, 
-        "N": 2, 
-        "O": 10, 
-        "ON3": 9, 
-        "OO": 5, 
-        "S": 8, 
-        "SN3": 7, 
-        "TT": 3, 
-        "Z": 1
-      }, 
-      "TO": {  <font color="DarkRed">Tweek Operations, adjustments to operations settings.</font>
-        "CWS": <font color="green">true</font>,  <font color="DarkRed">setCloseWindowOnSaveEnabled</font>
-        "SBA": <font color="green">true</font>,  <font color="DarkRed">setBuildAggressive</font>
-        "SCT": <font color="green">"ARR Codes"</font>,  <font color="DarkRed">setCarTypes</font>
-        "SIA": <font color="green">true</font>,  <font color="DarkRed">setStagingTrackImmediatelyAvail</font>
-        "SME": <font color="green">true</font>,  <font color="DarkRed">setMainMenuEnabled</font>
-        "TNB": <font color="green">false</font>,  <font color="DarkRed">setStagingTryNormalBuildEnabled</font>
+        },
+        "colorA" : "DUST", The name of the color to be used when colorA is called.
+        "colorB" : "FADED", The name of the color to be used when colorB is called.
+        "colorC" : "RASH" The name of the color to be used when colorC is called.
       }
-    }, 
+    },
 </pre>

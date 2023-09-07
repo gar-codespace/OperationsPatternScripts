@@ -56,12 +56,12 @@
 <h3>Mise en page du plugin</h3>
 <p>OperationsPatternScripts.MainScript.View.makePatternScriptsWindow()</p>
 <img src="./img/Plugin_Layout.png" alt="<Plugin Layout Image>">
-<h3>PatternConfig.json</h3>
-<p>Chaque profil JMRI dispose de son propre fichier de configuration, appelé PatternConfig.json, qui se trouve dans le dossier des opérations et qui est utilisé pour fournir des paramètres personnalisés pour chaque profil et enregistrer les entrées de l'utilisateur.</p>
+<h3>configFile.json</h3>
+<p>Chaque profil JMRI dispose de son propre fichier de configuration, appelé configFile.json, qui se trouve dans le dossier des opérations et qui est utilisé pour fournir des paramètres personnalisés pour chaque profil et enregistrer les entrées de l'utilisateur.</p>
 <p><font color="DarkRed">La description de chaque élément est en rouge foncé.</font></p>
 <p><font color="green">Les clés modifiables par l'utilisateur sont décrites en vert.</font></p>
-<p>Sélectionnez Tools/Edit Config File. Si une erreur est commise lors de la modification du fichier PatternConfig.json, le plugin supprimera le fichier et en fournira un nouveau pour recommencer. Dans le pire des cas, le plugin peut se planter. Si cela se produit, sélectionnez Tools/Restart From Default.</p>
-<h4>Paramètres du plugin Pattern Scripts dans PatternConfig.json</h4>
+<p>Sélectionnez Tools/Edit Config File. Si une erreur est commise lors de la modification du fichier configFile.json, le plugin supprimera le fichier et en fournira un nouveau pour recommencer. Dans le pire des cas, le plugin peut se planter. Si cela se produit, sélectionnez Tools/Restart From Default.</p>
+<h4>Paramètres du plugin Pattern Scripts dans configFile.json</h4>
 <pre>
   {
     "Main Script": {
@@ -2183,4 +2183,32 @@
     "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
     "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
   },
+</pre>
+<h2>Template Subroutine</h2>
+<h3>Introduction</h3>
+<p>Talk about how amazing this subroutine is.</P>
+<h3>Subroutine Panel</h3>
+<p>Subroutines.Template.View.ManageGui</p>
+<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
+<h4>Template Subroutine Settings in configFile.json</h4>
+<pre>
+  Put any user editable settings here.
+  
+  "US" : {
+        
+  }
+</pre>
+<h2>Template Subroutine</h2>
+<h3>Introduction</h3>
+<p>Talk about how amazing this subroutine is.</P>
+<h3>Subroutine Panel</h3>
+<p>Subroutines.Template.View.ManageGui</p>
+<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
+<h4>Template Subroutine Settings in configFile.json</h4>
+<pre>
+  Put any user editable settings here.
+  
+  "US" : {
+        
+  }
 </pre>

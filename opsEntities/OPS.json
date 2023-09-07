@@ -1,58 +1,61 @@
 {
   "Main Script" : {
-    "CD": {
-        "BLANCH": {
-          "A": 210,
-          "B": 255,
-          "D": "Lighten a bit",
-          "G": 255,
-          "R": 255
+    "US" : {
+      "CD": {
+          "BLANCH": {
+            "A": 210,
+            "B": 255,
+            "D": "Lighten a bit",
+            "G": 255,
+            "R": 255
+          },
+          "GLOOM": {
+            "A": 10,
+            "B": 0,
+            "D": "Darken a bit",
+            "G": 0,
+            "R": 0
+          },
+          "DUST": {
+            "A": 255,
+            "B": 218,
+            "D": "Light tan",
+            "G": 242,
+            "R": 252
+          },
+          "FADED": {
+            "A": 255,
+            "B": 245,
+            "D": "Light purple",
+            "G": 225,
+            "R": 237
+          },
+          "LICHEN": {
+            "A": 255,
+            "B": 244,
+            "D": "Light green",
+            "G": 255,
+            "R": 236
+          },
+          "PALE": {
+            "A": 255,
+            "B": 250,
+            "D": "Light blue",
+            "G": 243,
+            "R": 237
+          },
+          "RASH": {
+            "A": 255,
+            "B": 224,
+            "D": "Light red",
+            "G": 208,
+            "R": 240
+          },
+          "colorA" : "DUST",
+          "colorB" : "FADED",
+          "colorC" : "RASH"
         },
-        "GLOOM": {
-          "A": 10,
-          "B": 0,
-          "D": "Darken a bit",
-          "G": 0,
-          "R": 0
-        },
-        "DUST": {
-          "A": 255,
-          "B": 218,
-          "D": "Light tan",
-          "G": 242,
-          "R": 252
-        },
-        "FADED": {
-          "A": 255,
-          "B": 245,
-          "D": "Light purple",
-          "G": 225,
-          "R": 237
-        },
-        "LICHEN": {
-          "A": 255,
-          "B": 244,
-          "D": "Light green",
-          "G": 255,
-          "R": 236
-        },
-        "PALE": {
-          "A": 255,
-          "B": 250,
-          "D": "Light blue",
-          "G": 243,
-          "R": 237
-        },
-        "RASH": {
-          "A": 255,
-          "B": 224,
-          "D": "Light red",
-          "G": 208,
-          "R": 240
-        },
-        "colorA" : "DUST",
-        "colorB" : "FADED",
-        "colorC" : "RASH"
+        "OC" : true
       },
     "CP" : {
       "TS" : {
@@ -60,8 +63,6 @@
         "UX" : "UseSomethingElse"
       },
       "TC" : "UD",
-      "DR" : true,
-      "AP" : true,
       "EH" : false,
       "SE" : "utf-8",
       "ES" : "CA",
@@ -75,7 +76,6 @@
       "PW" : 1000,
       "PX" : 0,
       "PY" : 0,
-      "OC" : true,
       "RV" : 20230812,
       "GP" : "https://github.com/gar-codespace/OperationsPatternScripts",
       "EC" : {
@@ -83,15 +83,6 @@
         "402" : "402 - Requested page not found",
         "403" : "403 - Forbidden. The key is invalid."
       }
-      },
-    "TO" : {
-      "SME" : true,
-      "CWS" : true,
-      "SBA" : true,
-      "SIA" : true,
-      "SCT" : "ARR Codes",
-      "TNB" : false,
-      "ASE" : true
       },
     "LD" : {
       "OR" : "",

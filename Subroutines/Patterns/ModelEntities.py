@@ -399,12 +399,12 @@ class RollingStockParser:
     def sortLocoList(self):
         """
         Try/Except protects against bad edit of config file
-        Sort order of PSE.readConfigFile('RM')['SL'] is top down
+        Sort order of PSE.readConfigFile('US')['SL'] is top down
         """
 
         setupBundle = PSE.JMRI.jmrit.operations.setup.Bundle()
 
-        sortLocos = self.configFile['Patterns']['RM']['SL']
+        sortLocos = self.configFile['Patterns']['US']['SL']
         for sortKey in sortLocos:
             try:
                 translatedkey = (setupBundle.handleGetMessage(sortKey))
@@ -417,12 +417,12 @@ class RollingStockParser:
     def sortCarList(self):
         """
         Try/Except protects against bad edit of config file
-        Sort order of PSE.readConfigFile('Patterns')['RM']['SC'] is top down
+        Sort order of PSE.readConfigFile('Patterns')['US']['SC'] is top down
         """
 
         setupBundle = PSE.JMRI.jmrit.operations.setup.Bundle()
 
-        sortCars = self.configFile['Patterns']['RM']['SC']
+        sortCars = self.configFile['Patterns']['US']['SC']
         for sortKey in sortCars:
             try:
                 translatedkey = (setupBundle.handleGetMessage(sortKey))

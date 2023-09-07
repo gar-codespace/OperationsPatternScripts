@@ -208,7 +208,7 @@ def crawler(frame):
 def openSystemConsole():
 
     console = APPS.SystemConsole.getConsole()
-    console.setVisible(readConfigFile('Main Script')['CP']['OC'])
+    console.setVisible(readConfigFile('Main Script')['US']['OC'])
 
     return
 
@@ -605,7 +605,7 @@ def makeReportItemWidthMatrix():
     """
 
     reportMatrix = {}
-    attributeWidths = readConfigFile('Patterns')['RM']['AW']
+    attributeWidths = readConfigFile('Patterns')['US']['AW']
 
     for aKey, aValue in attributeWidths.items():
         reportMatrix[aKey] = aValue
@@ -937,7 +937,7 @@ def getSpecificColor(colorName):
     PSE.getAlertColor
     """
 
-    colorPalette = readConfigFile('Main Script')['CD']
+    colorPalette = readConfigFile('Main Script')['US']['CD']
 
     r = colorPalette[colorName]["R"]
     g = colorPalette[colorName]["G"]
@@ -954,7 +954,7 @@ def getColorA():
     """
 
     try:
-        colorName = readConfigFile('Main Script')['CD']['colorA']
+        colorName = readConfigFile('Main Script')['US']['CD']['colorA']
         color = getSpecificColor(colorName)
         return color
     except:
@@ -970,7 +970,7 @@ def getColorB():
     """
 
     try:
-        colorName = readConfigFile('Main Script')['CD']['colorB']
+        colorName = readConfigFile('Main Script')['US']['CD']['colorB']
         color = getSpecificColor(colorName)
         return color
     except:
@@ -986,7 +986,7 @@ def getColorC():
     """
 
     try:
-        colorName = readConfigFile('Main Script')['CD']['colorC']
+        colorName = readConfigFile('Main Script')['US']['CD']['colorC']
         color = getSpecificColor(colorName)
         return color
     except:

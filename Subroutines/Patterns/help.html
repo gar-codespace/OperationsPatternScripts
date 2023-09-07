@@ -26,66 +26,55 @@
 <p>All the pattern reports start with the creation of a json file. These files are created by this plugin and are written to the jsonManifests folder. They follow the illustrated format:</p>
 <img src="../Subroutines/Patterns/img/Report_File_Format.png" alt="<JSON format for reports>">
 <p>Depending upon the task, any of the json files will then be written into a Pattern Report or Switchlist text file or exported to TrainPlayer as a WorkEvents csv file.</p>
-<h4>Patterns Subroutine settings in configFile.json</h4>
+<h4>User Settings for the Patterns section of configFile.json</h4>
 <pre>
-  "Patterns" : { <font color="DarkRed">Patterns Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "AD" : [ <font color="DarkRed">All divisions</font>
+  The Patterns section of the configuration file has the following user editable settings.
+  
+  "US" : {
+    "DS" : "Not Assigned", Destination designator when the field would otherwise be blank.
+    "DT" : "Not Scheduled", Destination Track designator when the field would otherwise be blank.
+    "FD" : "Unconsigned", Final Destination designator when the field would otherwise be blank.
+    "FT" : "No Waybill", Final Destination and Track designator when the field would otherwise be blank.
+    "EH" : "Available", Extended Handling, special case designator for engine, passenger and caboose.
+    "SL": [ Sort Locomotives. Loco lists are sorted on the fields entered here.
+      "Model"
     ],
-    "AL" : [ <font color="DarkRed">All locations</font>
+    "SC": [ Sort Cars. Car lists are sorted on the fields entered here.
+      "Load_Type",
+      "FD&Track"
     ],
-    "PL" : "", <font color="DarkRed">Pattern Location</font>
-    "PT" : { <font color="DarkRed">Pattern-Tracks</font>
-    },
-    "PA" : false, <font color="DarkRed">Yard Tracks Only flag (set by user, written by this plugin)</font>
-    "PI" : false, <font color="DarkRed">Ignore Track Length flag (set by user, written by this plugin)</font>
-    "AS" : true, <font color="DarkRed">Apply Schedule flag (set by user, written by this plugin)</font>
-    "TI" : false, <font color="DarkRed">TrainPlayer Include flag (reserved)</font>
-    "PW" : 260, <font color="DarkRed">Pattern Width</font>
-    "PH" : 16, <font color="DarkRed">Pattern Height</font>
-    "RM": 8, <font color="DarkRed">Row Multiplier</font>
-
-  "RM" : { <font color="DarkRed">Report Modifiers</font></h4>
-    "DS" : "<font color="green">*No Waybill</font>", <font color="DarkRed">Destination designator</font>
-    "DT" : "<font color="green">*Not Consigned</font>", <font color="DarkRed">Destination Track designator</font>
-    "FD" : "<font color="green">*Via Staging</font>", <font color="DarkRed">Final Destination designator</font>
-    "FT" : "<font color="green">*Any Line</font>", <font color="DarkRed">Final destination Track designator</font>
-    "SL": [ <font color="DarkRed">Sort Locomotives</font>
-      "<font color="green">Model</font>"
-    ],
-    "SC": [ <font color="DarkRed">Sort Cars</font>
-      "<font color="green">Load Type</font>",
-      "<font color="green">FD&Track</font>"
-    ],
-    "AW": { <font color="DarkRed">Attribute Width</font>
-      "Input": <font color="green">6</font>,
-      "Model": <font color="green">5</font>,
-      "Road" : <font color="green">5</font>,
-      "Number" : <font color="green">7</font>,
-      "Type" : <font color="green">6</font>,
-      "Length" : <font color="green">7</font>,
-      "Weight" : <font color="green">7</font>,
-      "Load" : <font color="green">6</font>,
-      "Load Type" : <font color="green">5</font>,
-      "Loco Type" : <font color="green">18</font>,
-      "Owner" : <font color="green">20</font>,
-      "Consist" : <font color="green">8</font>,
-      "Hazardous" : <font color="green">10</font>,
-      "Color" : <font color="green">6</font>,
-      "Kernel" : <font color="green">7</font>,
-      "Kernel Size" : <font color="green">12</font>,
-      "Owner" : <font color="green">6</font>,
-      "Track" : <font color="green">6</font>,
-      "Location" : <font color="green">9</font>,
-      "Destination" : <font color="green">15</font>,
-      "Dest&Track" : <font color="green">30</font>,
-      "Final Dest" : <font color="green">11</font>,
-      "FD&Track" : <font color="green">21</font>,
-      "Comment" : <font color="green">15</font>,
-      "SetOut Msg" : <font color="green">12</font>,
-      "PickUp Msg" : <font color="green">12</font>,
-      "RWE" : <font color="green">10</font>,
-      " " : 0
+    "AW": { Attribute Width, IE in a report, the Number field is alloted 7 characters.
+      " ": 1, 
+      "Road": 5, 
+      "Number": 7, 
+      "Type": 6, 
+      "Length": 7, 
+      "Color": 6, 
+      "Weight": 7,
+      "Comment": 15, 
+      "Division": 15, 
+      "Location": 9, 
+      "Track": 6, 
+      "Destination": 15, 
+      "Owner": 20, 
+      "Model": 5, 
+      "DCC_Address": 10, 
+      "Consist": 8, 
+      "Load_Type": 1, 
+      "Load": 6, 
+      "Hazardous": 10, 
+      "Kernel": 7, 
+      "Kernel_Size": 3, 
+      "Dest&Track": 27, 
+      "Final_Dest": 11, 
+      "FD&Track": 23, 
+      "SetOut_Msg": 12, 
+      "PickUp_Msg": 12, 
+      "RWE": 10, 
+      "RWL": 10, 
+      "onTrain": 0, 
+      "puso": 6, 
+      "setTo": 6
     }
-  },
+}
 </pre>

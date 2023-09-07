@@ -207,7 +207,7 @@ def insertStandins(trackPattern):
     """
 
     setupBundle = PSE.JMRI.jmrit.operations.setup.Bundle()
-    standins = PSE.readConfigFile('Patterns')['SI']
+    standins = PSE.readConfigFile('Patterns')['US']
 
     tracks = trackPattern['tracks']
     for track in tracks:

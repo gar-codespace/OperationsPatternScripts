@@ -16,20 +16,22 @@
 <h3>Subroutine Panel</h3>
 <p>Subroutines.o2o.View.ManageGui</p>
 <img src="../Subroutines/o2o/img/o2o_Subroutine.png" alt="<o2o Subroutine Image>">
-<h4>o2o Subroutine settings in configFile.json</h4>
+<h4>User Settings for the o2o section of configFile.json</h4>
 <pre>
-  "o2o" : {  <font color="DarkRed">o2o Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "PC": [  <font color="DarkRed">List of TrainPlayer car codes for passenger cars.</font>
-      <font color="green">"B"</font>,  <font color="DarkRed">Any of these can be added to or removed</font>
-      "BE",
-      "BH",
-      "BM",
-      "BMR",
-      "BMT",
-      "BP",
-      "BR",
-      "BX",
+  The o2o section of the configuration file has the following user editable settings.
+  The following are TrainPlayer car code lists for types of equipment, based on default TrainPlayer values.
+  Custom car codes added to TrainPlayer would also be added here.
+
+  "US" : {
+    "XE" : [ List of TrainPlayer car codes for engines.
+      "E",
+      "ES",
+      "ED",
+      "EE",
+      "ET"
+    ],
+    "XP" : [ List of TrainPlayer car codes for passenger cars.
+      "EP",
       "CA",
       "CS",
       "D",
@@ -40,9 +42,6 @@
       "DO",
       "DP",
       "DPA",
-      "MA",
-      "MB",
-      "MR",
       "P",
       "PA",
       "PAS",
@@ -55,27 +54,35 @@
       "PS",
       "PSA"
     ],
-    "CC" : [  <font color="DarkRed">List of TrainPlayer caboose car codes.</font>
-      <font color="green">"N"</font>,  <font color="DarkRed">Any of these can be added to or removed</font>
+    "XX" : [ List of TrainPlayer car codes for baggage mail cars.
+      "B",
+      "BE",
+      "BH",
+      "BM",
+      "BMR",
+      "BMT",
+      "BP",
+      "BR",
+      "BX",
+      "MA",
+      "MB",
+      "MR"
+    ],
+    "XC" : [ List of TrainPlayer car codes for cabeese.
+      "N",
       "NM",
       "NE"
     ],
-    "CFL" : [  <font color="DarkRed">Core File List</font>
-      "OperationsCarRoster",
-      "OperationsEngineRoster",
-      "OperationsLocationRoster,
-    },
-    "RF" : { <font color="DarkRed">Report Files - Names of the TrainPlayer layout export files.</font>
-      "TRL" : "TrainPlayer Report - Locations.txt",
-      "TRI" : "TrainPlayer Report - Industries.txt",
-      "TRR" : "TrainPlayer Report - Rolling Stock.txt"
-    },
-
-    "TR" : {  <font color="DarkRed">Type Rubric - Align TrainPlayer and JMRI track types.</font>
-      "industry": "Spur",
-      "interchange": "Interchange",
-      "staging": "Staging",
-      "class yard": "Yard",
-      "XO reserved": "Spur"
-    }
+    "XM" : [ List of TrainPlayer car codes for MOW equipment.
+      "M",
+      "MWB",
+      "MWC",
+      "MWD",
+      "MWG",
+      "MWF",
+      "MWK",
+      "MWR",
+      "MWX"
+    ]
+  },
 </pre>

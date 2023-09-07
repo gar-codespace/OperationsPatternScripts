@@ -2,89 +2,68 @@
     "RN" : "o2o-Workevents",
     "SV" : true,
     "DL" : 40,
-    "XE" : [
-      "E",
-      "ES",
-      "ED",
-      "EE",
-      "ET"
-    ],
-    "XP" : [
-      "EP",
-      "CA",
-      "CS",
-      "D",
-      "DA",
-      "DB",
-      "DC",
-      "DL",
-      "DO",
-      "DP",
-      "DPA",
-      "P",
-      "PA",
-      "PAS",
-      "PB",
-      "PBC",
-      "PBO",
-      "PC",
-      "PL",
-      "PO",
-      "PS",
-      "PSA"
-    ],
-    "XX" : [
-      "B",
-      "BE",
-      "BH",
-      "BM",
-      "BMR",
-      "BMT",
-      "BP",
-      "BR",
-      "BX",
-      "MA",
-      "MB",
-      "MR"
-    ],
-    "XC" : [
-      "N",
-      "NM",
-      "NE"
-    ],
-    "XM" : [
-      "M",
-      "MWB",
-      "MWC",
-      "MWD",
-      "MWG",
-      "MWF",
-      "MWK",
-      "MWR",
-      "MWX"
-    ],
-    "CFL" : [
-      "CMX",
-      "EMX",
-      "LMX"
-    ],
-    "RA" : [
-      "PUSO",
-      "Road",
-      "Number",
-      "Model",
-      "Load_Type",
-      "Load",
-      "Location",
-      "Dest&Track",
-      "FD&Track"
-    ],
-    "RF" : {
-      "TRL" : "TrainPlayer Report - Locations.txt",
-      "TRI" : "TrainPlayer Report - Industries.txt",
-      "TRR" : "TrainPlayer Report - Rolling Stock.txt",
-      "RRD" : "tpRailroadData",
-      "RSD" : "tpRollingStockData"
+    "US" : {
+      "XE" : [
+        "E",
+        "ES",
+        "ED",
+        "EE",
+        "ET"
+      ],
+      "XP" : [
+        "EP",
+        "CA",
+        "CS",
+        "D",
+        "DA",
+        "DB",
+        "DC",
+        "DL",
+        "DO",
+        "DP",
+        "DPA",
+        "P",
+        "PA",
+        "PAS",
+        "PB",
+        "PBC",
+        "PBO",
+        "PC",
+        "PL",
+        "PO",
+        "PS",
+        "PSA"
+      ],
+      "XX" : [
+        "B",
+        "BE",
+        "BH",
+        "BM",
+        "BMR",
+        "BMT",
+        "BP",
+        "BR",
+        "BX",
+        "MA",
+        "MB",
+        "MR"
+      ],
+      "XC" : [
+        "N",
+        "NM",
+        "NE"
+      ],
+      "XM" : [
+        "M",
+        "MWB",
+        "MWC",
+        "MWD",
+        "MWG",
+        "MWF",
+        "MWK",
+        "MWR",
+        "MWX"
+      ]
     },
     "RMO" : {
       "A01" : "Road",
@@ -131,19 +110,28 @@
       "RCL" : true,
       "LEE" : true
     },
+    "TO" : {
+      "SME" : true,
+      "CWS" : true,
+      "SBA" : true,
+      "SIA" : true,
+      "SCT" : "ARR Codes",
+      "TNB" : false,
+      "ASE" : true
+      },
+    "RF" : {
+      "TRL" : "TrainPlayer Report - Locations.txt",
+      "TRI" : "TrainPlayer Report - Industries.txt",
+      "TRR" : "TrainPlayer Report - Rolling Stock.txt",
+      "RRD" : "tpRailroadData",
+      "RSD" : "tpRollingStockData"
+    },
     "TR" : {
       "industry": "Spur",
       "interchange": "Interchange",
       "staging": "Staging",
       "class yard": "Yard",
       "XO reserved": "Spur"
-    },
-    "CC" : {
-      "locoColor": "FADED",
-      "carColor": "DUST",
-      "alertColor": "RASH"
-    },
-    "RC" : [
-      "Generic"
-    ]
-}
+    }
+  }
+  

@@ -1,27 +1,20 @@
 <!-- Throwback help section html -->
 <h2>Throwback Subroutine</h2>
 <h3>Description</h3>
-<p>The Throwback Subroutine is modeled on the idea of version control software. Commits are named and saved. In so doing snapshots are taken of the railroads data. The commit then serves as a setpoint that allows any of the JMRI data sets to be reset to.</p>
+<p>The Throwback Subroutine is modeled on the idea of version control software. Commits are named and saved. In so doing snapshots are taken of the railroads data.</p>
+<p>The commit then serves as a setpoint that allows any of the JMRI data sets to be reset to.</p>
+<p>This subroutine does not interact with JMRIs Auto Save or Auto Backup feature, they run as configured.</p>
 <h3>What the buttons do</h3>
 <p>The name of each commit is entered into the text box of the Total Commits frame. Enter the name BEFORE pressing the Add New Commit button.</p>
 <p>Presing the Add New Commit button will add a new commit.</p>
-<p>Pressing the Delete All Commits button erases all saved commits, so be careful!</p>
+<p>Pressing the Delete All Commits brings up a choice to confirm or cancel the commit. Pressing the Confirm button erases all saved commits, so be careful!</p>
 <p>In the Actions panel, the Previous and Next buttons facilitate scrolling through your collection of commits. The list is ordered by creation date/time.</p>
 <p>Select any combination of data sets to be thrown back by clicking its check box.</p>
 <p>Pressing the Throwback button sets the selected data sets to the displayed commit.</p>
-<p>This subroutine does not interact with JMRIs Auto Save or Auto Backup feature, they run as configured.</p>
 <h3>Plugin Layout</h3>
 <p>Subroutines.Throwback.View.ManageGui()</p>
 <img src="../Subroutines/Throwback/img/Throwbach_Subroutine.png" alt="<Plugin Layout Image>">
-<h4>Throwback plugin settings in configFile.json</h4>
+<h4>User Settings for the Throwback section of configFile.json</h4>
 <pre>
-  "Throwback": {  <font color="DarkRed">Throwback Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "SS": [  <font color="DarkRed">Saved Setpoints</font>
-      [
-        "",  <font color="DarkRed">Time stamp, commit name</font>
-        ""
-      ]
-    ]
-  }
+  The Throwback section of the configuration file has no user editable settings.
 </pre>
