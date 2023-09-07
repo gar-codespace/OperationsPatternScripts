@@ -229,10 +229,11 @@ def insertStandins(trackPattern):
                 finalDestination = extendedFinalDestionationHandling(car, standins)
 
             shortLoadType = PSE.getShortLoadType(car)
+            print(shortLoadType)
 
             car.update({setupBundle.handleGetMessage('Destination'): destination})
             car.update({setupBundle.handleGetMessage('Final_Dest'): finalDestination})
-            car.update({'loadType': shortLoadType})
+            car.update({setupBundle.handleGetMessage('Load_Type'): shortLoadType})
 
     return trackPattern
 
