@@ -1,7 +1,6 @@
 Todo:
   How to publish DeepL?
   Update help html.
-  Add color Generic to list of colors in cars xml.
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.
