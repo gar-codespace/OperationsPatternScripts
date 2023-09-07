@@ -31,19 +31,19 @@
   The Patterns section of the configuration file has the following user editable settings.
   
   "US" : {
-    "DS" : "Not Assigned", Destination designator when the field would otherwise be blank.
-    "DT" : "Not Scheduled", Destination Track designator when the field would otherwise be blank.
-    "FD" : "Unconsigned", Final Destination designator when the field would otherwise be blank.
-    "FT" : "No Waybill", Final Destination and Track designator when the field would otherwise be blank.
-    "EH" : "Available", Extended Handling, special case designator for engine, passenger and caboose.
-    "SL": [ Sort Locomotives. Loco lists are sorted on the fields entered here.
+    "DS" : "Not Assigned", <font color="DarkRed">Destination designator when the field would otherwise be blank.</font>
+    "DT" : "Not Scheduled", <font color="DarkRed">Destination Track designator when the field would otherwise be blank.</font>
+    "FD" : "Unconsigned", <font color="DarkRed">Final Destination designator when the field would otherwise be blank.</font>
+    "FT" : "No Waybill", <font color="DarkRed">Final Destination and Track designator when the field would otherwise be blank.</font>
+    "EH" : "Available", <font color="DarkRed">Extended Handling, special case designator for engine, passenger and caboose.</font>
+    "SL": [ Sort Locomotives. <font color="DarkRed">Loco lists are sorted on the fields entered here.*</font>
       "Model"
     ],
-    "SC": [ Sort Cars. Car lists are sorted on the fields entered here.
+    "SC": [ Sort Cars. <font color="DarkRed">Car lists are sorted on the fields entered here.*</font>
       "Load_Type",
       "FD&Track"
     ],
-    "AW": { Attribute Width, IE in a report, the Number field is alloted 7 characters.
+    "AW": { <font color="DarkRed">Attribute Width, IE in a report, the Number field is alloted 7 characters.</font>
       " ": 1, 
       "Road": 5, 
       "Number": 7, 
@@ -77,4 +77,5 @@
       "setTo": 6
     }
 }
+<font color="DarkRed">* Note, for Sort Loco "SL" and Sort car "SC", select names from those listed in "AW".</font>
 </pre>

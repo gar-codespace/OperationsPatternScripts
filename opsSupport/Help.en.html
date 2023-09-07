@@ -72,16 +72,16 @@ Worst case, the plugin may crash. If that should happed select Tools/Restart Fro
   The following are user editable values for the plugin.
   For colors, any of the A, B, G, R values can be changed, between 0 and 255.
   Also, new colors may be added.
-      
+
   "US" : {
-    "OC" : true, Open Console. Opens the system console when the plugin starts.
-    "CD": { Color definitions, a set of predefined colors.
-        "BLANCH": { The name of the color.
-          "A": 210, The alpha (transparency) value.
-          "B": 255, The blue component value.
-          "D": "Lighten a bit", A description of the color.
-          "G": 255, The green component value.
-          "R": 255 The red component value.
+    "OC" : true, <font color="DarkRed">Open Console. Opens the system console when the plugin starts.</font>
+    "CD": { <font color="DarkRed">Color Definitions, a set of predefined colors.</font>
+        "BLANCH": { <font color="DarkRed">The name of the color.</font>
+          "A": 210, <font color="DarkRed">The alpha (transparency) value.</font>
+          "B": 255, <font color="DarkRed">The blue component value.</font>
+          "D": "Lighten a bit", <font color="DarkRed">A description of the color.</font>
+          "G": 255, <font color="DarkRed">The green component value.</font>
+          "R": 255 <font color="DarkRed">The red component value.</font>
         },
         "GLOOM": {
           "A": 10,
@@ -125,9 +125,9 @@ Worst case, the plugin may crash. If that should happed select Tools/Restart Fro
           "G": 208,
           "R": 240
         },
-        "colorA" : "DUST",
-        "colorB" : "FADED",
-        "colorC" : "RASH"
+        "colorA" : "DUST", <font color="DarkRed">The name of the color to be used when colorA is called.</font>
+        "colorB" : "FADED", <font color="DarkRed">The name of the color to be used when colorB is called.</font>
+        "colorC" : "RASH" <font color="DarkRed">The name of the color to be used when colorC is called.</font>
       }
     },
 </pre>
@@ -177,14 +177,14 @@ Worst case, the plugin may crash. If that should happed select Tools/Restart Fro
   Custom car codes added to TrainPlayer would also be added here.
 
   "US" : {
-    "XE" : [ List of TrainPlayer car codes for engines.
+    "XE" : [ <font color="DarkRed">List of TrainPlayer car codes for engines.</font>
       "E",
       "ES",
       "ED",
       "EE",
       "ET"
     ],
-    "XP" : [ List of TrainPlayer car codes for passenger cars.
+    "XP" : [ <font color="DarkRed">List of TrainPlayer car codes for passenger cars.</font>
       "EP",
       "CA",
       "CS",
@@ -208,7 +208,7 @@ Worst case, the plugin may crash. If that should happed select Tools/Restart Fro
       "PS",
       "PSA"
     ],
-    "XX" : [ List of TrainPlayer car codes for baggage mail cars.
+    "XX" : [ <font color="DarkRed">List of TrainPlayer car codes for baggage mail cars.</font>
       "B",
       "BE",
       "BH",
@@ -222,12 +222,12 @@ Worst case, the plugin may crash. If that should happed select Tools/Restart Fro
       "MB",
       "MR"
     ],
-    "XC" : [ List of TrainPlayer car codes for cabeese.
+    "XC" : [ <font color="DarkRed">List of TrainPlayer car codes for cabeese.</font>
       "N",
       "NM",
       "NE"
     ],
-    "XM" : [ List of TrainPlayer car codes for MOW equipment.
+    "XM" : [ <font color="DarkRed">List of TrainPlayer car codes for MOW equipment.</font>
       "M",
       "MWB",
       "MWC",
@@ -273,19 +273,19 @@ Worst case, the plugin may crash. If that should happed select Tools/Restart Fro
   The Patterns section of the configuration file has the following user editable settings.
   
   "US" : {
-    "DS" : "Not Assigned", Destination designator when the field would otherwise be blank.
-    "DT" : "Not Scheduled", Destination Track designator when the field would otherwise be blank.
-    "FD" : "Unconsigned", Final Destination designator when the field would otherwise be blank.
-    "FT" : "No Waybill", Final Destination and Track designator when the field would otherwise be blank.
-    "EH" : "Available", Extended Handling, special case designator for engine, passenger and caboose.
-    "SL": [ Sort Locomotives. Loco lists are sorted on the fields entered here.
+    "DS" : "Not Assigned", <font color="DarkRed">Destination designator when the field would otherwise be blank.</font>
+    "DT" : "Not Scheduled", <font color="DarkRed">Destination Track designator when the field would otherwise be blank.</font>
+    "FD" : "Unconsigned", <font color="DarkRed">Final Destination designator when the field would otherwise be blank.</font>
+    "FT" : "No Waybill", <font color="DarkRed">Final Destination and Track designator when the field would otherwise be blank.</font>
+    "EH" : "Available", <font color="DarkRed">Extended Handling, special case designator for engine, passenger and caboose.</font>
+    "SL": [ Sort Locomotives. <font color="DarkRed">Loco lists are sorted on the fields entered here.*</font>
       "Model"
     ],
-    "SC": [ Sort Cars. Car lists are sorted on the fields entered here.
+    "SC": [ Sort Cars. <font color="DarkRed">Car lists are sorted on the fields entered here.*</font>
       "Load_Type",
       "FD&Track"
     ],
-    "AW": { Attribute Width, IE in a report, the Number field is alloted 7 characters.
+    "AW": { <font color="DarkRed">Attribute Width, IE in a report, the Number field is alloted 7 characters.</font>
       " ": 1, 
       "Road": 5, 
       "Number": 7, 
@@ -319,6 +319,7 @@ Worst case, the plugin may crash. If that should happed select Tools/Restart Fro
       "setTo": 6
     }
 }
+<font color="DarkRed">* Note, for Sort Loco "SL" and Sort car "SC", select name from those listed in "AW".</font>
 </pre>
 <h2>Template Subroutine</h2>
 <h3>Introduction</h3>
