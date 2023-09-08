@@ -249,12 +249,12 @@ def updateHelpFileForLocale():
 
     for sub in PSE.getSubroutineDirs():
         includeCheck = sub + ' help section html -->'
-        if includeCheck in localeHelpHtml:
-            continue
-
-        targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'Subroutines', sub, 'help.html')
-        subroutineHelp = PSE.genericReadReport(targetPath)
-        localeHelpHtml += subroutineHelp
+        if not includeCheck in localeHelpHtml:
+            targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'Subroutines', sub, 'help.html')
+            subroutineHelp = PSE.genericReadReport(targetPath)
+            localeHelpHtml += subroutineHelp
+            print(targetPath)
+            print('vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv')
 
     PSE.genericWriteReport(localeHelpFileLocation, localeHelpHtml)
 
