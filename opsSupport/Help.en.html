@@ -53,9 +53,7 @@
 <p>The Pattern Scripts plugin can be thought of as a framework for hosting subroutines (or scripts) for JMRI Operations Pro that require a user interface. This plugin comes with four subroutines; jPlus, Patterns, o2o and Throwback. A template is also included to serve as scaffolding for someone wishing to add their own subroutine.</p>
 <p>Subroutines may be added or removed individually as needed.</p>
 <p>Additionally, each subroutine can be shown or hidden as needed, fron the Tools menu pulldown.</p>
-<p>Each of the subroutines' features are only available when the plugin is running and the subroutine has been included.
-For example, extended railroad details will only appear in reports when the Pattern Scripts plugin has been started, and jPlus has been included.
-To deactivate the plugins features, close (not hide) the window.</p>
+<p>Each of the subroutines' features are only available when the plugin is running and the subroutine has been included. For example, extended railroad details will only appear in reports when the Pattern Scripts plugin has been started, and jPlus has been included. To deactivate the plugins features, close (not hide) the window.</p>
 <h3>Organization</h3>
 <p>The following chart shows the code structure of this plugin.</P>
 <img src="./img/Code_Structure.png" alt="<Code Structure Image>">
@@ -64,9 +62,7 @@ To deactivate the plugins features, close (not hide) the window.</p>
 <img src="./img/Plugin_Layout.png" alt="<Plugin Layout Image>">
 <h3>configFile.json</h3>
 <p>Each JMRI profile gets its own configuration file, which is named configFile.json. It is found in the operations folder, and is used to provide custom settings for each profile and record user inputs.</p>
-<p>Select Tools/Edit Config File. The values that are user editable are in subsections labeled "US" for User Settings. Other values should not be edited.
-If a mistake is made editing the configFile, the plugin will delete the file and provide a new one to start over using default values.
-Worst case, the plugin may crash. If that should happed select Tools/Restart From Default.</p>
+<p>Select Tools/Edit Config File. The values that are user editable are in subsections labeled "US" for User Settings. Other values should not be edited. If a mistake is made editing the configFile, the plugin will delete the file and provide a new one to start over using default values. Worst case, the plugin may crash. If that should happed select Tools/Restart From Default.</p>
 <h4>User Settings for the Main Script section of configFile.json</h4>
 <pre>
   The following are user editable values for the plugin.
@@ -156,14 +152,14 @@ Worst case, the plugin may crash. If that should happed select Tools/Restart Fro
 <h2>o2o Subroutine</h2>
 <h3>Description</h3>
 <p>The ops to ops (o2o) subroutine is a group of utilities that are designed to be the glue that allows JMRI Operations Pro to be the operations engine for TrainPlayer©. The idea is to expand the capability of TrainPlayer©'s Advanced Ops feature to include the flexibility of Operations Pro, while also eleminating the tedium of keeping two databases synchronised.</p>
-<p>o2o will automatically export a built train or switchlist to TrainPlayer when the Pattern scripts window is open and the o2o subroutine is displayed. To disable o2o export, disable o2o from the Tools pulldown or close the Pattern Scripts window.</p>
+<p>o2o will automatically export a built train or switchlist to TrainPlayer when the Pattern scripts window is open and the o2o subroutine is included. To disable o2o export, Remove o2o from the Pattern Scripts window or close (not hide) the Pattern Scripts window.</p>
 <h3>What the buttons do</h3>
 <p>Before any of these buttons are pressed, export your layout from TrainPlayer. The QuickKeys for TrainPlayer subroutines have to be added to TrainPlayer before your TrainPlayer layout can be exported. Refer to the Quick Keys documentation.</p>
 <p><A HREF="https://github.com/gar-codespace/QuickKeys-for-TrainPlayer">The Quick Keys page on GitHub</A></p>
-<p>New JMRI Railroad - Pressing this button erases any existing data and builds a new JMRI railroad from the Advanced Ops window via a TrainPlayer export. The Routes and Trains XML files are backed up, the others are discarded.</p>
-<p>Update Locations - Pressing this button updates your JMRI railroad to the changes made to the TrainPlayer Advanced Ops Locations and Industries tabs, along with any changes made to your TrainPlayer rolling stock.</p>
-<p>Update Industries - Pressing this button only applies changes made to the TrainPlayer Advanced Ops Industries tab. Nothing else is updated. This effectively updates only JMRI schedule data.</p>
-<p>Update Rolling Stock - Pressing this button applies changes made to your TrainPlayer rolling stock to your JMRI rolling stock. If a change is made to existing cars, the final destination is not overwritten.</p>
+<p>Initialize Railroad - Pressing this button erases any existing JMRI so a new JMRI railroad can be built from the TrainPlayer export. The Routes and Trains XML files are backed up, the others are initialized.</p>
+<p>Import Locations - Pressing this button builds a whole new JMRI railroad from the TrainPlayer export. If you are using jPlus, the extended data you entered into the TrainPlayer layout will be added. Additionally, when changes are made to the Locations tab of TrainPlayer's Advanced Ops window, pressing this button will update your layout.</p>
+<p>Import Industries - Press this button when you have made changes to TrainPlayers Advanced Ops Industries tab, This will update your spurs. Any changes you have made to your rolling stock are also updated.</p>
+<p>Import Cars - Press this button when you have changed the rolling stock on your layout.</p>
 <h3>Who does what</h3>
 <p>The table below shows which program manages which elements.</p>
 <img src="../Subroutines/o2o/img/Who_Does_What.png" alt="<Who Does What Image>">
@@ -245,12 +241,11 @@ Worst case, the plugin may crash. If that should happed select Tools/Restart Fro
 <h3>Description</h3>
 <p>The Patterns subroutine can generate pattern reports for tracks at a single location. Additionally, cars can be moved from track to track within a location. Optionally, if a car is moved onto a spur, the schedule for that spur can be applied.</p>
 <h3>What the buttons do</h3>
-<p>If you are using divisions, the Division drop down will display a list of divisions. Selecting a division will load a list of locations for that division into the Location drop dow.</p>
-<p>The Location drop down will display a list of locations for your layout, or just the locations assigned to the selected division.</p>
+<p>If you are using divisions, the Division drop down will display a list of divisions. Selecting a division will load a list of locations for that division into the Location drop down.</p>
 <p>With a location selected, a list of check boxes will display, one for each track at the selected location.</p>
 <p>The list of tracks can be filtered by clicking the 'Yard Tracks Only' check box on or off.</p>
 <p>Individual tracks can be selected by clicking the check box next to the track name.</p>
-<p>With tracks selected, pressing the Pattern Report button will display inventory information about the selected tracks. This is printable.</p>
+<p>With tracks selected, pressing the Track Inquiry button will display inventory information about the selected tracks. This is printable.</p>
 <p>With tracks selected, pressing the Set Rolling Stock to Track button will pop open one worklist for each track selected.</p>
 <p>For each worklist window, a row of buttons, one for each track of the selected location, will display. Pressing one of the track buttons will load the track name into memory.</p>
 <p>For any of the rolling stock rows in the Cars At... panel, clicking inside of one of the text boxes will paste the selected track name into the box.</p>

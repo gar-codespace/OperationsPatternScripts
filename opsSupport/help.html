@@ -17,9 +17,7 @@
 <p>The Pattern Scripts plugin can be thought of as a framework for hosting subroutines (or scripts) for JMRI Operations Pro that require a user interface. This plugin comes with four subroutines; jPlus, Patterns, o2o and Throwback. A template is also included to serve as scaffolding for someone wishing to add their own subroutine.</p>
 <p>Subroutines may be added or removed individually as needed.</p>
 <p>Additionally, each subroutine can be shown or hidden as needed, fron the Tools menu pulldown.</p>
-<p>Each of the subroutines' features are only available when the plugin is running and the subroutine has been included.
-For example, extended railroad details will only appear in reports when the Pattern Scripts plugin has been started, and jPlus has been included.
-To deactivate the plugins features, close (not hide) the window.</p>
+<p>Each of the subroutines' features are only available when the plugin is running and the subroutine has been included. For example, extended railroad details will only appear in reports when the Pattern Scripts plugin has been started, and jPlus has been included. To deactivate the plugins features, close (not hide) the window.</p>
 <h3>Organization</h3>
 <p>The following chart shows the code structure of this plugin.</P>
 <img src="./img/Code_Structure.png" alt="<Code Structure Image>">
@@ -28,9 +26,7 @@ To deactivate the plugins features, close (not hide) the window.</p>
 <img src="./img/Plugin_Layout.png" alt="<Plugin Layout Image>">
 <h3>configFile.json</h3>
 <p>Each JMRI profile gets its own configuration file, which is named configFile.json. It is found in the operations folder, and is used to provide custom settings for each profile and record user inputs.</p>
-<p>Select Tools/Edit Config File. The values that are user editable are in subsections labeled "US" for User Settings. Other values should not be edited.
-If a mistake is made editing the configFile, the plugin will delete the file and provide a new one to start over using default values.
-Worst case, the plugin may crash. If that should happed select Tools/Restart From Default.</p>
+<p>Select Tools/Edit Config File. The values that are user editable are in subsections labeled "US" for User Settings. Other values should not be edited. If a mistake is made editing the configFile, the plugin will delete the file and provide a new one to start over using default values. Worst case, the plugin may crash. If that should happed select Tools/Restart From Default.</p>
 <h4>User Settings for the Main Script section of configFile.json</h4>
 <pre>
   The following are user editable values for the plugin.

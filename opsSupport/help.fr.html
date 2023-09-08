@@ -35,21 +35,25 @@
 </head>
 <body>
 <h1>Page d'aide - Plugin Pattern Scripts pour JMRI</h1>
-<p>Le plugin Pattern Scripts pour JMRI est une suite de sous-programmes pour JMRI Operations Pro. L'utilisation de ce plugin est documentée dans la liste suivante de vidéos. Les vidéos sont enregistrées en langue anglaise.</p>
+<p>Le plugin Pattern Scripts pour JMRI est une suite de sous-programmes pour JMRI Operations Pro. L'utilisation de ce plugin est documentée dans la liste suivante de vidéos YouTube. Les vidéos sont enregistrées en anglais.</p>
 <h3>Plugin Pattern Scripts - Documentation vidéo</h3>
-<p>Aperçu de ce plugin</p>
+<p><A HREF="https://youtu.be/vFeCn1d2YfI">Une vue d'ensemble de ce plugin</A></p>
 <p><A HREF="https://youtu.be/Sl9yBQaRpeY">Comment ajouter ce plugin à JMRI</A></p>
 <p><A HREF="https://youtu.be/6G7xkRJTczo">Comment traduire ce plugin</A></p>
-<p><A HREF="https://youtu.be/GjPtXk3oKmc">Comment configurer ce plugin</A></p>
+<p><A HREF="https://youtu.be/GjPtXk3oKmc">Comment installer ce plugin</A></p>
 <p><A HREF="https://youtu.be/DK6O9AQmqXo">Comment modifier ce plugin</A></p>
-<h3>Sous-routines - Documentation vidéo</h3>
-<p>La sous-routine j Plus</p>
-<p><A HREF="https://youtu.be/IdXvxyo-E3Y">Subroutine de modèle de piste - Démonstration sur un chantier</A></p>
-<p><A HREF="https://youtu.be/2Tv6sUMDD_Y">Sous-routine Track Pattern - Démonstration à l'industrie</A></p>
-<p><A HREF="https://youtu.be/rlUfoSesnQo">o2o, le sous-routine ops to ops pour TrainPlayer©</A></p>
-<h2>Plugin Scripts de motifs</h2>
+<h3>Sous-programmes - Documentation vidéo</h3>
+<p><A HREF="https://youtu.be/rlUfoSesnQo">Le sous-programme o2o - Utiliser JMRI avec le logiciel de modélisme ferroviaire TrainPlayer©</A></p>
+<p>Le sous-programme Patterns - Vue d'ensemble</p>
+<p><A HREF="https://youtu.be/2Tv6sUMDD_Y">La sous-routine Patterns - Démonstration dans l'industrie</A></p>
+<p><A HREF="https://youtu.be/IdXvxyo-E3Y">Le sous-programme Patterns - Démonstration dans un chantier naval</A></p>
+<p><A HREF="https://youtu.be/5YleSgJGN9k">Le sous-programme Throwback - Exécuter des scénarios de simulation avec des points de retour pratiques</A></p>
+<h2>Plugin Pattern Scripts</h2>
 <h3>Introduction</h3>
-<p>Le plugin Pattern Scripts peut être considéré comme un cadre pour héberger des sous-programmes pour JMRI Operations Pro qui nécessitent une interface utilisateur. Ce plugin est livré avec quatre sous-programmes : jPlus, Patterns, o2o et Throwback. Un modèle est également inclus pour servir d'échafaudage pour quelqu'un qui souhaite ajouter son propre sous-programme. Bien que les sous-programmes soient quelque peu interdépendants, ils peuvent être activés ou désactivés individuellement selon les besoins.</p>
+<p>Le plugin Pattern Scripts peut être considéré comme un cadre pour l'hébergement de sous-programmes (ou scripts) pour JMRI Operations Pro qui nécessitent une interface utilisateur. Ce plugin est livré avec quatre sous-programmes : jPlus, Patterns, o2o et Throwback. Un modèle est également inclus pour servir d'échafaudage à quelqu'un qui souhaite ajouter son propre sous-programme.</p>
+<p>Des sous-programmes peuvent être ajoutés ou supprimés individuellement selon les besoins.</p>
+<p>En outre, chaque sous-programme peut être affiché ou masqué selon les besoins, à partir du menu Outils.</p>
+<p>Chacune des fonctions des sous-programmes n'est disponible que lorsque le plugin est en cours d'exécution et que le sous-programme a été inclus. Par exemple, les détails ferroviaires étendus n'apparaîtront dans les rapports que lorsque le plugin Pattern Scripts a été lancé et que jPlus a été inclus. Pour désactiver les fonctions des plugins, fermez (et non pas cachez) la fenêtre.</p>
 <h3>Organisation</h3>
 <p>Le tableau suivant montre la structure du code de ce plugin.</P>
 <img src="./img/Code_Structure.png" alt="<Code Structure Image>">
@@ -57,169 +61,127 @@
 <p>OperationsPatternScripts.MainScript.View.makePatternScriptsWindow()</p>
 <img src="./img/Plugin_Layout.png" alt="<Plugin Layout Image>">
 <h3>configFile.json</h3>
-<p>Chaque profil JMRI dispose de son propre fichier de configuration, appelé configFile.json, qui se trouve dans le dossier des opérations et qui est utilisé pour fournir des paramètres personnalisés pour chaque profil et enregistrer les entrées de l'utilisateur.</p>
-<p><font color="DarkRed">La description de chaque élément est en rouge foncé.</font></p>
-<p><font color="green">Les clés modifiables par l'utilisateur sont décrites en vert.</font></p>
-<p>Sélectionnez Tools/Edit Config File. Si une erreur est commise lors de la modification du fichier configFile.json, le plugin supprimera le fichier et en fournira un nouveau pour recommencer. Dans le pire des cas, le plugin peut se planter. Si cela se produit, sélectionnez Tools/Restart From Default.</p>
-<h4>Paramètres du plugin Pattern Scripts dans configFile.json</h4>
+<p>Chaque profil JMRI dispose de son propre fichier de configuration, nommé configFile.json, qui se trouve dans le dossier operations et qui est utilisé pour fournir des paramètres personnalisés pour chaque profil et enregistrer les entrées de l'utilisateur.</p>
+<p>Sélectionnez Outils/Modifier le fichier de configuration. Les valeurs modifiables par l'utilisateur se trouvent dans les sous-sections intitulées "US" pour User Settings. Les autres valeurs ne doivent pas être modifiées. Si une erreur est commise lors de la modification du fichier de configuration, le plugin supprimera le fichier et en fournira un nouveau pour recommencer en utilisant les valeurs par défaut. Dans le pire des cas, le plugin peut se planter. Si cela se produit, sélectionnez Outils/Redémarrer à partir de la valeur par défaut.</p>
+<h4>Paramètres de l'utilisateur pour la section Main Script de configFile.json</h4>
 <pre>
-  {
-    "Main Script": {
-      "CD": {  <font color="DarkRed">Définitions des couleurs</font>
-        "<font color="green">BLANCH</font>": { <font color="DarkRed">N'importe laquelle de ces couleurs peut être changée</font>
-          "A": <font color="green">255</font>, <font color="DarkRed">Valeur alpha</font>
-          "B": <font color="green">225</font>, <font color="DarkRed">Valeur bleue</font>
-          "D": <font color="green">Light grey</font>, <font color="DarkRed">Description vague</font>
-          "G": <font color="green">225</font>, <font color="DarkRed">Valeur verte</font>
-          "R": <font color="green">225</font> <font color="DarkRed">Valeur rouge</font>
-        }, 
-        "DUST": {
-          "A": 255, 
-          "B": 218, 
-          "D": "Light tan", 
-          "G": 242, 
-          "R": 252
-        }, 
-        "FADED": {
-          "A": 255, 
-          "B": 245, 
-          "D": "Light purple", 
-          "G": 225, 
-          "R": 237
-        }, 
+  The following are user editable values for the plugin.
+  For colors, any of the A, B, G, R values can be changed, between 0 and 255.
+  Also, new colors may be added.
+
+  "US" : {
+    "OC" : true, <font color="DarkRed">Open Console (Ouvrir la console) : ouvre la console du système au démarrage du plugin.</font>
+    "CD": { <font color="DarkRed">Définitions de couleurs, un ensemble de couleurs prédéfinies.</font>
+        "BLANCH": { <font color="DarkRed">Le nom de la couleur.</font>
+          "A": 210, <font color="DarkRed">Valeur alpha (transparence).</font>
+          "B": 255, <font color="DarkRed">La valeur de la composante bleue.</font>
+          "D": "Lighten a bit", <font color="DarkRed">Une description de la couleur.</font>
+          "G": 255, <font color="DarkRed">La valeur de la composante verte.</font>
+          "R": 255 <font color="DarkRed">La valeur du composant rouge.</font>
+        },
         "GLOOM": {
-          "A": 10, 
-          "B": 0, 
-          "D": "Darken a bit", 
-          "G": 0, 
+          "A": 10,
+          "B": 0,
+          "D": "Darken a bit",
+          "G": 0,
           "R": 0
-        }, 
-        "LICHEN": {
-          "A": 255, 
-          "B": 244, 
-          "D": "Light green", 
-          "G": 255, 
-          "R": 236
-        }, 
-        "PALE": {
-          "A": 255, 
-          "B": 250, 
-          "D": "Light blue", 
-          "G": 243, 
+        },
+        "DUST": {
+          "A": 255,
+          "B": 218,
+          "D": "Light tan",
+          "G": 242,
+          "R": 252
+        },
+        "FADED": {
+          "A": 255,
+          "B": 245,
+          "D": "Light purple",
+          "G": 225,
           "R": 237
-        }, 
+        },
+        "LICHEN": {
+          "A": 255,
+          "B": 244,
+          "D": "Light green",
+          "G": 255,
+          "R": 236
+        },
+        "PALE": {
+          "A": 255,
+          "B": 250,
+          "D": "Light blue",
+          "G": 243,
+          "R": 237
+        },
         "RASH": {
-          "A": 255, 
-          "B": 224, 
-          "D": "Light red", 
-          "G": 208, 
+          "A": 255,
+          "B": 224,
+          "D": "Light red",
+          "G": 208,
           "R": 240
-        }, 
-        "colorA": "DUST", 
-        "colorB": "FADED", 
-        "colorC": "RASH"
-      }, 
-      "CP": { <font color="DarkRed">Panneau de contrôle</font>
-        "AP": <font color="green">true</font>,  <font color="DarkRed">Ajout d'un bouton au cadre de Panel Pro, le plugin n'est pas affiché mais toujours activé</font>
-        "DR": true,  <font color="DarkRed">Réservé</font>
-        "OC": <font color="green">true</font>,  <font color="DarkRed">Ouvrir la fenêtre de la console système au démarrage du plugin</font>
-        "PH": <font color="green">280</font>,  <font color="DarkRed">Hauteur du panneau par défaut</font>
-        "PW": <font color="green">1000</font>,  <font color="DarkRed">Largeur du panneau par défaut</font>
-        "PX": 0,     <font color="DarkRed">Emplacement du plugin, axe X</font>
-        "PY": 0,     <font color="DarkRed">Emplacement du plugin, axe Y</font>
-        "RV": 20230101,  <font color="DarkRed">Contrôle des révisions</font>
-        "SE": "utf-8",  <font color="DarkRed">Codage des scripts</font>
-        "TC": "UD",  <font color="DarkRed">Choix de la traduction</font>
-        "TS": {  <font color="DarkRed">Services de traduction</font>
-          "UD": "UseDeepL", 
-          "UX": "UseSomethingElse"
-        }
-      }, 
-      "LD": {  <font color="DarkRed">Détails de la mise en page</font>
-        "BD": "",  <font color="DarkRed">Date de construction</font>
-        "LN": "",  <font color="DarkRed">Nom de la mise en page</font>
-        "LO": "",  <font color="DarkRed">Emplacement modélisé</font>
-        "OR": "",  <font color="DarkRed">Chemin de fer d'exploitation</font>
-        "SC": "",  <font color="DarkRed">Échelle de chemin de fer miniature</font>
-        "TR": "",  <font color="DarkRed">Territoire modélisé</font>
-        "YR": ""   <font color="DarkRed">Année de fabrication</font>
-      }, 
-      "SR": {  <font color="DarkRed">Grille d'évaluation</font>
-        "G": 11, 
-        "HO": 6, 
-        "HON3": 4, 
-        "N": 2, 
-        "O": 10, 
-        "ON3": 9, 
-        "OO": 5, 
-        "S": 8, 
-        "SN3": 7, 
-        "TT": 3, 
-        "Z": 1
-      }, 
-      "TO": {  <font color="DarkRed">Tweek Operations, ajustements des paramètres des opérations</font>
-        "CWS": <font color="green">true</font>,  <font color="DarkRed">setCloseWindowOnSaveEnabled</font>
-        "SBA": <font color="green">true</font>,  <font color="DarkRed">setBuildAggressive</font>
-        "SCT": <font color="green">"ARR Codes"</font>,  <font color="DarkRed">setCarTypes</font>
-        "SIA": <font color="green">true</font>,  <font color="DarkRed">setStagingTrackImmediatelyAvail</font>
-        "SME": <font color="green">true</font>,  <font color="DarkRed">setMainMenuEnabled</font>
-        "TNB": <font color="green">false</font>,  <font color="DarkRed">setStagingTryNormalBuildEnabled</font>
+        },
+        "colorA" : "DUST", <font color="DarkRed">Le nom de la couleur à utiliser lorsque colorA est appelé.</font>
+        "colorB" : "FADED", <font color="DarkRed">Le nom de la couleur à utiliser lorsque colorB est appelé.</font>
+        "colorC" : "RASH" <font color="DarkRed">Le nom de la couleur à utiliser lorsque colorC est appelé.</font>
       }
-    }, 
+    },
 </pre>
 <!-- jPlus help section html -->
 <h2>Sous-programme jPlus</h2>
 <h3>Description</h3>
-<p>Le sous-programme jPlus ajoute des détails ferroviaires améliorés aux rapports générés par JMRI et ce plugin.</P>
-<p>Les données de cette sous-routine sont saisies dans les zones de texte ou, si la sous-routine o2o est activée, les détails supplémentaires du chemin de fer sont importés à partir du modèle TrainPlayer.</P>
-<p>Tous les champs ne doivent pas être saisis.</P>
-<p>Les champs améliorés sont les suivants :</P>
-<h4>Nom du chemin de fer en exploitation</h4>
+<p>Le sous-programme jPlus ajoute des détails ferroviaires étendus aux rapports générés par ce plugin. Ces détails sont affichés dans l'en-tête des rapports de motifs et des listes de commutation. L'en-tête du serveur JMRI n'est pas modifié.</P>
+  <h3>How To Use</h3>
+<p>Pour utiliser ce sous-programme, saisissez les données appropriées dans la zone de texte et cliquez sur mettre à jour. Il n'est pas nécessaire de saisir tous les champs. Pour inclure les détails étendus dans un rapport Operations Pattern Scripts, cochez la case "Utiliser l'en-tête étendu". Les champs étendus sont les suivants :</P>
+<h4>Nom du chemin de fer d'exploitation</h4>
 <p>Il s'agit du chemin de fer qui possède ou exploite les voies modélisées. N'importe quel nom peut être saisi, tel que "PRR" ou "BN UPRR Joint" ou "G&D".</P>
 <h4>Territoire opérationnel</h4>
-<p>Il s'agit du nom du chemin de fer pour la partie à modéliser, comme "Long Beach Intermodal Terminal" ou "Salem Glass Works Branch".</P>
+<p>Il s'agit du nom du chemin de fer pour la partie modélisée, par exemple "Long Beach Intermodal Terminal" ou "Salem Glass Works Branch".</P>
 <h4>Localisation</h4>
-<p>L'endroit où se trouve le chemin de fer, par exemple "The Great Divide" ou "The Bronx, New York".</P>
-<h4>Année de fabrication</h4>
-<p>L'année sur laquelle le modèle ferroviaire est basé, c'est un miroir de 'JMRI/OperationsPro/Settings/Year Modeled'.</p>
-<h3>Panneau de sous-routines</h3>
+<p>Lieu où se trouve le chemin de fer, par exemple "The Great Divide" ou "The Bronx, New York".</P>
+<h4>Année de commercialisation</h4>
+<p>L'année sur laquelle le modèle de chemin de fer est basé, c'est un miroir de 'JMRI/OperationsPro/Settings/Year Modled'. L'un met à jour l'autre.</p>
+<h3>Panneau des sous-programmes</h3>
 <p>Sous-routines.jPlus.View.ManageGui</p>
 <img src="../Subroutines/jPlus/img/j_Plus_Subroutine.png" alt="<jPlus Subroutine Image>">
-<h4>Paramètres de la sous-routine jPlus dans configFile.json</h4>
+<h4>Paramètres utilisateur pour la section jPlus de configFile.json</h4>
 <pre>
-  "jPlus" :{  <font color="DarkRed">Paramètres de la sous-routine jPlus</font>
-    "OR" : "", <font color="DarkRed">Chemin de fer d'exploitation, celui qui possède les voies.</font>
-    "TR" : "", <font color="DarkRed">Territoire. Nom de l'opération particulière à modéliser.</font>
-    "LO" : "", <font color="DarkRed">Emplacement du prototype.</font>
-    "YR" : "", <font color="DarkRed">Année civile faisant l'objet du modèle.</font>
-    "SC" : "", <font color="DarkRed">Échelle de chemin de fer miniature, à partir des paramètres ou de TrainPlayer.</font>
-    "LN" : "", <font color="DarkRed">Nom de la disposition, à partir des paramètres ou de TrainPlayer.</font>
-    "BD" : "", <font color="DarkRed">Date de construction de TrainPlayer.</font>
-  },
+  The jPlus section of the configuration file has no user editable settings.
 </pre>
 <!-- o2o help section html -->
 <h2>o2o Sous-routine</h2>
 <h3>Description</h3>
-<p>La sous-routine ops to ops (o2o) est un groupe d'utilitaires conçus pour être la colle qui permet à JMRI Operations Pro d'être le moteur d'opérations pour TrainPlayer©. L'idée est d'étendre les capacités de la fonction Advanced Ops de TrainPlayer© pour inclure la flexibilité d'Operations Pro, tout en éliminant l'ennui de maintenir deux bases de données synchronisées.</p>
+<p>La sous-routine ops to ops (o2o) est un groupe d'utilitaires conçus pour être la colle qui permet à JMRI Operations Pro d'être le moteur d'opérations pour TrainPlayer©. L'idée est d'étendre la capacité de la fonction Advanced Ops de TrainPlayer© pour inclure la flexibilité d'Operations Pro, tout en éliminant le fastidieux maintien de la synchronisation de deux bases de données.</p>
+<p>o2o exporte automatiquement un train construit ou une liste d'aiguillage vers TrainPlayer lorsque la fenêtre des scripts de modèle est ouverte et que le sous-programme o2o est inclus. Pour désactiver l'exportation o2o, supprimez o2o de la fenêtre des scripts de modèle ou fermez (ne cachez pas) la fenêtre des scripts de modèle.</p>
+<h3>Ce que font les boutons</h3>
+<p>Avant d'appuyer sur l'un de ces boutons, exportez votre schéma de TrainPlayer. Les sous-routines QuickKeys pour TrainPlayer doivent être ajoutées à TrainPlayer avant que votre schéma de TrainPlayer puisse être exporté. Reportez-vous à la documentation sur les Quick Keys.</p>
+<p><A HREF="https://github.com/gar-codespace/QuickKeys-for-TrainPlayer">La page des clés rapides sur GitHub</A></p>
+<p>Initialiser le chemin de fer - En appuyant sur ce bouton, vous effacez tout JMRI existant afin qu'un nouveau chemin de fer JMRI puisse être construit à partir de l'exportation TrainPlayer. Les fichiers XML Routes et Trains sont sauvegardés, les autres sont initialisés.</p>
+<p>Importer des emplacements - En appuyant sur ce bouton, vous créez un nouveau chemin de fer JMRI à partir de l'exportation de TrainPlayer. Si vous utilisez jPlus, les données étendues que vous avez saisies dans la mise en page de TrainPlayer seront ajoutées. De plus, lorsque des modifications sont apportées à l'onglet Emplacements de la fenêtre Opérations avancées de TrainPlayer, vous pouvez appuyer sur ce bouton pour mettre à jour votre mise en page.</p>
+<p>Importer les industries - Appuyez sur ce bouton lorsque vous avez fait des changements dans l'onglet Industries des opérations avancées de TrainPlayers, cela mettra à jour vos embranchements. Tous les changements que vous avez faits à votre matériel roulant seront également mis à jour.</p>
+<p>Importer des wagons - Appuyez sur ce bouton lorsque vous avez changé le matériel roulant de votre réseau.</p>
 <h3>Qui fait quoi</h3>
-<p>Le tableau ci-dessous montre quel programme gère quels éléments.</p>
+<p>Le tableau ci-dessous indique quel programme gère quels éléments.</p>
 <img src="../Subroutines/o2o/img/Who_Does_What.png" alt="<Who Does What Image>">
-<h3>Panneau de sous-routines</h3>
+<h3>Panneau des sous-programmes</h3>
 <p>Sous-routines.o2o.View.ManageGui</p>
 <img src="../Subroutines/o2o/img/o2o_Subroutine.png" alt="<o2o Subroutine Image>">
-<h4>o2o Paramètres des sous-routines dans configFile.json</h4>
+<h4>Paramètres de l'utilisateur pour la section o2o de configFile.json</h4>
 <pre>
-  "o2o" : {  <font color="DarkRed">o2o Paramètres des sous-programmes</font>
-    "PC": [  <font color="DarkRed">Liste des codes de voitures TrainPlayer pour les voitures particulières.</font>
-      <font color="green">"B"</font>,  <font color="DarkRed">Tous ces éléments peuvent être ajoutés ou supprimés</font>
-      "BE",
-      "BH",
-      "BM",
-      "BMR",
-      "BMT",
-      "BP",
-      "BR",
-      "BX",
+  The o2o section of the configuration file has the following user editable settings.
+  The following are TrainPlayer car code lists for types of equipment, based on default TrainPlayer values.
+  Custom car codes added to TrainPlayer would also be added here.
+
+  "US" : {
+    "XE" : [ <font color="DarkRed">Liste des codes de voitures TrainPlayer pour les moteurs.</font>
+      "E",
+      "ES",
+      "ED",
+      "EE",
+      "ET"
+    ],
+    "XP" : [ <font color="DarkRed">Liste des codes de voitures TrainPlayer pour les voitures de passagers.</font>
+      "EP",
       "CA",
       "CS",
       "D",
@@ -230,9 +192,6 @@
       "DO",
       "DP",
       "DPA",
-      "MA",
-      "MB",
-      "MR",
       "P",
       "PA",
       "PAS",
@@ -245,2281 +204,155 @@
       "PS",
       "PSA"
     ],
-    "CC" : [  <font color="DarkRed">Liste des codes des wagons de queue de TrainPlayer.</font>
-      <font color="green">"N"</font>,  <font color="DarkRed">Tous ces éléments peuvent être ajoutés ou supprimés</font>
+    "XX" : [ <font color="DarkRed">Liste des codes de wagons TrainPlayer pour les wagons à bagages.</font>
+      "B",
+      "BE",
+      "BH",
+      "BM",
+      "BMR",
+      "BMT",
+      "BP",
+      "BR",
+      "BX",
+      "MA",
+      "MB",
+      "MR"
+    ],
+    "XC" : [ <font color="DarkRed">Liste des codes de voiture TrainPlayer pour les cabines.</font>
+      "N",
       "NM",
       "NE"
     ],
-    "CFL" : [  <font color="DarkRed">Liste des fichiers de base</font>
-      "OperationsCarRoster",
-      "OperationsEngineRoster",
-      "OperationsLocationRoster"
-    ],
-    "SR" : {  <font color="DarkRed">Rubrique sur les échelles - JMRI Échelle des chemins de fer miniatures.</font>
-      "Z" : 1,
-      "N" : 2,
-      "TT" : 3,
-      "HOn3" : 4,
-      "OO" : 5,
-      "HO" : 6,
-      "Sn3" : 7,
-      "S" : 8,
-      "On3" : 9,
-      "O" : 10,
-      "G" : 11
-    },
-    "RF" : { <font color="DarkRed">Report Files - Noms des fichiers d'exportation de la mise en page de TrainPlayer.</font>
-      "TRL" : "TrainPlayer Report - Locations.txt",
-      "TRI" : "TrainPlayer Report - Industries.txt",
-      "TRR" : "TrainPlayer Report - Rolling Stock.txt"
-    },
-
-    "TR" : {  <font color="DarkRed">Rubrique Type - Aligner les types de voies de TrainPlayer et de JMRI.</font>
-      "industry": "Spur",
-      "interchange": "Interchange",
-      "staging": "Staging",
-      "class yard": "Yard",
-      "XO reserved": "Spur"
-    }
-</pre>
-<!-- Patterns help section html -->
-<h2>Sous-routine Patterns</h2>
-<h3>Description</h3>
-<p>La sous-routine Patterns permet de générer des rapports de modèle pour les voies d'un même emplacement. En outre, les wagons peuvent être déplacés d'une voie à l'autre au sein d'un emplacement. En option, si un wagon est déplacé sur un embranchement, le programme de cet embranchement peut être appliqué.</p>
-<h3>Panneau de sous-routines</h3>
-<p>Sous-routines.Patterns.View.ManageGui</p>
-<img src="../Subroutines/Patterns/img/Pattern_Scripts_Subroutine.png" alt="<Pattern Scripts Subroutine Image>">
-<h3>Rapport sur les motifs de la fenêtre de suivi</h3>
-<p>Subroutines.Patterns.ControllerSetCarsForm.CreatePatternReportGui.makeFrame()</p>
-<img src="../Subroutines/Patterns/img/Pattern_Report_For_Track.png" alt="<Pattern Report for Track Window Image>">
-<h3>Format json du modèle de piste, de la liste des aiguillages et de l'événement de travail</h3>
-<p>Tous les rapports de motifs commencent par la création d'un fichier json. Ces fichiers sont créés par ce plugin et sont écrits dans le dossier jsonManifests. Ils suivent le format illustré :</p>
-<img src="../Subroutines/Patterns/img/Report_File_Format.png" alt="<JSON format for reports>">
-<p>En fonction de la tâche, les fichiers json seront ensuite écrits dans un rapport de modèle ou un fichier texte de liste de commutation, ou exportés vers TrainPlayer sous forme de fichier csv WorkEvents.</p>
-<h4>Paramètres de la sous-routine Patterns dans configFile.json</h4>
-<pre>
-  "Patterns" : { <font color="DarkRed">Paramètres des sous-programmes de motifs</font>
-    "AD" : [ <font color="DarkRed">Toutes les divisions (écrites par ce plugin)</font>
-    ],
-    "AL" : [ <font color="DarkRed">Tous les emplacements (écrits par ce plugin)</font>
-    ],
-    "PL" : "", <font color="DarkRed">Pattern Location (écrit par ce plugin)</font>
-    "PT" : { <font color="DarkRed">Pattern-Tracks (écrit par ce plugin)</font>
-    },
-    "PA" : false, <font color="DarkRed">Drapeau "Yard Tracks Only" (défini par l'utilisateur, écrit par ce plugin)</font>
-    "PI" : false, <font color="DarkRed">Ignorer l'indicateur de longueur de piste (défini par l'utilisateur, écrit par ce plugin)</font>
-    "AS" : true, <font color="DarkRed">Appliquer le drapeau Schedule (défini par l'utilisateur, écrit par ce plugin)</font>
-    "TI" : false, <font color="DarkRed">TrainPlayer Include flag (défini par l'utilisateur, écrit par ce plugin)</font>
-    "PW" : 260, <font color="DarkRed">Largeur du motif</font>
-    "PH" : 16, <font color="DarkRed">Hauteur du motif</font>
-    "RM": 8, <font color="DarkRed">Multiplicateur de rangs</font>
-
-  "RM" : { <font color="DarkRed">Modificateurs de rapport</font></h4>
-    "DS" : "<font color="green">*No Waybill</font>", <font color="DarkRed">Indicateur de destination</font>
-    "DT" : "<font color="green">*Not Consigned</font>", <font color="DarkRed">Désignation de la voie de destination</font>
-    "FD" : "<font color="green">*Via Staging</font>", <font color="DarkRed">Indicateur de destination finale</font>
-    "FT" : "<font color="green">*Any Line</font>", <font color="DarkRed">Destination finale Indicateur de voie</font>
-    "SL": [ <font color="DarkRed">Trier les locomotives</font>
-      "<font color="green">Modèle</font>"
-    ],
-    "SC": [ <font color="DarkRed">Trier les voitures</font>
-      "<font color="green">Type de charge</font>",
-      "<font color="green">FD&Track</font>"
-    ],
-    "AW": { <font color="DarkRed">Largeur de l'attribut</font>
-      "Input": <font color="green">6</font>,
-      "Model": <font color="green">5</font>,
-      "Road" : <font color="green">5</font>,
-      "Number" : <font color="green">7</font>,
-      "Type" : <font color="green">6</font>,
-      "Length" : <font color="green">7</font>,
-      "Weight" : <font color="green">7</font>,
-      "Load" : <font color="green">6</font>,
-      "Load Type" : <font color="green">5</font>,
-      "Loco Type" : <font color="green">18</font>,
-      "Owner" : <font color="green">20</font>,
-      "Consist" : <font color="green">8</font>,
-      "Hazardous" : <font color="green">10</font>,
-      "Color" : <font color="green">6</font>,
-      "Kernel" : <font color="green">7</font>,
-      "Kernel Size" : <font color="green">12</font>,
-      "Owner" : <font color="green">6</font>,
-      "Track" : <font color="green">6</font>,
-      "Location" : <font color="green">9</font>,
-      "Destination" : <font color="green">15</font>,
-      "Dest&Track" : <font color="green">30</font>,
-      "Final Dest" : <font color="green">11</font>,
-      "FD&Track" : <font color="green">21</font>,
-      "Comment" : <font color="green">15</font>,
-      "SetOut Msg" : <font color="green">12</font>,
-      "PickUp Msg" : <font color="green">12</font>,
-      "RWE" : <font color="green">10</font>,
-      " " : 0
-    }
+    "XM" : [ <font color="DarkRed">Liste des codes de wagons TrainPlayer pour le matériel MOW.</font>
+      "M",
+      "MWB",
+      "MWC",
+      "MWD",
+      "MWG",
+      "MWF",
+      "MWK",
+      "MWR",
+      "MWX"
+    ]
   },
 </pre>
-<!-- Throwback help section html -->
-<h2>Plugin de retour en arrière</h2>
+<!-- Patterns help section html -->
+<h2>Sous-routine sur les motifs</h2>
 <h3>Description</h3>
-<p>Description du plugin Throwback</p>
+<p>Le sous-programme Modèles permet de générer des rapports de modèles pour les voies d'une même localité. De plus, les wagons peuvent être déplacés d'une voie à l'autre à l'intérieur d'une même localité. En option, si un wagon est déplacé sur un embranchement, l'horaire de cet embranchement peut être appliqué.</p>
+<h3>Ce que font les boutons</h3>
+<p>Si vous utilisez des divisions, le menu déroulant Division affichera une liste de divisions. En sélectionnant une division, la liste des emplacements de cette division s'affichera dans le menu déroulant Emplacement.</p>
+<p>Lorsqu'un lieu est sélectionné, une liste de cases à cocher s'affiche, une pour chaque piste du lieu sélectionné.</p>
+<p>La liste des pistes peut être filtrée en activant ou désactivant la case à cocher "Pistes de triage uniquement".</p>
+<p>Les pistes individuelles peuvent être sélectionnées en cliquant sur la case à cocher située à côté du nom de la piste.</p>
+<p>Lorsque des pistes sont sélectionnées, le fait d'appuyer sur le bouton Interrogation des pistes permet d'afficher des informations sur l'inventaire des pistes sélectionnées. Ces informations sont imprimables.</p>
+<p>Une fois les voies sélectionnées, le fait d'appuyer sur le bouton "Set Rolling Stock to Track" ouvre une liste de travail pour chaque voie sélectionnée.</p>
+<p>Pour chaque fenêtre de la liste de travail, une rangée de boutons, un pour chaque piste de l'emplacement sélectionné, s'affichera. En appuyant sur l'un des boutons de piste, le nom de la piste sera chargé dans la mémoire.</p>
+<p>Pour n'importe quelle ligne de matériel roulant dans le panneau Voitures à..., cliquer à l'intérieur de l'une des zones de texte collera le nom de la voie sélectionnée dans la zone.</p>
+<p>En appuyant sur le bouton Liste de commutation, une liste de travail sera générée pour cette piste. Cette liste est imprimable. Si o2o est utilisé, une liste de travail TrainPlayer sera également générée.</p>
+<p>En appuyant sur le bouton "Set Rolling Stock to Track", une fenêtre s'ouvre.</p>
+<p>La fenêtre contextuelle ajoute l'option d'utiliser un horaire d'éperon et de modifier la capacité de la voie.</p>
+<p>En appuyant sur le bouton "Set Cars", le matériel roulant de la liste de travail sera déplacé sur la voie sélectionnée, sous réserve des restrictions de type.</p>
+<h3>Panneau des sous-programmes</h3>
+<p>Sous-routines.Patterns.View.ManageGui</p>
+<img src="../Subroutines/Patterns/img/Pattern_Scripts_Subroutine.png" alt="<Pattern Scripts Subroutine Image>">
+<h3>Rapport sur les motifs pour la fenêtre de la voie</h3>
+<p>Subroutines.Patterns.ControllerSetCarsForm.CreatePatternReportGui.makeFrame()</p>
+<img src="../Subroutines/Patterns/img/Pattern_Report_For_Track.png" alt="<Pattern Report for Track Window Image>">
+<h3>Format json pour le modèle de piste, la liste des aiguillages et les événements de travail</h3>
+<p>Tous les rapports de motifs commencent par la création d'un fichier json. Ces fichiers sont créés par ce plugin et sont écrits dans le dossier jsonManifests. Ils suivent le format illustré :</p>
+<img src="../Subroutines/Patterns/img/Report_File_Format.png" alt="<JSON format for reports>">
+<p>En fonction de la tâche, l'un ou l'autre des fichiers json sera ensuite écrit dans un fichier texte Pattern Report ou Switchlist ou exporté vers TrainPlayer sous la forme d'un fichier WorkEvents csv.</p>
+<h4>Paramètres utilisateur pour la section Patterns de configFile.json</h4>
+<pre>
+  The Patterns section of the configuration file has the following user editable settings.
+  
+  "US" : {
+    "DS" : "Not Assigned", <font color="DarkRed">Indicateur de destination lorsque le champ est vide.</font>
+    "DT" : "Not Scheduled", <font color="DarkRed">Indicateur de la voie de destination lorsque le champ est vide.</font>
+    "FD" : "Unconsigned", <font color="DarkRed">Indicateur de destination finale lorsque le champ est vide.</font>
+    "FT" : "No Waybill", <font color="DarkRed">Destination finale et indicatif de la voie lorsque le champ est vide.</font>
+    "EH" : "Available", <font color="DarkRed">Manutention prolongée, indicatif de cas particulier pour le moteur, le passager et le fourgon de queue.</font>
+    "SL": [ Sort Locomotives. <font color="DarkRed">Les listes de locomotives sont triées en fonction des champs saisis ici*.</font>
+      "Model"
+    ],
+    "SC": [ Sort Cars. <font color="DarkRed">Les listes de voitures sont triées en fonction des champs saisis ici*.</font>
+      "Load_Type",
+      "FD&Track"
+    ],
+    "AW": { <font color="DarkRed">Largeur de l'attribut, IE dans un rapport, le champ Nombre dispose de 7 caractères.</font>
+      " ": 1, 
+      "Road": 5, 
+      "Number": 7, 
+      "Type": 6, 
+      "Length": 7, 
+      "Color": 6, 
+      "Weight": 7,
+      "Comment": 15, 
+      "Division": 15, 
+      "Location": 9, 
+      "Track": 6, 
+      "Destination": 15, 
+      "Owner": 20, 
+      "Model": 5, 
+      "DCC_Address": 10, 
+      "Consist": 8, 
+      "Load_Type": 1, 
+      "Load": 6, 
+      "Hazardous": 10, 
+      "Kernel": 7, 
+      "Kernel_Size": 3, 
+      "Dest&Track": 27, 
+      "Final_Dest": 11, 
+      "FD&Track": 23, 
+      "SetOut_Msg": 12, 
+      "PickUp_Msg": 12, 
+      "RWE": 10, 
+      "RWL": 10, 
+      "onTrain": 0, 
+      "puso": 6, 
+      "setTo": 6
+    }
+}
+<font color="DarkRed">* Note, for Sort Loco "SL" and Sort car "SC", select names from those listed in "AW".</font>
+</pre>
+<h2>Sous-routine de modèle</h2>
+<h3>Introduction</h3>
+<p>Expliquez à quel point ce sous-programme est extraordinaire.</P>
+<h3>Panneau des sous-programmes</h3>
+<p>Sous-routines.Template.View.ManageGui</p>
+<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
+<h4>Paramètres de l'utilisateur pour la section Template de configFile.json</h4>
+<pre>
+  Put any user editable settings here.
+  
+  "US" : {
+        
+  }
+</pre>
+<!-- Throwback help section html -->
+<h2>Sous-routine Throwback</h2>
+<h3>Description</h3>
+<p>La sous-routine Throwback s'inspire de l'idée d'un logiciel de contrôle de version. Les modifications sont nommées et sauvegardées. Ce faisant, des instantanés des données des chemins de fer sont pris.</p>
+<p>L'engagement sert alors de point de référence qui permet de réinitialiser n'importe quel ensemble de données de l'IRMJ.</p>
+<p>Ce sous-programme n'interagit pas avec les fonctions d'enregistrement et de sauvegarde automatiques de JMRI, qui s'exécutent telles qu'elles ont été configurées.</p>
+<h3>Ce que font les boutons</h3>
+<p>Le nom de chaque livraison est saisi dans la zone de texte du cadre Total des livraisons. Saisissez le nom AVANT d'appuyer sur le bouton Ajouter une nouvelle livraison.</p>
+<p>En appuyant sur le bouton Ajouter un nouvel engagement, vous ajoutez un nouvel engagement.</p>
+<p>En appuyant sur le bouton Supprimer toutes les validations, vous pouvez choisir de confirmer ou d'annuler la validation. En appuyant sur le bouton Confirmer, vous effacez toutes les validations sauvegardées, soyez donc prudent !</p>
+<p>Dans le panneau Actions, les boutons Précédent et Suivant facilitent le défilement de votre collection de commits. La liste est classée par date/heure de création.</p>
+<p>Sélectionnez n'importe quelle combinaison d'ensembles de données à renvoyer en cliquant sur la case correspondante.</p>
+<p>En appuyant sur la touche Throwback, les ensembles de données sélectionnés sont ramenés à l'engagement affiché.</p>
 <h3>Mise en page du plugin</h3>
 <p>Subroutines.Throwback.View.ManageGui()</p>
-<img src="../Subroutines/Throwback/img/Throwback_Layout.png" alt="<Plugin Layout Image>">
-<h4>Paramètres du plugin Throwback dans configFile.json</h4>
+<img src="../Subroutines/Throwback/img/Throwbach_Subroutine.png" alt="<Plugin Layout Image>">
+<h4>Paramètres utilisateur pour la section Throwback de configFile.json</h4>
 <pre>
-  "Throwback": {  <font color="DarkRed">Paramètres de la sous-routine Throwback</font>
-    "SS": [  <font color="DarkRed">Points de consigne sauvegardés</font>
-      [
-        "",  <font color="DarkRed">Horodatage, nom du fichier</font>
-        ""
-      ]
-    ]
-  }
+  The Throwback section of the configuration file has no user editable settings.
 </pre>
 
 </body>
 </html>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>OperationsPatternScripts.jPlusSubroutine.Controller.makeSubroutinePanel()</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-  "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-  "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  "Template" :{  <font color="DarkRed">Template Subroutine settings</font>
-    "SV" : true,  <font color="DarkRed">Set visible toggle.</font> Show or hide the subroutine
-    "XX" : "<font color="green">Setting value if editable by the user</font>", <font color="DarkRed">Setting description</font>
-    "XX" : "Setting value if not editable by the user", <font color="DarkRed">Setting description</font>
-  },
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  Put any user editable settings here.
-  
-  "US" : {
-        
-  }
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>Template Subroutine Settings in configFile.json</h4>
-<pre>
-  Put any user editable settings here.
-  
-  "US" : {
-        
-  }
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>User Settings for the Template section of configFile.json</h4>
-<pre>
-  Put any user editable settings here.
-  
-  "US" : {
-        
-  }
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>User Settings for the Template section of configFile.json</h4>
-<pre>
-  Put any user editable settings here.
-  
-  "US" : {
-        
-  }
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>User Settings for the Template section of configFile.json</h4>
-<pre>
-  Put any user editable settings here.
-  
-  "US" : {
-        
-  }
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>User Settings for the Template section of configFile.json</h4>
-<pre>
-  Put any user editable settings here.
-  
-  "US" : {
-        
-  }
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>User Settings for the Template section of configFile.json</h4>
-<pre>
-  Put any user editable settings here.
-  
-  "US" : {
-        
-  }
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>User Settings for the Template section of configFile.json</h4>
-<pre>
-  Put any user editable settings here.
-  
-  "US" : {
-        
-  }
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>User Settings for the Template section of configFile.json</h4>
-<pre>
-  Put any user editable settings here.
-  
-  "US" : {
-        
-  }
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>User Settings for the Template section of configFile.json</h4>
-<pre>
-  Put any user editable settings here.
-  
-  "US" : {
-        
-  }
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>User Settings for the Template section of configFile.json</h4>
-<pre>
-  Put any user editable settings here.
-  
-  "US" : {
-        
-  }
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>User Settings for the Template section of configFile.json</h4>
-<pre>
-  Put any user editable settings here.
-  
-  "US" : {
-        
-  }
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>User Settings for the Template section of configFile.json</h4>
-<pre>
-  Put any user editable settings here.
-  
-  "US" : {
-        
-  }
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>User Settings for the Template section of configFile.json</h4>
-<pre>
-  Put any user editable settings here.
-  
-  "US" : {
-        
-  }
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>User Settings for the Template section of configFile.json</h4>
-<pre>
-  Put any user editable settings here.
-  
-  "US" : {
-        
-  }
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>User Settings for the Template section of configFile.json</h4>
-<pre>
-  Put any user editable settings here.
-  
-  "US" : {
-        
-  }
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>User Settings for the Template section of configFile.json</h4>
-<pre>
-  Put any user editable settings here.
-  
-  "US" : {
-        
-  }
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>User Settings for the Template section of configFile.json</h4>
-<pre>
-  Put any user editable settings here.
-  
-  "US" : {
-        
-  }
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>User Settings for the Template section of configFile.json</h4>
-<pre>
-  Put any user editable settings here.
-  
-  "US" : {
-        
-  }
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>User Settings for the Template section of configFile.json</h4>
-<pre>
-  Put any user editable settings here.
-  
-  "US" : {
-        
-  }
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>User Settings for the Template section of configFile.json</h4>
-<pre>
-  Put any user editable settings here.
-  
-  "US" : {
-        
-  }
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>User Settings for the Template section of configFile.json</h4>
-<pre>
-  Put any user editable settings here.
-  
-  "US" : {
-        
-  }
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>User Settings for the Template section of configFile.json</h4>
-<pre>
-  Put any user editable settings here.
-  
-  "US" : {
-        
-  }
-</pre>
-<h2>Template Subroutine</h2>
-<h3>Introduction</h3>
-<p>Talk about how amazing this subroutine is.</P>
-<h3>Subroutine Panel</h3>
-<p>Subroutines.Template.View.ManageGui</p>
-<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
-<h4>User Settings for the Template section of configFile.json</h4>
-<pre>
-  Put any user editable settings here.
-  
-  "US" : {
-        
-  }
-</pre>
 <h2>Template Subroutine</h2>
 <h3>Introduction</h3>
 <p>Talk about how amazing this subroutine is.</P>

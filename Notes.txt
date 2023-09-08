@@ -1,6 +1,7 @@
 Todo:
   How to publish DeepL?
   Update help html.
+  If the configFile gets trashed and has to be replaced, write some code to reload the saved throwback commits.
   
 
 Duplicate code:
