@@ -27,18 +27,4 @@ def shutdownCalls():
     Listeners.removeSubroutineListeners()
 
     return
-
-def resetCalls():
-    """
-    Depricated.
-    """
-    
-    return
-
-def nonSpecificCalls():
-    """
-    Catchall if the others are not appropriate
-    """
-
-    return
     
