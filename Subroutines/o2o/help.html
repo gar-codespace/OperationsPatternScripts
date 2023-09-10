@@ -2,16 +2,21 @@
 <h2>o2o Subroutine</h2>
 <h3>Description</h3>
 <p>The ops to ops (o2o) subroutine is a group of utilities that are designed to be the glue that allows JMRI Operations Pro to be the operations engine for TrainPlayer©. The idea is to expand the capability of TrainPlayer©'s Advanced Ops feature to include the flexibility of Operations Pro, while also eleminating the tedium of keeping two databases synchronised.</p>
-<p>o2o will automatically export a built train or switchlist to TrainPlayer when the Pattern scripts window is open and the o2o subroutine is included. To disable o2o export, Remove o2o from the Pattern Scripts window or close (not hide) the Pattern Scripts window.</p>
-<h3>What the buttons do</h3>
+<p>o2o will automatically export a built train or switchlist to TrainPlayer when the Pattern Scripts window is open and the o2o subroutine is included. To disable o2o export, Remove o2o from the Pattern Scripts window or close (not hide) the Pattern Scripts window.</p>
+<h3>How to use this subroutine</h3>
 <p>Before any of these buttons are pressed, export your layout from TrainPlayer. The QuickKeys for TrainPlayer subroutines have to be added to TrainPlayer before your TrainPlayer layout can be exported. Refer to the Quick Keys documentation.</p>
 <p><A HREF="https://github.com/gar-codespace/QuickKeys-for-TrainPlayer">The Quick Keys page on GitHub</A></p>
-<p>Initialize Railroad - Pressing this button erases any existing JMRI so a new JMRI railroad can be built from the TrainPlayer export. The Routes and Trains XML files are backed up, the others are initialized.</p>
-<p>Import Locations - Pressing this button builds a whole new JMRI railroad from the TrainPlayer export. If you are using jPlus, the extended data you entered into the TrainPlayer layout will be added. Additionally, when changes are made to the Locations tab of TrainPlayer's Advanced Ops window, pressing this button will update your layout.</p>
-<p>Import Industries - Press this button when you have made changes to TrainPlayers Advanced Ops Industries tab, This will update your spurs. Any changes you have made to your rolling stock are also updated.</p>
-<p>Import Cars - Press this button when you have changed the rolling stock on your layout.</p>
+<h4>Initialize Railroad</h4>
+<p>Pressing this button erases any existing JMRI so a new JMRI railroad can be built from the TrainPlayer export. The Routes and Trains XML files are backed up, the others are initialized.</p>
+<h4>Import Locations</h4>
+<p>Pressing this button builds a whole new JMRI railroad from the TrainPlayer export. If you are using jPlus, the extended data you entered into the TrainPlayer layout will be added. Additionally, when changes are made to the Locations tab of TrainPlayer's Advanced Ops window, pressing this button will update your layout.</p>
+<h4>Import Industries</h4>
+<p>Press this button when you have made changes to TrainPlayers Advanced Ops Industries tab, This will update your spurs. Any changes you have made to your rolling stock are also updated.</p>
+<h4>Import Cars</h4>
+<p>Press this button when you have made changes to the rolling stock on your TrainPlayer layout.</p>
 <h3>Who does what</h3>
-<p>The table below shows which program manages which elements.</p>
+<p>One of the primary purposes of o2o is to eliminate duplication between your TrainPlayer and JMRI layouts. As much as possible, layout maintenance is done on your TrainPlayer layout and the changes are then pushed to your JMRI layout.</p>
+<p>The table below shows which program manages which elements of your layout.</p>
 <img src="../Subroutines/o2o/img/Who_Does_What.png" alt="<Who Does What Image>">
 <h3>Subroutine Panel</h3>
 <p>Subroutines.o2o.View.ManageGui</p>

@@ -35,9 +35,7 @@ Tested Items:
     On defective config file, plugin replaces the defective file with the master copy OK.
     Template sub tests OK.
     Plugin restarts OK.
-    All subroutine restarters refactored as PSE.restartSubroutineByName OK.
-    All SI items set to false works OK.
-    Handles JMRI load type Empty or empty OK.
+    Handles JMRI load type E or empty OK.
     Subroutines activate and deactivate OK.
     Display all 'critical' log messages to Script Output window OK.
     ALERT messages open and display to the script output window OK.
