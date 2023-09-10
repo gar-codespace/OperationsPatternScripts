@@ -513,7 +513,10 @@ def validTime(epochTime=0):
     # return TIME.strftime('%b %d, ' + year + ' %I:%M %p %Z', TIME.gmtime(epochTime - timeOffset))
 
 def timeStamp():
-    """Returns the time in format: YYYY.MO.DY.24.MN.SC"""
+    """
+    Returns the time in format: YYYY.MO.DY.24.MN.SC
+    Used by Throwback.
+    """
 
     return TIME.strftime('%Y.%m.%d.%H.%M.%S', getTime())
 
@@ -530,7 +533,9 @@ def getTime(epochTime=0):
     return TIME.gmtime(epochTime - timeOffset)
 
 def getYear():
-    """Either the current year or the entry in settings: year modeled."""
+    """
+    Either the current year or the entry in settings: year modeled.
+    """
 
     railroadYear = JMRI.jmrit.operations.setup.Setup.getYearModeled()
     if railroadYear:
@@ -722,7 +727,9 @@ def dumpJson(file):
 
 
 def validateConfigFile():
-    """Checks and corrects the configFile."""
+    """
+    Checks and corrects the configFile.
+    """
 
     configFile = OS_PATH.join(PROFILE_PATH, 'operations', 'configFile.json')
 # Does one exist?
@@ -730,8 +737,6 @@ def validateConfigFile():
         makeNewConfigFile()
 # Is it the right version?
     validateConfigFileVersion()
-# Are the current subroutines active?
-    # turnOnSubroutines()
 # Does it have all the needed components?
     validateConfigFileComponents()
 
@@ -797,14 +802,14 @@ def getSubroutineDirs():
 
 def mergeConfigFiles():
     """
-    Implemented in v3
+    Implemented in v3?
     """
 
     return
 
 def readConfigFile(subConfig=None):
     """
-    tryConfigFile will return the config file if it's ok or a new one otherwise.
+    checkConfigFile will return the config file if it's ok or a new one otherwise.
     Called by:
     Everything
     """
@@ -832,7 +837,7 @@ def checkConfigFile():
 
 def makeNewConfigFile():
     """
-    Makes a composit ConfigFile.json from OPS.json and each of the subroutine json files.
+    Makes a combined configFile.json from OPS.json and each of the subroutine json files.
     For every subroutine, the chunck of config file is named config.json.
     """
 
@@ -886,10 +891,7 @@ def getConfigFile():
 def writeConfigFile(configFile):
     """
     Called by:
-    MainScript.Controller
-    PSE.updateWindowParams
-    PatternTracksSubroutine.Controller.StartUp.yardTrackOnlyCheckBox
-    PatternTracksSubroutine.Model
+    Everything
     """
 
     fileName = 'configFile.json'
@@ -1016,50 +1018,50 @@ def getBundleItem(item):
         return ''
 
 
-def translateMessageFormat():
-    """
-    DEPRICATED
-    The messageFormat is in the locale's language, it has to be hashed to the plugin fields.
-    """
+# def translateMessageFormat():
+#     """
+#     DEPRICATED
+#     The messageFormat is in the locale's language, it has to be hashed to the plugin fields.
+#     """
 
-    rosetta = {}
-#Common
-    rosetta[SB.handleGetMessage('Road')] = 'Road'
-    rosetta[SB.handleGetMessage('Number')] = 'Number'
-    rosetta[SB.handleGetMessage('Type')] = 'Type'
-    rosetta[SB.handleGetMessage('Length')] = 'Length'
-    rosetta[SB.handleGetMessage('Color')] = 'Color'
-    rosetta[SB.handleGetMessage('Weight')] = 'Weight'
-    rosetta[SB.handleGetMessage('Comment')] = 'Comment'
-    rosetta[SB.handleGetMessage('Division')] = 'Division'
-    rosetta[SB.handleGetMessage('Location')] = 'Location'
-    rosetta[SB.handleGetMessage('Track')] = 'Track'
-    rosetta[SB.handleGetMessage('Destination')] = 'Destination'
-    rosetta[SB.handleGetMessage('Owner')] = 'Owner'
-    rosetta[SB.handleGetMessage('Tab')] = 'Tab'
-    rosetta[SB.handleGetMessage('Tab2')] = 'Tab2'
-    rosetta[SB.handleGetMessage('Tab3')] = 'Tab3'
-# Locos
-    rosetta[SB.handleGetMessage('Model')] = 'Model'
-    rosetta[SB.handleGetMessage('DCC_Address')] = 'DCC_Address'
-    rosetta[SB.handleGetMessage('Consist')] = 'Consist'
-# Cars
-    rosetta[SB.handleGetMessage('Load_Type')] = 'Load_Type'
-    rosetta[SB.handleGetMessage('Load')] = 'Load'
-    rosetta[SB.handleGetMessage('Hazardous')] = 'Hazardous'
-    rosetta[SB.handleGetMessage('Kernel')] = 'Kernel'
-    rosetta[SB.handleGetMessage('Kernel_Size')] = 'Kernel_Size'
-    rosetta[SB.handleGetMessage('Dest&Track')] = 'Dest&Track'
-    rosetta[SB.handleGetMessage('Final_Dest')] = 'Final_Dest'
-    rosetta[SB.handleGetMessage('Track')] = 'FD&Track'
-    rosetta[SB.handleGetMessage('SetOut_Msg')] = 'SetOut_Msg'
-    rosetta[SB.handleGetMessage('PickUp_Msg')] = 'PickUp_Msg'
-    rosetta[SB.handleGetMessage('RWE')] = 'RWE'
-    # rosetta[J_BUNDLE.RWL] = 'RWL'
-# Unique to this plugin
-    rosetta['onTrain'] = 'onTrain'
-    rosetta['setTo'] = 'setTo'
-    rosetta['puso'] = 'puso'
-    rosetta[' '] = ' '
+#     rosetta = {}
+# #Common
+#     rosetta[SB.handleGetMessage('Road')] = 'Road'
+#     rosetta[SB.handleGetMessage('Number')] = 'Number'
+#     rosetta[SB.handleGetMessage('Type')] = 'Type'
+#     rosetta[SB.handleGetMessage('Length')] = 'Length'
+#     rosetta[SB.handleGetMessage('Color')] = 'Color'
+#     rosetta[SB.handleGetMessage('Weight')] = 'Weight'
+#     rosetta[SB.handleGetMessage('Comment')] = 'Comment'
+#     rosetta[SB.handleGetMessage('Division')] = 'Division'
+#     rosetta[SB.handleGetMessage('Location')] = 'Location'
+#     rosetta[SB.handleGetMessage('Track')] = 'Track'
+#     rosetta[SB.handleGetMessage('Destination')] = 'Destination'
+#     rosetta[SB.handleGetMessage('Owner')] = 'Owner'
+#     rosetta[SB.handleGetMessage('Tab')] = 'Tab'
+#     rosetta[SB.handleGetMessage('Tab2')] = 'Tab2'
+#     rosetta[SB.handleGetMessage('Tab3')] = 'Tab3'
+# # Locos
+#     rosetta[SB.handleGetMessage('Model')] = 'Model'
+#     rosetta[SB.handleGetMessage('DCC_Address')] = 'DCC_Address'
+#     rosetta[SB.handleGetMessage('Consist')] = 'Consist'
+# # Cars
+#     rosetta[SB.handleGetMessage('Load_Type')] = 'Load_Type'
+#     rosetta[SB.handleGetMessage('Load')] = 'Load'
+#     rosetta[SB.handleGetMessage('Hazardous')] = 'Hazardous'
+#     rosetta[SB.handleGetMessage('Kernel')] = 'Kernel'
+#     rosetta[SB.handleGetMessage('Kernel_Size')] = 'Kernel_Size'
+#     rosetta[SB.handleGetMessage('Dest&Track')] = 'Dest&Track'
+#     rosetta[SB.handleGetMessage('Final_Dest')] = 'Final_Dest'
+#     rosetta[SB.handleGetMessage('Track')] = 'FD&Track'
+#     rosetta[SB.handleGetMessage('SetOut_Msg')] = 'SetOut_Msg'
+#     rosetta[SB.handleGetMessage('PickUp_Msg')] = 'PickUp_Msg'
+#     rosetta[SB.handleGetMessage('RWE')] = 'RWE'
+#     # rosetta[J_BUNDLE.RWL] = 'RWL'
+# # Unique to this plugin
+#     rosetta['onTrain'] = 'onTrain'
+#     rosetta['setTo'] = 'setTo'
+#     rosetta['puso'] = 'puso'
+#     rosetta[' '] = ' '
 
-    return rosetta
+#     return rosetta
