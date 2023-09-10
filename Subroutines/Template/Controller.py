@@ -22,7 +22,9 @@ _psLog = PSE.LOGGING.getLogger('OPS.XX.Controller')
 
 
 def getSubroutineDropDownItem():
-    """Pattern Scripts/Tools/'Show or disable' Subroutines.<subroutine>"""
+    """
+    Pattern Scripts/Tools/'Show or disable' Subroutines.<subroutine>
+    """
 
     subroutineName = __package__.split('.')[1]
 
@@ -42,7 +44,9 @@ def getSubroutineDropDownItem():
 
 
 class StartUp:
-    """Start the subroutine."""
+    """
+    Start the subroutine.
+    """
 
     def __init__(self):
 
@@ -51,7 +55,9 @@ class StartUp:
         return
 
     def getSubroutine(self):
-        """Gets the title border frame"""
+        """
+        Gets the title border frame.
+        """
 
         subroutine, self.widgets = View.ManageGui().makeSubroutine()
         subroutineName = __package__.split('.')[1]
@@ -63,7 +69,10 @@ class StartUp:
         return subroutine
 
     def startUpTasks(self):
-        """Run these tasks when this subroutine is started."""
+        """
+        Run these tasks when this subroutine is started.
+        No GUI items as the GUI is not built yet.
+        """
 
         return
         
