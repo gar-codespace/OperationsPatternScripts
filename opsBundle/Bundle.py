@@ -182,7 +182,7 @@ def getAllBundles():
     return pluginBundle
 
 
-"""Help methods"""
+"""Help.html methods"""
 
 
 def makeDefaultHelpFile():
@@ -254,7 +254,6 @@ def updateHelpFileForLocale():
             subroutineHelp = PSE.genericReadReport(targetPath)
             localeHelpHtml += subroutineHelp
             print(targetPath)
-            print('vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv')
 
     PSE.genericWriteReport(localeHelpFileLocation, localeHelpHtml)
 
@@ -430,6 +429,8 @@ class Translator:
     def translateSingle(self, singleItem):
         """
         Translate items one at a time.
+        Really slow but the most praticle way to translate the help html.
+        Harden this in v3.
         """
 
         encodedItem = unicode(singleItem, PSE.ENCODING)
@@ -530,7 +531,6 @@ def translateUtility():
     Utility to translate the TrainPlayer side bundle files.
     Translates one line at a time, so it's slow.
     Preserves line order.
-    Translate other text files that need it.
     """
 
     controlPanel = PSE.readConfigFile('Main Script')['CP']
