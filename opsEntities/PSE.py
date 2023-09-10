@@ -45,7 +45,7 @@ J_BUNDLE = JMRI.jmrit.operations.setup.Setup()
 SB = JMRI.jmrit.operations.setup.Bundle()
 
 SCRIPT_NAME = 'OperationsPatternScripts.opsEntities.PSE'
-SCRIPT_REV = 20230201
+SCRIPT_REV = 20230901
 
 OM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.OperationsManager)
 PM = JMRI.InstanceManager.getDefault(JMRI.util.gui.GuiLafPreferencesManager)

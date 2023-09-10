@@ -13,7 +13,7 @@ from Subroutines.Throwback import View
 from Subroutines.Throwback import Listeners
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
-SCRIPT_REV = 20230201
+SCRIPT_REV = 20230901
 
 _psLog = PSE.LOGGING.getLogger('OPS.TB.Controller')
 

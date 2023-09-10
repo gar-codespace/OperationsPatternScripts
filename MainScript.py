@@ -27,7 +27,7 @@ from opsEntities import Listeners
 from opsBundle import Bundle
 
 SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
-SCRIPT_REV = 20230201
+SCRIPT_REV = 20230901
 
 PSE.validateConfigFile()
 

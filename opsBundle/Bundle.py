@@ -12,7 +12,7 @@ from urllib2 import urlopen, HTTPError, URLError
 import re
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
-SCRIPT_REV = 20230201
+SCRIPT_REV = 20230901
 
 PSE.BUNDLE_DIR = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle')
 

@@ -8,7 +8,7 @@ from opsEntities import PSE
 from Subroutines.Template import Model
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
-SCRIPT_REV = 20230201
+SCRIPT_REV = 20230901
 
 _psLog = PSE.LOGGING.getLogger('OPS.XX.Listeners')
 

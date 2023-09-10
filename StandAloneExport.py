@@ -34,7 +34,7 @@ encodingSelection = configFile['Main Script']['CP']['ES']
 PSE.ENCODING = configFile['Main Script']['CP']['EO'][encodingSelection]
 
 SCRIPT_NAME ='OperationsPatternScripts.StandAloneExport'
-SCRIPT_REV = 20230201
+SCRIPT_REV = 20230901
 
 
 class StandAloneExport(jmri.jmrit.automat.AbstractAutomaton):
