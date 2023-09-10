@@ -103,6 +103,11 @@ def makeCommit(displayWidgets):
     targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', fileName)
     PSE.genericWriteReport(targetFile, PSE.dumpJson(configFile['Main Script']['LD']))
 
+# Save the commit name
+    fileName = ts + '.' + note + '.txt.o2o'
+    targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', fileName)
+    PSE.genericWriteReport(targetFile, 'note')
+
     print('Commit made at: ' + ts)
 
     return
@@ -198,9 +203,47 @@ def resetThrowBack():
 
     return
 
+def validateCommits():
+    """
+    Mini controller.
+    """
+    countCommits()
+    if SNAP_SHOT_INDEX <= 0:
+        commits = getCommits()
+        updateThrowbackConfig(commits)
+        countCommits()
+
+    return
+
 def countCommits():
 
     global SNAP_SHOT_INDEX
     SNAP_SHOT_INDEX = len(PSE.readConfigFile('Throwback')['SS']) - 1
+
+    return
+
+def getCommits():
+    """
+    Returns a list of lists: [name, timeStamp]
+    """
+
+    commits = [['','']]
+    
+    targetDirectory = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback')
+    for file in PSE.JAVA_IO.File(targetDirectory).listFiles():
+        splitName = file.getName().split('.')
+
+        if splitName[7] == 'txt':
+            name = splitName[6]
+            timestamp = '.'.join(splitName[:6])
+            commits.append([timestamp, name])
+
+    return commits
+
+def updateThrowbackConfig(commits):
+
+    configFile = PSE.readConfigFile()
+    configFile['Throwback'].update({'SS':commits})
+    PSE.writeConfigFile(configFile)
 
     return

@@ -1,8 +1,6 @@
 Todo:
   How to publish DeepL?
-  Update help html.
-  If the configFile gets trashed and has to be replaced, write some code to reload the saved throwback commits.
-  
+  Update help html.  
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.
@@ -168,6 +166,7 @@ Tested Items:
     Throwbacks one, some, or all xml OK.
     Set checkbox default to False OK.
     Makes and restores the extended data for jPlus OK.
+    If there are commits, they will be restored when restart from default is selected OK.
 
 Catches Items:
   Catches pattern report button press no tracks selected OK.

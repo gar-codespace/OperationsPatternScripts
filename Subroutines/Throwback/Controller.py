@@ -70,7 +70,7 @@ class StartUp:
         """
             
         Model.createFolder()
-        Model.countCommits()
+        Model.validateCommits()
 
         return
 
