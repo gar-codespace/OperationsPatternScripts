@@ -467,18 +467,24 @@ def getExtendedRailroadName():
 
 def makeCompositRailroadName(layoutDetails):
     """
-    Uses configFile['Main Script']['LD'] data to make a composite name for other OPS subroutines.
+    Uses configFile['Main Script']['LD'] data to make a composite name for use by OPS subroutines.
     """
 
     _psLog.debug('makeCompositRailroadName')
 
-    operatingRoad = layoutDetails['OR']
-    territory = layoutDetails['TR']
-    location = layoutDetails['LO']
+    a = ''
+    if layoutDetails['OR']:
+        a = layoutDetails['OR'] + '\n'
 
-    compositeName = operatingRoad + '\n' + territory + '\n' + location
+    b = ''
+    if layoutDetails['TR']:
+        b = layoutDetails['TR'] + '\n'
 
-    return compositeName
+    c = ''
+    if layoutDetails['LO']:
+        c = layoutDetails['LO']
+
+    return a + b + c
 
 
 """Formatting Methods"""

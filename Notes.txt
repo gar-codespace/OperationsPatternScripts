@@ -1,6 +1,6 @@
 Todo:
   How to publish DeepL?
-  Update help html.  
+  Update help html.
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.
@@ -102,6 +102,7 @@ Tested Items:
     check on owner and ownerName in config file report width
     'AD' is depricated.
     Adds and removes Divisions and Locations listeners OK.
+    makeCompositRailroadName handles missing items OK.
 
   o2o
     Import-
