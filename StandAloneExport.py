@@ -29,6 +29,7 @@ Bundle.BUNDLE_DIR = PSE.OS_PATH.join(PLUGIN_ROOT, 'opsBundle')
 PSE.PLUGIN_ROOT = PLUGIN_ROOT
 PSE.BUNDLE = Bundle.getBundleForLocale()
 
+PSE.validateConfigFile()
 configFile = PSE.readConfigFile()
 encodingSelection = configFile['Main Script']['CP']['ES']
 PSE.ENCODING = configFile['Main Script']['CP']['EO'][encodingSelection]
@@ -48,8 +49,6 @@ class StandAloneExport(jmri.jmrit.automat.AbstractAutomaton):
 
         self.console = PSE.APPS.SystemConsole.getConsole()
         self.trainsWindow = PSE.JMRI.jmrit.operations.trains.TrainsTableFrame()
-
-        PSE.validateConfigFile()
 
         return
 

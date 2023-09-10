@@ -37,14 +37,16 @@ PSE.ENCODING = configFile['Main Script']['CP']['EO'][encodingSelection] # ['EO']
 
 def buildThePlugin(view):
     """
-    Mini controller to build and display the PS Plugin Window.
+    Mini controller.
+    Build and display the PS Plugin Window.
     Called by:
     patternScriptsButtonAction
+    restartThePlugin
     """
 
     view.makeSubroutinesPanel()
     # view.makeScrollPanel()
-    view.makePatternScriptsWindow()
+    view.makePatternScriptsGUI()
 
     for menuItem in view.getPsPluginMenuItems():
         menuItem.removeActionListener(getattr(Listeners, menuItem.getName()))
@@ -60,21 +62,16 @@ def restartThePlugin():
     
     PSE.closeWindowByName('patternScriptsWindow')
 
-    Bundle.setupBundle()
-
     buildThePlugin(View())
-
-    psButton = PSE.getPsButton()
-
-    psButton.setText(PSE.getBundleItem('Pattern Scripts'))
-
-    PSE.APPS.Apps.buttonSpace().revalidate()
 
     _psLog.info('Pattern Scripts plugin restarted')
 
     return
 
 class View:
+    """
+    Includes all the GUI elements.
+    """
 
     def __init__(self):
 
@@ -90,8 +87,9 @@ class View:
         self.subroutinePanel = PSE.JAVX_SWING.Box(PSE.JAVX_SWING.BoxLayout.PAGE_AXIS)
         self.subroutinePanel.setName('subroutinePanel')
 
+        self.itemText = ''
+        self.itemName = ''
         self.psPluginMenuItems = []
-        self.subroutineMenuItems = []
 
         return
 
@@ -106,8 +104,6 @@ class View:
             startUp = package.Controller.StartUp()
             startUp.startUpTasks()
             self.subroutinePanel.add(startUp.getSubroutine())
-            # if self.configFile[subroutine]['SV']:
-            #     self.subroutinePanel.add(startUp.getSubroutineFrame())
 
         return    
 
@@ -122,10 +118,13 @@ class View:
 
         return
 
-    def makePatternScriptsWindow(self):
+    def makePatternScriptsGUI(self):
+        """
+        This is the Pattern Scripts jFrame.
+        """
 
-        self.psLog.debug('makePatternScriptsWindow')
-
+        self.psLog.debug('makePatternScriptsGUI')
+    # Tools menu item drop-down items
         toolsMenu = PSE.JAVX_SWING.JMenu(PSE.getBundleItem('Tools'))
 
         toolsMenu.add(PSE.JMRI.jmrit.operations.setup.OptionAction())
@@ -138,60 +137,66 @@ class View:
             menuItem = package.Controller.getSubroutineDropDownItem()
             toolsMenu.add(menuItem)
 
-        itemText, itemName = self.setPtDropDownText()
-        ptMenuItem = self.makeMenuItem(itemText, itemName)
+        self.itemText = PSE.getBundleItem('Translate Plugin')
+        self.itemName =  'ptItemSelected'
+        ptMenuItem = self.makeMenuItem()
         self.psPluginMenuItems.append(ptMenuItem)
         toolsMenu.add(ptMenuItem)
         if not Bundle.validateKeyFile():
             ptMenuItem.setEnabled(False)
 
-        itemText, itemName = self.setEcDropDownText()
-        editConfigMenuItem = self.makeMenuItem(itemText, itemName)
+        self.itemText = PSE.getBundleItem('Edit Config File')
+        self.itemName = 'ecItemSelected'
+        editConfigMenuItem = self.makeMenuItem()
         self.psPluginMenuItems.append(editConfigMenuItem)
         toolsMenu.add(editConfigMenuItem)
 
-        itemText, itemName = self.setRsDropDownText()
-        rsMenuItem = self.makeMenuItem(itemText, itemName)
+        self.itemText = PSE.getBundleItem('Restart From Default')
+        self.itemName = 'rsItemSelected'
+        rsMenuItem = self.makeMenuItem()
         self.psPluginMenuItems.append(rsMenuItem)
         toolsMenu.add(rsMenuItem)
-
+    # Help menu item drop-down items
         helpMenu = PSE.JAVX_SWING.JMenu(PSE.getBundleItem('Help'))        
 
-        itemText, itemName = self.setHmDropDownText()
-        helpMenuItem = self.makeMenuItem(itemText, itemName)
+        self.itemText = PSE.getBundleItem('Window Help...')
+        self.itemName = 'helpItemSelected'
+        helpMenuItem = self.makeMenuItem()
         self.psPluginMenuItems.append(helpMenuItem)
         helpMenu.add(helpMenuItem)
 
-        itemText, itemName = self.setGhDropDownText()
-        gitHubMenuItem = self.makeMenuItem(itemText, itemName)
+        self.itemText = PSE.getBundleItem('GitHub Web Page')
+        self.itemName = 'ghItemSelected'
+        gitHubMenuItem = self.makeMenuItem()
         self.psPluginMenuItems.append(gitHubMenuItem)
         helpMenu.add(gitHubMenuItem)
 
-        itemText, itemName = self.setOfDropDownText()
-        opsFolderMenuItem = self.makeMenuItem(itemText, itemName)
+        self.itemText = PSE.getBundleItem('Operations Folder')
+        self.itemName = 'ofItemSelected'
+        opsFolderMenuItem = self.makeMenuItem()
         self.psPluginMenuItems.append(opsFolderMenuItem)
         helpMenu.add(opsFolderMenuItem)
 
-        itemText, itemName = self.setLmDropDownText()
-        logMenuItem = self.makeMenuItem(itemText, itemName)
+        self.itemText = PSE.getBundleItem('View Log File')
+        self.itemName = 'logItemSelected'
+        logMenuItem = self.makeMenuItem()
         self.psPluginMenuItems.append(logMenuItem)
         helpMenu.add(logMenuItem)
-
+    # The jFrame menu bar
         psMenuBar = PSE.JAVX_SWING.JMenuBar()
         psMenuBar.add(toolsMenu)
         psMenuBar.add(PSE.JMRI.jmrit.operations.OperationsMenu())
         psMenuBar.add(PSE.JMRI.util.WindowMenu(self.psWindow))
         psMenuBar.add(helpMenu)
-
-        configPanel = PSE.readConfigFile('Main Script')['CP']
+    # Put it all together
         self.psWindow.setName('patternScriptsWindow')
         self.psWindow.setTitle(PSE.getBundleItem('Pattern Scripts'))
-
         self.psWindow.addWindowListener(Listeners.PatternScriptsWindow())
         self.psWindow.setJMenuBar(psMenuBar)
-        # self.psWindow.add(self.scrollPanel)
         self.psWindow.add(self.subroutinePanel)
+        # self.psWindow.add(self.scrollPanel)
         # self.psWindow.pack()
+        configPanel = PSE.readConfigFile('Main Script')['CP']
         self.psWindow.setSize(configPanel['PW'], configPanel['PH'])
         self.psWindow.setLocation(configPanel['PX'], configPanel['PY'])
 
@@ -207,84 +212,20 @@ class View:
 
         return self.psPluginMenuItems
 
-    def makeMenuItem(self, itemText, itemName):
+    def makeMenuItem(self):
         """
-        Makes all the items for the custom drop down menus.
+        Makes all the items for the custom drop-down menus.
         """
 
-        menuItem = PSE.JAVX_SWING.JMenuItem(itemText)
-        menuItem.setName(itemName)
+        menuItem = PSE.JAVX_SWING.JMenuItem(self.itemText)
+        menuItem.setName(self.itemName)
 
         return menuItem
-
-    def setPtDropDownText(self):
-        """
-        itemMethod - Set the drop down text for the Translate Plugin item.
-        """
-
-        menuText = PSE.getBundleItem('Translate Plugin')        
-
-        return menuText, 'ptItemSelected'
-
-    def setRsDropDownText(self):
-        """
-        itemMethod - Set the drop down text for the Restart From Default item.
-        """
-
-        menuText = PSE.getBundleItem('Restart From Default') 
-        return menuText, 'rsItemSelected'
-
-    def setHmDropDownText(self):
-        """
-        itemMethod - Set the drop down text for the Log menu item.
-        """
-
-        menuText = PSE.getBundleItem('Window Help...') 
-
-        return menuText, 'helpItemSelected'
-
-    def setLmDropDownText(self):
-        """
-        itemMethod - Set the drop down text for the Log menu item.
-        """
-
-        menuText = PSE.getBundleItem('View Log File')
-
-        return menuText, 'logItemSelected'
-
-    def setGhDropDownText(self):
-        """
-        itemMethod - Set the drop down text for the gitHub page item.
-        """
-
-        menuText = PSE.getBundleItem('GitHub Web Page')
-
-        return menuText, 'ghItemSelected'
-
-    def setEcDropDownText(self):
-        """
-        itemMethod - Set the drop down text for the edit config file item.
-        """
-
-        menuText = PSE.getBundleItem('Edit Config File')
-
-        return menuText, 'ecItemSelected'
-
-    def setOfDropDownText(self):
-        """
-        itemMethod - Set the drop down text for the operations folder item.
-        """
-
-        menuText = PSE.getBundleItem('Operations Folder')
-
-        return menuText, 'ofItemSelected'
-
+    
 
 class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
     def init(self):
-        """
-        """
 
         PSE.makeReportFolders()
 
@@ -303,9 +244,9 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         """
 
         psButton = PSE.JAVX_SWING.JButton()
-        psButton.actionPerformed = self.patternScriptsButtonAction
         psButton.setName('psButton')
         psButton.setText(PSE.getBundleItem('Pattern Scripts'))
+        psButton.actionPerformed = self.patternScriptsButtonAction
         
         PSE.APPS.Apps.buttonSpace().add(psButton)
         PSE.APPS.Apps.buttonSpace().revalidate()
@@ -315,10 +256,6 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
     def patternScriptsButtonAction(self, MOUSE_CLICKED):
 
         self.psLog.debug(MOUSE_CLICKED)
-
-        PSE.validateConfigFile()
-
-        Bundle.setupBundle()
 
         buildThePlugin(View())
 
