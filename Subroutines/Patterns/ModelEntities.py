@@ -110,25 +110,6 @@ def loopThroughRs(type, rsAttribs):
         rowItem = PSE.formatText(labelName, itemWidth)
         switchListRow += rowItem
 
-
-
-
-    # for lookup in messageFormat:
-    #     item = rosetta[lookup]
-    #     if 'Tab' in item:
-    #         continue
-    #     itemWidth = reportWidth[item]
-    # # Special case handling for the hazardous flag
-    #     if item == 'Hazardous' and rsAttribs[lookup]:
-    #         labelName = lookup
-    #     elif item == 'Hazardous' and not rsAttribs[lookup]:
-    #         labelName = ' '
-    #     else:
-    #         labelName = rsAttribs[lookup]
-
-    #     rowItem = PSE.formatText(labelName, itemWidth)
-    #     switchListRow += rowItem
-
     return switchListRow
 
 def getTrackNamesByLocation(trackType):

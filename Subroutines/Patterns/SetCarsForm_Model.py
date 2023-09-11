@@ -61,6 +61,7 @@ def makeMergedForm(setCarsForm, buttonDict):
 
 def moveRollingStock(switchList):
     """
+    Set the rolling stock to the selected track.
     """
 
     configFile = PSE.readConfigFile()
