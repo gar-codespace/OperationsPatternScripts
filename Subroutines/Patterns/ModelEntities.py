@@ -36,7 +36,6 @@ def makeTextReportTracks(trackList, trackTotals):
     Called by:
     View.ManageGui.trackPatternButton'
     ViewSetCarsForm.switchListButton
-    PSE.SB.handleGetMessage('Length')
     """
 
     reportSwitchList = ''
@@ -170,11 +169,13 @@ def merge(switchList, userInputList):
     longestTrackString = findLongestTrackString()
     allTracksAtLoc = getTrackNamesByLocation(None)
 
+    currentTrack = switchList['tracks'][0]['trackName']
+
     i = 0
     locos = switchList['tracks'][0]['locos']
     for loco in locos:
         userInput = unicode(userInputList[i], PSE.ENCODING)
-        if userInput in allTracksAtLoc:
+        if userInput in allTracksAtLoc and userInput != currentTrack:
             setTrack = PSE.formatText('[' + userInput + ']', longestTrackString + 2)
         else:
             setTrack = PSE.formatText('[' + PSE.getBundleItem('Hold') + ']', longestTrackString + 2)
@@ -186,7 +187,7 @@ def merge(switchList, userInputList):
     for car in cars:
         userInput = unicode(userInputList[i], PSE.ENCODING)
 
-        if userInput in allTracksAtLoc:
+        if userInput in allTracksAtLoc and userInput != currentTrack:
             setTrack = PSE.formatText('[' + userInput + ']', longestTrackString + 2)
         else:
             setTrack = PSE.formatText('[' + PSE.getBundleItem('Hold') + ']', longestTrackString + 2)
