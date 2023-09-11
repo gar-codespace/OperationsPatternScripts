@@ -7,9 +7,10 @@ import jmri
 import sys
 from os import path as OS_PATH
 
+SCRIPT_NAME ='OperationsPatternScripts.StandAloneExport'
+SCRIPT_REV = 20230901
 SCRIPT_DIR = 'OperationsPatternScripts'
-# SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b1'
-# SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b2'
+# SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b3'
 
 PLUGIN_ROOT = OS_PATH.join(jmri.util.FileUtil.getPreferencesPath(), SCRIPT_DIR)
 sys.path.append(PLUGIN_ROOT)
@@ -33,9 +34,6 @@ PSE.validateConfigFile()
 configFile = PSE.readConfigFile()
 encodingSelection = configFile['Main Script']['CP']['ES']
 PSE.ENCODING = configFile['Main Script']['CP']['EO'][encodingSelection]
-
-SCRIPT_NAME ='OperationsPatternScripts.StandAloneExport'
-SCRIPT_REV = 20230901
 
 
 class StandAloneExport(jmri.jmrit.automat.AbstractAutomaton):

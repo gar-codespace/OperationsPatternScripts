@@ -5,11 +5,11 @@
 Choose or create a language translation bundle for the current locale.
 """
 
-from opsEntities import PSE
-from opsBundle import Translators
-
 from urllib2 import urlopen, HTTPError, URLError
 import re
+
+from opsEntities import PSE
+from opsBundle import Translators
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901

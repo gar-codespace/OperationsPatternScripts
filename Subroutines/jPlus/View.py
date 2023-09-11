@@ -11,7 +11,6 @@ from Subroutines.jPlus import GUI
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901
 
-_psLog = PSE.LOGGING.getLogger('OPS.JP.View')
 
 class ManageGui:
 

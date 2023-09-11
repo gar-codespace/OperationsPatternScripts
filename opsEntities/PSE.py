@@ -33,19 +33,15 @@ Ghost imports from Bundle:
     PSE.BUNDLE_DIR = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle')
 """
 
+SCRIPT_NAME = 'OperationsPatternScripts.opsEntities.PSE'
+SCRIPT_REV = 20230901
 PROFILE_PATH = JMRI.util.FileUtil.getProfilePath()
 BUNDLE = {}
 REPORT_ITEM_WIDTH_MATRIX = {}
 TRACK_NAME_CLICKED_ON = ''
 
-"""
-The formatting is a little different so don't use this:
-J_BUNDLE = JMRI.jmrit.operations.setup.Setup()
-"""
+# on't use this: J_BUNDLE = JMRI.jmrit.operations.setup.Setup()
 SB = JMRI.jmrit.operations.setup.Bundle()
-
-SCRIPT_NAME = 'OperationsPatternScripts.opsEntities.PSE'
-SCRIPT_REV = 20230901
 
 OM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.OperationsManager)
 PM = JMRI.InstanceManager.getDefault(JMRI.util.gui.GuiLafPreferencesManager)

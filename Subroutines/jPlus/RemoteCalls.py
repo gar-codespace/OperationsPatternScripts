@@ -6,7 +6,6 @@ Calls other subs make to this one
 Keep this as light as possible.
 """
 
-# from Subroutines.jPlus import Model
 from Subroutines.jPlus import Listeners
 
 def startupCalls():
@@ -14,7 +13,6 @@ def startupCalls():
     Called when the plugin is started.
     """
     
-    # Model.initializeSubroutine()
     Listeners.addSubroutineListeners()
 
     return

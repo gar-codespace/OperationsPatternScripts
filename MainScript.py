@@ -9,9 +9,10 @@ import jmri
 import sys
 from os import path as OS_PATH
 
+SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
+SCRIPT_REV = 20230901
 SCRIPT_DIR = 'OperationsPatternScripts'
-# SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b1'
-# SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b2'
+# SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b3'
 
 PLUGIN_ROOT = OS_PATH.join(jmri.util.FileUtil.getPreferencesPath(), SCRIPT_DIR)
 sys.path.append(PLUGIN_ROOT)
@@ -25,9 +26,6 @@ PSE.OS_PATH = OS_PATH
 
 from opsEntities import Listeners
 from opsBundle import Bundle
-
-SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
-SCRIPT_REV = 20230901
 
 PSE.validateConfigFile()
 

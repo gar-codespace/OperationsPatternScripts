@@ -7,7 +7,6 @@ The info can be input directly or imported from TrainPlayer if using o2o.
 """
 
 from opsEntities import PSE
-
 from Subroutines.jPlus import Listeners
 from Subroutines.jPlus import Model
 from Subroutines.jPlus import View

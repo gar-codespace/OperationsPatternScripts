@@ -11,7 +11,6 @@ SCRIPT_REV = 20230901
 
 _psLog = PSE.LOGGING.getLogger('OPS.JP.Listeners')
 
-
 def actionListener(EVENT):
     """
     menu item-Tools/Show Subroutines.jPlus.
