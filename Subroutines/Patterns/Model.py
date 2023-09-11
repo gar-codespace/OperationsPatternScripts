@@ -412,18 +412,18 @@ def makeTrackPatternCsv(trackPattern):
     Model.writeTrackPatternCsv
     """
 
-    trackPatternCsv = u'Operator,Description,Parameters\n'
-    trackPatternCsv += u'RT,Report Type,' + trackPattern['trainDescription'] + '\n'
-    trackPatternCsv += u'RD,Railroad Division,' + str(trackPattern['division']) + '\n'
-    trackPatternCsv += u'LN,Location Name,' + trackPattern['location'] + '\n'
-    trackPatternCsv += u'PRNTR,Printer Name,\n'
-    trackPatternCsv += u'YPC,Yard Pattern Comment,' + trackPattern['trainComment'] + '\n'
-    trackPatternCsv += u'VT,Valid,' + trackPattern['date'] + '\n'
+    trackPatternCsv = 'Operator,Description,Parameters\n'
+    trackPatternCsv += 'RT,Report Type,' + trackPattern['trainDescription'] + '\n'
+    trackPatternCsv += 'RD,Railroad Division,' + str(trackPattern['division']) + '\n'
+    trackPatternCsv += 'LN,Location Name,' + trackPattern['location'] + '\n'
+    trackPatternCsv += 'PRNTR,Printer Name,\n'
+    trackPatternCsv += 'YPC,Yard Pattern Comment,' + trackPattern['trainComment'] + '\n'
+    trackPatternCsv += 'VT,Valid,' + trackPattern['date'] + '\n'
     trackPatternCsv += 'SE,Set Engines\n'
-    trackPatternCsv += u'setTo,Road,Number,Type,Model,Length,Weight,Consist,Owner,Track,Location,Destination,Comment\n'
+    trackPatternCsv += 'setTo,Road,Number,Type,Model,Length,Weight,Consist,Owner,Track,Location,Destination,Comment\n'
     for track in trackPattern['tracks']:
         try:
-            trackPatternCsv += u'TN,Track name,' + unicode(track['trackName'], PSE.ENCODING) + '\n'
+            trackPatternCsv += 'TN,Track name,' + unicode(track['trackName'], PSE.ENCODING) + '\n'
         except:
             print('Exception at: Patterns.View.makeTrackPatternCsv')
             
@@ -445,10 +445,10 @@ def makeTrackPatternCsv(trackPattern):
                             + loco[PSE.SB.handleGetMessage('Comment')] + ',' \
                             + '\n'
     trackPatternCsv += 'SC,Set Cars\n'
-    trackPatternCsv += u'setTo,Road,Number,Type,Length,Weight,Load,Load_Type,Hazardous,Color,Kernel,Kernel_Size,Owner,Track,Location,Destination,dest&Track,Final_Dest,fd&Track,Comment,Drop_Comment,Pickup_Comment,RWE\n'
+    trackPatternCsv += 'setTo,Road,Number,Type,Length,Weight,Load,Load_Type,Hazardous,Color,Kernel,Kernel_Size,Owner,Track,Location,Destination,dest&Track,Final_Dest,fd&Track,Comment,Drop_Comment,Pickup_Comment,RWE\n'
     for track in trackPattern['tracks']:
         try:
-            trackPatternCsv += u'TN,Track name,' + unicode(track['trackName'], PSE.ENCODING) + '\n'
+            trackPatternCsv += 'TN,Track name,' + unicode(track['trackName'], PSE.ENCODING) + '\n'
         except:
             print('Exception at: Patterns.View.makeTrackPatternCsv')
 

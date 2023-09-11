@@ -45,7 +45,7 @@ class subroutineGui:
         selectionFrame = PSE.JAVX_SWING.JPanel()
         selectionFrame.setName('selectionFrame')
         selectionFrame.setLayout(PSE.JAVX_SWING.BoxLayout(selectionFrame, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
-        selectionFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Total Commits') + u' - ' + str(len(snapShot) - 1))
+        selectionFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Total Commits') + ' - ' + str(len(snapShot) - 1))
 
         tbText = PSE.JAVX_SWING.JTextField(20)
         tbText.setText(lastSnapShot[1])

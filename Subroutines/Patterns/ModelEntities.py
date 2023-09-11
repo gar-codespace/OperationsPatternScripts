@@ -327,9 +327,9 @@ class RollingStockParser:
         except:
             rsDetailDict[PSE.SB.handleGetMessage('Owner')] = rs.getOwnerName()
     # Common items for all OPS RS
-        rsDetailDict['setTo'] = u'[  ] '
-        rsDetailDict[u'puso'] = u' '
-        rsDetailDict[u' '] = u' ' # Catches KeyError - empty box added to getLocalSwitchListMessageFormat
+        rsDetailDict['setTo'] = '[  ] '
+        rsDetailDict['puso'] = ' '
+        rsDetailDict[' '] = ' ' # Catches KeyError - empty box added to getLocalSwitchListMessageFormat
         rsDetailDict['onTrain'] = False
         if rs in self.rsOnTrain: # Flag to mark if RS is on a built train
             rsDetailDict['onTrain'] = True

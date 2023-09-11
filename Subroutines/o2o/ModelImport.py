@@ -314,11 +314,11 @@ class TrainPlayerImporter:
         locales = {}
         uLocation = PSE.getBundleItem('Unreported')
         
-        locales['00'] = {u'location': uLocation, u'track': '~', u'label': '~', u'type': 'class yard', u'capacity': '100'}
+        locales['00'] = {'location': uLocation, 'track': '~', 'label': '~', 'type': 'class yard', 'capacity': '100'}
 
         for lineItem in self.tpLocations:
             splitLine = lineItem.split(';')
-            locales[splitLine[0]] = {u'location': splitLine[1], u'track': splitLine[2], u'label': splitLine[3], u'type': splitLine[4], u'capacity': splitLine[5]}
+            locales[splitLine[0]] = {'location': splitLine[1], 'track': splitLine[2], 'label': splitLine[3], 'type': splitLine[4], 'capacity': splitLine[5]}
 
         self.rr['LocationRoster_location'] = locales
 
@@ -365,7 +365,7 @@ class TrainPlayerImporter:
                 tpId = line[9]
                 scheduleItem = (aarName, sr, loadName, stagingName, viaIn, viaOut)
                 schedule = {trackLabel:[scheduleItem]}
-                industryDict[tpId] = {u'a-location': locationName, u'b-track': trackName, u'c-schedule': schedule}
+                industryDict[tpId] = {'a-location': locationName, 'b-track': trackName, 'c-schedule': schedule}
 
             locale = line[0] + line[1]
             

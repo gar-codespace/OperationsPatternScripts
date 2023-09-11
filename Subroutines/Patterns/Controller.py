@@ -152,7 +152,7 @@ class StartUp:
 
             windowOffset += 50
 
-            _psLog.info(u'Set Rolling Stock Window created for track ' + track)
+            _psLog.info('Set Rolling Stock Window created for track ' + track)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

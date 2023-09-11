@@ -274,21 +274,21 @@ class jmriManifestConversion:
             cars = []
             for car in location['cars']['add']:
                 parsedRS = self.parseRS(car)
-                parsedRS['puso'] = u'PC'
+                parsedRS['puso'] = 'PC'
                 cars.append(parsedRS)
             for car in location['cars']['remove']:
                 parsedRS = self.parseRS(car)
-                parsedRS['puso'] = u'SC'
+                parsedRS['puso'] = 'SC'
                 cars.append(parsedRS)
 
             locos = []
             for loco in location['engines']['add']:
                 parsedRS = self.parseRS(loco)
-                parsedRS['puso'] = u'PL'
+                parsedRS['puso'] = 'PL'
                 locos.append(parsedRS)
             for loco in location['engines']['remove']:
                 parsedRS = self.parseRS(loco)
-                parsedRS['puso'] = u'SL'
+                parsedRS['puso'] = 'SL'
                 locos.append(parsedRS)
 
             self.o2oWorkEvents['locations'].append({'locationName': location['userName'], 'tracks': [{'cars': cars, 'locos': locos}]})
@@ -370,7 +370,7 @@ class o2oWorkEvents:
         counter = 1
 
         for location in self.workEvents['locations']:
-            self.o2oList += u'WE,' + str(counter) + ',' + location['locationName'] + '\n'
+            self.o2oList += 'WE,' + str(counter) + ',' + location['locationName'] + '\n'
             for track in location['tracks']:
                 for car in track['cars']:
                     self.o2oList += self.makeLine(car) + '\n'
@@ -397,7 +397,7 @@ class o2oWorkEvents:
         try: # Locos don't use load type
             lt = rs['loadType']
         except:
-            lt = u'X'
+            lt = 'X'
 
         pu = rs['location'] + ';' + rs['track']
 

@@ -579,7 +579,7 @@ def formatText(item, length):
     else:
         xItem = item[:length]
 
-    return xItem + u' '
+    return xItem + ' '
 
 def getShortLoadType(car):
     """
