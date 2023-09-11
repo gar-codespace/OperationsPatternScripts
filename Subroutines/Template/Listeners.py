@@ -49,6 +49,10 @@ def actionListener(EVENT):
 
 def addSubroutineListeners():
 
+    frameName = PSE.getBundleItem('Pattern Scripts')
+    frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
+    frame.addPropertyChangeListener(OpsWindowPropertyChange())
+
     print('Template.Listeners.addSubroutineListeners')
     _psLog.debug('Template.Listeners.addSubroutineListeners')
 
@@ -56,6 +60,14 @@ def addSubroutineListeners():
 
 def removeSubroutineListeners():
 
+    frameName = PSE.getBundleItem('Pattern Scripts')
+    frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
+
+    for listener in frame.getPropertyChangeListeners():
+        if isinstance(listener, OpsWindowPropertyChange):
+            PSE.LM.removePropertyChangeListener(listener)
+            print('jPlus.Listeners.removeSubroutnieListeners.OpsWindowPropertyChange')
+            
     print('Template.Listeners.removeSubroutineListeners')
     _psLog.debug('Template.Listeners.removeSubroutineListeners')
 
@@ -64,7 +76,8 @@ def removeSubroutineListeners():
 
 class OpsWindowPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     """
-    A property change listener attached to the Operations Pattern Scripts window.:
+    A property change listener attached to the Operations Pattern Scripts window.
+    
     """
 
     def __init__(self):

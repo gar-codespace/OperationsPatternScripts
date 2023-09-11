@@ -104,25 +104,6 @@ def removeTrainsListener():
     return
 
 
-class OpsWindowPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
-    """
-    A property change listener attached to the Operations Pattern Scripts window.
-    """
-
-    def __init__(self):
-
-        pass
-
-    def propertyChange(self, PROPERTY_CHANGE_EVENT):
-
-        if PROPERTY_CHANGE_EVENT.propertyName == 'opsWindowActivated':
-            Model.refreshSubroutine()
-
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
-
-        return    
-
-
 class o2oPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     """
     Events that are triggered with changes to JMRI Trains and OPS/o2o switch lists.
