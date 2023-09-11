@@ -45,11 +45,10 @@ def buildThePlugin(view):
     """
 
     view.makeSubroutinesPanel()
-    # view.makeScrollPanel()
+    view.makeScrollPanel()
     view.makePatternScriptsGUI()
 
     for menuItem in view.getPsPluginMenuItems():
-        menuItem.removeActionListener(getattr(Listeners, menuItem.getName()))
         menuItem.addActionListener(getattr(Listeners, menuItem.getName()))
 
     view.OpenPatternScriptsWindow()
@@ -109,7 +108,7 @@ class View:
 
     def makeScrollPanel(self):
         """
-        Currently not implemented.
+        The subroutinePanel is set into a scroll panel.
         """
 
         self.scrollPanel = PSE.JAVX_SWING.JScrollPane(self.subroutinePanel)
@@ -193,8 +192,8 @@ class View:
         self.psWindow.setTitle(PSE.getBundleItem('Pattern Scripts'))
         self.psWindow.addWindowListener(Listeners.PatternScriptsWindow())
         self.psWindow.setJMenuBar(psMenuBar)
-        self.psWindow.add(self.subroutinePanel)
-        # self.psWindow.add(self.scrollPanel)
+        # self.psWindow.add(self.subroutinePanel)
+        self.psWindow.add(self.scrollPanel)
         # self.psWindow.pack()
         configPanel = PSE.readConfigFile('Main Script')['CP']
         self.psWindow.setSize(configPanel['PW'], configPanel['PH'])
