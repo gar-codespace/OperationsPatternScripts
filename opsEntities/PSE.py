@@ -40,7 +40,7 @@ BUNDLE = {}
 REPORT_ITEM_WIDTH_MATRIX = {}
 TRACK_NAME_CLICKED_ON = ''
 
-# on't use this: J_BUNDLE = JMRI.jmrit.operations.setup.Setup()
+# Don't use this: J_BUNDLE = JMRI.jmrit.operations.setup.Setup()
 SB = JMRI.jmrit.operations.setup.Bundle()
 
 OM = JMRI.InstanceManager.getDefault(JMRI.jmrit.operations.OperationsManager)
@@ -115,7 +115,6 @@ def makePatternLog():
     buildReportLevel = JMRI.jmrit.operations.setup.Setup.getBuildReportLevel()
 
     loggingIndex = logIndex()
-    logLevel = loggingIndex[buildReportLevel]
 
     fileName = 'PatternScriptsLog.txt'
     targetPath = OS_PATH.join(PROFILE_PATH, 'operations', 'buildstatus', fileName)
@@ -172,6 +171,7 @@ def getComponentByName(frameTitle, componentName):
     Gets a frame by title.
     Searches a frame for a component by name.
     Uses crawler() to find a component in a frame.
+    Assumes that each component has a unique name.
     """
 
     global CRAWLER
@@ -249,7 +249,7 @@ def closeWindowByName(windowName):
 
     return
 
-def closeWindowByLevel(level):
+def closeWindowByLevel(level=None):
     """
     Closes a group of windows depending upon the level chosen.
     """
@@ -260,8 +260,7 @@ def closeWindowByLevel(level):
     routesTable = JMRI.jmrit.operations.routes.Bundle().handleGetMessage('TitleRoutesTable')
     locationsTable = JMRI.jmrit.operations.locations.Bundle().handleGetMessage('TitleLocationsTable')
 
-    if level == 1:
-        keepTheseWindows = [console, 'PanelPro', patternScripts]
+    keepTheseWindows = [console, 'PanelPro', patternScripts]
 
     if level == 2:
         keepTheseWindows = [console, 'PanelPro', patternScripts, locationsTable]
