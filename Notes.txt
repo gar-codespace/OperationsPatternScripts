@@ -1,7 +1,6 @@
 Todo:
   How to publish DeepL?
   Update help html.
-  Is unicode( or u' still necessary?
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.
