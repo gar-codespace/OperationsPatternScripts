@@ -38,6 +38,10 @@ class subroutineGui:
         self.lpButton.setText(PSE.getBundleItem('Extended Header'))
         self.lpButton.setName('updateJmriProperties')
 
+        self.caButton = PSE.JAVX_SWING.JButton()
+        self.caButton.setText(PSE.getBundleItem('Cancel'))
+        self.caButton.setName('cancel')
+        self.caButton.setVisible(False)
         return
 
     def getGuiFrame(self):
@@ -64,6 +68,7 @@ class subroutineGui:
         newRrPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Import Preperation'))
         newRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(40,0)))
         newRrPanel.add(self.nrButton)
+        newRrPanel.add(self.caButton)
         newRrPanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(40,0)))
 
         updateRrPanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem("Import TrainPlayer's Advanced Ops"))
@@ -100,5 +105,6 @@ class subroutineGui:
         widgets.append(self.uiButton)
         widgets.append(self.ursButton)
         widgets.append(self.lpButton)
+        widgets.append(self.caButton)
 
         return widgets

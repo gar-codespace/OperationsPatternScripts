@@ -79,9 +79,16 @@ class StartUp:
 
         return
 
+    def getWidget(self, name):
+
+        for widget in self.widgets:
+            if widget.getName() == name:
+                return widget
+            
     def initializeJmriRailroad(self, EVENT):
         """
-        Creates a new JMRI railroad from the tpRailroadData.json file
+        Initializes JMRI Cars, Engines, and Locations.
+        Backs up Trains and Routes.
         """
 
         _psLog.debug(EVENT)
@@ -91,8 +98,20 @@ class StartUp:
         
         PSE.closeWindowByLevel(level=1)
 
-        Model.resetBuiltTrains()
-        Model.initializeJmriRailroad()
+        firstPress = PSE.getBundleItem('Initialize Railroad')
+        secondPress = PSE.getBundleItem('Confirm')
+
+        if EVENT.getSource().text == firstPress:
+            EVENT.getSource().setText(secondPress)
+            self.getWidget('cancel').setVisible(True)
+        else:
+            Model.resetBuiltTrains()
+            Model.initializeJmriRailroad()
+            EVENT.getSource().setText(firstPress)
+            self.getWidget('cancel').setVisible(False)
+
+
+
 
         PSE.LM.firePropertyChange('jmriDataSets', False, True)
         PSE.LM.firePropertyChange('extendedDetails', False, True)
@@ -180,4 +199,13 @@ class StartUp:
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
-    
+
+    def cancel(self, EVENT):
+        """
+        Cancel the reset.
+        """
+
+        EVENT.getSource().setVisible(False)
+        self.getWidget('initializeJmriRailroad').setText(PSE.getBundleItem('Initialize Railroad'))
+
+        return
