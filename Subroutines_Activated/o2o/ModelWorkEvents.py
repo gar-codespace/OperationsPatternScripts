@@ -6,7 +6,7 @@ Creates the TrainPlayer JMRI Report - o2o Workevents.csv file from either Patter
 """
 
 from opsEntities import PSE
-from Subroutines.o2o import ModelEntities
+from Subroutines_Activated.o2o import ModelEntities
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901

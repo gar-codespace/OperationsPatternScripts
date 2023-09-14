@@ -8,10 +8,10 @@ On the TrainPlayer side, the Quick Keys suite of scripts is used to import from 
 """
 
 from opsEntities import PSE
-from Subroutines.o2o import Listeners
-from Subroutines.o2o import Model
-from Subroutines.o2o import ModelImport
-from Subroutines.o2o import View
+from Subroutines_Activated.o2o import Listeners
+from Subroutines_Activated.o2o import Model
+from Subroutines_Activated.o2o import ModelImport
+from Subroutines_Activated.o2o import View
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901

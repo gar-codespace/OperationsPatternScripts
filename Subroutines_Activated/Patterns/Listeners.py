@@ -4,7 +4,7 @@ JAVAX action performed methods are in Controller.
 """
 
 from opsEntities import PSE
-from Subroutines.Patterns import Model
+from Subroutines_Activated.Patterns import Model
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901

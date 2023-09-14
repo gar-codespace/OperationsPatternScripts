@@ -9,10 +9,10 @@ This subroutine can be used in conjunction with o2o to create TrainPlayer switch
 """
 
 from opsEntities import PSE
-from Subroutines.Patterns import SetCarsForm_Controller
-from Subroutines.Patterns import Model
-from Subroutines.Patterns import View
-from Subroutines.Patterns import Listeners
+from Subroutines_Activated.Patterns import SetCarsForm_Controller
+from Subroutines_Activated.Patterns import Model
+from Subroutines_Activated.Patterns import View
+from Subroutines_Activated.Patterns import Listeners
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901

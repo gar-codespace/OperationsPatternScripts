@@ -8,7 +8,7 @@ Patterns
 from copy import deepcopy
 
 from opsEntities import PSE
-from Subroutines.Patterns import ModelEntities
+from Subroutines_Activated.Patterns import ModelEntities
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901

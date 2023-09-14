@@ -2,11 +2,11 @@
 # © 2023 Greg Ritacco
 
 """
-o2o
+Template
 """
 
 from opsEntities import PSE
-from Subroutines.o2o import GUI
+from Subroutines_Activated.Template import GUI
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901
@@ -22,6 +22,7 @@ class ManageGui:
         """
         Makes the complete subroutine.
         """
+
         subroutine = GUI.subroutineGui()
         gui = subroutine.guiMaker()
         widgets = subroutine.guiWidgetGetter()

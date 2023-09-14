@@ -24,6 +24,7 @@ from codecs import open as codecsOpen
 Ghost imports from MainScript:
     PSE.PLUGIN_ROOT = PLUGIN_ROOT
     PSE.SCRIPT_DIR = SCRIPT_DIR
+    PSE.SUBROUTINE_DIR = 'Subroutines_Activated'
     PSE.JMRI = jmri
     PSE.SYS = sys
     PSE.OS_PATH = OS_PATH
@@ -160,7 +161,7 @@ def repaintPatternScriptsWindow():
     frameName = getBundleItem('Pattern Scripts')
 
     for subroutineName in getSubroutineDirs():
-        subroutine = 'Subroutines.' + subroutineName
+        subroutine = SUBROUTINE_DIR + '.' + subroutineName
         targetPanel = getComponentByName(frameName, subroutine)
         targetPanel.setVisible(configFile[subroutineName]['SV'])
 
@@ -319,7 +320,7 @@ def remoteCalls(call):
     """
 
     for subroutine in getSubroutineDirs():
-        subroutine = 'Subroutines.' + subroutine
+        subroutine = SUBROUTINE_DIR + '.' + subroutine
         package = __import__(subroutine, fromlist=['RemoteCalls'], level=-1)
         getattr(package.RemoteCalls, call)()
 
@@ -770,7 +771,7 @@ def validateConfigFileComponents():
         try:
             configFile[subroutine]
         except KeyError:
-            chunkPath = OS_PATH.join(PLUGIN_ROOT, 'Subroutines', subroutine, 'config.json')
+            chunkPath = OS_PATH.join(PLUGIN_ROOT, 'Subroutines_Activated', subroutine, 'config.json')
             configChunk = loadJson(genericReadReport(chunkPath))
             configFile[subroutine] = configChunk
 
@@ -785,11 +786,11 @@ def getSubroutineDirs():
 
     subroutines = []
 
-    subroutinePath = OS_PATH.join(PLUGIN_ROOT, 'Subroutines')
+    subroutinePath = OS_PATH.join(PLUGIN_ROOT, 'Subroutines_Activated')
     dirContents = JAVA_IO.File(subroutinePath).list()
 
     for item in dirContents:
-        dirPath = OS_PATH.join(PLUGIN_ROOT, 'Subroutines', item)
+        dirPath = OS_PATH.join(PLUGIN_ROOT, 'Subroutines_Activated', item)
         if JAVA_IO.File(dirPath).isDirectory():
             subroutines.append(item)
 
@@ -842,9 +843,9 @@ def makeNewConfigFile():
 
     subroutines = getSubroutineDirs()
     for subroutine in subroutines:
-        dirPath = OS_PATH.join(PLUGIN_ROOT, 'Subroutines', subroutine)
+        dirPath = OS_PATH.join(PLUGIN_ROOT, 'Subroutines_Activated', subroutine)
         if JAVA_IO.File(dirPath).isDirectory():
-            chunkPath = OS_PATH.join(PLUGIN_ROOT, 'Subroutines', subroutine, 'config.json')
+            chunkPath = OS_PATH.join(PLUGIN_ROOT, 'Subroutines_Activated', subroutine, 'config.json')
             configChunk = loadJson(genericReadReport(chunkPath))
             configFile[subroutine] = configChunk
 

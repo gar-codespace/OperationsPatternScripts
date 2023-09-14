@@ -7,9 +7,10 @@ The info can be input directly or imported from TrainPlayer if using o2o.
 """
 
 from opsEntities import PSE
-from Subroutines.jPlus import Listeners
-from Subroutines.jPlus import Model
-from Subroutines.jPlus import View
+
+from Subroutines_Activated.jPlus import Listeners
+from Subroutines_Activated.jPlus import Model
+from Subroutines_Activated.jPlus import View
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901

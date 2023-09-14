@@ -6,8 +6,8 @@ Calls other subs make to this one
 Keep this as light as possible.
 """
 
-from Subroutines.Patterns import Model
-from Subroutines.Patterns import Listeners
+from Subroutines_Activated.Patterns import Model
+from Subroutines_Activated.Patterns import Listeners
 
 def startupCalls():
     """

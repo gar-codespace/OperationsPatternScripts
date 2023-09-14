@@ -11,9 +11,9 @@ Describe what this subroutine does.
 
 from opsEntities import PSE
 
-from Subroutines.Template import Listeners
-from Subroutines.Template import Model
-from Subroutines.Template import View
+from Subroutines_Activated.Template import Listeners
+from Subroutines_Activated.Template import Model
+from Subroutines_Activated.Template import View
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901

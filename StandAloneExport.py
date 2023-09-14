@@ -22,7 +22,7 @@ PSE.JMRI = jmri
 PSE.SYS = sys
 PSE.OS_PATH = OS_PATH
 
-from Subroutines.o2o import Listeners
+from Subroutines_Activated.o2o import Listeners
 from opsBundle import Bundle
 
 Bundle.BUNDLE_DIR = PSE.OS_PATH.join(PLUGIN_ROOT, 'opsBundle')

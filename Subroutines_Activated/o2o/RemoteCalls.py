@@ -6,13 +6,12 @@ Calls other subs make to this one
 Keep this as light as possible.
 """
 
-from Subroutines.Template import Listeners
+from Subroutines_Activated.o2o import Listeners
 
 def startupCalls():
     """
     Called when the plugin is started.
     """
-
 
     Listeners.addSubroutineListeners()
 

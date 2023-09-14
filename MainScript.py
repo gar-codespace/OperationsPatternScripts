@@ -20,6 +20,7 @@ from opsEntities import PSE
 
 PSE.PLUGIN_ROOT = PLUGIN_ROOT
 PSE.SCRIPT_DIR = SCRIPT_DIR
+PSE.SUBROUTINE_DIR = 'Subroutines_Activated'
 PSE.JMRI = jmri
 PSE.SYS = sys
 PSE.OS_PATH = OS_PATH
@@ -97,7 +98,7 @@ class View:
         """
 
         for subroutine in PSE.getSubroutineDirs():
-            subroutineName = 'Subroutines.' + subroutine
+            subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine
             package = __import__(subroutineName, fromlist=['Controller'], level=-1)
             startUp = package.Controller.StartUp()
             startUp.startUpTasks()

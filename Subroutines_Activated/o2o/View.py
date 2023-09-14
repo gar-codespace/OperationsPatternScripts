@@ -2,16 +2,15 @@
 # © 2023 Greg Ritacco
 
 """
-Throwback
+o2o
 """
 
 from opsEntities import PSE
-from Subroutines.Throwback import GUI
+from Subroutines_Activated.o2o import GUI
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901
 
-_psLog = PSE.LOGGING.getLogger('OPS.TB.View')
 
 class ManageGui:
 
@@ -22,8 +21,7 @@ class ManageGui:
     def makeSubroutine(self):
         """
         Makes the complete subroutine.
-        """       
-
+        """
         subroutine = GUI.subroutineGui()
         gui = subroutine.guiMaker()
         widgets = subroutine.guiWidgetGetter()

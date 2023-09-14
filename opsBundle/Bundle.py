@@ -175,7 +175,7 @@ def getAllBundles():
 
     allSubs = PSE.getSubroutineDirs()
     for sub in allSubs:
-        targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'Subroutines', sub, 'bundle.txt')
+        targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'Subroutines_Activated', sub, 'bundle.txt')
         subroutineBundle = PSE.genericReadReport(targetPath)
         pluginBundle += subroutineBundle
 
@@ -198,7 +198,7 @@ def makeDefaultHelpFile():
 
     allSubs = PSE.getSubroutineDirs()
     for sub in allSubs:
-        targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'Subroutines', sub, 'help.html')
+        targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'Subroutines_Activated', sub, 'help.html')
         subroutineBundle = PSE.genericReadReport(targetPath)
         helpHtml += subroutineBundle
 
@@ -250,7 +250,7 @@ def updateHelpFileForLocale():
     for sub in PSE.getSubroutineDirs():
         includeCheck = sub + ' help section html -->'
         if not includeCheck in localeHelpHtml:
-            targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'Subroutines', sub, 'help.html')
+            targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'Subroutines_Activated', sub, 'help.html')
             subroutineHelp = PSE.genericReadReport(targetPath)
             localeHelpHtml += subroutineHelp
             print(targetPath)

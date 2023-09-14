@@ -2,15 +2,16 @@
 # © 2023 Greg Ritacco
 
 """
-jPlus
+Throwback
 """
 
 from opsEntities import PSE
-from Subroutines.jPlus import GUI
+from Subroutines_Activated.Throwback import GUI
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901
 
+_psLog = PSE.LOGGING.getLogger('OPS.TB.View')
 
 class ManageGui:
 
@@ -21,7 +22,7 @@ class ManageGui:
     def makeSubroutine(self):
         """
         Makes the complete subroutine.
-        """
+        """       
 
         subroutine = GUI.subroutineGui()
         gui = subroutine.guiMaker()
