@@ -110,9 +110,6 @@ class StartUp:
             EVENT.getSource().setText(firstPress)
             self.getWidget('cancel').setVisible(False)
 
-
-
-
         PSE.LM.firePropertyChange('jmriDataSets', False, True)
         PSE.LM.firePropertyChange('extendedDetails', False, True)
 
@@ -202,7 +199,7 @@ class StartUp:
 
     def cancel(self, EVENT):
         """
-        Cancel the reset.
+        Cancel the initialization.
         """
 
         EVENT.getSource().setVisible(False)

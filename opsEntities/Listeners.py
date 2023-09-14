@@ -128,6 +128,33 @@ def logItemSelected(OPEN_LOG_EVENT):
 
     return
 
+def dropDownMenuItem(EVENT):
+    """
+    menu item-Tools/Show Subroutines.Throwback
+    """
+
+    _psLog.debug(EVENT)
+
+    configFile = PSE.readConfigFile()
+
+    subroutineName = EVENT.getSource().getName()
+
+    if configFile[subroutineName]['SV']: # Hide this subroutine
+        menuText = PSE.getBundleItem('Show') + ' ' + subroutineName
+        configFile[subroutineName].update({'SV':False})
+        _psLog.info('Hide ' + subroutineName)
+    else: # Show this subroutine
+        menuText = PSE.getBundleItem('Hide') + ' ' + subroutineName
+        configFile[subroutineName].update({'SV':True})
+        _psLog.info('Show ' + subroutineName)
+
+    EVENT.getSource().setText(menuText)
+    PSE.writeConfigFile(configFile)
+
+    PSE.repaintPatternScriptsWindow()
+
+    return
+
 
 class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
     """

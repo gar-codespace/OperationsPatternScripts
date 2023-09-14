@@ -86,6 +86,7 @@ class View:
 
         self.itemText = ''
         self.itemName = ''
+        self.subroutineName = ''
         self.psPluginMenuItems = []
 
         return
@@ -115,6 +116,23 @@ class View:
 
         return
 
+    def getSubroutineDropDownItem(self):
+        """
+        Pattern Scripts/Tools/'Show or Hide <subroutine>'
+        """
+
+        menuItem = PSE.JAVX_SWING.JMenuItem()
+
+        if self.configFile[self.subroutineName]['SV']:
+            menuText = PSE.getBundleItem('Hide') + ' ' + self.subroutineName        
+        else:
+            menuText = PSE.getBundleItem('Show') + ' ' + self.subroutineName
+
+        menuItem.setName(self.subroutineName)
+        menuItem.setText(menuText)
+
+        return menuItem
+
     def makePatternScriptsGUI(self):
         """
         This is the Pattern Scripts jFrame.
@@ -128,10 +146,9 @@ class View:
         toolsMenu.add(PSE.JMRI.jmrit.operations.setup.PrintOptionAction())
         toolsMenu.add(PSE.JMRI.jmrit.operations.setup.BuildReportOptionAction())
 
-        for subroutine in PSE.getSubroutineDirs():
-            xModule = 'Subroutines.' + subroutine
-            package = __import__(xModule, fromlist=['Controller'], level=-1)
-            menuItem = package.Controller.getSubroutineDropDownItem()
+        for self.subroutineName in PSE.getSubroutineDirs():
+            menuItem = self.getSubroutineDropDownItem()
+            menuItem.addActionListener(Listeners.dropDownMenuItem)
             toolsMenu.add(menuItem)
 
         self.itemText = PSE.getBundleItem('Translate Plugin')
