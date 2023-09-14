@@ -45,9 +45,6 @@ class StandAloneExport(jmri.jmrit.automat.AbstractAutomaton):
         self.logger = PSE.Logger(logFileTarget)
         self.logger.startLogger('OPS')
 
-        self.console = PSE.APPS.SystemConsole.getConsole()
-        self.trainsWindow = PSE.JMRI.jmrit.operations.trains.TrainsTableFrame()
-
         return
 
     def handle(self):
@@ -58,8 +55,8 @@ class StandAloneExport(jmri.jmrit.automat.AbstractAutomaton):
         Listeners.addTrainsTableListener()
         Listeners.addTrainsListener()
 
-        self.console.setVisible(True)
-        self.trainsWindow.setVisible(True)
+        PSE.openSystemConsole()
+        PSE.JMRI.jmrit.operations.trains.TrainsTableFrame()
 
         self.psLog.info('ConvertJmriManifestStandAlone')
 

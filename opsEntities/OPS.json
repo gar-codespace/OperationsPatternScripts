@@ -55,7 +55,8 @@
           "colorB" : "FADED",
           "colorC" : "RASH"
         },
-        "OC" : true
+        "OC" : true,
+        "OT" : false
       },
     "CP" : {
       "TS" : {
@@ -76,7 +77,7 @@
       "PW" : 1000,
       "PX" : 0,
       "PY" : 0,
-      "RV" : 20230812,
+      "RV" : 20230901,
       "GP" : "https://github.com/gar-codespace/OperationsPatternScripts",
       "EC" : {
         "400" : "400 - Bad Request: Unable to translate the current language.",
