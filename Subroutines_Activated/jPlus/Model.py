@@ -48,12 +48,6 @@ def refreshSubroutine():
     value = configFile['Main Script']['LD']['YR']
     component.setText(value)
 
-    # configFile['Main Script']['LD'].update({'YR':opsProSettingsItems['YR']})
-    # configFile['Main Script']['LD'].update({'LN':opsProSettingsItems['LN']})
-    # configFile['Main Script']['LD'].update({'SC':opsProSettingsItems['SC']})
-    # PSE.writeConfigFile(configFile)
-
-    print('refreshSubroutine')
     return
 
 def updateRailroadDetails(widgets):

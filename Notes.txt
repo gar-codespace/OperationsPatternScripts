@@ -1,6 +1,5 @@
 Todo:
   How to publish DeepL?
-  https://stackoverflow.com/questions/301134/how-can-i-import-a-module-dynamically-given-its-name-as-string
   Cleanup and re annotate Template to reflect all the recent changes.
 
 Duplicate code:
@@ -23,6 +22,7 @@ Comments:
   Generalized built train listeners into opsEntities.Listeners.
   Translate the plugin does not delete the config file.
   o2o Initialize Railroad does not reset Throwback.
+  Replace __import__ with importlib.import_module()
 
 Tested Items:
   Plugin

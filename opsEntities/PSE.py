@@ -10,8 +10,9 @@ import jmri as JMRI
 from java import io as JAVA_IO
 import java.awt as JAVA_AWT
 import java.nio.file as JAVA_NIO
-import java.beans as JAVA_BEANS # Called by the listeners
 import javax.swing as JAVX_SWING
+import java.beans as JAVA_BEANS # Called by the listeners
+from importlib import import_module as IM # Called by the listeners
 
 import logging as LOGGING
 import apps as APPS

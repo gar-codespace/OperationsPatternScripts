@@ -24,7 +24,7 @@ def ptItemSelected(TRANSLATE_PLUGIN_EVENT):
     Bundle.translateBundles()
     Bundle.translateHelpHtml()
 
-    xModule = __import__('MainScript')
+    xModule = PSE.IM('MainScript')
     xModule.restartThePlugin()
 
     _psLog.info('Pattern Scripts plugin translated')
@@ -53,7 +53,7 @@ def rsItemSelected(RESTART_PLUGIN_EVENT):
 
     PSE.deleteConfigFile()
 
-    xModule = __import__('MainScript')
+    xModule = PSE.IM('MainScript')
     xModule.restartThePlugin()
 
     return
@@ -181,14 +181,11 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         PSE.closeWindowByName('popupFrame')
         PSE.closeWindowByName('setCarsWindow')
 
-
-        # WINDOW_CLOSING.getSource().firePropertyChange('opsWindowClosing', False, True)
-
         for subroutine in PSE.getSubroutineDirs():
-            subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine
-            package = __import__(subroutineName, fromlist=['Listeners'], level=-1)
-            package.Listeners.removeSubroutineListeners()
 
+            subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine + '.Listeners'
+            package = PSE.IM(subroutineName)
+            package.removeSubroutineListeners()
 
 
         WINDOW_CLOSING.getSource().dispose()
@@ -199,12 +196,11 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
 
         _psLog.debug(WINDOW_OPENED)
 
-        # WINDOW_OPENED.getSource().firePropertyChange('opsWindowOpen', False, True)
-
         for subroutine in PSE.getSubroutineDirs():
-            subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine
-            package = __import__(subroutineName, fromlist=['Listeners'], level=-1)
-            package.Listeners.addSubroutineListeners()
+
+            subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine + '.Listeners'
+            package = PSE.IM(subroutineName)
+            package.addSubroutineListeners()
         
         PSE.getPsButton().setEnabled(False)
 
@@ -214,12 +210,11 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
 
         _psLog.debug(WINDOW_ACTIVATED)
 
-        # WINDOW_ACTIVATED.getSource().firePropertyChange('opsWindowActivated', False, True)
-
         for subroutine in PSE.getSubroutineDirs():
-            subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine
-            package = __import__(subroutineName, fromlist=['Model'], level=-1)
-            package.Model.refreshSubroutine()
+
+            subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine + '.Model'
+            package = PSE.IM(subroutineName)
+            package.refreshSubroutine()
 
         return
 
