@@ -19,18 +19,22 @@ def resetConfigFileItems():
 
     return
 
+def initializeSubroutine():
+    
+    return
+
+def resetSubroutine():
+
+    divComboUpdater()
+
+    locComboUpdater()
+
+    makeTrackRows()
+
+    return
+
 def refreshSubroutine():
-    """
-    """
-    configFile = PSE.readConfigFile()
 
-    divComboBox = divComboUpdater()
-    divComboBox.setSelectedItem(configFile['Patterns']['PD'])
-
-    locComboBox = locComboUpdater()
-    locComboBox.setSelectedItem(configFile['Patterns']['PL'])
-
-    trackRowManager()
     return
 
 def divComboUpdater():
@@ -111,7 +115,7 @@ def locComboSelected(EVENT):
 
     return
 
-def trackRowManager():
+def makeTrackRows():
     """
     Creates a row of check boxes, one for each track.
     If no tracks for the selected location, displays a message.

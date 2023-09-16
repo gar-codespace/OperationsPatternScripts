@@ -18,11 +18,13 @@ def resetConfigFileItems():
     Put configFile items here that need to be set to their defaults when this subroutine is reset.
     """
 
-    # configFile = PSE.readConfigFile()
+    return
 
-    # Reset stuff here
+def initializeSubroutine():
+    
+    return
 
-    # PSE.writeConfigFile(configFile)
+def resetSubroutine():
 
     return
 

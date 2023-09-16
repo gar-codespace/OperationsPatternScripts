@@ -18,35 +18,24 @@ def resetConfigFileItems():
     
     return
 
-def refreshSubroutine():
-    """
-    Pulls configFile LD settings data into the jPlus frame.
-    """
+def initializeSubroutine():
+    
+    return
 
-    configFile = PSE.readConfigFile()
+def resetSubroutine():
+
+    return
+
+def refreshSubroutine():
 
     frameName = PSE.getBundleItem('Pattern Scripts')
     frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
-
-    component = PSE.getComponentByName(frame, 'operatingRoad')
-    value = configFile['Main Script']['LD']['OR']
-    component.setText(value)
-
-    component = PSE.getComponentByName(frame, 'territory')
-    value = configFile['Main Script']['LD']['TR']
-    component.setText(value)
-
-    component = PSE.getComponentByName(frame, 'location')
-    value = configFile['Main Script']['LD']['LO']
-    component.setText(value)
-
-    component = PSE.getComponentByName(frame, 'useExtended')
-    flag = configFile['Main Script']['CP']['EH']
-    component.setSelected(flag)
-
     component = PSE.getComponentByName(frame, 'yearModeled')
-    value = configFile['Main Script']['LD']['YR']
-    component.setText(value)
+
+    OSU = PSE.JMRI.jmrit.operations.setup
+    yearModeled = OSU.Setup.getYearModeled()
+
+    component.setText(yearModeled)
 
     return
 

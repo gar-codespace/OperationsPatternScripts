@@ -19,6 +19,14 @@ def resetConfigFileItems():
 
     return
 
+def initializeSubroutine():
+    
+    return
+
+def resetSubroutine():
+
+    return
+
 def refreshSubroutine():
 
     return

@@ -182,7 +182,6 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         PSE.closeWindowByName('setCarsWindow')
 
         for subroutine in PSE.getSubroutineDirs():
-
             subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine + '.Listeners'
             package = PSE.IM(subroutineName)
             package.removeSubroutineListeners()
@@ -193,14 +192,20 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         return
 
     def windowOpened(self, WINDOW_OPENED):
+        """
+        The window is opened before it is activated, so windowActivated runs next.
+        """
 
         _psLog.debug(WINDOW_OPENED)
 
         for subroutine in PSE.getSubroutineDirs():
-
             subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine + '.Listeners'
             package = PSE.IM(subroutineName)
             package.addSubroutineListeners()
+
+            subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine + '.Model'
+            package = PSE.IM(subroutineName)
+            package.resetSubroutine()
         
         PSE.getPsButton().setEnabled(False)
 
@@ -211,7 +216,6 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         _psLog.debug(WINDOW_ACTIVATED)
 
         for subroutine in PSE.getSubroutineDirs():
-
             subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine + '.Model'
             package = PSE.IM(subroutineName)
             package.refreshSubroutine()

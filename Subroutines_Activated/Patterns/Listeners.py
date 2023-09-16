@@ -57,28 +57,27 @@ class PatternsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     def propertyChange(self, PROPERTY_CHANGE_EVENT):
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'jmriDataSets':
-            Model.divComboUpdater()
-            Model.locComboUpdater()
+            Model.resetSubroutine()
+
+            _psLog.debug(PROPERTY_CHANGE_EVENT)
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'divisionsListLength':
-            Model.divComboUpdater()
-            Model.locComboUpdater()
+            Model.resetSubroutine()
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'divisionName':
-            Model.divComboUpdater()
-            Model.locComboUpdater()
+            Model.resetSubroutine()
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'locationsListLength':
-            Model.locComboUpdater()
+            Model.resetSubroutine()
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'locationName':
-            Model.locComboUpdater()
+            Model.resetSubroutine()
             
             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
@@ -179,7 +178,7 @@ class DivisionAction(PSE.JAVA_AWT.event.ActionListener):
 
         Model.divComboSelected(EVENT)
         Model.locComboUpdater()
-        Model.trackRowManager()
+        Model.makeTrackRows()
 
         return
 
@@ -196,7 +195,7 @@ class LocationAction(PSE.JAVA_AWT.event.ActionListener):
     def actionPerformed(self, EVENT):
 
         Model.locComboSelected(EVENT)
-        Model.trackRowManager()
+        Model.makeTrackRows()
 
         return
 

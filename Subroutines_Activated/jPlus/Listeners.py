@@ -25,7 +25,7 @@ def removeSubroutineListeners():
     for listener in PSE.LM.getPropertyChangeListeners():
         if isinstance(listener, jPlusPropertyChange):
             PSE.LM.removePropertyChangeListener(listener)
-            print('jPlus.Listeners.removeSubroutnieListenersjPlusPropertyChange')
+            print('jPlus.Listeners.removeSubroutnieListeners.jPlusPropertyChange')
 
             _psLog.debug('jPlus.Listeners.removeSubroutineListeners')
 
@@ -45,7 +45,6 @@ class jPlusPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'extendedDetails':
             Model.refreshSubroutine()
-            print('extendedDetails')
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
