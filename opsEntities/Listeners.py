@@ -180,8 +180,16 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         PSE.updateWindowParams(WINDOW_CLOSING.getSource())
         PSE.closeWindowByName('popupFrame')
         PSE.closeWindowByName('setCarsWindow')
-        
-        PSE.remoteCalls('shutdownCalls')
+
+
+        # WINDOW_CLOSING.getSource().firePropertyChange('opsWindowClosing', False, True)
+
+        for subroutine in PSE.getSubroutineDirs():
+            subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine
+            package = __import__(subroutineName, fromlist=['Listeners'], level=-1)
+            package.Listeners.removeSubroutineListeners()
+
+
 
         WINDOW_CLOSING.getSource().dispose()
             
@@ -191,7 +199,12 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
 
         _psLog.debug(WINDOW_OPENED)
 
-        PSE.remoteCalls('startupCalls')
+        # WINDOW_OPENED.getSource().firePropertyChange('opsWindowOpen', False, True)
+
+        for subroutine in PSE.getSubroutineDirs():
+            subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine
+            package = __import__(subroutineName, fromlist=['Listeners'], level=-1)
+            package.Listeners.addSubroutineListeners()
         
         PSE.getPsButton().setEnabled(False)
 
@@ -201,7 +214,12 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
 
         _psLog.debug(WINDOW_ACTIVATED)
 
-        WINDOW_ACTIVATED.getSource().firePropertyChange('opsWindowActivated', False, True)
+        # WINDOW_ACTIVATED.getSource().firePropertyChange('opsWindowActivated', False, True)
+
+        for subroutine in PSE.getSubroutineDirs():
+            subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine
+            package = __import__(subroutineName, fromlist=['Model'], level=-1)
+            package.Model.refreshSubroutine()
 
         return
 

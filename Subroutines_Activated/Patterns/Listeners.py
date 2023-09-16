@@ -56,12 +56,6 @@ class PatternsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     
     def propertyChange(self, PROPERTY_CHANGE_EVENT):
 
-        if PROPERTY_CHANGE_EVENT.propertyName == 'opsWindowActivated' and PROPERTY_CHANGE_EVENT.newValue == True:
-            print('opsWindowActivated')
-            Model.refreshSubroutine()
-
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
-
         if PROPERTY_CHANGE_EVENT.propertyName == 'jmriDataSets':
             Model.divComboUpdater()
             Model.locComboUpdater()

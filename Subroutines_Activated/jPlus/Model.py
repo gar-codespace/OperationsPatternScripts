@@ -12,12 +12,6 @@ SCRIPT_REV = 20230901
 
 _psLog = PSE.LOGGING.getLogger('OPS.JP.Model')
 
-def initializeSubroutine():
-    """
-    """
-
-    return
-
 def resetConfigFileItems():
     """
     """
@@ -59,6 +53,7 @@ def refreshSubroutine():
     # configFile['Main Script']['LD'].update({'SC':opsProSettingsItems['SC']})
     # PSE.writeConfigFile(configFile)
 
+    print('refreshSubroutine')
     return
 
 def updateRailroadDetails(widgets):

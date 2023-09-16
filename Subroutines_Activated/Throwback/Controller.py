@@ -34,7 +34,6 @@ def getSubroutineDropDownItem():
 
     menuItem.setName(__package__)
     menuItem.setText(menuText)
-    menuItem.addActionListener(Listeners.actionListener)
 
     return menuItem
 

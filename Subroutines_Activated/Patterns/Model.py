@@ -15,11 +15,13 @@ SCRIPT_REV = 20230901
 
 _psLog = PSE.LOGGING.getLogger('OPS.PT.Model')
 
-def initializeSubroutine():
-    """
-    After the subroutine is built, set it to its' initial values.
-    """
+def resetConfigFileItems():
 
+    return
+
+def refreshSubroutine():
+    """
+    """
     configFile = PSE.readConfigFile()
 
     divComboBox = divComboUpdater()
@@ -29,19 +31,6 @@ def initializeSubroutine():
     locComboBox.setSelectedItem(configFile['Patterns']['PL'])
 
     trackRowManager()
-
-    return
-    
-def resetConfigFileItems():
-    """
-    """
-
-    return
-
-def refreshSubroutine():
-    """
-    """
-
     return
 
 def divComboUpdater():

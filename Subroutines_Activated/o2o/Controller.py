@@ -33,7 +33,6 @@ def getSubroutineDropDownItem():
 
     menuItem.setName(__package__)
     menuItem.setText(menuText)
-    menuItem.addActionListener(Listeners.actionListener)
 
     return menuItem
 
@@ -110,8 +109,8 @@ class StartUp:
             EVENT.getSource().setText(firstPress)
             self.getWidget('cancel').setVisible(False)
 
-        PSE.LM.firePropertyChange('jmriDataSets', False, True)
-        PSE.LM.firePropertyChange('extendedDetails', False, True)
+            PSE.LM.firePropertyChange('jmriDataSets', False, True)
+            PSE.LM.firePropertyChange('extendedDetails', False, True)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
         return

@@ -1,5 +1,7 @@
 Todo:
   How to publish DeepL?
+  https://stackoverflow.com/questions/301134/how-can-i-import-a-module-dynamically-given-its-name-as-string
+  Cleanup and re annotate Template to reflect all the recent changes.
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.

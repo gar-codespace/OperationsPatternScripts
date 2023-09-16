@@ -313,19 +313,6 @@ def updateWindowParams(window):
 """Utility Methods"""
 
 
-def remoteCalls(call):
-    """
-    'call' is one of the remote calls in each subroutine RemoteCalls module.
-    activatedCalls, deactivatedCalls, refreshCalls Etc.
-    """
-
-    for subroutine in getSubroutineDirs():
-        subroutine = SUBROUTINE_DIR + '.' + subroutine
-        package = __import__(subroutine, fromlist=['RemoteCalls'], level=-1)
-        getattr(package.RemoteCalls, call)()
-
-    return
-
 def psLocale():
     """
     Dealers choice, both work.

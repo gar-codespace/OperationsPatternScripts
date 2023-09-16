@@ -32,7 +32,6 @@ def getSubroutineDropDownItem():
 
     menuItem.setName(__package__)
     menuItem.setText(menuText)
-    menuItem.addActionListener(Listeners.actionListener)
 
     return menuItem
 
@@ -65,7 +64,7 @@ class StartUp:
     def startUpTasks(self):
         """
         Run these tasks when this subroutine is started.
-        """
+            """
 
         return
 

@@ -14,10 +14,6 @@ _psLog = PSE.LOGGING.getLogger('OPS.TB.Model')
 
 SNAP_SHOT_INDEX = 0
 
-def initializeSubroutine():
-
-    return
-
 def resetConfigFileItems():
 
     return
