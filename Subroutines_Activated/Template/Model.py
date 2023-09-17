@@ -21,13 +21,25 @@ def resetConfigFileItems():
     return
 
 def initializeSubroutine():
+    """
+    If any widgets need to be set to a value saved in the config file when the Pattern Scripts window is opened,
+    set those widgets here.
+    """
     
     return
 
 def resetSubroutine():
+    """
+    When the Pattern Scripts window is opened, this subroutine is reset to catch any outside 
+    changes made to JMRI that would effect this subroutine.
+    """
 
     return
 
 def refreshSubroutine():
+    """
+    When the Pattern Scripts window is activated by clicking on it,
+    update any widgets in this subroutine that can't otherwise be updated by a listener.
+    """
 
     return

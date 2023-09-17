@@ -1,6 +1,5 @@
 Todo:
   How to publish DeepL?
-  Cleanup and re annotate Template to reflect all the recent changes.
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.

@@ -2,7 +2,8 @@
 # © 2023 Greg Ritacco
 
 """
-Template
+Template subroutine
+This script builds the GUI from code in the GUI.py file.
 """
 
 from opsEntities import PSE
