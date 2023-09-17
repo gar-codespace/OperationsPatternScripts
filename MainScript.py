@@ -209,7 +209,6 @@ class View:
     # Put it all together
         self.psWindow.setName('patternScriptsWindow')
         self.psWindow.setTitle(PSE.getBundleItem('Pattern Scripts'))
-        self.psWindow.addWindowListener(Listeners.PatternScriptsWindow())
         self.psWindow.setJMenuBar(psMenuBar)
         # self.psWindow.add(self.subroutinePanel)
         self.psWindow.add(self.scrollPanel)
@@ -222,6 +221,7 @@ class View:
 
     def OpenPatternScriptsWindow(self):
 
+        self.psWindow.addWindowListener(Listeners.PatternScriptsWindow())
         self.psWindow.setVisible(True)
 
         return

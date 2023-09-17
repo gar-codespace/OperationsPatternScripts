@@ -12,6 +12,38 @@ SCRIPT_REV = 20230901
 
 _psLog = PSE.LOGGING.getLogger('OPS.XX.Listeners')
 
+
+class TemplateSubroutine(PSE.JAVA_BEANS.PropertyChangeListener):
+    """
+    """
+
+    def __init__(self):
+
+        pass
+
+    def propertyChange(self, PROPERTY_CHANGE_EVENT):
+        if PROPERTY_CHANGE_EVENT.propertyName == 'windowClosing':
+            
+            removeSubroutineListeners()
+            
+            _psLog.debug(PROPERTY_CHANGE_EVENT)
+    
+        if PROPERTY_CHANGE_EVENT.propertyName == 'windowOpened':
+
+            addSubroutineListeners()
+            Model.resetSubroutine()
+            
+            _psLog.debug(PROPERTY_CHANGE_EVENT)
+
+        if PROPERTY_CHANGE_EVENT.propertyName == 'windowActivated':
+
+            Model.refreshSubroutine()
+            
+            _psLog.debug(PROPERTY_CHANGE_EVENT)
+
+        return
+    
+
 def addSubroutineListeners():
     """
     A listener to detect if an event outside of this subroutine

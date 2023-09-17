@@ -169,6 +169,13 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
 
         _psLog.debug(WINDOW_CLOSED)
 
+        for listener in WINDOW_CLOSED.getSource().getWindowListeners():
+            if isinstance(listener, PatternScriptsWindow):
+                WINDOW_CLOSED.getSource().removeWindowListener(listener)
+                print('PatternScriptsWindow')
+
+        WINDOW_CLOSED.getSource().dispose()
+
         PSE.getPsButton().setEnabled(True)
 
         return
@@ -177,17 +184,34 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
 
         _psLog.debug(WINDOW_CLOSING)
 
+        PSE.LM.firePropertyChange('windowClosing', False, True)
+
+
         PSE.updateWindowParams(WINDOW_CLOSING.getSource())
         PSE.closeWindowByName('popupFrame')
         PSE.closeWindowByName('setCarsWindow')
 
-        for subroutine in PSE.getSubroutineDirs():
-            subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine + '.Listeners'
-            package = PSE.IM(subroutineName)
-            package.removeSubroutineListeners()
+        # for subroutine in PSE.getSubroutineDirs():
+        #     subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine + '.Listeners'
+        #     package = PSE.IM(subroutineName)
+        #     package.removeSubroutineListeners()
 
 
-        WINDOW_CLOSING.getSource().dispose()
+
+        # print(WINDOW_CLOSING.getSource().getWindowListeners())
+
+
+
+
+
+
+
+        # WINDOW_CLOSING.getSource().dispose()
+
+
+
+
+        # WINDOW_CLOSING.getSource().removeWindowListener(PatternScriptsWindow())
             
         return
 
@@ -198,14 +222,16 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
 
         _psLog.debug(WINDOW_OPENED)
 
-        for subroutine in PSE.getSubroutineDirs():
-            subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine + '.Listeners'
-            package = PSE.IM(subroutineName)
-            package.addSubroutineListeners()
+        PSE.LM.firePropertyChange('windowOpened', False, True)
 
-            subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine + '.Model'
-            package = PSE.IM(subroutineName)
-            package.resetSubroutine()
+        # for subroutine in PSE.getSubroutineDirs():
+        #     subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine + '.Listeners'
+        #     package = PSE.IM(subroutineName)
+        #     package.addSubroutineListeners()
+
+        #     subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine + '.Model'
+        #     package = PSE.IM(subroutineName)
+        #     package.resetSubroutine()
         
         PSE.getPsButton().setEnabled(False)
 
@@ -215,10 +241,12 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
 
         _psLog.debug(WINDOW_ACTIVATED)
 
-        for subroutine in PSE.getSubroutineDirs():
-            subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine + '.Model'
-            package = PSE.IM(subroutineName)
-            package.refreshSubroutine()
+        PSE.LM.firePropertyChange('windowActivated', False, True)
+
+        # for subroutine in PSE.getSubroutineDirs():
+        #     subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine + '.Model'
+        #     package = PSE.IM(subroutineName)
+        #     package.refreshSubroutine()
 
         return
 

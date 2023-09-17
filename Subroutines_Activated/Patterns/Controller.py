@@ -56,6 +56,15 @@ class StartUp:
         Returns the subroutine and activates the widgets.
         """
 
+
+
+
+        PSE.LM.addPropertyChangeListener(Listeners.PatternsSubroutine())
+
+
+
+
+
         subroutine, self.widgets = View.ManageGui().makeSubroutine()
         subroutineName = __package__.split('.')[1]
         subroutine.setVisible(self.configFile[subroutineName]['SV'])

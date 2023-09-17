@@ -11,6 +11,38 @@ SCRIPT_REV = 20230901
 
 _psLog = PSE.LOGGING.getLogger('OPS.JP.Listeners')
 
+
+class jPlusSubroutine(PSE.JAVA_BEANS.PropertyChangeListener):
+    """
+    """
+
+    def __init__(self):
+
+        pass
+
+    def propertyChange(self, PROPERTY_CHANGE_EVENT):
+        if PROPERTY_CHANGE_EVENT.propertyName == 'windowClosing':
+
+            removeSubroutineListeners()
+            
+            _psLog.debug(PROPERTY_CHANGE_EVENT)
+    
+        if PROPERTY_CHANGE_EVENT.propertyName == 'windowOpened':
+
+            addSubroutineListeners()
+            Model.resetSubroutine()
+            
+            _psLog.debug(PROPERTY_CHANGE_EVENT)
+
+        if PROPERTY_CHANGE_EVENT.propertyName == 'windowActivated':
+
+            Model.refreshSubroutine()
+            
+            _psLog.debug(PROPERTY_CHANGE_EVENT)
+
+        return
+    
+
 def addSubroutineListeners():
 
     PSE.LM.addPropertyChangeListener(jPlusPropertyChange())
@@ -21,6 +53,8 @@ def addSubroutineListeners():
     return
 
 def removeSubroutineListeners():
+
+    
 
     for listener in PSE.LM.getPropertyChangeListeners():
         if isinstance(listener, jPlusPropertyChange):
