@@ -36,7 +36,7 @@ configFile = PSE.readConfigFile()
 encodingSelection = configFile['Main Script']['CP']['ES']
 PSE.ENCODING = configFile['Main Script']['CP']['EO'][encodingSelection] # ['EO'] is encoding options
 
-def buildThePlugin(view):
+def buildThePlugin():
     """
     Mini controller.
     Build and display the PS Plugin Window.
@@ -45,6 +45,7 @@ def buildThePlugin(view):
     restartThePlugin
     """
 
+    view = View()
     view.makeSubroutinesPanel()
     view.makeScrollPanel()
     view.makePatternScriptsGUI()
@@ -62,7 +63,7 @@ def restartThePlugin():
     
     PSE.closeWindowByName('patternScriptsWindow')
 
-    buildThePlugin(View())
+    buildThePlugin()
 
     _psLog.info('Pattern Scripts plugin restarted')
 
@@ -275,7 +276,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         self.psLog.debug(MOUSE_CLICKED)
 
-        buildThePlugin(View())
+        buildThePlugin()
 
         return
 

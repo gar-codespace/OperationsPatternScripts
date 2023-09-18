@@ -172,9 +172,8 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         for listener in WINDOW_CLOSED.getSource().getWindowListeners():
             if isinstance(listener, PatternScriptsWindow):
                 WINDOW_CLOSED.getSource().removeWindowListener(listener)
-                print('PatternScriptsWindow')
 
-        WINDOW_CLOSED.getSource().dispose()
+        # WINDOW_CLOSED.getSource().dispose()
 
         PSE.getPsButton().setEnabled(True)
 
@@ -186,32 +185,9 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
 
         PSE.LM.firePropertyChange('windowClosing', False, True)
 
-
         PSE.updateWindowParams(WINDOW_CLOSING.getSource())
         PSE.closeWindowByName('popupFrame')
         PSE.closeWindowByName('setCarsWindow')
-
-        # for subroutine in PSE.getSubroutineDirs():
-        #     subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine + '.Listeners'
-        #     package = PSE.IM(subroutineName)
-        #     package.removeSubroutineListeners()
-
-
-
-        # print(WINDOW_CLOSING.getSource().getWindowListeners())
-
-
-
-
-
-
-
-        # WINDOW_CLOSING.getSource().dispose()
-
-
-
-
-        # WINDOW_CLOSING.getSource().removeWindowListener(PatternScriptsWindow())
             
         return
 
@@ -223,15 +199,6 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         _psLog.debug(WINDOW_OPENED)
 
         PSE.LM.firePropertyChange('windowOpened', False, True)
-
-        # for subroutine in PSE.getSubroutineDirs():
-        #     subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine + '.Listeners'
-        #     package = PSE.IM(subroutineName)
-        #     package.addSubroutineListeners()
-
-        #     subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine + '.Model'
-        #     package = PSE.IM(subroutineName)
-        #     package.resetSubroutine()
         
         PSE.getPsButton().setEnabled(False)
 
@@ -242,11 +209,6 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         _psLog.debug(WINDOW_ACTIVATED)
 
         PSE.LM.firePropertyChange('windowActivated', False, True)
-
-        # for subroutine in PSE.getSubroutineDirs():
-        #     subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine + '.Model'
-        #     package = PSE.IM(subroutineName)
-        #     package.refreshSubroutine()
 
         return
 
