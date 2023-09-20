@@ -28,13 +28,30 @@ def resetSubroutine():
 
 def refreshSubroutine():
 
+    configFile = PSE.readConfigFile()
+
     frameName = PSE.getBundleItem('Pattern Scripts')
     frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
-    component = PSE.getComponentByName(frame, 'yearModeled')
 
+    component = PSE.getComponentByName(frame, 'operatingRoad')
+    value = configFile['Main Script']['LD']['OR']
+    component.setText(value)
+
+    component = PSE.getComponentByName(frame, 'territory')
+    value = configFile['Main Script']['LD']['TR']
+    component.setText(value)
+
+    component = PSE.getComponentByName(frame, 'location')
+    value = configFile['Main Script']['LD']['LO']
+    component.setText(value)
+
+    component = PSE.getComponentByName(frame, 'useExtended')
+    flag = configFile['Main Script']['CP']['EH']
+    component.setSelected(flag)
+
+    component = PSE.getComponentByName(frame, 'yearModeled')
     OSU = PSE.JMRI.jmrit.operations.setup
     yearModeled = OSU.Setup.getYearModeled()
-
     component.setText(yearModeled)
 
     return

@@ -151,12 +151,12 @@ def dropDownMenuItem(EVENT):
     EVENT.getSource().setText(menuText)
     PSE.writeConfigFile(configFile)
 
-    PSE.repaintPatternScriptsWindow()
+    PSE.repaintPatternScriptsFrame()
 
     return
 
 
-class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
+class PatternScriptsFrame(PSE.JAVA_AWT.event.WindowListener):
     """
     Listener to respond to the plugin window operations.
     """
@@ -165,42 +165,11 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
         
         pass
 
-    def windowClosed(self, WINDOW_CLOSED):
-
-        _psLog.debug(WINDOW_CLOSED)
-
-        for listener in WINDOW_CLOSED.getSource().getWindowListeners():
-            if isinstance(listener, PatternScriptsWindow):
-                WINDOW_CLOSED.getSource().removeWindowListener(listener)
-
-        # WINDOW_CLOSED.getSource().dispose()
-
-        PSE.getPsButton().setEnabled(True)
-
-        return
-
-    def windowClosing(self, WINDOW_CLOSING):
-
-        _psLog.debug(WINDOW_CLOSING)
-
-        PSE.LM.firePropertyChange('windowClosing', False, True)
-
-        PSE.updateWindowParams(WINDOW_CLOSING.getSource())
-        PSE.closeWindowByName('popupFrame')
-        PSE.closeWindowByName('setCarsWindow')
-            
-        return
-
     def windowOpened(self, WINDOW_OPENED):
-        """
-        The window is opened before it is activated, so windowActivated runs next.
-        """
 
         _psLog.debug(WINDOW_OPENED)
 
         PSE.LM.firePropertyChange('windowOpened', False, True)
-        
-        PSE.getPsButton().setEnabled(False)
 
         return
 
@@ -212,6 +181,25 @@ class PatternScriptsWindow(PSE.JAVA_AWT.event.WindowListener):
 
         return
 
+    def windowClosing(self, WINDOW_CLOSING):
+
+        _psLog.debug(WINDOW_CLOSING)
+
+        PSE.LM.firePropertyChange('windowClosing', False, True)
+
+        PSE.removePsFrameListener()
+        PSE.updateWindowParams(WINDOW_CLOSING.getSource())
+        PSE.closeWindowByName('popupFrame')
+        PSE.closeWindowByName('setCarsWindow')
+
+        WINDOW_CLOSING.getSource().dispose()
+
+        PSE.getPsButton().setEnabled(True)
+            
+        return
+
+    def windowClosed(self, WINDOW_CLOSED):
+        return
     def windowIconified(self, WINDOW_ICONIFIED):
         return
     def windowDeiconified(self, WINDOW_DEICONIFIED):

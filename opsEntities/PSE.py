@@ -151,7 +151,17 @@ def logIndex():
 """GUI Methods"""
 
 
-def repaintPatternScriptsWindow():
+def removePsFrameListener():
+
+    frameName = getBundleItem('Pattern Scripts')
+    frame = JMRI.util.JmriJFrame.getFrame(frameName)
+
+    for listener in frame.getWindowListeners():
+        frame.removeWindowListener(listener)
+
+    return
+
+def repaintPatternScriptsFrame():
     """
     Repaints the Pattern Scripts window.
     Called by:
@@ -283,8 +293,8 @@ def getPsButton():
     """
     Gets the Pattern Scripts button on the PanelPro frame.
     Called by:
-    Listeners.PatternScriptsWindow.windowClosed
-    Listeners.PatternScriptsWindow.windowOpened
+    Listeners.PatternScriptsFrame.windowClosed
+    Listeners.PatternScriptsFrame.windowOpened
     """
 
     buttonSpaceComponents = APPS.Apps.buttonSpace().getComponents()
@@ -298,7 +308,7 @@ def updateWindowParams(window):
     """
     Setting JmriJFrame(True, True) has no effect that I can figure.
     Called by:
-    Listeners.PatternScriptsWindow.windowClosing
+    Listeners.PatternScriptsFrame.windowClosing
     """
 
     configPanel = readConfigFile()

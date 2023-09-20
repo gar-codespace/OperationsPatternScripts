@@ -53,15 +53,13 @@ def buildThePlugin():
     for menuItem in view.getPsPluginMenuItems():
         menuItem.addActionListener(getattr(Listeners, menuItem.getName()))
 
-    view.OpenPatternScriptsWindow()
-
-    return
+    return view.getPsFrame()
 
 def restartThePlugin():
 
     _psLog = PSE.LOGGING.getLogger('OPS.Main.restartThePlugin')
     
-    PSE.closeWindowByName('patternScriptsWindow')
+    PSE.closeWindowByName('PatternScriptsFrame')
 
     buildThePlugin()
 
@@ -80,7 +78,7 @@ class View:
 
         self.configFile = PSE.readConfigFile()
 
-        self.psWindow = PSE.JMRI.util.JmriJFrame()
+        self.psFrame = PSE.JMRI.util.JmriJFrame()
 
         """Dealers choice, jPanel or Box."""
         # self.subroutinePanel = PSE.JAVX_SWING.JPanel()
@@ -205,27 +203,21 @@ class View:
         psMenuBar = PSE.JAVX_SWING.JMenuBar()
         psMenuBar.add(toolsMenu)
         psMenuBar.add(PSE.JMRI.jmrit.operations.OperationsMenu())
-        psMenuBar.add(PSE.JMRI.util.WindowMenu(self.psWindow))
+        psMenuBar.add(PSE.JMRI.util.WindowMenu(self.psFrame))
         psMenuBar.add(helpMenu)
     # Put it all together
-        self.psWindow.setName('patternScriptsWindow')
-        self.psWindow.setTitle(PSE.getBundleItem('Pattern Scripts'))
-        self.psWindow.setJMenuBar(psMenuBar)
-        # self.psWindow.add(self.subroutinePanel)
-        self.psWindow.add(self.scrollPanel)
-        # self.psWindow.pack()
-        configPanel = PSE.readConfigFile('Main Script')['CP']
-        self.psWindow.setSize(configPanel['PW'], configPanel['PH'])
-        self.psWindow.setLocation(configPanel['PX'], configPanel['PY'])
+        self.psFrame.setName('PatternScriptsFrame')
+        self.psFrame.setTitle(PSE.getBundleItem('Pattern Scripts'))
+        self.psFrame.setJMenuBar(psMenuBar)
+        # self.psFrame.add(self.subroutinePanel)
+        self.psFrame.add(self.scrollPanel)
+        # self.psFrame.pack()
 
         return
 
-    def OpenPatternScriptsWindow(self):
+    def getPsFrame(self):
 
-        self.psWindow.addWindowListener(Listeners.PatternScriptsWindow())
-        self.psWindow.setVisible(True)
-
-        return
+        return self.psFrame
 
     def getPsPluginMenuItems(self):
 
@@ -275,8 +267,15 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
     def patternScriptsButtonAction(self, MOUSE_CLICKED):
 
         self.psLog.debug(MOUSE_CLICKED)
+        configPanel = PSE.readConfigFile('Main Script')['CP']
 
-        buildThePlugin()
+        psFrame = buildThePlugin()
+        psFrame.addWindowListener(Listeners.PatternScriptsFrame())
+        psFrame.setSize(configPanel['PW'], configPanel['PH'])
+        psFrame.setLocation(configPanel['PX'], configPanel['PY'])
+        psFrame.setVisible(True)
+
+        PSE.getPsButton().setEnabled(False)
 
         return
 
