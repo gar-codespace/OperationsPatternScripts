@@ -27,6 +27,7 @@ PSE.SYS = sys
 PSE.OS_PATH = OS_PATH
 # PSE.IM = IM
 
+from opsEntities import GUI
 from opsEntities import Listeners
 from opsBundle import Bundle
 
@@ -36,203 +37,55 @@ configFile = PSE.readConfigFile()
 encodingSelection = configFile['Main Script']['CP']['ES']
 PSE.ENCODING = configFile['Main Script']['CP']['EO'][encodingSelection] # ['EO'] is encoding options
 
-def buildThePlugin():
-    """
-    Mini controller.
-    Build and display the PS Plugin Window.
-    Called by:
-    patternScriptsButtonAction
-    restartThePlugin
-    """
-
-    view = View()
-    view.makeSubroutinesPanel()
-    view.makeScrollPanel()
-    view.makePatternScriptsGUI()
-
-    for menuItem in view.getPsPluginMenuItems():
-        menuItem.addActionListener(getattr(Listeners, menuItem.getName()))
-
-    return view.getPsFrame()
-
-def restartThePlugin():
-
-    _psLog = PSE.LOGGING.getLogger('OPS.Main.restartThePlugin')
-    
-    PSE.closeWindowByName('PatternScriptsFrame')
-
-    buildThePlugin()
-
-    _psLog.info('Pattern Scripts plugin restarted')
-
-    return
 
 class View:
-    """
-    Includes all the GUI elements.
-    """
 
     def __init__(self):
 
         self.psLog = PSE.LOGGING.getLogger('OPS.Main.View')
 
-        self.configFile = PSE.readConfigFile()
-
-        self.psFrame = PSE.JMRI.util.JmriJFrame()
-
-        """Dealers choice, jPanel or Box."""
-        # self.subroutinePanel = PSE.JAVX_SWING.JPanel()
-        # self.subroutinePanel.setLayout(PSE.JAVX_SWING.BoxLayout( self.subroutinePanel, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
-        self.subroutinePanel = PSE.JAVX_SWING.Box(PSE.JAVX_SWING.BoxLayout.PAGE_AXIS)
-        self.subroutinePanel.setName('subroutinePanel')
-
-        self.itemText = ''
-        self.itemName = ''
-        self.subroutineName = ''
-        self.psPluginMenuItems = []
+        self.plugin = GUI.PluginGUI()
 
         return
 
-    def makeSubroutinesPanel(self):
-        """
-        The subroutines are added to self.subroutinePanel.
-        """
+    def getThePlugin(self):
 
-        for subroutine in PSE.getSubroutineDirs():
-
-            subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine + '.Controller'
-            package = PSE.IM(subroutineName)
-            startUp = package.StartUp()
-            startUp.startUpTasks()
-            self.subroutinePanel.add(startUp.getSubroutine())
-
-        return    
-
-    def makeScrollPanel(self):
-        """
-        The subroutinePanel is set into a scroll panel.
-        """
-
-        self.scrollPanel = PSE.JAVX_SWING.JScrollPane(self.subroutinePanel)
-        self.scrollPanel.border = PSE.JAVX_SWING.BorderFactory.createLineBorder(PSE.JAVA_AWT.Color.GRAY)
-        self.scrollPanel.setName('scrollPanel')
-
-        return
-
-    def getSubroutineDropDownItem(self):
-        """
-        Pattern Scripts/Tools/'Show or Hide <subroutine>'
-        """
-
-        menuItem = PSE.JAVX_SWING.JMenuItem()
-
-        if self.configFile[self.subroutineName]['SV']:
-            menuText = PSE.getBundleItem('Hide') + ' ' + self.subroutineName        
-        else:
-            menuText = PSE.getBundleItem('Show') + ' ' + self.subroutineName
-
-        menuItem.setName(self.subroutineName)
-        menuItem.setText(menuText)
-
-        return menuItem
-
-    def makePatternScriptsGUI(self):
-        """
-        This is the Pattern Scripts jFrame.
-        """
-
-        self.psLog.debug('makePatternScriptsGUI')
-    # Tools menu item drop-down items
-        toolsMenu = PSE.JAVX_SWING.JMenu(PSE.getBundleItem('Tools'))
-
-        toolsMenu.add(PSE.JMRI.jmrit.operations.setup.OptionAction())
-        toolsMenu.add(PSE.JMRI.jmrit.operations.setup.PrintOptionAction())
-        toolsMenu.add(PSE.JMRI.jmrit.operations.setup.BuildReportOptionAction())
-
-        for self.subroutineName in PSE.getSubroutineDirs():
-            menuItem = self.getSubroutineDropDownItem()
-            menuItem.addActionListener(Listeners.dropDownMenuItem)
-            toolsMenu.add(menuItem)
-
-        self.itemText = PSE.getBundleItem('Translate Plugin')
-        self.itemName =  'ptItemSelected'
-        ptMenuItem = self.makeMenuItem()
-        self.psPluginMenuItems.append(ptMenuItem)
-        toolsMenu.add(ptMenuItem)
-        if not Bundle.validateKeyFile():
-            ptMenuItem.setEnabled(False)
-
-        self.itemText = PSE.getBundleItem('Edit Config File')
-        self.itemName = 'ecItemSelected'
-        editConfigMenuItem = self.makeMenuItem()
-        self.psPluginMenuItems.append(editConfigMenuItem)
-        toolsMenu.add(editConfigMenuItem)
-
-        self.itemText = PSE.getBundleItem('Restart From Default')
-        self.itemName = 'rsItemSelected'
-        rsMenuItem = self.makeMenuItem()
-        self.psPluginMenuItems.append(rsMenuItem)
-        toolsMenu.add(rsMenuItem)
-    # Help menu item drop-down items
-        helpMenu = PSE.JAVX_SWING.JMenu(PSE.getBundleItem('Help'))        
-
-        self.itemText = PSE.getBundleItem('Window Help...')
-        self.itemName = 'helpItemSelected'
-        helpMenuItem = self.makeMenuItem()
-        self.psPluginMenuItems.append(helpMenuItem)
-        helpMenu.add(helpMenuItem)
-
-        self.itemText = PSE.getBundleItem('GitHub Web Page')
-        self.itemName = 'ghItemSelected'
-        gitHubMenuItem = self.makeMenuItem()
-        self.psPluginMenuItems.append(gitHubMenuItem)
-        helpMenu.add(gitHubMenuItem)
-
-        self.itemText = PSE.getBundleItem('Operations Folder')
-        self.itemName = 'ofItemSelected'
-        opsFolderMenuItem = self.makeMenuItem()
-        self.psPluginMenuItems.append(opsFolderMenuItem)
-        helpMenu.add(opsFolderMenuItem)
-
-        self.itemText = PSE.getBundleItem('View Log File')
-        self.itemName = 'logItemSelected'
-        logMenuItem = self.makeMenuItem()
-        self.psPluginMenuItems.append(logMenuItem)
-        helpMenu.add(logMenuItem)
-    # The jFrame menu bar
-        psMenuBar = PSE.JAVX_SWING.JMenuBar()
-        psMenuBar.add(toolsMenu)
-        psMenuBar.add(PSE.JMRI.jmrit.operations.OperationsMenu())
-        psMenuBar.add(PSE.JMRI.util.WindowMenu(self.psFrame))
-        psMenuBar.add(helpMenu)
-    # Put it all together
-        self.psFrame.setName('PatternScriptsFrame')
-        self.psFrame.setTitle(PSE.getBundleItem('Pattern Scripts'))
-        self.psFrame.setJMenuBar(psMenuBar)
-        # self.psFrame.add(self.subroutinePanel)
-        self.psFrame.add(self.scrollPanel)
-        # self.psFrame.pack()
-
-        return
-
-    def getPsFrame(self):
-
-        return self.psFrame
-
-    def getPsPluginMenuItems(self):
-
-        return self.psPluginMenuItems
-
-    def makeMenuItem(self):
-        """
-        Makes all the items for the custom drop-down menus.
-        """
-
-        menuItem = PSE.JAVX_SWING.JMenuItem(self.itemText)
-        menuItem.setName(self.itemName)
-
-        return menuItem
+        return self.plugin.getPsFrame()
     
+    def getMenuItems(self):
+
+        return self.plugin.getPsPluginMenuItems()
+    
+    def getSubroutineMenuItems(self):
+
+        return self.plugin.getSubroutineMenuItems()
+    
+
+def makePsPlugin():
+    """
+    Called by:
+    Controller
+    Listeners.rsItemSelected
+    """
+
+    configPanel = PSE.readConfigFile('Main Script')['CP']
+
+    view = View()
+    psFrame = view.getThePlugin()
+    # print(psFrame.multipleInstances())
+    psFrame.setSize(configPanel['PW'], configPanel['PH'])
+    psFrame.setLocation(configPanel['PX'], configPanel['PY'])
+
+    for menuItem in view.getMenuItems():
+        menuItem.addActionListener(getattr(Listeners, menuItem.getName()))
+    for menuItem in view.getSubroutineMenuItems():
+        menuItem.addActionListener(Listeners.dropDownMenuItem)
+    psFrame.addWindowListener(Listeners.PatternScriptsFrame())
+    
+    psFrame.setVisible(True)
+
+    return
+
 
 class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
@@ -267,13 +120,8 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
     def patternScriptsButtonAction(self, MOUSE_CLICKED):
 
         self.psLog.debug(MOUSE_CLICKED)
-        configPanel = PSE.readConfigFile('Main Script')['CP']
 
-        psFrame = buildThePlugin()
-        psFrame.addWindowListener(Listeners.PatternScriptsFrame())
-        psFrame.setSize(configPanel['PW'], configPanel['PH'])
-        psFrame.setLocation(configPanel['PX'], configPanel['PY'])
-        psFrame.setVisible(True)
+        makePsPlugin()
 
         PSE.getPsButton().setEnabled(False)
 

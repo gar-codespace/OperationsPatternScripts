@@ -14,6 +14,33 @@ _psLog = PSE.LOGGING.getLogger('OPS.OE.Listeners')
 """Tools menu items"""
 
 
+def dropDownMenuItem(EVENT):
+    """
+    menu item-Tools/Show/Hide <Subroutine>
+    """
+
+    _psLog.debug(EVENT)
+
+    configFile = PSE.readConfigFile()
+
+    subroutineName = EVENT.getSource().getName()
+
+    if configFile[subroutineName]['SV']: # Hide this subroutine
+        menuText = PSE.getBundleItem('Show') + ' ' + subroutineName
+        configFile[subroutineName].update({'SV':False})
+        _psLog.info('Hide ' + subroutineName)
+    else: # Show this subroutine
+        menuText = PSE.getBundleItem('Hide') + ' ' + subroutineName
+        configFile[subroutineName].update({'SV':True})
+        _psLog.info('Show ' + subroutineName)
+
+    EVENT.getSource().setText(menuText)
+    PSE.writeConfigFile(configFile)
+
+    PSE.repaintPatternScriptsFrame()
+
+    return
+
 def ptItemSelected(TRANSLATE_PLUGIN_EVENT):
     """
     Pattern Scripts/Tools/Translate Plugin.
@@ -51,10 +78,13 @@ def rsItemSelected(RESTART_PLUGIN_EVENT):
 
     _psLog.debug(RESTART_PLUGIN_EVENT)
 
+    PSE.closeWindowByName('PatternScriptsFrame')
     PSE.deleteConfigFile()
+    # PSE.makeNewConfigFile()
+    PSE.getPsButton().setEnabled(True)
 
     xModule = PSE.IM('MainScript')
-    xModule.restartThePlugin()
+    xModule.makePsPlugin()
 
     return
 
@@ -128,33 +158,6 @@ def logItemSelected(OPEN_LOG_EVENT):
 
     return
 
-def dropDownMenuItem(EVENT):
-    """
-    menu item-Tools/Show Subroutines.Throwback
-    """
-
-    _psLog.debug(EVENT)
-
-    configFile = PSE.readConfigFile()
-
-    subroutineName = EVENT.getSource().getName()
-
-    if configFile[subroutineName]['SV']: # Hide this subroutine
-        menuText = PSE.getBundleItem('Show') + ' ' + subroutineName
-        configFile[subroutineName].update({'SV':False})
-        _psLog.info('Hide ' + subroutineName)
-    else: # Show this subroutine
-        menuText = PSE.getBundleItem('Hide') + ' ' + subroutineName
-        configFile[subroutineName].update({'SV':True})
-        _psLog.info('Show ' + subroutineName)
-
-    EVENT.getSource().setText(menuText)
-    PSE.writeConfigFile(configFile)
-
-    PSE.repaintPatternScriptsFrame()
-
-    return
-
 
 class PatternScriptsFrame(PSE.JAVA_AWT.event.WindowListener):
     """
@@ -192,7 +195,7 @@ class PatternScriptsFrame(PSE.JAVA_AWT.event.WindowListener):
         PSE.closeWindowByName('popupFrame')
         PSE.closeWindowByName('setCarsWindow')
 
-        WINDOW_CLOSING.getSource().dispose()
+        # WINDOW_CLOSING.getSource().getWindowInterface().dispose()
 
         PSE.getPsButton().setEnabled(True)
             
