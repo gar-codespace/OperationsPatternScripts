@@ -22,11 +22,6 @@ class TemplateSubroutine(PSE.JAVA_BEANS.PropertyChangeListener):
         pass
 
     def propertyChange(self, PROPERTY_CHANGE_EVENT):
-        if PROPERTY_CHANGE_EVENT.propertyName == 'windowClosing':
-            
-            removeSubroutineListeners()
-            
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
     
         if PROPERTY_CHANGE_EVENT.propertyName == 'windowOpened':
 
@@ -41,6 +36,12 @@ class TemplateSubroutine(PSE.JAVA_BEANS.PropertyChangeListener):
             
             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
+        if PROPERTY_CHANGE_EVENT.propertyName == 'windowClosing':
+            
+            removeSubroutineListeners()
+            
+            _psLog.debug(PROPERTY_CHANGE_EVENT)
+            
         return
     
 

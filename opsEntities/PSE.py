@@ -158,6 +158,10 @@ def removePsFrameListener():
 
     for listener in frame.getWindowListeners():
         frame.removeWindowListener(listener)
+    for listener in frame.getWindowFocusListeners():
+        frame.removeWindowFocusListener(listener)
+    for listener in frame.getWindowStateListeners():
+        frame.removeWindowStateListener(listener)
 
     return
 

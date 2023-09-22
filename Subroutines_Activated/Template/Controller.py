@@ -58,8 +58,6 @@ class StartUp:
         Gets the title border frame.
         """
 
-        PSE.LM.addPropertyChangeListener(Listeners.TemplateSubroutine())
-
         subroutine, self.widgets = View.ManageGui().makeSubroutine()
         subroutineName = __package__.split('.')[1]
         subroutine.setVisible(self.configFile[subroutineName]['SV'])
@@ -75,6 +73,8 @@ class StartUp:
         No GUI items as the GUI is not built yet.
         """
 
+        # PSE.LM.addPropertyChangeListener(Listeners.TemplateSubroutine())
+        
         return
         
     def activateWidgets(self):

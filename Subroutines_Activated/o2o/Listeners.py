@@ -22,11 +22,6 @@ class o2oSubroutine(PSE.JAVA_BEANS.PropertyChangeListener):
         pass
 
     def propertyChange(self, PROPERTY_CHANGE_EVENT):
-        if PROPERTY_CHANGE_EVENT.propertyName == 'windowClosing':
-
-            removeSubroutineListeners()
-            
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
     
         if PROPERTY_CHANGE_EVENT.propertyName == 'windowOpened':
 
@@ -38,6 +33,12 @@ class o2oSubroutine(PSE.JAVA_BEANS.PropertyChangeListener):
         if PROPERTY_CHANGE_EVENT.propertyName == 'windowActivated':
 
             Model.refreshSubroutine()
+            
+            _psLog.debug(PROPERTY_CHANGE_EVENT)
+
+        if PROPERTY_CHANGE_EVENT.propertyName == 'windowClosing':
+
+            removeSubroutineListeners()
             
             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
@@ -56,6 +57,7 @@ def addSubroutineListeners():
 
 def removeSubroutineListeners():
 
+    removeO2oListener()
     removeTrainsTableListener()
     removeTrainsListener()
 
@@ -83,13 +85,24 @@ def addTrainsListener():
 
     return
 
+def removeO2oListener():
+
+    for listener in PSE.LM.getPropertyChangeListeners():
+        if isinstance(listener, PSE.JAVA_BEANS.PropertyChangeListener) and 'o2o' in listener.toString():
+            PSE.LM.removePropertyChangeListener(listener)
+
+            print('o2o.Listeners.removeO2oListener')
+            _psLog.debug('o2o.Listeners.removeO2oListener')
+
+    return
+
 def removeTrainsTableListener():
 
     for listener in PSE.TM.getPropertyChangeListeners():
-        if isinstance(listener, o2oPropertyChange):
+        if isinstance(listener, PSE.JAVA_BEANS.PropertyChangeListener) and 'o2o' in listener.toString():
             PSE.TM.removePropertyChangeListener(listener)
 
-            print('o2o.Listeners.removeTrainsTableListener.o2oPropertyChange')
+            print('o2o.Listeners.removeTrainsTableListener')
             _psLog.debug('o2o.Listeners.removeTrainsTableListener')
 
     return
@@ -101,10 +114,10 @@ def removeTrainsListener():
 
     for train in PSE.TM.getTrainsByIdList():
         for listener in train.getPropertyChangeListeners():
-            if isinstance(listener, o2oPropertyChange):
+            if isinstance(listener, PSE.JAVA_BEANS.PropertyChangeListener) and 'o2o' in listener.toString():
                 train.removePropertyChangeListener(listener)
 
-    print('o2o.Listeners.removeTrainsListener.o2oPropertyChange')
+    print('o2o.Listeners.removeTrainsListener')
     _psLog.debug('o2o.Listeners.removeTrainsListener')
 
     return

@@ -28,6 +28,7 @@ PSE.OS_PATH = OS_PATH
 # PSE.IM = IM
 
 from opsEntities import GUI
+from opsEntities import GUI2
 from opsEntities import Listeners
 from opsBundle import Bundle
 
@@ -43,6 +44,8 @@ class View:
     def __init__(self):
 
         self.psLog = PSE.LOGGING.getLogger('OPS.Main.View')
+
+        Bundle.setupBundle()
 
         self.plugin = GUI.PluginGUI()
 
@@ -63,6 +66,7 @@ class View:
 
 def makePsPlugin():
     """
+    Set outside the Controller because it's also called by reset plugin.
     Called by:
     Controller
     Listeners.rsItemSelected
@@ -72,7 +76,6 @@ def makePsPlugin():
 
     view = View()
     psFrame = view.getThePlugin()
-    # print(psFrame.multipleInstances())
     psFrame.setSize(configPanel['PW'], configPanel['PH'])
     psFrame.setLocation(configPanel['PX'], configPanel['PY'])
 
@@ -80,7 +83,8 @@ def makePsPlugin():
         menuItem.addActionListener(getattr(Listeners, menuItem.getName()))
     for menuItem in view.getSubroutineMenuItems():
         menuItem.addActionListener(Listeners.dropDownMenuItem)
-    psFrame.addWindowListener(Listeners.PatternScriptsFrame())
+
+    psFrame.addWindowListener(Listeners.PatternScriptsFrameListener())
     
     psFrame.setVisible(True)
 

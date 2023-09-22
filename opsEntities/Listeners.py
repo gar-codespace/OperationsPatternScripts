@@ -78,6 +78,8 @@ def rsItemSelected(RESTART_PLUGIN_EVENT):
 
     _psLog.debug(RESTART_PLUGIN_EVENT)
 
+    PSE.LM.firePropertyChange('windowClosing', False, True)
+
     PSE.closeWindowByName('PatternScriptsFrame')
     PSE.deleteConfigFile()
     # PSE.makeNewConfigFile()
@@ -159,7 +161,7 @@ def logItemSelected(OPEN_LOG_EVENT):
     return
 
 
-class PatternScriptsFrame(PSE.JAVA_AWT.event.WindowListener):
+class PatternScriptsFrameListener(PSE.JAVA_AWT.event.WindowListener):
     """
     Listener to respond to the plugin window operations.
     """
@@ -189,15 +191,13 @@ class PatternScriptsFrame(PSE.JAVA_AWT.event.WindowListener):
         _psLog.debug(WINDOW_CLOSING)
 
         PSE.LM.firePropertyChange('windowClosing', False, True)
-
-        PSE.removePsFrameListener()
         PSE.updateWindowParams(WINDOW_CLOSING.getSource())
         PSE.closeWindowByName('popupFrame')
         PSE.closeWindowByName('setCarsWindow')
 
-        # WINDOW_CLOSING.getSource().getWindowInterface().dispose()
-
         PSE.getPsButton().setEnabled(True)
+
+        PSE.removePsFrameListener()
             
         return
 

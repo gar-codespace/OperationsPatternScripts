@@ -51,8 +51,6 @@ class StartUp:
         Returns the subroutine and activates the widgets.
         """
 
-        PSE.LM.addPropertyChangeListener(Listeners.o2oSubroutine())
-
         subroutine, self.widgets = View.ManageGui().makeSubroutine()
         subroutineName = __package__.split('.')[1]
         subroutine.setVisible(self.configFile[subroutineName]['SV'])
@@ -63,10 +61,9 @@ class StartUp:
         return subroutine
 
     def startUpTasks(self):
-        """
-        Run these tasks when this subroutine is started.
-        """
 
+        PSE.LM.addPropertyChangeListener(Listeners.o2oSubroutine())
+        
         return
 
     def activateWidgets(self):
