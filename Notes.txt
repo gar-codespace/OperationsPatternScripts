@@ -1,9 +1,6 @@
 Todo:
   How to publish DeepL?
-  Closing the PS window should also close the schedule window.
-  Change Help/Operations Folder to Help/<profile> Folder
-  Add Help OPS Folder
-  Add PSE. to all the PSE log entries.
+  Refactor PSE.openOutputFrame(), what's it doing?
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.

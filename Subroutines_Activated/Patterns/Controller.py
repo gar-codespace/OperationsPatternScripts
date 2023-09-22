@@ -67,7 +67,7 @@ class StartUp:
 
     def startUpTasks(self):
 
-        PSE.LM.addPropertyChangeListener(Listeners.PatternScriptsWindowListener())
+        PSE.LM.addPropertyChangeListener(Listeners.ListenToThePSWindow())
         
         return
 
@@ -147,6 +147,8 @@ class StartUp:
             setCarsFrame.setSize(newDimension)
             setCarsFrame.setLocation(windowOffset, 100)
             setCarsFrame.setVisible(True)
+            
+            PSE.LM.addPropertyChangeListener(PSE.ListenToThePSWindow(setCarsFrame))
 
             windowOffset += 50
 

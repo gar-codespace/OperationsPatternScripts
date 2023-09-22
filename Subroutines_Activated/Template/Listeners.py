@@ -14,7 +14,7 @@ SCRIPT_REV = 20230901
 _psLog = PSE.LOGGING.getLogger('OPS.XX.Listeners')
 
 
-class PatternScriptsWindowListener(PSE.JAVA_BEANS.PropertyChangeListener):
+class ListenToThePSWindow(PSE.JAVA_BEANS.PropertyChangeListener):
     """
     Every subroutine has this class.
     Listens for changes to the Pattern Scripts plugin window.

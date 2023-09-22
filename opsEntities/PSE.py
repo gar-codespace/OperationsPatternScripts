@@ -151,6 +151,38 @@ def logIndex():
 """GUI Methods"""
 
 
+class ListenToThePSWindow(JAVA_BEANS.PropertyChangeListener):
+    """
+    Listens for changes to the Pattern Scripts plugin window.
+    This should be attached to any windows this plugin may open.
+    PSE.LM.addPropertyChangeListener(PSE.ListenToThePSWindow(frame))
+    """
+
+    def __init__(self, frame):
+
+        self.frame = frame
+
+        return
+
+    def propertyChange(self, PROPERTY_CHANGE_EVENT):
+    
+        if PROPERTY_CHANGE_EVENT.propertyName == 'windowOpened':
+
+            pass
+
+        if PROPERTY_CHANGE_EVENT.propertyName == 'windowActivated':
+            
+            pass
+
+        if PROPERTY_CHANGE_EVENT.propertyName == 'windowClosing':
+
+            self.frame.setVisible(False)
+            self.frame.dispose()
+            
+            _psLog.debug('Window closed: ' + self.frame.getTitle())
+            
+        return
+
 def removePSPropertyListeners():
     """
     Every subroutine attaches a property change listener to PSE.LM to monitor the PS window status.
@@ -158,7 +190,7 @@ def removePSPropertyListeners():
     """
 
     for listener in LM.getPropertyChangeListeners():
-        if isinstance(listener, JAVA_BEANS.PropertyChangeListener) and 'PatternScriptsWindowListener' in listener.toString():
+        if isinstance(listener, JAVA_BEANS.PropertyChangeListener) and 'ListenToThePSWindow' in listener.toString():
             LM.removePropertyChangeListener(listener)
 
             print('PSE.removePSWindowListener')
@@ -259,6 +291,7 @@ def openOutputFrame(message):
         JMRI.jmrit.jython.JythonWindow().actionPerformed(None)
 
     frame = JMRI.util.JmriJFrame.getFrame(frameName)
+    LM.addPropertyChangeListener(ListenToThePSWindow(frame))
 
     global CRAWLER
     CRAWLER = []

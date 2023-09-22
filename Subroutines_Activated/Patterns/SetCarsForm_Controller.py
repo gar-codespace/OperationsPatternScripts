@@ -106,7 +106,9 @@ class CreateSetCarsFrame:
         scheduleName = MOUSE_CLICKED.getSource().getText()
         schedule = PSE.SM.getScheduleByName(scheduleName)
         track = PSE.LM.getLocationByName(self.locationName).getTrackByName(self.trackName, None)
-        PSE.JMRI.jmrit.operations.locations.schedules.ScheduleEditFrame(schedule, track)
+        scheduleEditFrame = PSE.JMRI.jmrit.operations.locations.schedules.ScheduleEditFrame(schedule, track)
+
+        PSE.LM.addPropertyChangeListener(PSE.ListenToThePSWindow(scheduleEditFrame))
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -154,13 +156,13 @@ class CreateSetCarsFrame:
 
         popup = SetCarsForm_View.ManagePopUp()
         popupFrame = popup.getPopupFrame()
-        popupWidgets = popup.getPopupWidgets()
-
         popupFrame.setLocation(MOUSE_CLICKED.getSource().getParent().getLocationOnScreen())
         popupFrame.setVisible(True)        
 
-        for widget in popupWidgets:
+        for widget in popup.getPopupWidgets():
             widget.actionPerformed = getattr(self, widget.getName())
+
+        PSE.LM.addPropertyChangeListener(PSE.ListenToThePSWindow(popupFrame))
 
         self.setCarsWindow = MOUSE_CLICKED.getSource().getTopLevelAncestor()
 

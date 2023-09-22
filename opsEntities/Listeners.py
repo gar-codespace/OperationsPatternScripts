@@ -193,9 +193,6 @@ class PatternScriptsFrameListener(PSE.JAVA_AWT.event.WindowListener):
         PSE.LM.firePropertyChange('windowClosing', False, True)
         
         PSE.updateWindowParams(WINDOW_CLOSING.getSource())
-        PSE.closeWindowByName('popupFrame')
-        PSE.closeWindowByName('setCarsWindow')
-
         PSE.removePSPropertyListeners()
         PSE.removePSWindowListeners()
 

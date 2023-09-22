@@ -73,7 +73,7 @@ class StartUp:
         No GUI items as the GUI is not built yet.
         """
 
-        # PSE.LM.addPropertyChangeListener(Listeners.PatternScriptsWindowListener())
+        # PSE.LM.addPropertyChangeListener(Listeners.ListenToThePSWindow())
         
         return
         
