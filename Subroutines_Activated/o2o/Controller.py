@@ -62,7 +62,7 @@ class StartUp:
 
     def startUpTasks(self):
 
-        PSE.LM.addPropertyChangeListener(Listeners.o2oSubroutine())
+        PSE.LM.addPropertyChangeListener(Listeners.PatternScriptsWindowListener())
         
         return
 

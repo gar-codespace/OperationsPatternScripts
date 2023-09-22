@@ -129,6 +129,11 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         PSE.getPsButton().setEnabled(False)
 
+
+        # for listener in PSE.LM.getPropertyChangeListeners():
+        #     print(listener)
+
+
         return
 
     def handle(self):

@@ -65,7 +65,7 @@ class StartUp:
 
     def startUpTasks(self):
             
-        # PSE.LM.addPropertyChangeListener(Listeners.ThrowbackSubroutine())
+        # PSE.LM.addPropertyChangeListener(Listeners.PatternScriptsWindowListener())
         Model.createFolder()
         Model.validateCommits()
 

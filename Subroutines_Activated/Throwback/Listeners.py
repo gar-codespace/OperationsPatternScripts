@@ -12,8 +12,9 @@ SCRIPT_REV = 20230901
 _psLog = PSE.LOGGING.getLogger('OPS.TB.Listeners')
 
 
-class ThrowbackSubroutine(PSE.JAVA_BEANS.PropertyChangeListener):
+class PatternScriptsWindowListener(PSE.JAVA_BEANS.PropertyChangeListener):
     """
+    Listens for changes to the Pattern Scripts plugin window.
     """
 
     def __init__(self):
@@ -22,33 +23,16 @@ class ThrowbackSubroutine(PSE.JAVA_BEANS.PropertyChangeListener):
 
     def propertyChange(self, PROPERTY_CHANGE_EVENT):
     
-        if PROPERTY_CHANGE_EVENT.propertyName == 'windowOpened':
-
-            addSubroutineListeners()
-            Model.resetSubroutine()            
+        if PROPERTY_CHANGE_EVENT.propertyName == 'windowOpened':            
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'windowActivated':
-
-            Model.refreshSubroutine()
             
             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'windowClosing':
-
-            removeSubroutineListeners()
             
             _psLog.debug(PROPERTY_CHANGE_EVENT)
             
         return
-    
-
-def addSubroutineListeners():
-
-
-    return
-
-def removeSubroutineListeners():
-
-    return

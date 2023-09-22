@@ -12,7 +12,7 @@ SCRIPT_REV = 20230901
 _psLog = PSE.LOGGING.getLogger('OPS.PT.Listeners')
 
 
-class PatternsSubroutine(PSE.JAVA_BEANS.PropertyChangeListener):
+class PatternScriptsWindowListener(PSE.JAVA_BEANS.PropertyChangeListener):
     """
     """
 
@@ -21,11 +21,6 @@ class PatternsSubroutine(PSE.JAVA_BEANS.PropertyChangeListener):
         pass
 
     def propertyChange(self, PROPERTY_CHANGE_EVENT):
-        if PROPERTY_CHANGE_EVENT.propertyName == 'windowClosing':
-            
-            removeSubroutineListeners()
-            
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
     
         if PROPERTY_CHANGE_EVENT.propertyName == 'windowOpened':
 
@@ -40,6 +35,12 @@ class PatternsSubroutine(PSE.JAVA_BEANS.PropertyChangeListener):
             
             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
+        if PROPERTY_CHANGE_EVENT.propertyName == 'windowClosing':
+            
+            removeSubroutineListeners()
+            
+            _psLog.debug(PROPERTY_CHANGE_EVENT)
+            
         return
 
 def addSubroutineListeners():
@@ -92,8 +93,7 @@ def addDivisionsListener():
 
     for division in PSE.DM.getList():
         division.addPropertyChangeListener(PatternsPropertyChange())
-
-    _psLog.debug('Add division name change listener')
+        _psLog.debug('Patterns.Listeners.addDivisionsListener: ' + division.getName())
 
     return
 
@@ -101,20 +101,19 @@ def addLocationsListener():
 
     for location in PSE.LM.getList():
         location.addPropertyChangeListener(PatternsPropertyChange())
-        _psLog.debug('Add location name change listener')
-
-    _psLog.debug('Patterns.Listeners.addLocationsListener')
+        _psLog.debug('Patterns.Listeners.addLocationsListener: ' + location.getName())
 
     return
 
 def removeDivisionsTableListener():
 
     for listener in PSE.DM.getPropertyChangeListeners():
-        if isinstance(listener, PSE.JAVA_BEANS.PropertyChangeListener) and 'Patterns' in listener.toString():
+        if isinstance(listener, PSE.JAVA_BEANS.PropertyChangeListener) and 'PatternsPropertyChange' in listener.toString():
             PSE.DM.removePropertyChangeListener(listener)
 
-            print('Patterns.Listeners.removeDivisionsTableListener')
-            _psLog.debug('Patterns.Listeners.removeSubroutineListeners')
+            _psLog.debug('Patterns.Listeners.removeDivisionsTableListener')
+
+    print('Patterns.Listeners.removeDivisionsTableListener')
 
     return
 
@@ -122,11 +121,11 @@ def removeDivisionsListener():
 
     for division in PSE.DM.getList():
         for listener in division.getPropertyChangeListeners():
-            if isinstance(listener, PSE.JAVA_BEANS.PropertyChangeListener) and 'Patterns' in listener.toString():
+            if isinstance(listener, PSE.JAVA_BEANS.PropertyChangeListener) and 'PatternsPropertyChange' in listener.toString():
                 division.removePropertyChangeListener(listener)
+                _psLog.debug('Patterns.Listeners.removeDivisionsListener: ' + division.getName())
 
     print('Patterns.Listeners.removeDivisionsListener')
-    _psLog.debug('Patterns.Listeners.removeDivisionsListener')
 
     return
 
@@ -136,11 +135,12 @@ def removeLocationsTableListener():
     """
 
     for listener in PSE.LM.getPropertyChangeListeners():
-        if isinstance(listener, PSE.JAVA_BEANS.PropertyChangeListener) and 'Patterns' in listener.toString():
+        if isinstance(listener, PSE.JAVA_BEANS.PropertyChangeListener) and 'PatternsPropertyChange' in listener.toString():
             PSE.LM.removePropertyChangeListener(listener)
 
-            print('Patterns.Listeners.removeLocationsTableListener')
             _psLog.debug('Patterns.Listeners.removeLocationsTableListener')
+
+    print('Patterns.Listeners.removeLocationsTableListener')
 
     return
 
@@ -148,11 +148,12 @@ def removeLocationsListener():
 
     for location in PSE.LM.getList():
         for listener in location.getPropertyChangeListeners():
-            if isinstance(listener, PSE.JAVA_BEANS.PropertyChangeListener) and 'Patterns' in listener.toString():
+            if isinstance(listener, PSE.JAVA_BEANS.PropertyChangeListener) and 'PatternsPropertyChange' in listener.toString():
                 location.removePropertyChangeListener(listener)
 
+                _psLog.debug('Patterns.Listeners.removeLocationsListener: ' + location.getName())
+
     print('Patterns.Listeners.removeLocationsListener')
-    _psLog.debug('Patterns.Listeners.removeLocationsListener')
 
     return
 

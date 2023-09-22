@@ -151,7 +151,25 @@ def logIndex():
 """GUI Methods"""
 
 
-def removePsFrameListener():
+def removePSPropertyListeners():
+    """
+    Every subroutine attaches a property change listener to PSE.LM to monitor the PS window status.
+    This method removes all of them.
+    """
+
+    for listener in LM.getPropertyChangeListeners():
+        if isinstance(listener, JAVA_BEANS.PropertyChangeListener) and 'PatternScriptsWindowListener' in listener.toString():
+            LM.removePropertyChangeListener(listener)
+
+            print('PSE.removePSWindowListener')
+            _psLog.debug('PSE.removePSWindowListener')
+
+    return
+
+def removePSWindowListeners():
+    """
+    Removea all window listener types from the Pattern Scripts window.
+    """
 
     frameName = getBundleItem('Pattern Scripts')
     frame = JMRI.util.JmriJFrame.getFrame(frameName)
@@ -468,7 +486,7 @@ def makeCompositRailroadName(layoutDetails):
     Uses configFile['Main Script']['LD'] data to make a composite name for use by OPS subroutines.
     """
 
-    _psLog.debug('makeCompositRailroadName')
+    _psLog.debug('PSE.makeCompositRailroadName')
 
     a = ''
     if layoutDetails['OR']:

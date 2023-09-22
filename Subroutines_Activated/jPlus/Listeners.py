@@ -12,8 +12,9 @@ SCRIPT_REV = 20230901
 _psLog = PSE.LOGGING.getLogger('OPS.JP.Listeners')
 
 
-class jPlusSubroutine(PSE.JAVA_BEANS.PropertyChangeListener):
+class PatternScriptsWindowListener(PSE.JAVA_BEANS.PropertyChangeListener):
     """
+    Listens for changes to the Pattern Scripts plugin window.
     """
 
     def __init__(self):
@@ -56,10 +57,10 @@ def addSubroutineListeners():
 def removeSubroutineListeners():
 
     for listener in PSE.LM.getPropertyChangeListeners():
-        if isinstance(listener, PSE.JAVA_BEANS.PropertyChangeListener) and 'jPlus' in listener.toString():
+        if isinstance(listener, PSE.JAVA_BEANS.PropertyChangeListener) and 'jPlusPropertyChange' in listener.toString():
             PSE.LM.removePropertyChangeListener(listener)
-            print('jPlus.Listeners.removeSubroutnieListeners')
 
+            print('jPlus.Listeners.removeSubroutnieListeners')
             _psLog.debug('jPlus.Listeners.removeSubroutineListeners')
 
     return

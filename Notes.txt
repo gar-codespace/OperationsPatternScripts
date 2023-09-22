@@ -3,6 +3,7 @@ Todo:
   Closing the PS window should also close the schedule window.
   Change Help/Operations Folder to Help/<profile> Folder
   Add Help OPS Folder
+  Add PSE. to all the PSE log entries.
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.
