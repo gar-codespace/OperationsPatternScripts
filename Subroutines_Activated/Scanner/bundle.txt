@@ -1,0 +1,9 @@
+Scanner
+Scanner Subroutine
+Generate QR codes
+Generate
+Apply scanner data
+Division:
+Location:
+Scanner:
+Apply

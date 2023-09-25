@@ -8,7 +8,6 @@ No restrictions on use, but I would appreciate the reference.
 import jmri
 import sys
 from os import path as OS_PATH
-# from importlib import import_module as IM
 
 SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
 SCRIPT_REV = 20230901
@@ -25,10 +24,8 @@ PSE.SUBROUTINE_DIR = 'Subroutines_Activated'
 PSE.JMRI = jmri
 PSE.SYS = sys
 PSE.OS_PATH = OS_PATH
-# PSE.IM = IM
 
 from opsEntities import GUI
-from opsEntities import GUI2
 from opsEntities import Listeners
 from opsBundle import Bundle
 
@@ -128,11 +125,6 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
         makePsPlugin()
 
         PSE.getPsButton().setEnabled(False)
-
-
-        # for listener in PSE.LM.getPropertyChangeListeners():
-        #     print(listener)
-
 
         return
 
