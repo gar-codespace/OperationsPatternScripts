@@ -24,6 +24,9 @@ def initializeSubroutine():
     If any widgets need to be set to a value saved in the config file when the Pattern Scripts window is opened,
     set those widgets here.
     """
+
+    updateScannerList()
+    scannerComboUpdater()
     
     return
 
@@ -41,34 +44,144 @@ def refreshSubroutine():
     update any widgets in this subroutine that can't otherwise be updated by a listener.
     """
 
+    updateScannerList()
+    # scannerComboUpdater()
     return
 
-def divComboSelected(EVENT):
+def validateSequenceData():
     """
+    Checks that rsSequenceData.json exists.
+    If not then create one.
     """
-
-    _psLog.debug('divComboSelected')
-
-    itemSelected = EVENT.getSource().getSelectedItem()
-    if not itemSelected:
-        itemSelected = None
+    
+    sequenceFilePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'rsSequenceData.json')
+    if not PSE.JAVA_IO.File(sequenceFilePath).isFile():
+        initialSequenceHash = getInitialScannerHash()
+        PSE.genericWriteReport(sequenceFilePath, PSE.dumpJson(initialSequenceHash))
 
     return
 
-def locComboUpdater():
+def getInitialScannerHash():
+
+    scannerHash = {}
+    locoHash = {}
+    carHash = {}
+
+    for loco in PSE.EM.getList():
+        id = loco.getRoadName() + ' ' + loco.getNumber()
+        locoHash.update({id:8000})
+
+    for car in PSE.CM.getList():
+        id =  car.getRoadName() + ' ' + car.getNumber()
+        carHash.update({id:8000})
+                        
+    scannerHash.update({'locos':locoHash})
+    scannerHash.update({'cars':carHash})
+
+    return scannerHash
+
+def updateScannerList():
+    """
+    Update the contents of the scanner combo box.
+    """
+
+    configFile = PSE.readConfigFile()
+    scannerPath = configFile['Scanner']['US']['SP']
+    dirContents = PSE.JAVA_IO.File(scannerPath).list()
+
+    pulldownList = []
+    for file in dirContents:
+        pulldownList.append(file.split('.')[0])
+
+    configFile['Scanner'].update({'PL':pulldownList})
+    PSE.writeConfigFile(configFile)
+
+    return
+
+def scannerComboUpdater():
     """
     Updates the contents of the locations combo box when the listerers detect a change.
     """
 
-    _psLog.debug('locComboUpdater')
+    _psLog.debug('scannerComboUpdater')
+    configFile = PSE.readConfigFile()
+    pulldownList = configFile['Scanner']['PL']
 
     frameName = PSE.getBundleItem('Pattern Scripts')
     frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
 
-    component = PSE.getComponentByName(frame, 'sLocations')
+    component = PSE.getComponentByName(frame, 'sScanner')
     component.removeAllItems()
-    component.addItem(None)
-    for locationName in PSE.getLocationNamesByDivision():
-        component.addItem(locationName)
+    for scanName in pulldownList:
+        component.addItem(scanName)
 
-    return component
+    return
+
+def getScannerReport(EVENT):
+    """
+    Writes the name of the selected scanner report to the config file.
+    """
+
+    configFile = PSE.readConfigFile()
+    scannerPath = configFile['Scanner']['US']['SP']
+
+    frameName = PSE.getBundleItem('Pattern Scripts')
+    frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
+    component = PSE.getComponentByName(frame, 'sScanner')
+
+    itemSelected = component.getSelectedItem()
+    itemSelected = itemSelected + '.txt'
+    scannerReportPath = PSE.OS_PATH.join(scannerPath, itemSelected)
+
+    configFile['Scanner'].update({'RP':scannerReportPath})
+    PSE.writeConfigFile(configFile)
+
+    return
+
+def applyScanReport():
+    """
+    Assign a sequence number to the RS in the selected scan report.
+    """
+
+    _psLog.debug('applyScanReport')
+
+    sequenceFilePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'rsSequenceData.json')
+    sequenceFile = PSE.loadJson(PSE.genericReadReport(sequenceFilePath))
+
+    locoSequence = 8001
+    carSequence = 8001
+
+    configFile = PSE.readConfigFile()
+    reportPath = configFile['Scanner']['RP']
+
+    scannerReport = PSE.genericReadReport(reportPath)
+    splitReport = scannerReport.split('\n')
+    splitReport.pop(-1) # Pop off the empty line at the end.
+    header = splitReport.pop(0).split(',')
+
+    scannerName = header[0]
+    direction = header[1].upper()[0:1]
+    if direction == 'W':
+        splitReport.reverse()
+
+    print(direction)
+
+
+
+    for item in splitReport:
+        rs = item.split(',')
+        if rs[1].startswith('ET'):
+            continue
+        elif rs[1].startswith('E'):
+            sequenceFile['locos'].update({rs[0]:locoSequence})
+            locoSequence += 1
+        else:
+            sequenceFile['cars'].update({rs[0]:carSequence})
+            carSequence += 1
+
+    PSE.genericWriteReport(sequenceFilePath, PSE.dumpJson(sequenceFile))
+
+    _psLog.debug('applyScanReport for scanner: ' + scannerName)
+    print('applyScanReport for scanner: ' + scannerName)
+
+    return

@@ -65,6 +65,10 @@ def moveRollingStock(switchList):
     """
 
     configFile = PSE.readConfigFile()
+    isSequence, sequenceHash = PSE.getSequenceHash()
+
+    carSequence = 7001
+    locoSequence = 7001
 
     ignoreTrackLength = configFile['Patterns']['PI']
     applySchedule = configFile['Patterns']['AS']
@@ -92,6 +96,10 @@ def moveRollingStock(switchList):
             setResult = rollingStock.setLocation(toLocation, toTrack, True)
 
         if setResult == 'okay':
+            if sequenceHash:
+                rsID = rollingStock.getRoadName() + ' ' + rollingStock.getNumber()
+                sequenceHash['locos'].update({rsID:locoSequence})
+                locoSequence += 1
             setCount += 1
         
     cars = switchList['tracks'][0]['cars']
@@ -116,9 +124,57 @@ def moveRollingStock(switchList):
             rsUpdate(toTrack, rollingStock)
             if applySchedule:
                 scheduleUpdate(toTrack, rollingStock)
+            if isSequence:
+                rsID = rollingStock.getRoadName() + ' ' + rollingStock.getNumber()
+                sequenceHash['cars'].update({rsID:carSequence})
+                carSequence += 1
+
             setCount += 1
 
+    if isSequence:
+        sequenceFilePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'rsSequenceData.json')
+        PSE.genericWriteReport(sequenceFilePath, PSE.dumpJson(sequenceHash))
+        resequenceTracks()
+
     _psLog.info('Rolling stock count: ' + str(setCount) + ', processed.')
+
+    return
+
+def resequenceTracks():
+    
+    carHash = {}
+    _, sequenceHash = PSE.getSequenceHash()
+    allCars = PSE.CM.getList()
+    for car in allCars:
+        carID = car.getRoadName() + ' ' + car.getNumber()
+        carTrack = car.getTrackName()
+        try:
+            carSequence = sequenceHash['cars'][carID]
+        except:
+            carSequence = 8888
+        carHash[carID] = (carTrack, carSequence)
+
+    allTracksAtLoc = ModelEntities.getTrackNamesByLocation(None)
+    for track in allTracksAtLoc:
+        trackHash = []
+        for id, data in carHash.items():
+            if track == data[0]:
+                trackHash.append((id, data[1]))
+
+        trackHash.sort(key=lambda row: row[1])
+        sequence = 8001
+        for tuple in trackHash:
+            sequenceHash['cars'].update({tuple[0]:sequence})
+            sequence += 1
+
+
+
+
+
+
+    sequenceFilePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'rsSequenceData.json')
+    PSE.genericWriteReport(sequenceFilePath, PSE.dumpJson(sequenceHash))
+
 
     return
 

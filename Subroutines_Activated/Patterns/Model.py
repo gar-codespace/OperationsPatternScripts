@@ -66,6 +66,7 @@ def locComboUpdater():
 
     _psLog.debug('locComboUpdater')
     configFile = PSE.readConfigFile()
+    divisionName = configFile['Patterns']['PD']
 
     frameName = PSE.getBundleItem('Pattern Scripts')
     frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
@@ -73,7 +74,7 @@ def locComboUpdater():
     component = PSE.getComponentByName(frame, 'jLocations')
     component.removeAllItems()
     component.addItem(None)
-    for locationName in PSE.getLocationNamesByDivision():
+    for locationName in PSE.getLocationNamesByDivision(divisionName):
         component.addItem(locationName)
 
     configFile['Patterns'].update({'PL':None})

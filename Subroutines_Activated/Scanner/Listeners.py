@@ -26,8 +26,8 @@ class ListenToThePSWindow(PSE.JAVA_BEANS.PropertyChangeListener):
     
         if PROPERTY_CHANGE_EVENT.propertyName == 'windowOpened':
 
-            addSubroutineListeners()
-            Model.resetSubroutine()
+            # addSubroutineListeners()
+            Model.initializeSubroutine()
             
             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
@@ -39,7 +39,7 @@ class ListenToThePSWindow(PSE.JAVA_BEANS.PropertyChangeListener):
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'windowClosing':
             
-            removeSubroutineListeners()
+            # removeSubroutineListeners()
             
             _psLog.debug(PROPERTY_CHANGE_EVENT)
             
@@ -63,71 +63,15 @@ def removeSubroutineListeners():
     When the Pattern Scripts window is closed, turn off the listeners for this subroutine.
     Check the other subroutines for ideas on how to implement this.
     """
-            
-    # print('Scanner.Listeners.removeSubroutineListeners')
+
     # _psLog.debug('Scanner.Listeners.removeSubroutineListeners')
 
     return
 
-class TemplatePropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
-    """
-    A property change listener that will trigger an event in this subroutine
-    when something outside this subroutine happens.
-    """
-
-    def __init__(self):
-
-        pass
-
-    def propertyChange(self, PROPERTY_CHANGE_EVENT):
-
-        if PROPERTY_CHANGE_EVENT.propertyName == 'whatever you are listening for':
-            # Model.resetSubroutine()
-
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
-
-        if PROPERTY_CHANGE_EVENT.propertyName == 'add as many as you need':
-
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
-
-        return
-    
-class DivisionAction(PSE.JAVA_AWT.event.ActionListener):
-    """
-    Action taken when an item in the Divisions combo box is selected.
-    """
-
-    def __init__(self):
-
-        pass
-
-    def actionPerformed(self, EVENT):
-
-        Model.divComboSelected(EVENT)
-        Model.locComboUpdater()
-
-        return
-
-
-class LocationAction(PSE.JAVA_AWT.event.ActionListener):
-    """
-    Action taken when an item in the Locations combo box is selected.
-    """
-
-    def __init__(self):
-
-        pass
-
-    def actionPerformed(self, EVENT):
-
-        # Model.locComboSelected(EVENT)
-        # Model.makeTrackRows()
-
-        return
 
 class ScannerAction(PSE.JAVA_AWT.event.ActionListener):
     """
-    Action taken when an item in the Locations combo box is selected.
+    Action taken when an item in the Scanners combo box is selected.
     """
 
     def __init__(self):
@@ -136,7 +80,6 @@ class ScannerAction(PSE.JAVA_AWT.event.ActionListener):
 
     def actionPerformed(self, EVENT):
 
-        # Model.locComboSelected(EVENT)
-        # Model.makeTrackRows()
+        Model.getScannerReport(EVENT)
 
         return

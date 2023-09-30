@@ -69,7 +69,8 @@ class StartUp:
         No GUI items as the GUI is not built yet.
         """
 
-        # PSE.LM.addPropertyChangeListener(Listeners.ListenToThePSWindow())
+        PSE.LM.addPropertyChangeListener(Listeners.ListenToThePSWindow())
+        Model.validateSequenceData()
         
         return
         
@@ -77,25 +78,32 @@ class StartUp:
         """
         """
 
-        self.widgets[0].addActionListener(Listeners.DivisionAction())
-        self.widgets[1].addActionListener(Listeners.LocationAction())
-        self.widgets[2].addActionListener(Listeners.ScannerAction())
-        self.widgets[3].actionPerformed = self.scButton
-        self.widgets[4].actionPerformed = self.qrButton
-
-        return
-
-    def scButton(self, EVENT):
-        """
-        """
-
-        _psLog.debug(EVENT)
+        self.widgets[0].actionPerformed = self.qrButton
+        self.widgets[1].addActionListener(Listeners.ScannerAction())
+        self.widgets[2].actionPerformed = self.scButton
 
         return
 
     def qrButton(self, EVENT):
         """
+        The make QR codes button.
         """
+
+        _psLog.debug(EVENT)
+
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+
+        return
+
+    def scButton(self, EVENT):
+        """
+        The Apply button.
+        """
+
+        # Model.checkScanReport()
+        Model.applyScanReport()
+
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         _psLog.debug(EVENT)
 

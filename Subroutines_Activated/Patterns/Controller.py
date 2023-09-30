@@ -76,8 +76,8 @@ class StartUp:
         Puts actions on all the widgets that need actions.
         """
 
-        self.widgets[0].addActionListener(Listeners.DivisionAction()) # Divisions
-        self.widgets[1].addActionListener(Listeners.LocationAction()) # Locations
+        self.widgets[0].addActionListener(Listeners.DivisionAction())
+        self.widgets[1].addActionListener(Listeners.LocationAction())
         self.widgets[2].actionPerformed = self.yardTrackOnlyCheckBox
         self.widgets[4].actionPerformed = self.patternReportButton
         self.widgets[5].actionPerformed = self.setRsButton

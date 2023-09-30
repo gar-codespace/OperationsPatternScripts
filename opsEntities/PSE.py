@@ -424,6 +424,19 @@ def locationNameLookup(locationName):
 
     return locationName
 
+def getSequenceHash():
+
+    try:
+        sequenceFilePath = OS_PATH.join(PROFILE_PATH, 'operations', 'rsSequenceData.json')
+        isSequenceHash = True
+        sequenceHash = loadJson(genericReadReport(sequenceFilePath))
+    except:
+        isSequenceHash = False
+        sequenceHash = None
+        pass
+
+    return isSequenceHash, sequenceHash
+
 def getAllDivisionNames():
     """
     JMRI sorts the list.
@@ -435,13 +448,13 @@ def getAllDivisionNames():
 
     return divisionNames
 
-def getLocationNamesByDivision():
+def getLocationNamesByDivision(divisionName):
     """
     Returned list is sorted.
     """
 
     locationsByDivision = []
-    divisionName = readConfigFile()['Patterns']['PD']
+    # divisionName = readConfigFile()['Patterns']['PD']
 
     if divisionName == None:
         for location in LM.getList():

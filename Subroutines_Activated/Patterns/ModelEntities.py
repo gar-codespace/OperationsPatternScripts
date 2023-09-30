@@ -40,6 +40,8 @@ def makeTextReportTracks(trackList, trackTotals):
 
     reportSwitchList = ''
     reportTally = [] # running total for all tracks
+    isSequenceHash, sequenceHash = PSE.getSequenceHash()
+
     for track in trackList:
         lengthOfLocos = 0
         lengthOfCars = 0
@@ -50,11 +52,31 @@ def makeTextReportTracks(trackList, trackTotals):
 
         for loco in track['locos']:
             lengthOfLocos += int(loco[PSE.SB.handleGetMessage('Length')]) + 4
-            reportSwitchList += loco['setTo'] + loopThroughRs('loco', loco) + '\n'
+
+            seqStandIn = ''
+            if loco['setTo'] == '[  ] ' and isSequenceHash:
+                seqStandIn = sequenceHash['locos'][loco['Id']]
+                seqStandIn = seqStandIn - 8000
+                seqStandIn = str(seqStandIn).rjust(3, '0') + '  '
+            else:
+                seqStandIn = loco['setTo']
+
+            reportSwitchList += seqStandIn + loopThroughRs('loco', loco) + '\n'
 
         for car in track['cars']:
             lengthOfCars += int(car[PSE.SB.handleGetMessage('Length')]) + 4
-            reportSwitchList += car['setTo'] + loopThroughRs('car', car) + '\n'
+
+            seqStandIn = ''
+            if car['setTo'] == '[  ] ' and isSequenceHash:
+                seqStandIn = sequenceHash['cars'][car['Id']]
+                # print(sequenceHash['cars'][car['Id']])
+                seqStandIn = seqStandIn - 8000
+                # print(seqStandIn)
+                seqStandIn = str(seqStandIn).rjust(3, '0') + '  '
+            else:
+                seqStandIn = car['setTo']
+
+            reportSwitchList += seqStandIn + loopThroughRs('car', car) + '\n'
 
             trackTally.append(car[PSE.SB.handleGetMessage('Final_Dest')])
             reportTally.append(car[PSE.SB.handleGetMessage('Final_Dest')])
@@ -219,6 +241,7 @@ class RollingStockParser:
     def __init__(self):
 
         self.configFile = PSE.readConfigFile()
+        self.isSequence, self.sequenceHash = PSE.getSequenceHash()
 
         self.locationName = self.configFile['Patterns']['PL']
         self.location = PSE.LM.getLocationByName(self.locationName)
@@ -327,6 +350,7 @@ class RollingStockParser:
         except:
             rsDetailDict[PSE.SB.handleGetMessage('Owner')] = rs.getOwnerName()
     # Common items for all OPS RS
+        rsDetailDict['Id'] = rs.getRoadName() + ' ' + rs.getNumber()
         rsDetailDict['setTo'] = '[  ] '
         rsDetailDict['puso'] = ' '
         rsDetailDict[' '] = ' ' # Catches KeyError - empty box added to getLocalSwitchListMessageFormat
@@ -350,10 +374,11 @@ class RollingStockParser:
             locoDetailDict[PSE.SB.handleGetMessage('Consist')] = locoObject.getConsist().getName()
         except:
             locoDetailDict[PSE.SB.handleGetMessage('Consist')] = PSE.getBundleItem('Single')
-    # OPS car attributes
+    # OPS loco attributes
         locoDetailDict['isCaboose'] = False
         locoDetailDict['isPassenger'] = False
         locoDetailDict['isEngine'] = True
+        locoDetailDict['sequence'] = 8000
 
         return locoDetailDict
 
@@ -389,22 +414,39 @@ class RollingStockParser:
         carDetailDict['isCaboose'] = carObject.isCaboose()
         carDetailDict['isPassenger'] = carObject.isPassenger()
         carDetailDict['isEngine'] = False
+        if self.isSequence:
+            carDetailDict['sequence'] = self.getSequence('cars', carObject)
+        else:
+            carDetailDict['sequence'] = 8000
+
 
         return carDetailDict
+
+    def getSequence(self, rs, object):
+        """
+        rs is either cars or locos to choose the subset of the hash.
+        """
+
+        dataHash = self.sequenceHash[rs]
+        rsID = object.getRoadName() + ' ' + object.getNumber()
+
+        return dataHash[rsID]
 
     def sortLocoList(self):
         """
         Try/Except protects against bad edit of config file
         Sort order of PSE.readConfigFile('US')['SL'] is top down
         """
-
-        sortLocos = self.configFile['Patterns']['US']['SL']
-        for sortKey in sortLocos:
-            try:
-                translatedkey = (PSE.SB.handleGetMessage(sortKey))
-                self.locoDetails.sort(key=lambda row: row[translatedkey])
-            except:
-                print('No engines or list not sorted')
+        if self.isSequence:
+            self.locoDetails.sort(key=lambda row: row['sequence'])
+        else:
+            sortLocos = self.configFile['Patterns']['US']['SL']
+            for sortKey in sortLocos:
+                try:
+                    translatedkey = (PSE.SB.handleGetMessage(sortKey))
+                    self.locoDetails.sort(key=lambda row: row[translatedkey])
+                except:
+                    print('No engines or list not sorted')
 
         return
 
@@ -414,12 +456,15 @@ class RollingStockParser:
         Sort order of PSE.readConfigFile('Patterns')['US']['SC'] is top down
         """
 
-        sortCars = self.configFile['Patterns']['US']['SC']
-        for sortKey in sortCars:
-            try:
-                translatedkey = (PSE.SB.handleGetMessage(sortKey))
-                self.carDetails.sort(key=lambda row: row[translatedkey])
-            except:
-                print('No cars or list not sorted')
+        if self.isSequence:
+            self.carDetails.sort(key=lambda row: row['sequence'])
+        else:
+            sortCars = self.configFile['Patterns']['US']['SC']
+            for sortKey in sortCars:
+                try:
+                    translatedkey = (PSE.SB.handleGetMessage(sortKey))
+                    self.carDetails.sort(key=lambda row: row[translatedkey])
+                except:
+                    print('No cars or list not sorted')
 
         return

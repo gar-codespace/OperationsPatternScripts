@@ -18,23 +18,17 @@ class subroutineGui:
         The *.setName value is the name of the action for the widget.
         """
 
-    # The Divisions combo box content is managed by the Controller
-        self.divisionComboBox = PSE.JAVX_SWING.JComboBox()
-        self.divisionComboBox.setName('sDivisions')
-
-    # The Locations combo box content is managed by the Controller
-        self.locationComboBox = PSE.JAVX_SWING.JComboBox()
-        self.locationComboBox.setName('sLocations')
+        self.qrButton = PSE.JAVX_SWING.JButton()
+        self.qrButton.setText(PSE.getBundleItem('Generate'))
+        self.qrButton.setName('self.qrButton')
 
     # The Scanner combo box content is managed by the Controller
         self.scannerComboBox = PSE.JAVX_SWING.JComboBox()
         self.scannerComboBox.setName('sScanner')
 
-        self.qrButton = PSE.JAVX_SWING.JButton()
-        self.qrButton.setText(PSE.getBundleItem('Generate'))
-        self.qrButton.setName('self.qrButton')
-
-
+        self.scButton = PSE.JAVX_SWING.JButton()
+        self.scButton.setText(PSE.getBundleItem('Apply'))
+        self.scButton.setName('scButton')
 
         return
 
@@ -68,22 +62,8 @@ class subroutineGui:
         scFrame.setName('scFrame')
         scFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Apply scanner data'))
 
-        divisionLabel = PSE.JAVX_SWING.JLabel(PSE.getBundleItem('Division:'))
-        locationLabel = PSE.JAVX_SWING.JLabel(PSE.getBundleItem('Location:'))
         fileLabel = PSE.JAVX_SWING.JLabel(PSE.getBundleItem('Scanner:'))
         
-        self.scButton = PSE.JAVX_SWING.JButton()
-        self.scButton.setText(PSE.getBundleItem('Apply'))
-        self.scButton.setName('scButton')     
-
-        scFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
-        scFrame.add(divisionLabel)
-        scFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
-        scFrame.add(self.divisionComboBox)
-        scFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
-        scFrame.add(locationLabel)
-        scFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
-        scFrame.add(self.locationComboBox)
         scFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
         scFrame.add(fileLabel)
         scFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
@@ -109,10 +89,8 @@ class subroutineGui:
 
         widgets = []
 
-        widgets.append(self.divisionComboBox)
-        widgets.append(self.locationComboBox)
-        widgets.append(self.scannerComboBox)
         widgets.append(self.qrButton)
+        widgets.append(self.scannerComboBox)
         widgets.append(self.scButton)
 
         return widgets
