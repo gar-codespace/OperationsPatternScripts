@@ -26,7 +26,7 @@ class ListenToThePSWindow(PSE.JAVA_BEANS.PropertyChangeListener):
     
         if PROPERTY_CHANGE_EVENT.propertyName == 'windowOpened':
 
-            # addSubroutineListeners()
+            addSubroutineListeners()
             Model.initializeSubroutine()
             
             _psLog.debug(PROPERTY_CHANGE_EVENT)
@@ -53,6 +53,7 @@ def addSubroutineListeners():
     Check the other subroutines for ideas on how to implement this.
     """
 
+    addTrainsListener()
     # print('Scanner.Listeners.addSubroutineListeners')
     # _psLog.debug('Scanner.Listeners.addSubroutineListeners')
 
@@ -83,3 +84,41 @@ class ScannerAction(PSE.JAVA_AWT.event.ActionListener):
         Model.getScannerReport(EVENT)
 
         return
+
+def addTrainsListener():
+    """
+    Adds a listener to each train.
+    """
+
+    for train in PSE.TM.getTrainsByIdList():
+        train.addPropertyChangeListener(ScannerPropertyChange())
+        _psLog.debug('Scanner.Listeners.addTrainsListener: ' + train.getName())
+
+    return
+
+
+class ScannerPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
+    """
+    Events that are triggered with changes to JMRI Trains and OPS/o2o switch lists.
+    """
+
+    def __init__(self):
+
+        pass
+
+    def propertyChange(self, PROPERTY_CHANGE_EVENT):
+
+        sourceName = str(PROPERTY_CHANGE_EVENT.source)
+        propertyName = PROPERTY_CHANGE_EVENT.getPropertyName()
+        logMessage = 'Scanner.Listeners.ScannerPropertyChange- ' + sourceName + ' ' + propertyName
+
+
+        if PROPERTY_CHANGE_EVENT.propertyName == 'TrainBuilt' and PROPERTY_CHANGE_EVENT.newValue == True:
+            """
+            Called when a train is built.
+            """
+
+            train = PROPERTY_CHANGE_EVENT.getSource()
+            Model.modifyTrainManifest(train)
+
+            _psLog.debug(logMessage)

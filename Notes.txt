@@ -1,6 +1,9 @@
 Todo:
   How to publish DeepL?
   Refactor PSE.openOutputFrame(), what's it doing?
+  PSE.validTime() needs to add 'Valid' to bundle
+  Add a config file item to overwrite JMRI json, manifest, switch list with sequenced car lists from Scanner.
+  Add local moves to Manifest.textManifest()
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.

@@ -6,6 +6,7 @@ Scanner subroutine.
 """
 
 from opsEntities import PSE
+from opsEntities import Manifest
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901
@@ -58,6 +59,65 @@ def validateSequenceData():
     if not PSE.JAVA_IO.File(sequenceFilePath).isFile():
         initialSequenceHash = getInitialScannerHash()
         PSE.genericWriteReport(sequenceFilePath, PSE.dumpJson(initialSequenceHash))
+
+    return
+
+def modifyTrainManifest(train):
+    """
+    Mini controller.
+    """
+    
+    Manifest.jsonManifest(train)
+
+    textManifest = Manifest.textManifest(train)
+    manifestName = 'train (' + train.toString() + ').txt'
+    manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', manifestName)
+    PSE.genericWriteReport(manifestPath, textManifest)
+
+    return
+
+def addSequenceToManifest(train):
+    """
+    Adds an attribute called 'sequence' and it's value to an existing json manifest.
+    """
+
+    isSequenceHash, sequenceHash = PSE.getSequenceHash()
+
+    trainName = 'train-' + train + '.json'
+    manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', trainName)
+    manifest = PSE.loadJson(PSE.genericReadReport(manifestPath))
+
+    for location in manifest['locations']:
+        for car in location['cars']['add']:
+            carID = car['road'] + ' ' + car['number']
+            sequence = sequenceHash['cars'][carID]
+            car['sequence'] = sequence
+        for car in location['cars']['remove']:
+            carID = car['road'] + ' ' + car['number']
+            sequence = sequenceHash['cars'][carID]
+            car['sequence'] = sequence
+
+    PSE.genericWriteReport(manifestPath, PSE.dumpJson(manifest))
+
+    return
+
+def resequenceManifest(train):
+    """
+    Resequences an existing json manifest by its sequence value.
+    """
+
+    trainName = 'train-' + train + '.json'
+    manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', trainName)
+    manifest = PSE.loadJson(PSE.genericReadReport(manifestPath))
+
+    for location in manifest['locations']:
+        cars = location['cars']['add']
+        cars.sort(key=lambda row: row['sequence'])
+
+        cars = location['cars']['remove']
+        cars.sort(key=lambda row: row['sequence'])
+
+    PSE.genericWriteReport(manifestPath, PSE.dumpJson(manifest))
 
     return
 

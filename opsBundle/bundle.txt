@@ -11,3 +11,4 @@ View Log File
 Window Help...
 Show
 Hide
+Valid
