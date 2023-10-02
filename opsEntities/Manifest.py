@@ -105,7 +105,7 @@ def textManifest(train):
 
 # Body
     routeList = train.getRoute().getLocationsBySequenceList()
-    for rl in routeList:
+    for i, rl in enumerate(routeList, start=1):
         textManifest += TMT.getStringScheduledWork().format(rl.toString()) + '\n'
         for loco in locoSeq:
             # Pick up
@@ -113,6 +113,7 @@ def textManifest(train):
                 prefix = PSE.JMRI.jmrit.operations.setup.Setup.getPickupEnginePrefix()       
                 line = PSE.JMRI.jmrit.operations.trains.TrainCommon().pickupEngine(loco[0])
                 textManifest += prefix + line + '\n'
+        for loco in locoSeq:
             # Set out
             if loco[0].getRouteDestination().toString() == rl.toString():
                 prefix = PSE.JMRI.jmrit.operations.setup.Setup.getDropEnginePrefix()
@@ -120,21 +121,22 @@ def textManifest(train):
                 textManifest += prefix + line + '\n'
 
         for car in carSeq:
-            # Pick up
-            if car[0].getLocation().toString() == rl.toString():
+            # Pick up - The current car location = the current route location, and not the last route location
+            if car[0].getLocation().toString() == rl.toString() and i != len(routeList):
                 prefix = PSE.JMRI.jmrit.operations.setup.Setup.getPickupCarPrefix()       
                 line = PSE.JMRI.jmrit.operations.trains.TrainCommon().pickupCar(car[0], True, False)
                 textManifest += prefix + line + '\n'
-            # Set out
-            if car[0].getRouteDestination().toString() == rl.toString():
-                prefix = PSE.JMRI.jmrit.operations.setup.Setup.getDropCarPrefix()
-                line = PSE.JMRI.jmrit.operations.trains.TrainCommon().dropCar(car[0], True, False)
-                textManifest += prefix + line + '\n'
-            # Move
-            # if car[0].getRouteDestination().toString() == car[0].getLocation().toString() and car[0].getLocation().toString() == rl.toString():
+        for car in carSeq:
+            # Move - The cars route destination = the car's current location = the current route location
             if car[0].getRouteDestination().toString() == car[0].getLocation().toString() == rl.toString():
                 prefix = PSE.JMRI.jmrit.operations.setup.Setup.getLocalPrefix()       
                 line = PSE.JMRI.jmrit.operations.trains.TrainCommon().localMoveCar(car[0], True)
+                textManifest += prefix + line + '\n'
+        for car in carSeq:
+            # Set out - The cars route destination = the current roite location and not the first route location
+            if car[0].getRouteDestination().toString() == rl.toString() and i != 1:
+                prefix = PSE.JMRI.jmrit.operations.setup.Setup.getDropCarPrefix()
+                line = PSE.JMRI.jmrit.operations.trains.TrainCommon().dropCar(car[0], True, False)
                 textManifest += prefix + line + '\n'
 
         textManifest += TMT.getStringTrainDepartsCars().format(rl.toString(), rl.getTrainDirectionString(), train.getNumberCarsInTrain(rl), train.getTrainLength(rl), PSE.JMRI.jmrit.operations.setup.Setup.getLengthUnit(), train.getTrainWeight(rl)) + '\n'
