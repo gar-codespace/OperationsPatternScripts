@@ -32,6 +32,8 @@ def makeTextReportHeader(patternReport):
 
 def makeTextReportTracks(trackList, trackTotals):
     """
+    trackList is a list
+    trackTotals is a bool
     Makes the body for generic text reports
     Called by:
     View.ManageGui.trackPatternButton'
@@ -76,7 +78,7 @@ def makeTextReportTracks(trackList, trackTotals):
             else:
                 seqStandIn = car['setTo']
 
-            reportSwitchList += seqStandIn + loopThroughRs('car', car) + '\n'
+            reportSwitchList += seqStandIn + PSE.localMoveCar(car) + '\n'
 
             trackTally.append(car[PSE.SB.handleGetMessage('Final_Dest')])
             reportTally.append(car[PSE.SB.handleGetMessage('Final_Dest')])

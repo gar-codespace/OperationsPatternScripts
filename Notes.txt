@@ -4,6 +4,7 @@ Todo:
   PSE.validTime() needs to add 'Valid' to bundle
   Add a config file item to overwrite JMRI json, manifest, switch list with sequenced car lists from Scanner.
   Add local moves to Manifest.textManifest()
+  https://webserver.jmri.org/JavaDoc/doc/jmri/jmrit/operations/rollingstock/RollingStockAttribute.html#store(org.jdom2.Element,java.lang.String,java.lang.String)
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.

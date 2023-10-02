@@ -552,6 +552,40 @@ def makeCompositRailroadName(layoutDetails):
 """Formatting Methods"""
 
 
+def localMoveCar(car):
+    """
+    Creates a line containing the attrs in get * MessageFormat
+    The message format is in the locales language.
+    Called by:
+    makeTextReportTracks
+    """
+
+    reportWidth = REPORT_ITEM_WIDTH_MATRIX
+    rsRow = ''
+
+    messageFormat = JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
+    print(messageFormat)
+
+    for item in messageFormat:
+        if 'Tab' in item:
+            continue
+    # Special case handling for the hazardous flag
+        if item == SB.handleGetMessage('Hazardous') and car[item]:
+            labelName = item
+        elif item == SB.handleGetMessage('Hazardous') and not car[item]:
+            labelName = ' '
+        else:
+            labelName = car[item]
+
+        itemWidth = reportWidth[item]
+        rowItem = formatText(labelName, itemWidth)
+        rsRow += rowItem
+
+    return rsRow
+
+
+
+
 def validTime(epochTime=0):
     """
     Valid Time, get local time adjusted for time zone and dst.
