@@ -40,6 +40,7 @@ SCRIPT_REV = 20230901
 PROFILE_PATH = JMRI.util.FileUtil.getProfilePath()
 BUNDLE = {}
 REPORT_ITEM_WIDTH_MATRIX = {}
+ROSETTA = {}
 TRACK_NAME_CLICKED_ON = ''
 
 # Don't use this: J_BUNDLE = JMRI.jmrit.operations.setup.Setup()
@@ -552,39 +553,107 @@ def makeCompositRailroadName(layoutDetails):
 """Formatting Methods"""
 
 
-def localMoveCar(car):
+def pickupCar(car, manifest, twoCol):
     """
-    Creates a line containing the attrs in get * MessageFormat
-    The message format is in the locales language.
-    Called by:
-    makeTextReportTracks
+    Based on the JMRI version.
     """
 
-    reportWidth = REPORT_ITEM_WIDTH_MATRIX
-    rsRow = ''
+    carItems = translateCarFormat(car)
 
-    messageFormat = JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
-    print(messageFormat)
+    line = ''
 
-    for item in messageFormat:
-        if 'Tab' in item:
+    if manifest:
+        messageFormat = JMRI.jmrit.operations.setup.Setup.getPickupManifestMessageFormat()
+    else:
+        messageFormat = JMRI.jmrit.operations.setup.Setup.getPickupSwitchListMessageFormat()
+
+    for messageItem in messageFormat:
+        lineItem = carItems[ROSETTA[messageItem]]
+        lineWidth = REPORT_ITEM_WIDTH_MATRIX[messageItem]
+
+        if 'Tab' in messageItem:
             continue
+
     # Special case handling for the hazardous flag
-        if item == SB.handleGetMessage('Hazardous') and car[item]:
-            labelName = item
-        elif item == SB.handleGetMessage('Hazardous') and not car[item]:
-            labelName = ' '
-        else:
-            labelName = car[item]
+        if ROSETTA[messageItem] == 'Hazardous' and car['hazardous']:
+            lineItem = messageItem[0].upper()
+            lineWidth = 2
+        elif ROSETTA[messageItem] == 'Hazardous' and not car['hazardous']:
+            lineItem = ' '
+            lineWidth = 2
 
-        itemWidth = reportWidth[item]
-        rowItem = formatText(labelName, itemWidth)
-        rsRow += rowItem
+        rowItem = formatText(lineItem, lineWidth)
+        line += rowItem
 
-    return rsRow
+    return line
 
+def dropCar(car, manifest, twoCol):
+    """
+    Based on the JMRI version.
+    """
 
+    carItems = translateCarFormat(car)
 
+    line = ''
+
+    if manifest:
+        messageFormat = JMRI.jmrit.operations.setup.Setup.getDropManifestMessageFormat()
+    else:
+        messageFormat = JMRI.jmrit.operations.setup.Setup.getDropSwitchListMessageFormat()
+
+    for messageItem in messageFormat:
+        lineItem = carItems[ROSETTA[messageItem]]
+        lineWidth = REPORT_ITEM_WIDTH_MATRIX[messageItem]
+
+        if 'Tab' in messageItem:
+            continue
+
+    # Special case handling for the hazardous flag
+        if ROSETTA[messageItem] == 'Hazardous' and car['hazardous']:
+            lineItem = messageItem[0].upper()
+            lineWidth = 2
+        elif ROSETTA[messageItem] == 'Hazardous' and not car['hazardous']:
+            lineItem = ' '
+            lineWidth = 2
+
+        rowItem = formatText(lineItem, lineWidth)
+        line += rowItem
+
+    return line
+
+def localMoveCar(car, manifest, twoCol):
+    """
+    Based on the JMRI version.
+    """
+
+    carItems = translateCarFormat(car)
+
+    line = ''
+
+    if manifest:
+        messageFormat = JMRI.jmrit.operations.setup.Setup.getLocalManifestMessageFormat()
+    else:
+        messageFormat = JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
+
+    for messageItem in messageFormat:
+        lineItem = carItems[ROSETTA[messageItem]]
+        lineWidth = REPORT_ITEM_WIDTH_MATRIX[messageItem]
+
+        if 'Tab' in messageItem:
+            continue
+
+    # Special case handling for the hazardous flag
+        if ROSETTA[messageItem] == 'Hazardous' and car['hazardous']:
+            lineItem = messageItem[0].upper()
+            lineWidth = 2
+        elif ROSETTA[messageItem] == 'Hazardous' and not car['hazardous']:
+            lineItem = ' '
+            lineWidth = 2
+
+        rowItem = formatText(lineItem, lineWidth)
+        line += rowItem
+
+    return line
 
 def validTime(epochTime=0):
     """
@@ -1114,50 +1183,86 @@ def getBundleItem(item):
         return ''
 
 
-# def translateMessageFormat():
-#     """
-#     DEPRICATED
-#     The messageFormat is in the locale's language, it has to be hashed to the plugin fields.
-#     """
+def translateMessageFormat():
+    """
+    The messageFormat is in the locale's language, it has to be hashed to the plugin fields.
+    """
 
-#     rosetta = {}
-# #Common
-#     rosetta[SB.handleGetMessage('Road')] = 'Road'
-#     rosetta[SB.handleGetMessage('Number')] = 'Number'
-#     rosetta[SB.handleGetMessage('Type')] = 'Type'
-#     rosetta[SB.handleGetMessage('Length')] = 'Length'
-#     rosetta[SB.handleGetMessage('Color')] = 'Color'
-#     rosetta[SB.handleGetMessage('Weight')] = 'Weight'
-#     rosetta[SB.handleGetMessage('Comment')] = 'Comment'
-#     rosetta[SB.handleGetMessage('Division')] = 'Division'
-#     rosetta[SB.handleGetMessage('Location')] = 'Location'
-#     rosetta[SB.handleGetMessage('Track')] = 'Track'
-#     rosetta[SB.handleGetMessage('Destination')] = 'Destination'
-#     rosetta[SB.handleGetMessage('Owner')] = 'Owner'
-#     rosetta[SB.handleGetMessage('Tab')] = 'Tab'
-#     rosetta[SB.handleGetMessage('Tab2')] = 'Tab2'
-#     rosetta[SB.handleGetMessage('Tab3')] = 'Tab3'
-# # Locos
-#     rosetta[SB.handleGetMessage('Model')] = 'Model'
-#     rosetta[SB.handleGetMessage('DCC_Address')] = 'DCC_Address'
-#     rosetta[SB.handleGetMessage('Consist')] = 'Consist'
-# # Cars
-#     rosetta[SB.handleGetMessage('Load_Type')] = 'Load_Type'
-#     rosetta[SB.handleGetMessage('Load')] = 'Load'
-#     rosetta[SB.handleGetMessage('Hazardous')] = 'Hazardous'
-#     rosetta[SB.handleGetMessage('Kernel')] = 'Kernel'
-#     rosetta[SB.handleGetMessage('Kernel_Size')] = 'Kernel_Size'
-#     rosetta[SB.handleGetMessage('Dest&Track')] = 'Dest&Track'
-#     rosetta[SB.handleGetMessage('Final_Dest')] = 'Final_Dest'
-#     rosetta[SB.handleGetMessage('Track')] = 'FD&Track'
-#     rosetta[SB.handleGetMessage('SetOut_Msg')] = 'SetOut_Msg'
-#     rosetta[SB.handleGetMessage('PickUp_Msg')] = 'PickUp_Msg'
-#     rosetta[SB.handleGetMessage('RWE')] = 'RWE'
-#     # rosetta[J_BUNDLE.RWL] = 'RWL'
-# # Unique to this plugin
-#     rosetta['onTrain'] = 'onTrain'
-#     rosetta['setTo'] = 'setTo'
-#     rosetta['puso'] = 'puso'
-#     rosetta[' '] = ' '
+    rosetta = {}
+#Common
+    rosetta[SB.handleGetMessage('Road')] = 'Road'
+    rosetta[SB.handleGetMessage('Number')] = 'Number'
+    rosetta[SB.handleGetMessage('Type')] = 'Type'   
+    rosetta[SB.handleGetMessage('Length')] = 'Length'
+    rosetta[SB.handleGetMessage('Color')] = 'Color'
+    rosetta[SB.handleGetMessage('Weight')] = 'Weight'
+    rosetta[SB.handleGetMessage('Comment')] = 'Comment'
+    rosetta[SB.handleGetMessage('Division')] = 'Division'
+    rosetta[SB.handleGetMessage('Location')] = 'Location'
+    rosetta[SB.handleGetMessage('Track')] = 'Track'
+    rosetta[SB.handleGetMessage('Destination')] = 'Destination'
+    rosetta[SB.handleGetMessage('Owner')] = 'Owner'
+    rosetta[SB.handleGetMessage('Tab')] = 'Tab'
+    rosetta[SB.handleGetMessage('Tab2')] = 'Tab2'
+    rosetta[SB.handleGetMessage('Tab3')] = 'Tab3'
+# Locos
+    rosetta[SB.handleGetMessage('Model')] = 'Model'
+    rosetta[SB.handleGetMessage('DCC_Address')] = 'DCC_Address'
+    rosetta[SB.handleGetMessage('Consist')] = 'Consist'
+# Cars
+    
+    rosetta[SB.handleGetMessage('Load_Type')] = 'Load_Type'
+    rosetta[SB.handleGetMessage('Load')] = 'Load'
+    rosetta[SB.handleGetMessage('Hazardous')] = 'Hazardous'
+    rosetta[SB.handleGetMessage('Kernel')] = 'Kernel'
+    rosetta[SB.handleGetMessage('Kernel_Size')] = 'Kernel_Size'
+    rosetta[SB.handleGetMessage('Dest&Track')] = 'Dest&Track'
+    rosetta[SB.handleGetMessage('Final_Dest')] = 'Final_Dest'
+    rosetta[SB.handleGetMessage('Track')] = 'FD&Track'
+    rosetta[SB.handleGetMessage('SetOut_Msg')] = 'SetOut_Msg'
+    rosetta[SB.handleGetMessage('PickUp_Msg')] = 'PickUp_Msg'
+    rosetta[SB.handleGetMessage('RWE')] = 'RWE'
+    # rosetta[SB.handleGetMessage('RWL')] = 'RWL'
+# Unique to this plugin
+    rosetta['onTrain'] = 'onTrain'
+    rosetta['setTo'] = 'setTo'
+    rosetta['puso'] = 'puso'
+    rosetta[' '] = ' '
 
-#     return rosetta
+    global ROSETTA
+    ROSETTA = rosetta
+
+    return
+
+def translateCarFormat(car):
+    """
+    For items found in the Setup.get< >ManifestMessageFormat()
+    """
+                
+    newCarFormat = {}
+
+    newCarFormat["Road"] = car['road']
+    newCarFormat["Number"] = car['number']
+    newCarFormat["Type"] = car['carType']
+    newCarFormat["Length"] = car['length']
+    newCarFormat["Weight"] = car['weight']
+    newCarFormat["Load"] = car['load']
+    newCarFormat["Hazardous"] = car['hazardous']
+    newCarFormat["Color"] = car['color']
+    newCarFormat["Kernel"] = car['kernel']
+    newCarFormat["Owner"] = car['owner']
+    newCarFormat["Track"] = car['location']['track']['userName']
+    newCarFormat["Location"] = car['location']['userName']
+    newCarFormat["Destination"] = car['destination']['userName']
+    newCarFormat["Dest&Track"] = car['destination']['userName'] + '-' + car['destination']['track']['userName']
+    newCarFormat["Final_Dest"] = str(car['finalDestination'])
+    newCarFormat["Comment"] = car['comment']
+    newCarFormat["SetOut_Msg"] = car['removeComment']
+    newCarFormat["PickUp_Msg"] = car['addComment']
+    newCarFormat["RWE"] = car['returnWhenEmpty']
+    newCarFormat["FD&Track"] = str(car['finalDestination']) + '-' + car['fdTrack']
+    newCarFormat["Load_Type"] = car['loadType']
+    newCarFormat["Kernel_Size"] = car['kernelSize']
+    newCarFormat["Division"] = car['division']
+
+    return newCarFormat
