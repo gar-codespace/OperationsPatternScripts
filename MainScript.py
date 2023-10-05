@@ -69,7 +69,7 @@ def makePsPlugin():
     Listeners.rsItemSelected
     """
 
-    configPanel = PSE.readConfigFile('Main Script')['CP']
+    configPanel = configFile['Main Script']['CP']
 
     view = View()
     psFrame = view.getThePlugin()
@@ -80,6 +80,9 @@ def makePsPlugin():
         menuItem.addActionListener(getattr(Listeners, menuItem.getName()))
     for menuItem in view.getSubroutineMenuItems():
         menuItem.addActionListener(Listeners.dropDownMenuItem)
+
+    configFile['Main Script'].update({'SL':PSE.getSubroutineDirs()})
+    PSE.writeConfigFile(configFile)
 
     psFrame.addWindowListener(Listeners.PatternScriptsFrameListener())
     

@@ -2,7 +2,7 @@
 # © 2023 Greg Ritacco
 
 """
-Routines to create various manifests and switch lists.
+Unified report formatting for all OPS generated reports.
 """
 
 from opsEntities import PSE
@@ -11,12 +11,13 @@ SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901
 
 TMT = PSE.JMRI.jmrit.operations.trains.TrainManifestText()
+
 _psLog = PSE.LOGGING.getLogger('OPS.OE.Manifest')
 
 def jsonManifest(train):
     """
     Mini controller
-    Modifies the json manifest and sorts it in sequence order.
+    Modifies the JMRI generated json manifest and sorts it in sequence order.
     """
     
     extendJmriManifestJson(train)

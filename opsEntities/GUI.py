@@ -2,7 +2,7 @@
 # © 2023 Greg Ritacco
 
 """
-All the GUI items are made here.
+All the OPS GUI items are made here.
 """
 
 from opsEntities import PSE
