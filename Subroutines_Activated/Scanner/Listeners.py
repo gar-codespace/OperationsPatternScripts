@@ -70,9 +70,9 @@ def removeSubroutineListeners():
     return
 
 
-class ScannerAction(PSE.JAVA_AWT.event.ActionListener):
+class ScannerSelection(PSE.JAVA_AWT.event.ActionListener):
     """
-    Action taken when an item in the Scanners combo box is selected.
+    
     """
 
     def __init__(self):
@@ -81,10 +81,11 @@ class ScannerAction(PSE.JAVA_AWT.event.ActionListener):
 
     def actionPerformed(self, EVENT):
 
-        Model.getScannerReport(EVENT)
+        Model.recordSelection(EVENT.getSource())
 
         return
 
+    
 def addTrainsListener():
     """
     Adds a listener to each train.

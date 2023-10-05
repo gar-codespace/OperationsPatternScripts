@@ -79,7 +79,7 @@ class StartUp:
         """
 
         self.widgets[0].actionPerformed = self.qrButton
-        self.widgets[1].addActionListener(Listeners.ScannerAction())
+        self.widgets[1].addActionListener(Listeners.ScannerSelection())
         self.widgets[2].actionPerformed = self.scButton
 
         return
@@ -100,8 +100,9 @@ class StartUp:
         The Apply button.
         """
 
-        # Model.checkScanReport()
-        Model.applyScanReport()
+        scannerReportPath = Model.getScannerReportPath()
+        if Model.validateScanReport(scannerReportPath):
+            Model.applyScanReport(scannerReportPath)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

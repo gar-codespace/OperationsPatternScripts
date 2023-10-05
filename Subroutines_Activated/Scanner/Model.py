@@ -26,7 +26,6 @@ def initializeSubroutine():
     set those widgets here.
     """
 
-    updateScannerList()
     scannerComboUpdater()
     
     return
@@ -45,8 +44,22 @@ def refreshSubroutine():
     update any widgets in this subroutine that can't otherwise be updated by a listener.
     """
 
-    updateScannerList()
-    # scannerComboUpdater()
+    configFile = PSE.readConfigFile()
+
+    scannerComboUpdater(configFile['Scanner']['SI'])
+
+    return
+
+
+def recordSelection(comboBox):
+    """
+    Write the combo box selected item to the configfile.
+    """
+
+    configFile = PSE.readConfigFile()
+    configFile['Scanner'].update({'SI':comboBox.getSelectedItem()})
+    PSE.writeConfigFile(configFile)
+
     return
 
 def validateSequenceData():
@@ -57,7 +70,7 @@ def validateSequenceData():
     
     sequenceFilePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'rsSequenceData.json')
     if not PSE.JAVA_IO.File(sequenceFilePath).isFile():
-        initialSequenceHash = getInitialScannerHash()
+        initialSequenceHash = getInitialSequenceHash()
         PSE.genericWriteReport(sequenceFilePath, PSE.dumpJson(initialSequenceHash))
 
     return
@@ -122,7 +135,7 @@ def resequenceManifest(train):
 
     return
 
-def getInitialScannerHash():
+def getInitialSequenceHash():
 
     scannerHash = {}
     locoHash = {}
@@ -141,9 +154,9 @@ def getInitialScannerHash():
 
     return scannerHash
 
-def updateScannerList():
+def _updateScannerList():
     """
-    Update the contents of the scanner combo box.
+    Gets the file names in the designated scanner path.
     """
 
     configFile = PSE.readConfigFile()
@@ -154,31 +167,29 @@ def updateScannerList():
     for file in dirContents:
         pulldownList.append(file.split('.')[0])
 
-    configFile['Scanner'].update({'PL':pulldownList})
-    PSE.writeConfigFile(configFile)
+    return pulldownList
 
-    return
-
-def scannerComboUpdater():
+def scannerComboUpdater(selected=None):
     """
-    Updates the contents of the locations combo box when the listerers detect a change.
+    Updates the contents of the scanners combo box.
     """
 
     _psLog.debug('scannerComboUpdater')
-    configFile = PSE.readConfigFile()
-    pulldownList = configFile['Scanner']['PL']
 
     frameName = PSE.getBundleItem('Pattern Scripts')
     frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
-
     component = PSE.getComponentByName(frame, 'sScanner')
     component.removeAllItems()
+
+    pulldownList = _updateScannerList()
     for scanName in pulldownList:
         component.addItem(scanName)
 
+    component.setSelectedItem(selected)
+    
     return
 
-def getScannerReport(EVENT):
+def getScannerReportPath():
     """
     Writes the name of the selected scanner report to the config file.
     """
@@ -194,12 +205,15 @@ def getScannerReport(EVENT):
     itemSelected = itemSelected + '.txt'
     scannerReportPath = PSE.OS_PATH.join(scannerPath, itemSelected)
 
-    configFile['Scanner'].update({'RP':scannerReportPath})
-    PSE.writeConfigFile(configFile)
+    return scannerReportPath
 
-    return
+def validateScanReport(scannerReportPath):
 
-def applyScanReport():
+    _psLog.debug('validateScanReport')
+
+    return True
+
+def applyScanReport(scannerReportPath):
     """
     Assign a sequence number to the RS in the selected scan report.
     """
@@ -212,10 +226,7 @@ def applyScanReport():
     locoSequence = 8001
     carSequence = 8001
 
-    configFile = PSE.readConfigFile()
-    reportPath = configFile['Scanner']['RP']
-
-    scannerReport = PSE.genericReadReport(reportPath)
+    scannerReport = PSE.genericReadReport(scannerReportPath)
     splitReport = scannerReport.split('\n')
     splitReport.pop(-1) # Pop off the empty line at the end.
     header = splitReport.pop(0).split(',')
@@ -225,9 +236,7 @@ def applyScanReport():
     if direction == 'W':
         splitReport.reverse()
 
-    print(direction)
-
-
+    print('applyScanReport')
 
     for item in splitReport:
         rs = item.split(',')
