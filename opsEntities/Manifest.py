@@ -14,14 +14,16 @@ TMT = PSE.JMRI.jmrit.operations.trains.TrainManifestText()
 
 _psLog = PSE.LOGGING.getLogger('OPS.OE.Manifest')
 
-def jsonManifest(train):
+def extendJmriManifest(train):
     """
     Mini controller
     Modifies the JMRI generated json manifest and sorts it in sequence order.
     """
     
     extendJmriManifestJson(train)
-    resequenceJmriManifest(train)
+
+    if 'Scanner' in PSE.readConfigFile('Main Script')['SL']:
+        resequenceJmriManifest(train)
 
     return
 
@@ -88,7 +90,7 @@ def resequenceJmriManifest(train):
 
     return
 
-def jmriManifest(train):
+def opsTextManifest(train):
     """"
     Replaces the JMRI generated text manifest with this one.
     """

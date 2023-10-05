@@ -77,13 +77,12 @@ def validateSequenceData():
 
 def modifyTrainManifest(train):
     """
-    Mini controller.
     Modifies the existing JMRI manifest, sorts by sequence number.
     """
     
-    Manifest.jsonManifest(train)
+    Manifest.extendJmriManifest(train)
 
-    textManifest = Manifest.jmriManifest(train)
+    textManifest = Manifest.opsTextManifest(train)
     manifestName = 'train (' + train.toString() + ').txt'
     manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', manifestName)
     PSE.genericWriteReport(manifestPath, textManifest)
