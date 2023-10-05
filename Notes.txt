@@ -1,7 +1,6 @@
 Todo:
   How to publish DeepL?
   Refactor PSE.openOutputFrame(), what's it doing?
-  PSE.validTime() needs to add 'Valid' to bundle
   Try to add sequence to the car xml:
     https://webserver.jmri.org/JavaDoc/doc/jmri/jmrit/operations/rollingstock/RollingStockAttribute.html#store(org.jdom2.Element,java.lang.String,java.lang.String)
   Replace Patterns.Model deepcopy with clone()?

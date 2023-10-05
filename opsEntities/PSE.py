@@ -665,13 +665,14 @@ def validTime(epochTime=0):
     Nov 15, 2022 11:53 AM PST vs Valid 11/15/2022 11:54
     """
 
+    valid = getBundleItem('Valid')
     year = getYear()
     time = getTime(epochTime)
 
     if JMRI.jmrit.operations.setup.Setup.is12hrFormatEnabled():
-        return TIME.strftime('Valid %b %d, ' + year + ', %I:%M %p', time)
+        return TIME.strftime(valid + ' %b %d, ' + year + ', %I:%M %p', time)
     else:
-        return TIME.strftime('Valid %b %d, ' + year + ', %H:%M', time)
+        return TIME.strftime(valid + ' %b %d, ' + year + ', %H:%M', time)
 
     # return TIME.strftime('%m/%d/%Y %I:%M', TIME.gmtime(epochTime - timeOffset))
     # return TIME.strftime('%a %b %d %Y %I:%M %p %Z', TIME.gmtime(epochTime - timeOffset))
