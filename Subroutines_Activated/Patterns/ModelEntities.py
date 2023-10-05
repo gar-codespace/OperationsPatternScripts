@@ -78,7 +78,7 @@ def makeTextReportTracks(trackList, trackTotals):
             else:
                 seqStandIn = car['setTo']
 
-            reportSwitchList += seqStandIn + PSE.localMoveCar(car) + '\n'
+            reportSwitchList += seqStandIn + loopThroughRs('car', car) + '\n'
 
             trackTally.append(car[PSE.SB.handleGetMessage('Final_Dest')])
             reportTally.append(car[PSE.SB.handleGetMessage('Final_Dest')])

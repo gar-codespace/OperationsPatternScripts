@@ -1,6 +1,39 @@
 {
   "Main Script" : {
     "US" : {
+      "AW": {
+        " ": 1, 
+        "Road": 5, 
+        "Number": 6, 
+        "Type": 3, 
+        "Length": 3, 
+        "Color": 6, 
+        "Weight": 7,
+        "Comment": 15, 
+        "Division": 15, 
+        "Location": 9, 
+        "Track": 6, 
+        "Destination": 15, 
+        "Owner": 20, 
+        "Model": 5, 
+        "DCC_Address": 10, 
+        "Consist": 8, 
+        "Load_Type": 1, 
+        "Load": 6, 
+        "Hazardous": 10, 
+        "Kernel": 7, 
+        "Kernel_Size": 3, 
+        "Dest&Track": 27, 
+        "Final_Dest": 11, 
+        "FD&Track": 23, 
+        "SetOut_Msg": 12, 
+        "PickUp_Msg": 12, 
+        "RWE": 10, 
+        "RWL": 10, 
+        "onTrain": 0, 
+        "puso": 6, 
+        "setTo": 6
+        },
       "CD": {
           "BLANCH": {
             "A": 210,
@@ -77,7 +110,7 @@
       "PW" : 1000,
       "PX" : 0,
       "PY" : 0,
-      "RV" : 20230902,
+      "RV" : 20231001,
       "GP" : "https://github.com/gar-codespace/OperationsPatternScripts",
       "EC" : {
         "400" : "400 - Bad Request: Unable to translate the current language.",
@@ -108,6 +141,7 @@
       "O" : 10,
       "G" : 11
     }
+
     
   }
 }

@@ -762,6 +762,10 @@ def getShortLoadType(car):
         carObject = CM.getByRoadAndNumber(car['road'], car['number'])
 
     lt =  getBundleItem('Unknown').upper()[0]
+    if carObject.getLoadName() == 'E':
+        lt = getBundleItem('Empty').upper()[0]
+    if carObject.getLoadName() == 'L':
+        lt = getBundleItem('Load').upper()[0]
     if carObject.getLoadType() == 'empty' or carObject.getLoadType() == 'E':
         lt = getBundleItem('Empty').upper()[0]
 
@@ -779,7 +783,7 @@ def makeReportItemWidthMatrix():
     """
 
     reportMatrix = {}
-    attributeWidths = readConfigFile('Patterns')['US']['AW']
+    attributeWidths = readConfigFile('Main Script')['US']['AW']
 
     for aKey, aValue in attributeWidths.items():
         try: # Include translated JMRI fields
