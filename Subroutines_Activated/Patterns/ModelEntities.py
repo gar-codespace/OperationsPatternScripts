@@ -171,7 +171,12 @@ def merge(switchList, userInputList):
     ModelSetCarsForm.makeMergedForm
     """
 
-    longestTrackString = findLongestTrackString()
+    prefix = ['[' + PSE.getBundleItem('Hold') + ']']
+    location = PSE.LM.getLocationByName(PSE.readConfigFile('Patterns')['PL'])
+    for track in location.getTracksByNameList(None):
+        prefix.append(track.toString())
+    longestTrackString = PSE.findLongestStringLength(prefix)
+
     allTracksAtLoc = getTrackNamesByLocation(None)
 
     currentTrack = switchList['tracks'][0]['trackName']
@@ -202,20 +207,20 @@ def merge(switchList, userInputList):
 
     return switchList
 
-def findLongestTrackString():
-    """
-    Called by:
-    merge
-    """
+# def findLongestTrackString():
+#     """
+#     Called by:
+#     merge
+#     """
 
-    hold = '[' + PSE.getBundleItem('Hold') + ']'
-    longestTrackString = len(hold)
+#     hold = '[' + PSE.getBundleItem('Hold') + ']'
+#     longestTrackString = len(hold)
 
-    location = PSE.LM.getLocationByName(PSE.readConfigFile('Patterns')['PL'])
-    for track in location.getTracksList():
-        longestTrackString = max(longestTrackString, len(track.getName()))
+#     location = PSE.LM.getLocationByName(PSE.readConfigFile('Patterns')['PL'])
+#     for track in location.getTracksList():
+#         longestTrackString = max(longestTrackString, len(track.getName()))
 
-    return longestTrackString
+#     return longestTrackString
 
 def getDetailsForTracks(selectedTracks):
     """

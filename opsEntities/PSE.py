@@ -733,6 +733,19 @@ def convertJmriDateToEpoch(jmriTime):
 
     return epochTime
 
+def findLongestStringLength(list):
+    """
+    list is a list or tuple of strings.
+    Returns the length of the longest string.
+    """
+
+    longestString = 0
+
+    for string in list:
+        longestString = max(longestString, len(string))
+
+    return longestString
+
 def formatText(item, length):
     """
     Truncate each item to its defined length in configFile.json and add a space at the end.

@@ -92,11 +92,20 @@ def resequenceJmriManifest(train):
 
 def opsTextManifest(train):
     """"
-    Replaces the JMRI generated text manifest with this one.
+    OPS version of the JMRI generated text manifest.
     """
 
     PSE.makeReportItemWidthMatrix()
     PSE.translateMessageFormat()
+
+    pep = PSE.JMRI.jmrit.operations.setup.Setup.getPickupEnginePrefix()
+    dep = PSE.JMRI.jmrit.operations.setup.Setup.getDropEnginePrefix()
+    pcp = PSE.JMRI.jmrit.operations.setup.Setup.getPickupCarPrefix()
+    dcp = PSE.JMRI.jmrit.operations.setup.Setup.getDropCarPrefix()
+    mcp = PSE.JMRI.jmrit.operations.setup.Setup.getLocalPrefix()
+    hcp = PSE.getBundleItem('Hold')
+
+    longestStringLength = PSE.findLongestStringLength((pep, dep, pcp, dcp, mcp, hcp))
 
     trainName = 'train-' + train.toString() + '.json'
     manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', trainName)
@@ -117,31 +126,33 @@ def opsTextManifest(train):
     
     # Pick up locos
         for loco in location['engines']['add']:
-            pass
+            formatPrefix = PSE.formatText(pep, longestStringLength)
+
     # Set out locos
         for loco in location['engines']['remove']:
-            pass
+            formatPrefix = PSE.formatText(dep, longestStringLength)
+
     # Pick up cars
         for car in location['cars']['add']:
             if car['isLocal']:
                 continue
-            prefix = PSE.JMRI.jmrit.operations.setup.Setup.getPickupCarPrefix()
+            formatPrefix = PSE.formatText(pcp, longestStringLength)
             line = PSE.pickupCar(car, True, False)
-            textManifest += prefix + ' ' + line + '\n'
+            textManifest += formatPrefix + ' ' + line + '\n'
     # Move cars
         for car in location['cars']['add']:
             if not car['isLocal']:
                 continue
-            prefix = PSE.JMRI.jmrit.operations.setup.Setup.getLocalPrefix()
+            formatPrefix = PSE.formatText(mcp, longestStringLength)
             line = PSE.localMoveCar(car, True, False)
-            textManifest += prefix + ' ' + line + '\n'
+            textManifest += formatPrefix + ' ' + line + '\n'
     # Set out cars
         for car in location['cars']['remove']:
             if car['isLocal']:
                 continue
-            prefix = PSE.JMRI.jmrit.operations.setup.Setup.getDropCarPrefix()
+            formatPrefix = PSE.formatText(dcp, longestStringLength)
             line = PSE.dropCar(car, True, False)
-            textManifest += prefix + ' ' + line + '\n'
+            textManifest += formatPrefix + ' ' + line + '\n'
 
         try:
         # Location summary

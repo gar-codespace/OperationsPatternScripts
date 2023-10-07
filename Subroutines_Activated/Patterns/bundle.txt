@@ -15,7 +15,6 @@ FAIL: CreateSetCarsForm.quickCheck.formIsValid
 FAIL: CreateSetCarsFormGui.quickCheck.formIsValid
 FAIL: Mismatched input list and car roster lengths
 Hazardous
-Hold
 Ignore track length
 Load
 Location:

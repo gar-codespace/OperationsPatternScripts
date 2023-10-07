@@ -1,14 +1,15 @@
 Edit Config File
 GitHub Web Page
 Help
+Hide
+Hold
 Operations Folder
 Pattern Scripts
 Restart From Default
 Script Output
+Show
 Tools
 Translate Plugin
+Valid
 View Log File
 Window Help...
-Show
-Hide
-Valid
