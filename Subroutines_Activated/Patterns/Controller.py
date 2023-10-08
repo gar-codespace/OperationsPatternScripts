@@ -9,6 +9,7 @@ This subroutine can be used in conjunction with o2o to create TrainPlayer switch
 """
 
 from opsEntities import PSE
+from opsEntities import Manifest
 from Subroutines_Activated.Patterns import SetCarsForm_Controller
 from Subroutines_Activated.Patterns import Model
 from Subroutines_Activated.Patterns import View
@@ -107,14 +108,26 @@ class StartUp:
         selectedTracks = [track for track, flag in configFile['Patterns']['PT'].items() if flag]
         selectedTracks.sort()
 
-        PSE.makeReportItemWidthMatrix()
+        # PSE.makeReportItemWidthMatrix()
 
-        trackPattern = Model.makeTrackPattern(selectedTracks)
-        Model.writePatternReport(trackPattern)
+        Model.makeJsonTrackPattern(selectedTracks)
+        Manifest.opsTextPatternReport(configFile['Patterns']['PL'])
 
-        reportName = PSE.getBundleItem('ops-pattern-report')
-        Model.getReportForPrint(reportName)
-        Model.trackPatternAsCsv(reportName)
+
+
+
+
+
+
+
+
+
+        # trackPattern = Model.makeTrackPattern(selectedTracks)
+        # Model.writePatternReport(trackPattern)
+
+        # reportName = PSE.getBundleItem('ops-pattern-report')
+        # Model.getReportForPrint(reportName)
+        # Model.trackPatternAsCsv(reportName)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

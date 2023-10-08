@@ -53,6 +53,7 @@
   "Industries": "Industries", 
   "Industries not imported. Import Locations recommended": "Industries not imported. Import Locations recommended", 
   "Initialize Railroad": "Initialize Railroad", 
+  "List of inventory at": "List of inventory at", 
   "Load": "Load", 
   "Location": "Location", 
   "Location:": "Location:", 
@@ -67,6 +68,7 @@
   "Operations Folder": "Operations Folder", 
   "Pattern Report": "Pattern Report", 
   "Pattern Report for Tracks": "Pattern Report for Tracks", 
+  "Pattern Report for location": "Pattern Report for location", 
   "Pattern Scripts": "Pattern Scripts", 
   "Pattern Tracks": "Pattern Tracks", 
   "Patterns": "Patterns", 
@@ -126,7 +128,7 @@
   "o2o": "o2o", 
   "o2o Subroutine": "o2o Subroutine", 
   "o2o-work-list": "o2o-work-list", 
-  "ops-pattern-report": "ops-pattern-report", 
+  "ops-Pattern Report": "ops-Pattern Report", 
   "ops-switch-list": "ops-switch-list", 
   "ops-work-list": "ops-work-list"
 }

@@ -263,6 +263,48 @@ def extendedFinalDestionationHandling(rs, standins):
 
     return finalDestination
 
+def makeJsonTrackPattern(selectedTracks):
+    """
+    This track pattern json file mimics the JMRI manifest json.
+    """
+
+    configFile = PSE.readConfigFile()
+
+    jsonTrackPattern = {}
+
+    jsonTrackPattern['date'] = PSE.isoTimeStamp()
+    jsonTrackPattern['description'] = configFile['Patterns']['TD']
+    jsonTrackPattern['locations'] = ModelEntities.getDetailsByTrack(selectedTracks)
+    jsonTrackPattern['railroad'] = PSE.getExtendedRailroadName()
+    jsonTrackPattern['userName'] = configFile['Patterns']['TD']
+    
+
+
+
+
+
+    fileName = PSE.getBundleItem('ops-Pattern Report') + '.json'    
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+
+    PSE.genericWriteReport(targetPath, PSE.dumpJson(jsonTrackPattern))
+
+    return jsonTrackPattern
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def makeTrackPattern(selectedTracks):
     """
     Mini controller.

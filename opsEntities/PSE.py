@@ -573,7 +573,10 @@ def pickupCar(car, manifest, twoCol):
 
         if 'Tab' in messageItem:
             continue
-
+    # Special case handling for car number
+        if ROSETTA[messageItem] == 'Number':
+            line += lineItem.rjust(lineWidth) + ' '
+            continue
     # Special case handling for the hazardous flag
         if ROSETTA[messageItem] == 'Hazardous' and car['hazardous']:
             lineItem = messageItem[0].upper()
@@ -607,7 +610,10 @@ def dropCar(car, manifest, twoCol):
 
         if 'Tab' in messageItem:
             continue
-
+    # Special case handling for car number
+        if ROSETTA[messageItem] == 'Number':
+            line += lineItem.rjust(lineWidth) + ' '
+            continue
     # Special case handling for the hazardous flag
         if ROSETTA[messageItem] == 'Hazardous' and car['hazardous']:
             lineItem = messageItem[0].upper()
@@ -641,6 +647,10 @@ def localMoveCar(car, manifest, twoCol):
 
         if 'Tab' in messageItem:
             continue
+    # Special case handling for car number
+        if ROSETTA[messageItem] == 'Number':
+            line += lineItem.rjust(lineWidth) + ' '
+            continue
 
     # Special case handling for the hazardous flag
         if ROSETTA[messageItem] == 'Hazardous' and car['hazardous']:
@@ -654,6 +664,20 @@ def localMoveCar(car, manifest, twoCol):
         line += rowItem
 
     return line
+
+def isoValidTime(timeStamp):
+    """
+    Input the JMRI generated ios time stamp.
+    Return format: Valid Oct 08, 1915, 11:11
+    """
+
+
+
+    valid = getBundleItem('Valid') + ' ' + JMRI.jmrit.operations.trains.TrainCommon.getDate(True)
+
+
+
+    return valid
 
 def validTime(epochTime=0):
     """
@@ -677,6 +701,17 @@ def validTime(epochTime=0):
     # return TIME.strftime('%m/%d/%Y %I:%M', TIME.gmtime(epochTime - timeOffset))
     # return TIME.strftime('%a %b %d %Y %I:%M %p %Z', TIME.gmtime(epochTime - timeOffset))
     # return TIME.strftime('%b %d, ' + year + ' %I:%M %p %Z', TIME.gmtime(epochTime - timeOffset))
+
+def isoTimeStamp():
+    """
+    Returns the iso8601 format time stamp adjusted for model year.
+    """
+
+    bool = False
+    if JMRI.jmrit.operations.setup.Setup.getYearModeled():
+        bool = True
+
+    return JMRI.jmrit.operations.trains.TrainCommon.getISO8601Date(bool)
 
 def timeStamp():
     """
@@ -1263,24 +1298,24 @@ def translateCarFormat(car):
     newCarFormat["Number"] = car['number']
     newCarFormat["Type"] = car['carType']
     newCarFormat["Length"] = car['length']
-    newCarFormat["Weight"] = car['weight']
+    newCarFormat["Weight"] = car['weightTons']
     newCarFormat["Load"] = car['load']
+    newCarFormat["Load_Type"] = car['loadType']
     newCarFormat["Hazardous"] = car['hazardous']
     newCarFormat["Color"] = car['color']
     newCarFormat["Kernel"] = car['kernel']
+    newCarFormat["Kernel_Size"] = car['kernelSize']
     newCarFormat["Owner"] = car['owner']
+    newCarFormat["Division"] = car['division']
     newCarFormat["Track"] = car['location']['track']['userName']
     newCarFormat["Location"] = car['location']['userName']
     newCarFormat["Destination"] = car['destination']['userName']
     newCarFormat["Dest&Track"] = car['destination']['userName'] + '-' + car['destination']['track']['userName']
-    newCarFormat["Final_Dest"] = str(car['finalDestination'])
+    newCarFormat["Final_Dest"] = car['finalDestination']
+    newCarFormat["FD&Track"] = car['finalDestination'] + '-' + car['fdTrack']
     newCarFormat["Comment"] = car['comment']
     newCarFormat["SetOut_Msg"] = car['removeComment']
     newCarFormat["PickUp_Msg"] = car['addComment']
     newCarFormat["RWE"] = car['returnWhenEmpty']
-    newCarFormat["FD&Track"] = str(car['finalDestination']) + '-' + car['fdTrack']
-    newCarFormat["Load_Type"] = car['loadType']
-    newCarFormat["Kernel_Size"] = car['kernelSize']
-    newCarFormat["Division"] = car['division']
 
     return newCarFormat

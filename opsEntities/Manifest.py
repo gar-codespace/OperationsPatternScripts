@@ -48,6 +48,7 @@ def extendJmriManifestJson(train):
             car['sequence'] = sequence
 
             carObj = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
+            car['finalDestination'] = carObj.getFinalDestinationName()
             car['fdTrack'] = carObj.getFinalDestinationTrackName()
             car['loadType'] = PSE.getShortLoadType(car)
             car['kernelSize'] = 'NA'
@@ -59,6 +60,7 @@ def extendJmriManifestJson(train):
             car['sequence'] = sequence
 
             carObj = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
+            car['finalDestination'] = carObj.getFinalDestinationName()
             car['fdTrack'] = carObj.getFinalDestinationTrackName()
             car['loadType'] = PSE.getShortLoadType(car)
             car['kernelSize'] = 'NA'
@@ -90,6 +92,52 @@ def resequenceJmriManifest(train):
 
     return
 
+def opsTextPatternReport(location):
+    """
+    Creates a text Pattern Report from a json file.
+    Formatting is similar to a JMRI text manifest.
+    """
+
+    PSE.makeReportItemWidthMatrix()
+    PSE.translateMessageFormat()
+
+    reportName = PSE.getBundleItem('ops-Pattern Report') + '.json'
+    reportPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
+    report = PSE.loadJson(PSE.genericReadReport(reportPath))
+
+    textPatternReport = ''
+
+# Header
+    textPatternReport += PSE.getExtendedRailroadName() + '\n'
+    textPatternReport += '\n'
+
+    textPatternReport += PSE.getBundleItem('Pattern Report for location') + ' (' + location + ')\n'
+    epochTime = PSE.convertJmriDateToEpoch(report['date'])
+    textPatternReport += PSE.validTime(epochTime) + '\n'
+    textPatternReport += '\n'
+# Body
+    for location in report['locations']:
+        carLength = 0
+        textPatternReport += PSE.getBundleItem('List of inventory at') + ' ' + location['userName'] + '\n'
+    # Pick up locos
+        for loco in location['engines']['add']:
+            seq = loco['sequence'] - 8000
+            formatPrefix = PSE.formatText(str(seq), 4)
+    # Move cars
+        for car in location['cars']['add']:
+            carLength += int(car['length'])
+            seq = car['sequence'] - 8000
+            formatPrefix = ' ' + str(seq).rjust(2, '0') + '  '
+            line = PSE.localMoveCar(car, True, False)
+            textPatternReport += formatPrefix + ' ' + line + '\n'
+        
+        totalCars = str(len(location['cars']['add']))
+        textPatternReport += PSE.getBundleItem('Total Cars:') + ' ' + totalCars + PSE.getBundleItem('Track Length:') + '\n'
+        textPatternReport += '\n'
+
+    print(textPatternReport)
+    return
+
 def opsTextManifest(train):
     """"
     OPS version of the JMRI generated text manifest.
@@ -118,7 +166,8 @@ def opsTextManifest(train):
     textManifest += '\n'
 
     textManifest += TMT.getStringManifestForTrain().format(train.getName(), train.getDescription()) + '\n'
-    textManifest += PSE.validTime() + '\n'
+    epochTime = PSE.convertJmriDateToEpoch(manifest['date'])
+    textManifest += PSE.validTime(epochTime) + '\n'
     textManifest += '\n'
 # Body
     for location in manifest['locations']:

@@ -21,8 +21,7 @@ Location:
 Locomotives at
 Make Work
 Occupied
-ops-pattern-report
-ops-pattern-report
+ops-Pattern Report
 ops-switch-list
 ops-work-list
 Pattern Report
@@ -40,9 +39,7 @@ Single
 + Switch List
 There are no tracks for this selection
 There are no yard tracks for this location
-Total Cars:
 Track Inquiry
-Track Length:
 Track List:
 Track Totals for Cars:
 Track:

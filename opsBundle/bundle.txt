@@ -3,12 +3,16 @@ GitHub Web Page
 Help
 Hide
 Hold
+List of inventory at
 Operations Folder
 Pattern Scripts
+Pattern Report for location
 Restart From Default
 Script Output
 Show
 Tools
+Total Cars:
+Track Length:
 Translate Plugin
 Valid
 View Log File
