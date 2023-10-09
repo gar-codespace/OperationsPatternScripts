@@ -131,7 +131,7 @@ def loopThroughRs(type, rsAttribs):
             labelName = rsAttribs[item]
 
         itemWidth = reportWidth[item]
-        rowItem = PSE.formatText(labelName, itemWidth)
+        rowItem = labelName.ljust(itemWidth)
         switchListRow += rowItem
 
     return switchListRow
@@ -175,7 +175,7 @@ def merge(switchList, userInputList):
     location = PSE.LM.getLocationByName(PSE.readConfigFile('Patterns')['PL'])
     for track in location.getTracksByNameList(None):
         prefix.append(track.toString())
-    longestTrackString = PSE.findLongestStringLength(prefix)
+    longestTrackString = PSE.findLongestStringLength(prefix) + 2
 
     allTracksAtLoc = getTrackNamesByLocation(None)
 
@@ -186,9 +186,9 @@ def merge(switchList, userInputList):
     for loco in locos:
         userInput = unicode(userInputList[i], PSE.ENCODING)
         if userInput in allTracksAtLoc and userInput != currentTrack:
-            setTrack = PSE.formatText('[' + userInput + ']', longestTrackString + 2)
+            setTrack = str('[' + userInput + ']').ljust(longestTrackString)
         else:
-            setTrack = PSE.formatText('[' + PSE.getBundleItem('Hold') + ']', longestTrackString + 2)
+            setTrack = str('[' + PSE.getBundleItem('Hold') + ']').ljust(longestTrackString)
 
         loco.update({'setTo': setTrack})
         i += 1
@@ -198,9 +198,9 @@ def merge(switchList, userInputList):
         userInput = unicode(userInputList[i], PSE.ENCODING)
 
         if userInput in allTracksAtLoc and userInput != currentTrack:
-            setTrack = PSE.formatText('[' + userInput + ']', longestTrackString + 2)
+            setTrack = str('[' + userInput + ']').ljust(longestTrackString)
         else:
-            setTrack = PSE.formatText('[' + PSE.getBundleItem('Hold') + ']', longestTrackString + 2)
+            setTrack = str('[' + PSE.getBundleItem('Hold') + ']').ljust(longestTrackString)
 
         car.update({'setTo': setTrack})
         i += 1

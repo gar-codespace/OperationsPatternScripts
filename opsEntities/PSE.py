@@ -569,9 +569,13 @@ def pickupCar(car, manifest, twoCol):
 
     for messageItem in messageFormat:
         lineItem = carItems[ROSETTA[messageItem]]
-        lineWidth = REPORT_ITEM_WIDTH_MATRIX[messageItem]
+        lineWidth = REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
 
         if 'Tab' in messageItem:
+            continue
+    # Special case handling for car load type
+        if ROSETTA[messageItem] == 'Load_Type':
+            line += getShortLoadType(car).ljust(1) + ' '
             continue
     # Special case handling for car number
         if ROSETTA[messageItem] == 'Number':
@@ -585,7 +589,7 @@ def pickupCar(car, manifest, twoCol):
             lineItem = ' '
             lineWidth = 2
 
-        rowItem = formatText(lineItem, lineWidth)
+        rowItem = lineItem.ljust(lineWidth)
         line += rowItem
 
     return line
@@ -606,9 +610,13 @@ def dropCar(car, manifest, twoCol):
 
     for messageItem in messageFormat:
         lineItem = carItems[ROSETTA[messageItem]]
-        lineWidth = REPORT_ITEM_WIDTH_MATRIX[messageItem]
+        lineWidth = REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
 
         if 'Tab' in messageItem:
+            continue
+    # Special case handling for car load type
+        if ROSETTA[messageItem] == 'Load_Type':
+            line += getShortLoadType(car).ljust(1) + ' '
             continue
     # Special case handling for car number
         if ROSETTA[messageItem] == 'Number':
@@ -622,7 +630,7 @@ def dropCar(car, manifest, twoCol):
             lineItem = ' '
             lineWidth = 2
 
-        rowItem = formatText(lineItem, lineWidth)
+        rowItem = lineItem.ljust(lineWidth)
         line += rowItem
 
     return line
@@ -643,15 +651,18 @@ def localMoveCar(car, manifest, twoCol):
 
     for messageItem in messageFormat:
         lineItem = carItems[ROSETTA[messageItem]]
-        lineWidth = REPORT_ITEM_WIDTH_MATRIX[messageItem]
+        lineWidth = REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
 
         if 'Tab' in messageItem:
+            continue
+    # Special case handling for car load type
+        if ROSETTA[messageItem] == 'Load_Type':
+            line += getShortLoadType(car).ljust(1) + ' '
             continue
     # Special case handling for car number
         if ROSETTA[messageItem] == 'Number':
             line += lineItem.rjust(lineWidth) + ' '
             continue
-
     # Special case handling for the hazardous flag
         if ROSETTA[messageItem] == 'Hazardous' and car['hazardous']:
             lineItem = messageItem[0].upper()
@@ -660,7 +671,7 @@ def localMoveCar(car, manifest, twoCol):
             lineItem = ' '
             lineWidth = 2
 
-        rowItem = formatText(lineItem, lineWidth)
+        rowItem = lineItem.ljust(lineWidth)
         line += rowItem
 
     return line
@@ -781,19 +792,19 @@ def findLongestStringLength(list):
 
     return longestString
 
-def formatText(item, length):
-    """
-    Truncate each item to its defined length in configFile.json and add a space at the end.
-    Called by:
-    PatternsSubroutine.ModelEntities.ETC
-    """
+# def formatText(item, length):
+#     """
+#     Truncate each item to its defined length in configFile.json and add a space at the end.
+#     Called by:
+#     PatternsSubroutine.ModelEntities.ETC
+#     """
         
-    if len(item) < length:
-        xItem = item.ljust(length)
-    else:
-        xItem = item[:length]
+#     if len(item) < length:
+#         xItem = item.ljust(length)
+#     else:
+#         xItem = item[:length]
 
-    return xItem + ' '
+#     return xItem + ' '
 
 def getShortLoadType(car):
     """
@@ -1263,7 +1274,6 @@ def translateMessageFormat():
     rosetta[SB.handleGetMessage('DCC_Address')] = 'DCC_Address'
     rosetta[SB.handleGetMessage('Consist')] = 'Consist'
 # Cars
-    
     rosetta[SB.handleGetMessage('Load_Type')] = 'Load_Type'
     rosetta[SB.handleGetMessage('Load')] = 'Load'
     rosetta[SB.handleGetMessage('Hazardous')] = 'Hazardous'

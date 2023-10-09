@@ -3,14 +3,16 @@
 
 """
 Unified report formatting for all OPS generated reports.
+The idea is to have all the JMRI and OPS text reports share a similar look.
+-Extends the JMRI generated json manifest.
+-Creates a new JMRI text manifest.
+-Creates the OPS text Pattern Report.
 """
 
 from opsEntities import PSE
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901
-
-TMT = PSE.JMRI.jmrit.operations.trains.TrainManifestText()
 
 _psLog = PSE.LOGGING.getLogger('OPS.OE.Manifest')
 
@@ -50,7 +52,7 @@ def extendJmriManifestJson(train):
             carObj = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
             car['finalDestination'] = carObj.getFinalDestinationName()
             car['fdTrack'] = carObj.getFinalDestinationTrackName()
-            car['loadType'] = PSE.getShortLoadType(car)
+            car['loadType'] = carObj.getLoadType()
             car['kernelSize'] = 'NA'
             car['division'] = PSE.LM.getLocationByName(car['location']['userName']).getDivisionName()
 
@@ -62,7 +64,7 @@ def extendJmriManifestJson(train):
             carObj = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
             car['finalDestination'] = carObj.getFinalDestinationName()
             car['fdTrack'] = carObj.getFinalDestinationTrackName()
-            car['loadType'] = PSE.getShortLoadType(car)
+            car['loadType'] = carObj.getLoadType()
             car['kernelSize'] = 'NA'
             car['division'] = PSE.LM.getLocationByName(car['location']['userName']).getDivisionName()
 
@@ -94,8 +96,7 @@ def resequenceJmriManifest(train):
 
 def opsTextPatternReport(location):
     """
-    Creates a text Pattern Report from a json file.
-    Formatting is similar to a JMRI text manifest.
+    Creates a text Pattern Report from an OPS generated json file.
     """
 
     PSE.makeReportItemWidthMatrix()
@@ -115,6 +116,7 @@ def opsTextPatternReport(location):
     epochTime = PSE.convertJmriDateToEpoch(report['date'])
     textPatternReport += PSE.validTime(epochTime) + '\n'
     textPatternReport += '\n'
+    fdTally = []
 # Body
     for location in report['locations']:
         carLength = 0
@@ -122,21 +124,32 @@ def opsTextPatternReport(location):
     # Pick up locos
         for loco in location['engines']['add']:
             seq = loco['sequence'] - 8000
-            formatPrefix = PSE.formatText(str(seq), 4)
+            formatPrefix = ' ' + str(seq).rjust(2, '0') + ' '
     # Move cars
         for car in location['cars']['add']:
             carLength += int(car['length'])
+            fdTally.append(car['finalDestination'])
             seq = car['sequence'] - 8000
-            formatPrefix = ' ' + str(seq).rjust(2, '0') + '  '
+            formatPrefix = ' ' + str(seq).rjust(2, '0') + ' '
             line = PSE.localMoveCar(car, True, False)
             textPatternReport += formatPrefix + ' ' + line + '\n'
         
         totalCars = str(len(location['cars']['add']))
-        textPatternReport += PSE.getBundleItem('Total Cars:') + ' ' + totalCars + PSE.getBundleItem('Track Length:') + '\n'
+        trackLength = location['length']['length']
+        eqptLength = carLength
+        avail = trackLength - eqptLength
+        summaryText = PSE.getBundleItem('Total cars: {} Track length: {} Equipment length: {} Available: {}')
+        textPatternReport += summaryText.format(totalCars, trackLength, eqptLength, avail) + '\n'
         textPatternReport += '\n'
 
-    print(textPatternReport)
-    return
+    textPatternReport += PSE.getBundleItem('Final Destination Totals:') + '\n'
+
+    for track, count in sorted(PSE.occuranceTally(fdTally).items()):
+        if not track:
+            track = PSE.getBundleItem('None')
+        textPatternReport += ' ' + track + ' - ' + str(count) + '\n'
+
+    return textPatternReport
 
 def opsTextManifest(train):
     """"
@@ -146,6 +159,7 @@ def opsTextManifest(train):
     PSE.makeReportItemWidthMatrix()
     PSE.translateMessageFormat()
 
+    TMT = PSE.JMRI.jmrit.operations.trains.TrainManifestText()
     pep = PSE.JMRI.jmrit.operations.setup.Setup.getPickupEnginePrefix()
     dep = PSE.JMRI.jmrit.operations.setup.Setup.getDropEnginePrefix()
     pcp = PSE.JMRI.jmrit.operations.setup.Setup.getPickupCarPrefix()
@@ -175,31 +189,31 @@ def opsTextManifest(train):
     
     # Pick up locos
         for loco in location['engines']['add']:
-            formatPrefix = PSE.formatText(pep, longestStringLength)
+            formatPrefix = pep.ljust(longestStringLength)
 
     # Set out locos
         for loco in location['engines']['remove']:
-            formatPrefix = PSE.formatText(dep, longestStringLength)
+            formatPrefix = dep.ljust(longestStringLength)
 
     # Pick up cars
         for car in location['cars']['add']:
             if car['isLocal']:
                 continue
-            formatPrefix = PSE.formatText(pcp, longestStringLength)
+            formatPrefix = pcp.ljust(longestStringLength)
             line = PSE.pickupCar(car, True, False)
             textManifest += formatPrefix + ' ' + line + '\n'
     # Move cars
         for car in location['cars']['add']:
             if not car['isLocal']:
                 continue
-            formatPrefix = PSE.formatText(mcp, longestStringLength)
+            formatPrefix = mcp.ljust(longestStringLength)
             line = PSE.localMoveCar(car, True, False)
             textManifest += formatPrefix + ' ' + line + '\n'
     # Set out cars
         for car in location['cars']['remove']:
             if car['isLocal']:
                 continue
-            formatPrefix = PSE.formatText(dcp, longestStringLength)
+            formatPrefix = dcp.ljust(longestStringLength)
             line = PSE.dropCar(car, True, False)
             textManifest += formatPrefix + ' ' + line + '\n'
 

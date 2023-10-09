@@ -338,20 +338,19 @@ def makeReportTracks(selectedTracks):
 
     return ModelEntities.getDetailsForTracks(selectedTracks)
 
-def writePatternReport(trackPattern):
+def writePatternReport(textPatternReport):
     """
-    Writes the track pattern report as a json file.
+    Writes the track pattern report as a text file.
     Called by:
     Controller.StartUp.patternReportButton
     """
 
-    fileName = PSE.getBundleItem('ops-pattern-report') + '.json'    
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+    fileName = PSE.getBundleItem('ops-Pattern Report') + '.txt'    
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', fileName)
 
-    trackPatternReport = PSE.dumpJson(trackPattern)
-    PSE.genericWriteReport(targetPath, trackPatternReport)
+    PSE.genericWriteReport(targetPath, textPatternReport)
 
-    return
+    return targetPath
 
 def resetWorkList():
     """
@@ -366,28 +365,28 @@ def resetWorkList():
     workList = PSE.dumpJson(workList)
     PSE.genericWriteReport(targetPath, workList)
 
-    return
+    return targetPath
 
-def getReportForPrint(reportName):
-    """
-    Mini controller.
-    Formats and displays the Track Pattern or Switch List report.
-    Called by:
-    Controller.StartUp.patternReportButton
-    ControllerSetCarsForm.CreateSetCarsFrame.switchListButton
-    """
+# def getReportForPrint(reportName):
+#     """
+#     Mini controller.
+#     Formats and displays the Track Pattern or Switch List report.
+#     Called by:
+#     Controller.StartUp.patternReportButton
+#     ControllerSetCarsForm.CreateSetCarsFrame.switchListButton
+#     """
 
-    _psLog.debug('getReportForPrint')
+#     _psLog.debug('getReportForPrint')
 
-    report = getReport(reportName)
+#     report = getReport(reportName)
 
-    reportForPrint = makePatternReportForPrint(report)
+#     reportForPrint = makePatternReportForPrint(report)
 
-    targetPath = writeReportForPrint(reportName, reportForPrint)
+#     targetPath = writeReportForPrint(reportName, reportForPrint)
 
-    PSE.genericDisplayReport(targetPath)
+#     PSE.genericDisplayReport(targetPath)
 
-    return
+#     return
 
 def getReport(reportName):
     

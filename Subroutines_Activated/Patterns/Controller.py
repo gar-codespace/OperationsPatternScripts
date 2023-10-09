@@ -108,26 +108,10 @@ class StartUp:
         selectedTracks = [track for track, flag in configFile['Patterns']['PT'].items() if flag]
         selectedTracks.sort()
 
-        # PSE.makeReportItemWidthMatrix()
-
         Model.makeJsonTrackPattern(selectedTracks)
-        Manifest.opsTextPatternReport(configFile['Patterns']['PL'])
-
-
-
-
-
-
-
-
-
-
-        # trackPattern = Model.makeTrackPattern(selectedTracks)
-        # Model.writePatternReport(trackPattern)
-
-        # reportName = PSE.getBundleItem('ops-pattern-report')
-        # Model.getReportForPrint(reportName)
-        # Model.trackPatternAsCsv(reportName)
+        textPatternReport = Manifest.opsTextPatternReport(configFile['Patterns']['PL'])
+        targetPath = Model.writePatternReport(textPatternReport)
+        PSE.genericDisplayReport(targetPath)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
