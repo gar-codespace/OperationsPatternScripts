@@ -4,14 +4,15 @@ GitHub Web Page
 Help
 Hide
 Hold
-List of inventory at
+List of inventory at {}
 None
 Operations Folder
 Pattern Scripts
-Pattern Report for location
+Pattern Report for location ({})
 Restart From Default
 Script Output
 Show
+Switch List for location ({})
 Tools
 Total cars: {} Track length: {} Equipment length: {} Available: {}
 Track Length:

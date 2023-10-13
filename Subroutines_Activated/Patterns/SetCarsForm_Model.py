@@ -15,49 +15,111 @@ _psLog = PSE.LOGGING.getLogger('OPS.PT.ModelSetCarsForm')
 
 def appendSwitchList(mergedForm):
     """
-    Appends switch lists into one form to make the ops-switch-list file.
-    Also used by o2o.
+    Appends switch lists into one form to make the ops-Switch List file.
+    Replaces an existing track.
     """
 
-    fileName = PSE.getBundleItem('ops-switch-list') + '.json'    
+    fileName = PSE.getBundleItem('ops-Switch List') + '.json'    
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
     currentWorkList = PSE.jsonLoadS(PSE.genericReadReport(targetPath))
 
-    currentWorkList['tracks'].append(mergedForm['tracks'][0])
+    trackLookUp = []
+    for i, trackName in enumerate(currentWorkList['locations']):
+        trackLookUp.append((trackName['userName'], i))
+
+    index = [x[1] for x in trackLookUp if mergedForm['locations'][0]['userName'] == x[0]]
+    if index:
+        currentWorkList['locations'].pop(index[0])
+
+    currentWorkList['locations'].append(mergedForm['locations'][0])
 
     currentWorkList = PSE.dumpJson(currentWorkList)
     PSE.genericWriteReport(targetPath, currentWorkList)
 
     return
 
-def formIsValid(setCarsForm, textBoxEntry):
+# def formIsValid(setCarsForm, textBoxEntry):
+#     """
+#     Checks that both submitted forms are the same length
+#     Called by:
+#     ControllerSetCarsForm.CreateSetCarsForm.quickCheck
+#     """
+
+#     _psLog.debug('testValidityOfForm')
+
+#     locoCount = len(setCarsForm['tracks'][0]['locos'])
+#     carCount = len(setCarsForm['tracks'][0]['cars'])
+
+#     if len(textBoxEntry) == locoCount + carCount:
+#         return True
+#     else:
+#         return False
+
+def getMergedForm(setCarsForm, textBoxEntry):
     """
-    Checks that both submitted forms are the same length
     Called by:
-    ControllerSetCarsForm.CreateSetCarsForm.quickCheck
-    """
-
-    _psLog.debug('testValidityOfForm')
-
-    locoCount = len(setCarsForm['tracks'][0]['locos'])
-    carCount = len(setCarsForm['tracks'][0]['cars'])
-
-    if len(textBoxEntry) == locoCount + carCount:
-        return True
-    else:
-        return False
-
-def makeMergedForm(setCarsForm, buttonDict):
-    """
-    Called by:
-    ControllerSetCarsForm.CreateSetCarsForm.o2oButton
     switchListButton
     """
 
-    inputList = ModelEntities.makeUserInputList(buttonDict)
-    mergedForm = ModelEntities.merge(setCarsForm, inputList)
+    _psLog.debug('getMergedForm')
+
+    inputList = getUserInputList(textBoxEntry)
+    mergedForm = ModelEntities.appendTrackData(setCarsForm, inputList)
 
     return mergedForm
+
+def getUserInputList(textBoxEntry):
+
+    userInputList = []
+    for userInput in textBoxEntry:
+        userInputList.append(unicode(userInput.getText(), PSE.ENCODING))
+
+    return userInputList
+
+def mergeSetCarsForm(setCarsForm, inputList):
+    """
+    Merge the values in textBoxEntry into the destination field of the set cars form data.
+    """
+
+    location = PSE.readConfigFile('Patterns')['PL']
+    allTracksAtLoc = ModelEntities.getTrackNamesByLocation(None)
+    currentTrack = setCarsForm['locations'][0]['userName']
+
+    i = 0
+
+    for loco in setCarsForm['locations'][0]['engines']['add']:
+    # Skip locos that are assigned to a train
+        if loco['onTrain']:
+            i += 1
+            continue
+        userInput = unicode(inputList[i], PSE.ENCODING)
+        if userInput in allTracksAtLoc:
+            loco['destination']['userName'] = location
+            loco['destination']['track']['userName'] = userInput
+        else:
+            loco['destination']['userName'] = location
+
+            loco['destination']['track']['userName'] = currentTrack
+
+        i += 1
+
+    for car in setCarsForm['locations'][0]['cars']['add']:
+    # Skip cars that are assigned to a train
+        if car['onTrain']:
+            i += 1
+            continue
+
+        userInput = unicode(inputList[i], PSE.ENCODING)
+        if userInput in allTracksAtLoc:
+            car['destination']['userName'] = location
+            car['destination']['track']['userName'] = userInput
+        else:
+            car['destination']['userName'] = location
+            car['destination']['track']['userName'] = currentTrack
+
+        i += 1
+
+    return setCarsForm
 
 def moveRollingStock(switchList):
     """

@@ -7,6 +7,7 @@ The idea is to have all the JMRI and OPS text reports share a similar look.
 -Extends the JMRI generated json manifest.
 -Creates a new JMRI text manifest.
 -Creates the OPS text Pattern Report.
+-Creates the OPS text Switch List.
 """
 
 from opsEntities import PSE
@@ -112,7 +113,7 @@ def opsTextPatternReport(location):
     textPatternReport += PSE.getExtendedRailroadName() + '\n'
     textPatternReport += '\n'
 
-    textPatternReport += PSE.getBundleItem('Pattern Report for location') + ' (' + location + ')\n'
+    textPatternReport += PSE.getBundleItem('Pattern Report for location ({})').format(location) + '\n'
     epochTime = PSE.convertJmriDateToEpoch(report['date'])
     textPatternReport += PSE.validTime(epochTime) + '\n'
     textPatternReport += '\n'
@@ -120,7 +121,7 @@ def opsTextPatternReport(location):
 # Body
     for location in report['locations']:
         carLength = 0
-        textPatternReport += PSE.getBundleItem('List of inventory at') + ' ' + location['userName'] + '\n'
+        textPatternReport += PSE.getBundleItem('List of inventory at {}').format(location['userName']) + '\n'
     # Pick up locos
         for loco in location['engines']['add']:
             seq = loco['sequence'] - 8000
@@ -151,6 +152,69 @@ def opsTextPatternReport(location):
 
     return textPatternReport
 
+def opsTextSwitchList():
+    """
+    Creates a text Switch List from an OPS generated json file.
+    """
+    PSE.makeReportItemWidthMatrix()
+    PSE.translateMessageFormat()
+
+    configFile = PSE.readConfigFile()
+
+    location = configFile['Patterns']['PL']
+    dep = PSE.JMRI.jmrit.operations.setup.Setup.getDropEnginePrefix()
+    mcp = PSE.JMRI.jmrit.operations.setup.Setup.getLocalPrefix()
+    hcp = configFile['Patterns']['US']['HCP']
+    longestStringLength = PSE.findLongestStringLength((dep, mcp, hcp))
+
+
+    reportName = PSE.getBundleItem('ops-Switch List') + '.json'
+    reportPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
+    report = PSE.loadJson(PSE.genericReadReport(reportPath))
+
+    textSwitchList = ''
+
+# Header
+    textSwitchList += PSE.getExtendedRailroadName() + '\n'
+    textSwitchList += '\n'
+
+    textSwitchList += PSE.getBundleItem('Switch List for location ({})').format(location) + '\n'
+    epochTime = PSE.convertJmriDateToEpoch(report['date'])
+    textSwitchList += PSE.validTime(epochTime) + '\n'
+    textSwitchList += '\n'
+# Body
+    for location in report['locations']: # For the OPS switch list, the locations list is a track list.
+        carLength = 0
+        textSwitchList += PSE.getBundleItem('List of inventory at {}').format(location['userName']) + '\n'
+    # Pick up locos
+        for loco in location['engines']['add']:
+            currentTrack = car['location']['track']['userName']
+            destTrack = car['destination']['track']['userName']
+            if currentTrack == destTrack:
+                formatPrefix = hcp.format(longestStringLength)
+            else:
+                formatPrefix = dep.format(longestStringLength)
+
+            # line = PSE.localMoveCar(loco, True, False)
+            # textSwitchList += formatPrefix + ' ' + line + '\n'
+    # Move cars
+        for car in location['cars']['add']:
+            currentTrack = car['location']['track']['userName']
+            destTrack = car['destination']['track']['userName']
+            if currentTrack == destTrack:
+                formatPrefix = hcp.ljust(longestStringLength)
+            elif car['onTrain']:
+                formatPrefix = hcp.ljust(longestStringLength)
+            else:
+                formatPrefix = mcp.ljust(longestStringLength)
+
+            line = PSE.localMoveCar(car, True, False)
+            textSwitchList += formatPrefix + line + '\n'
+
+        textSwitchList += '\n'
+
+    return textSwitchList
+
 def opsTextManifest(train):
     """"
     OPS version of the JMRI generated text manifest.
@@ -165,7 +229,7 @@ def opsTextManifest(train):
     pcp = PSE.JMRI.jmrit.operations.setup.Setup.getPickupCarPrefix()
     dcp = PSE.JMRI.jmrit.operations.setup.Setup.getDropCarPrefix()
     mcp = PSE.JMRI.jmrit.operations.setup.Setup.getLocalPrefix()
-    hcp = PSE.getBundleItem('Hold')
+    hcp = PSE.readConfigFile()['Patterns']['US']['HCP']
 
     longestStringLength = PSE.findLongestStringLength((pep, dep, pcp, dcp, mcp, hcp))
 
@@ -178,7 +242,6 @@ def opsTextManifest(train):
 # Header
     textManifest += PSE.getExtendedRailroadName() + '\n'
     textManifest += '\n'
-
     textManifest += TMT.getStringManifestForTrain().format(train.getName(), train.getDescription()) + '\n'
     epochTime = PSE.convertJmriDateToEpoch(manifest['date'])
     textManifest += PSE.validTime(epochTime) + '\n'

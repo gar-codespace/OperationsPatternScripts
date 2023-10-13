@@ -163,6 +163,8 @@ def makeSetCarsForTrackForm(setCarsFormData):
 
     _psLog.debug('makeSetCarsForTrackForm')
 
+
+
     allSetCarsWidgets = {}
 
     setCarsForm = PSE.JAVX_SWING.JPanel()
@@ -173,14 +175,19 @@ def makeSetCarsForTrackForm(setCarsFormData):
     
     trackButtonsPanel, buttonList = makeSetCarsTrackButtons()
     allSetCarsWidgets['trackButtons'] = buttonList
-
     setCarsForm.add(trackButtonsPanel)
+
+
 
     inventoryPanel, textBoxList = makeSetCarsListOfInventory(setCarsFormData)
     allSetCarsWidgets['textBoxEntry'] = textBoxList
-    
     setCarsForm.add(inventoryPanel)
-    # setCarsForm.add(PSE.JAVX_SWING.JSeparator())
+    setCarsForm.add(PSE.JAVX_SWING.JSeparator())
+
+
+
+
+    
 
     schedulePanel, scheduleButton = makeSetCarsScheduleRow(setCarsFormData)
     allSetCarsWidgets['scheduleButton'] = None
@@ -203,14 +210,14 @@ def makeSetCarsFormHeader(setCarsFormData):
 
     _psLog.debug('makeSetCarsFormHeader')
 
-    splitName = setCarsFormData['railroadName'].split('\n')
-    trackName = setCarsFormData['tracks'][0]['trackName'] # There's only one track
-    locationName = setCarsFormData['location'] # There's only one location
-    validDate = setCarsFormData['date']
+    splitName = setCarsFormData['railroad'].split('\n')
+    trackName = setCarsFormData['locations'][0]['userName'] # There's only one track
+    locationName = PSE.readConfigFile('Patterns')['PL'] # There's only one location
+    validDate = PSE.isoValidTime(setCarsFormData['date'])
 
     headerTrackLabel = PSE.JAVX_SWING.JLabel()
     headerTrackLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
-    headerTrackLabel.setText(PSE.getBundleItem('Set Rolling Stock for track:') + ' ' + trackName + ' ' + PSE.getBundleItem('at') + ' ' + locationName)
+    headerTrackLabel.setText(PSE.getBundleItem('Set Rolling Stock for track: {} at {}').format(trackName, locationName))
 
     headerValidLabel = PSE.JAVX_SWING.JLabel()
     headerValidLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)
@@ -258,7 +265,7 @@ def makeSetCarsTrackButtons():
     trackButtonsWrapper = PSE.JAVX_SWING.JPanel()
     trackButtonsWrapper.setLayout(PSE.JAVX_SWING.BoxLayout(trackButtonsWrapper, PSE.JAVX_SWING.BoxLayout.Y_AXIS))
     trackButtonsWrapper.setMinimumSize(PSE.JAVA_AWT.Dimension(paneHeight, paneHeight))
-    trackButtonsWrapper.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Tracks at') +  ' ' + location)
+    trackButtonsWrapper.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Tracks at {}').format(location))
 
     trackButtonsWrapper.add(trackButtonsPane)
 
@@ -275,21 +282,22 @@ def makeSetCarsListOfInventory(setCarsFormData):
     inventoryFormBody.setLayout(PSE.JAVX_SWING.BoxLayout(inventoryFormBody, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
 
     setCarsEqptRows = MakeSetCarsEqptRows(setCarsFormData)
+    trackName = setCarsFormData['locations'][0]['userName']
 
-    if setCarsFormData['tracks'][0]['locos']:
+    if setCarsFormData['locations'][0]['engines']['add']:
         locoFormBody = PSE.JAVX_SWING.JPanel()
         locoFormBody.setLayout(PSE.JAVX_SWING.BoxLayout(locoFormBody, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
-        locoFormBody.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Locomotives at') +  ' ' + setCarsFormData['tracks'][0]['trackName'])
+        locoFormBody.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Locomotives at {}').format(trackName))
 
-        setCarsLocoRows = setCarsEqptRows.makeSetCarsLocoRows()
-        for loco in setCarsLocoRows:
-            locoFormBody.add(loco)
+        # setCarsLocoRows = setCarsEqptRows.makeSetCarsLocoRows()
+        # for loco in setCarsLocoRows:
+        #     locoFormBody.add(loco)
         inventoryFormBody.add(locoFormBody)
 
-    if setCarsFormData['tracks'][0]['cars']:
+    if setCarsFormData['locations'][0]['cars']['add']:
         carFormBody = PSE.JAVX_SWING.JPanel()
         carFormBody.setLayout(PSE.JAVX_SWING.BoxLayout(carFormBody, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
-        carFormBody.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Cars at') +  ' ' + setCarsFormData['tracks'][0]['trackName'])
+        carFormBody.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Cars at {}').format(trackName))
 
         setCarsCarRows = setCarsEqptRows.makeSetCarsCarRows()
         for car in setCarsCarRows:
@@ -315,14 +323,15 @@ def makeSetCarsScheduleRow(setCarsFormData):
     _psLog.debug('makeSetCarsScheduleRow')
 
     trackLocation = PSE.readConfigFile('Patterns')['PL']
-    trackName = setCarsFormData['tracks'][0]['trackName']
+    trackName = setCarsFormData['locations'][0]['userName']
     trackObject = PSE.LM.getLocationByName(trackLocation).getTrackByName(trackName, None)
     scheduleObject = trackObject.getSchedule()
     if scheduleObject:
         schedulePanel = PSE.JAVX_SWING.JPanel()
-        schedulePanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Schedule for') + ' ' + trackName)
+        schedulePanel.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Schedule for {}').format(trackName))
         scheduleButton = PSE.JAVX_SWING.JButton(scheduleObject.getName())
-        schedulePanel.add(PSE.JAVX_SWING.JLabel(PSE.getBundleItem('Schedule:') + ' '))
+        schedulePanel.add(PSE.JAVX_SWING.JLabel(PSE.getBundleItem('Schedule:')))
+        schedulePanel.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(5,0)))
         schedulePanel.add(scheduleButton)
 
         return schedulePanel, scheduleButton
@@ -390,6 +399,7 @@ class MakeSetCarsEqptRows():
         self.SCRIPT_NAME = 'OperationsPatternScripts.MakeSetCarsEqptRows'
 
         PSE.makeReportItemWidthMatrix()
+        PSE.translateMessageFormat()
 
         self.reportWidth = PSE.REPORT_ITEM_WIDTH_MATRIX
         fontSize = PSE.PM.getFontSize()
@@ -411,13 +421,15 @@ class MakeSetCarsEqptRows():
         """
 
         listOfLocoRows = []
-        locos = self.setCarsFormData['tracks'][0]['locos']
+        locos = self.setCarsFormData['locations'][0]['engines']['add']
 
         for loco in locos:
+            locoItems = PSE.translateCarFormat(loco)
             combinedInputLine = PSE.JAVX_SWING.JPanel()
             combinedInputLine.setBackground(self.locoColor)
             if loco['onTrain']:
                 combinedInputLine.setBackground(self.alertColor)
+
             inputText = PSE.JAVX_SWING.JTextField(5)
             self.textBoxEntry.append(inputText)
             inputBox = makeSwingBox(self.panelWidth * 6, self.panelHeight)
@@ -425,30 +437,33 @@ class MakeSetCarsEqptRows():
             combinedInputLine.add(inputBox)
 
             messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
-            for item in messageFormat:
+            for messageItem in messageFormat:
                 if 'Tab' in item:
                     continue
-                labelName = loco[item]
-                label = PSE.JAVX_SWING.JLabel(labelName)
-                box = makeSwingBox(self.reportWidth[item] * self.panelWidth, self.panelHeight)
+                labelName = locoItems[PSE.ROSETTA[messageItem]]
+                lineWidth = PSE.REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
+
+                rowItem = labelName.ljust(lineWidth)
+                label = PSE.JAVX_SWING.JLabel(rowItem)
+                box = makeSwingBox(lineWidth * self.panelWidth, self.panelHeight)
                 box.add(label)
                 combinedInputLine.add(box)
 
             combinedInputLine.add(PSE.JAVX_SWING.Box.createHorizontalGlue())
-
             listOfLocoRows.append(combinedInputLine)
 
         return listOfLocoRows
 
     def makeSetCarsCarRows(self):
         """
-        Creates the car lines of the pattern report form
+        Creates the car lines of the Set Cars frame.
         """
 
         listOfCarRows = []
-        cars = self.setCarsFormData['tracks'][0]['cars']
+        cars = self.setCarsFormData['locations'][0]['cars']['add']
 
         for car in cars:
+            carItems = PSE.translateCarFormat(car)
             combinedInputLine = PSE.JAVX_SWING.JPanel()
             combinedInputLine.setBackground(self.carColor)
             if car['onTrain']:
@@ -461,19 +476,30 @@ class MakeSetCarsEqptRows():
             combinedInputLine.add(inputBox)
 
             messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
-            for item in messageFormat:
-                if 'Tab' in item:
+            for messageItem in messageFormat:
+                if 'Tab' in messageItem:
                     continue
-            # Special case handling for the hazardous flag
-                if item == PSE.SB.handleGetMessage('Hazardous') and car[item]:
-                    labelName = item
-                elif item == PSE.SB.handleGetMessage('Hazardous') and not car[item]:
-                    labelName = ' '
-                else:
-                    labelName = car[item]
+                labelName = carItems[PSE.ROSETTA[messageItem]]
+                lineWidth = PSE.REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
 
-                label = PSE.JAVX_SWING.JLabel(labelName)
-                box = makeSwingBox(self.reportWidth[item] * self.panelWidth, self.panelHeight)
+            # Special case handling for car load type
+                if PSE.ROSETTA[messageItem] == 'Load_Type':
+                    labelName = PSE.getShortLoadType(car).ljust(1)
+                    lineWidth = 2
+            # Special case handling for car number
+                if PSE.ROSETTA[messageItem] == 'Number':
+                    labelName = labelName.rjust(lineWidth)
+            # Special case handling for the hazardous flag
+                if PSE.ROSETTA[messageItem] == 'Hazardous' and car['hazardous']:
+                    labelName = messageItem[0].upper()
+                    lineWidth = 2
+                elif PSE.ROSETTA[messageItem] == 'Hazardous' and not car['hazardous']:
+                    labelName = ' '
+                    lineWidth = 2
+
+                rowItem = labelName.ljust(lineWidth)
+                label = PSE.JAVX_SWING.JLabel(rowItem)
+                box = makeSwingBox(lineWidth * self.panelWidth, self.panelHeight)
                 box.add(label)
                 combinedInputLine.add(box)
 

@@ -589,7 +589,7 @@ def pickupCar(car, manifest, twoCol):
             lineItem = ' '
             lineWidth = 2
 
-        rowItem = lineItem.ljust(lineWidth)
+        rowItem = lineItem.ljust(lineWidth)[:lineWidth]
         line += rowItem
 
     return line
@@ -630,7 +630,7 @@ def dropCar(car, manifest, twoCol):
             lineItem = ' '
             lineWidth = 2
 
-        rowItem = lineItem.ljust(lineWidth)
+        rowItem = lineItem.ljust(lineWidth)[:lineWidth]
         line += rowItem
 
     return line
@@ -671,7 +671,7 @@ def localMoveCar(car, manifest, twoCol):
             lineItem = ' '
             lineWidth = 2
 
-        rowItem = lineItem.ljust(lineWidth)
+        rowItem = lineItem.ljust(lineWidth)[:lineWidth]
         line += rowItem
 
     return line
@@ -816,10 +816,10 @@ def getShortLoadType(car):
     PatternsSubroutine.Model`
     """
 
-    try: # car is sent in from Patterns
-        carObject = CM.getByRoadAndNumber(car[SB.handleGetMessage('Road')], car[SB.handleGetMessage('Number')])
-    except KeyError: # car is sent in from JMRI manifest json
-        carObject = CM.getByRoadAndNumber(car['road'], car['number'])
+    # try: # car is sent in from Patterns
+    #     carObject = CM.getByRoadAndNumber(car[SB.handleGetMessage('Road')], car[SB.handleGetMessage('Number')])
+    # except KeyError: # car is sent in from JMRI manifest json
+    carObject = CM.getByRoadAndNumber(car['road'], car['number'])
 
     lt =  getBundleItem('Unknown').upper()[0]
     if carObject.getLoadName() == 'E':

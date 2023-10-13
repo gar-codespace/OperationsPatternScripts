@@ -108,9 +108,18 @@ class StartUp:
         selectedTracks = [track for track, flag in configFile['Patterns']['PT'].items() if flag]
         selectedTracks.sort()
 
-        Model.makeJsonTrackPattern(selectedTracks)
+        Model.makeJsonTrackPattern(selectedTracks) # Write to a file
+
+
         textPatternReport = Manifest.opsTextPatternReport(configFile['Patterns']['PL'])
-        targetPath = Model.writePatternReport(textPatternReport)
+
+
+
+
+
+        # Add CSV report maker
+
+        targetPath = Model.writePatternReport(textPatternReport, True)
         PSE.genericDisplayReport(targetPath)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
@@ -130,7 +139,7 @@ class StartUp:
  
         PSE.makeReportItemWidthMatrix()
 
-        Model.resetWorkList()
+        Model.resetSwitchList()
 
         windowOffset = 200
         for track in selectedTracks:

@@ -2,10 +2,16 @@
 # © 2023 Greg Ritacco
 
 """
-Makes a 'Set Cars Form for Track X' form for each selected track.
+Makes a 'Set Cars Form for Track X' frame for each selected track.
+Developers Note:
+The Set Cars frame data and switch list json follow the same format as the JMRI json manifest,
+with one difference:
+With the JMRI json manifest, manifest['locations'] is a list of location dictionaries, IE userName is the name of the location.
+With the OPS Set Cars frame and switch list, self.setCarsData['locations'] is a list of track dictionaries, IE userName is the name of the track.
 """
 
 from opsEntities import PSE
+from opsEntities import Manifest
 from Subroutines_Activated.Patterns import Model
 from Subroutines_Activated.Patterns import SetCarsForm_Model
 from Subroutines_Activated.Patterns import SetCarsForm_View
@@ -20,17 +26,13 @@ _psLog = PSE.LOGGING.getLogger('OPS.PT.ControllerSetCarsForm')
 class CreateSetCarsFrame:
     """
     Creates an instance of each 'Set Cars Form for Track X' window.
+    self.setCarsForm follows the JMRI json manifest format.
     """
 
     def __init__(self, selectedTrack):
 
-        self.header = Model.makeReportHeader()
-        self.track = Model.makeReportTracks([selectedTrack])
+        self.setCarsData = Model.getSetCarsData(selectedTrack)
 
-        self.locationName = self.header['location']
-        self.trackName = selectedTrack
-
-        self.setCarsForm = {}
         self.setCarsTracks = {}
         self.buttonDict = {}
         self.mergedForm = {}
@@ -40,30 +42,28 @@ class CreateSetCarsFrame:
         return
 
     def makeForm(self):
+        """
+        Maybe, maybe not.
+        """
 
-        self.setCarsForm = self.header
-
-        self.setCarsForm['tracks'] = [self.track][0]
-        self.setCarsForm = Model.insertStandins(self.setCarsForm)
+        # self.setCarsForm = Model.insertStandins(self.setCarsData)
 
         return
     
     def makeFrame(self):
 
-        setCarsFrame = SetCarsForm_View.ManageSetCarsGui(self.setCarsForm)
+        setCarsFrame = SetCarsForm_View.ManageSetCarsGui(self.setCarsData)
         setCarsFrame.makeSetCarsFrame()
-
-        setCarsForTrackWindow = setCarsFrame.getSetCarsForTrackWindow()
-
-        setCarsForTrackWindow.setTitle(PSE.getBundleItem('Set Rolling Stock for track:') + ' ' + self.track[0]['trackName'])
-        setCarsForTrackWindow.setName('setCarsWindow')
-        setCarsForTrackWindow.pack()
+        setCarsForTrackFrame = setCarsFrame.getSetCarsForTrackFrame()
+        trackName = self.setCarsData['locations'][0]['userName']
+        setCarsForTrackFrame.setTitle(PSE.getBundleItem('Set Rolling Stock for track: {}').format(trackName))
+        setCarsForTrackFrame.setName('setCarsWindow')
+        setCarsForTrackFrame.pack()
 
         self.buttonDict = setCarsFrame.getButtonDict()
-
         self.activateButtons()
 
-        return setCarsForTrackWindow
+        return setCarsForTrackFrame
 
     def activateButtons(self):
 
@@ -85,27 +85,40 @@ class CreateSetCarsFrame:
 
     def quickCheck(self):
 
-        if SetCarsForm_Model.formIsValid(self.setCarsForm, self.buttonDict['textBoxEntry']):
+        textBoxLength = len(self.buttonDict['textBoxEntry'])
+        carRosterLength = len(self.setCarsData['locations'][0]['cars']['add'])
+        locoRosterLength = len(self.setCarsData['locations'][0]['engines']['add'])
+
+        if textBoxLength == locoRosterLength + carRosterLength:
             _psLog.info('PASS - form validated')
+
             return True
         else:
             _psLog.critical('FAIL - CreateSetCarsFrame.quickCheck.formIsValid')
-            PSE.openOutputFrame(PSE.getBundleItem('FAIL: CreateSetCarsFrame.quickCheck.formIsValid'))            
+            PSE.openOutputFrame(PSE.getBundleItem('FAIL: CreateSetCarsFrame.quickCheck.formIsValid'))  
+
             return False
 
     def trackRowButton(self, MOUSE_CLICKED):
-        """Any button of the 'Set Cars Form for Track X' - row of track buttons"""
+        """
+        Any button of the 'Set Cars Form for Track X' - row of track buttons
+        """
 
         PSE.TRACK_NAME_CLICKED_ON = unicode(MOUSE_CLICKED.getSource().getText(), PSE.ENCODING)
 
         return
 
     def scheduleButton(self, MOUSE_CLICKED):
-        """The schedule button if displayed for the active 'Set Cars Form for Track X' window."""
+        """
+        The schedule button if displayed for the active 'Set Cars Form for Track X' window.
+        """
 
         scheduleName = MOUSE_CLICKED.getSource().getText()
         schedule = PSE.SM.getScheduleByName(scheduleName)
-        track = PSE.LM.getLocationByName(self.locationName).getTrackByName(self.trackName, None)
+
+        locationName = PSE.readConfigFile('Patterns')['PL']
+        trackName = self.setCarsData['locations'][0]['userName'] 
+        track = PSE.LM.getLocationByName(locationName).getTrackByName(trackName, None)
         scheduleEditFrame = PSE.JMRI.jmrit.operations.locations.schedules.ScheduleEditFrame(schedule, track)
 
         PSE.LM.addPropertyChangeListener(PSE.ListenToThePSWindow(scheduleEditFrame))
@@ -115,20 +128,24 @@ class CreateSetCarsFrame:
         return
 
     def switchListButton(self, MOUSE_CLICKED):
-        """Makes a Set Cars (SC) switch list for the active 'Set Rolling Stock for Track X' window."""
+        """
+        Makes a Set Cars (SC) switch list for the active 'Set Rolling Stock for Track X' window.
+        """
 
         _psLog.debug(MOUSE_CLICKED)
 
         if not self.quickCheck():
             return
+        
+        userInputList = SetCarsForm_Model.getUserInputList(self.buttonDict['textBoxEntry'])
+        mergedForm = SetCarsForm_Model.mergeSetCarsForm(self.setCarsData, userInputList)
 
-        mergedForm = SetCarsForm_Model.makeMergedForm(self.setCarsForm, self.buttonDict['textBoxEntry'])
+        SetCarsForm_Model.appendSwitchList(mergedForm) # Write to a file
 
-        SetCarsForm_Model.appendSwitchList(mergedForm)
+        textSwitchList = Manifest.opsTextSwitchList()
 
-        reportName = PSE.getBundleItem('ops-switch-list')
-        Model.getReportForPrint(reportName)
-        Model.trackPatternAsCsv(reportName)
+        targetPath = Model.writePatternReport(textSwitchList, False)
+        PSE.genericDisplayReport(targetPath)
 
         MOUSE_CLICKED.getSource().setBackground(PSE.JAVA_AWT.Color.GREEN)
     # Plays well with others
@@ -149,7 +166,8 @@ class CreateSetCarsFrame:
         if not self.quickCheck():
             return
 
-        self.mergedForm = SetCarsForm_Model.makeMergedForm(self.setCarsForm, self.buttonDict['textBoxEntry'])
+        self.mergedForm = SetCarsForm_Model.getMergedForm(self.setCarsForm, self.buttonDict['textBoxEntry'])
+        print(self.setCarsForm)
 
     # Open the pop up window
         PSE.closeWindowByName('popupFrame')
@@ -171,7 +189,9 @@ class CreateSetCarsFrame:
         return
 
     def asCheckBox(self, EVENT):
-        """The Apply Schedule check box."""
+        """
+        The Apply Schedule check box.
+        """
 
         configFile = PSE.readConfigFile()
 
@@ -185,7 +205,9 @@ class CreateSetCarsFrame:
         return
 
     def itlCheckBox(self,EVENT):
-        """The Ignore Track Length checkbox."""
+        """
+        The Ignore Track Length checkbox.
+        """
 
         configFile = PSE.readConfigFile()
 

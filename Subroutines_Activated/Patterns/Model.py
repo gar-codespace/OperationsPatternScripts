@@ -118,6 +118,7 @@ def locComboSelected(EVENT):
 
 def makeTrackRows():
     """
+    For the plugin GUI.
     Creates a row of check boxes, one for each track.
     If no tracks for the selected location, displays a message.
     """
@@ -268,17 +269,17 @@ def makeJsonTrackPattern(selectedTracks):
     This track pattern json file mimics the JMRI manifest json.
     """
 
-    configFile = PSE.readConfigFile()
+    # configFile = PSE.readConfigFile()
 
-    jsonTrackPattern = {}
+    # jsonTrackPattern = {}
 
-    jsonTrackPattern['date'] = PSE.isoTimeStamp()
-    jsonTrackPattern['description'] = configFile['Patterns']['TD']
-    jsonTrackPattern['locations'] = ModelEntities.getDetailsByTrack(selectedTracks)
-    jsonTrackPattern['railroad'] = PSE.getExtendedRailroadName()
-    jsonTrackPattern['userName'] = configFile['Patterns']['TD']
+    # jsonTrackPattern['date'] = PSE.isoTimeStamp()
+    # jsonTrackPattern['description'] = configFile['Patterns']['TD']
+    # jsonTrackPattern['railroad'] = PSE.getExtendedRailroadName()
+    # jsonTrackPattern['userName'] = configFile['Patterns']['TD']
     
-
+    jsonTrackPattern = makeReportHeader()
+    jsonTrackPattern['locations'] = ModelEntities.getDetailsByTrack(selectedTracks)
 
 
 
@@ -316,51 +317,71 @@ def makeTrackPattern(selectedTracks):
     return patternReport
 
 def makeReportHeader():
+    """
+    Makes the header for:
+    OPS Pattern Report
+    OPS Set Cars frame
+    OPS Switch List.
+    """
 
     configFile = PSE.readConfigFile()
 
     reportHeader = {}
-    reportHeader['railroadName'] = PSE.getExtendedRailroadName()
-    reportHeader['railroadDescription'] = configFile['Patterns']['RD']
-    reportHeader['trainName'] = configFile['Patterns']['TN']
-    reportHeader['trainDescription'] = configFile['Patterns']['TD']
-    reportHeader['trainComment'] = configFile['Patterns']['TC']
-    reportHeader['division'] = configFile['Patterns']['PD']
-    reportHeader['date'] = unicode(PSE.validTime(), PSE.ENCODING)
-    reportHeader['location'] = configFile['Patterns']['PL']
+
+    reportHeader['date'] = PSE.isoTimeStamp()
+    reportHeader['description'] = configFile['Patterns']['TD']
+    reportHeader['railroad'] = PSE.getExtendedRailroadName()
+    reportHeader['userName'] = configFile['Patterns']['TD']
 
     return reportHeader
 
-def makeReportTracks(selectedTracks):
+# def makeReportTracks(selectedTracks):
+#     """
+#     Depricated
+#     """
+
+#     return ModelEntities.getDetailsByTrack(selectedTracks)
+
+def getSetCarsData(selectedTrack):
     """
-    Tracks is a list of dictionaries.
+    Gets the data for:
+    OPS Set Cars frame.
+    OPS set cars switch list.
     """
 
-    return ModelEntities.getDetailsForTracks(selectedTracks)
+    setCarsData = makeReportHeader()
+    setCarsData['locations'] = ModelEntities.getDetailsByTrack([selectedTrack])
 
-def writePatternReport(textPatternReport):
+    return setCarsData
+
+
+def writePatternReport(textPatternReport, flag):
     """
     Writes the track pattern report as a text file.
     Called by:
     Controller.StartUp.patternReportButton
     """
 
-    fileName = PSE.getBundleItem('ops-Pattern Report') + '.txt'    
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', fileName)
+    if flag: # Report is a track pattern
+        fileName = PSE.getBundleItem('ops-Pattern Report') + '.txt'
+        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', fileName)
+    else: # Report is a switch list
+        fileName = PSE.getBundleItem('ops-Switch List') + '.txt'
+        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'switchLists', fileName)  
 
     PSE.genericWriteReport(targetPath, textPatternReport)
 
     return targetPath
 
-def resetWorkList():
+def resetSwitchList():
     """
     The worklist is reset when the Set Cars button is pressed.
     """
 
     workList = makeReportHeader()
-    workList['tracks'] = []
+    workList['locations'] = []
 
-    fileName = PSE.getBundleItem('ops-switch-list') + '.json'
+    fileName = PSE.getBundleItem('ops-Switch List') + '.json'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
     workList = PSE.dumpJson(workList)
     PSE.genericWriteReport(targetPath, workList)

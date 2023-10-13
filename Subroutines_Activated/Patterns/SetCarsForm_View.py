@@ -15,23 +15,23 @@ _psLog = PSE.LOGGING.getLogger('OPS.PT.ViewSetCarsForm')
 
 class ManageSetCarsGui:
 
-    def __init__(self, setCarsForm):
+    def __init__(self, setCarsData):
 
-        self.setCarsForm = setCarsForm
-        self.setCarsData = None
+        self.setCarsData = setCarsData
+        self.setCarsForm = None
         self.allSetCarsWidgets = None
 
         return
 
     def makeSetCarsFrame(self):
 
-        self.setCarsData, self.allSetCarsWidgets = GUI.makeSetCarsForTrackForm(self.setCarsForm)
+        self.setCarsForm, self.allSetCarsWidgets = GUI.makeSetCarsForTrackForm(self.setCarsData)
 
         return
 
-    def getSetCarsForTrackWindow(self):
+    def getSetCarsForTrackFrame(self):
 
-        setCarsWindow = GUI.setCarsForTrackWindow(self.setCarsData)
+        setCarsWindow = GUI.setCarsForTrackWindow(self.setCarsForm)
 
         return setCarsWindow
 

@@ -7,6 +7,8 @@ Todo:
   Refactor car['kernelSize'] = 'NA'
   Maybe put Dest and FD standins into Manifest.py
   Rework how haz is displayed: If loaded and haz, getShortLoadType = H and a * in the hazardous column
+  flesh out genericTrackDetails['loads'] = 0
+  add back onTrain and implement
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.

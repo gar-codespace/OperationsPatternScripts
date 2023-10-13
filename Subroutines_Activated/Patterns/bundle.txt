@@ -6,7 +6,7 @@ Apply the destination tracks schedule
 at
 Available:
 Cancel
-Cars at
+Cars at {}
 Division:
 Do Not Apply Schedule
 Empty
@@ -18,11 +18,11 @@ Hazardous
 Ignore track length
 Load
 Location:
-Locomotives at
+Locomotives at {}
 Make Work
 Occupied
 ops-Pattern Report
-ops-switch-list
+ops-Switch List
 ops-work-list
 Pattern Report
 Pattern Report for Tracks
@@ -30,11 +30,12 @@ Pattern Tracks
 Report Totals for Cars:
 Report Work
 Restart with default settings
-Schedule for
+Schedule for {}
 Schedule:
 Set Cars
-Set Rolling Stock for track:
 Set Rolling Stock to Track
+Set Rolling Stock for track: {}
+Set Rolling Stock for track: {} at {}
 Single
 + Switch List
 There are no tracks for this selection
@@ -43,8 +44,7 @@ Track Inquiry
 Track List:
 Track Totals for Cars:
 Track:
-Tracks at
+Tracks at {}
 Unknown
 Work Location:
 Yard tracks only
-

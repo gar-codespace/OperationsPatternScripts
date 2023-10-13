@@ -152,60 +152,70 @@ def getTrackNamesByLocation(trackType):
     except AttributeError:
         return allTracksAtLoc
 
-def makeUserInputList(textBoxEntry):
-    """
-    Called by:
-    ModelSetCarsForm.makeMergedForm
-    """
+# def makeUserInputList(textBoxEntry):
+#     """
+#     Called by:
+#     ModelSetCarsForm.makeMergedForm
+#     """
 
-    userInputList = []
-    for userInput in textBoxEntry:
-        userInputList.append(unicode(userInput.getText(), PSE.ENCODING))
+#     userInputList = []
+#     for userInput in textBoxEntry:
+#         userInputList.append(unicode(userInput.getText(), PSE.ENCODING))
 
-    return userInputList
+#     return userInputList
 
-def merge(switchList, userInputList):
+def appendTrackData(switchList, userInputList):
     """
-    Merge the values in textBoxEntry into the ['setTo'] field of switchList.
-    Called by:
-    ModelSetCarsForm.makeMergedForm
+    Adds the current track data to ops-Switch List.json
     """
 
-    prefix = ['[' + PSE.getBundleItem('Hold') + ']']
     location = PSE.LM.getLocationByName(PSE.readConfigFile('Patterns')['PL'])
-    for track in location.getTracksByNameList(None):
-        prefix.append(track.toString())
-    longestTrackString = PSE.findLongestStringLength(prefix) + 2
 
-    allTracksAtLoc = getTrackNamesByLocation(None)
 
-    currentTrack = switchList['tracks'][0]['trackName']
+    return
 
-    i = 0
-    locos = switchList['tracks'][0]['locos']
-    for loco in locos:
-        userInput = unicode(userInputList[i], PSE.ENCODING)
-        if userInput in allTracksAtLoc and userInput != currentTrack:
-            setTrack = str('[' + userInput + ']').ljust(longestTrackString)
-        else:
-            setTrack = str('[' + PSE.getBundleItem('Hold') + ']').ljust(longestTrackString)
+# def merge(switchList, userInputList):
+#     """
+#     Merge the values in textBoxEntry into the ['setTo'] field of switchList.
+#     Called by:
+#     ModelSetCarsForm.makeMergedForm
+#     """
 
-        loco.update({'setTo': setTrack})
-        i += 1
+#     prefix = ['[' + PSE.getBundleItem('Hold') + ']']
+#     location = PSE.LM.getLocationByName(PSE.readConfigFile('Patterns')['PL'])
+#     for track in location.getTracksByNameList(None):
+#         prefix.append(track.toString())
+#     longestTrackString = PSE.findLongestStringLength(prefix) + 2
 
-    cars = switchList['tracks'][0]['cars']
-    for car in cars:
-        userInput = unicode(userInputList[i], PSE.ENCODING)
+#     allTracksAtLoc = getTrackNamesByLocation(None)
 
-        if userInput in allTracksAtLoc and userInput != currentTrack:
-            setTrack = str('[' + userInput + ']').ljust(longestTrackString)
-        else:
-            setTrack = str('[' + PSE.getBundleItem('Hold') + ']').ljust(longestTrackString)
+#     currentTrack = switchList['tracks'][0]['trackName']
 
-        car.update({'setTo': setTrack})
-        i += 1
+#     i = 0
+#     locos = switchList['tracks'][0]['locos']
+#     for loco in locos:
+#         userInput = unicode(userInputList[i], PSE.ENCODING)
+#         if userInput in allTracksAtLoc and userInput != currentTrack:
+#             setTrack = str('[' + userInput + ']').ljust(longestTrackString)
+#         else:
+#             setTrack = str('[' + PSE.getBundleItem('Hold') + ']').ljust(longestTrackString)
 
-    return switchList
+#         loco.update({'setTo': setTrack})
+#         i += 1
+
+#     cars = switchList['tracks'][0]['cars']
+#     for car in cars:
+#         userInput = unicode(userInputList[i], PSE.ENCODING)
+
+#         if userInput in allTracksAtLoc and userInput != currentTrack:
+#             setTrack = str('[' + userInput + ']').ljust(longestTrackString)
+#         else:
+#             setTrack = str('[' + PSE.getBundleItem('Hold') + ']').ljust(longestTrackString)
+
+#         car.update({'setTo': setTrack})
+#         i += 1
+
+#     return switchList
 
 # def findLongestTrackString():
 #     """
@@ -234,6 +244,9 @@ def getDetailsByTrack(selectedTracks):
     """
     Returns a list of dictionaries.
     Copies structure of JMRI manifest.
+    Big difference:
+    JMRI ['locations'] lists locations
+    OPS ['locations'] lists tracks
     """
 
     locationName = PSE.readConfigFile('Patterns')['PL']
@@ -246,11 +259,11 @@ def getDetailsByTrack(selectedTracks):
         genericTrackDetails = {}
         genericTrackDetails['userName'] = track
         genericTrackDetails['trainDirection'] = 1
+        genericTrackDetails['loads'] = 0
+        genericTrackDetails['empties'] = 0
         trackLength = PSE.LM.getLocationByName(locationName).getTrackByName(track, None).getLength()
         trackUnit = PSE.JMRI.jmrit.operations.setup.Setup.getLengthUnit()
         genericTrackDetails['length'] = {'length':trackLength, 'unit':trackUnit}
-
-        
 
         genericTrackDetails['engines'] = {'add':parseRollingStock.getLocoDetails(track), 'remove':[]}
         genericTrackDetails['cars'] = {'add':parseRollingStock.getCarDetails(track), 'remove':[]}
