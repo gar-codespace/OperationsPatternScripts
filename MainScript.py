@@ -69,12 +69,12 @@ def makePsPlugin():
     Listeners.rsItemSelected
     """
 
-    configPanel = configFile['Main Script']['CP']
+    configFile = PSE.readConfigFile()
 
     view = View()
     psFrame = view.getThePlugin()
-    psFrame.setSize(configPanel['PW'], configPanel['PH'])
-    psFrame.setLocation(configPanel['PX'], configPanel['PY'])
+    psFrame.setSize(configFile['Main Script']['CP']['PW'], configFile['Main Script']['CP']['PH'])
+    psFrame.setLocation(configFile['Main Script']['CP']['PX'], configFile['Main Script']['CP']['PY'])
 
     for menuItem in view.getMenuItems():
         menuItem.addActionListener(getattr(Listeners, menuItem.getName()))

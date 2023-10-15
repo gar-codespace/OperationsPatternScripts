@@ -20,15 +20,15 @@ def resetConfigFileItems():
     return
 
 def initializeSubroutine():
-    
+
+    resetSubroutine()
+        
     return
 
 def resetSubroutine():
 
     divComboUpdater()
-
     locComboUpdater()
-
     makeTrackRows()
 
     return

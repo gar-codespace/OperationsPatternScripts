@@ -12,27 +12,27 @@ SCRIPT_REV = 20230901
 _psLog = PSE.LOGGING.getLogger('OPS.TB.Listeners')
 
 
-class ListenToThePSWindow(PSE.JAVA_BEANS.PropertyChangeListener):
-    """
-    Listens for changes to the Pattern Scripts plugin window.
-    """
+# class ListenToThePSWindow(PSE.JAVA_BEANS.PropertyChangeListener):
+#     """
+#     Listens for changes to the Pattern Scripts plugin window.
+#     """
 
-    def __init__(self):
+#     def __init__(self):
 
-        pass
+#         pass
 
-    def propertyChange(self, PROPERTY_CHANGE_EVENT):
+#     def propertyChange(self, PROPERTY_CHANGE_EVENT):
     
-        if PROPERTY_CHANGE_EVENT.propertyName == 'windowOpened':            
+#         if PROPERTY_CHANGE_EVENT.propertyName == 'windowOpened':            
 
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
+#             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
-        if PROPERTY_CHANGE_EVENT.propertyName == 'windowActivated':
+#         if PROPERTY_CHANGE_EVENT.propertyName == 'windowActivated':
             
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
+#             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
-        if PROPERTY_CHANGE_EVENT.propertyName == 'windowClosing':
+#         if PROPERTY_CHANGE_EVENT.propertyName == 'windowClosing':
             
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
+#             _psLog.debug(PROPERTY_CHANGE_EVENT)
             
-        return
+#         return

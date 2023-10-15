@@ -69,7 +69,7 @@ class StartUp:
         No GUI items as the GUI is not built yet.
         """
 
-        PSE.LM.addPropertyChangeListener(Listeners.ListenToThePSWindow())
+        # PSE.LM.addPropertyChangeListener(Listeners.ListenToThePSWindow())
         Model.validateSequenceData()
         
         return

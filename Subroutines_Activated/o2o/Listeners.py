@@ -13,146 +13,33 @@ SCRIPT_REV = 20230901
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.Listeners')
 
 
-class ListenToThePSWindow(PSE.JAVA_BEANS.PropertyChangeListener):
-    """
-    Listens for changes to the Pattern Scripts plugin window.
-    """
+# class ListenToThePSWindow(PSE.JAVA_BEANS.PropertyChangeListener):
+#     """
+#     Listens for changes to the Pattern Scripts plugin window.
+#     """
 
-    def __init__(self):
+#     def __init__(self):
 
-        pass
+#         pass
 
-    def propertyChange(self, PROPERTY_CHANGE_EVENT):
+#     def propertyChange(self, PROPERTY_CHANGE_EVENT):
     
-        if PROPERTY_CHANGE_EVENT.propertyName == 'windowOpened':
+#         if PROPERTY_CHANGE_EVENT.propertyName == 'windowOpened':
 
-            addSubroutineListeners()
-            Model.resetSubroutine()
+#             Model.resetSubroutine()
            
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
+#             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
-        if PROPERTY_CHANGE_EVENT.propertyName == 'windowActivated':
+#         if PROPERTY_CHANGE_EVENT.propertyName == 'windowActivated':
 
-            Model.refreshSubroutine()
+#             Model.refreshSubroutine()
             
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
+#             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
-        if PROPERTY_CHANGE_EVENT.propertyName == 'windowClosing':
-
-            removeSubroutineListeners()
+#         if PROPERTY_CHANGE_EVENT.propertyName == 'windowClosing':
             
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
+#             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
-        return
+#         return
     
 
-def addSubroutineListeners():
-
-    addTrainsTableListener()
-    addTrainsListener()
-
-    print('o2o.Listeners.addSubroutineListeners')
-    _psLog.debug('o2o.Listeners.addSubroutineListeners')
-
-    return
-
-def removeSubroutineListeners():
-
-    removeTrainsTableListener()
-    removeTrainsListener()
-
-    _psLog.debug('o2o.Listeners.removeSubroutineListeners')
-
-    return
-
-def addTrainsTableListener():
-
-    PSE.TM.addPropertyChangeListener(o2oPropertyChange())
-
-    _psLog.debug('o2o.Listeners.addTrainsTableListener')
-
-    return
-
-def addTrainsListener():
-    """
-    Adds a listener to each train.
-    """
-
-    for train in PSE.TM.getTrainsByIdList():
-        train.addPropertyChangeListener(o2oPropertyChange())
-        _psLog.debug('o2o.Listeners.addTrainsListener: ' + train.getName())
-
-    return
-
-def removeTrainsTableListener():
-
-    for listener in PSE.TM.getPropertyChangeListeners():
-        if isinstance(listener, PSE.JAVA_BEANS.PropertyChangeListener) and 'o2oPropertyChange' in listener.toString():
-            PSE.TM.removePropertyChangeListener(listener)
-
-            _psLog.debug('o2o.Listeners.removeTrainsTableListener')
-
-    print('o2o.Listeners.removeTrainsTableListener')
-
-    return
-
-def removeTrainsListener():
-    """
-    Removes the listener attached to each train.
-    """
-
-    for train in PSE.TM.getTrainsByIdList():
-        for listener in train.getPropertyChangeListeners():
-            if isinstance(listener, PSE.JAVA_BEANS.PropertyChangeListener) and 'o2oPropertyChange' in listener.toString():
-                train.removePropertyChangeListener(listener)
-                _psLog.debug('o2o.Listeners.removeTrainsListener: ' + train.getName())
-
-    print('o2o.Listeners.removeTrainsListener')
-
-    return
-
-
-class o2oPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
-    """
-    Events that are triggered with changes to JMRI Trains and OPS/o2o switch lists.
-    """
-
-    def __init__(self):
-
-        pass
-
-    def propertyChange(self, PROPERTY_CHANGE_EVENT):
-
-        sourceName = str(PROPERTY_CHANGE_EVENT.source)
-        propertyName = PROPERTY_CHANGE_EVENT.getPropertyName()
-        logMessage = 'o2o.Listeners.o2oPropertyChange- ' + sourceName + ' ' + propertyName
-
-        if PROPERTY_CHANGE_EVENT.propertyName == 'TrainsListLength':
-            """
-            Called when a new train is added or an existing train is removed.
-            """
-
-            removeTrainsListener()
-            addTrainsListener()
-
-            _psLog.debug(logMessage)
-
-        if PROPERTY_CHANGE_EVENT.propertyName == 'TrainBuilt' and PROPERTY_CHANGE_EVENT.newValue == True:
-            """
-            Called when a train is built.
-            """
-
-            ModelWorkEvents.workListFromManifest()
-
-            _psLog.debug(logMessage)
-
-        if PROPERTY_CHANGE_EVENT.propertyName == 'patternsSwitchList' and PROPERTY_CHANGE_EVENT.newValue == True:
-            """
-            Called when the o2o Set Cars window Switch List button is pressed.
-            """
-
-            ModelWorkEvents.convertOpsSwitchList()
-
-            _psLog.debug(logMessage)
-
-        return

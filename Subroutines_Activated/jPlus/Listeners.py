@@ -12,74 +12,74 @@ SCRIPT_REV = 20230901
 _psLog = PSE.LOGGING.getLogger('OPS.JP.Listeners')
 
 
-class ListenToThePSWindow(PSE.JAVA_BEANS.PropertyChangeListener):
-    """
-    Listens for changes to the Pattern Scripts plugin window.
-    """
+# class ListenToThePSWindow(PSE.JAVA_BEANS.PropertyChangeListener):
+#     """
+#     Listens for changes to the Pattern Scripts plugin window.
+#     """
 
-    def __init__(self):
+#     def __init__(self):
 
-        pass
+#         pass
 
-    def propertyChange(self, PROPERTY_CHANGE_EVENT):
+#     def propertyChange(self, PROPERTY_CHANGE_EVENT):
     
-        if PROPERTY_CHANGE_EVENT.propertyName == 'windowOpened':
+#         if PROPERTY_CHANGE_EVENT.propertyName == 'windowOpened':
 
-            addSubroutineListeners()
-            Model.resetSubroutine()
+#             addSubroutineListeners()
+#             Model.resetSubroutine()
             
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
+#             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
-        if PROPERTY_CHANGE_EVENT.propertyName == 'windowActivated':
+#         if PROPERTY_CHANGE_EVENT.propertyName == 'windowActivated':
 
-            Model.refreshSubroutine()
+#             Model.refreshSubroutine()
             
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
+#             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
-        if PROPERTY_CHANGE_EVENT.propertyName == 'windowClosing':
+#         if PROPERTY_CHANGE_EVENT.propertyName == 'windowClosing':
 
-            removeSubroutineListeners()
+#             removeSubroutineListeners()
             
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
+#             _psLog.debug(PROPERTY_CHANGE_EVENT)
             
-        return
+#         return
     
 
-def addSubroutineListeners():
+# def addSubroutineListeners():
 
-    PSE.LM.addPropertyChangeListener(jPlusPropertyChange())
+#     PSE.LM.addPropertyChangeListener(jPlusPropertyChange())
 
-    print('jPlus.Listeners.addSubroutineListeners')
-    _psLog.debug('jPlus.Listeners.addSubroutineListeners')
+#     print('jPlus.Listeners.addSubroutineListeners')
+#     _psLog.debug('jPlus.Listeners.addSubroutineListeners')
 
-    return
+#     return
 
-def removeSubroutineListeners():
+# def removeSubroutineListeners():
 
-    for listener in PSE.LM.getPropertyChangeListeners():
-        if isinstance(listener, PSE.JAVA_BEANS.PropertyChangeListener) and 'jPlusPropertyChange' in listener.toString():
-            PSE.LM.removePropertyChangeListener(listener)
+#     for listener in PSE.LM.getPropertyChangeListeners():
+#         if isinstance(listener, PSE.JAVA_BEANS.PropertyChangeListener) and 'jPlusPropertyChange' in listener.toString():
+#             PSE.LM.removePropertyChangeListener(listener)
 
-            print('jPlus.Listeners.removeSubroutnieListeners')
-            _psLog.debug('jPlus.Listeners.removeSubroutineListeners')
+#             print('jPlus.Listeners.removeSubroutnieListeners')
+#             _psLog.debug('jPlus.Listeners.removeSubroutineListeners')
 
-    return
+#     return
 
 
-class jPlusPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
-    """
-    A property change listener attached to the Location Manager.
-    """
+# class jPlusPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
+#     """
+#     A property change listener attached to the Location Manager.
+#     """
 
-    def __init__(self):
+#     def __init__(self):
 
-        pass
+#         pass
     
-    def propertyChange(self, PROPERTY_CHANGE_EVENT):
+#     def propertyChange(self, PROPERTY_CHANGE_EVENT):
 
-        if PROPERTY_CHANGE_EVENT.propertyName == 'extendedDetails':
-            Model.refreshSubroutine()
+#         if PROPERTY_CHANGE_EVENT.propertyName == 'extendedDetails':
+#             Model.refreshSubroutine()
 
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
+#             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
-        return
+#         return

@@ -66,35 +66,55 @@ def workListFromManifest():
 
 class o2oWorkEvents:
     """
-    This class makes the o2o work event list for TrainPlayer.
+    This class makes the o2o work event list for TrainPlayer from:
+    A stock JMRI generated manifest
+    An OPS modified JMRI manifest
+    An OPS generated Set Cars switch list
     """
 
     def __init__(self):
 
-        self.jsonManifest = ''
-        self.o2oWorkEvents = ''
+        self.jsonInput = ''
+        self.opsSwitchList = ''
 
-        fileName = 'JMRI Report - o2o Workevents.csv'
-        self.o2oWorkEventPath = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData', 'Roaming', 'TrainPlayer', 'Reports', fileName)
+        self.o2oWorkEvents = ''
+        outPutName = 'JMRI Report - o2o Workevents.csv'
+        self.o2oWorkEventPath = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData', 'Roaming', 'TrainPlayer', 'Reports', outPutName)
 
         return
 
-    def makeList(self, jsonManifest):
+    def getManifest(self, train):
+        """
+        Gets a train manifest, stock or modified by OPS.
+        """
+
+        manifestName = 'train-{}.json'.format(train.toString())
+        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', manifestName)
+
+        if not PSE.JAVA_IO.File(targetPath).isFile():
+            _psLog.info(manifestName + ' not found')
+            return {}
+
+        report = PSE.genericReadReport(targetPath)
+        self.jsonInput = PSE.loadJson(report)
+
+        self.makeWorkEvents()
+
+        return
+    
+    def makeWorkEvents(self):
         """
         Mini controller.
         """
-
-        self.jsonManifest = jsonManifest
-
-        # print(self.jsonManifest)
-
         
+        self.o2oHeader()
+        self.o2oLocations()
 
         
         
-        # self.o2oHeader()
-        # self.o2oLocations()
         # self.saveList()
+
+        print(self.o2oWorkEvents)
 
         return
     
@@ -102,11 +122,12 @@ class o2oWorkEvents:
 
         _psLog.debug('o2oWorkEvents.o2oHeader')
 
-        self.o2oWorkEvents = 'HN,' + self.jsonManifest['railroad'].replace('\n', ';') + '\n'
-        self.o2oWorkEvents += 'HT,' + self.jsonManifest['userName'] + '\n'
-        self.o2oWorkEvents += 'HD,' + self.jsonManifest['description'] + '\n'
-        self.o2oWorkEvents += 'HV,' + PSE.convertJmriDateToEpoch(self.jsonManifest['date']) + '\n'
-        self.o2oWorkEvents += 'WT,' + str(len(self.jsonManifest['locations'])) + '\n'
+        self.o2oWorkEvents = 'HN,' + self.jsonInput['railroad'].replace('\n', ';') + '\n'
+        self.o2oWorkEvents += 'HT,' + self.jsonInput['userName'] + '\n'
+        self.o2oWorkEvents += 'HD,' + self.jsonInput['description'] + '\n'
+        epochTime = PSE.convertJmriDateToEpoch(self.jsonInput['date'])
+        self.o2oWorkEvents += 'HV,' + PSE.validTime(epochTime) + '\n'
+        self.o2oWorkEvents += 'WT,' + str(len(self.jsonInput['locations'])) + '\n'
 
         return
 
@@ -119,13 +140,17 @@ class o2oWorkEvents:
 
         counter = 1
 
-        for location in self.jsonManifest['locations']:
-            self.o2oWorkEvents += 'WE,' + str(counter) + ',' + location['locationName'] + '\n'
-            for track in location['tracks']:
-                for car in track['cars']:
-                    self.o2oWorkEvents += self.makeLine(car) + '\n'
-                for loco in track['locos']:
-                    self.o2oWorkEvents += self.makeLine(loco) + '\n'
+        for location in self.jsonInput['locations']:
+            self.o2oWorkEvents += 'WE,{},{}\n'.format(str(counter), location['userName'])
+
+            for loco in location['engines']['add']:
+                pass
+            for loco in location['engines']['remove']:
+                pass
+            for car in location['cars']['add']:
+                pass
+            for car in location['cars']['remove']:
+                pass
 
             counter += 1
 
