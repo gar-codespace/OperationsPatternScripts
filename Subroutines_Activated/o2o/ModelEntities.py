@@ -86,33 +86,28 @@ def tpDirectoryExists():
         return
 
 
+"""o2o.ModelWorkEvents"""
+
+
+def getManifestForTrain(newestTrain):
+
+
+    trainName = newestTrain.toString()
+
+    fileName = 'train-{}.json'.format(trainName)
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+
+    if not PSE.JAVA_IO.File(targetPath).isFile():
+        _psLog.info(fileName + '.json not found')
+        return {}
+
+    report = PSE.genericReadReport(targetPath)
+    jsonManifest = PSE.loadJson(report)
+
+    return jsonManifest
+
+
 """o2o.Model"""
-
-
-# def addTypesToTracks():
-#     """
-#     Depricated
-#     """
-
-
-#     tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarTypes
-#     TCM = PSE.JMRI.InstanceManager.getDefault(tc)
-#     typeList = TCM.getNames()
-
-#     tc = PSE.JMRI.jmrit.operations.rollingstock.engines.EngineTypes
-#     TCM = PSE.JMRI.InstanceManager.getDefault(tc)
-
-#     typeList += TCM.getNames()
-
-#     for location in PSE.LM.getList():
-#         for type in typeList:
-#             location.addTypeName(type)      
-
-#     for track in PSE.getAllTracks():
-#         for type in typeList:
-#             track.addTypeName(type)
-
-#     return
 
 def deselectCarTypesAtSpurs():
     """
@@ -229,3 +224,31 @@ def parseCarId(carId):
             rsRoad += character
 
     return rsRoad, rsNumber
+
+
+
+
+# def addTypesToTracks():
+#     """
+#     Depricated
+#     """
+
+
+#     tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarTypes
+#     TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+#     typeList = TCM.getNames()
+
+#     tc = PSE.JMRI.jmrit.operations.rollingstock.engines.EngineTypes
+#     TCM = PSE.JMRI.InstanceManager.getDefault(tc)
+
+#     typeList += TCM.getNames()
+
+#     for location in PSE.LM.getList():
+#         for type in typeList:
+#             location.addTypeName(type)      
+
+#     for track in PSE.getAllTracks():
+#         for type in typeList:
+#             track.addTypeName(type)
+
+#     return

@@ -163,8 +163,6 @@ def makeSetCarsForTrackForm(setCarsFormData):
 
     _psLog.debug('makeSetCarsForTrackForm')
 
-
-
     allSetCarsWidgets = {}
 
     setCarsForm = PSE.JAVX_SWING.JPanel()
@@ -177,17 +175,10 @@ def makeSetCarsForTrackForm(setCarsFormData):
     allSetCarsWidgets['trackButtons'] = buttonList
     setCarsForm.add(trackButtonsPanel)
 
-
-
     inventoryPanel, textBoxList = makeSetCarsListOfInventory(setCarsFormData)
     allSetCarsWidgets['textBoxEntry'] = textBoxList
     setCarsForm.add(inventoryPanel)
     setCarsForm.add(PSE.JAVX_SWING.JSeparator())
-
-
-
-
-    
 
     schedulePanel, scheduleButton = makeSetCarsScheduleRow(setCarsFormData)
     allSetCarsWidgets['scheduleButton'] = None

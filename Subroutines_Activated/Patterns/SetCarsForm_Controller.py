@@ -166,9 +166,8 @@ class CreateSetCarsFrame:
         if not self.quickCheck():
             return
 
-        self.mergedForm = SetCarsForm_Model.getMergedForm(self.setCarsForm, self.buttonDict['textBoxEntry'])
-        print(self.setCarsForm)
-
+        userInputList = SetCarsForm_Model.getUserInputList(self.buttonDict['textBoxEntry'])
+        self.mergedForm = SetCarsForm_Model.mergeSetCarsForm(self.setCarsData, userInputList)
     # Open the pop up window
         PSE.closeWindowByName('popupFrame')
 
@@ -183,8 +182,6 @@ class CreateSetCarsFrame:
         PSE.LM.addPropertyChangeListener(PSE.ListenToThePSWindow(popupFrame))
 
         self.setCarsWindow = MOUSE_CLICKED.getSource().getTopLevelAncestor()
-
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 
@@ -230,6 +227,9 @@ class CreateSetCarsFrame:
 
         self.setCarsWindow.setVisible(False)
         self.setCarsWindow.dispose()
+
+        _psLog.info('Set Cars to track')
+        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
         return
 

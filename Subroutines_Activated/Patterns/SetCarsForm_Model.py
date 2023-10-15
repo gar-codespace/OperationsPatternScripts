@@ -38,23 +38,6 @@ def appendSwitchList(mergedForm):
 
     return
 
-# def formIsValid(setCarsForm, textBoxEntry):
-#     """
-#     Checks that both submitted forms are the same length
-#     Called by:
-#     ControllerSetCarsForm.CreateSetCarsForm.quickCheck
-#     """
-
-#     _psLog.debug('testValidityOfForm')
-
-#     locoCount = len(setCarsForm['tracks'][0]['locos'])
-#     carCount = len(setCarsForm['tracks'][0]['cars'])
-
-#     if len(textBoxEntry) == locoCount + carCount:
-#         return True
-#     else:
-#         return False
-
 def getMergedForm(setCarsForm, textBoxEntry):
     """
     Called by:
@@ -98,7 +81,6 @@ def mergeSetCarsForm(setCarsForm, inputList):
             loco['destination']['track']['userName'] = userInput
         else:
             loco['destination']['userName'] = location
-
             loco['destination']['track']['userName'] = currentTrack
 
         i += 1
@@ -139,22 +121,19 @@ def moveRollingStock(switchList):
 
     setCount = 0
     i = -1
-    locos = switchList['tracks'][0]['locos']
+    locos = switchList['locations'][0]['engines']['add']
     for loco in locos:
         i += 1
-        rollingStock = PSE.EM.getByRoadAndNumber(loco[PSE.SB.handleGetMessage('Road')], loco[PSE.SB.handleGetMessage('Number')])
+        rollingStock = PSE.EM.getByRoadAndNumber(loco['road'], loco['number'])
         if not rollingStock:
-            _psLog.warning('Not found; ' + car[PSE.SB.handleGetMessage('Road')] + car[PSE.SB.handleGetMessage('Number')])
+            _psLog.warning('Not found; ' + car['road'] + car['number'])
             continue
 
-        setTo = loco['setTo'][1:-1].split(']')[0]
-        if setTo == PSE.getBundleItem('Hold') or setTo not in allTracksAtLoc:
-            continue
-
+        setTo = loco['destination']['track']['userName']
         toTrack = toLocation.getTrackByName(setTo, None)
 
         setResult = rollingStock.setLocation(toLocation, toTrack)
-        if ignoreTrackLength and toTrack.isTypeNameAccepted(loco[PSE.SB.handleGetMessage('Type')]):
+        if ignoreTrackLength and toTrack.isTypeNameAccepted(loco['carType']):
             setResult = rollingStock.setLocation(toLocation, toTrack, True)
 
         if setResult == 'okay':
@@ -164,22 +143,19 @@ def moveRollingStock(switchList):
                 locoSequence += 1
             setCount += 1
         
-    cars = switchList['tracks'][0]['cars']
+    cars = switchList['locations'][0]['cars']['add']
     for car in cars:
         i += 1
-        rollingStock = PSE.CM.getByRoadAndNumber(car[PSE.SB.handleGetMessage('Road')], car[PSE.SB.handleGetMessage('Number')])
+        rollingStock = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
         if not rollingStock:
-            _psLog.warning('Not found; ' + car[PSE.SB.handleGetMessage('Road')] + car[PSE.SB.handleGetMessage('Number')])
+            _psLog.warning('Not found; ' + car['road'] + car['number'])
             continue
 
-        setTo = car['setTo'][1:-1].split(']')[0]
-        if setTo == PSE.getBundleItem('Hold') or setTo not in allTracksAtLoc:
-            continue
-        
+        setTo = car['destination']['track']['userName']
         toTrack = toLocation.getTrackByName(setTo, None)
 
         setResult = rollingStock.setLocation(toLocation, toTrack)
-        if ignoreTrackLength and toTrack.isTypeNameAccepted(car[PSE.SB.handleGetMessage('Type')]):
+        if ignoreTrackLength and toTrack.isTypeNameAccepted(car['carType']):
             setResult = rollingStock.setLocation(toLocation, toTrack, True)
 
         if setResult == 'okay':
@@ -229,14 +205,8 @@ def resequenceTracks():
             sequenceHash['cars'].update({tuple[0]:sequence})
             sequence += 1
 
-
-
-
-
-
     sequenceFilePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'rsSequenceData.json')
     PSE.genericWriteReport(sequenceFilePath, PSE.dumpJson(sequenceHash))
-
 
     return
 
@@ -273,3 +243,21 @@ def scheduleUpdate(toTrack, rollingStock):
     schedule.getItemByType(carType).setHits(schedule.getItemByType(carType).getHits() + 1)
 
     return
+
+
+# def formIsValid(setCarsForm, textBoxEntry):
+#     """
+#     Checks that both submitted forms are the same length
+#     Called by:
+#     ControllerSetCarsForm.CreateSetCarsForm.quickCheck
+#     """
+
+#     _psLog.debug('testValidityOfForm')
+
+#     locoCount = len(setCarsForm['tracks'][0]['locos'])
+#     carCount = len(setCarsForm['tracks'][0]['cars'])
+
+#     if len(textBoxEntry) == locoCount + carCount:
+#         return True
+#     else:
+#         return False

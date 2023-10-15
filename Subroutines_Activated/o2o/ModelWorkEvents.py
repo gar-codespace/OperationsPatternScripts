@@ -16,7 +16,7 @@ _psLog = PSE.LOGGING.getLogger('OPS.o2o.ModelWorkEvents')
 def convertOpsSwitchList():
     """
     Mini controller.
-    Converts the Patterns ops-switch-list.json into an o2o work events file.
+    Converts the Patterns ops-Switch List.json into an o2o work events file.
     Called by: Listeners - PROPERTY_CHANGE_EVENT.propertyName == 'patternsSwitchList' 
     """
 
@@ -25,7 +25,7 @@ def convertOpsSwitchList():
         return
     
     tpWorkEventsList = opsSwitchList.convert()
-    o2oWorkEvents(tpWorkEventsList).makeList()
+    # o2oWorkEvents(tpWorkEventsList).makeList()
 
     print(SCRIPT_NAME + '.convertOpsSwitchList ' + str(SCRIPT_REV))
 
@@ -45,6 +45,131 @@ def convertJmriManifest():
 
     return
 
+def workListFromManifest():
+    """
+    Makes an o2o work list from an OPS modified JMRI manifest json.
+    """
+
+    newestTrain = FindTrain().findNewestTrain()
+    # jsonManifest = PSE.JMRI.jmrit.operations.trains.JsonManifest(newestTrain).getFile()
+    # jsonManifest = PSE.JMRI.util.FileUtil.readFile(jsonManifest)
+    jsonManifest = ModelEntities.getManifestForTrain(newestTrain)
+    # print(jsonManifest)
+
+
+
+    
+    # o2oWorkEvents().makeList(jsonManifest)
+
+    return
+
+
+class o2oWorkEvents:
+    """
+    This class makes the o2o work event list for TrainPlayer.
+    """
+
+    def __init__(self):
+
+        self.jsonManifest = ''
+        self.o2oWorkEvents = ''
+
+        fileName = 'JMRI Report - o2o Workevents.csv'
+        self.o2oWorkEventPath = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData', 'Roaming', 'TrainPlayer', 'Reports', fileName)
+
+        return
+
+    def makeList(self, jsonManifest):
+        """
+        Mini controller.
+        """
+
+        self.jsonManifest = jsonManifest
+
+        # print(self.jsonManifest)
+
+        
+
+        
+        
+        # self.o2oHeader()
+        # self.o2oLocations()
+        # self.saveList()
+
+        return
+    
+    def o2oHeader(self):
+
+        _psLog.debug('o2oWorkEvents.o2oHeader')
+
+        self.o2oWorkEvents = 'HN,' + self.jsonManifest['railroad'].replace('\n', ';') + '\n'
+        self.o2oWorkEvents += 'HT,' + self.jsonManifest['userName'] + '\n'
+        self.o2oWorkEvents += 'HD,' + self.jsonManifest['description'] + '\n'
+        self.o2oWorkEvents += 'HV,' + PSE.convertJmriDateToEpoch(self.jsonManifest['date']) + '\n'
+        self.o2oWorkEvents += 'WT,' + str(len(self.jsonManifest['locations'])) + '\n'
+
+        return
+
+    def o2oLocations(self):
+        """
+        This works for both JMRI and o2o generated lists.
+        """
+
+        _psLog.debug('o2oWorkEvents.o2oLocations')
+
+        counter = 1
+
+        for location in self.jsonManifest['locations']:
+            self.o2oWorkEvents += 'WE,' + str(counter) + ',' + location['locationName'] + '\n'
+            for track in location['tracks']:
+                for car in track['cars']:
+                    self.o2oWorkEvents += self.makeLine(car) + '\n'
+                for loco in track['locos']:
+                    self.o2oWorkEvents += self.makeLine(loco) + '\n'
+
+            counter += 1
+
+        return
+
+    def makeLine(self, rs):
+        """
+        This makes a rolling stock line for the TP o2o file.
+        format: PUSO, TP ID, Road, Number, Car Type, L/E/O, Load or Model, From, To
+        """
+
+        ID = rs['road'] + ' ' + rs['number']
+        load = ''
+        try:
+            load = rs['load']
+        except:
+            load = rs['model']
+
+        try: # Locos don't use load type
+            lt = rs['loadType']
+        except:
+            lt = 'X'
+
+        pu = rs['location'] + ';' + rs['track']
+
+        so = rs['destination'] + ';' + rs['setTo']
+
+        return rs['puso'] + ',' + ID + ',' + rs['road'] + ',' + rs['number'] + ',' + rs['carType'] + ',' + lt + ',' + load + ',' + pu + ',' + so
+
+    def saveList(self):
+
+        _psLog.debug('o2oWorkEvents.saveList')
+
+        if ModelEntities.tpDirectoryExists():
+            PSE.genericWriteReport(self.o2oWorkEventPath, self.o2oWorkEvents)
+
+        print(SCRIPT_NAME + '.o2oWorkEvents ' + str(SCRIPT_REV))
+
+        return
+    
+
+
+
+
 
 class FindTrain:
     """
@@ -61,6 +186,7 @@ class FindTrain:
     def findNewestTrain(self):
         """
         If more than 1 train is built, pick the newest one.
+        Returns a train object.
         """
 
         _psLog.debug('findNewestTrain')
@@ -93,8 +219,7 @@ class opsSwitchListConversion:
 
     def __init__(self):
 
-        self.inputName = PSE.getBundleItem('ops-switch-list')
-        self.inputFileName = self.inputName + '.json'
+        self.inputFileName = PSE.getBundleItem('ops-Switch List') + '.json'
         self.inputTargetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', self.inputFileName)
 
         self.opsSwitchList = {}
@@ -110,11 +235,10 @@ class opsSwitchListConversion:
     def validate(self):
 
         if not PSE.JAVA_IO.File(self.inputTargetPath).isFile():
-            print('ALERT: not found-ops-switch-list.json')
+            print('ALERT: not found-ops-Switch List.json')
             self.validationResult = False
 
         return self.validationResult
-
 
     def convert(self):
         """
@@ -123,7 +247,7 @@ class opsSwitchListConversion:
 
         self.switchListGetter()
         self.makeTpWorkEventsList()
-        self.addTracksToList()
+        # self.addTracksToList()
 
         return self.tpWorkEventsList
     
@@ -136,13 +260,15 @@ class opsSwitchListConversion:
     
     def makeTpWorkEventsList(self):
 
-        self.tpWorkEventsList['railroadName'] = self.opsSwitchList['railroadName']
-        self.tpWorkEventsList['railroadDescription'] = self.opsSwitchList['railroadDescription']
-        self.tpWorkEventsList['trainName'] = self.opsSwitchList['trainName']
-        self.tpWorkEventsList['trainDescription'] = self.opsSwitchList['trainDescription']
+        self.tpWorkEventsList['railroadName'] = self.opsSwitchList['railroad']
+        self.tpWorkEventsList['railroadDescription'] = self.opsSwitchList['description']
+        self.tpWorkEventsList['trainName'] = self.opsSwitchList['userName']
+        self.tpWorkEventsList['trainDescription'] = self.opsSwitchList['userName']
         self.tpWorkEventsList['date'] = self.opsSwitchList['date']
-        self.tpWorkEventsList['locations'] = [{'locationName':self.opsSwitchList['location'],'tracks':[]}]
+        self.tpWorkEventsList['locations'] = self.opsSwitchList['locations']
 
+
+        print(self.tpWorkEventsList)
         return
 
     def addTracksToList(self):
@@ -320,96 +446,97 @@ class jmriManifestConversion:
         return self.o2oWorkEvents
 
 
-class o2oWorkEvents:
-    """
-    This class makes the o2o work event list for TrainPlayer.
-    """
 
-    def __init__(self, workEvents):
+# class o2oWorkEvents:
+#     """
+#     This class makes the o2o work event list for TrainPlayer.
+#     """
 
-        self.workEvents = workEvents
-        self.o2oList = ''
+#     def __init__(self, workEvents):
 
-        fileName = 'JMRI Report - o2o Workevents.csv'
-        self.o2oWorkEventPath = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData', 'Roaming', 'TrainPlayer', 'Reports', fileName)
+#         self.workEvents = workEvents
+#         self.o2oList = ''
 
-        return
+#         fileName = 'JMRI Report - o2o Workevents.csv'
+#         self.o2oWorkEventPath = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData', 'Roaming', 'TrainPlayer', 'Reports', fileName)
 
-    def makeList(self):
-        """
-        Mini controller.
-        """
+#         return
+
+#     def makeList(self):
+#         """
+#         Mini controller.
+#         """
         
-        self.o2oHeader()
-        self.o2oLocations()
-        self.saveList()
+#         self.o2oHeader()
+#         self.o2oLocations()
+#         self.saveList()
 
-        return
+#         return
     
-    def o2oHeader(self):
+#     def o2oHeader(self):
 
-        _psLog.debug('o2oWorkEvents.o2oHeader')
+#         _psLog.debug('o2oWorkEvents.o2oHeader')
 
-        self.o2oList = 'HN,' + PSE.getExtendedRailroadName().replace('\n', ';') + '\n'
-        self.o2oList += 'HT,' + self.workEvents['trainName'] + '\n'
-        self.o2oList += 'HD,' + self.workEvents['trainDescription'] + '\n'
-        self.o2oList += 'HV,' + self.workEvents['date'] + '\n'
-        self.o2oList += 'WT,' + str(len(self.workEvents['locations'])) + '\n'
+#         self.o2oList = 'HN,' + PSE.getExtendedRailroadName().replace('\n', ';') + '\n'
+#         self.o2oList += 'HT,' + self.workEvents['trainName'] + '\n'
+#         self.o2oList += 'HD,' + self.workEvents['trainDescription'] + '\n'
+#         self.o2oList += 'HV,' + self.workEvents['date'] + '\n'
+#         self.o2oList += 'WT,' + str(len(self.workEvents['locations'])) + '\n'
 
-        return
+#         return
 
-    def o2oLocations(self):
-        """
-        This works for both JMRI and o2o generated lists.
-        """
+#     def o2oLocations(self):
+#         """
+#         This works for both JMRI and o2o generated lists.
+#         """
 
-        _psLog.debug('o2oWorkEvents.o2oLocations')
+#         _psLog.debug('o2oWorkEvents.o2oLocations')
 
-        counter = 1
+#         counter = 1
 
-        for location in self.workEvents['locations']:
-            self.o2oList += 'WE,' + str(counter) + ',' + location['locationName'] + '\n'
-            for track in location['tracks']:
-                for car in track['cars']:
-                    self.o2oList += self.makeLine(car) + '\n'
-                for loco in track['locos']:
-                    self.o2oList += self.makeLine(loco) + '\n'
+#         for location in self.workEvents['locations']:
+#             self.o2oList += 'WE,' + str(counter) + ',' + location['locationName'] + '\n'
+#             for track in location['tracks']:
+#                 for car in track['cars']:
+#                     self.o2oList += self.makeLine(car) + '\n'
+#                 for loco in track['locos']:
+#                     self.o2oList += self.makeLine(loco) + '\n'
 
-            counter += 1
+#             counter += 1
 
-        return
+#         return
 
-    def makeLine(self, rs):
-        """
-        This makes a rolling stock line for the TP o2o file.
-        format: PUSO, TP ID, Road, Number, Car Type, L/E/O, Load or Model, From, To
-        """
+#     def makeLine(self, rs):
+#         """
+#         This makes a rolling stock line for the TP o2o file.
+#         format: PUSO, TP ID, Road, Number, Car Type, L/E/O, Load or Model, From, To
+#         """
 
-        ID = rs['road'] + ' ' + rs['number']
-        load = ''
-        try:
-            load = rs['load']
-        except:
-            load = rs['model']
+#         ID = rs['road'] + ' ' + rs['number']
+#         load = ''
+#         try:
+#             load = rs['load']
+#         except:
+#             load = rs['model']
 
-        try: # Locos don't use load type
-            lt = rs['loadType']
-        except:
-            lt = 'X'
+#         try: # Locos don't use load type
+#             lt = rs['loadType']
+#         except:
+#             lt = 'X'
 
-        pu = rs['location'] + ';' + rs['track']
+#         pu = rs['location'] + ';' + rs['track']
 
-        so = rs['destination'] + ';' + rs['setTo']
+#         so = rs['destination'] + ';' + rs['setTo']
 
-        return rs['puso'] + ',' + ID + ',' + rs['road'] + ',' + rs['number'] + ',' + rs['carType'] + ',' + lt + ',' + load + ',' + pu + ',' + so
+#         return rs['puso'] + ',' + ID + ',' + rs['road'] + ',' + rs['number'] + ',' + rs['carType'] + ',' + lt + ',' + load + ',' + pu + ',' + so
 
-    def saveList(self):
+#     def saveList(self):
 
-        _psLog.debug('o2oWorkEvents.saveList')
+#         _psLog.debug('o2oWorkEvents.saveList')
 
-        if ModelEntities.tpDirectoryExists():
-            PSE.genericWriteReport(self.o2oWorkEventPath, self.o2oList)
+#         if ModelEntities.tpDirectoryExists():
+#             PSE.genericWriteReport(self.o2oWorkEventPath, self.o2oList)
 
-        print(SCRIPT_NAME + '.o2oWorkEvents ' + str(SCRIPT_REV))
+#         print(SCRIPT_NAME + '.o2oWorkEvents ' + str(SCRIPT_REV))
 
-        return
+#         return

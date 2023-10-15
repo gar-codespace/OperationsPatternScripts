@@ -142,7 +142,7 @@ class o2oPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
             Called when a train is built.
             """
 
-            ModelWorkEvents.convertJmriManifest()
+            ModelWorkEvents.workListFromManifest()
 
             _psLog.debug(logMessage)
 

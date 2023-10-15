@@ -44,6 +44,8 @@ def extendJmriManifestJson(train):
     manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', trainName)
     manifest = PSE.loadJson(PSE.genericReadReport(manifestPath))
 
+    manifest.update({'railroad':PSE.getExtendedRailroadName()})
+
     for location in manifest['locations']:
         for car in location['cars']['add']:
             carID = car['road'] + ' ' + car['number']
@@ -110,7 +112,7 @@ def opsTextPatternReport(location):
     textPatternReport = ''
 
 # Header
-    textPatternReport += PSE.getExtendedRailroadName() + '\n'
+    textPatternReport += report['railroad'] + '\n'
     textPatternReport += '\n'
 
     textPatternReport += PSE.getBundleItem('Pattern Report for location ({})').format(location) + '\n'
@@ -175,7 +177,7 @@ def opsTextSwitchList():
     textSwitchList = ''
 
 # Header
-    textSwitchList += PSE.getExtendedRailroadName() + '\n'
+    textSwitchList += report['railroad'] + '\n'
     textSwitchList += '\n'
 
     textSwitchList += PSE.getBundleItem('Switch List for location ({})').format(location) + '\n'
