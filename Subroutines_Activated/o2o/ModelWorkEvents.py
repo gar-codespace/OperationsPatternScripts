@@ -13,6 +13,56 @@ SCRIPT_REV = 20230901
 
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.ModelWorkEvents')
 
+def o2oWorkEvents(manifest):
+    """
+    Makes an o2o workevents list from a standardized manifest/work event list.
+    manifest is a string from the json file.
+    """
+
+    _psLog.debug('o2oWorkEvents')
+# Header
+    o2oWorkEvents = 'HN,' + manifest['railroad'].replace('\n', ';') + '\n'
+    o2oWorkEvents += 'HT,' + manifest['userName'] + '\n'
+    o2oWorkEvents += 'HD,' + manifest['description'] + '\n'
+    epochTime = PSE.convertJmriDateToEpoch(manifest['date'])
+    o2oWorkEvents += 'HV,' + PSE.validTime(epochTime) + '\n'
+    o2oWorkEvents += 'WT,' + str(len(manifest['locations'])) + '\n'
+# Body
+    for i, location in enumerate(manifest['locations'], start=1):
+        o2oWorkEvents += 'WE,{},{}\n'.format(str(i), location['userName'])
+        for loco in location['engines']['add']:
+            o2oWorkEvents += 'PL,{}\n'.format(_makeLine(loco))
+        for loco in location['engines']['remove']:
+            o2oWorkEvents += 'SL,{}\n'.format(_makeLine(loco))
+        for car in location['cars']['add']:
+            o2oWorkEvents += 'PC,{}\n'.format(_makeLine(car))
+        for car in location['cars']['remove']:
+            o2oWorkEvents += 'SC,{}\n'.format(_makeLine(car))
+        
+    return o2oWorkEvents
+
+def _makeLine(rs):
+    """
+    Helper function to make the rs line for o2oWorkEvents.
+    format: TP ID, Road, Number, Car Type, L/E/O, Load or Model, From, To
+    """
+
+    try: # Cars
+        loadName = rs['load']
+        lt = PSE.getShortLoadType(rs)
+    except: # Locos
+        loadName = rs['model']
+        lt = PSE.getBundleItem('Occupied').upper()[0]
+
+    ID = rs['road'] + ' ' + rs['number']
+    pu = rs['location']['userName'] + ';' + rs['location']['track']['userName']
+    so = rs['destination']['userName'] + ';' + rs['destination']['track']['userName']
+
+    line = '{},{},{},{},{},{},{},{}'.format(ID, rs['road'], rs['number'], rs['carType'], lt, loadName, pu, so)
+
+    return line
+
+
 def convertOpsSwitchList():
     """
     Mini controller.
@@ -30,211 +80,6 @@ def convertOpsSwitchList():
     print(SCRIPT_NAME + '.convertOpsSwitchList ' + str(SCRIPT_REV))
 
     return
-
-def convertJmriManifest():
-    """
-    Mini controller.
-    Converts a JMRI manifest to a Quick Keys work events list.
-    Called by: Listeners - PROPERTY_CHANGE_EVENT.propertyName == 'TrainBuilt'
-    """
-
-    newestTrain = FindTrain().findNewestTrain()
-
-    tpWorkEventsList = jmriManifestConversion(newestTrain).convert()
-    o2oWorkEvents(tpWorkEventsList).makeList()
-
-    return
-
-def workListFromManifest():
-    """
-    Makes an o2o work list from an OPS modified JMRI manifest json.
-    """
-
-    newestTrain = FindTrain().findNewestTrain()
-    # jsonManifest = PSE.JMRI.jmrit.operations.trains.JsonManifest(newestTrain).getFile()
-    # jsonManifest = PSE.JMRI.util.FileUtil.readFile(jsonManifest)
-    jsonManifest = ModelEntities.getManifestForTrain(newestTrain)
-    # print(jsonManifest)
-
-
-
-    
-    # o2oWorkEvents().makeList(jsonManifest)
-
-    return
-
-
-class o2oWorkEvents:
-    """
-    This class makes the o2o work event list for TrainPlayer from:
-    A stock JMRI generated manifest
-    An OPS modified JMRI manifest
-    An OPS generated Set Cars switch list
-    """
-
-    def __init__(self):
-
-        self.jsonInput = ''
-        self.opsSwitchList = ''
-
-        self.o2oWorkEvents = ''
-        outPutName = 'JMRI Report - o2o Workevents.csv'
-        self.o2oWorkEventPath = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData', 'Roaming', 'TrainPlayer', 'Reports', outPutName)
-
-        return
-
-    def getManifest(self, train):
-        """
-        Gets a train manifest, stock or modified by OPS.
-        """
-
-        manifestName = 'train-{}.json'.format(train.toString())
-        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', manifestName)
-
-        if not PSE.JAVA_IO.File(targetPath).isFile():
-            _psLog.info(manifestName + ' not found')
-            return {}
-
-        report = PSE.genericReadReport(targetPath)
-        self.jsonInput = PSE.loadJson(report)
-
-        self.makeWorkEvents()
-
-        return
-    
-    def makeWorkEvents(self):
-        """
-        Mini controller.
-        """
-        
-        self.o2oHeader()
-        self.o2oLocations()
-
-        
-        
-        # self.saveList()
-
-        print(self.o2oWorkEvents)
-
-        return
-    
-    def o2oHeader(self):
-
-        _psLog.debug('o2oWorkEvents.o2oHeader')
-
-        self.o2oWorkEvents = 'HN,' + self.jsonInput['railroad'].replace('\n', ';') + '\n'
-        self.o2oWorkEvents += 'HT,' + self.jsonInput['userName'] + '\n'
-        self.o2oWorkEvents += 'HD,' + self.jsonInput['description'] + '\n'
-        epochTime = PSE.convertJmriDateToEpoch(self.jsonInput['date'])
-        self.o2oWorkEvents += 'HV,' + PSE.validTime(epochTime) + '\n'
-        self.o2oWorkEvents += 'WT,' + str(len(self.jsonInput['locations'])) + '\n'
-
-        return
-
-    def o2oLocations(self):
-        """
-        This works for both JMRI and o2o generated lists.
-        """
-
-        _psLog.debug('o2oWorkEvents.o2oLocations')
-
-        counter = 1
-
-        for location in self.jsonInput['locations']:
-            self.o2oWorkEvents += 'WE,{},{}\n'.format(str(counter), location['userName'])
-
-            for loco in location['engines']['add']:
-                pass
-            for loco in location['engines']['remove']:
-                pass
-            for car in location['cars']['add']:
-                pass
-            for car in location['cars']['remove']:
-                pass
-
-            counter += 1
-
-        return
-
-    def makeLine(self, rs):
-        """
-        This makes a rolling stock line for the TP o2o file.
-        format: PUSO, TP ID, Road, Number, Car Type, L/E/O, Load or Model, From, To
-        """
-
-        ID = rs['road'] + ' ' + rs['number']
-        load = ''
-        try:
-            load = rs['load']
-        except:
-            load = rs['model']
-
-        try: # Locos don't use load type
-            lt = rs['loadType']
-        except:
-            lt = 'X'
-
-        pu = rs['location'] + ';' + rs['track']
-
-        so = rs['destination'] + ';' + rs['setTo']
-
-        return rs['puso'] + ',' + ID + ',' + rs['road'] + ',' + rs['number'] + ',' + rs['carType'] + ',' + lt + ',' + load + ',' + pu + ',' + so
-
-    def saveList(self):
-
-        _psLog.debug('o2oWorkEvents.saveList')
-
-        if ModelEntities.tpDirectoryExists():
-            PSE.genericWriteReport(self.o2oWorkEventPath, self.o2oWorkEvents)
-
-        print(SCRIPT_NAME + '.o2oWorkEvents ' + str(SCRIPT_REV))
-
-        return
-    
-
-
-
-
-
-class FindTrain:
-    """
-    Find a particular train using various crateria.
-    """
-
-    def __init__(self):
-
-        self.builtTrainList = []
-        self.getBuiltTrains()
-
-        return
-        
-    def findNewestTrain(self):
-        """
-        If more than 1 train is built, pick the newest one.
-        Returns a train object.
-        """
-
-        _psLog.debug('findNewestTrain')
-
-        if not PSE.TM.isAnyTrainBuilt():
-            return
-
-        newestBuildTime = ''
-        for train in self.getBuiltTrains():
-            trainManifest = PSE.JMRI.jmrit.operations.trains.JsonManifest(train).getFile()
-            trainManifest = PSE.JMRI.util.FileUtil.readFile(trainManifest)
-            testDate = PSE.loadJson(trainManifest)['date']
-            if testDate > newestBuildTime:
-                newestBuildTime = testDate
-                newestTrain = train
-
-        return newestTrain
-
-    def getBuiltTrains(self):
-
-        _psLog.debug('getBuiltTrains')
-
-        return [train for train in PSE.TM.getTrainsByStatusList() if train.isBuilt()]
 
 
 class opsSwitchListConversion:
@@ -356,119 +201,199 @@ class opsSwitchListConversion:
         return setTo[1:-1].split(']')[0]
 
 
-class jmriManifestConversion:
-    """
-    Converts the JMRI generated manifest for use by o2oWorkEvents.
-    """
 
-    def __init__(self, builtTrain):
+# def convertJmriManifest():
+#     """
+#     Mini controller.
+#     Converts a JMRI manifest to a Quick Keys work events list.
+#     Called by: Listeners - PROPERTY_CHANGE_EVENT.propertyName == 'TrainBuilt'
+#     """
 
-        self.builtTrain = builtTrain
-        self.jmriManifest = {}
-        self.o2oWorkEvents = {}
+#     newestTrain = FindTrain().findNewestTrain()
 
-        self.cars = []
-        self.locos = []
+#     tpWorkEventsList = jmriManifestConversion(newestTrain).convert()
+#     o2oWorkEvents(tpWorkEventsList).makeList()
 
-        return
+#     return
 
-    def convert(self):
-        """
-        Mini controller.
-        """
+# def workListFromManifest():
+#     """
+#     Makes an o2o work list from an OPS modified JMRI manifest json.
+#     """
 
-        self.jmriManifestGetter()
-        self.convertHeader()
-        self.convertBody()
+#     newestTrain = FindTrain().findNewestTrain()
+#     # jsonManifest = PSE.JMRI.jmrit.operations.trains.JsonManifest(newestTrain).getFile()
+#     # jsonManifest = PSE.JMRI.util.FileUtil.readFile(jsonManifest)
+#     jsonManifest = ModelEntities.getManifestForTrain(newestTrain)
+#     # print(jsonManifest)
 
-        return self.o2oWorkEvents
+
+
     
-    def jmriManifestGetter(self):
+#     # o2oWorkEvents().makeList(jsonManifest)
 
-        _psLog.debug('jmriManifestConversion.jmriManifestGetter')
+#     return
 
-        reportName = self.builtTrain.getName()
-        fileName = 'train-' + reportName + '.json'
-        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
 
-        workEventList = PSE.genericReadReport(targetPath)
-        self.jmriManifest = PSE.loadJson(workEventList)
 
-        return
 
-    def convertHeader(self):
-        """
-        Train comment is not in the JMRI train.json file.
-        """
 
-        _psLog.debug('jmriManifestConversion.convertHeader')
 
-        self.o2oWorkEvents['railroadName'] = PSE.HTML_PARSER().unescape(self.jmriManifest['railroad'])
-        self.o2oWorkEvents['railroadDescription'] = PSE.JMRI.jmrit.operations.setup.Setup.getComment()
-        self.o2oWorkEvents['trainName'] = PSE.HTML_PARSER().unescape(self.jmriManifest['userName'])
-        self.o2oWorkEvents['trainDescription'] = PSE.HTML_PARSER().unescape(self.jmriManifest['description'])
 
-        epoch = PSE.convertJmriDateToEpoch(self.jmriManifest['date'])
-        self.o2oWorkEvents['date'] = PSE.validTime(epoch)
-        self.o2oWorkEvents['locations'] = []
+# class FindTrain:
+#     """
+#     Find a particular train using various crateria.
+#     """
 
-        return
+#     def __init__(self):
 
-    def convertBody(self):
+#         self.builtTrainList = []
+#         self.getBuiltTrains()
 
-        _psLog.debug('jmriManifestConversion.convertBody')
+#         return
+        
+#     def findNewestTrain(self):
+#         """
+#         If more than 1 train is built, pick the newest one.
+#         Returns a train object.
+#         """
 
-        for location in self.jmriManifest['locations']:
+#         _psLog.debug('findNewestTrain')
 
-            cars = []
-            for car in location['cars']['add']:
-                parsedRS = self.parseRS(car)
-                parsedRS['puso'] = 'PC'
-                cars.append(parsedRS)
-            for car in location['cars']['remove']:
-                parsedRS = self.parseRS(car)
-                parsedRS['puso'] = 'SC'
-                cars.append(parsedRS)
+#         if not PSE.TM.isAnyTrainBuilt():
+#             return
 
-            locos = []
-            for loco in location['engines']['add']:
-                parsedRS = self.parseRS(loco)
-                parsedRS['puso'] = 'PL'
-                locos.append(parsedRS)
-            for loco in location['engines']['remove']:
-                parsedRS = self.parseRS(loco)
-                parsedRS['puso'] = 'SL'
-                locos.append(parsedRS)
+#         newestBuildTime = ''
+#         for train in self.getBuiltTrains():
+#             trainManifest = PSE.JMRI.jmrit.operations.trains.JsonManifest(train).getFile()
+#             trainManifest = PSE.JMRI.util.FileUtil.readFile(trainManifest)
+#             testDate = PSE.loadJson(trainManifest)['date']
+#             if testDate > newestBuildTime:
+#                 newestBuildTime = testDate
+#                 newestTrain = train
 
-            self.o2oWorkEvents['locations'].append({'locationName': location['userName'], 'tracks': [{'cars': cars, 'locos': locos}]})
+#         return newestTrain
 
-        return
+#     def getBuiltTrains(self):
 
-    def parseRS(self, rs):
-        """
-        The load field ie either Load or Model.
-        """
+#         _psLog.debug('getBuiltTrains')
 
-        parsedRS = {}
-        parsedRS['road'] = rs['road']
-        parsedRS['number'] = rs['number']
-        parsedRS['carType'] = rs['carType']
-        parsedRS['location'] = rs['location']['userName']
-        parsedRS['track'] = rs['location']['track']['userName']
-        parsedRS['destination'] = rs['destination']['userName']
-        parsedRS['setTo'] = rs['destination']['track']['userName']
+#         return [train for train in PSE.TM.getTrainsByStatusList() if train.isBuilt()]
 
-        try:
-            parsedRS['loadType'] = PSE.getShortLoadType(rs)
-            parsedRS['load'] = rs['load']
-        except:
-            parsedRS['load'] = rs['model']
 
-        return parsedRS
+# class jmriManifestConversion:
+#     """
+#     Converts the JMRI generated manifest for use by o2oWorkEvents.
+#     """
 
-    def geto2oWorkEvents(self):
+#     def __init__(self, builtTrain):
 
-        return self.o2oWorkEvents
+#         self.builtTrain = builtTrain
+#         self.jmriManifest = {}
+#         self.o2oWorkEvents = {}
+
+#         self.cars = []
+#         self.locos = []
+
+#         return
+
+#     def convert(self):
+#         """
+#         Mini controller.
+#         """
+
+#         self.jmriManifestGetter()
+#         self.convertHeader()
+#         self.convertBody()
+
+#         return self.o2oWorkEvents
+    
+#     def jmriManifestGetter(self):
+
+#         _psLog.debug('jmriManifestConversion.jmriManifestGetter')
+
+#         reportName = self.builtTrain.getName()
+#         fileName = 'train-' + reportName + '.json'
+#         targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+
+#         workEventList = PSE.genericReadReport(targetPath)
+#         self.jmriManifest = PSE.loadJson(workEventList)
+
+#         return
+
+#     def convertHeader(self):
+#         """
+#         Train comment is not in the JMRI train.json file.
+#         """
+
+#         _psLog.debug('jmriManifestConversion.convertHeader')
+
+#         self.o2oWorkEvents['railroadName'] = PSE.HTML_PARSER().unescape(self.jmriManifest['railroad'])
+#         self.o2oWorkEvents['railroadDescription'] = PSE.JMRI.jmrit.operations.setup.Setup.getComment()
+#         self.o2oWorkEvents['trainName'] = PSE.HTML_PARSER().unescape(self.jmriManifest['userName'])
+#         self.o2oWorkEvents['trainDescription'] = PSE.HTML_PARSER().unescape(self.jmriManifest['description'])
+
+#         epoch = PSE.convertJmriDateToEpoch(self.jmriManifest['date'])
+#         self.o2oWorkEvents['date'] = PSE.validTime(epoch)
+#         self.o2oWorkEvents['locations'] = []
+
+#         return
+
+#     def convertBody(self):
+
+#         _psLog.debug('jmriManifestConversion.convertBody')
+
+#         for location in self.jmriManifest['locations']:
+
+#             cars = []
+#             for car in location['cars']['add']:
+#                 parsedRS = self.parseRS(car)
+#                 parsedRS['puso'] = 'PC'
+#                 cars.append(parsedRS)
+#             for car in location['cars']['remove']:
+#                 parsedRS = self.parseRS(car)
+#                 parsedRS['puso'] = 'SC'
+#                 cars.append(parsedRS)
+
+#             locos = []
+#             for loco in location['engines']['add']:
+#                 parsedRS = self.parseRS(loco)
+#                 parsedRS['puso'] = 'PL'
+#                 locos.append(parsedRS)
+#             for loco in location['engines']['remove']:
+#                 parsedRS = self.parseRS(loco)
+#                 parsedRS['puso'] = 'SL'
+#                 locos.append(parsedRS)
+
+#             self.o2oWorkEvents['locations'].append({'locationName': location['userName'], 'tracks': [{'cars': cars, 'locos': locos}]})
+
+#         return
+
+#     def parseRS(self, rs):
+#         """
+#         The load field ie either Load or Model.
+#         """
+
+#         parsedRS = {}
+#         parsedRS['road'] = rs['road']
+#         parsedRS['number'] = rs['number']
+#         parsedRS['carType'] = rs['carType']
+#         parsedRS['location'] = rs['location']['userName']
+#         parsedRS['track'] = rs['location']['track']['userName']
+#         parsedRS['destination'] = rs['destination']['userName']
+#         parsedRS['setTo'] = rs['destination']['track']['userName']
+
+#         try:
+#             parsedRS['loadType'] = PSE.getShortLoadType(rs)
+#             parsedRS['load'] = rs['load']
+#         except:
+#             parsedRS['load'] = rs['model']
+
+#         return parsedRS
+
+#     def geto2oWorkEvents(self):
+
+#         return self.o2oWorkEvents
 
 
 

@@ -9,6 +9,7 @@ From tpRailroadData.json, a JMRI railroad is created or updated.
 
 from opsEntities import PSE
 from opsEntities import Manifest
+from Subroutines_Activated.o2o import ModelWorkEvents
 from Subroutines_Activated.o2o import ModelEntities
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
@@ -34,46 +35,48 @@ def refreshSubroutine():
 
     return
 
-def opsAction1():
+def opsAction1(message=None):
     """
     Generic action called by a plugin listener.
     """
 
-    train = PSE.getNewestTrain()
+    if message == 'TrainBuilt':
+        train = PSE.getNewestTrain()
 
-    manifest = PSE.getTrainManifest(train)
-    manifest = extendJmriManifestJson(manifest)
-    PSE.saveManifest(manifest, train)
+        manifest = PSE.getTrainManifest(train)
+        manifest = extendJmriManifestJson(manifest)
+        PSE.saveManifest(manifest, train)
 
     return
 
-def opsAction2():
+def opsAction2(message=None):
     """
     Writes a new text manifest from the extended manifest.
     """
-    
-    train = PSE.getNewestTrain()
-    manifest = PSE.getTrainManifest(train)
 
-    textManifest = Manifest.opsTextManifest(manifest)
-    manifestName = 'train ({}).txt'.format(train.toString())
-    manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', manifestName)
-    PSE.genericWriteReport(manifestPath, textManifest)
+    if message == 'TrainBuilt':    
+        train = PSE.getNewestTrain()
+        manifest = PSE.getTrainManifest(train)
 
-    # Modify the JMRI switch lists here
+        textManifest = Manifest.opsTextManifest(manifest)
+        manifestName = 'train ({}).txt'.format(train.toString())
+        manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', manifestName)
+        PSE.genericWriteReport(manifestPath, textManifest)
+
+        # Modify the JMRI switch lists here
 
     return
 
-def opsAction3():
+def opsAction3(message=None):
     """
     Generic action called by a plugin listener.
     """
 
     tpDirectory = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData', 'Roaming', 'TrainPlayer', 'Reports')
-    if PSE.JAVA_IO.File(tpDirectory).isDirectory():   
+    if PSE.JAVA_IO.File(tpDirectory).isDirectory() and message == 'TrainBuilt':   
         train = PSE.getNewestTrain()
         manifest = PSE.getTrainManifest(train)
-        o2oWorkEvents = Manifest.o2oWorkEvents(manifest)
+        o2oWorkEvents = ModelWorkEvents.o2oWorkEvents(manifest)
 
         outPutName = 'JMRI Report - o2o Workevents.csv'
         o2oWorkEventPath = PSE.OS_PATH.join(tpDirectory, outPutName)

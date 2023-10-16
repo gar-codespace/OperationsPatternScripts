@@ -257,17 +257,17 @@ class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
             for subroutine in PSE.getSubroutineDirs():
                 xModule = 'Subroutines_Activated.{}'.format(subroutine)
                 package = __import__(xModule, fromlist=['Model'], level=-1)
-                package.Model.opsAction1()
+                package.Model.opsAction1('TrainBuilt')
         # writes a new OPS formatted manifest and a new OPS formatted switch list from the trains manifest json
             for subroutine in PSE.getSubroutineDirs():
                 xModule = 'Subroutines_Activated.{}'.format(subroutine)
                 package = __import__(xModule, fromlist=['Model'], level=-1)
-                package.Model.opsAction2()
+                package.Model.opsAction2('TrainBuilt')
         # writes the o2o work event list
             for subroutine in PSE.getSubroutineDirs():
                 xModule = 'Subroutines_Activated.{}'.format(subroutine)
                 package = __import__(xModule, fromlist=['Model'], level=-1)
-                package.Model.opsAction3()
+                package.Model.opsAction3('TrainBuilt')
                 
             _psLog.debug(logMessage)
 

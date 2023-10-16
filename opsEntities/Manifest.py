@@ -213,51 +213,51 @@ def opsTextManifest(manifest):
 
     return textManifest
 
-def o2oWorkEvents(manifest):
-    """
-    Makes an o2o workevents list from a manifest.
-    manifest is a string from the json file.
-    """
+# def o2oWorkEvents(manifest):
+#     """
+#     Makes an o2o workevents list from a manifest.
+#     manifest is a string from the json file.
+#     """
 
-    _psLog.debug('o2oWorkEvents')
-# Header
-    o2oWorkEvents = 'HN,' + manifest['railroad'].replace('\n', ';') + '\n'
-    o2oWorkEvents += 'HT,' + manifest['userName'] + '\n'
-    o2oWorkEvents += 'HD,' + manifest['description'] + '\n'
-    epochTime = PSE.convertJmriDateToEpoch(manifest['date'])
-    o2oWorkEvents += 'HV,' + PSE.validTime(epochTime) + '\n'
-    o2oWorkEvents += 'WT,' + str(len(manifest['locations'])) + '\n'
-# Body
-    for i, location in enumerate(manifest['locations'], start=1):
-        o2oWorkEvents += 'WE,{},{}\n'.format(str(i), location['userName'])
-        for loco in location['engines']['add']:
-            o2oWorkEvents += 'PL,{}\n'.format(_makeLine(loco))
-        for loco in location['engines']['remove']:
-            o2oWorkEvents += 'SL,{}\n'.format(_makeLine(loco))
-        for car in location['cars']['add']:
-            o2oWorkEvents += 'PC,{}\n'.format(_makeLine(car))
-        for car in location['cars']['remove']:
-            o2oWorkEvents += 'SC,{}\n'.format(_makeLine(car))
+#     _psLog.debug('o2oWorkEvents')
+# # Header
+#     o2oWorkEvents = 'HN,' + manifest['railroad'].replace('\n', ';') + '\n'
+#     o2oWorkEvents += 'HT,' + manifest['userName'] + '\n'
+#     o2oWorkEvents += 'HD,' + manifest['description'] + '\n'
+#     epochTime = PSE.convertJmriDateToEpoch(manifest['date'])
+#     o2oWorkEvents += 'HV,' + PSE.validTime(epochTime) + '\n'
+#     o2oWorkEvents += 'WT,' + str(len(manifest['locations'])) + '\n'
+# # Body
+#     for i, location in enumerate(manifest['locations'], start=1):
+#         o2oWorkEvents += 'WE,{},{}\n'.format(str(i), location['userName'])
+#         for loco in location['engines']['add']:
+#             o2oWorkEvents += 'PL,{}\n'.format(_makeLine(loco))
+#         for loco in location['engines']['remove']:
+#             o2oWorkEvents += 'SL,{}\n'.format(_makeLine(loco))
+#         for car in location['cars']['add']:
+#             o2oWorkEvents += 'PC,{}\n'.format(_makeLine(car))
+#         for car in location['cars']['remove']:
+#             o2oWorkEvents += 'SC,{}\n'.format(_makeLine(car))
         
-    return o2oWorkEvents
+#     return o2oWorkEvents
 
-def _makeLine(rs):
-    """
-    Helper function to make the rs line for o2oWorkEvents.
-    format: TP ID, Road, Number, Car Type, L/E/O, Load or Model, From, To
-    """
+# def _makeLine(rs):
+#     """
+#     Helper function to make the rs line for o2oWorkEvents.
+#     format: TP ID, Road, Number, Car Type, L/E/O, Load or Model, From, To
+#     """
 
-    try: # Cars
-        loadName = rs['load']
-        lt = PSE.getShortLoadType(rs)
-    except: # Locos
-        loadName = rs['model']
-        lt = PSE.getBundleItem('Occupied').upper()[0]
+#     try: # Cars
+#         loadName = rs['load']
+#         lt = PSE.getShortLoadType(rs)
+#     except: # Locos
+#         loadName = rs['model']
+#         lt = PSE.getBundleItem('Occupied').upper()[0]
 
-    ID = rs['road'] + ' ' + rs['number']
-    pu = rs['location']['userName'] + ';' + rs['location']['track']['userName']
-    so = rs['destination']['userName'] + ';' + rs['destination']['track']['userName']
+#     ID = rs['road'] + ' ' + rs['number']
+#     pu = rs['location']['userName'] + ';' + rs['location']['track']['userName']
+#     so = rs['destination']['userName'] + ';' + rs['destination']['track']['userName']
 
-    line = '{},{},{},{},{},{},{},{}'.format(ID, rs['road'], rs['number'], rs['carType'], lt, loadName, pu, so)
+#     line = '{},{},{},{},{},{},{},{}'.format(ID, rs['road'], rs['number'], rs['carType'], lt, loadName, pu, so)
 
-    return line
+#     return line

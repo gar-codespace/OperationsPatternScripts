@@ -37,37 +37,39 @@ def refreshSubroutine():
 
     return
 
-def opsAction1():
+def opsAction1(message=None):
     """
     Generic action called by a plugin listener.
     """
 
-    train = PSE.getNewestTrain()
+    if message == 'TrainBuilt':
+        train = PSE.getNewestTrain()
 
-    manifest = PSE.getTrainManifest(train)
-    manifest = extendJmriManifestJson(manifest)
-    PSE.saveManifest(manifest, train)
+        manifest = PSE.getTrainManifest(train)
+        manifest = extendJmriManifestJson(manifest)
+        PSE.saveManifest(manifest, train)
 
     return
 
-def opsAction2():
+def opsAction2(message=None):
     """
     Writes a new text manifest from the extended manifest.
     """
 
-    train = PSE.getNewestTrain()
-    manifest = PSE.getTrainManifest(train)
+    if message == 'TrainBuilt':
+        train = PSE.getNewestTrain()
+        manifest = PSE.getTrainManifest(train)
 
-    textManifest = Manifest.opsTextManifest(manifest)
-    manifestName = 'train ({}).txt'.format(train.toString())
-    manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', manifestName)
-    PSE.genericWriteReport(manifestPath, textManifest)
+        textManifest = Manifest.opsTextManifest(manifest)
+        manifestName = 'train ({}).txt'.format(train.toString())
+        manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', manifestName)
+        PSE.genericWriteReport(manifestPath, textManifest)
 
-    # Modify the JMRI switch lists here
+        # Modify the JMRI switch lists here
 
     return
 
-def opsAction3():
+def opsAction3(message=None):
     """
     Generic action called by a plugin listener.
     """
