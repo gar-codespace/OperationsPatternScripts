@@ -8,7 +8,7 @@ The info can be input directly or imported from TrainPlayer if using o2o.
 
 from opsEntities import PSE
 
-from Subroutines_Activated.jPlus import Listeners
+# from Subroutines_Activated.jPlus import SubroutineListeners
 from Subroutines_Activated.jPlus import Model
 from Subroutines_Activated.jPlus import View
 
@@ -62,8 +62,6 @@ class StartUp:
         return subroutine
 
     def startUpTasks(self):
-
-        # PSE.LM.addPropertyChangeListener(Listeners.ListenToThePSWindow())
 
         return
 

@@ -13,7 +13,7 @@ from opsEntities import Manifest
 from Subroutines_Activated.Patterns import SetCarsForm_Controller
 from Subroutines_Activated.Patterns import Model
 from Subroutines_Activated.Patterns import View
-from Subroutines_Activated.Patterns import Listeners
+from Subroutines_Activated.Patterns import SubroutineListeners
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901
@@ -67,8 +67,6 @@ class StartUp:
         return subroutine
 
     def startUpTasks(self):
-
-        # PSE.LM.addPropertyChangeListener(Listeners.ListenToThePSWindow())
         
         return
 
@@ -77,8 +75,8 @@ class StartUp:
         Puts actions on all the widgets that need actions.
         """
 
-        self.widgets[0].addActionListener(Listeners.DivisionAction())
-        self.widgets[1].addActionListener(Listeners.LocationAction())
+        self.widgets[0].addActionListener(SubroutineListeners.DivisionAction())
+        self.widgets[1].addActionListener(SubroutineListeners.LocationAction())
         self.widgets[2].actionPerformed = self.yardTrackOnlyCheckBox
         self.widgets[4].actionPerformed = self.patternReportButton
         self.widgets[5].actionPerformed = self.setRsButton

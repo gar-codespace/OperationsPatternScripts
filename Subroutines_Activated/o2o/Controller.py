@@ -8,7 +8,7 @@ On the TrainPlayer side, the Quick Keys suite of scripts is used to import from 
 """
 
 from opsEntities import PSE
-from Subroutines_Activated.o2o import Listeners
+# from Subroutines_Activated.o2o import SubroutineListeners
 from Subroutines_Activated.o2o import Model
 from Subroutines_Activated.o2o import ModelImport
 from Subroutines_Activated.o2o import View
@@ -61,8 +61,6 @@ class StartUp:
         return subroutine
 
     def startUpTasks(self):
-
-        # PSE.LM.addPropertyChangeListener(Listeners.ListenToThePSWindow())
         
         return
 

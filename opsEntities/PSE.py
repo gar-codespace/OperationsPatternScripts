@@ -549,6 +549,44 @@ def makeCompositRailroadName(layoutDetails):
 
     return a + b + c
 
+def getNewestTrain():
+    """
+    If more than 1 train is built, pick the newest one.
+    Returns a train object.
+    """
+
+    _psLog.debug('findNewestTrain')
+
+    if not TM.isAnyTrainBuilt():
+        return None
+
+    newestBuildTime = ''
+    for train in [train for train in TM.getTrainsByStatusList() if train.isBuilt()]:
+        trainManifest = JMRI.jmrit.operations.trains.JsonManifest(train).getFile()
+        trainManifest = JMRI.util.FileUtil.readFile(trainManifest)
+        testDate = loadJson(trainManifest)['date']
+        if testDate > newestBuildTime:
+            newestBuildTime = testDate
+            newestTrain = train
+
+    return newestTrain
+
+def getTrainManifest(train):
+
+    trainName = 'train-{}.json'.format(train.toString())
+    manifestPath = OS_PATH.join(PROFILE_PATH, 'operations', 'jsonManifests', trainName)
+    manifest = loadJson(genericReadReport(manifestPath))
+
+    return manifest
+
+def saveManifest(manifest, train):
+
+    trainName = 'train-{}.json'.format(train.toString())
+    manifestPath = OS_PATH.join(PROFILE_PATH, 'operations', 'jsonManifests', trainName)
+    genericWriteReport(manifestPath, dumpJson(manifest))
+
+    return
+
 
 """Formatting Methods"""
 
@@ -682,11 +720,7 @@ def isoValidTime(timeStamp):
     Return format: Valid Oct 08, 1915, 11:11
     """
 
-
-
     valid = getBundleItem('Valid') + ' ' + JMRI.jmrit.operations.trains.TrainCommon.getDate(True)
-
-
 
     return valid
 

@@ -13,6 +13,8 @@ SCRIPT_REV = 20230901
 
 _psLog = PSE.LOGGING.getLogger('OPS.XX.Model')
 
+""" Actions called by the plugin listeners """
+
 def resetConfigFileItems():
     """
     Put configFile items here that need to be set to their defaults when this subroutine is reset.
@@ -43,3 +45,26 @@ def refreshSubroutine():
     """
 
     return
+
+def opsAction1():
+    """
+    Generic action called by a plugin listener.
+    """
+
+    return
+
+def opsAction2():
+    """
+    Generic action called by a plugin listener.
+    """
+
+    return
+
+def opsAction3():
+    """
+    Generic action called by a plugin listener.
+    """
+
+    return
+
+""" Routines specific to this subroutine """

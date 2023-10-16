@@ -7,7 +7,7 @@ Scanner subroutine
 
 from opsEntities import PSE
 
-from Subroutines_Activated.Scanner import Listeners
+from Subroutines_Activated.Scanner import SubroutineListeners
 from Subroutines_Activated.Scanner import Model
 from Subroutines_Activated.Scanner import View
 
@@ -69,7 +69,6 @@ class StartUp:
         No GUI items as the GUI is not built yet.
         """
 
-        # PSE.LM.addPropertyChangeListener(Listeners.ListenToThePSWindow())
         Model.validateSequenceData()
         
         return
@@ -79,7 +78,7 @@ class StartUp:
         """
 
         self.widgets[0].actionPerformed = self.qrButton
-        self.widgets[1].addActionListener(Listeners.ScannerSelection())
+        self.widgets[1].addActionListener(SubroutineListeners.ScannerSelection())
         self.widgets[2].actionPerformed = self.scButton
 
         return

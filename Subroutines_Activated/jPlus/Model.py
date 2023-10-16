@@ -6,15 +6,16 @@ jPlus
 """
 
 from opsEntities import PSE
+from opsEntities import Manifest
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901
 
 _psLog = PSE.LOGGING.getLogger('OPS.JP.Model')
 
+""" Actions called by the plugin listeners """
+
 def resetConfigFileItems():
-    """
-    """
     
     return
 
@@ -76,6 +77,45 @@ def refreshSubroutine():
     component.setText(yearModeled)
 
     return
+
+def opsAction1():
+    """
+    Modifies the trains json manifest wit the extended railroad detail.
+    """
+
+    train = PSE.getNewestTrain()
+
+    manifest = PSE.getTrainManifest(train)
+    manifest.update({'railroad':PSE.getExtendedRailroadName()})
+    PSE.saveManifest(manifest, train)
+
+    return
+
+def opsAction2():
+    """
+    Writes a new text manifest from the extended manifest.
+    """
+    
+    train = PSE.getNewestTrain()
+    manifest = PSE.getTrainManifest(train)
+
+    textManifest = Manifest.opsTextManifest(manifest)
+    manifestName = 'train ({}).txt'.format(train.toString())
+    manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', manifestName)
+    PSE.genericWriteReport(manifestPath, textManifest)
+
+    # Modify the JMRI switch lists here
+
+    return
+
+def opsAction3():
+    """
+    Generic action called by a plugin listener.
+    """
+
+    return
+
+""" Routines specific to this subroutine """
 
 def updateRailroadDetails(widgets):
     """

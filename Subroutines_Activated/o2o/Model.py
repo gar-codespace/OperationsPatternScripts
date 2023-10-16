@@ -8,12 +8,15 @@ From tpRailroadData.json, a JMRI railroad is created or updated.
 """
 
 from opsEntities import PSE
+from opsEntities import Manifest
 from Subroutines_Activated.o2o import ModelEntities
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901
 
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.Model')
+
+""" Actions called by the plugin listeners """
 
 def resetConfigFileItems():
 
@@ -30,6 +33,79 @@ def resetSubroutine():
 def refreshSubroutine():
 
     return
+
+def opsAction1():
+    """
+    Generic action called by a plugin listener.
+    """
+
+    train = PSE.getNewestTrain()
+
+    manifest = PSE.getTrainManifest(train)
+    manifest = extendJmriManifestJson(manifest)
+    PSE.saveManifest(manifest, train)
+
+    return
+
+def opsAction2():
+    """
+    Writes a new text manifest from the extended manifest.
+    """
+    
+    train = PSE.getNewestTrain()
+    manifest = PSE.getTrainManifest(train)
+
+    textManifest = Manifest.opsTextManifest(manifest)
+    manifestName = 'train ({}).txt'.format(train.toString())
+    manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', manifestName)
+    PSE.genericWriteReport(manifestPath, textManifest)
+
+    # Modify the JMRI switch lists here
+
+    return
+
+def opsAction3():
+    """
+    Generic action called by a plugin listener.
+    """
+
+    tpDirectory = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData', 'Roaming', 'TrainPlayer', 'Reports')
+    if PSE.JAVA_IO.File(tpDirectory).isDirectory():   
+        train = PSE.getNewestTrain()
+        manifest = PSE.getTrainManifest(train)
+        o2oWorkEvents = Manifest.o2oWorkEvents(manifest)
+
+        outPutName = 'JMRI Report - o2o Workevents.csv'
+        o2oWorkEventPath = PSE.OS_PATH.join(tpDirectory, outPutName)
+        PSE.genericWriteReport(o2oWorkEventPath, o2oWorkEvents)
+    else:
+        _psLog.warning('TrainPlayer Reports destination directory not found')
+        print('TrainPlayer Reports destination directory not found')    
+    
+    return
+
+""" Routines specific to this subroutine """
+
+def extendJmriManifestJson(manifest):
+
+    for location in manifest['locations']:
+        for car in location['cars']['add']:
+            carObj = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
+            car['finalDestination'] = carObj.getFinalDestinationName()
+            car['fdTrack'] = carObj.getFinalDestinationTrackName()
+            car['loadType'] = carObj.getLoadType()
+            car['kernelSize'] = 'NA'
+            car['division'] = PSE.LM.getLocationByName(car['location']['userName']).getDivisionName()
+
+        for car in location['cars']['remove']:
+            carObj = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
+            car['finalDestination'] = carObj.getFinalDestinationName()
+            car['fdTrack'] = carObj.getFinalDestinationTrackName()
+            car['loadType'] = carObj.getLoadType()
+            car['kernelSize'] = 'NA'
+            car['division'] = PSE.LM.getLocationByName(car['location']['userName']).getDivisionName()
+
+    return manifest
 
 def resetBuiltTrains():
     """
@@ -1615,7 +1691,7 @@ class RollingStockulator:
             car.setPassenger(True)
             car.setLoadName(load)
         if carData['aar'] in self.tpRailroad['AAR_Express']:
-            car.setPassenger(True)
+            car.setPassenger(False)
 
         car.setLength(str(self.configFile['o2o']['DL']))
         kernel = PSE.KM.getKernelByName(carData['kernel'])

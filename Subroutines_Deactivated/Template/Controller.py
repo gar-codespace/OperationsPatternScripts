@@ -11,7 +11,7 @@ Replace this text with a description of what this subroutine does.
 
 from opsEntities import PSE
 
-from Subroutines_Activated.Template import Listeners
+from Subroutines_Activated.Template import SubroutineListeners
 from Subroutines_Activated.Template import Model
 from Subroutines_Activated.Template import View
 
@@ -72,8 +72,6 @@ class StartUp:
         Run these tasks when this subroutine is started.
         No GUI items as the GUI is not built yet.
         """
-
-        # PSE.LM.addPropertyChangeListener(Listeners.ListenToThePSWindow())
         
         return
         

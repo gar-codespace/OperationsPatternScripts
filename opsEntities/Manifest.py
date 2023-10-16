@@ -4,6 +4,7 @@
 """
 Unified report formatting for all OPS generated reports.
 The idea is to have all the JMRI and OPS text reports share a similar look.
+None of the text reports are processed, only formatting at this module.
 -Extends the JMRI generated json manifest.
 -Creates a new JMRI text manifest.
 -Creates the OPS text Pattern Report.
@@ -16,86 +17,6 @@ SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901
 
 _psLog = PSE.LOGGING.getLogger('OPS.OE.Manifest')
-
-def extendJmriManifest(train):
-    """
-    Mini controller
-    Modifies the JMRI generated json manifest and sorts it in sequence order.
-    """
-    
-    extendJmriManifestJson(train)
-
-    if 'Scanner' in PSE.readConfigFile('Main Script')['SL']:
-        resequenceJmriManifest(train)
-
-    return
-
-def extendJmriManifestJson(train):
-    """
-    Adds an attribute called 'sequence' and it's value to an existing json manifest.
-    Adds additional items found in the Setup.get< >ManifestMessageFormat()
-    """
-
-    _psLog.debug('Manifest.extendJmriManifestJson')
-
-    isSequenceHash, sequenceHash = PSE.getSequenceHash()
-
-    trainName = 'train-' + train.toString() + '.json'
-    manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', trainName)
-    manifest = PSE.loadJson(PSE.genericReadReport(manifestPath))
-
-    manifest.update({'railroad':PSE.getExtendedRailroadName()})
-
-    for location in manifest['locations']:
-        for car in location['cars']['add']:
-            carID = car['road'] + ' ' + car['number']
-            sequence = sequenceHash['cars'][carID]
-            car['sequence'] = sequence
-
-            carObj = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
-            car['finalDestination'] = carObj.getFinalDestinationName()
-            car['fdTrack'] = carObj.getFinalDestinationTrackName()
-            car['loadType'] = carObj.getLoadType()
-            car['kernelSize'] = 'NA'
-            car['division'] = PSE.LM.getLocationByName(car['location']['userName']).getDivisionName()
-
-        for car in location['cars']['remove']:
-            carID = car['road'] + ' ' + car['number']
-            sequence = sequenceHash['cars'][carID]
-            car['sequence'] = sequence
-
-            carObj = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
-            car['finalDestination'] = carObj.getFinalDestinationName()
-            car['fdTrack'] = carObj.getFinalDestinationTrackName()
-            car['loadType'] = carObj.getLoadType()
-            car['kernelSize'] = 'NA'
-            car['division'] = PSE.LM.getLocationByName(car['location']['userName']).getDivisionName()
-
-    PSE.genericWriteReport(manifestPath, PSE.dumpJson(manifest))
-
-    return
-
-def resequenceJmriManifest(train):
-    """
-    Resequences an existing json manifest by its sequence value.
-    """
-
-    _psLog.debug('Manifest.resequenceJmriManifest')
-
-    trainName = 'train-' + train.toString() + '.json'
-    manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', trainName)
-    manifest = PSE.loadJson(PSE.genericReadReport(manifestPath))
-
-    for location in manifest['locations']:
-        cars = location['cars']['add']
-        cars.sort(key=lambda row: row['sequence'])
-
-        cars = location['cars']['remove']
-        cars.sort(key=lambda row: row['sequence'])
-
-    PSE.genericWriteReport(manifestPath, PSE.dumpJson(manifest))
-
-    return
 
 def opsTextPatternReport(location):
     """
@@ -217,8 +138,9 @@ def opsTextSwitchList():
 
     return textSwitchList
 
-def opsTextManifest(train):
+def opsTextManifest(manifest):
     """"
+    manifest is a string from the json file.
     OPS version of the JMRI generated text manifest.
     """
 
@@ -235,16 +157,13 @@ def opsTextManifest(train):
 
     longestStringLength = PSE.findLongestStringLength((pep, dep, pcp, dcp, mcp, hcp))
 
-    trainName = 'train-' + train.toString() + '.json'
-    manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', trainName)
-    manifest = PSE.loadJson(PSE.genericReadReport(manifestPath))
-
     textManifest = ''
 
 # Header
     textManifest += PSE.getExtendedRailroadName() + '\n'
     textManifest += '\n'
-    textManifest += TMT.getStringManifestForTrain().format(train.getName(), train.getDescription()) + '\n'
+    # textManifest += TMT.getStringManifestForTrain().format(train.getName(), train.getDescription()) + '\n'
+    textManifest += '{}, {}'.format(manifest['userName'], manifest['description']) + '\n'
     epochTime = PSE.convertJmriDateToEpoch(manifest['date'])
     textManifest += PSE.validTime(epochTime) + '\n'
     textManifest += '\n'
@@ -293,3 +212,52 @@ def opsTextManifest(train):
         textManifest += '\n'
 
     return textManifest
+
+def o2oWorkEvents(manifest):
+    """
+    Makes an o2o workevents list from a manifest.
+    manifest is a string from the json file.
+    """
+
+    _psLog.debug('o2oWorkEvents')
+# Header
+    o2oWorkEvents = 'HN,' + manifest['railroad'].replace('\n', ';') + '\n'
+    o2oWorkEvents += 'HT,' + manifest['userName'] + '\n'
+    o2oWorkEvents += 'HD,' + manifest['description'] + '\n'
+    epochTime = PSE.convertJmriDateToEpoch(manifest['date'])
+    o2oWorkEvents += 'HV,' + PSE.validTime(epochTime) + '\n'
+    o2oWorkEvents += 'WT,' + str(len(manifest['locations'])) + '\n'
+# Body
+    for i, location in enumerate(manifest['locations'], start=1):
+        o2oWorkEvents += 'WE,{},{}\n'.format(str(i), location['userName'])
+        for loco in location['engines']['add']:
+            o2oWorkEvents += 'PL,{}\n'.format(_makeLine(loco))
+        for loco in location['engines']['remove']:
+            o2oWorkEvents += 'SL,{}\n'.format(_makeLine(loco))
+        for car in location['cars']['add']:
+            o2oWorkEvents += 'PC,{}\n'.format(_makeLine(car))
+        for car in location['cars']['remove']:
+            o2oWorkEvents += 'SC,{}\n'.format(_makeLine(car))
+        
+    return o2oWorkEvents
+
+def _makeLine(rs):
+    """
+    Helper function to make the rs line for o2oWorkEvents.
+    format: TP ID, Road, Number, Car Type, L/E/O, Load or Model, From, To
+    """
+
+    try: # Cars
+        loadName = rs['load']
+        lt = PSE.getShortLoadType(rs)
+    except: # Locos
+        loadName = rs['model']
+        lt = PSE.getBundleItem('Occupied').upper()[0]
+
+    ID = rs['road'] + ' ' + rs['number']
+    pu = rs['location']['userName'] + ';' + rs['location']['track']['userName']
+    so = rs['destination']['userName'] + ';' + rs['destination']['track']['userName']
+
+    line = '{},{},{},{},{},{},{},{}'.format(ID, rs['road'], rs['number'], rs['carType'], lt, loadName, pu, so)
+
+    return line

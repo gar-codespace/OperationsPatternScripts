@@ -26,7 +26,8 @@ PSE.SYS = sys
 PSE.OS_PATH = OS_PATH
 
 from opsEntities import GUI
-from opsEntities import Listeners
+from opsEntities import MainScriptListeners
+from opsEntities import PluginListeners
 from opsBundle import Bundle
 
 PSE.validateConfigFile()
@@ -66,7 +67,7 @@ def makePsPlugin():
     Set outside the Controller because it's also called by reset plugin.
     Called by:
     Controller
-    Listeners.rsItemSelected
+    MainScriptListeners.rsItemSelected
     """
 
     configFile = PSE.readConfigFile()
@@ -77,14 +78,14 @@ def makePsPlugin():
     psFrame.setLocation(configFile['Main Script']['CP']['PX'], configFile['Main Script']['CP']['PY'])
 
     for menuItem in view.getMenuItems():
-        menuItem.addActionListener(getattr(Listeners, menuItem.getName()))
+        menuItem.addActionListener(getattr(MainScriptListeners, menuItem.getName()))
     for menuItem in view.getSubroutineMenuItems():
-        menuItem.addActionListener(Listeners.dropDownMenuItem)
+        menuItem.addActionListener(MainScriptListeners.dropDownMenuItem)
 
     configFile['Main Script'].update({'SL':PSE.getSubroutineDirs()})
     PSE.writeConfigFile(configFile)
 
-    psFrame.addWindowListener(Listeners.PatternScriptsFrameListener())
+    psFrame.addWindowListener(PluginListeners.PatternScriptsFrameListener())
     
     psFrame.setVisible(True)
 

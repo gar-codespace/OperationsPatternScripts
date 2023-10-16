@@ -13,6 +13,8 @@ SCRIPT_REV = 20230901
 
 _psLog = PSE.LOGGING.getLogger('OPS.SC.Model')
 
+""" Actions called by the plugin listeners """
+
 def resetConfigFileItems():
 
     return
@@ -35,6 +37,68 @@ def refreshSubroutine():
 
     return
 
+def opsAction1():
+    """
+    Generic action called by a plugin listener.
+    """
+
+    train = PSE.getNewestTrain()
+
+    manifest = PSE.getTrainManifest(train)
+    manifest = extendJmriManifestJson(manifest)
+    PSE.saveManifest(manifest, train)
+
+    return
+
+def opsAction2():
+    """
+    Writes a new text manifest from the extended manifest.
+    """
+
+    train = PSE.getNewestTrain()
+    manifest = PSE.getTrainManifest(train)
+
+    textManifest = Manifest.opsTextManifest(manifest)
+    manifestName = 'train ({}).txt'.format(train.toString())
+    manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', manifestName)
+    PSE.genericWriteReport(manifestPath, textManifest)
+
+    # Modify the JMRI switch lists here
+
+    return
+
+def opsAction3():
+    """
+    Generic action called by a plugin listener.
+    """
+
+    return
+
+""" Routines specific to this subroutine """
+
+def extendJmriManifestJson(manifest):
+
+    isSequenceHash, sequenceHash = PSE.getSequenceHash()
+
+    for location in manifest['locations']:
+        for car in location['cars']['add']:
+            carID = car['road'] + ' ' + car['number']
+            sequence = sequenceHash['cars'][carID]
+            car['sequence'] = sequence
+
+        for car in location['cars']['remove']:
+            carID = car['road'] + ' ' + car['number']
+            sequence = sequenceHash['cars'][carID]
+            car['sequence'] = sequence
+
+    for location in manifest['locations']:
+        cars = location['cars']['add']
+        cars.sort(key=lambda row: row['sequence'])
+
+        cars = location['cars']['remove']
+        cars.sort(key=lambda row: row['sequence'])
+
+    return manifest
 
 def recordSelection(comboBox):
     """

@@ -14,6 +14,8 @@ _psLog = PSE.LOGGING.getLogger('OPS.TB.Model')
 
 SNAP_SHOT_INDEX = 0
 
+""" Actions called by the plugin listeners """
+
 def resetConfigFileItems():
 
     return
@@ -29,6 +31,29 @@ def resetSubroutine():
 def refreshSubroutine():
 
     return
+
+def opsAction1():
+    """
+    Generic action called by a plugin listener.
+    """
+
+    return
+
+def opsAction2():
+    """
+    Generic action called by a plugin listener.
+    """
+
+    return
+
+def opsAction3():
+    """
+    Generic action called by a plugin listener.
+    """
+
+    return
+
+""" Routines specific to this subroutine """
 
 def createFolder():
     """
