@@ -374,8 +374,7 @@ class ParseRollingStock:
         carDetailDict['hazardous'] = carObject.isHazardous()
         carDetailDict['kernel'] = carObject.getKernelName()
         carDetailDict['kernelSize'] = kernelSize
-        carDetailDict['finalDestination'] = carObject.getFinalDestinationName()
-        carDetailDict['fdTrack'] = carObject.getFinalDestinationTrackName()
+        carDetailDict['finalDestination'] = {'userName':carObject.getFinalDestinationName(), 'track':{'userName':carObject.getFinalDestinationTrackName()}}
         carDetailDict['removeComment'] = carObject.getDropComment()
         carDetailDict['addComment'] = carObject.getPickupComment()
         carDetailDict['returnWhenEmpty'] = carObject.getReturnWhenEmptyDestinationName()
@@ -416,9 +415,6 @@ class ParseRollingStock:
         if rs in self.rsOnTrain: # Flag to mark if RS is on a built train
             rsDetailDict['onTrain'] = True
 
-        # try: # Depending on which version of JMRI Ops Pro
-        #     rsDetailDict[PSE.SB.handleGetMessage('Owner')] = rs.getOwner()
-        # except:
         return rsDetailDict
  
     def getRsOnTrains(self):
@@ -644,18 +640,13 @@ class RollingStockParser:
         rsDetailDict[PSE.SB.handleGetMessage('Location')] = rs.getLocationName()
         rsDetailDict[PSE.SB.handleGetMessage('Track')] = rs.getTrackName()
         rsDetailDict[PSE.SB.handleGetMessage('Destination')] = rs.getDestinationName()
-        try: # Depending on which version of JMRI Ops Pro
-            rsDetailDict[PSE.SB.handleGetMessage('Owner')] = rs.getOwner()
-        except:
-            rsDetailDict[PSE.SB.handleGetMessage('Owner')] = rs.getOwnerName()
+        rsDetailDict[PSE.SB.handleGetMessage('Owner')] = rs.getOwnerName()
+        rsDetailDict[PSE.SB.handleGetMessage('Tab')] = 'Tab'
+        rsDetailDict[PSE.SB.handleGetMessage('Tab2')] = 'Tab2'
+        rsDetailDict[PSE.SB.handleGetMessage('Tab3')] = 'Tab3'
     # Common items for all OPS RS
         rsDetailDict['Id'] = rs.getRoadName() + ' ' + rs.getNumber()
-        rsDetailDict['setTo'] = '[  ] '
-        rsDetailDict['puso'] = ' '
         rsDetailDict[' '] = ' ' # Catches KeyError - empty box added to getLocalSwitchListMessageFormat
-        rsDetailDict['onTrain'] = False
-        if rs in self.rsOnTrain: # Flag to mark if RS is on a built train
-            rsDetailDict['onTrain'] = True
 
         return rsDetailDict
      
@@ -674,9 +665,6 @@ class RollingStockParser:
         except:
             locoDetailDict[PSE.SB.handleGetMessage('Consist')] = PSE.getBundleItem('Single')
     # OPS loco attributes
-        locoDetailDict['isCaboose'] = False
-        locoDetailDict['isPassenger'] = False
-        locoDetailDict['isEngine'] = True
         locoDetailDict['sequence'] = 8000
 
         return locoDetailDict
@@ -705,14 +693,9 @@ class RollingStockParser:
         carDetailDict[PSE.SB.handleGetMessage('SetOut_Msg')] = track.getCommentSetout()
         carDetailDict[PSE.SB.handleGetMessage('PickUp_Msg')] = track.getCommentPickup()
         carDetailDict[PSE.SB.handleGetMessage('RWE')] = carObject.getReturnWhenEmptyDestinationName()
-        try:
-            carDetailDict[PSE.SB.handleGetMessage('RWL')] = carObject.getReturnWhenLoadedDestinationName()
-        except:
-            carDetailDict['RWL'] = carObject.getReturnWhenLoadedDestinationName()
     # OPS car attributes
         carDetailDict['isCaboose'] = carObject.isCaboose()
         carDetailDict['isPassenger'] = carObject.isPassenger()
-        carDetailDict['isEngine'] = False
         if self.isSequence:
             carDetailDict['sequence'] = self.getSequence('cars', carObject)
         else:

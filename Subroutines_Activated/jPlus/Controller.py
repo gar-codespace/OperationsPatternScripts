@@ -4,6 +4,8 @@
 """
 A simple subroutine to add extended info about a railroad to JMRI.
 The info can be input directly or imported from TrainPlayer if using o2o.
+This subroutine causes a modified JMRI manifest and
+a modified JMRI switch list set to be created.
 """
 
 from opsEntities import PSE

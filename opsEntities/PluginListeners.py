@@ -258,23 +258,26 @@ class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
                 xModule = 'Subroutines_Activated.{}'.format(subroutine)
                 package = __import__(xModule, fromlist=['Model'], level=-1)
                 package.Model.opsAction1('TrainBuilt')
-        # writes a new OPS formatted manifest and a new OPS formatted switch list from the trains manifest json
+        # writes a new OPS formatted manifest from the trains manifest json
             for subroutine in PSE.getSubroutineDirs():
                 xModule = 'Subroutines_Activated.{}'.format(subroutine)
                 package = __import__(xModule, fromlist=['Model'], level=-1)
                 package.Model.opsAction2('TrainBuilt')
-        # writes the o2o work event list
-            for subroutine in PSE.getSubroutineDirs():
-                xModule = 'Subroutines_Activated.{}'.format(subroutine)
-                package = __import__(xModule, fromlist=['Model'], level=-1)
-                package.Model.opsAction3('TrainBuilt')
+        # # writes the o2o work event list
+        #     for subroutine in PSE.getSubroutineDirs():
+        #         xModule = 'Subroutines_Activated.{}'.format(subroutine)
+        #         package = __import__(xModule, fromlist=['Model'], level=-1)
+        #         package.Model.opsAction3('TrainBuilt')
                 
             _psLog.debug(logMessage)
 
-        if PROPERTY_CHANGE_EVENT.propertyName == 'patternsSwitchList' and PROPERTY_CHANGE_EVENT.newValue == True:
+        if PROPERTY_CHANGE_EVENT.propertyName == 'opsSwitchList' and PROPERTY_CHANGE_EVENT.newValue == True:
         # Fired from OPS
-
-            print('patternsSwitchList')
+        # # writes the o2o work event list
+        #     for subroutine in PSE.getSubroutineDirs():
+        #         xModule = 'Subroutines_Activated.{}'.format(subroutine)
+        #         package = __import__(xModule, fromlist=['Model'], level=-1)
+        #         package.Model.opsAction3('opsSwitchList')
 
             _psLog.debug(logMessage)
 

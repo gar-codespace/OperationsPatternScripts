@@ -6,7 +6,7 @@ Scanner subroutine.
 """
 
 from opsEntities import PSE
-from opsEntities import Manifest
+from opsEntities import TextReports
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901
@@ -60,25 +60,46 @@ def opsAction2(message=None):
         train = PSE.getNewestTrain()
         manifest = PSE.getTrainManifest(train)
 
-        textManifest = Manifest.opsTextManifest(manifest)
+        textManifest = TextReports.opsTextManifest(manifest)
         manifestName = 'train ({}).txt'.format(train.toString())
         manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', manifestName)
         PSE.genericWriteReport(manifestPath, textManifest)
 
-        # Modify the JMRI switch lists here
-
     return
 
 def opsAction3(message=None):
-    """
-    Generic action called by a plugin listener.
-    """
+
+    tpDirectory = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData', 'Roaming', 'TrainPlayer', 'Reports')
+# Make a work event list from a JMRI manifest
+    if PSE.JAVA_IO.File(tpDirectory).isDirectory() and message == 'TrainBuilt':   
+        train = PSE.getNewestTrain()
+        manifest = PSE.getTrainManifest(train)
+        o2oWorkEvents = ModelWorkEvents.o2oWorkEvents(manifest)
+
+        outPutName = 'JMRI Report - o2o Workevents.csv'
+        o2oWorkEventPath = PSE.OS_PATH.join(tpDirectory, outPutName)
+        PSE.genericWriteReport(o2oWorkEventPath, o2oWorkEvents)
+# Make a work event list from an OPS switch list
+    elif PSE.JAVA_IO.File(tpDirectory).isDirectory() and message == 'opsSwitchList':   
+        manifest = PSE.getOpsSwitchList()
+        o2oWorkEvents = ModelWorkEvents.o2oWorkEvents(manifest)
+
+        outPutName = 'JMRI Report - o2o Workevents.csv'
+        o2oWorkEventPath = PSE.OS_PATH.join(tpDirectory, outPutName)
+        PSE.genericWriteReport(o2oWorkEventPath, o2oWorkEvents)
+
+    else:
+        _psLog.warning('TrainPlayer Reports destination directory not found')
+        print('TrainPlayer Reports destination directory not found')
 
     return
 
 """ Routines specific to this subroutine """
 
 def extendJmriManifestJson(manifest):
+    """
+    Add a sequence attribute.
+    """
 
     isSequenceHash, sequenceHash = PSE.getSequenceHash()
 
@@ -131,9 +152,9 @@ def modifyTrainManifest(train):
     Modifies the existing JMRI manifest, sorts by sequence number.
     """
     
-    Manifest.extendJmriManifest(train)
+    TextReports.extendJmriManifest(train)
 
-    textManifest = Manifest.opsTextManifest(train)
+    textManifest = TextReports.opsTextManifest(train)
     manifestName = 'train (' + train.toString() + ').txt'
     manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', manifestName)
     PSE.genericWriteReport(manifestPath, textManifest)

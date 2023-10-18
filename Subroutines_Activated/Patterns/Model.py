@@ -40,27 +40,51 @@ def refreshSubroutine():
     return
 
 def opsAction1(message=None):
-    """
-    Generic action called by a plugin listener.
-    """
+
+    if message == 'TrainBuilt':
+        train = PSE.getNewestTrain()
+
+        manifest = PSE.getTrainManifest(train)
+        manifest = extendJmriManifestJson(manifest)
+        PSE.saveManifest(manifest, train)
 
     return
 
 def opsAction2(message=None):
-    """
-    Generic action called by a plugin listener.
-    """
 
     return
 
 def opsAction3(message=None):
-    """
-    Generic action called by a plugin listener.
-    """
 
     return
 
 """ Routines specific to this subroutine """
+
+def extendJmriManifestJson(manifest):
+    """
+    Add attributes necessary for the track pattern and switch lists.
+    """
+
+    for location in manifest['locations']:
+        for car in location['cars']['add']:
+            carObj = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
+            car['finalDestination']={'userName':carObj.getFinalDestinationName(), 'track':{'userName':carObj.getFinalDestinationTrackName()}}
+            # car['finalDestination'] = carObj.getFinalDestinationName()
+            # car['fdTrack'] = carObj.getFinalDestinationTrackName()
+            car['loadType'] = carObj.getLoadType()
+            car['kernelSize'] = 'NA'
+            car['division'] = PSE.LM.getLocationByName(car['location']['userName']).getDivisionName()
+
+        for car in location['cars']['remove']:
+            carObj = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
+            car['finalDestination']={'userName':carObj.getFinalDestinationName(), 'track':{'userName':carObj.getFinalDestinationTrackName()}}
+            # car['finalDestination'] = carObj.getFinalDestinationName()
+            # car['fdTrack'] = carObj.getFinalDestinationTrackName()
+            car['loadType'] = carObj.getLoadType()
+            car['kernelSize'] = 'NA'
+            car['division'] = PSE.LM.getLocationByName(car['location']['userName']).getDivisionName()
+
+    return manifest
 
 def divComboUpdater():
     """
@@ -293,15 +317,6 @@ def makeJsonTrackPattern(selectedTracks):
     """
     This track pattern json file mimics the JMRI manifest json.
     """
-
-    # configFile = PSE.readConfigFile()
-
-    # jsonTrackPattern = {}
-
-    # jsonTrackPattern['date'] = PSE.isoTimeStamp()
-    # jsonTrackPattern['description'] = configFile['Patterns']['TD']
-    # jsonTrackPattern['railroad'] = PSE.getExtendedRailroadName()
-    # jsonTrackPattern['userName'] = configFile['Patterns']['TD']
     
     jsonTrackPattern = makeReportHeader()
     jsonTrackPattern['locations'] = ModelEntities.getDetailsByTrack(selectedTracks)
@@ -315,21 +330,6 @@ def makeJsonTrackPattern(selectedTracks):
     PSE.genericWriteReport(targetPath, PSE.dumpJson(jsonTrackPattern))
 
     return jsonTrackPattern
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 def makeTrackPattern(selectedTracks):
     """
@@ -356,7 +356,7 @@ def makeReportHeader():
     reportHeader['date'] = PSE.isoTimeStamp()
     reportHeader['description'] = configFile['Patterns']['TD']
     reportHeader['railroad'] = PSE.getExtendedRailroadName()
-    reportHeader['userName'] = configFile['Patterns']['TD']
+    reportHeader['userName'] = configFile['Patterns']['PL']
 
     return reportHeader
 
@@ -383,8 +383,6 @@ def getSetCarsData(selectedTrack):
 def writePatternReport(textPatternReport, flag):
     """
     Writes the track pattern report as a text file.
-    Called by:
-    Controller.StartUp.patternReportButton
     """
 
     if flag: # Report is a track pattern

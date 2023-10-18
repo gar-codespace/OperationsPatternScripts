@@ -4,7 +4,8 @@
 """
 The o2o Subroutine creates a JMRI railroad from TrainPlayer data.
 It also exports a JMRI manifest and Patterns switch list into a Quick Keys work events list.
-On the TrainPlayer side, the Quick Keys suite of scripts is used to import from and export to the JMRI railroad.
+On the TrainPlayer side, the Quick Keys suite of scripts is used
+to import from and export to the JMRI railroad.
 """
 
 from opsEntities import PSE

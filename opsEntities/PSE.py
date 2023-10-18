@@ -588,6 +588,27 @@ def saveManifest(manifest, train):
     return
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+def getOpsSwitchList():
+
+    trainName = '{}.json'.format(getBundleItem('ops-Switch List'))
+    manifestPath = OS_PATH.join(PROFILE_PATH, 'operations', 'jsonManifests', trainName)
+    manifest = loadJson(genericReadReport(manifestPath))
+
+    return manifest
+
 """Formatting Methods"""
 
 
@@ -716,7 +737,7 @@ def localMoveCar(car, manifest, twoCol):
 
 def isoValidTime(timeStamp):
     """
-    Input the JMRI generated ios time stamp.
+    Input the JMRI generated iso time stamp.
     Return format: Valid Oct 08, 1915, 11:11
     """
 
@@ -1315,16 +1336,16 @@ def translateMessageFormat():
     rosetta[SB.handleGetMessage('Kernel_Size')] = 'Kernel_Size'
     rosetta[SB.handleGetMessage('Dest&Track')] = 'Dest&Track'
     rosetta[SB.handleGetMessage('Final_Dest')] = 'Final_Dest'
-    rosetta[SB.handleGetMessage('Track')] = 'FD&Track'
+    rosetta[SB.handleGetMessage('FD&Track')] = 'FD&Track'
     rosetta[SB.handleGetMessage('SetOut_Msg')] = 'SetOut_Msg'
     rosetta[SB.handleGetMessage('PickUp_Msg')] = 'PickUp_Msg'
     rosetta[SB.handleGetMessage('RWE')] = 'RWE'
     # rosetta[SB.handleGetMessage('RWL')] = 'RWL'
 # Unique to this plugin
-    rosetta['onTrain'] = 'onTrain'
-    rosetta['setTo'] = 'setTo'
-    rosetta['puso'] = 'puso'
-    rosetta[' '] = ' '
+    # rosetta['onTrain'] = 'onTrain'
+    # rosetta['setTo'] = 'setTo'
+    # rosetta['puso'] = 'puso'
+    # rosetta[' '] = ' '
 
     global ROSETTA
     ROSETTA = rosetta
@@ -1338,28 +1359,28 @@ def translateCarFormat(car):
                 
     newCarFormat = {}
 
-    newCarFormat["Road"] = car['road']
-    newCarFormat["Number"] = car['number']
-    newCarFormat["Type"] = car['carType']
-    newCarFormat["Length"] = car['length']
-    newCarFormat["Weight"] = car['weightTons']
-    newCarFormat["Load"] = car['load']
-    newCarFormat["Load_Type"] = car['loadType']
-    newCarFormat["Hazardous"] = car['hazardous']
-    newCarFormat["Color"] = car['color']
-    newCarFormat["Kernel"] = car['kernel']
-    newCarFormat["Kernel_Size"] = car['kernelSize']
-    newCarFormat["Owner"] = car['owner']
-    newCarFormat["Division"] = car['division']
-    newCarFormat["Track"] = car['location']['track']['userName']
-    newCarFormat["Location"] = car['location']['userName']
-    newCarFormat["Destination"] = car['destination']['userName']
-    newCarFormat["Dest&Track"] = car['destination']['userName'] + '-' + car['destination']['track']['userName']
-    newCarFormat["Final_Dest"] = car['finalDestination']
-    newCarFormat["FD&Track"] = car['finalDestination'] + '-' + car['fdTrack']
-    newCarFormat["Comment"] = car['comment']
-    newCarFormat["SetOut_Msg"] = car['removeComment']
-    newCarFormat["PickUp_Msg"] = car['addComment']
-    newCarFormat["RWE"] = car['returnWhenEmpty']
+    newCarFormat['Road'] = car['road']
+    newCarFormat['Number'] = car['number']
+    newCarFormat['Type'] = car['carType']
+    newCarFormat['Length'] = car['length']
+    newCarFormat['Weight'] = car['weightTons']
+    newCarFormat['Load'] = car['load']
+    newCarFormat['Load_Type'] = car['loadType']
+    newCarFormat['Hazardous'] = car['hazardous']
+    newCarFormat['Color'] = car['color']
+    newCarFormat['Kernel'] = car['kernel']
+    newCarFormat['Kernel_Size'] = car['kernelSize']
+    newCarFormat['Owner'] = car['owner']
+    newCarFormat['Division'] = car['division']
+    newCarFormat['Location'] = car['location']['userName']
+    newCarFormat['Track'] = car['location']['track']['userName']
+    newCarFormat['Destination'] = car['destination']['userName']
+    newCarFormat['Dest&Track'] = '{}-{}'.format(car['destination']['userName'], car['destination']['track']['userName'])
+    newCarFormat['Final_Dest'] = car['finalDestination']['userName']
+    newCarFormat['FD&Track'] = '{}-{}'.format(car['finalDestination']['userName'], car['finalDestination']['track']['userName'])
+    newCarFormat['Comment'] = car['comment']
+    newCarFormat['SetOut_Msg'] = car['removeComment']
+    newCarFormat['PickUp_Msg'] = car['addComment']
+    newCarFormat['RWE'] = car['returnWhenEmpty']
 
     return newCarFormat

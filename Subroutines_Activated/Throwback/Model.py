@@ -33,23 +33,14 @@ def refreshSubroutine():
     return
 
 def opsAction1(message=None):
-    """
-    Generic action called by a plugin listener.
-    """
 
     return
 
 def opsAction2(message=None):
-    """
-    Generic action called by a plugin listener.
-    """
 
     return
 
 def opsAction3(message=None):
-    """
-    Generic action called by a plugin listener.
-    """
 
     return
 

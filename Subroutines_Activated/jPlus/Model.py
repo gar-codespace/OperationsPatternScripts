@@ -6,7 +6,7 @@ jPlus
 """
 
 from opsEntities import PSE
-from opsEntities import Manifest
+from opsEntities import TextReports
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901
@@ -80,7 +80,7 @@ def refreshSubroutine():
 
 def opsAction1(message=None):
     """
-    Modifies the trains json manifest wit the extended railroad detail.
+    Modifies the trains json manifest with the extended railroad detail.
     """
 
     if message == 'TrainBuilt':
@@ -97,23 +97,41 @@ def opsAction2(message=None):
     Writes a new text manifest from the extended manifest.
     """
 
-    if message == 'TrainBuilt':    
+    if message == 'TrainBuilt':
         train = PSE.getNewestTrain()
         manifest = PSE.getTrainManifest(train)
 
-        textManifest = Manifest.opsTextManifest(manifest)
+        textManifest = TextReports.opsTextManifest(manifest)
         manifestName = 'train ({}).txt'.format(train.toString())
         manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', manifestName)
         PSE.genericWriteReport(manifestPath, textManifest)
 
-        # Modify the JMRI switch lists here
-
     return
 
 def opsAction3(message=None):
-    """
-    Generic action called by a plugin listener.
-    """
+    
+    tpDirectory = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData', 'Roaming', 'TrainPlayer', 'Reports')
+# Make a work event list from a JMRI manifest
+    if PSE.JAVA_IO.File(tpDirectory).isDirectory() and message == 'TrainBuilt':   
+        train = PSE.getNewestTrain()
+        manifest = PSE.getTrainManifest(train)
+        o2oWorkEvents = ModelWorkEvents.o2oWorkEvents(manifest)
+
+        outPutName = 'JMRI Report - o2o Workevents.csv'
+        o2oWorkEventPath = PSE.OS_PATH.join(tpDirectory, outPutName)
+        PSE.genericWriteReport(o2oWorkEventPath, o2oWorkEvents)
+# Make a work event list from an OPS switch list
+    elif PSE.JAVA_IO.File(tpDirectory).isDirectory() and message == 'opsSwitchList':   
+        manifest = PSE.getOpsSwitchList()
+        o2oWorkEvents = ModelWorkEvents.o2oWorkEvents(manifest)
+
+        outPutName = 'JMRI Report - o2o Workevents.csv'
+        o2oWorkEventPath = PSE.OS_PATH.join(tpDirectory, outPutName)
+        PSE.genericWriteReport(o2oWorkEventPath, o2oWorkEvents)
+
+    else:
+        _psLog.warning('TrainPlayer Reports destination directory not found')
+        print('TrainPlayer Reports destination directory not found')
 
     return
 

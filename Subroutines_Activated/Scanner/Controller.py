@@ -2,7 +2,10 @@
 # © 2023 Greg Ritacco
 
 """
-Scanner subroutine
+Scanner subroutine.
+Scanner adds a sequence attribute to the cars data set.
+This subroutine causes a modified JMRI manifest and
+a modified JMRI switch list set to be created.
 """
 
 from opsEntities import PSE

@@ -11,11 +11,11 @@ With the OPS Set Cars frame and switch list, self.setCarsData['locations'] is a 
 """
 
 from opsEntities import PSE
-from opsEntities import Manifest
+from opsEntities import TextReports
 from Subroutines_Activated.Patterns import Model
 from Subroutines_Activated.Patterns import SetCarsForm_Model
 from Subroutines_Activated.Patterns import SetCarsForm_View
-from Subroutines_Activated.Patterns import Listeners
+from Subroutines_Activated.Patterns import SubroutineListeners
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901
@@ -71,7 +71,7 @@ class CreateSetCarsFrame:
             track.actionPerformed = self.trackRowButton
 
         for inputText in self.buttonDict['textBoxEntry']:
-            inputText.addMouseListener(Listeners.TextBoxEntry())
+            inputText.addMouseListener(SubroutineListeners.TextBoxEntry())
 
         try:
             self.buttonDict['scheduleButton'].actionPerformed = self.scheduleButton
@@ -142,14 +142,14 @@ class CreateSetCarsFrame:
 
         SetCarsForm_Model.appendSwitchList(mergedForm) # Write to a file
 
-        textSwitchList = Manifest.opsTextSwitchList()
+        textSwitchList = TextReports.opsTextSwitchList()
 
         targetPath = Model.writePatternReport(textSwitchList, False)
         PSE.genericDisplayReport(targetPath)
 
         MOUSE_CLICKED.getSource().setBackground(PSE.JAVA_AWT.Color.GREEN)
     # Plays well with others
-        PSE.TM.firePropertyChange('patternsSwitchList', False, True)
+        PSE.TM.firePropertyChange('opsSwitchList', False, True)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

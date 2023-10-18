@@ -9,7 +9,7 @@ This subroutine can be used in conjunction with o2o to create TrainPlayer switch
 """
 
 from opsEntities import PSE
-from opsEntities import Manifest
+from opsEntities import TextReports
 from Subroutines_Activated.Patterns import SetCarsForm_Controller
 from Subroutines_Activated.Patterns import Model
 from Subroutines_Activated.Patterns import View
@@ -107,15 +107,15 @@ class StartUp:
         selectedTracks.sort()
 
         Model.makeJsonTrackPattern(selectedTracks) # Write to a file
-
-
-        textPatternReport = Manifest.opsTextPatternReport(configFile['Patterns']['PL'])
-
+        textPatternReport = TextReports.opsTextPatternReport()
 
 
 
 
         # Add CSV report maker
+
+
+
 
         targetPath = Model.writePatternReport(textPatternReport, True)
         PSE.genericDisplayReport(targetPath)
