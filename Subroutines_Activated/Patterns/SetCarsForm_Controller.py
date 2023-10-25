@@ -31,11 +31,9 @@ class CreateSetCarsFrame:
 
     def __init__(self, selectedTrack):
 
-        self.setCarsData = Model.getSetCarsData(selectedTrack)
-        
-        # self.header = Model.makeReportHeader()
-        # self.setCarsData = {}
         self.selectedTrack = selectedTrack
+        
+        self.setCarsData = Model.getSetCarsData(selectedTrack)
 
         self.setCarsTracks = {}
         self.buttonDict = {}
@@ -46,8 +44,6 @@ class CreateSetCarsFrame:
         return
 
     def makeForm(self):
-
-        # self.setCarsData.update(self.header)
 
         return
     

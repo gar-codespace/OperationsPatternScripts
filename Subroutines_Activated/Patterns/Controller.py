@@ -91,7 +91,7 @@ class StartUp:
         configFile['Patterns'].update({'PA': self.widgets[2].selected})
         PSE.writeConfigFile(configFile)
 
-        Model.trackRowManager()
+        Model.makeTrackRows()
         
         return
 
@@ -135,8 +135,6 @@ class StartUp:
         selectedTracks = [track for track, flag in configFile['Patterns']['PT'].items() if flag]
         selectedTracks.sort()
  
-        # PSE.makeReportItemWidthMatrix()
-
         Model.resetSwitchList()
 
         windowOffset = 200

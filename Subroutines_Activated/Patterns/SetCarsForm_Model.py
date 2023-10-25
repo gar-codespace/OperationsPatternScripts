@@ -38,19 +38,6 @@ def appendSwitchList(mergedForm):
 
     return
 
-def getMergedForm(setCarsForm, textBoxEntry):
-    """
-    Called by:
-    switchListButton
-    """
-
-    _psLog.debug('getMergedForm')
-
-    inputList = getUserInputList(textBoxEntry)
-    mergedForm = ModelEntities.appendTrackData(setCarsForm, inputList)
-
-    return mergedForm
-
 def getUserInputList(textBoxEntry):
 
     userInputList = []
@@ -243,21 +230,3 @@ def scheduleUpdate(toTrack, rollingStock):
     schedule.getItemByType(carType).setHits(schedule.getItemByType(carType).getHits() + 1)
 
     return
-
-
-# def formIsValid(setCarsForm, textBoxEntry):
-#     """
-#     Checks that both submitted forms are the same length
-#     Called by:
-#     ControllerSetCarsForm.CreateSetCarsForm.quickCheck
-#     """
-
-#     _psLog.debug('testValidityOfForm')
-
-#     locoCount = len(setCarsForm['tracks'][0]['locos'])
-#     carCount = len(setCarsForm['tracks'][0]['cars'])
-
-#     if len(textBoxEntry) == locoCount + carCount:
-#         return True
-#     else:
-#         return False

@@ -195,20 +195,6 @@ def makeReportHeader():
 
     return reportHeader
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def makeTrackRows():
     """
     For the plugin GUI.
@@ -216,7 +202,7 @@ def makeTrackRows():
     If no tracks for the selected location, displays a message.
     """
 
-    _psLog.debug('trackRowManager')
+    _psLog.debug('makeTrackRows')
 
     configFile = PSE.readConfigFile()
 
@@ -288,88 +274,6 @@ def getTrackDict():
         trackDict[unicode(track, PSE.ENCODING)] = False
 
     return trackDict
-    
-def insertStandins(trackPattern):
-    """
-    Substitutes in standins from the config file.
-    """
-
-    standins = PSE.readConfigFile('Patterns')['US']
-
-    tracks = trackPattern['tracks']
-    for track in tracks:
-        for loco in track['locos']:
-            destination = loco[PSE.SB.handleGetMessage('Destination')]
-            if not destination:
-                destination = extendedDestionationHandling(loco, standins)
-
-            loco.update({PSE.SB.handleGetMessage('Destination'): destination})
-
-        for car in track['cars']:
-            destination = car[PSE.SB.handleGetMessage('Destination')]
-            finalDestination = car[PSE.SB.handleGetMessage('Final_Dest')]
-
-            if not destination:
-                destination = extendedDestionationHandling(car, standins)
-
-            if not finalDestination:
-                finalDestination = extendedFinalDestionationHandling(car, standins)
-
-            shortLoadType = PSE.getShortLoadType(car)
-
-            car.update({PSE.SB.handleGetMessage('Destination'): destination})
-            car.update({PSE.SB.handleGetMessage('Final_Dest'): finalDestination})
-            car.update({PSE.SB.handleGetMessage('Load_Type'): shortLoadType})
-
-    return trackPattern
-
-def extendedDestionationHandling(rs, standins):
-    """
-    Special case handling foe Engine, Caboose, and Passenger.
-    """
-
-    destination = standins['DS']
-    if rs['isEngine']:
-        destination = standins['EH']
-
-    if rs['isCaboose']:
-        destination = standins['EH']
-
-    if rs['isPassenger']:
-        destination = standins['EH']
-
-    return destination
-
-def extendedFinalDestionationHandling(rs, standins):
-    """
-    Special case handling foe Engine, Caboose, and Passenger.
-    """
-
-    finalDestination = standins['DS']
-    if rs['isEngine']:
-        pass
-
-    if rs['isCaboose']:
-        finalDestination = standins['EH']
-
-    if rs['isPassenger']:
-        finalDestination = standins['EH']
-
-    return finalDestination
-
-
-
-# def makeTrackPattern(selectedTracks):
-#     """
-#     Mini controller.
-#     """
-
-#     patternReport = makeReportHeader()
-#     patternReport['tracks'] = makeReportTracks(selectedTracks)
-
-#     return patternReport
-
-
 
 
 def getSetCarsData(selectedTrack):
@@ -416,27 +320,6 @@ def resetSwitchList():
 
     return targetPath
 
-# def getReportForPrint(reportName):
-#     """
-#     Mini controller.
-#     Formats and displays the Track Pattern or Switch List report.
-#     Called by:
-#     Controller.StartUp.patternReportButton
-#     ControllerSetCarsForm.CreateSetCarsFrame.switchListButton
-#     """
-
-#     _psLog.debug('getReportForPrint')
-
-#     report = getReport(reportName)
-
-#     reportForPrint = makePatternReportForPrint(report)
-
-#     targetPath = writeReportForPrint(reportName, reportForPrint)
-
-#     PSE.genericDisplayReport(targetPath)
-
-#     return
-
 def getReport(reportName):
     
     fileName = reportName + '.json'
@@ -444,23 +327,6 @@ def getReport(reportName):
     report = PSE.genericReadReport(targetPath)
 
     return PSE.loadJson(report)
-
-def makePatternReportForPrint(trackPattern):
-
-    trackPattern = insertStandins(trackPattern)
-    reportHeader = ModelEntities.makeTextReportHeader(trackPattern)
-    reportLocations = PSE.getBundleItem('Pattern Report for Tracks') + '\n\n'
-    reportLocations += ModelEntities.makeTextReportTracks(trackPattern['tracks'], trackTotals=True)
-
-    return reportHeader + reportLocations
-
-def writeReportForPrint(reportName, report):
-
-    fileName = reportName + '.txt'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', fileName)
-    PSE.genericWriteReport(targetPath, report)
-
-    return targetPath
 
 def trackPatternAsCsv(reportName):
     """

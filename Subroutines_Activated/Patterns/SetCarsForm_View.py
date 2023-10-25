@@ -18,7 +18,6 @@ class ManageSetCarsGui:
     def __init__(self, setCarsData):
 
         self.setCarsData = setCarsData
-        # print(self.setCarsData)
         self.setCarsForm = None
         self.allSetCarsWidgets = None
 

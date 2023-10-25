@@ -396,7 +396,6 @@ def occuranceTally(listOfOccurances):
     Tally the occurances of a word in a list and return a dictionary.
     Home grown version of collections.Counter.
     Called by:
-    ModelEntities.getKernelTally
     ViewEntities.makeTextReportLocations
     o2o.ModelEntities
     """
