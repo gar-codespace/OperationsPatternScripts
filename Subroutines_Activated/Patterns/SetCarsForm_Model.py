@@ -72,7 +72,7 @@ def mergeSetCarsForm(setCarsForm, inputList):
 
     for loco in setCarsForm['locations'][0]['engines']['add']:
     # Skip locos that are assigned to a train
-        if loco['onTrain']:
+        if loco['trainName']:
             i += 1
             continue
         userInput = unicode(inputList[i], PSE.ENCODING)
@@ -87,7 +87,7 @@ def mergeSetCarsForm(setCarsForm, inputList):
 
     for car in setCarsForm['locations'][0]['cars']['add']:
     # Skip cars that are assigned to a train
-        if car['onTrain']:
+        if car['trainName']:
             i += 1
             continue
 

@@ -135,7 +135,7 @@ class StartUp:
         selectedTracks = [track for track, flag in configFile['Patterns']['PT'].items() if flag]
         selectedTracks.sort()
  
-        PSE.makeReportItemWidthMatrix()
+        # PSE.makeReportItemWidthMatrix()
 
         Model.resetSwitchList()
 

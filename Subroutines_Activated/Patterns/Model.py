@@ -58,8 +58,6 @@ def opsAction3(message=None):
 
     return
 
-""" Routines specific to this subroutine """
-
 def extendJmriManifestJson(manifest):
     """
     Add attributes necessary for the track pattern and switch lists.
@@ -69,19 +67,13 @@ def extendJmriManifestJson(manifest):
         for car in location['cars']['add']:
             carObj = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
             car['finalDestination']={'userName':carObj.getFinalDestinationName(), 'track':{'userName':carObj.getFinalDestinationTrackName()}}
-            # car['finalDestination'] = carObj.getFinalDestinationName()
-            # car['fdTrack'] = carObj.getFinalDestinationTrackName()
             car['loadType'] = carObj.getLoadType()
-            car['kernelSize'] = 'NA'
             car['division'] = PSE.LM.getLocationByName(car['location']['userName']).getDivisionName()
 
         for car in location['cars']['remove']:
             carObj = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
             car['finalDestination']={'userName':carObj.getFinalDestinationName(), 'track':{'userName':carObj.getFinalDestinationTrackName()}}
-            # car['finalDestination'] = carObj.getFinalDestinationName()
-            # car['fdTrack'] = carObj.getFinalDestinationTrackName()
             car['loadType'] = carObj.getLoadType()
-            car['kernelSize'] = 'NA'
             car['division'] = PSE.LM.getLocationByName(car['location']['userName']).getDivisionName()
 
     return manifest
@@ -164,6 +156,58 @@ def locComboSelected(EVENT):
     PSE.writeConfigFile(configFile)
 
     return
+
+
+""" Routines specific to this subroutine """
+
+
+def makeJsonTrackPattern(selectedTracks):
+    """
+    This track pattern json file mimics the JMRI manifest json.
+    """
+    
+    jsonTrackPattern = makeReportHeader()
+    jsonTrackPattern['locations'] = ModelEntities.getDetailsByTrack(selectedTracks)
+
+    fileName = PSE.getBundleItem('ops-Pattern Report') + '.json'    
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+    PSE.genericWriteReport(targetPath, PSE.dumpJson(jsonTrackPattern))
+
+    return jsonTrackPattern
+
+def makeReportHeader():
+    """
+    Makes the header for:
+    OPS Pattern Report
+    OPS Set Cars frame
+    OPS Switch List.
+    """
+
+    configFile = PSE.readConfigFile()
+    OSU = PSE.JMRI.jmrit.operations.setup
+    
+    reportHeader = {}
+
+    reportHeader['date'] = PSE.isoTimeStamp()
+    reportHeader['description'] = configFile['Patterns']['TD']
+    reportHeader['railroad'] = OSU.Setup.getRailroadName()
+    reportHeader['userName'] = configFile['Patterns']['PL']
+
+    return reportHeader
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def makeTrackRows():
     """
@@ -313,59 +357,20 @@ def extendedFinalDestionationHandling(rs, standins):
 
     return finalDestination
 
-def makeJsonTrackPattern(selectedTracks):
-    """
-    This track pattern json file mimics the JMRI manifest json.
-    """
-    
-    jsonTrackPattern = makeReportHeader()
-    jsonTrackPattern['locations'] = ModelEntities.getDetailsByTrack(selectedTracks)
 
 
-
-
-    fileName = PSE.getBundleItem('ops-Pattern Report') + '.json'    
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
-
-    PSE.genericWriteReport(targetPath, PSE.dumpJson(jsonTrackPattern))
-
-    return jsonTrackPattern
-
-def makeTrackPattern(selectedTracks):
-    """
-    Mini controller.
-    """
-
-    patternReport = makeReportHeader()
-    patternReport['tracks'] = makeReportTracks(selectedTracks)
-
-    return patternReport
-
-def makeReportHeader():
-    """
-    Makes the header for:
-    OPS Pattern Report
-    OPS Set Cars frame
-    OPS Switch List.
-    """
-
-    configFile = PSE.readConfigFile()
-
-    reportHeader = {}
-
-    reportHeader['date'] = PSE.isoTimeStamp()
-    reportHeader['description'] = configFile['Patterns']['TD']
-    reportHeader['railroad'] = PSE.getExtendedRailroadName()
-    reportHeader['userName'] = configFile['Patterns']['PL']
-
-    return reportHeader
-
-# def makeReportTracks(selectedTracks):
+# def makeTrackPattern(selectedTracks):
 #     """
-#     Depricated
+#     Mini controller.
 #     """
 
-#     return ModelEntities.getDetailsByTrack(selectedTracks)
+#     patternReport = makeReportHeader()
+#     patternReport['tracks'] = makeReportTracks(selectedTracks)
+
+#     return patternReport
+
+
+
 
 def getSetCarsData(selectedTrack):
     """

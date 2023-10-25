@@ -32,6 +32,10 @@ class CreateSetCarsFrame:
     def __init__(self, selectedTrack):
 
         self.setCarsData = Model.getSetCarsData(selectedTrack)
+        
+        # self.header = Model.makeReportHeader()
+        # self.setCarsData = {}
+        self.selectedTrack = selectedTrack
 
         self.setCarsTracks = {}
         self.buttonDict = {}
@@ -42,11 +46,8 @@ class CreateSetCarsFrame:
         return
 
     def makeForm(self):
-        """
-        Maybe, maybe not.
-        """
 
-        # self.setCarsForm = Model.insertStandins(self.setCarsData)
+        # self.setCarsData.update(self.header)
 
         return
     
@@ -55,8 +56,7 @@ class CreateSetCarsFrame:
         setCarsFrame = SetCarsForm_View.ManageSetCarsGui(self.setCarsData)
         setCarsFrame.makeSetCarsFrame()
         setCarsForTrackFrame = setCarsFrame.getSetCarsForTrackFrame()
-        trackName = self.setCarsData['locations'][0]['userName']
-        setCarsForTrackFrame.setTitle(PSE.getBundleItem('Set Rolling Stock for track: {}').format(trackName))
+        setCarsForTrackFrame.setTitle(PSE.getBundleItem('Set Rolling Stock for track: {}').format(self.selectedTrack))
         setCarsForTrackFrame.setName('setCarsWindow')
         setCarsForTrackFrame.pack()
 

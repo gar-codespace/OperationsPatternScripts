@@ -106,11 +106,18 @@ def extendJmriManifestJson(manifest):
     for location in manifest['locations']:
         for car in location['cars']['add']:
             carID = car['road'] + ' ' + car['number']
-            sequence = sequenceHash['cars'][carID]
+            try:
+                sequence = sequenceHash['cars'][carID]
+            except:
+                sequence = 8000
             car['sequence'] = sequence
 
         for car in location['cars']['remove']:
             carID = car['road'] + ' ' + car['number']
+            try:
+                sequence = sequenceHash['cars'][carID]
+            except:
+                sequence = 8000
             sequence = sequenceHash['cars'][carID]
             car['sequence'] = sequence
 

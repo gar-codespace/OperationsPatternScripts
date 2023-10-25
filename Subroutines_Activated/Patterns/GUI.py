@@ -280,9 +280,9 @@ def makeSetCarsListOfInventory(setCarsFormData):
         locoFormBody.setLayout(PSE.JAVX_SWING.BoxLayout(locoFormBody, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
         locoFormBody.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Locomotives at {}').format(trackName))
 
-        # setCarsLocoRows = setCarsEqptRows.makeSetCarsLocoRows()
-        # for loco in setCarsLocoRows:
-        #     locoFormBody.add(loco)
+        setCarsLocoRows = setCarsEqptRows.makeSetCarsLocoRows()
+        for loco in setCarsLocoRows:
+            locoFormBody.add(loco)
         inventoryFormBody.add(locoFormBody)
 
     if setCarsFormData['locations'][0]['cars']['add']:
@@ -387,17 +387,14 @@ class MakeSetCarsEqptRows():
 
     def __init__(self, setCarsFormData):
 
-        self.SCRIPT_NAME = 'OperationsPatternScripts.MakeSetCarsEqptRows'
+        self.setCarsFormData = setCarsFormData
 
-        PSE.makeReportItemWidthMatrix()
-        PSE.translateMessageFormat()
-
-        self.reportWidth = PSE.REPORT_ITEM_WIDTH_MATRIX
+        self.configFile = PSE.readConfigFile()
+        self.reportWidth = self.configFile['Main Script']['US']['AW']
         fontSize = PSE.PM.getFontSize()
         self.panelHeight = fontSize + 4
         self.panelWidth = fontSize - 2
 
-        self.setCarsFormData = setCarsFormData
         self.textBoxEntry = []
 
         self.carColor = PSE.getColorA()
@@ -408,6 +405,7 @@ class MakeSetCarsEqptRows():
 
     def makeSetCarsLocoRows(self):
         """
+        The set locos row items are hard coded.
         Creates the locomotive lines of the pattern report form
         """
 
@@ -415,10 +413,10 @@ class MakeSetCarsEqptRows():
         locos = self.setCarsFormData['locations'][0]['engines']['add']
 
         for loco in locos:
-            locoItems = PSE.translateCarFormat(loco)
+            # locoItems = PSE.translateCarFormat(loco)
             combinedInputLine = PSE.JAVX_SWING.JPanel()
             combinedInputLine.setBackground(self.locoColor)
-            if loco['onTrain']:
+            if loco['trainName']:
                 combinedInputLine.setBackground(self.alertColor)
 
             inputText = PSE.JAVX_SWING.JTextField(5)
@@ -427,18 +425,36 @@ class MakeSetCarsEqptRows():
             inputBox.add(inputText)
             combinedInputLine.add(inputBox)
 
-            messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
-            for messageItem in messageFormat:
-                if 'Tab' in item:
-                    continue
-                labelName = locoItems[PSE.ROSETTA[messageItem]]
-                lineWidth = PSE.REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
+            lineWidth = self.reportWidth['Road']
+            rowItem = loco['road'].ljust(lineWidth)
+            label = PSE.JAVX_SWING.JLabel(rowItem)
+            box = makeSwingBox(lineWidth * self.panelWidth, self.panelHeight)
+            box.add(label)
+            combinedInputLine.add(box)
 
-                rowItem = labelName.ljust(lineWidth)
-                label = PSE.JAVX_SWING.JLabel(rowItem)
-                box = makeSwingBox(lineWidth * self.panelWidth, self.panelHeight)
-                box.add(label)
-                combinedInputLine.add(box)
+            lineWidth = self.reportWidth['Number']
+            rowItem = loco['number'].rjust(lineWidth)
+            label = PSE.JAVX_SWING.JLabel(rowItem)
+            box = makeSwingBox(lineWidth * self.panelWidth, self.panelHeight)
+            box.add(label)
+            combinedInputLine.add(box)
+
+            lineWidth = self.reportWidth['Model']
+            rowItem = loco['model'].ljust(lineWidth)
+            label = PSE.JAVX_SWING.JLabel(rowItem)
+            box = makeSwingBox(lineWidth * self.panelWidth, self.panelHeight)
+            box.add(label)
+            combinedInputLine.add(box)
+
+            lineWidth = self.reportWidth['Consist']
+            consist = loco['consist']
+            if not consist:
+                consist = PSE.getBundleItem('Single')
+            rowItem = consist.ljust(lineWidth)
+            label = PSE.JAVX_SWING.JLabel(rowItem)
+            box = makeSwingBox(lineWidth * self.panelWidth, self.panelHeight)
+            box.add(label)
+            combinedInputLine.add(box)
 
             combinedInputLine.add(PSE.JAVX_SWING.Box.createHorizontalGlue())
             listOfLocoRows.append(combinedInputLine)
@@ -447,6 +463,7 @@ class MakeSetCarsEqptRows():
 
     def makeSetCarsCarRows(self):
         """
+        The set cars row items are hard coded.
         Creates the car lines of the Set Cars frame.
         """
 
@@ -454,10 +471,9 @@ class MakeSetCarsEqptRows():
         cars = self.setCarsFormData['locations'][0]['cars']['add']
 
         for car in cars:
-            carItems = PSE.translateCarFormat(car)
             combinedInputLine = PSE.JAVX_SWING.JPanel()
             combinedInputLine.setBackground(self.carColor)
-            if car['onTrain']:
+            if car['trainName']:
                 combinedInputLine.setBackground(self.alertColor)
 
             inputText = PSE.JAVX_SWING.JTextField(5)
@@ -466,33 +482,43 @@ class MakeSetCarsEqptRows():
             inputBox.add(inputText)
             combinedInputLine.add(inputBox)
 
-            messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
-            for messageItem in messageFormat:
-                if 'Tab' in messageItem:
-                    continue
-                labelName = carItems[PSE.ROSETTA[messageItem]]
-                lineWidth = PSE.REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
+            lineWidth = self.reportWidth['Road']
+            rowItem = car['road'].ljust(lineWidth)
+            label = PSE.JAVX_SWING.JLabel(rowItem)
+            box = makeSwingBox(lineWidth * self.panelWidth, self.panelHeight)
+            box.add(label)
+            combinedInputLine.add(box)
 
-            # Special case handling for car load type
-                if PSE.ROSETTA[messageItem] == 'Load_Type':
-                    labelName = PSE.getShortLoadType(car).ljust(1)
-                    lineWidth = 2
-            # Special case handling for car number
-                if PSE.ROSETTA[messageItem] == 'Number':
-                    labelName = labelName.rjust(lineWidth)
-            # Special case handling for the hazardous flag
-                if PSE.ROSETTA[messageItem] == 'Hazardous' and car['hazardous']:
-                    labelName = messageItem[0].upper()
-                    lineWidth = 2
-                elif PSE.ROSETTA[messageItem] == 'Hazardous' and not car['hazardous']:
-                    labelName = ' '
-                    lineWidth = 2
+            lineWidth = self.reportWidth['Number']
+            rowItem = car['number'].rjust(lineWidth)
+            label = PSE.JAVX_SWING.JLabel(rowItem)
+            box = makeSwingBox(lineWidth * self.panelWidth, self.panelHeight)
+            box.add(label)
+            combinedInputLine.add(box)
 
-                rowItem = labelName.ljust(lineWidth)
-                label = PSE.JAVX_SWING.JLabel(rowItem)
-                box = makeSwingBox(lineWidth * self.panelWidth, self.panelHeight)
-                box.add(label)
-                combinedInputLine.add(box)
+            lineWidth = self.reportWidth['Type']
+            rowItem = car['carType'].ljust(lineWidth)
+            label = PSE.JAVX_SWING.JLabel(rowItem)
+            box = makeSwingBox(lineWidth * self.panelWidth, self.panelHeight)
+            box.add(label)
+            combinedInputLine.add(box)
+
+            lineWidth = self.reportWidth['Load']
+            rowItem = car['load'].ljust(lineWidth)
+            label = PSE.JAVX_SWING.JLabel(rowItem)
+            box = makeSwingBox(lineWidth * self.panelWidth, self.panelHeight)
+            box.add(label)
+            combinedInputLine.add(box)
+
+            lineWidth = self.reportWidth['Final_Dest']
+            fd = car['finalDestination']['userName']
+            if not fd:
+                fd = self.configFile['Patterns']['US']['FD']
+            rowItem = fd.ljust(lineWidth)
+            label = PSE.JAVX_SWING.JLabel(rowItem)
+            box = makeSwingBox(lineWidth * self.panelWidth, self.panelHeight)
+            box.add(label)
+            combinedInputLine.add(box)
 
             combinedInputLine.add(PSE.JAVX_SWING.Box.createHorizontalGlue())
             listOfCarRows.append(combinedInputLine)

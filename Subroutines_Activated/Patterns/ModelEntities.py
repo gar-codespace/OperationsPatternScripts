@@ -3,242 +3,13 @@
 
 """
 Patterns
+Helper methods for any of the Model level modules.
 """
 
 from opsEntities import PSE
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901
-
-def makeTextReportHeader(patternReport):
-    """
-    Makes the header for generic text reports
-    Called by:
-    View.ManageGui.trackPatternButton'
-    ViewSetCarsForm.switchListButton
-    """
-
-    patternLocation = PSE.readConfigFile('Patterns')['PL']
-    divisionName = patternReport['division']
-    workLocation = ''
-    if divisionName and patternLocation:
-        workLocation = divisionName + ' - ' + patternLocation
-    elif patternLocation:
-        workLocation = patternLocation
-
-    textReportHeader = patternReport['railroadName'] + '\n\n' + PSE.getBundleItem('Work Location:') + ' ' + workLocation + '\n' + patternReport['date'] + '\n\n'
-    
-    return textReportHeader
-
-def makeTextReportTracks(trackList, trackTotals):
-    """
-    trackList is a list
-    trackTotals is a bool
-    Makes the body for generic text reports
-    Called by:
-    View.ManageGui.trackPatternButton'
-    ViewSetCarsForm.switchListButton
-    """
-
-    reportSwitchList = ''
-    reportTally = [] # running total for all tracks
-    isSequenceHash, sequenceHash = PSE.getSequenceHash()
-
-    for track in trackList:
-        lengthOfLocos = 0
-        lengthOfCars = 0
-        trackTally = []
-        trackName = track['trackName']
-        trackLength = track['length']
-        reportSwitchList += PSE.getBundleItem('Track:') + ' ' + trackName + '\n'
-
-        for loco in track['locos']:
-            lengthOfLocos += int(loco[PSE.SB.handleGetMessage('Length')]) + 4
-
-            seqStandIn = ''
-            if loco['setTo'] == '[  ] ' and isSequenceHash:
-                seqStandIn = sequenceHash['locos'][loco['Id']]
-                seqStandIn = seqStandIn - 8000
-                seqStandIn = str(seqStandIn).rjust(3, '0') + '  '
-            else:
-                seqStandIn = loco['setTo']
-
-            reportSwitchList += seqStandIn + loopThroughRs('loco', loco) + '\n'
-
-        for car in track['cars']:
-            lengthOfCars += int(car[PSE.SB.handleGetMessage('Length')]) + 4
-
-            seqStandIn = ''
-            if car['setTo'] == '[  ] ' and isSequenceHash:
-                seqStandIn = sequenceHash['cars'][car['Id']]
-                # print(sequenceHash['cars'][car['Id']])
-                seqStandIn = seqStandIn - 8000
-                # print(seqStandIn)
-                seqStandIn = str(seqStandIn).rjust(3, '0') + '  '
-            else:
-                seqStandIn = car['setTo']
-
-            reportSwitchList += seqStandIn + loopThroughRs('car', car) + '\n'
-
-            trackTally.append(car[PSE.SB.handleGetMessage('Final_Dest')])
-            reportTally.append(car[PSE.SB.handleGetMessage('Final_Dest')])
-
-        if trackTotals:
-            totalLength = lengthOfLocos + lengthOfCars
-            reportSwitchList += PSE.getBundleItem('Total Cars:') + ' ' \
-                + str(len(track['cars'])) + ' ' + PSE.getBundleItem('Track Length:')  + ' ' \
-                + str(trackLength) +  ' ' + PSE.getBundleItem('Eqpt. Length:')  + ' ' \
-                + str(totalLength) + ' ' +  PSE.getBundleItem('Available:') + ' '  \
-                + str(trackLength - totalLength) \
-                + '\n\n'
-            reportSwitchList += PSE.getBundleItem('Track Totals for Cars:') + '\n'
-            for track, count in sorted(PSE.occuranceTally(trackTally).items()):
-                reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
-        reportSwitchList += '\n'
-
-    if trackTotals:
-        reportSwitchList += '\n' + PSE.getBundleItem('Report Totals for Cars:') + '\n'
-        for track, count in sorted(PSE.occuranceTally(reportTally).items()):
-            reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
-
-    return reportSwitchList
-
-def loopThroughRs(type, rsAttribs):
-    """
-    Creates a line containing the attrs in get * MessageFormat
-    The message format is in the locales language.
-    Called by:
-    makeTextReportTracks
-    """
-
-    reportWidth = PSE.REPORT_ITEM_WIDTH_MATRIX
-    switchListRow = ''
-
-    if type == 'loco':
-        messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
-    if type == 'car':
-        messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
-
-    for item in messageFormat:
-        if 'Tab' in item:
-            continue
-    # Special case handling for the hazardous flag
-        if item == PSE.SB.handleGetMessage('Hazardous') and rsAttribs[item]:
-            labelName = item
-        elif item == PSE.SB.handleGetMessage('Hazardous') and not rsAttribs[item]:
-            labelName = ' '
-        else:
-            labelName = rsAttribs[item]
-
-        itemWidth = reportWidth[item]
-        rowItem = labelName.ljust(itemWidth)
-        switchListRow += rowItem
-
-    return switchListRow
-
-def getTrackNamesByLocation(trackType):
-    """
-    Called by:
-    Model.verifySelectedTracks
-    ViewEntities.merge
-    """
-
-    patternLocation = PSE.readConfigFile('Patterns')['PL']
-    allTracksAtLoc = []
-    try: # Catch on the fly user edit of config file error
-        for track in PSE.LM.getLocationByName(patternLocation).getTracksByNameList(trackType):
-            allTracksAtLoc.append(unicode(track.getName(), PSE.ENCODING))
-        return allTracksAtLoc
-    except AttributeError:
-        return allTracksAtLoc
-
-# def makeUserInputList(textBoxEntry):
-#     """
-#     Called by:
-#     ModelSetCarsForm.makeMergedForm
-#     """
-
-#     userInputList = []
-#     for userInput in textBoxEntry:
-#         userInputList.append(unicode(userInput.getText(), PSE.ENCODING))
-
-#     return userInputList
-
-def appendTrackData(switchList, userInputList):
-    """
-    Adds the current track data to ops-Switch List.json
-    """
-
-    location = PSE.LM.getLocationByName(PSE.readConfigFile('Patterns')['PL'])
-
-
-    return
-
-# def merge(switchList, userInputList):
-#     """
-#     Merge the values in textBoxEntry into the ['setTo'] field of switchList.
-#     Called by:
-#     ModelSetCarsForm.makeMergedForm
-#     """
-
-#     prefix = ['[' + PSE.getBundleItem('Hold') + ']']
-#     location = PSE.LM.getLocationByName(PSE.readConfigFile('Patterns')['PL'])
-#     for track in location.getTracksByNameList(None):
-#         prefix.append(track.toString())
-#     longestTrackString = PSE.findLongestStringLength(prefix) + 2
-
-#     allTracksAtLoc = getTrackNamesByLocation(None)
-
-#     currentTrack = switchList['tracks'][0]['trackName']
-
-#     i = 0
-#     locos = switchList['tracks'][0]['locos']
-#     for loco in locos:
-#         userInput = unicode(userInputList[i], PSE.ENCODING)
-#         if userInput in allTracksAtLoc and userInput != currentTrack:
-#             setTrack = str('[' + userInput + ']').ljust(longestTrackString)
-#         else:
-#             setTrack = str('[' + PSE.getBundleItem('Hold') + ']').ljust(longestTrackString)
-
-#         loco.update({'setTo': setTrack})
-#         i += 1
-
-#     cars = switchList['tracks'][0]['cars']
-#     for car in cars:
-#         userInput = unicode(userInputList[i], PSE.ENCODING)
-
-#         if userInput in allTracksAtLoc and userInput != currentTrack:
-#             setTrack = str('[' + userInput + ']').ljust(longestTrackString)
-#         else:
-#             setTrack = str('[' + PSE.getBundleItem('Hold') + ']').ljust(longestTrackString)
-
-#         car.update({'setTo': setTrack})
-#         i += 1
-
-#     return switchList
-
-# def findLongestTrackString():
-#     """
-#     Called by:
-#     merge
-#     """
-
-#     hold = '[' + PSE.getBundleItem('Hold') + ']'
-#     longestTrackString = len(hold)
-
-#     location = PSE.LM.getLocationByName(PSE.readConfigFile('Patterns')['PL'])
-#     for track in location.getTracksList():
-#         longestTrackString = max(longestTrackString, len(track.getName()))
-
-#     return longestTrackString
-
-
-
-
-
-
-
-
 
 def getDetailsByTrack(selectedTracks):
     """
@@ -341,17 +112,17 @@ class ParseRollingStock:
 
         locoDetailDict = {}
 
+        consistName = locoObject.getConsist().getName()
+        eConsist = PSE.getBundleItem('Single')
+        if consistName:
+            eConsist = consistName
+
     # Necessary JMRI attributes
         locoDetailDict['carType'] = locoObject.getTypeName()
         locoDetailDict['model'] = locoObject.getModel()
-    # Modifications used by this plugin
-        try:
-            locoDetailDict['consist'] = locoObject.getConsist().getName()
-        except:
-            locoDetailDict['consist'] = PSE.getBundleItem('Single')
-    # Additional OPS attributes for locos
         locoDetailDict['dccAddress'] = locoObject.getDccAddress()
-        locoDetailDict['sequence'] = self.getSequence('locos', locoObject)
+    # Modifications used by this plugin
+        locoDetailDict['consist'] = eConsist
 
         return locoDetailDict
     
@@ -361,11 +132,10 @@ class ParseRollingStock:
         """
 
         carDetailDict = {}
-
-        try:
-            kernelSize = self.kernelTally[carObject.getKernelName()]
-        except:
-            kernelSize = 0
+        kernelName = carObject.getKernelName()
+        kSize = 0
+        if kernelName:
+            kSize = PSE.KM.getKernelByName(kernelName).getSize()
 
     # Necessary JMRI attributes
         carDetailDict['carType'] = carObject.getTypeName()
@@ -373,7 +143,7 @@ class ParseRollingStock:
         carDetailDict['loadType'] = carObject.getLoadType()
         carDetailDict['hazardous'] = carObject.isHazardous()
         carDetailDict['kernel'] = carObject.getKernelName()
-        carDetailDict['kernelSize'] = kernelSize
+        carDetailDict['kernelSize'] = str(kSize)
         carDetailDict['finalDestination'] = {'userName':carObject.getFinalDestinationName(), 'track':{'userName':carObject.getFinalDestinationTrackName()}}
         carDetailDict['removeComment'] = carObject.getDropComment()
         carDetailDict['addComment'] = carObject.getPickupComment()
@@ -383,10 +153,6 @@ class ParseRollingStock:
         carDetailDict['caboose'] = carObject.isCaboose()
         carDetailDict['passenger'] = carObject.isPassenger()
         carDetailDict['fred'] = carObject.hasFred()
-        if self.isSequence:
-            carDetailDict['sequence'] = self.getSequence('cars', carObject)
-        else:
-            carDetailDict['sequence'] = 8000
 
         return carDetailDict
 
@@ -411,9 +177,7 @@ class ParseRollingStock:
     # Additional attribs for OPS
         rsDetailDict['Id'] = rs.getRoadName() + ' ' + rs.getNumber()
         rsDetailDict[' '] = ' ' # Catches KeyError - empty box added to getLocalSwitchListMessageFormat
-        rsDetailDict['onTrain'] = False
-        if rs in self.rsOnTrain: # Flag to mark if RS is on a built train
-            rsDetailDict['onTrain'] = True
+        rsDetailDict['trainName'] = rs.getTrainName()
 
         return rsDetailDict
  
@@ -464,16 +228,14 @@ class ParseRollingStock:
         Try/Except protects against bad edit of config file
         Sort order of PSE.readConfigFile('US')['SL'] is top down
         """
-        if self.isSequence:
-            self.locoDetails.sort(key=lambda row: row['sequence'])
-        else:
-            sortLocos = self.configFile['Patterns']['US']['SL']
-            for sortKey in sortLocos:
-                try:
-                    translatedkey = (PSE.SB.handleGetMessage(sortKey))
-                    self.locoDetails.sort(key=lambda row: row[translatedkey])
-                except:
-                    print('No engines or list not sorted')
+
+        sortLocos = self.configFile['Patterns']['US']['SL']
+        for sortKey in sortLocos:
+            try:
+                translatedkey = (PSE.SB.handleGetMessage(sortKey))
+                self.locoDetails.sort(key=lambda row: row[translatedkey])
+            except:
+                print('No engines or list not sorted')
 
         return
 
@@ -483,19 +245,26 @@ class ParseRollingStock:
         Sort order of PSE.readConfigFile('Patterns')['US']['SC'] is top down
         """
 
-        if self.isSequence:
-            self.carDetails.sort(key=lambda row: row['sequence'])
-        else:
-            sortCars = self.configFile['Patterns']['US']['SC']
-            for sortKey in sortCars:
-                try:
-                    translatedkey = (PSE.SB.handleGetMessage(sortKey))
-                    self.carDetails.sort(key=lambda row: row[translatedkey])
-                except:
-                    print('No cars or list not sorted')
+        sortCars = self.configFile['Patterns']['US']['SC']
+        for sortKey in sortCars:
+            try:
+                translatedkey = (PSE.SB.handleGetMessage(sortKey))
+                self.carDetails.sort(key=lambda row: row[translatedkey])
+            except:
+                print('No cars or list not sorted')
 
         return
 
+def getTrackNamesByLocation(trackType):
+
+    patternLocation = PSE.readConfigFile('Patterns')['PL']
+    allTracksAtLoc = []
+    try: # Catch on the fly user edit of config file error
+        for track in PSE.LM.getLocationByName(patternLocation).getTracksByNameList(trackType):
+            allTracksAtLoc.append(unicode(track.getName(), PSE.ENCODING))
+        return allTracksAtLoc
+    except AttributeError:
+        return allTracksAtLoc
 
 
 
@@ -510,243 +279,465 @@ class ParseRollingStock:
 
 
 
-def getDetailsForTracks(selectedTracks):
-    """
-    Returns a list of dictionaries.
-    """
-
-    detailsForTracks = []
-    parseRollingStock = RollingStockParser()
-
-    locationName = PSE.readConfigFile('Patterns')['PL']
-    for track in selectedTracks:
-        genericTrackDetails = {}
-        genericTrackDetails['trackName'] = track
-        genericTrackDetails['length'] =  PSE.LM.getLocationByName(locationName).getTrackByName(track, None).getLength()
-        genericTrackDetails['locos'] = parseRollingStock.getLocoDetails(track)
-        genericTrackDetails['cars'] = parseRollingStock.getCarDetails(track)
-
-        detailsForTracks.append(genericTrackDetails)
-
-    return detailsForTracks
 
 
-class RollingStockParser:
 
-    def __init__(self):
 
-        self.configFile = PSE.readConfigFile()
-        self.isSequence, self.sequenceHash = PSE.getSequenceHash()
 
-        self.locationName = self.configFile['Patterns']['PL']
-        self.location = PSE.LM.getLocationByName(self.locationName)
 
-        self.rsOnTrain = self.getRsOnTrains()
-        self.kernelTally = self.getKernelTally()
 
-        self.trackName = ''
-        self.locoDetails = []
-        self.carDetails = []
 
-        return
+
+
+
+# class RollingStockParser:
+
+#     def __init__(self):
+
+#         self.configFile = PSE.readConfigFile()
+#         self.isSequence, self.sequenceHash = PSE.getSequenceHash()
+
+#         self.locationName = self.configFile['Patterns']['PL']
+#         self.location = PSE.LM.getLocationByName(self.locationName)
+
+#         self.rsOnTrain = self.getRsOnTrains()
+#         self.kernelTally = self.getKernelTally()
+
+#         self.trackName = ''
+#         self.locoDetails = []
+#         self.carDetails = []
+
+#         return
     
-    def getRsOnTrains(self):
-        """
-        Make a list of all rolling stock that are on built trains.
-        """
+#     def getRsOnTrains(self):
+#         """
+#         Make a list of all rolling stock that are on built trains.
+#         """
 
-        builtTrainList = []
-        for train in PSE.TM.getTrainsByStatusList():
-            if train.isBuilt():
-                builtTrainList.append(train)
+#         builtTrainList = []
+#         for train in PSE.TM.getTrainsByStatusList():
+#             if train.isBuilt():
+#                 builtTrainList.append(train)
 
-        listOfAssignedRs = []
-        for train in builtTrainList:
-            listOfAssignedRs += PSE.CM.getByTrainList(train)
-            listOfAssignedRs += PSE.EM.getByTrainList(train)
+#         listOfAssignedRs = []
+#         for train in builtTrainList:
+#             listOfAssignedRs += PSE.CM.getByTrainList(train)
+#             listOfAssignedRs += PSE.EM.getByTrainList(train)
 
-        return listOfAssignedRs
+#         return listOfAssignedRs
 
-    def getKernelTally(self):
-        """
-        Makes a hash table of kernel names and kernel sizes.
-        """
+#     def getKernelTally(self):
+#         """
+#         Makes a hash table of kernel names and kernel sizes.
+#         """
 
-        tally = []
-        for car in PSE.CM.getByIdList():
-            kernelName = car.getKernelName()
-            if kernelName:
-                tally.append(kernelName)
+#         tally = []
+#         for car in PSE.CM.getByIdList():
+#             kernelName = car.getKernelName()
+#             if kernelName:
+#                 tally.append(kernelName)
 
-        kernelTally = PSE.occuranceTally(tally)
+#         kernelTally = PSE.occuranceTally(tally)
 
-        return kernelTally
+#         return kernelTally
     
-    def getLocoDetails(self, trackName):
-        """
-        Mini controller.
-        Gets the details for all engines at the selected track.
-        """
+#     def getLocoDetails(self, trackName):
+#         """
+#         Mini controller.
+#         Gets the details for all engines at the selected track.
+#         """
 
-        self.locoDetails = []
+#         self.locoDetails = []
 
-        self.trackName = trackName
-        track = self.location.getTrackByName(trackName, None)
+#         self.trackName = trackName
+#         track = self.location.getTrackByName(trackName, None)
 
-        locos = PSE.EM.getList(track)
-        for loco in locos:
-            locoDetails = self.getDetailsForLoco(loco)
-            locoDetails.update(self.getDetailsForRollingStock(loco))
-            self.locoDetails.append(locoDetails)
+#         locos = PSE.EM.getList(track)
+#         for loco in locos:
+#             locoDetails = self.getDetailsForLoco(loco)
+#             locoDetails.update(self.getDetailsForRollingStock(loco))
+#             self.locoDetails.append(locoDetails)
 
-        self.sortLocoList()
+#         self.sortLocoList()
 
-        return self.locoDetails
+#         return self.locoDetails
 
-    def getCarDetails(self, trackName):
-        """
-        Mini controller.
-        Gets the details for all cars at the selected track.
-        """
+#     def getCarDetails(self, trackName):
+#         """
+#         Mini controller.
+#         Gets the details for all cars at the selected track.
+#         """
 
-        self.carDetails = []
+#         self.carDetails = []
 
-        self.trackName = trackName
-        track = self.location.getTrackByName(trackName, None)
+#         self.trackName = trackName
+#         track = self.location.getTrackByName(trackName, None)
 
-        cars = PSE.CM.getList(track)
-        for car in cars:
-            carDetails = self.getDetailsForCar(car)
-            carDetails.update(self.getDetailsForRollingStock(car))
-            self.carDetails.append(carDetails)
+#         cars = PSE.CM.getList(track)
+#         for car in cars:
+#             carDetails = self.getDetailsForCar(car)
+#             carDetails.update(self.getDetailsForRollingStock(car))
+#             self.carDetails.append(carDetails)
 
-        self.sortCarList()
+#         self.sortCarList()
 
-        return self.carDetails
+#         return self.carDetails
     
-    def getDetailsForRollingStock(self, rs):
+#     def getDetailsForRollingStock(self, rs):
 
-        rsDetailDict = {}
+#         rsDetailDict = {}
 
-    # Common items for all JMRI RS
-        rsDetailDict[PSE.SB.handleGetMessage('Road')] = rs.getRoadName()
-        rsDetailDict[PSE.SB.handleGetMessage('Number')] = rs.getNumber()
-        rsDetailDict[PSE.SB.handleGetMessage('Type')] = rs.getTypeName()
-        rsDetailDict[PSE.SB.handleGetMessage('Length')] = rs.getLength()
-        rsDetailDict[PSE.SB.handleGetMessage('Color')] = rs.getColor()
-        rsDetailDict[PSE.SB.handleGetMessage('Weight')] = rs.getWeightTons()
-        rsDetailDict[PSE.SB.handleGetMessage('Comment')] = rs.getComment()
-        rsDetailDict[PSE.SB.handleGetMessage('Division')] = rs.getDivisionName()
-        rsDetailDict[PSE.SB.handleGetMessage('Location')] = rs.getLocationName()
-        rsDetailDict[PSE.SB.handleGetMessage('Track')] = rs.getTrackName()
-        rsDetailDict[PSE.SB.handleGetMessage('Destination')] = rs.getDestinationName()
-        rsDetailDict[PSE.SB.handleGetMessage('Owner')] = rs.getOwnerName()
-        rsDetailDict[PSE.SB.handleGetMessage('Tab')] = 'Tab'
-        rsDetailDict[PSE.SB.handleGetMessage('Tab2')] = 'Tab2'
-        rsDetailDict[PSE.SB.handleGetMessage('Tab3')] = 'Tab3'
-    # Common items for all OPS RS
-        rsDetailDict['Id'] = rs.getRoadName() + ' ' + rs.getNumber()
-        rsDetailDict[' '] = ' ' # Catches KeyError - empty box added to getLocalSwitchListMessageFormat
+#     # Common items for all JMRI RS
+#         rsDetailDict[PSE.SB.handleGetMessage('Road')] = rs.getRoadName()
+#         rsDetailDict[PSE.SB.handleGetMessage('Number')] = rs.getNumber()
+#         rsDetailDict[PSE.SB.handleGetMessage('Type')] = rs.getTypeName()
+#         rsDetailDict[PSE.SB.handleGetMessage('Length')] = rs.getLength()
+#         rsDetailDict[PSE.SB.handleGetMessage('Color')] = rs.getColor()
+#         rsDetailDict[PSE.SB.handleGetMessage('Weight')] = rs.getWeightTons()
+#         rsDetailDict[PSE.SB.handleGetMessage('Comment')] = rs.getComment()
+#         rsDetailDict[PSE.SB.handleGetMessage('Division')] = rs.getDivisionName()
+#         rsDetailDict[PSE.SB.handleGetMessage('Location')] = rs.getLocationName()
+#         rsDetailDict[PSE.SB.handleGetMessage('Track')] = rs.getTrackName()
+#         rsDetailDict[PSE.SB.handleGetMessage('Destination')] = rs.getDestinationName()
+#         rsDetailDict[PSE.SB.handleGetMessage('Owner')] = rs.getOwnerName()
+#         rsDetailDict[PSE.SB.handleGetMessage('Tab')] = 'Tab'
+#         rsDetailDict[PSE.SB.handleGetMessage('Tab2')] = 'Tab2'
+#         rsDetailDict[PSE.SB.handleGetMessage('Tab3')] = 'Tab3'
+#     # Common items for all OPS RS
+#         rsDetailDict['Id'] = rs.getRoadName() + ' ' + rs.getNumber()
+#         rsDetailDict[' '] = ' ' # Catches KeyError - empty box added to getLocalSwitchListMessageFormat
 
-        return rsDetailDict
+#         return rsDetailDict
      
-    def getDetailsForLoco(self, locoObject):
-        """
-        Mimics jmri.jmrit.operations.setup.Setup.getEngineAttributes()
-        """
+#     def getDetailsForLoco(self, locoObject):
+#         """
+#         Mimics jmri.jmrit.operations.setup.Setup.getEngineAttributes()
+#         """
 
-        locoDetailDict = {}
+#         locoDetailDict = {}
 
-        locoDetailDict[PSE.SB.handleGetMessage('Model')] = locoObject.getModel()
-        locoDetailDict[PSE.SB.handleGetMessage('DCC_Address')] = locoObject.getDccAddress()
-    # Modifications used by this plugin
-        try:
-            locoDetailDict[PSE.SB.handleGetMessage('Consist')] = locoObject.getConsist().getName()
-        except:
-            locoDetailDict[PSE.SB.handleGetMessage('Consist')] = PSE.getBundleItem('Single')
-    # OPS loco attributes
-        locoDetailDict['sequence'] = 8000
+#         locoDetailDict[PSE.SB.handleGetMessage('Model')] = locoObject.getModel()
+#         locoDetailDict[PSE.SB.handleGetMessage('DCC_Address')] = locoObject.getDccAddress()
+#     # Modifications used by this plugin
+#         try:
+#             locoDetailDict[PSE.SB.handleGetMessage('Consist')] = locoObject.getConsist().getName()
+#         except:
+#             locoDetailDict[PSE.SB.handleGetMessage('Consist')] = PSE.getBundleItem('Single')
+#     # OPS loco attributes
+#         locoDetailDict['sequence'] = 8000
 
-        return locoDetailDict
+#         return locoDetailDict
 
-    def getDetailsForCar(self, carObject):
-        """
-        Mimics jmri.jmrit.operations.setup.Setup.getCarAttributes()
-        """
+#     def getDetailsForCar(self, carObject):
+#         """
+#         Mimics jmri.jmrit.operations.setup.Setup.getCarAttributes()
+#         """
 
-        track = self.location.getTrackByName(carObject.getTrackName(), None)
-        try:
-            kernelSize = self.kernelTally[carObject.getKernelName()]
-        except:
-            kernelSize = 0
+#         track = self.location.getTrackByName(carObject.getTrackName(), None)
+#         try:
+#             kernelSize = self.kernelTally[carObject.getKernelName()]
+#         except:
+#             kernelSize = 0
 
-        carDetailDict = {}
-    # JMRI car attributes
-        carDetailDict[PSE.SB.handleGetMessage('Load_Type')] = carObject.getLoadType()
-        carDetailDict[PSE.SB.handleGetMessage('Load')] = carObject.getLoadName()
-        carDetailDict[PSE.SB.handleGetMessage('Hazardous')] = carObject.isHazardous()
-        carDetailDict[PSE.SB.handleGetMessage('Kernel')] = carObject.getKernelName()
-        carDetailDict[PSE.SB.handleGetMessage('Kernel_Size')] = str(kernelSize)
-        carDetailDict[PSE.SB.handleGetMessage('Dest&Track')] = carObject.getDestinationTrackName()
-        carDetailDict[PSE.SB.handleGetMessage('Final_Dest')] = carObject.getFinalDestinationName()
-        carDetailDict[PSE.SB.handleGetMessage('FD&Track')] = carObject.getFinalDestinationTrackName()
-        carDetailDict[PSE.SB.handleGetMessage('SetOut_Msg')] = track.getCommentSetout()
-        carDetailDict[PSE.SB.handleGetMessage('PickUp_Msg')] = track.getCommentPickup()
-        carDetailDict[PSE.SB.handleGetMessage('RWE')] = carObject.getReturnWhenEmptyDestinationName()
-    # OPS car attributes
-        carDetailDict['isCaboose'] = carObject.isCaboose()
-        carDetailDict['isPassenger'] = carObject.isPassenger()
-        if self.isSequence:
-            carDetailDict['sequence'] = self.getSequence('cars', carObject)
-        else:
-            carDetailDict['sequence'] = 8000
+#         carDetailDict = {}
+#     # JMRI car attributes
+#         carDetailDict[PSE.SB.handleGetMessage('Load_Type')] = carObject.getLoadType()
+#         carDetailDict[PSE.SB.handleGetMessage('Load')] = carObject.getLoadName()
+#         carDetailDict[PSE.SB.handleGetMessage('Hazardous')] = carObject.isHazardous()
+#         carDetailDict[PSE.SB.handleGetMessage('Kernel')] = carObject.getKernelName()
+#         carDetailDict[PSE.SB.handleGetMessage('Kernel_Size')] = str(kernelSize)
+#         carDetailDict[PSE.SB.handleGetMessage('Dest&Track')] = carObject.getDestinationTrackName()
+#         carDetailDict[PSE.SB.handleGetMessage('Final_Dest')] = carObject.getFinalDestinationName()
+#         carDetailDict[PSE.SB.handleGetMessage('FD&Track')] = carObject.getFinalDestinationTrackName()
+#         carDetailDict[PSE.SB.handleGetMessage('SetOut_Msg')] = track.getCommentSetout()
+#         carDetailDict[PSE.SB.handleGetMessage('PickUp_Msg')] = track.getCommentPickup()
+#         carDetailDict[PSE.SB.handleGetMessage('RWE')] = carObject.getReturnWhenEmptyDestinationName()
+#     # OPS car attributes
+#         carDetailDict['isCaboose'] = carObject.isCaboose()
+#         carDetailDict['isPassenger'] = carObject.isPassenger()
+#         if self.isSequence:
+#             carDetailDict['sequence'] = self.getSequence('cars', carObject)
+#         else:
+#             carDetailDict['sequence'] = 8000
 
 
-        return carDetailDict
+#         return carDetailDict
 
-    def getSequence(self, rs, object):
-        """
-        rs is either cars or locos to choose the subset of the hash.
-        """
+#     def getSequence(self, rs, object):
+#         """
+#         rs is either cars or locos to choose the subset of the hash.
+#         """
 
-        dataHash = self.sequenceHash[rs]
-        rsID = object.getRoadName() + ' ' + object.getNumber()
+#         dataHash = self.sequenceHash[rs]
+#         rsID = object.getRoadName() + ' ' + object.getNumber()
 
-        return dataHash[rsID]
+#         return dataHash[rsID]
 
-    def sortLocoList(self):
-        """
-        Try/Except protects against bad edit of config file
-        Sort order of PSE.readConfigFile('US')['SL'] is top down
-        """
-        if self.isSequence:
-            self.locoDetails.sort(key=lambda row: row['sequence'])
-        else:
-            sortLocos = self.configFile['Patterns']['US']['SL']
-            for sortKey in sortLocos:
-                try:
-                    translatedkey = (PSE.SB.handleGetMessage(sortKey))
-                    self.locoDetails.sort(key=lambda row: row[translatedkey])
-                except:
-                    print('No engines or list not sorted')
+#     def sortLocoList(self):
+#         """
+#         Try/Except protects against bad edit of config file
+#         Sort order of PSE.readConfigFile('US')['SL'] is top down
+#         """
+#         if self.isSequence:
+#             self.locoDetails.sort(key=lambda row: row['sequence'])
+#         else:
+#             sortLocos = self.configFile['Patterns']['US']['SL']
+#             for sortKey in sortLocos:
+#                 try:
+#                     translatedkey = (PSE.SB.handleGetMessage(sortKey))
+#                     self.locoDetails.sort(key=lambda row: row[translatedkey])
+#                 except:
+#                     print('No engines or list not sorted')
 
-        return
+#         return
 
-    def sortCarList(self):
-        """
-        Try/Except protects against bad edit of config file
-        Sort order of PSE.readConfigFile('Patterns')['US']['SC'] is top down
-        """
+#     def sortCarList(self):
+#         """
+#         Try/Except protects against bad edit of config file
+#         Sort order of PSE.readConfigFile('Patterns')['US']['SC'] is top down
+#         """
 
-        if self.isSequence:
-            self.carDetails.sort(key=lambda row: row['sequence'])
-        else:
-            sortCars = self.configFile['Patterns']['US']['SC']
-            for sortKey in sortCars:
-                try:
-                    translatedkey = (PSE.SB.handleGetMessage(sortKey))
-                    self.carDetails.sort(key=lambda row: row[translatedkey])
-                except:
-                    print('No cars or list not sorted')
+#         if self.isSequence:
+#             self.carDetails.sort(key=lambda row: row['sequence'])
+#         else:
+#             sortCars = self.configFile['Patterns']['US']['SC']
+#             for sortKey in sortCars:
+#                 try:
+#                     translatedkey = (PSE.SB.handleGetMessage(sortKey))
+#                     self.carDetails.sort(key=lambda row: row[translatedkey])
+#                 except:
+#                     print('No cars or list not sorted')
 
-        return
+#         return
+
+
+# def makeTextReportHeader(patternReport):
+#     """
+#     Makes the header for generic text reports
+#     Called by:
+#     View.ManageGui.trackPatternButton'
+#     ViewSetCarsForm.switchListButton
+#     """
+
+#     patternLocation = PSE.readConfigFile('Patterns')['PL']
+#     divisionName = patternReport['division']
+#     workLocation = ''
+#     if divisionName and patternLocation:
+#         workLocation = divisionName + ' - ' + patternLocation
+#     elif patternLocation:
+#         workLocation = patternLocation
+
+#     textReportHeader = patternReport['railroadName'] + '\n\n' + PSE.getBundleItem('Work Location:') + ' ' + workLocation + '\n' + patternReport['date'] + '\n\n'
+    
+#     return textReportHeader
+
+# def makeTextReportTracks(trackList, trackTotals):
+#     """
+#     trackList is a list
+#     trackTotals is a bool
+#     Makes the body for generic text reports
+#     Called by:
+#     View.ManageGui.trackPatternButton'
+#     ViewSetCarsForm.switchListButton
+#     """
+
+#     reportSwitchList = ''
+#     reportTally = [] # running total for all tracks
+#     isSequenceHash, sequenceHash = PSE.getSequenceHash()
+
+#     for track in trackList:
+#         lengthOfLocos = 0
+#         lengthOfCars = 0
+#         trackTally = []
+#         trackName = track['trackName']
+#         trackLength = track['length']
+#         reportSwitchList += PSE.getBundleItem('Track:') + ' ' + trackName + '\n'
+
+#         for loco in track['locos']:
+#             lengthOfLocos += int(loco[PSE.SB.handleGetMessage('Length')]) + 4
+
+#             seqStandIn = ''
+#             if loco['setTo'] == '[  ] ' and isSequenceHash:
+#                 seqStandIn = sequenceHash['locos'][loco['Id']]
+#                 seqStandIn = seqStandIn - 8000
+#                 seqStandIn = str(seqStandIn).rjust(3, '0') + '  '
+#             else:
+#                 seqStandIn = loco['setTo']
+
+#             reportSwitchList += seqStandIn + loopThroughRs('loco', loco) + '\n'
+
+#         for car in track['cars']:
+#             lengthOfCars += int(car[PSE.SB.handleGetMessage('Length')]) + 4
+
+#             seqStandIn = ''
+#             if car['setTo'] == '[  ] ' and isSequenceHash:
+#                 seqStandIn = sequenceHash['cars'][car['Id']]
+#                 # print(sequenceHash['cars'][car['Id']])
+#                 seqStandIn = seqStandIn - 8000
+#                 # print(seqStandIn)
+#                 seqStandIn = str(seqStandIn).rjust(3, '0') + '  '
+#             else:
+#                 seqStandIn = car['setTo']
+
+#             reportSwitchList += seqStandIn + loopThroughRs('car', car) + '\n'
+
+#             trackTally.append(car[PSE.SB.handleGetMessage('Final_Dest')])
+#             reportTally.append(car[PSE.SB.handleGetMessage('Final_Dest')])
+
+#         if trackTotals:
+#             totalLength = lengthOfLocos + lengthOfCars
+#             reportSwitchList += PSE.getBundleItem('Total Cars:') + ' ' \
+#                 + str(len(track['cars'])) + ' ' + PSE.getBundleItem('Track Length:')  + ' ' \
+#                 + str(trackLength) +  ' ' + PSE.getBundleItem('Eqpt. Length:')  + ' ' \
+#                 + str(totalLength) + ' ' +  PSE.getBundleItem('Available:') + ' '  \
+#                 + str(trackLength - totalLength) \
+#                 + '\n\n'
+#             reportSwitchList += PSE.getBundleItem('Track Totals for Cars:') + '\n'
+#             for track, count in sorted(PSE.occuranceTally(trackTally).items()):
+#                 reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
+#         reportSwitchList += '\n'
+
+#     if trackTotals:
+#         reportSwitchList += '\n' + PSE.getBundleItem('Report Totals for Cars:') + '\n'
+#         for track, count in sorted(PSE.occuranceTally(reportTally).items()):
+#             reportSwitchList += ' ' + track + ' - ' + str(count) + '\n'
+
+#     return reportSwitchList
+
+# def loopThroughRs(type, rsAttribs):
+#     """
+#     Creates a line containing the attrs in get * MessageFormat
+#     The message format is in the locales language.
+#     Called by:
+#     makeTextReportTracks
+#     """
+
+#     reportWidth = PSE.REPORT_ITEM_WIDTH_MATRIX
+#     switchListRow = ''
+
+#     if type == 'loco':
+#         messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
+#     if type == 'car':
+#         messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
+
+#     for item in messageFormat:
+#         if 'Tab' in item:
+#             continue
+#     # Special case handling for the hazardous flag
+#         if item == PSE.SB.handleGetMessage('Hazardous') and rsAttribs[item]:
+#             labelName = item
+#         elif item == PSE.SB.handleGetMessage('Hazardous') and not rsAttribs[item]:
+#             labelName = ' '
+#         else:
+#             labelName = rsAttribs[item]
+
+#         itemWidth = reportWidth[item]
+#         rowItem = labelName.ljust(itemWidth)
+#         switchListRow += rowItem
+
+#     return switchListRow
+
+
+
+# def makeUserInputList(textBoxEntry):
+#     """
+#     Called by:
+#     ModelSetCarsForm.makeMergedForm
+#     """
+
+#     userInputList = []
+#     for userInput in textBoxEntry:
+#         userInputList.append(unicode(userInput.getText(), PSE.ENCODING))
+
+#     return userInputList
+
+# def appendTrackData(switchList, userInputList):
+#     """
+#     Adds the current track data to ops-Switch List.json
+#     """
+
+#     location = PSE.LM.getLocationByName(PSE.readConfigFile('Patterns')['PL'])
+
+
+#     return
+
+# def merge(switchList, userInputList):
+#     """
+#     Merge the values in textBoxEntry into the ['setTo'] field of switchList.
+#     Called by:
+#     ModelSetCarsForm.makeMergedForm
+#     """
+
+#     prefix = ['[' + PSE.getBundleItem('Hold') + ']']
+#     location = PSE.LM.getLocationByName(PSE.readConfigFile('Patterns')['PL'])
+#     for track in location.getTracksByNameList(None):
+#         prefix.append(track.toString())
+#     longestTrackString = PSE.findLongestStringLength(prefix) + 2
+
+#     allTracksAtLoc = getTrackNamesByLocation(None)
+
+#     currentTrack = switchList['tracks'][0]['trackName']
+
+#     i = 0
+#     locos = switchList['tracks'][0]['locos']
+#     for loco in locos:
+#         userInput = unicode(userInputList[i], PSE.ENCODING)
+#         if userInput in allTracksAtLoc and userInput != currentTrack:
+#             setTrack = str('[' + userInput + ']').ljust(longestTrackString)
+#         else:
+#             setTrack = str('[' + PSE.getBundleItem('Hold') + ']').ljust(longestTrackString)
+
+#         loco.update({'setTo': setTrack})
+#         i += 1
+
+#     cars = switchList['tracks'][0]['cars']
+#     for car in cars:
+#         userInput = unicode(userInputList[i], PSE.ENCODING)
+
+#         if userInput in allTracksAtLoc and userInput != currentTrack:
+#             setTrack = str('[' + userInput + ']').ljust(longestTrackString)
+#         else:
+#             setTrack = str('[' + PSE.getBundleItem('Hold') + ']').ljust(longestTrackString)
+
+#         car.update({'setTo': setTrack})
+#         i += 1
+
+#     return switchList
+
+# def findLongestTrackString():
+#     """
+#     Called by:
+#     merge
+#     """
+
+#     hold = '[' + PSE.getBundleItem('Hold') + ']'
+#     longestTrackString = len(hold)
+
+#     location = PSE.LM.getLocationByName(PSE.readConfigFile('Patterns')['PL'])
+#     for track in location.getTracksList():
+#         longestTrackString = max(longestTrackString, len(track.getName()))
+
+#     return longestTrackString
+
+
+
+
+# def getDetailsForTracks(selectedTracks):
+#     """
+#     Returns a list of dictionaries.
+#     """
+
+#     detailsForTracks = []
+#     parseRollingStock = RollingStockParser()
+
+#     locationName = PSE.readConfigFile('Patterns')['PL']
+#     for track in selectedTracks:
+#         genericTrackDetails = {}
+#         genericTrackDetails['trackName'] = track
+#         genericTrackDetails['length'] =  PSE.LM.getLocationByName(locationName).getTrackByName(track, None).getLength()
+#         genericTrackDetails['locos'] = parseRollingStock.getLocoDetails(track)
+#         genericTrackDetails['cars'] = parseRollingStock.getCarDetails(track)
+
+#         detailsForTracks.append(genericTrackDetails)
+
+#     return detailsForTracks

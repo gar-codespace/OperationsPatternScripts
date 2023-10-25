@@ -24,7 +24,7 @@ def o2oWorkEvents(manifest):
     o2oWorkEvents = 'HN,' + manifest['railroad'].replace('\n', ';') + '\n'
     o2oWorkEvents += 'HT,' + manifest['userName'] + '\n'
     o2oWorkEvents += 'HD,' + manifest['description'] + '\n'
-    epochTime = PSE.convertJmriDateToEpoch(manifest['date'])
+    epochTime = PSE.convertIsoTimeToEpoch(manifest['date'])
     o2oWorkEvents += 'HV,' + PSE.validTime(epochTime) + '\n'
     o2oWorkEvents += 'WT,' + str(len(manifest['locations'])) + '\n'
 # Body
@@ -333,7 +333,7 @@ class opsSwitchListConversion:
 #         self.o2oWorkEvents['trainName'] = PSE.HTML_PARSER().unescape(self.jmriManifest['userName'])
 #         self.o2oWorkEvents['trainDescription'] = PSE.HTML_PARSER().unescape(self.jmriManifest['description'])
 
-#         epoch = PSE.convertJmriDateToEpoch(self.jmriManifest['date'])
+#         epoch = PSE.convertIsoTimeToEpoch(self.jmriManifest['date'])
 #         self.o2oWorkEvents['date'] = PSE.validTime(epoch)
 #         self.o2oWorkEvents['locations'] = []
 
