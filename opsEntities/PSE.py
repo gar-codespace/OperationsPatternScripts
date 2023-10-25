@@ -586,20 +586,6 @@ def saveManifest(manifest, train):
 
     return
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def getOpsSwitchList():
 
     trainName = '{}.json'.format(getBundleItem('ops-Switch List'))
@@ -608,90 +594,91 @@ def getOpsSwitchList():
 
     return manifest
 
+
 """Formatting Methods"""
 
 
-def pickupCar(car, manifest, twoCol):
-    """
-    Based on the JMRI version.
-    """
+# def pickupCar(car, manifest, twoCol):
+#     """
+#     Based on the JMRI version.
+#     """
 
-    carItems = translateCarFormat(car)
+#     carItems = translateCarFormat(car)
 
-    line = ''
+#     line = ''
 
-    if manifest:
-        messageFormat = JMRI.jmrit.operations.setup.Setup.getPickupManifestMessageFormat()
-    else:
-        messageFormat = JMRI.jmrit.operations.setup.Setup.getPickupSwitchListMessageFormat()
+#     if manifest:
+#         messageFormat = JMRI.jmrit.operations.setup.Setup.getPickupManifestMessageFormat()
+#     else:
+#         messageFormat = JMRI.jmrit.operations.setup.Setup.getPickupSwitchListMessageFormat()
 
-    for messageItem in messageFormat:
-        lineItem = carItems[ROSETTA[messageItem]]
-        lineWidth = REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
+#     for messageItem in messageFormat:
+#         lineItem = carItems[ROSETTA[messageItem]]
+#         lineWidth = REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
 
-        if 'Tab' in messageItem:
-            continue
-    # Special case handling for car load type
-        if ROSETTA[messageItem] == 'Load_Type':
-            line += getShortLoadType(car).ljust(1) + ' '
-            continue
-    # Special case handling for car number
-        if ROSETTA[messageItem] == 'Number':
-            line += lineItem.rjust(lineWidth) + ' '
-            continue
-    # Special case handling for the hazardous flag
-        if ROSETTA[messageItem] == 'Hazardous' and car['hazardous']:
-            lineItem = messageItem[0].upper()
-            lineWidth = 2
-        elif ROSETTA[messageItem] == 'Hazardous' and not car['hazardous']:
-            lineItem = ' '
-            lineWidth = 2
+#         if 'Tab' in messageItem:
+#             continue
+#     # Special case handling for car load type
+#         if ROSETTA[messageItem] == 'Load_Type':
+#             line += getShortLoadType(car).ljust(1) + ' '
+#             continue
+#     # Special case handling for car number
+#         if ROSETTA[messageItem] == 'Number':
+#             line += lineItem.rjust(lineWidth) + ' '
+#             continue
+#     # Special case handling for the hazardous flag
+#         if ROSETTA[messageItem] == 'Hazardous' and car['hazardous']:
+#             lineItem = messageItem[0].upper()
+#             lineWidth = 2
+#         elif ROSETTA[messageItem] == 'Hazardous' and not car['hazardous']:
+#             lineItem = ' '
+#             lineWidth = 2
 
-        rowItem = lineItem.ljust(lineWidth)[:lineWidth]
-        line += rowItem
+#         rowItem = lineItem.ljust(lineWidth)[:lineWidth]
+#         line += rowItem
 
-    return line
+#     return line
 
-def dropCar(car, manifest, twoCol):
-    """
-    Based on the JMRI version.
-    """
+# def dropCar(car, manifest, twoCol):
+#     """
+#     Based on the JMRI version.
+#     """
 
-    carItems = translateCarFormat(car)
+#     carItems = translateCarFormat(car)
 
-    line = ''
+#     line = ''
 
-    if manifest:
-        messageFormat = JMRI.jmrit.operations.setup.Setup.getDropManifestMessageFormat()
-    else:
-        messageFormat = JMRI.jmrit.operations.setup.Setup.getDropSwitchListMessageFormat()
+#     if manifest:
+#         messageFormat = JMRI.jmrit.operations.setup.Setup.getDropManifestMessageFormat()
+#     else:
+#         messageFormat = JMRI.jmrit.operations.setup.Setup.getDropSwitchListMessageFormat()
 
-    for messageItem in messageFormat:
-        lineItem = carItems[ROSETTA[messageItem]]
-        lineWidth = REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
+#     for messageItem in messageFormat:
+#         lineItem = carItems[ROSETTA[messageItem]]
+#         lineWidth = REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
 
-        if 'Tab' in messageItem:
-            continue
-    # Special case handling for car load type
-        if ROSETTA[messageItem] == 'Load_Type':
-            line += getShortLoadType(car).ljust(1) + ' '
-            continue
-    # Special case handling for car number
-        if ROSETTA[messageItem] == 'Number':
-            line += lineItem.rjust(lineWidth) + ' '
-            continue
-    # Special case handling for the hazardous flag
-        if ROSETTA[messageItem] == 'Hazardous' and car['hazardous']:
-            lineItem = messageItem[0].upper()
-            lineWidth = 2
-        elif ROSETTA[messageItem] == 'Hazardous' and not car['hazardous']:
-            lineItem = ' '
-            lineWidth = 2
+#         if 'Tab' in messageItem:
+#             continue
+#     # Special case handling for car load type
+#         if ROSETTA[messageItem] == 'Load_Type':
+#             line += getShortLoadType(car).ljust(1) + ' '
+#             continue
+#     # Special case handling for car number
+#         if ROSETTA[messageItem] == 'Number':
+#             line += lineItem.rjust(lineWidth) + ' '
+#             continue
+#     # Special case handling for the hazardous flag
+#         if ROSETTA[messageItem] == 'Hazardous' and car['hazardous']:
+#             lineItem = messageItem[0].upper()
+#             lineWidth = 2
+#         elif ROSETTA[messageItem] == 'Hazardous' and not car['hazardous']:
+#             lineItem = ' '
+#             lineWidth = 2
 
-        rowItem = lineItem.ljust(lineWidth)[:lineWidth]
-        line += rowItem
+#         rowItem = lineItem.ljust(lineWidth)[:lineWidth]
+#         line += rowItem
 
-    return line
+#     return line
 
 # def localMoveCar(car, manifest, twoCol):
 #     """

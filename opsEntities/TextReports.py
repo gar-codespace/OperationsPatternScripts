@@ -24,6 +24,8 @@ def opsTextPatternReport():
     Creates a text Pattern Report from an OPS generated json file.
     """
 
+    _psLog.debug('opsTextPatternReport')
+
     TRE.makeReportItemWidthMatrix()
     TRE.translateMessageFormat()
 
@@ -72,7 +74,204 @@ def opsTextPatternReport():
 
     return textPatternReport
 
+def getDetailsForRollingStock(rs):
+
+    rsDetailDict = {}
+
+# Common items for all JMRI RS
+    rsDetailDict['road'] = rs.getRoadName()
+    rsDetailDict['number'] = rs.getNumber()
+    rsDetailDict['carType'] = rs.getTypeName()
+    rsDetailDict['length'] = rs.getLength()
+    rsDetailDict['color'] = rs.getColor()
+    rsDetailDict['weightTons'] = rs.getWeightTons()
+    rsDetailDict['comment'] = rs.getComment()
+    rsDetailDict['division'] = rs.getDivisionName()
+    rsDetailDict['location']={'userName':rs.getTrackName(), 'track':{'userName':rs.getTrackName()}}
+    rsDetailDict['destination']={'userName':rs.getDestinationName(), 'track':{'userName':rs.getDestinationTrackName()}}
+    rsDetailDict['owner'] = rs.getOwnerName()
+# Common items for all OPS RS
+    rsDetailDict['Id'] = '{} {}'.format(rs.getRoadName(), rs.getNumber())
+    rsDetailDict['train'] = rs.getTrainName()
+
+    return rsDetailDict
+
+def getDetailsForCar(carObject):
+    """
+    Mimics jmri.jmrit.operations.setup.Setup.getCarAttributes()
+    """
+
+    kernelName = carObject.getKernelName()
+    kSize = 0
+    if kernelName:
+        kSize = PSE.KM.getKernelByName(kernelName).getSize()
+
+    carDetailDict = {}
+# JMRI car attributes
+    carDetailDict['loadType'] = carObject.getLoadType()
+    carDetailDict['load'] = carObject.getLoadName()
+    carDetailDict['hazardous'] = carObject.isHazardous()
+    carDetailDict['kernel'] = carObject.getKernelName()
+    carDetailDict['kernelSize'] = str(kSize)
+    carDetailDict['returnWhenEmpty'] = carObject.getReturnWhenEmptyDestinationName()
+    carDetailDict['caboose'] = carObject.isCaboose()
+    carDetailDict['passenger'] = carObject.isPassenger()
+    carDetailDict['removeComment'] = carObject.getDropComment()
+    carDetailDict['addComment'] = carObject.getPickupComment()
+    carDetailDict['finalDestination']={'userName':carObject.getFinalDestinationName(), 'track':{'userName':carObject.getFinalDestinationTrackName()}}
+
+    return carDetailDict
+
+def opsTextSwitchList():
+    """
+    Creates a text Switch List from an OPS generated json file.
+    """
+
+    _psLog.debug('opsTextSwitchList')
+
+    TRE.makeReportItemWidthMatrix()
+    TRE.translateMessageFormat()
+
+    configFile = PSE.readConfigFile()
+
+    location = configFile['Patterns']['PL']
+    dep = PSE.JMRI.jmrit.operations.setup.Setup.getDropEnginePrefix()
+    mcp = PSE.JMRI.jmrit.operations.setup.Setup.getLocalPrefix()
+    hcp = configFile['Patterns']['US']['HCP']
+    longestStringLength = PSE.findLongestStringLength((dep, mcp, hcp))
+
+    reportName = PSE.getBundleItem('ops-Switch List') + '.json'
+    reportPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
+    report = PSE.loadJson(PSE.genericReadReport(reportPath))
+
+    textSwitchList = ''
+
+# Header
+    textSwitchList += report['railroad'] + '\n'
+    textSwitchList += '\n'
+
+    textSwitchList += PSE.getBundleItem('Switch List for location ({})').format(location) + '\n'
+    epochTime = PSE.convertIsoTimeToEpoch(report['date'])
+    textSwitchList += PSE.validTime(epochTime) + '\n'
+    textSwitchList += '\n'
+# Body
+    for location in report['locations']: # For the OPS switch list, the locations list is a track list.
+        carLength = 0
+        textSwitchList += PSE.getBundleItem('List of inventory at {}').format(location['userName']) + '\n'
+    # Pick up locos
+        for loco in location['engines']['add']:
+            currentTrack = car['location']['track']['userName']
+            destTrack = car['destination']['track']['userName']
+            if currentTrack == destTrack:
+                formatPrefix = hcp.format(longestStringLength)
+            else:
+                formatPrefix = dep.format(longestStringLength)
+
+            # line = TRE.localMoveCar(loco, True, False)
+            # textSwitchList += formatPrefix + ' ' + line + '\n'
+    # Move cars
+        for car in location['cars']['add']:
+            currentTrack = car['location']['track']['userName']
+            destTrack = car['destination']['track']['userName']
+            if currentTrack == destTrack:
+                formatPrefix = hcp.ljust(longestStringLength)
+            elif car['trainName']:
+                formatPrefix = hcp.ljust(longestStringLength)
+            else:
+                formatPrefix = mcp.ljust(longestStringLength)
+
+            line = TRE.localMoveCar(car, True, False)
+            textSwitchList += formatPrefix + line + '\n'
+
+        textSwitchList += '\n'
+
+    return textSwitchList
+
+def opsTextManifest(manifest):
+    """"
+    OPS version of the JMRI generated text manifest.
+    """
+
+    _psLog.debug('opsTextManifest')
+
+    TRE.makeReportItemWidthMatrix()
+    TRE.translateMessageFormat()
+
+    TMT = PSE.JMRI.jmrit.operations.trains.TrainManifestText()
+    pep = PSE.JMRI.jmrit.operations.setup.Setup.getPickupEnginePrefix()
+    dep = PSE.JMRI.jmrit.operations.setup.Setup.getDropEnginePrefix()
+    pcp = PSE.JMRI.jmrit.operations.setup.Setup.getPickupCarPrefix()
+    dcp = PSE.JMRI.jmrit.operations.setup.Setup.getDropCarPrefix()
+    mcp = PSE.JMRI.jmrit.operations.setup.Setup.getLocalPrefix()
+    hcp = PSE.readConfigFile()['Patterns']['US']['HCP']
+
+    longestStringLength = PSE.findLongestStringLength((pep, dep, pcp, dcp, mcp, hcp))
+
+    textManifest = ''
+
+# Header
+    textManifest += PSE.getExtendedRailroadName() + '\n'
+    textManifest += '\n'
+    textManifest += '{}, {}'.format(manifest['userName'], manifest['description']) + '\n'
+    epochTime = PSE.convertIsoTimeToEpoch(manifest['date'])
+    textManifest += PSE.validTime(epochTime) + '\n'
+    textManifest += '\n'
+# Body
+    for location in manifest['locations']:
+        textManifest += TMT.getStringScheduledWork().format(location['userName']) + '\n'
+    
+    # Pick up locos
+        for loco in location['engines']['add']:
+            formatPrefix = pep.ljust(longestStringLength)
+
+    # Set out locos
+        for loco in location['engines']['remove']:
+            formatPrefix = dep.ljust(longestStringLength)
+
+    # Pick up cars
+        for car in location['cars']['add']:
+            if car['isLocal']:
+                continue
+            formatPrefix = pcp.ljust(longestStringLength)
+            line = TRE.pickupCar(car, True, False)
+            textManifest += formatPrefix + ' ' + line + '\n'
+    # Move cars
+        for car in location['cars']['add']:
+            if not car['isLocal']:
+                continue
+            formatPrefix = mcp.ljust(longestStringLength)
+            line = TRE.localMoveCar(car, True, False)
+            textManifest += formatPrefix + ' ' + line + '\n'
+    # Set out cars
+        for car in location['cars']['remove']:
+            if car['isLocal']:
+                continue
+            formatPrefix = dcp.ljust(longestStringLength)
+            line = TRE.dropCar(car, True, False)
+            textManifest += formatPrefix + ' ' + line + '\n'
+
+        try:
+        # Location summary
+            td = PSE.JMRI.jmrit.operations.setup.Setup.getDirectionString(location['trainDirection'])
+            textManifest += TMT.getStringTrainDepartsCars().format(location['userName'], td, str(location['cars']['total']), str(location['length']['length']), location['length']['unit'], str(location['weight'])) + '\n'
+        except:
+        # Footer
+            textManifest += TMT.getStringTrainTerminates().format(manifest['locations'][-1]['userName']) + '\n'
+
+        textManifest += '\n'
+
+    return textManifest
+
+
 def opsTextSwitchLists(manifest, typeFlag):
+    """
+    OPS version of the JMRI generated text switch list.
+    Makes new switch lists from a JMRI train.
+    This one is still under construction.
+    The name is too similar to the OPS switch list.
+    """
+
+    _psLog.debug('opsTextSwitchLists')
 
     TRE.makeReportItemWidthMatrix()
     TRE.translateMessageFormat()
@@ -150,194 +349,6 @@ def opsTextSwitchLists(manifest, typeFlag):
         PSE.genericWriteReport(switchListPath, textSwitchList)
 
     return
-
-
-def getDetailsForRollingStock(rs):
-
-    rsDetailDict = {}
-
-# Common items for all JMRI RS
-    rsDetailDict['road'] = rs.getRoadName()
-    rsDetailDict['number'] = rs.getNumber()
-    rsDetailDict['carType'] = rs.getTypeName()
-    rsDetailDict['length'] = rs.getLength()
-    rsDetailDict['color'] = rs.getColor()
-    rsDetailDict['weightTons'] = rs.getWeightTons()
-    rsDetailDict['comment'] = rs.getComment()
-    rsDetailDict['division'] = rs.getDivisionName()
-    rsDetailDict['location']={'userName':rs.getTrackName(), 'track':{'userName':rs.getTrackName()}}
-    rsDetailDict['destination']={'userName':rs.getDestinationName(), 'track':{'userName':rs.getDestinationTrackName()}}
-    rsDetailDict['owner'] = rs.getOwnerName()
-# Common items for all OPS RS
-    rsDetailDict['Id'] = '{} {}'.format(rs.getRoadName(), rs.getNumber())
-    rsDetailDict['train'] = rs.getTrainName()
-
-    return rsDetailDict
-
-def getDetailsForCar(carObject):
-    """
-    Mimics jmri.jmrit.operations.setup.Setup.getCarAttributes()
-    """
-
-    kernelName = carObject.getKernelName()
-    kSize = 0
-    if kernelName:
-        kSize = PSE.KM.getKernelByName(kernelName).getSize()
-
-    carDetailDict = {}
-# JMRI car attributes
-    carDetailDict['loadType'] = carObject.getLoadType()
-    carDetailDict['load'] = carObject.getLoadName()
-    carDetailDict['hazardous'] = carObject.isHazardous()
-    carDetailDict['kernel'] = carObject.getKernelName()
-    carDetailDict['kernelSize'] = str(kSize)
-    carDetailDict['returnWhenEmpty'] = carObject.getReturnWhenEmptyDestinationName()
-    carDetailDict['caboose'] = carObject.isCaboose()
-    carDetailDict['passenger'] = carObject.isPassenger()
-    carDetailDict['removeComment'] = carObject.getDropComment()
-    carDetailDict['addComment'] = carObject.getPickupComment()
-    carDetailDict['finalDestination']={'userName':carObject.getFinalDestinationName(), 'track':{'userName':carObject.getFinalDestinationTrackName()}}
-
-
-    return carDetailDict
-
-
-
-def opsTextSwitchList():
-    """
-    Creates a text Switch List from an OPS generated json file.
-    """
-    TRE.makeReportItemWidthMatrix()
-    TRE.translateMessageFormat()
-
-    configFile = PSE.readConfigFile()
-
-    location = configFile['Patterns']['PL']
-    dep = PSE.JMRI.jmrit.operations.setup.Setup.getDropEnginePrefix()
-    mcp = PSE.JMRI.jmrit.operations.setup.Setup.getLocalPrefix()
-    hcp = configFile['Patterns']['US']['HCP']
-    longestStringLength = PSE.findLongestStringLength((dep, mcp, hcp))
-
-    reportName = PSE.getBundleItem('ops-Switch List') + '.json'
-    reportPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
-    report = PSE.loadJson(PSE.genericReadReport(reportPath))
-
-    textSwitchList = ''
-
-# Header
-    textSwitchList += report['railroad'] + '\n'
-    textSwitchList += '\n'
-
-    textSwitchList += PSE.getBundleItem('Switch List for location ({})').format(location) + '\n'
-    epochTime = PSE.convertIsoTimeToEpoch(report['date'])
-    textSwitchList += PSE.validTime(epochTime) + '\n'
-    textSwitchList += '\n'
-# Body
-    for location in report['locations']: # For the OPS switch list, the locations list is a track list.
-        carLength = 0
-        textSwitchList += PSE.getBundleItem('List of inventory at {}').format(location['userName']) + '\n'
-    # Pick up locos
-        for loco in location['engines']['add']:
-            currentTrack = car['location']['track']['userName']
-            destTrack = car['destination']['track']['userName']
-            if currentTrack == destTrack:
-                formatPrefix = hcp.format(longestStringLength)
-            else:
-                formatPrefix = dep.format(longestStringLength)
-
-            # line = TRE.localMoveCar(loco, True, False)
-            # textSwitchList += formatPrefix + ' ' + line + '\n'
-    # Move cars
-        for car in location['cars']['add']:
-            currentTrack = car['location']['track']['userName']
-            destTrack = car['destination']['track']['userName']
-            if currentTrack == destTrack:
-                formatPrefix = hcp.ljust(longestStringLength)
-            elif car['trainName']:
-                formatPrefix = hcp.ljust(longestStringLength)
-            else:
-                formatPrefix = mcp.ljust(longestStringLength)
-
-            line = TRE.localMoveCar(car, True, False)
-            textSwitchList += formatPrefix + line + '\n'
-
-        textSwitchList += '\n'
-
-    return textSwitchList
-
-def opsTextManifest(manifest):
-    """"
-    manifest is a string from the json file.
-    OPS version of the JMRI generated text manifest.
-    """
-
-    TRE.makeReportItemWidthMatrix()
-    TRE.translateMessageFormat()
-
-    TMT = PSE.JMRI.jmrit.operations.trains.TrainManifestText()
-    pep = PSE.JMRI.jmrit.operations.setup.Setup.getPickupEnginePrefix()
-    dep = PSE.JMRI.jmrit.operations.setup.Setup.getDropEnginePrefix()
-    pcp = PSE.JMRI.jmrit.operations.setup.Setup.getPickupCarPrefix()
-    dcp = PSE.JMRI.jmrit.operations.setup.Setup.getDropCarPrefix()
-    mcp = PSE.JMRI.jmrit.operations.setup.Setup.getLocalPrefix()
-    hcp = PSE.readConfigFile()['Patterns']['US']['HCP']
-
-    longestStringLength = PSE.findLongestStringLength((pep, dep, pcp, dcp, mcp, hcp))
-
-    textManifest = ''
-
-# Header
-    textManifest += PSE.getExtendedRailroadName() + '\n'
-    textManifest += '\n'
-    textManifest += '{}, {}'.format(manifest['userName'], manifest['description']) + '\n'
-    epochTime = PSE.convertIsoTimeToEpoch(manifest['date'])
-    textManifest += PSE.validTime(epochTime) + '\n'
-    textManifest += '\n'
-# Body
-    for location in manifest['locations']:
-        textManifest += TMT.getStringScheduledWork().format(location['userName']) + '\n'
-    
-    # Pick up locos
-        for loco in location['engines']['add']:
-            formatPrefix = pep.ljust(longestStringLength)
-
-    # Set out locos
-        for loco in location['engines']['remove']:
-            formatPrefix = dep.ljust(longestStringLength)
-
-    # Pick up cars
-        for car in location['cars']['add']:
-            if car['isLocal']:
-                continue
-            formatPrefix = pcp.ljust(longestStringLength)
-            line = PSE.pickupCar(car, True, False)
-            textManifest += formatPrefix + ' ' + line + '\n'
-    # Move cars
-        for car in location['cars']['add']:
-            if not car['isLocal']:
-                continue
-            formatPrefix = mcp.ljust(longestStringLength)
-            line = TRE.localMoveCar(car, True, False)
-            textManifest += formatPrefix + ' ' + line + '\n'
-    # Set out cars
-        for car in location['cars']['remove']:
-            if car['isLocal']:
-                continue
-            formatPrefix = dcp.ljust(longestStringLength)
-            line = PSE.dropCar(car, True, False)
-            textManifest += formatPrefix + ' ' + line + '\n'
-
-        try:
-        # Location summary
-            td = PSE.JMRI.jmrit.operations.setup.Setup.getDirectionString(location['trainDirection'])
-            textManifest += TMT.getStringTrainDepartsCars().format(location['userName'], td, str(location['cars']['total']), str(location['length']['length']), location['length']['unit'], str(location['weight'])) + '\n'
-        except:
-        # Footer
-            textManifest += TMT.getStringTrainTerminates().format(manifest['locations'][-1]['userName']) + '\n'
-
-        textManifest += '\n'
-
-    return textManifest
 
 # def o2oWorkEvents(manifest):
 #     """
