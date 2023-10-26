@@ -25,12 +25,15 @@
       "FD" : "Unconsigned",
       "FT" : "No Waybill",
       "EH" : "Available",
-      "SL": [
-        "Model"
-      ],
-      "SC": [
-        "Load_Type",
-        "FD&Track"
-      ]
+      "SL": {
+        "model":1
+      },
+      "SC" : {
+        "destination userName":0,
+        "division":0,
+        "finalDestination userName":1,
+        "loadType":2,
+        "road":0
+      }
   }
 }

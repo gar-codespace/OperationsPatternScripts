@@ -4,11 +4,8 @@ Todo:
   Try to add sequence to the car xml:
     https://webserver.jmri.org/JavaDoc/doc/jmri/jmrit/operations/rollingstock/RollingStockAttribute.html#store(org.jdom2.Element,java.lang.String,java.lang.String)
   Replace Patterns.Model deepcopy with clone()?
-  Refactor car['kernelSize'] = 'NA'
-  Maybe put Dest and FD standins into Manifest.py
-  Rework how haz is displayed: If loaded and haz, getShortLoadType = H and a * in the hazardous column
+  Maybe put Dest and FD standins into TextReports.py
   flesh out genericTrackDetails['loads'] = 0
-  add back onTrain and implement
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.

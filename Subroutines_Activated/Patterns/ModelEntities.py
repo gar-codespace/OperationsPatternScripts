@@ -26,18 +26,19 @@ def getDetailsByTrack(selectedTracks):
 
     detailsByTracks = []
 
-    for track in selectedTracks:
+    for trackName in selectedTracks:
+        track = PSE.LM.getLocationByName(locationName).getTrackByName(trackName, None)
         genericTrackDetails = {}
-        genericTrackDetails['userName'] = track
-        genericTrackDetails['trainDirection'] = 1
+        genericTrackDetails['userName'] = trackName
+        genericTrackDetails['trainDirection'] = track.getTrainDirections()
         genericTrackDetails['loads'] = 0
         genericTrackDetails['empties'] = 0
-        trackLength = PSE.LM.getLocationByName(locationName).getTrackByName(track, None).getLength()
+        trackLength = track.getLength()
         trackUnit = PSE.JMRI.jmrit.operations.setup.Setup.getLengthUnit()
         genericTrackDetails['length'] = {'length':trackLength, 'unit':trackUnit}
 
-        genericTrackDetails['engines'] = {'add':parseRollingStock.getLocoDetails(track), 'remove':[]}
-        genericTrackDetails['cars'] = {'add':parseRollingStock.getCarDetails(track), 'remove':[]}
+        genericTrackDetails['engines'] = {'add':parseRollingStock.getLocoDetails(trackName), 'remove':[]}
+        genericTrackDetails['cars'] = {'add':parseRollingStock.getCarDetails(trackName), 'remove':[]}
 
         detailsByTracks.append(genericTrackDetails)
 
@@ -49,12 +50,12 @@ class ParseRollingStock:
     def __init__(self):
 
         self.configFile = PSE.readConfigFile()
-        self.isSequence, self.sequenceHash = PSE.getSequenceHash()
+        # self.isSequence, self.sequenceHash = PSE.getSequenceHash()
 
         self.locationName = self.configFile['Patterns']['PL']
         self.location = PSE.LM.getLocationByName(self.locationName)
 
-        self.rsOnTrain = self.getRsOnTrains()
+        # self.rsOnTrain = self.getRsOnTrains()
 
         self.trackName = ''
         self.locoDetails = []
@@ -116,11 +117,10 @@ class ParseRollingStock:
         if consistName:
             eConsist = consistName
 
-    # Necessary JMRI attributes
+    # JMRI attributes
         locoDetailDict['carType'] = locoObject.getTypeName()
         locoDetailDict['model'] = locoObject.getModel()
         locoDetailDict['dccAddress'] = locoObject.getDccAddress()
-    # Modifications used by this plugin
         locoDetailDict['consist'] = eConsist
 
         return locoDetailDict
@@ -136,7 +136,7 @@ class ParseRollingStock:
         if kernelName:
             kSize = PSE.KM.getKernelByName(kernelName).getSize()
 
-    # Necessary JMRI attributes
+    # JMRI attributes
         carDetailDict['carType'] = carObject.getTypeName()
         carDetailDict['load'] = carObject.getLoadName()
         carDetailDict['loadType'] = carObject.getLoadType()
@@ -147,7 +147,6 @@ class ParseRollingStock:
         carDetailDict['removeComment'] = carObject.getDropComment()
         carDetailDict['addComment'] = carObject.getPickupComment()
         carDetailDict['returnWhenEmpty'] = carObject.getReturnWhenEmptyDestinationName()
-    # Additional OPS attributes for cars
         carDetailDict['isLocal'] = True
         carDetailDict['caboose'] = carObject.isCaboose()
         carDetailDict['passenger'] = carObject.isPassenger()
@@ -166,6 +165,7 @@ class ParseRollingStock:
         rsDetailDict['road'] = rs.getRoadName()
         rsDetailDict['number'] = rs.getNumber()
         rsDetailDict['length'] = rs.getLength()
+        rsDetailDict['weight'] = rs.getWeight()
         rsDetailDict['weightTons'] = rs.getAdjustedWeightTons()
         rsDetailDict['color'] = rs.getColor()
         rsDetailDict['owner'] = rs.getOwnerName()
@@ -174,38 +174,38 @@ class ParseRollingStock:
         rsDetailDict['destination'] = {'userName':rs.getDestinationName(), 'track':{'userName':rs.getDestinationTrackName()}}
         rsDetailDict['comment'] = rs.getComment()
     # Additional attribs for OPS
-        rsDetailDict['Id'] = rs.getRoadName() + ' ' + rs.getNumber()
+        rsDetailDict['id'] = '{} {}'.format(rs.getRoadName(), rs.getNumber())
         rsDetailDict[' '] = ' ' # Catches KeyError - empty box added to getLocalSwitchListMessageFormat
         rsDetailDict['trainName'] = rs.getTrainName()
 
         return rsDetailDict
  
-    def getRsOnTrains(self):
-        """
-        Make a list of all rolling stock that are on built trains.
-        """
+    # def getRsOnTrains(self):
+    #     """
+    #     Make a list of all rolling stock that are on built trains.
+    #     """
 
-        builtTrainList = []
-        for train in PSE.TM.getTrainsByStatusList():
-            if train.isBuilt():
-                builtTrainList.append(train)
+    #     builtTrainList = []
+    #     for train in PSE.TM.getTrainsByStatusList():
+    #         if train.isBuilt():
+    #             builtTrainList.append(train)
 
-        listOfAssignedRs = []
-        for train in builtTrainList:
-            listOfAssignedRs += PSE.CM.getByTrainList(train)
-            listOfAssignedRs += PSE.EM.getByTrainList(train)
+    #     listOfAssignedRs = []
+    #     for train in builtTrainList:
+    #         listOfAssignedRs += PSE.CM.getByTrainList(train)
+    #         listOfAssignedRs += PSE.EM.getByTrainList(train)
 
-        return listOfAssignedRs
+    #     return listOfAssignedRs
 
-    def getSequence(self, rs, object):
-        """
-        rs is either cars or locos to choose the subset of the hash.
-        """
+    # def getSequence(self, rs, object):
+    #     """
+    #     rs is either cars or locos to choose the subset of the hash.
+    #     """
 
-        dataHash = self.sequenceHash[rs]
-        rsID = object.getRoadName() + ' ' + object.getNumber()
+    #     dataHash = self.sequenceHash[rs]
+    #     rsID = object.getRoadName() + ' ' + object.getNumber()
 
-        return dataHash[rsID]
+    #     return dataHash[rsID]
 
     def sortLocoList(self):
         """
@@ -213,29 +213,67 @@ class ParseRollingStock:
         Sort order of PSE.readConfigFile('US')['SL'] is top down
         """
 
-        sortLocos = self.configFile['Patterns']['US']['SL']
-        for sortKey in sortLocos:
+    # Process the sort list
+        try:
+            sortRS = self.configFile['Patterns']['US']['SL']
+            sortRS.items().sort(key=lambda row: row[1])
+        except:
+            print('No engines were sorted')
+            return
+        
+        sortList = []
+        for sortKey, include in sortRS.items():
+            if include != 0:
+                sortList.append(sortKey)
+
+        if not sortList:
+            print('No engines were sorted')
+            return
+
+    # Sort the loco list
+        for sortKey in sortList:
+            sortKey = sortKey.split()
             try:
-                translatedkey = (PSE.SB.handleGetMessage(sortKey))
-                self.locoDetails.sort(key=lambda row: row[translatedkey])
+                self.locoDetails.sort(key=lambda row: row[sortKey[0]][sortKey[1]])
             except:
-                print('No engines or list not sorted')
+                self.locoDetails.sort(key=lambda row: row[sortKey[0]])
+
+        print('{} engines were sorted'.format(str(len(self.locoDetails))))
 
         return
 
     def sortCarList(self):
         """
-        Try/Except protects against bad edit of config file
-        Sort order of PSE.readConfigFile('Patterns')['US']['SC'] is top down
+        Sorts the car list by value in self.configFile['Patterns']['US']['SC']
+        A value of 0 in self.configFile['Patterns']['US']['SC'] means the item is excluded
         """
 
-        sortCars = self.configFile['Patterns']['US']['SC']
-        for sortKey in sortCars:
+    # Process the sort list
+        try:
+            sortRS = self.configFile['Patterns']['US']['SC']
+            sortRS.items().sort(key=lambda row: row[1])
+        except:
+            print('No cars were sorted')
+            return
+        
+        sortList = []
+        for sortKey, include in sortRS.items():
+            if include != 0:
+                sortList.append(sortKey)
+
+        if not sortList:
+            print('No cars were sorted')
+            return
+
+    # Sort the car list
+        for sortKey in sortList:
+            sortKey = sortKey.split()
             try:
-                translatedkey = (PSE.SB.handleGetMessage(sortKey))
-                self.carDetails.sort(key=lambda row: row[translatedkey])
+                self.carDetails.sort(key=lambda row: row[sortKey[0]][sortKey[1]])
             except:
-                print('No cars or list not sorted')
+                self.carDetails.sort(key=lambda row: row[sortKey[0]])
+                
+        print('{} cars were sorted'.format(str(len(self.carDetails))))
 
         return
 
