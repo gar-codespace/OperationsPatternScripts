@@ -21,18 +21,26 @@ def getDetailsByTrack(selectedTracks):
     """
 
     locationName = PSE.readConfigFile('Patterns')['PL']
+    location = PSE.LM.getLocationByName(locationName)
 
     parseRollingStock = ParseRollingStock()
 
     detailsByTracks = []
 
     for trackName in selectedTracks:
-        track = PSE.LM.getLocationByName(locationName).getTrackByName(trackName, None)
+        track = location.getTrackByName(trackName, None)
+        carCount = track.getNumberCars()
+        loadCount = 0
+        for car in PSE.CM.getList(track):
+            if car.getLoadType() == 'load' or car.getLoadName() == 'L':
+                loadCount += 1
+
         genericTrackDetails = {}
         genericTrackDetails['userName'] = trackName
         genericTrackDetails['trainDirection'] = track.getTrainDirections()
-        genericTrackDetails['loads'] = 0
-        genericTrackDetails['empties'] = 0
+        genericTrackDetails['total'] = carCount
+        genericTrackDetails['loads'] = loadCount
+        genericTrackDetails['empties'] = carCount - loadCount
         trackLength = track.getLength()
         trackUnit = PSE.JMRI.jmrit.operations.setup.Setup.getLengthUnit()
         genericTrackDetails['length'] = {'length':trackLength, 'unit':trackUnit}

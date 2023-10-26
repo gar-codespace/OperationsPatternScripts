@@ -289,7 +289,7 @@ def openOutputFrame(message):
     frame = JMRI.util.JmriJFrame.getFrame(frameName)
 
     if not frame:
-        JMRI.jmrit.jython.JythonWindow().actionPerformed(None)
+        JMRI.jmrit.jython.JythonWindow().actionPerformed(None) # This command opens the frame
 
     frame = JMRI.util.JmriJFrame.getFrame(frameName)
     LM.addPropertyChangeListener(ListenToThePSWindow(frame))
@@ -299,7 +299,7 @@ def openOutputFrame(message):
     crawler(frame)
     for component in CRAWLER:
         if component.getClass() == JAVX_SWING.JTextArea:
-           component.text += message + '\n'
+           component.text += '{}\n'.format(message)
            break
 
     return

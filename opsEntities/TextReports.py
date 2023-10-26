@@ -57,12 +57,15 @@ def opsTextPatternReport():
             line = TRE.localMoveCar(car, True, False)
             textPatternReport += formatPrefix + ' ' + line + '\n'
         
-        totalCars = str(len(location['cars']['add']))
+
+        summaryText = PSE.getBundleItem('Total cars:{},  Loads:{},  Empties:{}')
+        textPatternReport += summaryText.format(location['total'], location['loads'], location['empties']) + '\n'
+
         trackLength = location['length']['length']
-        eqptLength = carLength
-        avail = trackLength - eqptLength
-        summaryText = PSE.getBundleItem('Total cars: {} Track length: {} Equipment length: {} Available: {}')
-        textPatternReport += summaryText.format(totalCars, trackLength, eqptLength, avail) + '\n'
+        avail = trackLength - carLength
+        summaryText = PSE.getBundleItem('Track length:{},  Equipment length:{},  Available:{}')
+        textPatternReport += summaryText.format(trackLength, carLength, avail) + '\n'
+
         textPatternReport += '\n'
 
     textPatternReport += PSE.getBundleItem('Final Destination Totals:') + '\n'

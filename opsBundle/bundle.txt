@@ -14,7 +14,8 @@ Script Output
 Show
 Switch List for location ({})
 Tools
-Total cars: {} Track length: {} Equipment length: {} Available: {}
+Total cars:{},  Loads:{},  Empties:{}
+Track length:{},  Equipment length:{},  Available:{}
 Track Length:
 Translate Plugin
 Valid

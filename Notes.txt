@@ -1,11 +1,9 @@
 Todo:
   How to publish DeepL?
-  Refactor PSE.openOutputFrame(), what's it doing?
   Try to add sequence to the car xml:
     https://webserver.jmri.org/JavaDoc/doc/jmri/jmrit/operations/rollingstock/RollingStockAttribute.html#store(org.jdom2.Element,java.lang.String,java.lang.String)
   Replace Patterns.Model deepcopy with clone()?
   Maybe put Dest and FD standins into TextReports.py
-  flesh out genericTrackDetails['loads'] = 0
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.
