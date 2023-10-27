@@ -121,14 +121,13 @@ class StartUp:
         _psLog.debug(EVENT)
 
         Model.updateRailroadDetails(self.widgets['panel'])
-        Model.extendedRailroadDetails()
+        Model.compositeRailroadName()
         Model.updateYearModeled()
         Model.refreshOperationsSettingsFrame()
-        # Model.refreshSubroutine()
 
         self.widgets['control']['UX'].setSelected(True)
 
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+        print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
 
         return
 

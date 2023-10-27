@@ -135,7 +135,7 @@ class CreateSetCarsFrame:
 
         PSE.LM.addPropertyChangeListener(PSE.ListenToThePSWindow(scheduleEditFrame))
 
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+        print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
 
         return
 
@@ -159,7 +159,7 @@ class CreateSetCarsFrame:
 
         MOUSE_CLICKED.getSource().setBackground(PSE.JAVA_AWT.Color.GREEN)
 
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+        print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
 
         return
 
@@ -237,7 +237,7 @@ class CreateSetCarsFrame:
         self.setCarsWindow.dispose()
 
         _psLog.info('Set Cars to track')
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+        print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
 
         return
 

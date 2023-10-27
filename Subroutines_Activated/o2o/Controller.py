@@ -144,9 +144,9 @@ class StartUp:
             self.getWidget('cancel').setVisible(False)
 
             PSE.LM.firePropertyChange('jmriDataSets', False, True)
-            PSE.LM.firePropertyChange('extendedDetails', False, True)
+            # PSE.LM.firePropertyChange('extendedDetails', False, True)
 
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+        print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
         return
 
     def aoLocations(self, EVENT):
@@ -165,9 +165,9 @@ class StartUp:
         Model.updateJmriLocations()
 
         PSE.LM.firePropertyChange('jmriDataSets', False, True)
-        PSE.LM.firePropertyChange('extendedDetails', False, True)
+        # PSE.LM.firePropertyChange('extendedDetails', False, True)
 
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+        print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
 
         return
 
@@ -187,9 +187,9 @@ class StartUp:
         Model.updateJmriTracks()
 
         PSE.LM.firePropertyChange('jmriDataSets', False, True)
-        PSE.LM.firePropertyChange('extendedDetails', False, True)
+        # PSE.LM.firePropertyChange('extendedDetails', False, True)
 
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+        print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
 
         return
     
@@ -208,7 +208,7 @@ class StartUp:
         Model.resetBuiltTrains()
         Model.updateJmriRollingingStock()
 
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+        print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
 
         return
 
@@ -226,7 +226,7 @@ class StartUp:
 
         PSE.LM.firePropertyChange('extendedDetails', False, True)
 
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+        print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
 
         return
 

@@ -147,7 +147,7 @@ class StartUp:
         # targetPath = Model.writePatternReport(textPatternReport, True)
         # PSE.genericDisplayReport(targetPath)
 
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+        print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
 
         return
 
@@ -183,6 +183,6 @@ class StartUp:
 
             _psLog.info('Set Rolling Stock Window created for track ' + track)
 
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+        print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
 
         return

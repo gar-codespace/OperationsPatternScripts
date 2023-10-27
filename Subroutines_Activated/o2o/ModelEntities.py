@@ -24,7 +24,6 @@ def getTpRailroadJson(reportName):
         _psLog.info(fileName + '.json not found')
         return {}
 
-    # PSE.JAVA_IO.File(targetPath).isFile()
     report = PSE.genericReadReport(targetPath)
     tpReport = PSE.loadJson(report)
 
@@ -224,31 +223,3 @@ def parseCarId(carId):
             rsRoad += character
 
     return rsRoad, rsNumber
-
-
-
-
-# def addTypesToTracks():
-#     """
-#     Depricated
-#     """
-
-
-#     tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarTypes
-#     TCM = PSE.JMRI.InstanceManager.getDefault(tc)
-#     typeList = TCM.getNames()
-
-#     tc = PSE.JMRI.jmrit.operations.rollingstock.engines.EngineTypes
-#     TCM = PSE.JMRI.InstanceManager.getDefault(tc)
-
-#     typeList += TCM.getNames()
-
-#     for location in PSE.LM.getList():
-#         for type in typeList:
-#             location.addTypeName(type)      
-
-#     for track in PSE.getAllTracks():
-#         for type in typeList:
-#             track.addTypeName(type)
-
-#     return

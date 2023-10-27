@@ -93,7 +93,7 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+        print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
 
         return
 
@@ -106,7 +106,7 @@ class StartUp:
         if Model.validateScanReport(scannerReportPath):
             Model.applyScanReport(scannerReportPath)
 
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+        print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
 
         _psLog.debug(EVENT)
 

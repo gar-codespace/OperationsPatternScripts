@@ -29,4 +29,4 @@ class ManageGui:
     
         return gui, widgets
 
-    print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+    print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))

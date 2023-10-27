@@ -431,18 +431,18 @@ class Resetter:
         """
         """
 
-        _psLog.debug('resetConfigFile')
+        # _psLog.debug('resetConfigFile')
 
-        self.configFile['Main Script']['LD'].update({"BD":""})
-        self.configFile['Main Script']['LD'].update({"JN":""})
-        self.configFile['Main Script']['LD'].update({"LN":""})
-        self.configFile['Main Script']['LD'].update({"LO":""})
-        self.configFile['Main Script']['LD'].update({"OR":""})
-        self.configFile['Main Script']['LD'].update({"SC":""})
-        self.configFile['Main Script']['LD'].update({"TR":""})
-        self.configFile['Main Script']['LD'].update({"YR":""})
+        # self.configFile['Main Script']['LD'].update({"BD":""})
+        # self.configFile['Main Script']['LD'].update({"JN":""})
+        # self.configFile['Main Script']['LD'].update({"LN":""})
+        # self.configFile['Main Script']['LD'].update({"LO":""})
+        # self.configFile['Main Script']['LD'].update({"OR":""})
+        # self.configFile['Main Script']['LD'].update({"SC":""})
+        # self.configFile['Main Script']['LD'].update({"TR":""})
+        # self.configFile['Main Script']['LD'].update({"YR":""})
 
-        PSE.writeConfigFile(self.configFile)
+        # PSE.writeConfigFile(self.configFile)
 
         return
 

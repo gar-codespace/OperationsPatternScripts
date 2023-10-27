@@ -77,11 +77,8 @@ def rsItemSelected(RESTART_PLUGIN_EVENT):
 
     _psLog.debug(RESTART_PLUGIN_EVENT)
 
-    # PSE.LM.firePropertyChange('windowClosing', False, True)
-
     PSE.closeWindowByName('PatternScriptsFrame')
     PSE.deleteConfigFile()
-    # PSE.makeNewConfigFile()
     PSE.getPsButton().setEnabled(True)
 
     xModule = PSE.IM('MainScript')

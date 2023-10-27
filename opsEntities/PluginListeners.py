@@ -37,19 +37,6 @@ class PatternScriptsFrameListener(PSE.JAVA_AWT.event.WindowListener):
 
         return
 
-    def windowActivated(self, WINDOW_ACTIVATED):
-        """
-        When the plugin window is active, refresh all the included subroutines.
-        """
-
-        _psLog.debug(WINDOW_ACTIVATED)
-
-        # for subroutine in PSE.getSubroutineDirs():
-        #     xModule = 'Subroutines_Activated.{}'.format(subroutine)
-        #     package = __import__(xModule, fromlist=['Model'], level=-1)
-
-        return
-
     def windowClosing(self, WINDOW_CLOSING):
         """
         As the plugin window is closing, remove all the needed listeners,
@@ -68,6 +55,8 @@ class PatternScriptsFrameListener(PSE.JAVA_AWT.event.WindowListener):
             
         return
 
+    def windowActivated(self, WINDOW_ACTIVATED):
+        return
     def windowClosed(self, WINDOW_CLOSED):
         return
     def windowIconified(self, WINDOW_ICONIFIED):

@@ -49,6 +49,21 @@ def initializeSubroutine():
 
 def resetSubroutine():
 
+    _psLog.debug('resetConfigFile')
+
+    configFile = PSE.readConfigFile()
+
+    configFile['jPlus']['LD'].update({"BD":""})
+    configFile['jPlus']['LD'].update({"JN":""})
+    configFile['jPlus']['LD'].update({"LN":""})
+    configFile['jPlus']['LD'].update({"LO":""})
+    configFile['jPlus']['LD'].update({"OR":""})
+    configFile['jPlus']['LD'].update({"SC":""})
+    configFile['jPlus']['LD'].update({"TR":""})
+    configFile['jPlus']['LD'].update({"YR":""})
+
+    PSE.writeConfigFile(configFile)
+
     return
 
 def refreshSubroutine():
@@ -185,14 +200,14 @@ def updateRailroadDetails(widgets):
 
     return
 
-def extendedRailroadDetails():
+def compositeRailroadName():
     """
     Creates the composite railroad name from jPlus fields. 
     The jPlus composite name ['JN'] is added to ['jPlus']['LD']
     Sets 'use extended header' to True.
     """
 
-    _psLog.debug('extendedRailroadDetails')
+    _psLog.debug('compositeRailroadName')
 
     configFile = PSE.readConfigFile()
 

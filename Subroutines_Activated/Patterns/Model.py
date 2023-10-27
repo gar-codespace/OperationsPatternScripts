@@ -8,7 +8,6 @@ Patterns
 from copy import deepcopy
 
 from opsEntities import PSE
-from opsEntities import TextReports
 from Subroutines_Activated.Patterns import ModelEntities
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
@@ -16,7 +15,9 @@ SCRIPT_REV = 20230901
 
 _psLog = PSE.LOGGING.getLogger('OPS.PT.Model')
 
+
 """ Actions called by the plugin listeners """
+
 
 def resetConfigFileItems():
 

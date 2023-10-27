@@ -264,34 +264,6 @@ class ParseRollingStock:
 
         return
 
- 
-    # def getRsOnTrains(self):
-    #     """
-    #     Make a list of all rolling stock that are on built trains.
-    #     """
-
-    #     builtTrainList = []
-    #     for train in PSE.TM.getTrainsByStatusList():
-    #         if train.isBuilt():
-    #             builtTrainList.append(train)
-
-    #     listOfAssignedRs = []
-    #     for train in builtTrainList:
-    #         listOfAssignedRs += PSE.CM.getByTrainList(train)
-    #         listOfAssignedRs += PSE.EM.getByTrainList(train)
-
-    #     return listOfAssignedRs
-
-    # def getSequence(self, rs, object):
-    #     """
-    #     rs is either cars or locos to choose the subset of the hash.
-    #     """
-
-    #     dataHash = self.sequenceHash[rs]
-    #     rsID = object.getRoadName() + ' ' + object.getNumber()
-
-    #     return dataHash[rsID]
-
 
 def getTrackNamesByLocation(trackType):
 

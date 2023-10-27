@@ -149,7 +149,7 @@ class Controller(PSE.JMRI.jmrit.automat.AbstractAutomaton):
 
         runTime = PSE.TIME.time() - startTime
         self.psLog.info('Main script run time (sec): ' + str(round(runTime, 4)))
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+        print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
 
         return False
 

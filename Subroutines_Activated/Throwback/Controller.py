@@ -10,7 +10,6 @@ Any or all of the XML files can be 'thrown back' to any one of the commits.
 from opsEntities import PSE
 from Subroutines_Activated.Throwback import Model
 from Subroutines_Activated.Throwback import View
-# from Subroutines_Activated.Throwback import SubroutineListeners
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901
@@ -157,7 +156,7 @@ class StartUp:
 
         PSE.LM.firePropertyChange('extendedDetails', False, True)
 
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+        print('{} {}'.format(SCRIPT_NAME, SCRIPT_REV))
 
         return
 

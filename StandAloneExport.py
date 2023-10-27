@@ -60,7 +60,7 @@ class StandAloneExport(jmri.jmrit.automat.AbstractAutomaton):
 
         self.psLog.info('ConvertJmriManifestStandAlone')
 
-        print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
+        print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
 
         return False
 
