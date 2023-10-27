@@ -31,9 +31,9 @@ def getSubroutineDropDownItem():
 
     configFile = PSE.readConfigFile()
     if configFile[subroutineName]['SV']:
-        menuText = PSE.getBundleItem('Hide') + ' ' + __package__
+        menuText = '{} {}'.format(PSE.getBundleItem('Hide'), __package__)
     else:
-        menuText = PSE.getBundleItem('Show') + ' ' + __package__
+        menuText = '{} {}'.format(PSE.getBundleItem('Show'), __package__)
 
     menuItem.setName(__package__)
     menuItem.setText(menuText)

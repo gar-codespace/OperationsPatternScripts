@@ -710,8 +710,8 @@ class Attributator:
 
         _psLog.debug('addCarLoads')
 
-        empty = PSE.getBundleItem('Empty')
-        load = PSE.getBundleItem('load')
+        # empty = PSE.getBundleItem('Empty')
+        # load = PSE.getBundleItem('load')
 
         tc = PSE.JMRI.jmrit.operations.rollingstock.cars.CarLoads
         TCM = PSE.JMRI.InstanceManager.getDefault(tc)
@@ -1553,7 +1553,8 @@ class RollingStockulator:
             track = line[4]
             if not self.testLocale(location, track):
                 _psLog.critical('ALERT: Not a valid locale: ' + line[0] + ', ' + location + ', ' + track)
-                PSE.openOutputFrame(PSE.getBundleItem('ALERT: Not a valid locale:') + line[0] + ', ' + location + ', ' + track)
+                # PSE.openOutputFrame(PSE.getBundleItem('ALERT: Not a valid locale:') + line[0] + ', ' + location + ', ' + track)
+                PSE.openOutputFrame('{}{}, {}, {}'.format(PSE.getBundleItem('ALERT: Not a valid locale:'), line[0], location, track))
                 PSE.openOutputFrame(PSE.getBundleItem('ALERT: rolling stock skipped, parsing error.'))
                 continue
 
@@ -1770,7 +1771,8 @@ class RollingStockulator:
                     litmus = 1
 
             if litmus == 0:
-                PSE.openOutputFrame(PSE.getBundleItem('ALERT: Schedule item not found for car:') + ' ' + car.getRoadName() + ' ' + car.getNumber() + ' ' + car.getTrackName())
+                # PSE.openOutputFrame(PSE.getBundleItem('ALERT: Schedule item not found for car:') + ' ' + car.getRoadName() + ' ' + car.getNumber() + ' ' + car.getTrackName())
+                PSE.openOutputFrame('{} {} {} {}'.format('ALERT: Schedule item not found for car:'), car.getRoadName(), car.getNumber(), car.getTrackName())
                 PSE.openOutputFrame(PSE.getBundleItem('Track does not serve this car type'))
 
         return

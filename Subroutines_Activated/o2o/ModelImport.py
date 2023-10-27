@@ -72,7 +72,8 @@ def boilerplateErrors():
 
     b = PSE.getBundleItem('From TrainPlayer, re-export layout to JMRI.')
     c = PSE.getBundleItem('TrainPlayer layout not imported to JMRI.')
-    message = b + '\n' + c + '\n'
+    # message = b + '\n' + c + '\n'
+    message = '{}\n{}\n'.format(b, c)
 
     PSE.openOutputFrame(message)
 
