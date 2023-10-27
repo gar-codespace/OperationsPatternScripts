@@ -11,7 +11,7 @@ from opsEntities import PSE
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901
 
-def getDetailsByTrack(selectedTracks):
+def getDetailsByTrack(selectedTracks, reportToggle):
     """
     Returns a list of dictionaries.
     Copies structure of JMRI manifest.
@@ -23,7 +23,7 @@ def getDetailsByTrack(selectedTracks):
     locationName = PSE.readConfigFile('Patterns')['PL']
     location = PSE.LM.getLocationByName(locationName)
 
-    parseRollingStock = ParseRollingStock()
+    parseRollingStock = ParseRollingStock(reportToggle)
 
     detailsByTracks = []
 
@@ -54,16 +54,20 @@ def getDetailsByTrack(selectedTracks):
 
 
 class ParseRollingStock:
+    """
+    Report toggle:
+    true if the list data is for a OPS pattern report,
+    false if the data is for a OPS switch list
+    """
 
-    def __init__(self):
+    def __init__(self, reportToggle):
+
+        self.reportToggle = reportToggle
 
         self.configFile = PSE.readConfigFile()
-        # self.isSequence, self.sequenceHash = PSE.getSequenceHash()
 
         self.locationName = self.configFile['Patterns']['PL']
         self.location = PSE.LM.getLocationByName(self.locationName)
-
-        # self.rsOnTrain = self.getRsOnTrains()
 
         self.trackName = ''
         self.locoDetails = []
@@ -88,7 +92,8 @@ class ParseRollingStock:
             locoDetails.update(self.getDetailsForRollingStock(loco))
             self.locoDetails.append(locoDetails)
 
-        self.sortLocoList()
+        if self.reportToggle:
+            self.sortLocosByAttribute()
 
         return self.locoDetails
 
@@ -109,7 +114,8 @@ class ParseRollingStock:
             carDetails.update(self.getDetailsForRollingStock(car))
             self.carDetails.append(carDetails)
 
-        self.sortCarList()
+        if self.reportToggle:
+            self.sortCarsByAttribute()
 
         return self.carDetails
 
@@ -187,35 +193,8 @@ class ParseRollingStock:
         rsDetailDict['trainName'] = rs.getTrainName()
 
         return rsDetailDict
- 
-    # def getRsOnTrains(self):
-    #     """
-    #     Make a list of all rolling stock that are on built trains.
-    #     """
 
-    #     builtTrainList = []
-    #     for train in PSE.TM.getTrainsByStatusList():
-    #         if train.isBuilt():
-    #             builtTrainList.append(train)
-
-    #     listOfAssignedRs = []
-    #     for train in builtTrainList:
-    #         listOfAssignedRs += PSE.CM.getByTrainList(train)
-    #         listOfAssignedRs += PSE.EM.getByTrainList(train)
-
-    #     return listOfAssignedRs
-
-    # def getSequence(self, rs, object):
-    #     """
-    #     rs is either cars or locos to choose the subset of the hash.
-    #     """
-
-    #     dataHash = self.sequenceHash[rs]
-    #     rsID = object.getRoadName() + ' ' + object.getNumber()
-
-    #     return dataHash[rsID]
-
-    def sortLocoList(self):
+    def sortLocosByAttribute(self):
         """
         Try/Except protects against bad edit of config file
         Sort order of PSE.readConfigFile('US')['SL'] is top down
@@ -250,7 +229,7 @@ class ParseRollingStock:
 
         return
 
-    def sortCarList(self):
+    def sortCarsByAttribute(self):
         """
         Sorts the car list by value in self.configFile['Patterns']['US']['SC']
         A value of 0 in self.configFile['Patterns']['US']['SC'] means the item is excluded
@@ -284,6 +263,35 @@ class ParseRollingStock:
         print('{} cars were sorted'.format(str(len(self.carDetails))))
 
         return
+
+ 
+    # def getRsOnTrains(self):
+    #     """
+    #     Make a list of all rolling stock that are on built trains.
+    #     """
+
+    #     builtTrainList = []
+    #     for train in PSE.TM.getTrainsByStatusList():
+    #         if train.isBuilt():
+    #             builtTrainList.append(train)
+
+    #     listOfAssignedRs = []
+    #     for train in builtTrainList:
+    #         listOfAssignedRs += PSE.CM.getByTrainList(train)
+    #         listOfAssignedRs += PSE.EM.getByTrainList(train)
+
+    #     return listOfAssignedRs
+
+    # def getSequence(self, rs, object):
+    #     """
+    #     rs is either cars or locos to choose the subset of the hash.
+    #     """
+
+    #     dataHash = self.sequenceHash[rs]
+    #     rsID = object.getRoadName() + ' ' + object.getNumber()
+
+    #     return dataHash[rsID]
+
 
 def getTrackNamesByLocation(trackType):
 

@@ -26,11 +26,13 @@ def dropDownMenuItem(EVENT):
     subroutineName = EVENT.getSource().toString()
 
     if configFile[subroutineName]['SV']: # Hide this subroutine
-        menuText = PSE.getBundleItem('Show') + ' ' + subroutineName
+        # menuText = PSE.getBundleItem('Show') + ' ' + subroutineName
+        menuText = '{} {}'.format(PSE.getBundleItem('Show'), subroutineName)
         configFile[subroutineName].update({'SV':False})
         _psLog.info('Hide ' + subroutineName)
     else: # Show this subroutine
-        menuText = PSE.getBundleItem('Hide') + ' ' + subroutineName
+        # menuText = PSE.getBundleItem('Hide') + ' ' + subroutineName
+        menuText = '{} {}'.format(PSE.getBundleItem('Hide'), subroutineName)
         configFile[subroutineName].update({'SV':True})
         _psLog.info('Show ' + subroutineName)
 

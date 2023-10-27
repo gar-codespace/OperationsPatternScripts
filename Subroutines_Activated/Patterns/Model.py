@@ -167,7 +167,7 @@ def makeJsonTrackPattern(selectedTracks):
     """
     
     jsonTrackPattern = makeReportHeader()
-    jsonTrackPattern['locations'] = ModelEntities.getDetailsByTrack(selectedTracks)
+    jsonTrackPattern['locations'] = ModelEntities.getDetailsByTrack(selectedTracks, True)
 
     fileName = PSE.getBundleItem('ops-Pattern Report') + '.json'    
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
@@ -284,7 +284,7 @@ def getSetCarsData(selectedTrack):
     """
 
     setCarsData = makeReportHeader()
-    setCarsData['locations'] = ModelEntities.getDetailsByTrack([selectedTrack])
+    setCarsData['locations'] = ModelEntities.getDetailsByTrack([selectedTrack], False)
 
     return setCarsData
 

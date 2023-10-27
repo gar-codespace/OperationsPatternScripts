@@ -510,11 +510,15 @@ class MakeSetCarsEqptRows():
             box.add(label)
             combinedInputLine.add(box)
 
-            lineWidth = self.reportWidth['Final_Dest']
+            lineWidth = self.reportWidth['FD&Track']
             fd = car['finalDestination']['userName']
+            ft = car['finalDestination']['track']['userName']
             if not fd:
                 fd = self.configFile['Patterns']['US']['FD']
-            rowItem = fd.ljust(lineWidth)
+                ft = self.configFile['Patterns']['US']['FT']
+
+            fdt = '{}-{}'.format(fd, ft)
+            rowItem = fdt.ljust(lineWidth)
             label = PSE.JAVX_SWING.JLabel(rowItem)
             box = makeSwingBox(lineWidth * self.panelWidth, self.panelHeight)
             box.add(label)
