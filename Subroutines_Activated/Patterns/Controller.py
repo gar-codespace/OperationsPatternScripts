@@ -40,6 +40,33 @@ def getSubroutineDropDownItem():
 
     return menuItem
 
+def opsPreProcess(message=None):
+
+    if message == 'TrainBuilt':
+        train = PSE.getNewestTrain()
+
+        manifest = PSE.getTrainManifest(train)
+        manifest = Model.extendJmriManifestJson(manifest)
+        PSE.saveManifest(manifest, train)
+
+    return
+
+def opsProcess(message=None):
+
+    return
+
+def opsPostProcess(message=None):
+
+    if message == 'opsPatternReport':
+        textPatternReport = TextReports.opsTextPatternReport()
+        targetPath = Model.writePatternReport(textPatternReport, True)
+        PSE.genericDisplayReport(targetPath)
+
+    if message == 'opsSwitchList':
+        SetCarsForm_Controller.opsPostProcess()
+        
+    return
+
 
 class StartUp:
     """
@@ -107,18 +134,18 @@ class StartUp:
         selectedTracks.sort()
 
         Model.makeJsonTrackPattern(selectedTracks) # Write to a file
-        textPatternReport = TextReports.opsTextPatternReport()
-
-
-
 
         # Add CSV report maker
 
+        PSE.TM.firePropertyChange('opsPatternReport', False, True)
 
 
 
-        targetPath = Model.writePatternReport(textPatternReport, True)
-        PSE.genericDisplayReport(targetPath)
+
+
+        # textPatternReport = TextReports.opsTextPatternReport()
+        # targetPath = Model.writePatternReport(textPatternReport, True)
+        # PSE.genericDisplayReport(targetPath)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

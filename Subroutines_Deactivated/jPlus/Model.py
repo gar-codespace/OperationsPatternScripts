@@ -78,7 +78,7 @@ def refreshSubroutine():
 
     return
 
-def opsAction1(message=None):
+def opsPreProcess(message=None):
     """
     Modifies the trains json manifest with the extended railroad detail.
     """
@@ -92,7 +92,7 @@ def opsAction1(message=None):
 
     return
 
-def opsAction2(message=None):
+def opsProcess(message=None):
     """
     Writes a new text manifest from the extended manifest.
     """
@@ -108,7 +108,7 @@ def opsAction2(message=None):
 
     return
 
-def opsAction3(message=None):
+def opsPostProcess(message=None):
     
     tpDirectory = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData', 'Roaming', 'TrainPlayer', 'Reports')
 # Make a work event list from a JMRI manifest

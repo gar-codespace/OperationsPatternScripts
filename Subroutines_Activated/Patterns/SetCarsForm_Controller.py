@@ -22,6 +22,22 @@ SCRIPT_REV = 20230901
 
 _psLog = PSE.LOGGING.getLogger('OPS.PT.ControllerSetCarsForm')
 
+def opsPreProcess(message=None):
+
+    return
+
+def opsProcess(message=None):
+
+    return
+
+def opsPostProcess(message=None):
+
+    textSwitchList = TextReports.opsTextSwitchList()
+    targetPath = Model.writePatternReport(textSwitchList, False)
+    PSE.genericDisplayReport(targetPath)
+
+    return
+
 
 class CreateSetCarsFrame:
     """
@@ -135,17 +151,13 @@ class CreateSetCarsFrame:
         
         userInputList = SetCarsForm_Model.getUserInputList(self.buttonDict['textBoxEntry'])
         mergedForm = SetCarsForm_Model.mergeSetCarsForm(self.setCarsData, userInputList)
-
         SetCarsForm_Model.appendSwitchList(mergedForm) # Write to a file
 
-        textSwitchList = TextReports.opsTextSwitchList()
+        # Make a CSV switch list
 
-        targetPath = Model.writePatternReport(textSwitchList, False)
-        PSE.genericDisplayReport(targetPath)
+        PSE.TM.firePropertyChange('opsSwitchList', False, True)
 
         MOUSE_CLICKED.getSource().setBackground(PSE.JAVA_AWT.Color.GREEN)
-    # Plays well with others
-        PSE.TM.firePropertyChange('opsSwitchList', False, True)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 

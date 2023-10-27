@@ -32,17 +32,17 @@ def refreshSubroutine():
 
     return
 
-def opsAction1(message=None):
+# def opsPreProcess(message=None):
 
-    return
+#     return
 
-def opsAction2(message=None):
+# def opsProcess(message=None):
 
-    return
+#     return
 
-def opsAction3(message=None):
+# def opsPostProcess(message=None):
 
-    return
+#     return
 
 """ Routines specific to this subroutine """
 

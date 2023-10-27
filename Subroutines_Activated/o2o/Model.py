@@ -8,8 +8,6 @@ From tpRailroadData.json, a JMRI railroad is created or updated.
 """
 
 from opsEntities import PSE
-from opsEntities import TextReports
-from Subroutines_Activated.o2o import ModelWorkEvents
 from Subroutines_Activated.o2o import ModelEntities
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
@@ -35,43 +33,6 @@ def refreshSubroutine():
 
     return
 
-def opsAction1(message=None):
-
-    return
-
-def opsAction2(message=None):
-
-    return
-
-def opsAction3(message=None):
-    """
-    Create the work event lists.
-    """
-
-    tpDirectory = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData', 'Roaming', 'TrainPlayer', 'Reports')
-# Make a work event list from a JMRI manifest
-    if PSE.JAVA_IO.File(tpDirectory).isDirectory() and message == 'TrainBuilt':   
-        train = PSE.getNewestTrain()
-        manifest = PSE.getTrainManifest(train)
-        o2oWorkEvents = ModelWorkEvents.o2oWorkEvents(manifest)
-
-        outPutName = 'JMRI Report - o2o Workevents.csv'
-        o2oWorkEventPath = PSE.OS_PATH.join(tpDirectory, outPutName)
-        PSE.genericWriteReport(o2oWorkEventPath, o2oWorkEvents)
-# Make a work event list from an OPS switch list
-    elif PSE.JAVA_IO.File(tpDirectory).isDirectory() and message == 'opsSwitchList':   
-        manifest = PSE.getOpsSwitchList()
-        o2oWorkEvents = ModelWorkEvents.o2oWorkEvents(manifest)
-
-        outPutName = 'JMRI Report - o2o Workevents.csv'
-        o2oWorkEventPath = PSE.OS_PATH.join(tpDirectory, outPutName)
-        PSE.genericWriteReport(o2oWorkEventPath, o2oWorkEvents)
-
-    else:
-        _psLog.warning('TrainPlayer Reports destination directory not found')
-        print('TrainPlayer Reports destination directory not found')    
-    
-    return
 
 """ Routines specific to this subroutine """
 

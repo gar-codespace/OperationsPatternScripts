@@ -9,9 +9,9 @@ to import from and export to the JMRI railroad.
 """
 
 from opsEntities import PSE
-# from Subroutines_Activated.o2o import SubroutineListeners
 from Subroutines_Activated.o2o import Model
 from Subroutines_Activated.o2o import ModelImport
+from Subroutines_Activated.o2o import ModelWorkEvents
 from Subroutines_Activated.o2o import View
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
@@ -35,6 +35,43 @@ def getSubroutineDropDownItem():
     menuItem.setText(menuText)
 
     return menuItem
+
+def opsPreProcess(message=None):
+
+    return
+
+def opsProcess(message=None):
+
+    return
+
+def opsPostProcess(message=None):
+    """
+    Create the work event lists.
+    """
+
+    tpDirectory = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData', 'Roaming', 'TrainPlayer', 'Reports')
+    if not tpDirectory:
+        _psLog.warning('TrainPlayer Reports destination directory not found')
+        print('TrainPlayer Reports destination directory not found')
+
+        return    
+
+    if message == 'TrainBuilt':   
+        train = PSE.getNewestTrain()
+        workList = PSE.getTrainManifest(train)
+
+    elif message == 'opsSwitchList':   
+        workList = PSE.getOpsSwitchList()
+
+    else:
+        return
+
+    o2oWorkEvents = ModelWorkEvents.o2oWorkEvents(workList)
+    outPutName = 'JMRI Report - o2o Workevents.csv'
+    o2oWorkEventPath = PSE.OS_PATH.join(tpDirectory, outPutName)
+    PSE.genericWriteReport(o2oWorkEventPath, o2oWorkEvents)
+
+    return
 
 
 class StartUp:

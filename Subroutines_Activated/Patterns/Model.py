@@ -8,6 +8,7 @@ Patterns
 from copy import deepcopy
 
 from opsEntities import PSE
+from opsEntities import TextReports
 from Subroutines_Activated.Patterns import ModelEntities
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
@@ -39,24 +40,29 @@ def refreshSubroutine():
 
     return
 
-def opsAction1(message=None):
+# def opsPreProcess(message=None):
 
-    if message == 'TrainBuilt':
-        train = PSE.getNewestTrain()
+#     if message == 'TrainBuilt':
+#         train = PSE.getNewestTrain()
 
-        manifest = PSE.getTrainManifest(train)
-        manifest = extendJmriManifestJson(manifest)
-        PSE.saveManifest(manifest, train)
-
-    return
-
-def opsAction2(message=None):
+#         manifest = PSE.getTrainManifest(train)
+#         manifest = extendJmriManifestJson(manifest)
+#         PSE.saveManifest(manifest, train)
 
     return
 
-def opsAction3(message=None):
+# def opsProcess(message=None):
 
-    return
+#     return
+
+# def opsPostProcess(message=None):
+
+#     if message == 'opsPatternReport':
+#         textPatternReport = TextReports.opsTextPatternReport()
+#         targetPath = writePatternReport(textPatternReport, True)
+#         PSE.genericDisplayReport(targetPath)
+
+#     return
 
 def extendJmriManifestJson(manifest):
     """

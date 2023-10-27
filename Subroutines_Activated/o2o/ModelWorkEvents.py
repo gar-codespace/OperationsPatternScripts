@@ -6,7 +6,7 @@ Creates the TrainPlayer JMRI Report - o2o Workevents.csv file from either Patter
 """
 
 from opsEntities import PSE
-from Subroutines_Activated.o2o import ModelEntities
+from opsEntities import TRE
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901
@@ -49,7 +49,7 @@ def _makeLine(rs):
 
     try: # Cars
         loadName = rs['load']
-        lt = PSE.getShortLoadType(rs)
+        lt = TRE.getShortLoadType(rs)
     except: # Locos
         loadName = rs['model']
         lt = PSE.getBundleItem('Occupied').upper()[0]

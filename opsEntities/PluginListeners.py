@@ -250,35 +250,61 @@ class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
 
             _psLog.debug(logMessage)
 
-        if PROPERTY_CHANGE_EVENT.propertyName == 'TrainBuilt' and PROPERTY_CHANGE_EVENT.newValue == True:
-        # Fired from JMRI.
-            train = PROPERTY_CHANGE_EVENT.getSource()
-        # modifies the json manifest on a per subroutine basis
+        if PROPERTY_CHANGE_EVENT.propertyName == 'opsPatternReport' and PROPERTY_CHANGE_EVENT.newValue == True:
+
             for subroutine in PSE.getSubroutineDirs():
                 xModule = 'Subroutines_Activated.{}'.format(subroutine)
-                package = __import__(xModule, fromlist=['Model'], level=-1)
-                package.Model.opsAction1('TrainBuilt')
-        # writes a new OPS formatted manifest from the trains manifest json
+                package = __import__(xModule, fromlist=['Controller'], level=-1)
+                package.Controller.opsPreProcess('opsPatternReport')
+
             for subroutine in PSE.getSubroutineDirs():
                 xModule = 'Subroutines_Activated.{}'.format(subroutine)
-                package = __import__(xModule, fromlist=['Model'], level=-1)
-                package.Model.opsAction2('TrainBuilt')
-        # # writes the o2o work event list
-        #     for subroutine in PSE.getSubroutineDirs():
-        #         xModule = 'Subroutines_Activated.{}'.format(subroutine)
-        #         package = __import__(xModule, fromlist=['Model'], level=-1)
-        #         package.Model.opsAction3('TrainBuilt')
+                package = __import__(xModule, fromlist=['Controller'], level=-1)
+                package.Controller.opsProcess('opsPatternReport')
+
+            for subroutine in PSE.getSubroutineDirs():
+                xModule = 'Subroutines_Activated.{}'.format(subroutine)
+                package = __import__(xModule, fromlist=['Controller'], level=-1)
+                package.Controller.opsPostProcess('opsPatternReport')
                 
             _psLog.debug(logMessage)
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'opsSwitchList' and PROPERTY_CHANGE_EVENT.newValue == True:
-        # Fired from OPS
-        # # writes the o2o work event list
-        #     for subroutine in PSE.getSubroutineDirs():
-        #         xModule = 'Subroutines_Activated.{}'.format(subroutine)
-        #         package = __import__(xModule, fromlist=['Model'], level=-1)
-        #         package.Model.opsAction3('opsSwitchList')
 
+            for subroutine in PSE.getSubroutineDirs():
+                xModule = 'Subroutines_Activated.{}'.format(subroutine)
+                package = __import__(xModule, fromlist=['Controller'], level=-1)
+                package.Controller.opsPreProcess('opsSwitchList')
+
+            for subroutine in PSE.getSubroutineDirs():
+                xModule = 'Subroutines_Activated.{}'.format(subroutine)
+                package = __import__(xModule, fromlist=['Controller'], level=-1)
+                package.Controller.opsProcess('opsSwitchList')
+
+            for subroutine in PSE.getSubroutineDirs():
+                xModule = 'Subroutines_Activated.{}'.format(subroutine)
+                package = __import__(xModule, fromlist=['Controller'], level=-1)
+                package.Controller.opsPostProcess('opsSwitchList')
+                
+            _psLog.debug(logMessage)
+
+        if PROPERTY_CHANGE_EVENT.propertyName == 'TrainBuilt' and PROPERTY_CHANGE_EVENT.newValue == True:
+
+            for subroutine in PSE.getSubroutineDirs():
+                xModule = 'Subroutines_Activated.{}'.format(subroutine)
+                package = __import__(xModule, fromlist=['Controller'], level=-1)
+                package.Controller.opsPreProcess('TrainBuilt')
+
+            for subroutine in PSE.getSubroutineDirs():
+                xModule = 'Subroutines_Activated.{}'.format(subroutine)
+                package = __import__(xModule, fromlist=['Controller'], level=-1)
+                package.Controller.opsProcess('TrainBuilt')
+
+            for subroutine in PSE.getSubroutineDirs():
+                xModule = 'Subroutines_Activated.{}'.format(subroutine)
+                package = __import__(xModule, fromlist=['Controller'], level=-1)
+                package.Controller.opsPostProcess('TrainBuilt')
+                
             _psLog.debug(logMessage)
 
         return

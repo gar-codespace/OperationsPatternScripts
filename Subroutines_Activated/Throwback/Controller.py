@@ -37,6 +37,18 @@ def getSubroutineDropDownItem():
 
     return menuItem
 
+def opsPreProcess(message=None):
+
+    return
+
+def opsProcess(message=None):
+
+    return
+
+def opsPostProcess(message=None):
+
+    return
+
 
 class StartUp:
     """
