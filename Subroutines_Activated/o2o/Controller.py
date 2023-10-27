@@ -104,7 +104,7 @@ class StartUp:
     def activateWidgets(self):
         """
         The *.getName value is the name of the action for the widget.
-        IE: initializeJmriRailroad, updateJmriLocations
+        IE: initializeJmriRailroad, aoLocations
         """
 
         for widget in self.widgets:
@@ -149,9 +149,9 @@ class StartUp:
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
         return
 
-    def updateJmriLocations(self, EVENT):
+    def aoLocations(self, EVENT):
         """
-        Applies changes made to the TrainPlayer/OC/Locations tab.
+        Import Trainplayer's Advanced Ops/Locations button.
         """
 
         _psLog.debug(EVENT)
@@ -171,9 +171,9 @@ class StartUp:
 
         return
 
-    def updateJmriTracks(self, EVENT):
+    def aoIndustries(self, EVENT):
         """
-        Applies changes made to the TrainPlayer/OC/Industries tab.
+        Import Trainplayer's Advanced Ops/Industries button.
         """
 
         _psLog.debug(EVENT)
@@ -193,9 +193,9 @@ class StartUp:
 
         return
     
-    def updateJmriRollingingStock(self, EVENT):
+    def aoCars(self, EVENT):
         """
-        Writes new or updated car and engine data.
+        Import Trainplayer's Advanced Ops/Cars button.
         """
 
         _psLog.debug(EVENT)
@@ -212,9 +212,9 @@ class StartUp:
 
         return
 
-    def updateJmriProperties(self, EVENT):
+    def extendedDetail(self, EVENT):
         """
-        Writes the extended railroad details.
+        Import Personalized Settings/Extended Detail button.
         """
 
         _psLog.debug(EVENT)
@@ -222,7 +222,7 @@ class StartUp:
         if not ModelImport.importTpRailroad():
             return
         
-        Model.updateJmriProperties()
+        Model._updateJmriProperties()
 
         PSE.LM.firePropertyChange('extendedDetails', False, True)
 

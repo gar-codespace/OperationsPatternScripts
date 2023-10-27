@@ -24,15 +24,13 @@ def resetConfigFileItems():
 
 def initializeSubroutine():
 
-    resetSubroutine()
+    divComboUpdater()
+    locComboUpdater()
+    makeTrackRows()
         
     return
 
 def resetSubroutine():
-
-    divComboUpdater()
-    locComboUpdater()
-    makeTrackRows()
 
     return
 
@@ -40,49 +38,9 @@ def refreshSubroutine():
 
     return
 
-# def opsPreProcess(message=None):
 
-#     if message == 'TrainBuilt':
-#         train = PSE.getNewestTrain()
+""" Routines specific to this subroutine """
 
-#         manifest = PSE.getTrainManifest(train)
-#         manifest = extendJmriManifestJson(manifest)
-#         PSE.saveManifest(manifest, train)
-
-    return
-
-# def opsProcess(message=None):
-
-#     return
-
-# def opsPostProcess(message=None):
-
-#     if message == 'opsPatternReport':
-#         textPatternReport = TextReports.opsTextPatternReport()
-#         targetPath = writePatternReport(textPatternReport, True)
-#         PSE.genericDisplayReport(targetPath)
-
-#     return
-
-def extendJmriManifestJson(manifest):
-    """
-    Add attributes necessary for the track pattern and switch lists.
-    """
-
-    for location in manifest['locations']:
-        for car in location['cars']['add']:
-            carObj = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
-            car['finalDestination']={'userName':carObj.getFinalDestinationName(), 'track':{'userName':carObj.getFinalDestinationTrackName()}}
-            car['loadType'] = carObj.getLoadType()
-            car['division'] = PSE.LM.getLocationByName(car['location']['userName']).getDivisionName()
-
-        for car in location['cars']['remove']:
-            carObj = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
-            car['finalDestination']={'userName':carObj.getFinalDestinationName(), 'track':{'userName':carObj.getFinalDestinationTrackName()}}
-            car['loadType'] = carObj.getLoadType()
-            car['division'] = PSE.LM.getLocationByName(car['location']['userName']).getDivisionName()
-
-    return manifest
 
 def divComboUpdater():
     """

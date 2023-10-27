@@ -79,7 +79,7 @@ def updateJmriLocations():
     """
     Mini controller.
     Action for the Import Locations button.
-    Changes are rippled through Industries, Cars and Extended Header
+    Changes are rippled through Industries, Cars and Extended Detail
     Does not change Trains and Routes.
     Schedules are rewritten from scratch.
     Called by:
@@ -123,7 +123,7 @@ def updateJmriLocations():
     _psLog.info('JMRI rolling stock updated from TrainPlayer data')
 
 # This part does the extended header
-    ExtendedDetails().update()
+    _updateJmriProperties()
 
     return
 
@@ -131,7 +131,7 @@ def updateJmriTracks():
     """
     Mini controller.
     Action for the Import Industries button.
-    Changes are rippled through Cars and Extended Header
+    Changes are rippled through Cars and Extended Detail
     Uses LM to update tracks and track attributes.
     Called by:
     Controller.Startup.updateJmriTracks
@@ -161,7 +161,7 @@ def updateJmriTracks():
     _psLog.info('JMRI rolling stock updated from TrainPlayer data')
 
 # This part does the extended header
-    ExtendedDetails().update()
+    _updateJmriProperties()
 
     return
 
@@ -169,7 +169,7 @@ def updateJmriRollingingStock():
     """
     Mini controller.
     Action for the Import Cars button.
-    Changes are rippled through Extended Header
+    Changes are rippled through Extended Detail
     Loads cars at spurs per schedule.
     Sets cars load at staging to E.
     Called by:
@@ -188,16 +188,36 @@ def updateJmriRollingingStock():
     _psLog.info('JMRI rolling stock updated from TrainPlayer data')
 
 # This part does the extended header
-    ExtendedDetails().update()
+    _updateJmriProperties()
     
     return
 
-def updateJmriProperties():
+def _updateJmriProperties():
     """
-    Action on press of the Import Extended Header button.
+    Helper function updates JMRI properties from o2o import detail.
     """
+    _psLog.debug('extendedDetail')
 
-    ExtendedDetails().update()
+    tpRailroadData = ModelEntities.getTpRailroadJson('tpRailroadData')
+    OSU = PSE.JMRI.jmrit.operations.setup
+# Set the railroad name
+    try:
+        OSU.Setup.setRailroadName(tpRailroadData['Extended_layoutName'])
+    except:
+        pass
+# Set the year
+    try:
+        OSU.Setup.setYearModeled(tpRailroadData['Extended_year'])
+    except:
+        pass
+# Set the scale
+    try:
+        layoutScale = tpRailroadData['Extended_scale']
+        OSU.Setup.setScale(PSE.readConfigFile()['Main Script']['SR'][layoutScale])
+    except:
+        pass
+
+    PSE.JMRI.jmrit.operations.setup.OperationsSettingsPanel().savePreferences()
 
     _psLog.info('JMRI railroad properties updated from TrainPlayer data')
 

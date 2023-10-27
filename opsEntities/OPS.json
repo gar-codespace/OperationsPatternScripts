@@ -97,7 +97,6 @@
         "UX" : "UseSomethingElse"
       },
       "TC" : "UD",
-      "EH" : false,
       "SE" : "utf-8",
       "ES" : "CA",
       "EO" : {
@@ -110,7 +109,7 @@
       "PW" : 1000,
       "PX" : 0,
       "PY" : 0,
-      "RV" : 20231003,
+      "RV" : 20231004,
       "GP" : "https://github.com/gar-codespace/OperationsPatternScripts",
       "EC" : {
         "400" : "400 - Bad Request: Unable to translate the current language.",
@@ -118,16 +117,6 @@
         "403" : "403 - Forbidden. The key is invalid."
       }
       },
-    "LD" : {
-      "OR" : "",
-      "TR" : "",
-      "LO" : "",
-      "YR" : "",
-      "BD" : "",
-      "SC" : "",
-      "LN" : "",
-      "JN" : ""
-    },
     "SR" : {
       "Z" : 1,
       "N" : 2,

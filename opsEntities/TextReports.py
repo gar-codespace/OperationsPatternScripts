@@ -213,7 +213,7 @@ def opsTextManifest(manifest):
     textManifest = ''
 
 # Header
-    textManifest += PSE.getExtendedRailroadName() + '\n'
+    textManifest += manifest['railroad'] + '\n'
     textManifest += '\n'
     textManifest += '{}, {}'.format(manifest['userName'], manifest['description']) + '\n'
     epochTime = PSE.convertIsoTimeToEpoch(manifest['date'])

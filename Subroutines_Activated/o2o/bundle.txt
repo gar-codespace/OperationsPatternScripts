@@ -15,7 +15,7 @@ Check TrainPlayer-Advanced Ops-Industries for errors.
 Check TrainPlayer-Advanced Ops-Locales for semicolon.
 Cancel
 Empty
-Extended Header
+Extended Detail
 From TrainPlayer, re-export layout to JMRI.
 Generic
 Import Personalized Settings

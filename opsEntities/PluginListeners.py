@@ -5,7 +5,6 @@ Lieteners for JMRI events.
 """
 
 from opsEntities import PSE
-from opsBundle import Bundle
 
 SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
 SCRIPT_REV = 20230901
@@ -45,10 +44,9 @@ class PatternScriptsFrameListener(PSE.JAVA_AWT.event.WindowListener):
 
         _psLog.debug(WINDOW_ACTIVATED)
 
-        for subroutine in PSE.getSubroutineDirs():
-            xModule = 'Subroutines_Activated.{}'.format(subroutine)
-            package = __import__(xModule, fromlist=['Model'], level=-1)
-            package.Model.refreshSubroutine()
+        # for subroutine in PSE.getSubroutineDirs():
+        #     xModule = 'Subroutines_Activated.{}'.format(subroutine)
+        #     package = __import__(xModule, fromlist=['Model'], level=-1)
 
         return
 
@@ -309,6 +307,7 @@ class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
 
         return
 
+
 class LocationsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     """
     Events that are triggered with changes to JMRI Locations.
@@ -325,7 +324,7 @@ class LocationsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
             for subroutine in PSE.getSubroutineDirs():
                 xModule = 'Subroutines_Activated.{}'.format(subroutine)
                 package = __import__(xModule, fromlist=['Model'], level=-1)
-                package.Model.resetSubroutine()
+                package.Model.initializeSubroutine()
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
@@ -334,7 +333,7 @@ class LocationsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
             for subroutine in PSE.getSubroutineDirs():
                 xModule = 'Subroutines_Activated.{}'.format(subroutine)
                 package = __import__(xModule, fromlist=['Model'], level=-1)
-                package.Model.resetSubroutine()
+                package.Model.initializeSubroutine()
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
@@ -343,7 +342,7 @@ class LocationsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
             for subroutine in PSE.getSubroutineDirs():
                 xModule = 'Subroutines_Activated.{}'.format(subroutine)
                 package = __import__(xModule, fromlist=['Model'], level=-1)
-                package.Model.resetSubroutine()
+                package.Model.initializeSubroutine()
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
@@ -352,7 +351,7 @@ class LocationsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
             for subroutine in PSE.getSubroutineDirs():
                 xModule = 'Subroutines_Activated.{}'.format(subroutine)
                 package = __import__(xModule, fromlist=['Model'], level=-1)
-                package.Model.resetSubroutine()
+                package.Model.initializeSubroutine()
             
             _psLog.debug(PROPERTY_CHANGE_EVENT)
 

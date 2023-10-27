@@ -42,12 +42,12 @@ def getSubroutineDropDownItem():
 
 def opsPreProcess(message=None):
 
-    if message == 'TrainBuilt':
-        train = PSE.getNewestTrain()
+    # if message == 'TrainBuilt':
+    #     train = PSE.getNewestTrain()
 
-        manifest = PSE.getTrainManifest(train)
-        manifest = Model.extendJmriManifestJson(manifest)
-        PSE.saveManifest(manifest, train)
+    #     manifest = PSE.getTrainManifest(train)
+    #     manifest = Model.extendJmriManifestJson(manifest)
+    #     PSE.saveManifest(manifest, train)
 
     return
 

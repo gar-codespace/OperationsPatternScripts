@@ -9,8 +9,7 @@ a modified JMRI switch list set to be created.
 """
 
 from opsEntities import PSE
-
-# from Subroutines_Activated.jPlus import SubroutineListeners
+from opsEntities import TextReports
 from Subroutines_Activated.jPlus import Model
 from Subroutines_Activated.jPlus import View
 
@@ -36,6 +35,43 @@ def getSubroutineDropDownItem():
     menuItem.setText(menuText)
 
     return menuItem
+
+def opsPreProcess(message=None):
+
+    return
+
+def opsProcess(message=None):
+    """
+    Modifies the OPS pattern report.
+    Modifies the OPS switch list.
+    Modifies the JMRI manifest.
+    """
+
+    if message == 'opsPatternReport':
+        Model.modifyPatternReport()
+
+    if message == 'opsSwitchList':
+        Model.modifySwitchList()
+
+    if message == 'TrainBuilt':
+        Model.modifyManifest()
+
+    return
+
+def opsPostProcess(message=None):
+    """
+    Writes the OPS version of a train manifest.
+    """
+    if message == 'TrainBuilt':
+        train = PSE.getNewestTrain()
+        manifest = PSE.getTrainManifest(train)
+
+        textManifest = TextReports.opsTextManifest(manifest)
+        manifestName = 'train ({}).txt'.format(train.toString())
+        manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', manifestName)
+        PSE.genericWriteReport(manifestPath, textManifest)
+
+    return
 
 
 class StartUp:
@@ -80,18 +116,17 @@ class StartUp:
     def update(self, EVENT):
         """
         Update button.
-        Writes the text box entries to the configFile.
-        Updates JMRI year modeled.
-        Sets the jPlus extended header.
         """
 
         _psLog.debug(EVENT)
 
         Model.updateRailroadDetails(self.widgets['panel'])
         Model.extendedRailroadDetails()
-        Model.pushDetailsToJmri()
+        Model.updateYearModeled()
         Model.refreshOperationsSettingsFrame()
-        Model.refreshSubroutine()
+        # Model.refreshSubroutine()
+
+        self.widgets['control']['UX'].setSelected(True)
 
         print(SCRIPT_NAME + ' ' + str(SCRIPT_REV))
 
@@ -105,7 +140,7 @@ class StartUp:
         _psLog.debug(EVENT)
 
         configFile = PSE.readConfigFile()            
-        configFile['Main Script']['CP'].update({'EH':EVENT.getSource().selected})
+        configFile['jPlus']['LD'].update({'EH':EVENT.getSource().selected})
         PSE.writeConfigFile(configFile)
 
         return

@@ -24,7 +24,7 @@ def getTpRailroadJson(reportName):
         _psLog.info(fileName + '.json not found')
         return {}
 
-    PSE.JAVA_IO.File(targetPath).isFile()
+    # PSE.JAVA_IO.File(targetPath).isFile()
     report = PSE.genericReadReport(targetPath)
     tpReport = PSE.loadJson(report)
 

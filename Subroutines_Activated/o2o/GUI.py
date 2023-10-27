@@ -24,19 +24,19 @@ class subroutineGui:
 
         self.ulButton = PSE.JAVX_SWING.JButton()
         self.ulButton.setText(PSE.getBundleItem('Locations'))
-        self.ulButton.setName('updateJmriLocations')
+        self.ulButton.setName('aoLocations')
 
         self.uiButton = PSE.JAVX_SWING.JButton()
         self.uiButton.setText(PSE.getBundleItem('Industries'))
-        self.uiButton.setName('updateJmriTracks')
+        self.uiButton.setName('aoIndustries')
 
         self.ursButton = PSE.JAVX_SWING.JButton()
         self.ursButton.setText(PSE.getBundleItem('Cars'))
-        self.ursButton.setName('updateJmriRollingingStock')
+        self.ursButton.setName('aoCars')
 
         self.lpButton = PSE.JAVX_SWING.JButton()
-        self.lpButton.setText(PSE.getBundleItem('Extended Header'))
-        self.lpButton.setName('updateJmriProperties')
+        self.lpButton.setText(PSE.getBundleItem('Extended Detail'))
+        self.lpButton.setName('extendedDetail')
 
         self.caButton = PSE.JAVX_SWING.JButton()
         self.caButton.setText(PSE.getBundleItem('Cancel'))

@@ -513,19 +513,19 @@ def getOpsProSettingsItems():
 
     return items
 
-def getExtendedRailroadName():
-    """
-    Returns either the extended railroad name or the JMRI railroad name.
-    """
+# def getExtendedRailroadName():
+#     """
+#     Returns either the extended railroad name or the JMRI railroad name.
+#     """
 
-    configFile = readConfigFile()
-    OSU = JMRI.jmrit.operations.setup
+#     configFile = readConfigFile()
+#     OSU = JMRI.jmrit.operations.setup
     
-    railroadName = OSU.Setup.getRailroadName()
-    if configFile['Main Script']['CP']['EH']:
-        railroadName = configFile['Main Script']['LD']['JN']
+#     railroadName = OSU.Setup.getRailroadName()
+#     if configFile['Main Script']['CP']['EH']:
+#         railroadName = configFile['Main Script']['LD']['JN']
 
-    return railroadName
+#     return railroadName
 
 def makeCompositRailroadName(layoutDetails):
     """
