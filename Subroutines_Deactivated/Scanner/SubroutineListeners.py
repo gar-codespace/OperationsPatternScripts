@@ -7,8 +7,8 @@ JAVAX action performed methods are in Controller.
 from opsEntities import PSE
 from Subroutines_Activated.Scanner import Model
 
-SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
-SCRIPT_REV = 20230901
+SCRIPT_NAME = '{}.{}'.format(PSE.SCRIPT_DIR, __name__)
+SCRIPT_REV = 20231001
 
 _psLog = PSE.LOGGING.getLogger('OPS.SC.PluginListeners')
 

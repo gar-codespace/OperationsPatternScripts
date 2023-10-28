@@ -8,8 +8,8 @@ Creates the TrainPlayer JMRI Report - o2o Workevents.csv file from either Patter
 from opsEntities import PSE
 from opsEntities import TRE
 
-SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
-SCRIPT_REV = 20230901
+SCRIPT_NAME = '{}.{}'.format(PSE.SCRIPT_DIR, __name__)
+SCRIPT_REV = 20231001
 
 _psLog = PSE.LOGGING.getLogger('OPS.o2o.ModelWorkEvents')
 

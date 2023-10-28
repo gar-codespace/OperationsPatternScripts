@@ -14,8 +14,8 @@ All the reports are built from a json file, formatted like JMRI manifest.json.
 from opsEntities import TRE
 from opsEntities import PSE
 
-SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
-SCRIPT_REV = 20230901
+SCRIPT_NAME = '{}.{}'.format(PSE.SCRIPT_DIR, __name__)
+SCRIPT_REV = 20231001
 
 _psLog = PSE.LOGGING.getLogger('OPS.OE.TextReports')
 

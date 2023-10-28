@@ -8,8 +8,8 @@ Replace XX with a designator for this subroutines name.
 
 from opsEntities import PSE
 
-SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
-SCRIPT_REV = 20230901
+SCRIPT_NAME = '{}.{}'.format(PSE.SCRIPT_DIR, __name__)
+SCRIPT_REV = 20231001
 
 _psLog = PSE.LOGGING.getLogger('OPS.XX.Model')
 

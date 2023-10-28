@@ -8,8 +8,8 @@ All the OPS GUI items are made here.
 from opsEntities import PSE
 from opsBundle import Bundle
 
-SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
-SCRIPT_REV = 20230901
+SCRIPT_NAME = '{}.{}'.format(PSE.SCRIPT_DIR, __name__)
+SCRIPT_REV = 20231001
 
 
 class PluginGUI:

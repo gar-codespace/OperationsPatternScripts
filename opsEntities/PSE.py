@@ -36,7 +36,7 @@ Ghost imports from Bundle:
 """
 
 SCRIPT_NAME = 'OperationsPatternScripts.opsEntities.PSE'
-SCRIPT_REV = 20230901
+SCRIPT_REV = 20231001
 PROFILE_PATH = JMRI.util.FileUtil.getProfilePath()
 BUNDLE = {}
 REPORT_ITEM_WIDTH_MATRIX = {}

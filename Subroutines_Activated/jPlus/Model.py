@@ -8,8 +8,8 @@ jPlus
 from opsEntities import PSE
 from opsEntities import TextReports
 
-SCRIPT_NAME = PSE.SCRIPT_DIR + '.' + __name__
-SCRIPT_REV = 20230901
+SCRIPT_NAME = '{}.{}'.format(PSE.SCRIPT_DIR, __name__)
+SCRIPT_REV = 20231001
 
 _psLog = PSE.LOGGING.getLogger('OPS.JP.Model')
 

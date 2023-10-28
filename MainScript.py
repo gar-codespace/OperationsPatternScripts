@@ -10,7 +10,7 @@ import sys
 from os import path as OS_PATH
 
 SCRIPT_NAME = 'OperationsPatternScripts.MainScript'
-SCRIPT_REV = 20230901
+SCRIPT_REV = 20231001
 SCRIPT_DIR = 'OperationsPatternScripts'
 # SCRIPT_DIR = 'OperationsPatternScripts-2.0.0.b3'
 
