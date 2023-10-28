@@ -119,9 +119,15 @@ def addTrainsTableListener():
     return
 
 def addLocationListener():
+    """
+    Adds a listener to each location
+    and each track at each location.
+    """
 
     for location in PSE.LM.getList():
         location.addPropertyChangeListener(LocationsPropertyChange())
+        for track in location.getTracksList():
+            track.addPropertyChangeListener(LocationsPropertyChange())
 
         _psLog.debug('Main Script.Listeners.addLocationListener: ' + location.toString())
 
@@ -174,6 +180,10 @@ def removeTrainsTableListener():
     return
 
 def removeLocationListener():
+    """
+    Removes the listeners attached to each location
+    and each track at each location.
+    """
 
     for location in PSE.LM.getList():
         for listener in location.getPropertyChangeListeners():
@@ -182,6 +192,13 @@ def removeLocationListener():
 
                 _psLog.debug('Main Script.Listeners.removeLocationListener: ' + location.toString())
 
+        for track in location.getTracksList():
+            for listener in track.getPropertyChangeListeners():
+                if isinstance(listener, PSE.JAVA_BEANS.PropertyChangeListener) and 'LocationsPropertyChange' in listener.toString():
+                    track.removePropertyChangeListener(listener)
+
+                    _psLog.debug('Main Script.Listeners.removeLocationListener: ' + track.toString())
+                    
     return
 
 def removeLocationsTableListener():
@@ -299,7 +316,7 @@ class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
 
 class LocationsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     """
-    Events that are triggered with changes to JMRI Locations.
+    Events that are triggered with changes to JMRI Divisions, Locations and Tracks.
     """
 
     def __init__(self):
@@ -308,8 +325,9 @@ class LocationsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     
     def propertyChange(self, PROPERTY_CHANGE_EVENT):
 
-        if PROPERTY_CHANGE_EVENT.propertyName == 'divisionsListLength':
-        # Fired from JMRI.
+        jmriProperties = ['divisionsListLength', 'divisionName', 'locationsListLength', 'locationName', 'trackListLength', 'trackName']
+        if PROPERTY_CHANGE_EVENT.propertyName in jmriProperties:
+
             for subroutine in PSE.getSubroutineDirs():
                 xModule = 'Subroutines_Activated.{}'.format(subroutine)
                 package = __import__(xModule, fromlist=['Model'], level=-1)
@@ -317,34 +335,7 @@ class LocationsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
-        if PROPERTY_CHANGE_EVENT.propertyName == 'divisionName':
-        # Fired from JMRI.
-            for subroutine in PSE.getSubroutineDirs():
-                xModule = 'Subroutines_Activated.{}'.format(subroutine)
-                package = __import__(xModule, fromlist=['Model'], level=-1)
-                package.Model.initializeSubroutine()
-
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
-
-        if PROPERTY_CHANGE_EVENT.propertyName == 'locationsListLength':
-        # Fired from JMRI.
-            for subroutine in PSE.getSubroutineDirs():
-                xModule = 'Subroutines_Activated.{}'.format(subroutine)
-                package = __import__(xModule, fromlist=['Model'], level=-1)
-                package.Model.initializeSubroutine()
-
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
-
-        if PROPERTY_CHANGE_EVENT.propertyName == 'locationName':
-        # Fired from JMRI.
-            for subroutine in PSE.getSubroutineDirs():
-                xModule = 'Subroutines_Activated.{}'.format(subroutine)
-                package = __import__(xModule, fromlist=['Model'], level=-1)
-                package.Model.initializeSubroutine()
-            
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
-
-        if PROPERTY_CHANGE_EVENT.propertyName == 'extendedDetails':
+        if PROPERTY_CHANGE_EVENT.propertyName == 'opsRefreshSubroutine':
         # Fired from OPS
             for subroutine in PSE.getSubroutineDirs():
                 xModule = 'Subroutines_Activated.{}'.format(subroutine)
@@ -353,7 +344,7 @@ class LocationsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
-        if PROPERTY_CHANGE_EVENT.propertyName == 'jmriDataSets':
+        if PROPERTY_CHANGE_EVENT.propertyName == 'opsResetSubroutine':
         # Fired from OPS
             for subroutine in PSE.getSubroutineDirs():
                 xModule = 'Subroutines_Activated.{}'.format(subroutine)

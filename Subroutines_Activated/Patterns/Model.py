@@ -33,6 +33,10 @@ def initializeSubroutine():
 
 def resetSubroutine():
 
+    divComboUpdater()
+    locComboUpdater()
+    makeTrackRows()
+
     return
 
 def refreshSubroutine():

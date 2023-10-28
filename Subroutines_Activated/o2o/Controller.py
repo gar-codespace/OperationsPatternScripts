@@ -143,8 +143,8 @@ class StartUp:
             EVENT.getSource().setText(firstPress)
             self.getWidget('cancel').setVisible(False)
 
-            PSE.LM.firePropertyChange('jmriDataSets', False, True)
-            # PSE.LM.firePropertyChange('extendedDetails', False, True)
+            PSE.LM.firePropertyChange('opsResetSubroutine', False, True)
+            PSE.LM.firePropertyChange('opsRefreshSubroutine', False, True)
 
         print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
         return
@@ -164,8 +164,8 @@ class StartUp:
         Model.resetBuiltTrains()
         Model.updateJmriLocations()
 
-        PSE.LM.firePropertyChange('jmriDataSets', False, True)
-        # PSE.LM.firePropertyChange('extendedDetails', False, True)
+        PSE.LM.firePropertyChange('opsResetSubroutine', False, True)
+        # PSE.LM.firePropertyChange('opsRefreshSubroutine', False, True)
 
         print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
 
@@ -186,8 +186,8 @@ class StartUp:
         Model.resetBuiltTrains()
         Model.updateJmriTracks()
 
-        PSE.LM.firePropertyChange('jmriDataSets', False, True)
-        # PSE.LM.firePropertyChange('extendedDetails', False, True)
+        PSE.LM.firePropertyChange('opsResetSubroutine', False, True)
+        # PSE.LM.firePropertyChange('opsRefreshSubroutine', False, True)
 
         print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
 
@@ -224,7 +224,7 @@ class StartUp:
         
         Model._updateJmriProperties()
 
-        PSE.LM.firePropertyChange('extendedDetails', False, True)
+        PSE.LM.firePropertyChange('opsRefreshSubroutine', False, True)
 
         print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
 
