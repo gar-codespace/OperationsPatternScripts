@@ -5,6 +5,7 @@ Lieteners for JMRI events.
 """
 
 from opsEntities import PSE
+from opsEntities import TextReports
 
 SCRIPT_NAME = '{}.{}'.format(PSE.SCRIPT_DIR, __name__)
 SCRIPT_REV = 20231001
@@ -308,6 +309,9 @@ class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
                 xModule = 'Subroutines_Activated.{}'.format(subroutine)
                 package = __import__(xModule, fromlist=['Controller'], level=-1)
                 package.Controller.opsPostProcess('TrainBuilt')
+
+            if PSE.readConfigFile()['Main Script']['CP']['ER']:
+                TextReports.printExtendedManifest()
                 
             _psLog.debug(logMessage)
 

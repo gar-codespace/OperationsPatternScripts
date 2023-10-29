@@ -19,6 +19,17 @@ SCRIPT_REV = 20231001
 
 _psLog = PSE.LOGGING.getLogger('OPS.OE.TextReports')
 
+def printExtendedManifest():
+
+    train = PSE.getNewestTrain()
+    manifestName = 'ops train ({}).txt'.format(train.toString())
+    manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', manifestName)
+    if PSE.JAVA_IO.File(manifestPath).isFile():
+        PSE.genericDisplayReport(manifestPath)
+    
+    return
+
+
 def opsTextPatternReport():
     """
     Creates a text Pattern Report from an OPS generated json file.
@@ -215,7 +226,7 @@ def opsTextManifest(manifest):
 # Header
     textManifest += manifest['railroad'] + '\n'
     textManifest += '\n'
-    textManifest += '{}, {}'.format(manifest['userName'], manifest['description']) + '\n'
+    textManifest += TMT.getStringManifestForTrain().format(manifest['userName'], manifest['description']) + '\n'
     epochTime = PSE.convertIsoTimeToEpoch(manifest['date'])
     textManifest += PSE.validTime(epochTime) + '\n'
     textManifest += '\n'
@@ -282,8 +293,8 @@ def opsTextSwitchLists(manifest, typeFlag):
     configFile = PSE.readConfigFile()
     isSequence, sequenceHash = PSE.getSequenceHash()
 
-    messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getPickupSwitchListMessageFormat()
-    TMT = PSE.JMRI.jmrit.operations.trains.TrainManifestText()
+    # messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getPickupSwitchListMessageFormat()
+    # TMT = PSE.JMRI.jmrit.operations.trains.TrainManifestText()
     SMT = PSE.JMRI.jmrit.operations.trains.TrainSwitchListText()
     pep = PSE.JMRI.jmrit.operations.setup.Setup.getPickupEnginePrefix()
     dep = PSE.JMRI.jmrit.operations.setup.Setup.getDropEnginePrefix()

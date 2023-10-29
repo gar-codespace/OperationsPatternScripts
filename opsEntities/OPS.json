@@ -3,8 +3,8 @@
     "US" : {
       "AW": {
         " ": 1, 
-        "Road": 5, 
-        "Number": 6, 
+        "Road": 4, 
+        "Number": 5, 
         "Type": 3, 
         "Length": 3, 
         "Color": 6, 
@@ -19,7 +19,7 @@
         "DCC_Address": 10, 
         "Consist": 8, 
         "Load_Type": 1, 
-        "Load": 6, 
+        "Load": 12, 
         "Hazardous": 10, 
         "Kernel": 7, 
         "Kernel_Size": 3, 
@@ -99,6 +99,7 @@
       "TC" : "UD",
       "SE" : "utf-8",
       "ES" : "CA",
+      "ER" : true,
       "EO" : {
         "CA" : "utf-8",
         "CB" : "ascii",
@@ -109,7 +110,7 @@
       "PW" : 1000,
       "PX" : 0,
       "PY" : 0,
-      "RV" : 20231004,
+      "RV" : 20231006,
       "GP" : "https://github.com/gar-codespace/OperationsPatternScripts",
       "EC" : {
         "400" : "400 - Bad Request: Unable to translate the current language.",

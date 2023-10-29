@@ -229,7 +229,7 @@ def localMoveCar(car, manifest, twoCol):
 
     for messageItem in messageFormat:
         lineItem = carItems[PSE.ROSETTA[messageItem]]
-        lineWidth = PSE.REPORT_ITEM_WIDTH_MATRIX[messageItem]
+        lineWidth = PSE.REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
 
         if 'Tab' in messageItem:
             continue
@@ -244,13 +244,13 @@ def localMoveCar(car, manifest, twoCol):
     # Special case handling for the hazardous flag
         if PSE.ROSETTA[messageItem] == 'Hazardous' and car['hazardous']:
             lineItem = messageItem[0].upper()
-            lineWidth = 1
+            lineWidth = 2
         elif PSE.ROSETTA[messageItem] == 'Hazardous' and not car['hazardous']:
             lineItem = ' '
-            lineWidth = 1
+            lineWidth = 2
 
         rowItem = lineItem.ljust(lineWidth)[:lineWidth]
-        line += rowItem + ' '
+        line += rowItem
 
     return line
 

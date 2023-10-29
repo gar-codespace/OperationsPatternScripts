@@ -513,20 +513,6 @@ def getOpsProSettingsItems():
 
     return items
 
-# def getExtendedRailroadName():
-#     """
-#     Returns either the extended railroad name or the JMRI railroad name.
-#     """
-
-#     configFile = readConfigFile()
-#     OSU = JMRI.jmrit.operations.setup
-    
-#     railroadName = OSU.Setup.getRailroadName()
-#     if configFile['Main Script']['CP']['EH']:
-#         railroadName = configFile['Main Script']['LD']['JN']
-
-#     return railroadName
-
 def makeCompositRailroadName(layoutDetails):
     """
     Uses configFile['Main Script']['LD'] data to make a composite name for use by OPS subroutines.
@@ -598,129 +584,6 @@ def getOpsSwitchList():
 """Formatting Methods"""
 
 
-# def pickupCar(car, manifest, twoCol):
-#     """
-#     Based on the JMRI version.
-#     """
-
-#     carItems = translateCarFormat(car)
-
-#     line = ''
-
-#     if manifest:
-#         messageFormat = JMRI.jmrit.operations.setup.Setup.getPickupManifestMessageFormat()
-#     else:
-#         messageFormat = JMRI.jmrit.operations.setup.Setup.getPickupSwitchListMessageFormat()
-
-#     for messageItem in messageFormat:
-#         lineItem = carItems[ROSETTA[messageItem]]
-#         lineWidth = REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
-
-#         if 'Tab' in messageItem:
-#             continue
-#     # Special case handling for car load type
-#         if ROSETTA[messageItem] == 'Load_Type':
-#             line += getShortLoadType(car).ljust(1) + ' '
-#             continue
-#     # Special case handling for car number
-#         if ROSETTA[messageItem] == 'Number':
-#             line += lineItem.rjust(lineWidth) + ' '
-#             continue
-#     # Special case handling for the hazardous flag
-#         if ROSETTA[messageItem] == 'Hazardous' and car['hazardous']:
-#             lineItem = messageItem[0].upper()
-#             lineWidth = 2
-#         elif ROSETTA[messageItem] == 'Hazardous' and not car['hazardous']:
-#             lineItem = ' '
-#             lineWidth = 2
-
-#         rowItem = lineItem.ljust(lineWidth)[:lineWidth]
-#         line += rowItem
-
-#     return line
-
-# def dropCar(car, manifest, twoCol):
-#     """
-#     Based on the JMRI version.
-#     """
-
-#     carItems = translateCarFormat(car)
-
-#     line = ''
-
-#     if manifest:
-#         messageFormat = JMRI.jmrit.operations.setup.Setup.getDropManifestMessageFormat()
-#     else:
-#         messageFormat = JMRI.jmrit.operations.setup.Setup.getDropSwitchListMessageFormat()
-
-#     for messageItem in messageFormat:
-#         lineItem = carItems[ROSETTA[messageItem]]
-#         lineWidth = REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
-
-#         if 'Tab' in messageItem:
-#             continue
-#     # Special case handling for car load type
-#         if ROSETTA[messageItem] == 'Load_Type':
-#             line += getShortLoadType(car).ljust(1) + ' '
-#             continue
-#     # Special case handling for car number
-#         if ROSETTA[messageItem] == 'Number':
-#             line += lineItem.rjust(lineWidth) + ' '
-#             continue
-#     # Special case handling for the hazardous flag
-#         if ROSETTA[messageItem] == 'Hazardous' and car['hazardous']:
-#             lineItem = messageItem[0].upper()
-#             lineWidth = 2
-#         elif ROSETTA[messageItem] == 'Hazardous' and not car['hazardous']:
-#             lineItem = ' '
-#             lineWidth = 2
-
-#         rowItem = lineItem.ljust(lineWidth)[:lineWidth]
-#         line += rowItem
-
-#     return line
-
-# def localMoveCar(car, manifest, twoCol):
-#     """
-#     Based on the JMRI version.
-#     """
-
-#     carItems = translateCarFormat(car)
-
-#     line = ''
-
-#     if manifest:
-#         messageFormat = JMRI.jmrit.operations.setup.Setup.getLocalManifestMessageFormat()
-#     else:
-#         messageFormat = JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
-
-#     for messageItem in messageFormat:
-#         lineItem = carItems[ROSETTA[messageItem]]
-#         lineWidth = REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
-
-#         if 'Tab' in messageItem:
-#             continue
-#     # Special case handling for car load type
-#         if ROSETTA[messageItem] == 'Load_Type':
-#             line += getShortLoadType(car).ljust(1) + ' '
-#             continue
-#     # Special case handling for car number
-#         if ROSETTA[messageItem] == 'Number':
-#             line += lineItem.rjust(lineWidth) + ' '
-#             continue
-#     # Special case handling for the hazardous flag
-#         if ROSETTA[messageItem] == 'Hazardous' and car['hazardous']:
-#             lineItem = messageItem[0].upper()
-#             lineWidth = 2
-#         elif ROSETTA[messageItem] == 'Hazardous' and not car['hazardous']:
-#             lineItem = ' '
-#             lineWidth = 2
-
-#         rowItem = lineItem.ljust(lineWidth)[:lineWidth]
-#         line += rowItem
-
-#     return line
-
 def isoValidTime(timeStamp):
     """
     Input the JMRI generated iso time stamp.
@@ -763,12 +626,9 @@ def convertIsoTimeToEpoch(isoTime):
 
 def validTime(epochTime=0):
     """
-    Valid Time, get local time adjusted for time zone and dst.
-    Called by:
-    o2oSubroutine.ModelImport.TrainPlayerImporter.processFileHeaders
-    o2oSubroutine.ModelWorkEvents.jmriManifestConversion.convertHeader
-    PatternTracksSubroutine.ModelEntities.initializeReportHeader
-    Nov 15, 2022 11:53 AM PST vs Valid 11/15/2022 11:54
+    Get local time adjusted for time zone and dst.
+    Uses calander or railroad year.
+    Valid 11/15/2022 11:54
     """
 
     valid = getBundleItem('Valid')
@@ -776,13 +636,9 @@ def validTime(epochTime=0):
     time = getTime(epochTime)
 
     if JMRI.jmrit.operations.setup.Setup.is12hrFormatEnabled():
-        return TIME.strftime(valid + ' %b %d, ' + year + ', %I:%M %p', time)
+        return TIME.strftime(valid + ' %m/%d/' + year + ' %I:%M %p', time)
     else:
-        return TIME.strftime(valid + ' %b %d, ' + year + ', %H:%M', time)
-
-    # return TIME.strftime('%m/%d/%Y %I:%M', TIME.gmtime(epochTime - timeOffset))
-    # return TIME.strftime('%a %b %d %Y %I:%M %p %Z', TIME.gmtime(epochTime - timeOffset))
-    # return TIME.strftime('%b %d, ' + year + ' %I:%M %p %Z', TIME.gmtime(epochTime - timeOffset))
+        return TIME.strftime(valid + ' %m/%d/' + year + ' %H:%M', time)
 
 def getYear():
     """
@@ -826,10 +682,6 @@ def getTime(epochTime=0):
 
     return TIME.gmtime(epochTime - timeOffset)
 
-
-
-
-
 def findLongestStringLength(list):
     """
     list is a list or tuple of strings.
@@ -842,64 +694,6 @@ def findLongestStringLength(list):
         longestString = max(longestString, len(string))
 
     return longestString
-
-# def formatText(item, length):
-#     """
-#     Truncate each item to its defined length in configFile.json and add a space at the end.
-#     Called by:
-#     PatternsSubroutine.ModelEntities.ETC
-#     """
-        
-#     if len(item) < length:
-#         xItem = item.ljust(length)
-#     else:
-#         xItem = item[:length]
-
-#     return xItem + ' '
-
-# def getShortLoadType(car):
-#     """
-#     Replaces empty and load with E, L, or O for occupied.
-#     JMRI defines custom load type as empty but default load type as E, hence the 'or' statement.
-#     Load, Empty, Occupied and Unknown are translated by the bundle.
-#     """
-
-#     carObject = CM.getByRoadAndNumber(car['road'], car['number'])
-
-#     lt =  getBundleItem('Unknown').upper()[0]
-#     if carObject.getLoadName() == 'E':
-#         lt = getBundleItem('Empty').upper()[0]
-#     if carObject.getLoadName() == 'L':
-#         lt = getBundleItem('Load').upper()[0]
-#     if carObject.getLoadType() == 'empty' or carObject.getLoadType() == 'E':
-#         lt = getBundleItem('Empty').upper()[0]
-
-#     if carObject.getLoadType() == 'load' or carObject.getLoadType() == 'L':
-#         lt = getBundleItem('Load').upper()[0]
-
-#     if carObject.isCaboose() or carObject.isPassenger():
-#         lt = getBundleItem('Occupied').upper()[0]
-
-#     return lt
-
-# def makeReportItemWidthMatrix():
-#     """
-#     The attribute widths (AW) for each of the rolling stock attributes is defined in the report matrix (RM) of the config file.
-#     """
-
-#     reportMatrix = {}
-#     attributeWidths = readConfigFile('Main Script')['US']['AW']
-
-#     for aKey, aValue in attributeWidths.items():
-#         try: # Include translated JMRI fields
-#             reportMatrix[SB.handleGetMessage(aKey)] = aValue
-#         except: # Include custom OPS fields
-#             reportMatrix[aKey] = aValue
-
-#     global REPORT_ITEM_WIDTH_MATRIX
-#     REPORT_ITEM_WIDTH_MATRIX = reportMatrix
-
-#     return
 
 
 """File Handling Methods"""
@@ -1290,87 +1084,3 @@ def getBundleItem(item):
         return unicode(BUNDLE[item], ENCODING)
     except KeyError:
         return ''
-
-
-# def translateMessageFormat():
-#     """
-#     The messageFormat is in the locale's language, it has to be hashed to the plugin fields.
-#     """
-
-#     rosetta = {}
-# #Common
-#     rosetta[SB.handleGetMessage('Road')] = 'Road'
-#     rosetta[SB.handleGetMessage('Number')] = 'Number'
-#     rosetta[SB.handleGetMessage('Type')] = 'Type'   
-#     rosetta[SB.handleGetMessage('Length')] = 'Length'
-#     rosetta[SB.handleGetMessage('Color')] = 'Color'
-#     rosetta[SB.handleGetMessage('Weight')] = 'Weight'
-#     rosetta[SB.handleGetMessage('Comment')] = 'Comment'
-#     rosetta[SB.handleGetMessage('Division')] = 'Division'
-#     rosetta[SB.handleGetMessage('Location')] = 'Location'
-#     rosetta[SB.handleGetMessage('Track')] = 'Track'
-#     rosetta[SB.handleGetMessage('Destination')] = 'Destination'
-#     rosetta[SB.handleGetMessage('Owner')] = 'Owner'
-#     rosetta[SB.handleGetMessage('Tab')] = 'Tab'
-#     rosetta[SB.handleGetMessage('Tab2')] = 'Tab2'
-#     rosetta[SB.handleGetMessage('Tab3')] = 'Tab3'
-# # Locos
-#     rosetta[SB.handleGetMessage('Model')] = 'Model'
-#     rosetta[SB.handleGetMessage('DCC_Address')] = 'DCC_Address'
-#     rosetta[SB.handleGetMessage('Consist')] = 'Consist'
-# # Cars
-#     rosetta[SB.handleGetMessage('Load_Type')] = 'Load_Type'
-#     rosetta[SB.handleGetMessage('Load')] = 'Load'
-#     rosetta[SB.handleGetMessage('Hazardous')] = 'Hazardous'
-#     rosetta[SB.handleGetMessage('Kernel')] = 'Kernel'
-#     rosetta[SB.handleGetMessage('Kernel_Size')] = 'Kernel_Size'
-#     rosetta[SB.handleGetMessage('Dest&Track')] = 'Dest&Track'
-#     rosetta[SB.handleGetMessage('Final_Dest')] = 'Final_Dest'
-#     rosetta[SB.handleGetMessage('FD&Track')] = 'FD&Track'
-#     rosetta[SB.handleGetMessage('SetOut_Msg')] = 'SetOut_Msg'
-#     rosetta[SB.handleGetMessage('PickUp_Msg')] = 'PickUp_Msg'
-#     rosetta[SB.handleGetMessage('RWE')] = 'RWE'
-#     # rosetta[SB.handleGetMessage('RWL')] = 'RWL'
-# # Unique to this plugin
-#     # rosetta['onTrain'] = 'onTrain'
-#     # rosetta['setTo'] = 'setTo'
-#     # rosetta['puso'] = 'puso'
-#     # rosetta[' '] = ' '
-
-#     global ROSETTA
-#     ROSETTA = rosetta
-
-#     return
-
-# def translateCarFormat(car):
-#     """
-#     For items found in the Setup.get< >ManifestMessageFormat()
-#     """
-                
-#     newCarFormat = {}
-
-#     newCarFormat['Road'] = car['road']
-#     newCarFormat['Number'] = car['number']
-#     newCarFormat['Type'] = car['carType']
-#     newCarFormat['Length'] = car['length']
-#     newCarFormat['Weight'] = car['weightTons']
-#     newCarFormat['Load'] = car['load']
-#     newCarFormat['Load_Type'] = car['loadType']
-#     newCarFormat['Hazardous'] = car['hazardous']
-#     newCarFormat['Color'] = car['color']
-#     newCarFormat['Kernel'] = car['kernel']
-#     newCarFormat['Kernel_Size'] = car['kernelSize']
-#     newCarFormat['Owner'] = car['owner']
-#     newCarFormat['Division'] = car['division']
-#     newCarFormat['Location'] = car['location']['userName']
-#     newCarFormat['Track'] = car['location']['track']['userName']
-#     newCarFormat['Destination'] = car['destination']['userName']
-#     newCarFormat['Dest&Track'] = '{}-{}'.format(car['destination']['userName'], car['destination']['track']['userName'])
-#     newCarFormat['Final_Dest'] = car['finalDestination']['userName']
-#     newCarFormat['FD&Track'] = '{}-{}'.format(car['finalDestination']['userName'], car['finalDestination']['track']['userName'])
-#     newCarFormat['Comment'] = car['comment']
-#     newCarFormat['SetOut_Msg'] = car['removeComment']
-#     newCarFormat['PickUp_Msg'] = car['addComment']
-#     newCarFormat['RWE'] = car['returnWhenEmpty']
-
-#     return newCarFormat
