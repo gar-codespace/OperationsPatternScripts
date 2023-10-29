@@ -99,8 +99,17 @@ def refreshSubroutine():
     component.setText(value)
     configFile['jPlus']['LD'].update({'LO':value})
 
+    value = tpReport['Extended_year']
+    component = PSE.getComponentByName(frame, 'yearModeled')
+    component.setText(value)
+    configFile['jPlus']['LD'].update({'YR':value})
+
     PSE.writeConfigFile(configFile)
 
+    compositeRailroadName()
+    updateYearModeled()
+    refreshOperationsSettingsFrame()
+    
     return
 
 
