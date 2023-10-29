@@ -111,9 +111,12 @@ def makeCommit(displayWidgets):
             PSE.JAVA_IO.File(targetFile).setReadOnly()
 
 # Save the extended data as well
-    fileName = ts + '.D.json.o2o'
-    targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', fileName)
-    PSE.genericWriteReport(targetFile, PSE.dumpJson(configFile['Main Script']['LD']))
+    # fileName = ts + '.D.json.o2o'
+    # targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', fileName)
+    # try:
+    #     PSE.genericWriteReport(targetFile, PSE.dumpJson(configFile['jPlus']['LD']))
+    # except:
+    #     pass
 
 # Save the commit name
     fileName = ts + '.' + note + '.txt.o2o'
