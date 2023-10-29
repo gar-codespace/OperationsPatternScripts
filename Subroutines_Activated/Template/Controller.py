@@ -10,8 +10,6 @@ Replace this text with a description of what this subroutine does.
 """
 
 from opsEntities import PSE
-
-from Subroutines_Activated.Template import SubroutineListeners
 from Subroutines_Activated.Template import Model
 from Subroutines_Activated.Template import View
 
@@ -40,6 +38,18 @@ def getSubroutineDropDownItem():
     menuItem.setText(menuText)
 
     return menuItem
+
+def opsPreProcess(message=None):
+
+    return
+
+def opsProcess(message=None):
+
+    return
+
+def opsPostProcess(message=None):
+
+    return
 
 
 class StartUp:
@@ -91,7 +101,7 @@ class StartUp:
         Whatever it is this button does.
         """
 
-        Model.refreshSubroutine()
+        print('button')
 
         _psLog.debug(EVENT)
 

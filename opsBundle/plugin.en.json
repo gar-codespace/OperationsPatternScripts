@@ -89,6 +89,8 @@
   "Single": "Single", 
   "Snap Shot": "Snap Shot", 
   "Switch List for location ({})": "Switch List for location ({})", 
+  "Template": "Template", 
+  "Template Subroutine": "Template Subroutine", 
   "There are no tracks for this selection": "There are no tracks for this selection", 
   "There are no yard tracks for this location": "There are no yard tracks for this location", 
   "Throwback": "Throwback", 
@@ -127,5 +129,6 @@
   "o2o-work-list": "o2o-work-list", 
   "ops-Pattern Report": "ops-Pattern Report", 
   "ops-Switch List": "ops-Switch List", 
-  "ops-work-list": "ops-work-list"
+  "ops-work-list": "ops-work-list", 
+  "xyzzy": "xyzzy"
 }
