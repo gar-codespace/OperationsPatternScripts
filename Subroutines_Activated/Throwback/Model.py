@@ -15,7 +15,7 @@ _psLog = PSE.LOGGING.getLogger('OPS.TB.Model')
 SNAP_SHOT_INDEX = 0
 
 
-""" Actions called by the plugin listeners """
+""" Routines called by the plugin listeners """
 
 
 def resetConfigFileItems():

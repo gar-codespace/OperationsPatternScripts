@@ -29,6 +29,13 @@ def printExtendedManifest():
     
     return
 
+def printExtendedSwitchLists():
+
+    return
+
+
+""" Text report functions """
+
 
 def opsTextPatternReport():
     """
@@ -67,7 +74,6 @@ def opsTextPatternReport():
             formatPrefix = ' [{}] '.format('  ')
             line = TRE.localMoveCar(car, True, False)
             textPatternReport += formatPrefix + ' ' + line + '\n'
-        
 
         summaryText = PSE.getBundleItem('Total cars:{},  Loads:{},  Empties:{}')
         textPatternReport += summaryText.format(location['total'], location['loads'], location['empties']) + '\n'
@@ -201,12 +207,12 @@ def opsTextSwitchList():
 
     return textSwitchList
 
-def opsTextManifest(manifest):
+def opsJmriManifest(manifest):
     """"
     OPS version of the JMRI generated text manifest.
     """
 
-    _psLog.debug('opsTextManifest')
+    _psLog.debug('opsJmriManifest')
 
     TRE.makeReportItemWidthMatrix()
     TRE.translateMessageFormat()
@@ -276,8 +282,7 @@ def opsTextManifest(manifest):
 
     return textManifest
 
-
-def opsTextSwitchLists(manifest, typeFlag):
+def opsJmriSwitchLists(manifest, typeFlag):
     """
     OPS version of the JMRI generated text switch list.
     Makes new switch lists from a JMRI train.
@@ -285,7 +290,7 @@ def opsTextSwitchLists(manifest, typeFlag):
     The name is too similar to the OPS switch list.
     """
 
-    _psLog.debug('opsTextSwitchLists')
+    _psLog.debug('opsJmriSwitchLists')
 
     TRE.makeReportItemWidthMatrix()
     TRE.translateMessageFormat()
@@ -315,7 +320,6 @@ def opsTextSwitchLists(manifest, typeFlag):
         textSwitchList += '{}\n'.format(PSE.validTime(epochTime))
         textSwitchList += '\n'
         textSwitchList += '{}\n'.format(SMT.getStringSwitchListByTrack())
-        
 
         trackList = PSE.LM.getLocationByName(location['userName']).getTracksByNameList(None)
         for track in trackList:
@@ -339,15 +343,11 @@ def opsTextSwitchLists(manifest, typeFlag):
                      carAttribs = getDetailsForCar(carObject)
                      rsAttribs = getDetailsForRollingStock(carObject)
                      carAttribs.update(rsAttribs)
-
-
-
                 else:
                     roadName = carObject.getRoadName().ljust(PSE.REPORT_ITEM_WIDTH_MATRIX['Road'])
                     roadNumber = carObject.getNumber().rjust(PSE.REPORT_ITEM_WIDTH_MATRIX['Number'])
                     formatPrefix = hcp.ljust(longestStringLength)
                     textSwitchList += '{} {} {}\n'.format(formatPrefix, roadName, roadNumber)
-                    
 
         # Set out cars
             for car in location['cars']['remove']:
@@ -363,52 +363,3 @@ def opsTextSwitchLists(manifest, typeFlag):
         PSE.genericWriteReport(switchListPath, textSwitchList)
 
     return
-
-# def o2oWorkEvents(manifest):
-#     """
-#     Makes an o2o workevents list from a manifest.
-#     manifest is a string from the json file.
-#     """
-
-#     _psLog.debug('o2oWorkEvents')
-# # Header
-#     o2oWorkEvents = 'HN,' + manifest['railroad'].replace('\n', ';') + '\n'
-#     o2oWorkEvents += 'HT,' + manifest['userName'] + '\n'
-#     o2oWorkEvents += 'HD,' + manifest['description'] + '\n'
-#     epochTime = PSE.convertIsoTimeToEpoch(manifest['date'])
-#     o2oWorkEvents += 'HV,' + PSE.validTime(epochTime) + '\n'
-#     o2oWorkEvents += 'WT,' + str(len(manifest['locations'])) + '\n'
-# # Body
-#     for i, location in enumerate(manifest['locations'], start=1):
-#         o2oWorkEvents += 'WE,{},{}\n'.format(str(i), location['userName'])
-#         for loco in location['engines']['add']:
-#             o2oWorkEvents += 'PL,{}\n'.format(_makeLine(loco))
-#         for loco in location['engines']['remove']:
-#             o2oWorkEvents += 'SL,{}\n'.format(_makeLine(loco))
-#         for car in location['cars']['add']:
-#             o2oWorkEvents += 'PC,{}\n'.format(_makeLine(car))
-#         for car in location['cars']['remove']:
-#             o2oWorkEvents += 'SC,{}\n'.format(_makeLine(car))
-        
-#     return o2oWorkEvents
-
-# def _makeLine(rs):
-#     """
-#     Helper function to make the rs line for o2oWorkEvents.
-#     format: TP ID, Road, Number, Car Type, L/E/O, Load or Model, From, To
-#     """
-
-#     try: # Cars
-#         loadName = rs['load']
-#         lt = PSE.getShortLoadType(rs)
-#     except: # Locos
-#         loadName = rs['model']
-#         lt = PSE.getBundleItem('Occupied').upper()[0]
-
-#     ID = rs['road'] + ' ' + rs['number']
-#     pu = rs['location']['userName'] + ';' + rs['location']['track']['userName']
-#     so = rs['destination']['userName'] + ';' + rs['destination']['track']['userName']
-
-#     line = '{},{},{},{},{},{},{},{}'.format(ID, rs['road'], rs['number'], rs['carType'], lt, loadName, pu, so)
-
-#     return line

@@ -311,6 +311,7 @@ class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
                 package.Controller.opsPostProcess('TrainBuilt')
 
             if PSE.readConfigFile()['Main Script']['CP']['ER']:
+                TextReports.printExtendedSwitchLists()
                 TextReports.printExtendedManifest()
                 
             _psLog.debug(logMessage)

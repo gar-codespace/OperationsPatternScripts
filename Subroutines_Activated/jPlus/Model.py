@@ -13,7 +13,9 @@ SCRIPT_REV = 20231001
 
 _psLog = PSE.LOGGING.getLogger('OPS.JP.Model')
 
-""" Actions called by the plugin listeners """
+
+""" Routines called by the plugin listeners """
+
 
 def resetConfigFileItems():
     

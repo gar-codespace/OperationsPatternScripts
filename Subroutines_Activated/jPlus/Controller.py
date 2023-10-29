@@ -66,7 +66,7 @@ def opsPostProcess(message=None):
         train = PSE.getNewestTrain()
         manifest = PSE.getTrainManifest(train)
 
-        textManifest = TextReports.opsTextManifest(manifest)
+        textManifest = TextReports.opsJmriManifest(manifest)
         manifestName = 'ops train ({}).txt'.format(train.toString())
         manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', manifestName)
         PSE.genericWriteReport(manifestPath, textManifest)

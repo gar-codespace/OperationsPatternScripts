@@ -60,7 +60,7 @@ def opsProcess(message=None):
         train = PSE.getNewestTrain()
         manifest = PSE.getTrainManifest(train)
 
-        textManifest = TextReports.opsTextManifest(manifest)
+        textManifest = TextReports.opsJmriManifest(manifest)
         manifestName = 'train ({}).txt'.format(train.toString())
         manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', manifestName)
         PSE.genericWriteReport(manifestPath, textManifest)
@@ -161,7 +161,7 @@ def modifyTrainManifest(train):
     
     TextReports.extendJmriManifest(train)
 
-    textManifest = TextReports.opsTextManifest(train)
+    textManifest = TextReports.opsJmriManifest(train)
     manifestName = 'train (' + train.toString() + ').txt'
     manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', manifestName)
     PSE.genericWriteReport(manifestPath, textManifest)
