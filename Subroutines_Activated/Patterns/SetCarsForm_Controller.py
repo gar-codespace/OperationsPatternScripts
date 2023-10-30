@@ -23,14 +23,23 @@ SCRIPT_REV = 20231001
 _psLog = PSE.LOGGING.getLogger('OPS.PT.ControllerSetCarsForm')
 
 def opsPreProcess(message=None):
+    """
+    Extends the json files.
+    """
 
     return
 
 def opsProcess(message=None):
+    """
+    Process the extended json files.
+    """
 
     return
 
 def opsPostProcess(message=None):
+    """
+    Writes the processed json files to text files.
+    """
 
     textSwitchList = TextReports.opsTextSwitchList()
     targetPath = Model.writePatternReport(textSwitchList, False)

@@ -130,7 +130,7 @@ def locComboSelected(EVENT):
 """ Routines specific to this subroutine """
 
 
-def modifyManifest():
+def extendManifestJson():
 
     reportName = 'train-{}.json'.format(PSE.getNewestTrain().toString())
     PSE.extendManifest(reportName)

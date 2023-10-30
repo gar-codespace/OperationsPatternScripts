@@ -37,14 +37,23 @@ def getSubroutineDropDownItem():
     return menuItem
 
 def opsPreProcess(message=None):
+    """
+    Extends the json files.
+    """
 
     return
 
 def opsProcess(message=None):
+    """
+    Process the extended json files.
+    """
 
     return
 
 def opsPostProcess(message=None):
+    """
+    Writes the processed json files to text files.
+    """
 
     return
 

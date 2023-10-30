@@ -38,9 +38,7 @@ def getSubroutineDropDownItem():
 
 def opsPreProcess(message=None):
     """
-    Modifies the OPS pattern report.
-    Modifies the OPS switch list.
-    Modifies the JMRI manifest.
+    Extends the json files.
     """
 
     # if message == 'opsPatternReport':
@@ -55,12 +53,15 @@ def opsPreProcess(message=None):
     return
 
 def opsProcess(message=None):
+    """
+    Process the extended json files.
+    """
 
     return
 
 def opsPostProcess(message=None):
     """
-    Create the work event lists.
+    Writes the processed json files to text files.
     """
 
     tpDirectory = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData', 'Roaming', 'TrainPlayer', 'Reports')

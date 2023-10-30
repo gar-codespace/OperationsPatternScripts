@@ -42,43 +42,38 @@ def getSubroutineDropDownItem():
 
 def opsPreProcess(message=None):
     """
-    Modifies the OPS pattern report.
-    Modifies the OPS switch list.
-    Modifies the JMRI manifest.
+    Extends the json files.
     """
 
-    # if message == 'opsPatternReport':
-    #     Model.modifyPatternReport()
-
-    # if message == 'opsSwitchList':
-    #     Model.modifySwitchList()
+    if message == 'opsSwitchList':
+        Model.extendSwitchListJson()
 
     if message == 'TrainBuilt':
-        Model.modifyManifestJson()
+        Model.extendManifestJson()
 
     return
 
 def opsProcess(message=None):
     """
-    Modifies the OPS pattern report.
-    Modifies the OPS switch list.
-    Modifies the JMRI manifest.
+    Process the extended json files.
+    Note: the pattern report is sorted using user defined criteria.
     """
 
-    # if message == 'opsPatternReport':
-    #     Model.modifyPatternReport()
+    if message == 'opsSwitchList':
+        switchListName = 'ops-Switch List.json'
+        Model.resequenceManifestJson(switchListName)
 
-    # if message == 'opsSwitchList':
-    #     Model.modifySwitchList()
+
 
     if message == 'TrainBuilt':
-        Model.resequenceManifestJson()
+        trainName = 'train-{}.json'.format(PSE.getNewestTrain().toString())
+        Model.resequenceManifestJson(trainName)
 
     return
 
 def opsPostProcess(message=None):
     """
-    Writes the OPS version of a train manifest.
+    Writes the processed json files to text files.
     """
 
     if message == 'TrainBuilt':

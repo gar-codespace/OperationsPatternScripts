@@ -6,10 +6,9 @@ Todo:
   Decide if Throwback saves jPlus data.
   Move PSE.locationNameLookup() to o2o.
   Move all single use PSE functions to their respective subroutine.
-  In Patterns modifyManifest() is duplicate processing.
   Update default report print attribs.
   Change Patterns back to moving a car on a train.
-  Manifest pick up cars sort first on track then sequence.
+  Sort the set cars form by sequence.
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.

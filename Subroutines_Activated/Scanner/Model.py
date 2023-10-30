@@ -168,10 +168,21 @@ def recordSelection(comboBox):
 
     return
 
-def modifyManifestJson():
+def extendSwitchListJson():
+
+    _psLog.debug('extendSwitchListJson')
+
+    reportName = 'ops-Switch List.json'
+    _modifyAction(reportName)
+
+    return
+
+def extendManifestJson():
     """
-    Modifies the JMRI created json manifest.
+    Extends the JMRI created json manifest.
     """
+
+    _psLog.debug('extendManifestJson')
 
     reportName = 'train-{}.json'.format(PSE.getNewestTrain().toString())
     PSE.extendManifest(reportName)
@@ -212,41 +223,21 @@ def _addSequenceToManifest(manifest):
             sequence = PSE.SEQUENCE_HASH['cars'][carID]
             car['sequence'] = sequence
 
-    for location in manifest['locations']:
-        cars = location['cars']['add']
-        cars.sort(key=lambda row: row['sequence'])
-
-        cars = location['cars']['remove']
-        cars.sort(key=lambda row: row['sequence'])
-
     return manifest
 
-# def modifyTrainManifest(train):
-#     """
-#     Modifies the existing JMRI manifest, sorts by sequence number.
-#     """
-    
-#     TextReports.extendJmriManifest(train)
-
-#     textManifest = TextReports.opsJmriManifest(train)
-#     manifestName = 'train (' + train.toString() + ').txt'
-#     manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', manifestName)
-#     PSE.genericWriteReport(manifestPath, textManifest)
-
-#     return
-
-def resequenceManifestJson():
+def resequenceManifestJson(jsonFileName):
     """
     Resequences an existing json manifest by its sequence value.
+    Only sequences cars at this time.
     """
 
-    trainName = 'train-{}.json'.format(PSE.getNewestTrain().toString())
-    manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', trainName)
+    manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', jsonFileName)
     manifest = PSE.loadJson(PSE.genericReadReport(manifestPath))
 
     for location in manifest['locations']:
         cars = location['cars']['add']
         cars.sort(key=lambda row: row['sequence'])
+        cars.sort(key=lambda row: row['location']['track']['userName'])
 
         cars = location['cars']['remove']
         cars.sort(key=lambda row: row['sequence'])

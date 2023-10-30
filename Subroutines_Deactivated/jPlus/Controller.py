@@ -37,14 +37,8 @@ def getSubroutineDropDownItem():
     return menuItem
 
 def opsPreProcess(message=None):
-
-    return
-
-def opsProcess(message=None):
     """
-    Modifies the OPS pattern report.
-    Modifies the OPS switch list.
-    Modifies the JMRI manifest.
+    Extends the json files.
     """
 
     if message == 'opsPatternReport':
@@ -58,9 +52,16 @@ def opsProcess(message=None):
 
     return
 
+def opsProcess(message=None):
+    """
+    Process the extended json files.
+    """
+
+    return
+
 def opsPostProcess(message=None):
     """
-    Writes the OPS version of a train manifest.
+    Writes the processed json files to text files.
     """
 
     if message == 'TrainBuilt':
