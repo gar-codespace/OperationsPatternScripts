@@ -33,6 +33,8 @@ Ghost imports from MainScript:
     PSE.ENCODING = PSE.readConfigFile('Main Script')['CP']['SE']
 Ghost imports from Bundle:
     PSE.BUNDLE_DIR = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle')
+Ghost import from Scanner
+    PSE.SEQUENCE_HASH = PSE.loadJson(PSE.genericReadReport(sequenceFilePath))
 """
 
 SCRIPT_NAME = 'OperationsPatternScripts.opsEntities.PSE'
@@ -424,19 +426,6 @@ def locationNameLookup(locationName):
 
     return locationName
 
-def getSequenceHash():
-
-    try:
-        sequenceFilePath = OS_PATH.join(PROFILE_PATH, 'operations', 'rsSequenceData.json')
-        isSequenceHash = True
-        sequenceHash = loadJson(genericReadReport(sequenceFilePath))
-    except:
-        isSequenceHash = False
-        sequenceHash = None
-        pass
-
-    return isSequenceHash, sequenceHash
-
 def getAllDivisionNames():
     """
     JMRI sorts the list.
@@ -695,6 +684,40 @@ def findLongestStringLength(list):
 
     return longestString
 
+def extendManifest(reportName):
+    """
+    Adds additional attributes found in the print options dialog.
+    Called by Patterns, jPlus and Scanner
+    """
+
+    reportPath = OS_PATH.join(PROFILE_PATH, 'operations', 'jsonManifests', reportName)
+    report = loadJson(genericReadReport(reportPath))
+    for location in report['locations']:
+        for car in location['cars']['add']:
+            carObject = CM.getByRoadAndNumber(car['road'], car['number'])
+            kSize = 0
+            kernelName = carObject.getKernelName()
+            if kernelName:
+                kSize = KM.getKernelByName(kernelName).getSize()
+            car['kernelSize'] = kSize
+            car['finalDestination']={'userName':carObject.getFinalDestinationName(), 'track':{'userName':carObject.getFinalDestinationTrackName()}}
+            car['loadType'] = carObject.getLoadType()
+            car['division'] = LM.getLocationByName(car['location']['userName']).getDivisionName()
+
+        for car in location['cars']['remove']:
+            carObject = CM.getByRoadAndNumber(car['road'], car['number'])
+            kSize = 0
+            kernelName = carObject.getKernelName()
+            if kernelName:
+                kSize = KM.getKernelByName(kernelName).getSize()
+            car['kernelSize'] = kSize
+            car['finalDestination']={'userName':carObject.getFinalDestinationName(), 'track':{'userName':carObject.getFinalDestinationTrackName()}}
+            car['loadType'] = carObject.getLoadType()
+            car['division'] = LM.getLocationByName(car['location']['userName']).getDivisionName()
+
+    genericWriteReport(reportPath, dumpJson(report))
+
+    return
 
 """File Handling Methods"""
 

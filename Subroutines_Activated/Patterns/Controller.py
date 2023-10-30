@@ -41,13 +41,22 @@ def getSubroutineDropDownItem():
     return menuItem
 
 def opsPreProcess(message=None):
+    """
+    Modifies the OPS pattern report.
+    Modifies the OPS switch list.
+    Modifies the JMRI manifest.
+    """
 
-    # if message == 'TrainBuilt':
-    #     train = PSE.getNewestTrain()
+    # if message == 'opsPatternReport':
+    #     Model.modifyPatternReport()
 
-    #     manifest = PSE.getTrainManifest(train)
-    #     manifest = Model.extendJmriManifestJson(manifest)
-    #     PSE.saveManifest(manifest, train)
+    # if message == 'opsSwitchList':
+    #     Model.modifySwitchList()
+
+    if message == 'TrainBuilt':
+        Model.modifyManifest()
+
+    return
 
     return
 
@@ -64,7 +73,16 @@ def opsPostProcess(message=None):
 
     if message == 'opsSwitchList':
         SetCarsForm_Controller.opsPostProcess()
-        
+
+    if message == 'TrainBuilt':
+        train = PSE.getNewestTrain()
+        manifest = PSE.getTrainManifest(train)
+
+        textManifest = TextReports.opsJmriManifest(manifest)
+        manifestName = 'ops train ({}).txt'.format(train.toString())
+        manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', manifestName)
+        PSE.genericWriteReport(manifestPath, textManifest)  
+    
     return
 
 

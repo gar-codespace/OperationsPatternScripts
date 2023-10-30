@@ -133,7 +133,7 @@ def modifySwitchList():
 def modifyManifest():
 
     reportName = 'train-{}.json'.format(PSE.getNewestTrain().toString())
-    _extendManifest(reportName)
+    PSE.extendManifest(reportName)
     _modifyAction(reportName)
 
     return
@@ -148,39 +148,39 @@ def _modifyAction(reportName):
 
     return
 
-def _extendManifest(reportName):
-    """
-    Adds additional attributes found in the print options dialog.
-    """
+# def _extendManifest(reportName):
+#     """
+#     Adds additional attributes found in the print options dialog.
+#     """
 
-    reportPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
-    report = PSE.loadJson(PSE.genericReadReport(reportPath))
-    for location in report['locations']:
-        for car in location['cars']['add']:
-            carObject = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
-            kSize = 0
-            kernelName = carObject.getKernelName()
-            if kernelName:
-                kSize = PSE.KM.getKernelByName(kernelName).getSize()
-            car['kernelSize'] = kSize
-            car['finalDestination']={'userName':carObject.getFinalDestinationName(), 'track':{'userName':carObject.getFinalDestinationTrackName()}}
-            car['loadType'] = carObject.getLoadType()
-            car['division'] = PSE.LM.getLocationByName(car['location']['userName']).getDivisionName()
+#     reportPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
+#     report = PSE.loadJson(PSE.genericReadReport(reportPath))
+#     for location in report['locations']:
+#         for car in location['cars']['add']:
+#             carObject = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
+#             kSize = 0
+#             kernelName = carObject.getKernelName()
+#             if kernelName:
+#                 kSize = PSE.KM.getKernelByName(kernelName).getSize()
+#             car['kernelSize'] = kSize
+#             car['finalDestination']={'userName':carObject.getFinalDestinationName(), 'track':{'userName':carObject.getFinalDestinationTrackName()}}
+#             car['loadType'] = carObject.getLoadType()
+#             car['division'] = PSE.LM.getLocationByName(car['location']['userName']).getDivisionName()
 
-        for car in location['cars']['remove']:
-            carObject = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
-            kSize = 0
-            kernelName = carObject.getKernelName()
-            if kernelName:
-                kSize = PSE.KM.getKernelByName(kernelName).getSize()
-            car['kernelSize'] = kSize
-            car['finalDestination']={'userName':carObject.getFinalDestinationName(), 'track':{'userName':carObject.getFinalDestinationTrackName()}}
-            car['loadType'] = carObject.getLoadType()
-            car['division'] = PSE.LM.getLocationByName(car['location']['userName']).getDivisionName()
+#         for car in location['cars']['remove']:
+#             carObject = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
+#             kSize = 0
+#             kernelName = carObject.getKernelName()
+#             if kernelName:
+#                 kSize = PSE.KM.getKernelByName(kernelName).getSize()
+#             car['kernelSize'] = kSize
+#             car['finalDestination']={'userName':carObject.getFinalDestinationName(), 'track':{'userName':carObject.getFinalDestinationTrackName()}}
+#             car['loadType'] = carObject.getLoadType()
+#             car['division'] = PSE.LM.getLocationByName(car['location']['userName']).getDivisionName()
 
-    PSE.genericWriteReport(reportPath, PSE.dumpJson(report))
+#     PSE.genericWriteReport(reportPath, PSE.dumpJson(report))
 
-    return
+#     return
 
 def _getExtendedRailroadName():
     """

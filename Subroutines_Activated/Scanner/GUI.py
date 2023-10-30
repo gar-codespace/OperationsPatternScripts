@@ -18,17 +18,17 @@ class subroutineGui:
         The *.setName value is the name of the action for the widget.
         """
 
-        self.qrButton = PSE.JAVX_SWING.JButton()
-        self.qrButton.setText(PSE.getBundleItem('Generate'))
-        self.qrButton.setName('self.qrButton')
+        self.qrCodeButton = PSE.JAVX_SWING.JButton()
+        self.qrCodeButton.setText(PSE.getBundleItem('Generate'))
+        self.qrCodeButton.setName('self.qrCodeButton')
 
     # The Scanner combo box content is managed by the Controller
         self.scannerComboBox = PSE.JAVX_SWING.JComboBox()
         self.scannerComboBox.setName('sScanner')
 
-        self.scButton = PSE.JAVX_SWING.JButton()
-        self.scButton.setText(PSE.getBundleItem('Apply'))
-        self.scButton.setName('scButton')
+        self.applyButton = PSE.JAVX_SWING.JButton()
+        self.applyButton.setText(PSE.getBundleItem('Apply'))
+        self.applyButton.setName('applyButton')
 
         return
 
@@ -55,7 +55,7 @@ class subroutineGui:
         qrFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Generate QR codes'))
 
         qrFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
-        qrFrame.add(self.qrButton)
+        qrFrame.add(self.qrCodeButton)
         qrFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
     # Apply scanner
         scFrame = PSE.JAVX_SWING.JPanel()
@@ -69,7 +69,7 @@ class subroutineGui:
         scFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
         scFrame.add(self.scannerComboBox)
         scFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
-        scFrame.add(self.scButton)
+        scFrame.add(self.applyButton)
         scFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(8,0)))
         
         tpPanel.add(qrFrame)
@@ -89,8 +89,8 @@ class subroutineGui:
 
         widgets = []
 
-        widgets.append(self.qrButton)
+        widgets.append(self.qrCodeButton)
         widgets.append(self.scannerComboBox)
-        widgets.append(self.scButton)
+        widgets.append(self.applyButton)
 
         return widgets

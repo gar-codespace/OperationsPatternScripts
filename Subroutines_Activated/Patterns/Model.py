@@ -130,6 +130,13 @@ def locComboSelected(EVENT):
 """ Routines specific to this subroutine """
 
 
+def modifyManifest():
+
+    reportName = 'train-{}.json'.format(PSE.getNewestTrain().toString())
+    PSE.extendManifest(reportName)
+
+    return
+
 def makeJsonTrackPattern(selectedTracks):
     """
     This track pattern json file mimics the JMRI manifest json.

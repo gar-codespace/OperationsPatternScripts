@@ -62,6 +62,7 @@ def opsPostProcess(message=None):
     """
     Writes the OPS version of a train manifest.
     """
+
     if message == 'TrainBuilt':
         train = PSE.getNewestTrain()
         manifest = PSE.getTrainManifest(train)

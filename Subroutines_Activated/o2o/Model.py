@@ -39,6 +39,13 @@ def refreshSubroutine():
 """ Routines specific to this subroutine """
 
 
+def modifyManifest():
+
+    reportName = 'train-{}.json'.format(PSE.getNewestTrain().toString())
+    PSE.extendManifest(reportName)
+
+    return
+
 def resetBuiltTrains():
     """
     Resets all the trains that are built.

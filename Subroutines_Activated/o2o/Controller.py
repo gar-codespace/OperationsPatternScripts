@@ -37,6 +37,20 @@ def getSubroutineDropDownItem():
     return menuItem
 
 def opsPreProcess(message=None):
+    """
+    Modifies the OPS pattern report.
+    Modifies the OPS switch list.
+    Modifies the JMRI manifest.
+    """
+
+    # if message == 'opsPatternReport':
+    #     Model.modifyPatternReport()
+
+    # if message == 'opsSwitchList':
+    #     Model.modifySwitchList()
+
+    if message == 'TrainBuilt':
+        Model.modifyManifest()
 
     return
 

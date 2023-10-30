@@ -46,6 +46,8 @@ class PatternScriptsFrameListener(PSE.JAVA_AWT.event.WindowListener):
 
         _psLog.debug(WINDOW_CLOSING)
 
+        PSE.CM.firePropertyChange('opsWindowClosing', False, True)
+
         removeSubroutineListeners()
         
         PSE.updateWindowParams(WINDOW_CLOSING.getSource())

@@ -3,13 +3,12 @@
 
 """
 Scanner subroutine.
-Scanner adds a sequence attribute to the cars data set.
-This subroutine causes a modified JMRI manifest and
-a modified JMRI switch list set to be created.
+Only cars are sequenced.
+Engines will be sequenced in a future revision.
 """
 
 from opsEntities import PSE
-
+from opsEntities import TextReports
 from Subroutines_Activated.Scanner import SubroutineListeners
 from Subroutines_Activated.Scanner import Model
 from Subroutines_Activated.Scanner import View
@@ -40,6 +39,58 @@ def getSubroutineDropDownItem():
 
     return menuItem
 
+
+def opsPreProcess(message=None):
+    """
+    Modifies the OPS pattern report.
+    Modifies the OPS switch list.
+    Modifies the JMRI manifest.
+    """
+
+    # if message == 'opsPatternReport':
+    #     Model.modifyPatternReport()
+
+    # if message == 'opsSwitchList':
+    #     Model.modifySwitchList()
+
+    if message == 'TrainBuilt':
+        Model.modifyManifestJson()
+
+    return
+
+def opsProcess(message=None):
+    """
+    Modifies the OPS pattern report.
+    Modifies the OPS switch list.
+    Modifies the JMRI manifest.
+    """
+
+    # if message == 'opsPatternReport':
+    #     Model.modifyPatternReport()
+
+    # if message == 'opsSwitchList':
+    #     Model.modifySwitchList()
+
+    if message == 'TrainBuilt':
+        Model.resequenceManifestJson()
+
+    return
+
+def opsPostProcess(message=None):
+    """
+    Writes the OPS version of a train manifest.
+    """
+
+    if message == 'TrainBuilt':
+        train = PSE.getNewestTrain()
+        manifest = PSE.getTrainManifest(train)
+
+        textManifest = TextReports.opsJmriManifest(manifest)
+        manifestName = 'ops train ({}).txt'.format(train.toString())
+        manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', manifestName)
+        PSE.genericWriteReport(manifestPath, textManifest)
+
+    return
 
 class StartUp:
     """
@@ -73,6 +124,7 @@ class StartUp:
         """
 
         Model.validateSequenceData()
+        Model.getSequenceHash()
         
         return
         
@@ -80,16 +132,13 @@ class StartUp:
         """
         """
 
-        self.widgets[0].actionPerformed = self.qrButton
+        self.widgets[0].actionPerformed = self.qrCodeButton
         self.widgets[1].addActionListener(SubroutineListeners.ScannerSelection())
-        self.widgets[2].actionPerformed = self.scButton
+        self.widgets[2].actionPerformed = self.applyButton
 
         return
 
-    def qrButton(self, EVENT):
-        """
-        The make QR codes button.
-        """
+    def qrCodeButton(self, EVENT):
 
         _psLog.debug(EVENT)
 
@@ -97,17 +146,16 @@ class StartUp:
 
         return
 
-    def scButton(self, EVENT):
-        """
-        The Apply button.
-        """
+    def applyButton(self, EVENT):
+
+        _psLog.debug(EVENT)
 
         scannerReportPath = Model.getScannerReportPath()
-        if Model.validateScanReport(scannerReportPath):
+        if scannerReportPath:
+            Model.validateScanReport(scannerReportPath)
             Model.applyScanReport(scannerReportPath)
+            Model.saveSequenceHash()
 
         print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
-
-        _psLog.debug(EVENT)
 
         return
