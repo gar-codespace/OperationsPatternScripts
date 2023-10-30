@@ -18,7 +18,6 @@ SCRIPT_REV = 20231001
 
 _psLog = PSE.LOGGING.getLogger('OPS.SC.Controller')
 
-
 def getSubroutineDropDownItem():
     """
     Pattern Scripts/Tools/'Show or disable' Subroutines.<subroutine>
@@ -38,7 +37,6 @@ def getSubroutineDropDownItem():
     menuItem.setText(menuText)
 
     return menuItem
-
 
 def opsPreProcess(message=None):
     """
@@ -87,6 +85,7 @@ def opsPostProcess(message=None):
 
     return
 
+
 class StartUp:
     """
     Start the subroutine.
@@ -124,8 +123,6 @@ class StartUp:
         return
         
     def activateWidgets(self):
-        """
-        """
 
         self.widgets[0].actionPerformed = self.qrCodeButton
         self.widgets[1].addActionListener(SubroutineListeners.ScannerSelection())

@@ -62,7 +62,7 @@ class ParseRollingStock:
 
     def __init__(self, reportToggle):
 
-        self.reportToggle = reportToggle
+        self.reportToggle = reportToggle # True = pattern report, False = switch list
 
         self.configFile = PSE.readConfigFile()
 
@@ -116,6 +116,8 @@ class ParseRollingStock:
 
         if self.reportToggle:
             self.sortCarsByAttribute()
+        else:
+            self.sortCarsBySequence()
 
         return self.carDetails
 
@@ -261,6 +263,15 @@ class ParseRollingStock:
                 self.carDetails.sort(key=lambda row: row[sortKey[0]])
                 
         print('{} cars were sorted'.format(str(len(self.carDetails))))
+
+        return
+
+    def sortCarsBySequence(self):
+
+        try:
+            self.carDetails.sort(key=lambda row: row['sequence'])
+        except:
+            print('No cars were sorted')
 
         return
 

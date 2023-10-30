@@ -144,14 +144,6 @@ class StartUp:
 
         PSE.TM.firePropertyChange('opsPatternReport', False, True)
 
-
-
-
-
-        # textPatternReport = TextReports.opsTextPatternReport()
-        # targetPath = Model.writePatternReport(textPatternReport, True)
-        # PSE.genericDisplayReport(targetPath)
-
         print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
 
         return

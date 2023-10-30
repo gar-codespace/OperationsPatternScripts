@@ -6,7 +6,6 @@ Scanner subroutine.
 """
 
 from opsEntities import PSE
-from opsEntities import TextReports
 
 SCRIPT_NAME = '{}.{}'.format(PSE.SCRIPT_DIR, __name__)
 SCRIPT_REV = 20231001
@@ -143,7 +142,6 @@ def applyScanReport(scannerReportPath):
         else:
             PSE.SEQUENCE_HASH['cars'].update({rs[0]:carSequence})
             carSequence += 1
-
 
     _psLog.debug('applyScanReport for scanner: ' + scannerName)
     print('applyScanReport for scanner: ' + scannerName)

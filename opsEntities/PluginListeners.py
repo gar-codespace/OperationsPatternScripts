@@ -1,7 +1,7 @@
 """
 'Plugin' or 'Global' level listeners.
 Listeners for OPS interoperability.
-Lieteners for JMRI events.
+Listeners for JMRI events.
 """
 
 from opsEntities import PSE
