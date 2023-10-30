@@ -126,16 +126,16 @@ class ParseRollingStock:
 
         locoDetailDict = {}
 
-        consistName = locoObject.getConsist().getName()
-        eConsist = PSE.getBundleItem('Single')
-        if consistName:
-            eConsist = consistName
+        try:
+            consistName = locoObject.getConsist().getName()
+        except:
+            consistName = PSE.getBundleItem('Single')
 
     # JMRI attributes
         locoDetailDict['carType'] = locoObject.getTypeName()
         locoDetailDict['model'] = locoObject.getModel()
         locoDetailDict['dccAddress'] = locoObject.getDccAddress()
-        locoDetailDict['consist'] = eConsist
+        locoDetailDict['consist'] = consistName
 
         return locoDetailDict
     

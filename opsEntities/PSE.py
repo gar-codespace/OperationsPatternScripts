@@ -693,6 +693,14 @@ def extendManifest(reportName):
     reportPath = OS_PATH.join(PROFILE_PATH, 'operations', 'jsonManifests', reportName)
     report = loadJson(genericReadReport(reportPath))
     for location in report['locations']:
+        # Engines
+        for loco in location['engines']['add']:
+            locoObject = EM.getByRoadAndNumber(loco['road'], loco['number'])
+            loco['dccAddress'] = locoObject.getDccAddress()
+        for loco in location['engines']['remove']:
+            locoObject = EM.getByRoadAndNumber(loco['road'], loco['number'])
+            loco['dccAddress'] = locoObject.getDccAddress()
+        # Cars
         for car in location['cars']['add']:
             carObject = CM.getByRoadAndNumber(car['road'], car['number'])
             kSize = 0

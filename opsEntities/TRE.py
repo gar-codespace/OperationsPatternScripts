@@ -73,9 +73,32 @@ def translateMessageFormat():
 
     return
 
+def translateLocoFormat(loco):
+    """
+    For items found in the Setup.get<loco>ManifestMessageFormat()
+    """
+                
+    newCarFormat = {}
+
+    newCarFormat['Road'] = loco['road']
+    newCarFormat['Number'] = loco['number']
+    newCarFormat['Type'] = loco['carType']
+    newCarFormat['Model'] = loco['model']
+    newCarFormat['Length'] = loco['length']
+    newCarFormat['Weight'] = loco['weightTons']
+    newCarFormat['Consist'] = loco['consist']
+    newCarFormat['Owner'] = loco['owner']
+    newCarFormat['Track'] = loco['location']['track']['userName']
+    newCarFormat['Destination'] = loco['destination']['userName']
+    newCarFormat['Location'] = loco['location']['userName']
+    newCarFormat['Comment'] = loco['comment']
+    newCarFormat['DCC_Address'] = loco['dccAddress']
+
+    return newCarFormat
+
 def translateCarFormat(car):
     """
-    For items found in the Setup.get< >ManifestMessageFormat()
+    For items found in the Setup.get<car>ManifestMessageFormat()
     """
                 
     newCarFormat = {}
@@ -130,6 +153,63 @@ def getShortLoadType(car):
         lt = PSE.getBundleItem('Occupied').upper()[0]
 
     return lt
+
+
+
+def pickupLoco(loco, manifest, twoCol):
+    """
+    Based on the JMRI version.
+    """
+
+    carItems = translateLocoFormat(loco)
+
+    line = ''
+
+    messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getPickupEngineMessageFormat()
+
+    for messageItem in messageFormat:
+        lineItem = carItems[PSE.ROSETTA[messageItem]]
+        lineWidth = PSE.REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
+
+        if 'Tab' in messageItem:
+            continue
+    # Special case handling for loco number
+        if PSE.ROSETTA[messageItem] == 'Number':
+            line += lineItem.rjust(lineWidth) + ' '
+            continue
+
+        rowItem = lineItem.ljust(lineWidth)[:lineWidth]
+        line += rowItem
+
+    return line
+
+def setoutLoco(loco, manifest, twoCol):
+    """
+    Based on the JMRI version.
+    """
+
+    carItems = translateLocoFormat(loco)
+
+    line = ''
+
+    messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
+
+    for messageItem in messageFormat:
+        lineItem = carItems[PSE.ROSETTA[messageItem]]
+        lineWidth = PSE.REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
+
+        if 'Tab' in messageItem:
+            continue
+    # Special case handling for loco number
+        if PSE.ROSETTA[messageItem] == 'Number':
+            line += lineItem.rjust(lineWidth) + ' '
+            continue
+
+        rowItem = lineItem.ljust(lineWidth)[:lineWidth]
+        line += rowItem
+
+    return line
+
 
 def pickupCar(car, manifest, twoCol):
     """

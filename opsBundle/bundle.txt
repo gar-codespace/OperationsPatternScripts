@@ -1,10 +1,15 @@
+Cars
 Edit Config File
+Engines
 Final Destination Totals:
 GitHub Web Page
 Help
 Hide
 Hold
 List of inventory at {}
+No engines at
+No cars at
+No work at
 None
 Operations Folder
 Pattern Scripts
