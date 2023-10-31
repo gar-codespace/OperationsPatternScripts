@@ -225,7 +225,7 @@ class ParseRollingStock:
             sortRS = self.configFile['Patterns']['US']['SL']
             sortRS.items().sort(key=lambda row: row[1])
         except:
-            print('No engines were sorted')
+            print('Engine list not sorted')
             return
         
         sortList = []
@@ -234,7 +234,7 @@ class ParseRollingStock:
                 sortList.append(sortKey)
 
         if not sortList:
-            print('No engines were sorted')
+            print('Engine list not sorted')
             return
 
     # Sort the loco list
@@ -245,8 +245,7 @@ class ParseRollingStock:
             except:
                 self.locoDetails.sort(key=lambda row: row[sortKey[0]])
 
-        print('{} engines were sorted'.format(str(len(self.locoDetails))))
-
+        print('Sort engines by {}'.format(sortList))
         return
 
     def sortCarsByAttribute(self):
@@ -260,7 +259,7 @@ class ParseRollingStock:
             sortRS = self.configFile['Patterns']['US']['SC']
             sortRS.items().sort(key=lambda row: row[1])
         except:
-            print('No cars were sorted')
+            print('Car list not sorted')
             return
         
         sortList = []
@@ -269,7 +268,7 @@ class ParseRollingStock:
                 sortList.append(sortKey)
 
         if not sortList:
-            print('No cars were sorted')
+            print('Car list not sorted')
             return
 
     # Sort the car list
@@ -280,16 +279,33 @@ class ParseRollingStock:
             except:
                 self.carDetails.sort(key=lambda row: row[sortKey[0]])
                 
-        print('{} cars were sorted'.format(str(len(self.carDetails))))
+        print('Sort cars by {}'.format(sortList))
 
         return
 
     def sortCarsBySequence(self):
+        """
+        If the sequence data is available.
+        """
+
+        try:
+            PSE.SEQUENCE_HASH
+        except:
+            print('Sequence data not found')
+            return
+
+        for car in self.carDetails:
+            car['id'] = '{} {}'.format(car['road'], car['number'])
+            try:
+                car["sequence"] = PSE.SEQUENCE_HASH['cars'][car['id']]
+            except:
+                car["sequence"] = 8000
 
         try:
             self.carDetails.sort(key=lambda row: row['sequence'])
+            print('Sort cars by sequence number')
         except:
-            print('No cars were sorted')
+            print('Car list not sorted')
 
         return
 

@@ -3,7 +3,7 @@
 
 """
 PSE is an abbreviation for Pattern Script Entities.
-Support methods and package constants for all Pattern Script subroutines.
+Support methods, functions and package constants for all Pattern Script subroutines.
 """
 
 import jmri as JMRI

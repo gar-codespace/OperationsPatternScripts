@@ -5,7 +5,6 @@ Todo:
   Maybe put Dest and FD standins into TextReports.py?
   Change Patterns back to moving a car on a train?
   Update default report print attribs.
-  Sort the set cars form by sequence.
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.
@@ -109,6 +108,7 @@ Tested Items:
     'AD' is depricated.
     Adds and removes Divisions and Locations listeners OK.
     makeCompositRailroadName handles missing items OK.
+    Sort the set cars form, and switch list by sequence if available OK.
 
   o2o
     Import-
