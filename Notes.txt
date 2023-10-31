@@ -4,7 +4,6 @@ Todo:
     https://webserver.jmri.org/JavaDoc/doc/jmri/jmrit/operations/rollingstock/RollingStockAttribute.html#store(org.jdom2.Element,java.lang.String,java.lang.String)
   Maybe put Dest and FD standins into TextReports.py?
   Change Patterns back to moving a car on a train?
-  Update default report print attribs.
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.
