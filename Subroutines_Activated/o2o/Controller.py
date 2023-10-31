@@ -76,7 +76,7 @@ def opsPostProcess(message=None):
         workList = PSE.getTrainManifest(train)
 
     elif message == 'opsSwitchList':   
-        workList = PSE.getOpsSwitchList()
+        workList = getOpsSwitchList()
 
     else:
         return
@@ -87,6 +87,14 @@ def opsPostProcess(message=None):
     PSE.genericWriteReport(o2oWorkEventPath, o2oWorkEvents)
 
     return
+
+def getOpsSwitchList():
+
+    trainName = 'ops-Switch List.json'
+    manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', trainName)
+    manifest = PSE.loadJson(PSE.genericReadReport(manifestPath))
+
+    return manifest
 
 
 class StartUp:

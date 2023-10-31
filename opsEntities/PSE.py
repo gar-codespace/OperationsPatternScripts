@@ -119,7 +119,7 @@ def makePatternLog():
     outputPatternLog = ''
     buildReportLevel = JMRI.jmrit.operations.setup.Setup.getBuildReportLevel()
 
-    loggingIndex = logIndex()
+    loggingIndex = _logIndex()
 
     fileName = 'PatternScriptsLog.txt'
     targetPath = OS_PATH.join(PROFILE_PATH, 'operations', 'buildstatus', fileName)
@@ -139,11 +139,10 @@ def makePatternLog():
 
     return outputPatternLog
 
-def logIndex():
+def _logIndex():
     """
+    Helper function for makePatternLog()
     Moved here but may be put back into configFile.
-    Called by:
-    PSE.makePatternLog
     """
 
     loggingIndex = {"9": "- CRITICAL -", "7": "- ERROR -", "5": "- WARNING -", "3": "- INFO -", "1": "- DEBUG -"}
@@ -151,7 +150,22 @@ def logIndex():
     return loggingIndex
 
 
-"""GUI Methods"""
+"""Translation Functions"""
+
+
+def getBundleItem(item):
+    """
+    Centralized function for translation.
+    Retrieves the item from the bundle.
+    """
+
+    try:
+        return unicode(BUNDLE[item], ENCODING)
+    except KeyError:
+        return ''
+
+
+"""GUI Functions"""
 
 
 class ListenToThePSWindow(JAVA_BEANS.PropertyChangeListener):
@@ -221,8 +235,6 @@ def removePSWindowListeners():
 def repaintPatternScriptsFrame():
     """
     Repaints the Pattern Scripts window.
-    Called by:
-    All Show/Hide pulldowns.
     """
 
     configFile = readConfigFile()
@@ -309,7 +321,6 @@ def openOutputFrame(message):
 def closeWindowByName(windowName):
     """
     Close all the windows of a certain name.
-    Called by:
     """
 
     for frame in JMRI.util.JmriJFrame.getFrameList():
@@ -350,9 +361,6 @@ def closeWindowByLevel(level=None):
 def getPsButton():
     """
     Gets the Pattern Scripts button on the PanelPro frame.
-    Called by:
-    Listeners.PatternScriptsFrame.windowClosed
-    Listeners.PatternScriptsFrame.windowOpened
     """
 
     buttonSpaceComponents = APPS.Apps.buttonSpace().getComponents()
@@ -365,8 +373,6 @@ def getPsButton():
 def updateWindowParams(window):
     """
     Setting JmriJFrame(True, True) has no effect that I can figure.
-    Called by:
-    Listeners.PatternScriptsFrame.windowClosing
     """
 
     configPanel = readConfigFile()
@@ -379,15 +385,12 @@ def updateWindowParams(window):
     return
 
 
-"""Utility Methods"""
+"""Utility Functions"""
 
 
 def psLocale():
     """
     Dealers choice, both work.
-    Called by:
-    Bundle
-    Translaters
     """
 
     return PM.getLocale().toString()
@@ -397,9 +400,6 @@ def occuranceTally(listOfOccurances):
     """
     Tally the occurances of a word in a list and return a dictionary.
     Home grown version of collections.Counter.
-    Called by:
-    ViewEntities.makeTextReportLocations
-    o2o.ModelEntities
     """
 
     dict = {}
@@ -414,17 +414,17 @@ def occuranceTally(listOfOccurances):
 
     return dict
 
-def locationNameLookup(locationName):
-    """
-    A default location 'Unreported' is exported by Trainplayer for all RS not on a labeled track.
-    This method returns the translated word for 'Unreported'.
-    All other locations are passed through.
-    """
+# def locationNameLookup(locationName):
+#     """
+#     A default location 'Unreported' is exported by Trainplayer for all RS not on a labeled track.
+#     This method returns the translated word for 'Unreported'.
+#     All other locations are passed through.
+#     """
 
-    if locationName == 'Unreported':
-        locationName = getBundleItem('Unreported')
+#     if locationName == 'Unreported':
+#         locationName = getBundleItem('Unreported')
 
-    return locationName
+#     return locationName
 
 def getAllDivisionNames():
     """
@@ -437,31 +437,28 @@ def getAllDivisionNames():
 
     return divisionNames
 
-def getLocationNamesByDivision(divisionName):
-    """
-    Returned list is sorted.
-    """
+# def getLocationNamesByDivision(divisionName):
+#     """
+#     Returned list is sorted.
+#     """
 
-    locationsByDivision = []
-    # divisionName = readConfigFile()['Patterns']['PD']
+#     locationsByDivision = []
+#     # divisionName = readConfigFile()['Patterns']['PD']
 
-    if divisionName == None:
-        for location in LM.getList():
-            if not location.getDivisionName():
-                locationsByDivision.append(location.getName())
-    else:
-        for location in LM.getList():
-            if location.getDivisionName() == divisionName:
-                locationsByDivision.append(location.getName())
+#     if divisionName == None:
+#         for location in LM.getList():
+#             if not location.getDivisionName():
+#                 locationsByDivision.append(location.getName())
+#     else:
+#         for location in LM.getList():
+#             if location.getDivisionName() == divisionName:
+#                 locationsByDivision.append(location.getName())
 
-    return sorted(locationsByDivision)
+#     return sorted(locationsByDivision)
 
 def getAllLocationNames():
     """
     JMRI sorts the list, returns list of location names.
-    Called by:
-    o2oSubroutine.Model.Divisionator.assignDivisions
-    o2oSubroutine.Model.Trackulator.checkLocations
     """
 
     locationNames = []
@@ -470,37 +467,37 @@ def getAllLocationNames():
 
     return locationNames
 
-def getAllTracks():
-    """
-    All track objects for all locations.
-    Called by:
-    o2oSubroutine.Model.RollingStockulator.checkTracks
-    o2oSubroutine.Model.RollingStockulator.getAllSpurs
-    """
+# def getAllTracks():
+#     """
+#     All track objects for all locations.
+#     Called by:
+#     o2oSubroutine.Model.RollingStockulator.checkTracks
+#     o2oSubroutine.Model.RollingStockulator.getAllSpurs
+#     """
 
-    trackList = []
-    for location in LM.getList():
-        trackList += location.getTracksByNameList(None)
+#     trackList = []
+#     for location in LM.getList():
+#         trackList += location.getTracksByNameList(None)
 
-    return trackList
+#     return trackList
 
-def getOpsProSettingsItems():
-    """
-    From JMRI settings, get railroad name, year modeled, and scale.
-    """
+# def getOpsProSettingsItems():
+#     """
+#     From JMRI settings, get railroad name, year modeled, and scale.
+#     """
 
-    items = {}
-    scaleRubric = readConfigFile('Main Script')['SR']
-    scaleRubric = {sIndex:sScale for sScale, sIndex in scaleRubric.items()}
+#     items = {}
+#     scaleRubric = readConfigFile('Main Script')['SR']
+#     scaleRubric = {sIndex:sScale for sScale, sIndex in scaleRubric.items()}
 
-    OSU = JMRI.jmrit.operations.setup
-    scale = scaleRubric[OSU.Setup.getScale()]
+#     OSU = JMRI.jmrit.operations.setup
+#     scale = scaleRubric[OSU.Setup.getScale()]
 
-    items['YR'] = OSU.Setup.getYearModeled()
-    items['LN'] = OSU.Setup.getRailroadName()
-    items['SC'] = scale
+#     items['YR'] = OSU.Setup.getYearModeled()
+#     items['LN'] = OSU.Setup.getRailroadName()
+#     items['SC'] = scale
 
-    return items
+#     return items
 
 def makeCompositRailroadName(layoutDetails):
     """
@@ -553,48 +550,49 @@ def getTrainManifest(train):
 
     return manifest
 
-def saveManifest(manifest, train):
+# def saveManifest(manifest, train):
 
-    trainName = 'train-{}.json'.format(train.toString())
-    manifestPath = OS_PATH.join(PROFILE_PATH, 'operations', 'jsonManifests', trainName)
-    genericWriteReport(manifestPath, dumpJson(manifest))
+#     trainName = 'train-{}.json'.format(train.toString())
+#     manifestPath = OS_PATH.join(PROFILE_PATH, 'operations', 'jsonManifests', trainName)
+#     genericWriteReport(manifestPath, dumpJson(manifest))
 
-    return
+#     return
 
-def getOpsSwitchList():
+# def getOpsSwitchList():
 
-    trainName = '{}.json'.format(getBundleItem('ops-Switch List'))
-    manifestPath = OS_PATH.join(PROFILE_PATH, 'operations', 'jsonManifests', trainName)
-    manifest = loadJson(genericReadReport(manifestPath))
+#     trainName = '{}.json'.format(getBundleItem('ops-Switch List'))
+#     manifestPath = OS_PATH.join(PROFILE_PATH, 'operations', 'jsonManifests', trainName)
+#     manifest = loadJson(genericReadReport(manifestPath))
 
-    return manifest
-
-
-"""Formatting Methods"""
+#     return manifest
 
 
-def isoValidTime(timeStamp):
-    """
-    Input the JMRI generated iso time stamp.
-    Return format: Valid Oct 08, 1915, 11:11
-    """
+"""Formatting Functions"""
 
-    valid = getBundleItem('Valid') + ' ' + JMRI.jmrit.operations.trains.TrainCommon.getDate(True)
 
-    return valid
+# def isoValidTime(timeStamp):
+#     """
+#     Input the JMRI generated iso time stamp.
+#     Return format: Valid Oct 08, 1915, 11:11
+#     """
+
+#     valid = getBundleItem('Valid') + ' ' + JMRI.jmrit.operations.trains.TrainCommon.getDate(True)
+
+#     return valid
 
 def convertIsoToValidTime(isoDate):
-
-    epochTime = convertIsoTimeToEpoch(isoDate)
-
-    return validTime(epochTime)
-
-def convertIsoTimeToEpoch(isoTime):
     """
+    Convert ISO time generated by JMRI or OPS into the JMRI standard date time.
     Example: "date" : "2022-02-26T17:16:17.807+0000"
-    Example: "date" : "1915-04-24T20:55:40.227+00:00"
-    Called by:
-    o2oSubroutine.ModelWorkEvents.jmriManifestConversion.convertHeader
+    """
+
+    epochTime = _convertIsoTimeToEpoch(isoDate)
+
+    return _validTime(epochTime)
+
+def _convertIsoTimeToEpoch(isoTime):
+    """
+    Helper function for convertIsoToValidTime()
     """
     try:
         epochTime = TIME.mktime(TIME.strptime(isoTime, "%Y-%m-%dT%H:%M:%S.%f+0000"))
@@ -613,24 +611,26 @@ def convertIsoTimeToEpoch(isoTime):
 
     return epochTime
 
-def validTime(epochTime=0):
+def _validTime(epochTime=0):
     """
+    Helper function for convertIsoToValidTime()
     Get local time adjusted for time zone and dst.
     Uses calander or railroad year.
     Valid 11/15/2022 11:54
     """
 
     valid = getBundleItem('Valid')
-    year = getYear()
-    time = getTime(epochTime)
+    year = _getYear()
+    time = _getTime(epochTime)
 
     if JMRI.jmrit.operations.setup.Setup.is12hrFormatEnabled():
         return TIME.strftime(valid + ' %m/%d/' + year + ' %I:%M %p', time)
     else:
         return TIME.strftime(valid + ' %m/%d/' + year + ' %H:%M', time)
 
-def getYear():
+def _getYear():
     """
+    Helper function for convertIsoToValidTime()
     Either the current year or the entry in settings: year modeled.
     """
 
@@ -639,6 +639,21 @@ def getYear():
         return railroadYear
     else:
         return TIME.strftime('%Y', TIME.gmtime(TIME.time()))
+
+def _getTime(epochTime=0):
+    """
+    Helper function for convertIsoToValidTime()
+    """
+
+    if epochTime == 0:
+        epochTime = TIME.time()
+
+    if TIME.localtime(epochTime).tm_isdst and TIME.daylight: # If local dst and dst are both 1
+        timeOffset = TIME.altzone
+    else:
+        timeOffset = TIME.timezone # in seconds
+
+    return TIME.gmtime(epochTime - timeOffset)
 
 def isoTimeStamp():
     """
@@ -651,25 +666,13 @@ def isoTimeStamp():
 
     return JMRI.jmrit.operations.trains.TrainCommon.getISO8601Date(bool)
 
-def timeStamp():
-    """
-    Returns the time in format: YYYY.MO.DY.24.MN.SC
-    Used by Throwback.
-    """
+# def timeStamp():
+#     """
+#     Returns the time in format: YYYY.MO.DY.24.MN.SC
+#     Used by Throwback.
+#     """
 
-    return TIME.strftime('%Y.%m.%d.%H.%M.%S', getTime())
-
-def getTime(epochTime=0):
-
-    if epochTime == 0:
-        epochTime = TIME.time()
-
-    if TIME.localtime(epochTime).tm_isdst and TIME.daylight: # If local dst and dst are both 1
-        timeOffset = TIME.altzone
-    else:
-        timeOffset = TIME.timezone # in seconds
-
-    return TIME.gmtime(epochTime - timeOffset)
+#     return TIME.strftime('%Y.%m.%d.%H.%M.%S', getTime())
 
 def findLongestStringLength(list):
     """
@@ -727,7 +730,8 @@ def extendManifest(reportName):
 
     return
 
-"""File Handling Methods"""
+
+"""File Handling Functions"""
 
 
 def makeReportFolders():
@@ -773,8 +777,7 @@ def genericReadReport(filePath):
 
 def genericWriteReport(filePath, genericReport):
     """
-    Called by:
-    Everything
+    Called by everything
     """
 
     try:
@@ -788,41 +791,31 @@ def genericWriteReport(filePath, genericReport):
     return
 
 def genericDisplayReport(genericReportPath):
-    """
-    Called by:
-    MainScript.Controller.logItemSelected
-    MainScript.Controller.ecItemSelected
-    PatternTracksSubroutine.View.trackPatternButton
-    PatternTracksSubroutine.ViewSetCarsForm.switchListButton
-    """
 
     targetFile = JAVA_IO.File(genericReportPath)
 
     JMRI.util.HelpUtil.openWindowsFile(targetFile)
-# Does not work on Windows 11
+# Windows 11 throws error with json file
     # JAVA_AWT.Desktop.getDesktop().edit(targetFile)
-    # Windows 11 throws error with json file
 
     return
 
 def loadJson(file):
     """
-    Called by:
-    Everything
+    Called by everything
     """
 
     return jsonLoadS(file)
 
 def dumpJson(file):
     """
-    Called by:
-    Everything
+    Called by everything
     """
 
     return jsonDumpS(file, indent=2, sort_keys=True)
 
 
-"""Configuration File Methods"""
+"""Configuration File Functions"""
 
 
 def validateConfigFile():
@@ -884,7 +877,7 @@ def validateConfigFileComponents():
 
 def getSubroutineDirs():
     """
-    Returns a list of subroutine names in the Subroutines directory.
+    Returns a list of subroutine names in the Subroutines_Activated directory.
     """
 
     subroutines = []
@@ -909,8 +902,7 @@ def mergeConfigFiles():
 def readConfigFile(subConfig=None):
     """
     checkConfigFile will return the config file if it's ok or a new one otherwise.
-    Called by:
-    Everything
+    Called by everything.
     """
 
     configFile = checkConfigFile()
@@ -959,27 +951,24 @@ def makeNewConfigFile():
 def tryConfigFile():
     """
     Try/except catches some user edit mistakes.
-    Called by:
-    PSE.readConfigFile
     """
 
     try:
-        configFile = getConfigFile()
+        configFile = _getConfigFile()
     except ValueError:
-        writeNewConfigFile()
-        configFile = getConfigFile()
+        _writeNewConfigFile()
+        configFile = _getConfigFile()
         _psLog.warning('Defective configFile.json found, new file written')
     except IOError:
-        writeNewConfigFile()
-        configFile = getConfigFile()
+        _writeNewConfigFile()
+        configFile = _getConfigFile()
         _psLog.warning('No configFile.json found, new file written')
 
     return configFile
 
-def getConfigFile():
+def _getConfigFile():
     """
-    Called by:
-    tryConfigFile
+    Helper function for tryConfigFile()
     """
 
     fileName = 'configFile.json'
@@ -987,23 +976,9 @@ def getConfigFile():
 
     return loadJson(genericReadReport(targetPath))
 
-def writeConfigFile(configFile):
+def _writeNewConfigFile():
     """
-    Called by:
-    Everything
-    """
-
-    fileName = 'configFile.json'
-    targetPath = OS_PATH.join(PROFILE_PATH, 'operations', fileName)
-    targetFile = dumpJson(configFile)
-    genericWriteReport(targetPath, targetFile)
-
-    return
-
-def writeNewConfigFile():
-    """
-    Called by:
-    PSE.tryConfigFile
+    Helper function for tryConfigFile()
     """
 
     targetDir = OS_PATH.join(PROFILE_PATH, 'operations')
@@ -1021,11 +996,19 @@ def writeNewConfigFile():
 
     return
 
+def writeConfigFile(configFile):
+    """
+    Called by everything.
+    """
+
+    fileName = 'configFile.json'
+    targetPath = OS_PATH.join(PROFILE_PATH, 'operations', fileName)
+    targetFile = dumpJson(configFile)
+    genericWriteReport(targetPath, targetFile)
+
+    return
+
 def deleteConfigFile():
-    """
-    Called by:
-    MainScript.Controller.rsItemSelected
-    """
 
     fileName = 'configFile.json'
     targetFile = OS_PATH.join(PROFILE_PATH, 'operations', fileName)
@@ -1034,25 +1017,8 @@ def deleteConfigFile():
     return
 
 
-"""Color Handling Methods"""
+"""Color Handling Functions"""
 
-
-def getSpecificColor(colorName):
-    """
-    Called by:
-    PSE.getCarColor
-    PSE.getLocoColor
-    PSE.getAlertColor
-    """
-
-    colorPalette = readConfigFile('Main Script')['US']['CD']
-
-    r = colorPalette[colorName]["R"]
-    g = colorPalette[colorName]["G"]
-    b = colorPalette[colorName]["B"]
-    a = colorPalette[colorName]["A"]
-
-    return JAVA_AWT.Color(r, g, b, a)
 
 def getColorA():
     """
@@ -1063,7 +1029,7 @@ def getColorA():
 
     try:
         colorName = readConfigFile('Main Script')['US']['CD']['colorA']
-        color = getSpecificColor(colorName)
+        color = _getSpecificColor(colorName)
         return color
     except:
         print('Exception at: PSE.getColorA')
@@ -1079,7 +1045,7 @@ def getColorB():
 
     try:
         colorName = readConfigFile('Main Script')['US']['CD']['colorB']
-        color = getSpecificColor(colorName)
+        color = _getSpecificColor(colorName)
         return color
     except:
         print('Exception at: PSE.getColorB')
@@ -1095,23 +1061,23 @@ def getColorC():
 
     try:
         colorName = readConfigFile('Main Script')['US']['CD']['colorC']
-        color = getSpecificColor(colorName)
+        color = _getSpecificColor(colorName)
         return color
     except:
         print('Exception at: PSE.getColorC')
         _psLog.warning('colorC definition not found in configFile.json')
         return JAVA_AWT.Color(0, 0, 0, 0)
 
-
-"""Translation Methods"""
-
-def getBundleItem(item):
+def _getSpecificColor(colorName):
     """
-    Centralized method for translation.
-    Retrieves the item from the bundle.
+    Helper function for getColor<>()
     """
 
-    try:
-        return unicode(BUNDLE[item], ENCODING)
-    except KeyError:
-        return ''
+    colorPalette = readConfigFile('Main Script')['US']['CD']
+
+    r = colorPalette[colorName]["R"]
+    g = colorPalette[colorName]["G"]
+    b = colorPalette[colorName]["B"]
+    a = colorPalette[colorName]["A"]
+
+    return JAVA_AWT.Color(r, g, b, a)

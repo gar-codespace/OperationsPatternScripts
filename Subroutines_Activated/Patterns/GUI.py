@@ -204,7 +204,7 @@ def makeSetCarsFormHeader(setCarsFormData):
     splitName = setCarsFormData['railroad'].split('\n')
     trackName = setCarsFormData['locations'][0]['userName'] # There's only one track
     locationName = PSE.readConfigFile('Patterns')['PL'] # There's only one location
-    validDate = PSE.isoValidTime(setCarsFormData['date'])
+    validDate = PSE.convertIsoToValidTime(setCarsFormData['date'])
 
     headerTrackLabel = PSE.JAVX_SWING.JLabel()
     headerTrackLabel.setAlignmentX(PSE.JAVA_AWT.Component.CENTER_ALIGNMENT)

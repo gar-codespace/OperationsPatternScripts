@@ -11,6 +11,24 @@ from opsEntities import PSE
 SCRIPT_NAME = '{}.{}'.format(PSE.SCRIPT_DIR, __name__)
 SCRIPT_REV = 20231001
 
+def getLocationNamesByDivision(divisionName):
+    """
+    Returned list is sorted.
+    """
+
+    locationsByDivision = []
+
+    if divisionName == None:
+        for location in PSE.LM.getList():
+            if not location.getDivisionName():
+                locationsByDivision.append(location.getName())
+    else:
+        for location in PSE.LM.getList():
+            if location.getDivisionName() == divisionName:
+                locationsByDivision.append(location.getName())
+
+    return sorted(locationsByDivision)
+
 def getDetailsByTrack(selectedTracks, reportToggle):
     """
     Returns a list of dictionaries.

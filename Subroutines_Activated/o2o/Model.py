@@ -1485,13 +1485,12 @@ class RollingStockulator:
     
     def checkTracks(self):
 
-        if not PSE.getAllTracks():     
+        if not self.getAllTracks():     
             PSE.openOutputFrame(PSE.getBundleItem('ALERT: No JMRI tracks were found.'))
             self.validationResult = False
 
         return
 
-    
     def updateRollingStock(self):
         """
         Mini controller.
@@ -1545,7 +1544,7 @@ class RollingStockulator:
         Returns the result of testing the location and track.
         """
 
-        locationName = PSE.locationNameLookup(location)
+        locationName = self.locationNameLookup(location)
 
         if PSE.LM.getLocationByName(locationName) == None:
 
@@ -1642,7 +1641,7 @@ class RollingStockulator:
         kernel = PSE.KM.getKernelByName(carData['kernel'])
         car.setKernel(kernel)
 
-        locationName = PSE.locationNameLookup(carData['location'])
+        locationName = self.locationNameLookup(carData['location'])
         location = PSE.LM.getLocationByName(locationName)
         track = location.getTrackByName(carData['track'], None)
         car.setLocation(location, track, True)
@@ -1667,12 +1666,24 @@ class RollingStockulator:
         loco.setConsist(consist)
         loco.setColor(color)
 
-        locationName = PSE.locationNameLookup(locoData['location'])
+        locationName = self.locationNameLookup(locoData['location'])
         location = PSE.LM.getLocationByName(locationName)
         track = location.getTrackByName(locoData['track'], None)
         loco.setLocation(location, track, True)
 
         return
+
+    def locationNameLookup(self, locationName):
+        """
+        A default location 'Unreported' is exported by Trainplayer for all RS not on a labeled track.
+        This method returns the translated word for 'Unreported'.
+        All other locations are passed through.
+        """
+
+        if locationName == 'Unreported':
+            locationName = PSE.getBundleItem('Unreported')
+
+        return locationName
 
     def splitId(self, rsData):
         """
@@ -1710,12 +1721,23 @@ class RollingStockulator:
         Returns an unordered list of spurs as strings.
         """
 
-        for track in PSE.getAllTracks():
+        for track in self.getAllTracks():
             if track.getTrackTypeName() == 'spur':
                 self.listOfSpurs.append(track)
 
         return
     
+    def getAllTracks(self):
+        """
+        All track objects for all locations.
+        """
+
+        trackList = []
+        for location in PSE.LM.getList():
+            trackList += location.getTracksByNameList(None)
+
+        return trackList
+
     def applySpursScheduleToCars(self):
         """
         Applies a suprs schedule to each car at the spur.

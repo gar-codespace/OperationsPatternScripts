@@ -14,6 +14,7 @@ Cars
 Check TrainPlayer-Advanced Ops-Industries for errors.
 Check TrainPlayer-Advanced Ops-Locales for semicolon.
 Cancel
+Confirm
 Empty
 Extended Detail
 From TrainPlayer, re-export layout to JMRI.

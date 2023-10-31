@@ -24,8 +24,7 @@ def o2oWorkEvents(manifest):
     o2oWorkEvents = 'HN,' + manifest['railroad'].replace('\n', ';') + '\n'
     o2oWorkEvents += 'HT,' + manifest['userName'] + '\n'
     o2oWorkEvents += 'HD,' + manifest['description'] + '\n'
-    epochTime = PSE.convertIsoTimeToEpoch(manifest['date'])
-    o2oWorkEvents += 'HV,' + PSE.validTime(epochTime) + '\n'
+    o2oWorkEvents += 'HV,{}\n'.format(PSE.convertIsoToValidTime(manifest['date']))
     o2oWorkEvents += 'WT,' + str(len(manifest['locations'])) + '\n'
 # Body
     for i, location in enumerate(manifest['locations'], start=1):

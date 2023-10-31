@@ -84,7 +84,7 @@ def locComboUpdater():
     component = PSE.getComponentByName(frame, 'jLocations')
     component.removeAllItems()
     component.addItem(None)
-    for locationName in PSE.getLocationNamesByDivision(divisionName):
+    for locationName in ModelEntities.getLocationNamesByDivision(divisionName):
         component.addItem(locationName)
 
     configFile['Patterns'].update({'PL':None})

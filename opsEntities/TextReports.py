@@ -129,8 +129,7 @@ def opsTextSwitchList():
     textSwitchList += report['railroad'] + '\n'
     textSwitchList += '\n'
     textSwitchList += PSE.getBundleItem('Switch List for location ({})').format(location) + '\n'
-    epochTime = PSE.convertIsoTimeToEpoch(report['date'])
-    textSwitchList += PSE.validTime(epochTime) + '\n'
+    textSwitchList += '{}\n'.format(PSE.convertIsoToValidTime(report['date']))
     textSwitchList += '\n'
 # Body
     for location in report['locations']: # For the OPS switch list, the locations list is a track list.
@@ -189,8 +188,7 @@ def opsJmriManifest(manifest):
     textManifest += manifest['railroad'] + '\n'
     textManifest += '\n'
     textManifest += TMT.getStringManifestForTrain().format(manifest['userName'], manifest['description']) + '\n'
-    epochTime = PSE.convertIsoTimeToEpoch(manifest['date'])
-    textManifest += '{}\n'.format(PSE.validTime(epochTime))
+    textManifest += '{}\n'.format(PSE.convertIsoToValidTime(manifest['date']))
     textManifest += '\n'
 # Body
     for location in manifest['locations']:
@@ -281,12 +279,10 @@ def opsJmriSwitchLists(manifest, typeFlag):
 
     for location in manifest['locations']:
     # Header
-        epochTime = PSE.convertIsoTimeToEpoch(manifest['date'])
-
         textSwitchList = '{}\n'.format(PSE.getExtendedRailroadName())
         textSwitchList += '\n'
         textSwitchList += '{}\n'.format(SMT.getStringSwitchListFor().format(location['userName']))
-        textSwitchList += '{}\n'.format(PSE.validTime(epochTime))
+        textSwitchList += '{}\n'.format(PSE.convertIsoToValidTime(manifest['date']))
         textSwitchList += '\n'
         textSwitchList += '{}\n'.format(SMT.getStringSwitchListByTrack())
 
