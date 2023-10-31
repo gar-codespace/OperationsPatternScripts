@@ -2,12 +2,9 @@ Todo:
   How to publish DeepL?
   Try to add sequence to the car xml:
     https://webserver.jmri.org/JavaDoc/doc/jmri/jmrit/operations/rollingstock/RollingStockAttribute.html#store(org.jdom2.Element,java.lang.String,java.lang.String)
-  Maybe put Dest and FD standins into TextReports.py
-  Decide if Throwback saves jPlus data.
-  Move PSE.locationNameLookup() to o2o.
-  Move all single use PSE functions to their respective subroutine.
+  Maybe put Dest and FD standins into TextReports.py?
+  Change Patterns back to moving a car on a train?
   Update default report print attribs.
-  Change Patterns back to moving a car on a train.
   Sort the set cars form by sequence.
 
 Duplicate code:
