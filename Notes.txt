@@ -9,7 +9,6 @@ Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.
   PSE chunkPath.
   PSE pickupCar, dropCar localCar
-  Root out the duplicates in TextReports.py
   
 Comments:
   Schedule does not prevent setting a car to a track.

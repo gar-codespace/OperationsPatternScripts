@@ -93,7 +93,7 @@ class PluginGUI:
         ptMenuItem = self._makeMenuItem()
         self.psPluginMenuItems.append(ptMenuItem)
         toolsMenu.add(ptMenuItem)
-        if not Bundle.validateKeyFile():
+        if not Bundle.validateTranslationService():
             ptMenuItem.setEnabled(False)
 
         self.itemText = PSE.getBundleItem('Edit Config File')

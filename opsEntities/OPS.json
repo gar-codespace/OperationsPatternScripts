@@ -107,12 +107,13 @@
       "PW" : 1000,
       "PX" : 0,
       "PY" : 0,
-      "RV" : 20231006,
+      "RV" : 20231007,
       "GP" : "https://github.com/gar-codespace/OperationsPatternScripts",
       "EC" : {
         "400" : "400 - Bad Request: Unable to translate the current language.",
         "402" : "402 - Requested page not found",
-        "403" : "403 - Forbidden. The key is invalid."
+        "403" : "403 - Forbidden. The key is invalid.",
+        "456" : "456 - Usage limits exceeded."
       }
       },
     "SR" : {

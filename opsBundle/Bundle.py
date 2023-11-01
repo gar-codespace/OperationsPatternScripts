@@ -18,6 +18,17 @@ PSE.BUNDLE_DIR = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsBundle')
 
 _psLog = PSE.LOGGING.getLogger('OPS.OB.Bundle')
 
+def validateTranslationService():
+    """
+    Checks that the translation service selected is working correctly.
+    """
+
+    returnValue = True
+
+    returnValue = Translator().testTranslationService()
+    
+    return returnValue
+
 
 class CreateStubFile:
     """
@@ -263,33 +274,6 @@ def updateHelpFileForLocale():
 """Bundle and Help translation methods"""
 
 
-def validateKeyFile():
-    """
-    Checks that the keys.py file is valid.
-    Called by:
-    Main Script.View
-    """
-
-    returnValue = True
-
-    itemTarget =  PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'Keys.py')
-    if not PSE.JAVA_IO.File(itemTarget).isFile():
-        _psLog.warning('Authentication key file not found')
-        print('Authentication key file not found')
-        returnValue = False
-
-    translator = Translator()
-    translator.setTranslationService()
-
-    try:
-        translator.testTranslationService()
-    except URLError:
-        print('Unable to test internet connection')
-        _psLog.warning('Unable to test internet connection')
-        returnValue = False
-    
-    return returnValue
-
 def translateBundles():
     """
     Makes the plugin.<locale>.json file from getAllBundles()
@@ -315,7 +299,7 @@ def translateHelpHtml():
     """
 
     translator = Translator()
-    translator.setTranslationService()
+    # translator.setTranslationService()
     translatedHelpHtml = ''
 
     pPattern = re.compile('(<p>)(.+)(<.+>)') # finds <p>Overview of this plugin</p>
@@ -372,7 +356,7 @@ def batchTranslator(textBundle):
     inputBundle = textBundle.splitlines()
 
     translator = Translator()
-    translator.setTranslationService()
+    # translator.setTranslationService()
     translator.translateItems(inputBundle)
 
     batchTranslation = translator.makeDictionary()
@@ -393,6 +377,7 @@ class Translator:
 
         self.controlPanel = PSE.readConfigFile('Main Script')['CP']
         self.translatorChoice = self.controlPanel['TS'][self.controlPanel['TC']]
+        self.translationService = getattr(Translators, self.translatorChoice)()
 
         self.translationDict = {}
         self.tempResult = []
@@ -400,31 +385,23 @@ class Translator:
 
         return
 
-    def setTranslationService(self):
-        """
-        Gets the translator from readConfigFile('CP')['TC']
-        Example: self.translationService = Translators.UseDeepL()
-        """
+    # def setTranslationService(self):
+    #     """
+    #     Gets the translator from readConfigFile('CP')['TC']
+    #     Example: self.translationService = Translators.UseDeepL()
+    #     """
 
-        self.translationService = getattr(Translators, self.translatorChoice)()
+    #     self.translationService = getattr(Translators, self.translatorChoice)()
 
-        return
+    #     return
     
     def testTranslationService(self):
         """
         On start of the plugin, test that the translation service is available.
         """
 
-        url = self.translationService.testTheService()
-        try:
-            response = urlopen(url)
-            response.close()
-            _psLog.info('PASS: Translation service check')
-            return True
-        except HTTPError as error:
-            errorCode = self.controlPanel['EC'][str(error.code)]
-            _psLog.warning('FAIL: Translation service check: ' + errorCode)
-            return False
+        return self.translationService.testTheService()
+
 
     def translateSingle(self, singleItem):
         """
@@ -433,8 +410,8 @@ class Translator:
         Harden this in v3.
         """
 
-        encodedItem = unicode(singleItem, PSE.ENCODING)
-        url = self.translationService.getTheUrl(encodedItem)
+        # encodedItem = unicode(singleItem, PSE.ENCODING)
+        url = self.translationService.getTheUrl(singleItem)
         response = urlopen(url)
         translation = PSE.loadJson(response.read())
         response.close()
