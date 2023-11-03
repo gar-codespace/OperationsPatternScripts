@@ -66,10 +66,9 @@ def opsTextPatternReport():
     # Engines
         textPatternReport += '{}:\n'.format(PSE.getBundleItem('Engines'))
         for loco in location['engines']['add']:
-            for loco in location['engines']['add']:
-                formatPrefix = ' [{}] '.format('  ')
-                line = TRE.pickupLoco(loco, True, False)
-                textPatternReport += '{} {}\n'.format(formatPrefix ,line)
+            formatPrefix = ' [{}] '.format('  ')
+            line = TRE.pickupLoco(loco, True, False)
+            textPatternReport += '{} {}\n'.format(formatPrefix ,line)
         if len(location['engines']['add']) == 0:
             textPatternReport += ' {}: {}\n\n'.format(PSE.getBundleItem('No engines at'), location['userName'])
     # Cars

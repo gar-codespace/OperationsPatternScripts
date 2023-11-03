@@ -81,10 +81,17 @@ def nextCommit():
 
     return snapShots[SNAP_SHOT_INDEX]
 
+def stampTime():
+    """
+    Returns the time in format: YYYY.MO.DY.24.MN.SC
+    """
+
+    return PSE.TIME.strftime('%Y.%m.%d.%H.%M.%S', PSE._getTime())
+
 def makeCommit(displayWidgets):
 
     configFile = PSE.readConfigFile()
-    ts = PSE.timeStamp()
+    ts = stampTime()
 
     for widget in displayWidgets:
         if widget.getClass() == PSE.JAVX_SWING.JTextField:
