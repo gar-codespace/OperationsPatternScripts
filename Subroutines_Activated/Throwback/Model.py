@@ -156,10 +156,10 @@ def throwbackCommit(displayWidgets):
             _psLog.info('Throwback: ' + widget.getText() + ' to ' + throwbackRestorePoint[1])
 
     # Restore the extended data as well
-        fileName = throwbackRestorePoint[0] + '.D.json.o2o'
-        targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', fileName)
-        configFile['Main Script'].update({'LD':PSE.loadJson(PSE.genericReadReport(targetFile))})
-        PSE.writeConfigFile(configFile)
+        # fileName = throwbackRestorePoint[0] + '.D.json.o2o'
+        # targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', fileName)
+        # configFile['Main Script'].update({'LD':PSE.loadJson(PSE.genericReadReport(targetFile))})
+        # PSE.writeConfigFile(configFile)
 
     for widget in displayWidgets:
         if widget.getName() == 'rCheckBox' and widget.selected:
