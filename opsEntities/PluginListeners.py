@@ -46,8 +46,6 @@ class PatternScriptsFrameListener(PSE.JAVA_AWT.event.WindowListener):
 
         _psLog.debug(WINDOW_CLOSING)
 
-        PSE.CM.firePropertyChange('opsWindowClosing', False, True)
-
         removeSubroutineListeners()
         
         PSE.updateWindowParams(WINDOW_CLOSING.getSource())
@@ -59,6 +57,11 @@ class PatternScriptsFrameListener(PSE.JAVA_AWT.event.WindowListener):
         return
 
     def windowActivated(self, WINDOW_ACTIVATED):
+
+        _psLog.debug(WINDOW_ACTIVATED)
+
+        refreshSubroutines()
+
         return
     def windowClosed(self, WINDOW_CLOSED):
         return
@@ -69,6 +72,15 @@ class PatternScriptsFrameListener(PSE.JAVA_AWT.event.WindowListener):
     def windowDeactivated(self, WINDOW_DEACTIVATED):
         return
 
+
+def refreshSubroutines():
+
+    for subroutine in PSE.getSubroutineDirs():
+        xModule = 'Subroutines_Activated.{}'.format(subroutine)
+        package = __import__(xModule, fromlist=['Model'], level=-1)
+        package.Model.refreshSubroutine()
+
+    return
 
 def addSubroutineListeners():
     """
@@ -340,15 +352,6 @@ class LocationsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
                 xModule = 'Subroutines_Activated.{}'.format(subroutine)
                 package = __import__(xModule, fromlist=['Model'], level=-1)
                 package.Model.initializeSubroutine()
-
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
-
-        if PROPERTY_CHANGE_EVENT.propertyName == 'opsRefreshSubroutine':
-        # Fired from OPS
-            for subroutine in PSE.getSubroutineDirs():
-                xModule = 'Subroutines_Activated.{}'.format(subroutine)
-                package = __import__(xModule, fromlist=['Model'], level=-1)
-                package.Model.refreshSubroutine()
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
 

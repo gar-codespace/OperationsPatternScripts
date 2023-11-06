@@ -32,9 +32,7 @@ def resetSubroutine():
 
 def refreshSubroutine():
 
-    configFile = PSE.readConfigFile()
-
-    scannerComboUpdater(configFile['Scanner']['SI'])
+    scannerComboUpdater()
 
     return
 
@@ -119,6 +117,21 @@ def scannerComboUpdater(selected=None):
     component.setSelectedItem(selected)
     
     return
+
+def _updateScannerList():
+    """
+    Gets the file names in the designated scanner path.
+    """
+
+    configFile = PSE.readConfigFile()
+    scannerPath = configFile['Scanner']['US']['SP']
+    dirContents = PSE.JAVA_IO.File(scannerPath).list()
+
+    pulldownList = []
+    for file in dirContents:
+        pulldownList.append(file.split('.')[0])
+
+    return pulldownList
 
 def getScannerReportPath():
     """
@@ -270,18 +283,3 @@ def resequenceManifestJson(jsonFileName):
     PSE.genericWriteReport(manifestPath, PSE.dumpJson(manifest))
 
     return
-
-def _updateScannerList():
-    """
-    Gets the file names in the designated scanner path.
-    """
-
-    configFile = PSE.readConfigFile()
-    scannerPath = configFile['Scanner']['US']['SP']
-    dirContents = PSE.JAVA_IO.File(scannerPath).list()
-
-    pulldownList = []
-    for file in dirContents:
-        pulldownList.append(file.split('.')[0])
-
-    return pulldownList

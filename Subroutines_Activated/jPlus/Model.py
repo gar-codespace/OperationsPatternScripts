@@ -70,46 +70,25 @@ def resetSubroutine():
 
 def refreshSubroutine():
 
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'tpRailroadData.json')
-
-    if not PSE.JAVA_IO.File(targetPath).isFile():
-        _psLog.info('tpRailroadData.json not found')
-        return
-
     configFile = PSE.readConfigFile()
     
-    PSE.JAVA_IO.File(targetPath).isFile()
-    tpReport = PSE.loadJson(PSE.genericReadReport(targetPath))
-
     frameName = PSE.getBundleItem('Pattern Scripts')
     frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
 
-    value = tpReport['Extended_operatingRoad']
     component = PSE.getComponentByName(frame, 'operatingRoad')
-    component.setText(value)
-    configFile['jPlus']['LD'].update({'OR':value})
+    component.setText(configFile['jPlus']['LD']['OR'])
 
-    value = tpReport['Extended_territory']
     component = PSE.getComponentByName(frame, 'territory')
-    component.setText(value)
-    configFile['jPlus']['LD'].update({'TR':value})
+    component.setText(configFile['jPlus']['LD']['TR'])
 
-    value = tpReport['Extended_location']
     component = PSE.getComponentByName(frame, 'location')
-    component.setText(value)
-    configFile['jPlus']['LD'].update({'LO':value})
+    component.setText(configFile['jPlus']['LD']['LO'])
 
-    value = tpReport['Extended_year']
     component = PSE.getComponentByName(frame, 'yearModeled')
-    component.setText(value)
-    configFile['jPlus']['LD'].update({'YR':value})
+    component.setText(configFile['jPlus']['LD']['YR'])
 
-    PSE.writeConfigFile(configFile)
-
-    compositeRailroadName()
     updateYearModeled()
-    refreshOperationsSettingsFrame()
-    
+
     return
 
 
@@ -147,40 +126,6 @@ def _modifyAction(reportName):
     PSE.genericWriteReport(reportPath, PSE.dumpJson(report))
 
     return
-
-# def _extendManifest(reportName):
-#     """
-#     Adds additional attributes found in the print options dialog.
-#     """
-
-#     reportPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
-#     report = PSE.loadJson(PSE.genericReadReport(reportPath))
-#     for location in report['locations']:
-#         for car in location['cars']['add']:
-#             carObject = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
-#             kSize = 0
-#             kernelName = carObject.getKernelName()
-#             if kernelName:
-#                 kSize = PSE.KM.getKernelByName(kernelName).getSize()
-#             car['kernelSize'] = kSize
-#             car['finalDestination']={'userName':carObject.getFinalDestinationName(), 'track':{'userName':carObject.getFinalDestinationTrackName()}}
-#             car['loadType'] = carObject.getLoadType()
-#             car['division'] = PSE.LM.getLocationByName(car['location']['userName']).getDivisionName()
-
-#         for car in location['cars']['remove']:
-#             carObject = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
-#             kSize = 0
-#             kernelName = carObject.getKernelName()
-#             if kernelName:
-#                 kSize = PSE.KM.getKernelByName(kernelName).getSize()
-#             car['kernelSize'] = kSize
-#             car['finalDestination']={'userName':carObject.getFinalDestinationName(), 'track':{'userName':carObject.getFinalDestinationTrackName()}}
-#             car['loadType'] = carObject.getLoadType()
-#             car['division'] = PSE.LM.getLocationByName(car['location']['userName']).getDivisionName()
-
-#     PSE.genericWriteReport(reportPath, PSE.dumpJson(report))
-
-#     return
 
 def _getExtendedRailroadName():
     """
