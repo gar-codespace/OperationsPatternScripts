@@ -96,21 +96,18 @@ def moveRollingStock(switchList):
     """
 
     configFile = PSE.readConfigFile()
-    isSequence, sequenceHash = PSE.getSequenceHash()
-
-    carSequence = 7001
-    locoSequence = 7001
 
     ignoreTrackLength = configFile['Patterns']['PI']
     applySchedule = configFile['Patterns']['AS']
-    allTracksAtLoc = ModelEntities.getTrackNamesByLocation(None)
     toLocation = PSE.LM.getLocationByName(configFile['Patterns']['PL'])
 
+    propertyChangeToggle = False
+    newSequence = 5001
     setCount = 0
-    i = -1
+
     locos = switchList['locations'][0]['engines']['add']
     for loco in locos:
-        i += 1
+
         rollingStock = PSE.EM.getByRoadAndNumber(loco['road'], loco['number'])
         if not rollingStock:
             _psLog.warning('Not found; ' + car['road'] + car['number'])
@@ -124,15 +121,14 @@ def moveRollingStock(switchList):
             setResult = rollingStock.setLocation(toLocation, toTrack, True)
 
         if setResult == 'okay':
-            if sequenceHash:
-                rsID = rollingStock.getRoadName() + ' ' + rollingStock.getNumber()
-                sequenceHash['locos'].update({rsID:locoSequence})
-                locoSequence += 1
+            propertyChangeToggle = True
+            rollingStock.setValue(str(newSequence))
+            newSequence += 1
             setCount += 1
         
     cars = switchList['locations'][0]['cars']['add']
     for car in cars:
-        i += 1
+
         rollingStock = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
         if not rollingStock:
             _psLog.warning('Not found; ' + car['road'] + car['number'])
@@ -146,65 +142,21 @@ def moveRollingStock(switchList):
             setResult = rollingStock.setLocation(toLocation, toTrack, True)
 
         if setResult == 'okay':
-            rsUpdate(toTrack, rollingStock)
+            propertyChangeToggle = True
+            rollingStock.setValue(str(newSequence))
+            newSequence += 1
+            setCount += 1
+            if toTrack.getTrackType() == 'Spur':
+                rollingStock.setMoves(rollingStock.getMoves() + 1)
             if applySchedule:
                 scheduleUpdate(toTrack, rollingStock)
-            if isSequence:
-                rsID = rollingStock.getRoadName() + ' ' + rollingStock.getNumber()
-                sequenceHash['cars'].update({rsID:carSequence})
-                carSequence += 1
 
-            setCount += 1
+    if propertyChangeToggle:
+        PSE.EMX.save()
+        PSE.CMX.save()
+        PSE.LM.firePropertyChange('opsSetCarsToTrack', False, True)
 
-    if isSequence:
-        sequenceFilePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'rsSequenceData.json')
-        PSE.genericWriteReport(sequenceFilePath, PSE.dumpJson(sequenceHash))
-        resequenceTracks()
-
-    _psLog.info('Rolling stock count: ' + str(setCount) + ', processed.')
-
-    return
-
-def resequenceTracks():
-    
-    carHash = {}
-    _, sequenceHash = PSE.getSequenceHash()
-    allCars = PSE.CM.getList()
-    for car in allCars:
-        carID = car.getRoadName() + ' ' + car.getNumber()
-        carTrack = car.getTrackName()
-        try:
-            carSequence = sequenceHash['cars'][carID]
-        except:
-            carSequence = 8888
-        carHash[carID] = (carTrack, carSequence)
-
-    allTracksAtLoc = ModelEntities.getTrackNamesByLocation(None)
-    for track in allTracksAtLoc:
-        trackHash = []
-        for id, data in carHash.items():
-            if track == data[0]:
-                trackHash.append((id, data[1]))
-
-        trackHash.sort(key=lambda row: row[1])
-        sequence = 8001
-        for tuple in trackHash:
-            sequenceHash['cars'].update({tuple[0]:sequence})
-            sequence += 1
-
-    sequenceFilePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'rsSequenceData.json')
-    PSE.genericWriteReport(sequenceFilePath, PSE.dumpJson(sequenceHash))
-
-    return
-
-def rsUpdate(toTrack, rollingStock):
-    """
-    Called by:
-    moveRollingStock
-    """
-
-    if toTrack.getTrackType() == 'Spur':
-        rollingStock.setMoves(rollingStock.getMoves() + 1)
+    _psLog.info('Rolling stock count: {}, processed.'.format(str(setCount)))
 
     return
 

@@ -288,18 +288,12 @@ class ParseRollingStock:
         If the sequence data is available.
         """
 
-        try:
-            PSE.SEQUENCE_HASH
-        except:
-            print('Sequence data not found')
-            return
-
         for car in self.carDetails:
-            car['id'] = '{} {}'.format(car['road'], car['number'])
+            carObj = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
             try:
-                car["sequence"] = PSE.SEQUENCE_HASH['cars'][car['id']]
+                car["sequence"] = carObj.getValue()
             except:
-                car["sequence"] = 8000
+                car["sequence"] = 6000
 
         try:
             self.carDetails.sort(key=lambda row: row['sequence'])

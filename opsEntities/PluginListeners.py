@@ -238,6 +238,7 @@ def removeDivisionsTableListener():
 class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
     """
     Events that are triggered with changes to JMRI Trains.
+    Events that are triggered with changes to OPS switch lists.
     """
 
     def __init__(self):
@@ -256,7 +257,7 @@ class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
             addTrainListener()
 
             _psLog.debug(logMessage)
-
+        
         if PROPERTY_CHANGE_EVENT.propertyName == 'opsPatternReport' and PROPERTY_CHANGE_EVENT.newValue == True:
 
             for subroutine in PSE.getSubroutineDirs():
@@ -360,4 +361,13 @@ class LocationsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
+        if PROPERTY_CHANGE_EVENT.propertyName == 'opsSetCarsToTrack' and PROPERTY_CHANGE_EVENT.newValue == True:
+
+            for subroutine in PSE.getSubroutineDirs():
+                xModule = 'Subroutines_Activated.{}'.format(subroutine)
+                package = __import__(xModule, fromlist=['Controller'], level=-1)
+                package.Controller.opsPreProcess('opsSetCarsToTrack')
+
+            _psLog.debug(PROPERTY_CHANGE_EVENT)
+            
         return

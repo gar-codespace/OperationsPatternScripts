@@ -43,6 +43,9 @@ def opsPreProcess(message=None):
     Extends the json files.
     """
 
+    if message == 'opsSetCarsToTrack':
+        Model.resequenceCarsAtLocation()
+
     if message == 'opsSwitchList':
         Model.extendSwitchListJson()
 
@@ -60,8 +63,6 @@ def opsProcess(message=None):
     if message == 'opsSwitchList':
         switchListName = 'ops-Switch List.json'
         Model.resequenceManifestJson(switchListName)
-
-
 
     if message == 'TrainBuilt':
         trainName = 'train-{}.json'.format(PSE.getNewestTrain().toString())
@@ -116,9 +117,6 @@ class StartUp:
         Run these tasks when this subroutine is started.
         No GUI items as the GUI is not built yet.
         """
-
-        Model.validateSequenceData()
-        Model.getSequenceHash()
         
         return
         
@@ -134,7 +132,7 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
+        Model.applyRfidData()
 
         return
 
@@ -146,7 +144,6 @@ class StartUp:
         if scannerReportPath:
             Model.validateScanReport(scannerReportPath)
             Model.applyScanReport(scannerReportPath)
-            Model.saveSequenceHash()
 
         print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
 

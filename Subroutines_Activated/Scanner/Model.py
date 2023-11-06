@@ -42,6 +42,64 @@ def refreshSubroutine():
 """ Routines specific to this subroutine """
 
 
+def resequenceCarsAtLocation(locationName=None):
+
+    if not locationName:
+        locationName = PSE.readConfigFile('Patterns')['PL']
+
+    for track in PSE.LM.getLocationByName(locationName).getTracksList():
+        reSequence = 6001
+        carSeqList = []
+        for car in PSE.CM.getList(track):
+            carSeqList.append((car.getValue(), car))
+
+        carSeqList.sort(key=lambda row: row[0])
+        for item in carSeqList:
+            item[1].setValue(str(reSequence))
+            reSequence += 1
+
+    PSE.CMX.save()
+
+    _psLog.debug('resequenceCarsAtLocation')
+
+    return
+
+def applyRfidData():
+    """
+    Not the real function that goes here.
+    This one just imports a TrainPlayer file.
+    """
+
+    _psLog.debug('applyRfidData')
+
+    fileName = 'TrainPlayer Report - rfidRoster.txt'
+    targetPath = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData', 'Roaming', 'TrainPlayer', 'Reports', fileName)
+    if PSE.JAVA_IO.File(targetPath).isFile():
+        rfidData = PSE.genericReadReport(targetPath).split('\n')
+        rfidData = rfidData[:-1]
+    else:
+        print('Not found: TrainPlayer Report - rfidRoster.txt')
+        return
+
+    for data in rfidData:
+        splitLine = data.split(',')
+        rsName = splitLine[0].split(' ')
+        rfid = splitLine[1]
+        
+        try:
+            rs = PSE.EM.getByRoadAndNumber(rsName[0], rsName[1])
+            rs.setValue('6000')
+            rs.setRfid(rfid)
+        except:
+            rs = PSE.CM.getByRoadAndNumber(rsName[0], rsName[1])
+            rs.setValue('6000')
+            rs.setRfid(rfid)
+
+    PSE.EMX.save()
+    PSE.CMX.save()
+
+    return
+
 def scannerComboUpdater(selected=None):
     """
     Updates the contents of the scanners combo box.
@@ -60,29 +118,6 @@ def scannerComboUpdater(selected=None):
 
     component.setSelectedItem(selected)
     
-    return
-
-def validateSequenceData():
-    """
-    Checks that rsSequenceData.json exists.
-    If not then create one.
-    """
-    
-    sequenceFilePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'rsSequenceData.json')
-    if not PSE.JAVA_IO.File(sequenceFilePath).isFile():
-        initialSequenceHash = getInitialSequenceHash()
-        PSE.genericWriteReport(sequenceFilePath, PSE.dumpJson(initialSequenceHash))
-
-    return
-
-def getSequenceHash():
-    """
-    Load the sequence file into memory.
-    """
-
-    sequenceFilePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'rsSequenceData.json')
-    PSE.SEQUENCE_HASH = PSE.loadJson(PSE.genericReadReport(sequenceFilePath))
-
     return
 
 def getScannerReportPath():
@@ -119,39 +154,32 @@ def applyScanReport(scannerReportPath):
 
     _psLog.debug('applyScanReport')
 
-    locoSequence = 8001
-    carSequence = 8001
+    locoSequence = 6001
+    carSequence = 6001
 
     scannerReport = PSE.genericReadReport(scannerReportPath)
-    splitReport = scannerReport.split('\n')
-    splitReport.pop(-1) # Pop off the empty line at the end.
-    header = splitReport.pop(0).split(',')
+    scannerReport = scannerReport.split('\n')
+    scannerName = scannerReport.pop(0)
+    scanDirection = scannerReport.pop(0)
 
-    scannerName = header[0]
-    direction = header[1].upper()[0:1]
-    if direction == 'W':
-        splitReport.reverse()
+    if scanDirection == 'W':
+        scannerReport.reverse()
 
-    for item in splitReport:
-        rs = item.split(',')
-        if rs[1].startswith('ET'):
-            continue
-        elif rs[1].startswith('E'):
-            PSE.SEQUENCE_HASH['locos'].update({rs[0]:locoSequence})
+    for item in scannerReport:
+        try:
+            rs = PSE.EM.getByRfid('ID' + item)
+            rs.setValue(str(locoSequence))
             locoSequence += 1
-        else:
-            PSE.SEQUENCE_HASH['cars'].update({rs[0]:carSequence})
+        except:
+            rs = PSE.CM.getByRfid('ID' + item)
+            rs.setValue(str(carSequence))
             carSequence += 1
+
+    PSE.EMX.save()
+    PSE.CMX.save()
 
     _psLog.debug('applyScanReport for scanner: ' + scannerName)
     print('applyScanReport for scanner: ' + scannerName)
-
-    return
-
-def saveSequenceHash():
-    
-    sequenceFilePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'rsSequenceData.json')
-    PSE.genericWriteReport(sequenceFilePath, PSE.dumpJson(PSE.SEQUENCE_HASH))
 
     return
 
@@ -192,9 +220,9 @@ def _modifyAction(reportName):
 
     reportPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
     report = PSE.loadJson(PSE.genericReadReport(reportPath))
-    _addSequenceToManifest(report)
+    manifest = _addSequenceToManifest(report)
 
-    PSE.genericWriteReport(reportPath, PSE.dumpJson(report))
+    PSE.genericWriteReport(reportPath, PSE.dumpJson(manifest))
 
     return
 
@@ -205,20 +233,19 @@ def _addSequenceToManifest(manifest):
 
     for location in manifest['locations']:
         for car in location['cars']['add']:
-            carID = car['road'] + ' ' + car['number']
+            carObj = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
             try:
-                sequence = PSE.SEQUENCE_HASH['cars'][carID]
+                sequence = carObj.getValue()
             except:
-                sequence = 8000
+                sequence = 6000
             car['sequence'] = sequence
 
         for car in location['cars']['remove']:
-            carID = car['road'] + ' ' + car['number']
+            carObj = PSE.CM.getByRoadAndNumber(car['road'], car['number'])            
             try:
-                sequence = PSE.SEQUENCE_HASH['cars'][carID]
+                sequence = carObj.getValue()
             except:
-                sequence = 8000
-            sequence = PSE.SEQUENCE_HASH['cars'][carID]
+                sequence = 6000
             car['sequence'] = sequence
 
     return manifest
@@ -243,25 +270,6 @@ def resequenceManifestJson(jsonFileName):
     PSE.genericWriteReport(manifestPath, PSE.dumpJson(manifest))
 
     return
-
-def getInitialSequenceHash():
-
-    scannerHash = {}
-    locoHash = {}
-    carHash = {}
-
-    for loco in PSE.EM.getList():
-        id = loco.getRoadName() + ' ' + loco.getNumber()
-        locoHash.update({id:8000})
-
-    for car in PSE.CM.getList():
-        id =  car.getRoadName() + ' ' + car.getNumber()
-        carHash.update({id:8000})
-                        
-    scannerHash.update({'locos':locoHash})
-    scannerHash.update({'cars':carHash})
-
-    return scannerHash
 
 def _updateScannerList():
     """
