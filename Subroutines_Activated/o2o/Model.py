@@ -80,6 +80,9 @@ def initializeJmriRailroad():
 
     Initializer().Initialize()
 
+    PSE.EMX.save()
+    PSE.CMX.save()
+
     _psLog.info('JMRI data has been reset')
 
     return
@@ -128,6 +131,8 @@ def updateJmriLocations():
         return
     
     rollingStockulator.updateRollingStock()
+    PSE.EMX.save()
+    PSE.CMX.save()
 
     _psLog.info('JMRI rolling stock updated from TrainPlayer data')
 
@@ -166,6 +171,8 @@ def updateJmriTracks():
         return
     
     rollingStockulator.updateRollingStock()
+    PSE.EMX.save()
+    PSE.CMX.save()
 
     _psLog.info('JMRI rolling stock updated from TrainPlayer data')
 
@@ -193,6 +200,8 @@ def updateJmriRollingingStock():
         return
     
     rollingStockulator.updateRollingStock()
+    PSE.EMX.save()
+    PSE.CMX.save()
 
     _psLog.info('JMRI rolling stock updated from TrainPlayer data')
 
