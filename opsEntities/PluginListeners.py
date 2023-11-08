@@ -262,6 +262,10 @@ class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
         sourceName = str(PROPERTY_CHANGE_EVENT.source)
         propertyName = PROPERTY_CHANGE_EVENT.getPropertyName()
         logMessage = 'Main Script.Listeners.TrainsPropertyChange- {} {}'.format(sourceName, propertyName)
+        print(PROPERTY_CHANGE_EVENT.source.toString())
+        print(PROPERTY_CHANGE_EVENT.propertyName)
+        print(PROPERTY_CHANGE_EVENT.oldValue)
+        print(PROPERTY_CHANGE_EVENT.newValue)
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'TrainsListLength':
         # Fired from JMRI.
@@ -269,6 +273,8 @@ class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
             addTrainListener()
 
             _psLog.debug(logMessage)
+
+            return
         
         if PROPERTY_CHANGE_EVENT.propertyName == 'opsPatternReport' and PROPERTY_CHANGE_EVENT.newValue == True:
 
@@ -329,6 +335,39 @@ class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
                 TextReports.printExtendedSwitchLists()
                 TextReports.printExtendedManifest()
                 
+            _psLog.debug(logMessage)
+
+        # if PROPERTY_CHANGE_EVENT.propertyName == 'TrainMoveComplete':
+        #     try:
+        #         toLocation = PROPERTY_CHANGE_EVENT.newValue.toString()
+        #     except AttributeError:
+        #         toLocation = None
+
+        #     configFile = PSE.readConfigFile()
+        #     configFile['Main Script']['CP']['TL'] = toLocation
+        #     PSE.writeConfigFile(configFile)
+        #     print(toLocation)
+
+        #     for subroutine in PSE.getSubroutineDirs():
+        #         xModule = 'Subroutines_Activated.{}'.format(subroutine)
+        #         package = __import__(xModule, fromlist=['Controller'], level=-1)
+        #         package.Controller.opsPreProcess('TrainMoveComplete')
+
+        #     _psLog.debug(logMessage)
+
+        if PROPERTY_CHANGE_EVENT.propertyName == 'TrainLocation':
+
+            fromLocation = PROPERTY_CHANGE_EVENT.oldValue.toString()
+            configFile = PSE.readConfigFile()
+            configFile['Main Script']['CP']['FL'] = fromLocation
+            PSE.writeConfigFile(configFile)
+            
+
+            for subroutine in PSE.getSubroutineDirs():
+                xModule = 'Subroutines_Activated.{}'.format(subroutine)
+                package = __import__(xModule, fromlist=['Controller'], level=-1)
+                package.Controller.opsProcess('TrainLocation')
+
             _psLog.debug(logMessage)
 
         return

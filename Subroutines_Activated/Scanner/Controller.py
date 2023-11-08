@@ -52,6 +52,9 @@ def opsPreProcess(message=None):
     if message == 'TrainBuilt':
         Model.extendManifestJson()
 
+    if message == 'TrainMoveComplete':
+        Model.increaseSequenceNumber()
+
     return
 
 def opsProcess(message=None):
@@ -67,6 +70,11 @@ def opsProcess(message=None):
     if message == 'TrainBuilt':
         trainName = 'train-{}.json'.format(PSE.getNewestTrain().toString())
         Model.resequenceManifestJson(trainName)
+
+    if message == 'TrainLocation':
+        trainLocationName = PSE.readConfigFile()['Main Script']['CP']['FL']
+        Model.resequenceCarsAtLocation(trainLocationName)
+
 
     return
 

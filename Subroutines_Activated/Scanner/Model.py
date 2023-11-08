@@ -40,20 +40,43 @@ def refreshSubroutine():
 """ Routines specific to this subroutine """
 
 
+def increaseSequenceNumber():
+    """
+    For every car at every track for the given location, increase the sequence number by 1000.
+    """
+
+    toLocationName = PSE.readConfigFile()['Main Script']['CP']['TL']
+
+    if not toLocationName:
+        return
+    
+    for track in PSE.LM.getLocationByName(toLocationName).getTracksList():
+        # print(track.toString())
+        for car in PSE.CM.getList(track):
+            increaseValue = int(car.getValue()) + 1000
+            car.setValue(str(increaseValue))
+            # print(increaseValue)
+
+    PSE.CMX.save()
+
+    return
+
 def resequenceCarsAtLocation(locationName=None):
 
     if not locationName:
         locationName = PSE.readConfigFile('Patterns')['PL']
 
     for track in PSE.LM.getLocationByName(locationName).getTracksList():
-        reSequence = 6001
+        # print(track.toString())
         carSeqList = []
         for car in PSE.CM.getList(track):
             carSeqList.append((car.getValue(), car))
 
         carSeqList.sort(key=lambda row: row[0])
+        reSequence = 6001
         for item in carSeqList:
             item[1].setValue(str(reSequence))
+            # print(reSequence, item[1].toString())
             reSequence += 1
 
     PSE.CMX.save()
