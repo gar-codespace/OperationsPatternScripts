@@ -109,11 +109,10 @@ def modifySwitchList():
     
     return
 
-def modifyManifest():
+def modifyManifest(manifestName):
 
-    reportName = 'train-{}.json'.format(PSE.getNewestTrain().toString())
-    PSE.extendManifest(reportName)
-    _modifyAction(reportName)
+    PSE.extendManifest(manifestName)
+    _modifyAction(manifestName)
 
     return
 

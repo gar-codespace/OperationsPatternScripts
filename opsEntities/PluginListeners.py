@@ -259,118 +259,37 @@ class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
 
     def propertyChange(self, PROPERTY_CHANGE_EVENT):
 
-        sourceName = str(PROPERTY_CHANGE_EVENT.source)
-        propertyName = PROPERTY_CHANGE_EVENT.getPropertyName()
-        logMessage = 'Main Script.Listeners.TrainsPropertyChange- {} {}'.format(sourceName, propertyName)
         print(PROPERTY_CHANGE_EVENT.source.toString())
         print(PROPERTY_CHANGE_EVENT.propertyName)
         print(PROPERTY_CHANGE_EVENT.oldValue)
         print(PROPERTY_CHANGE_EVENT.newValue)
 
-        if PROPERTY_CHANGE_EVENT.propertyName == 'TrainsListLength':
-        # Fired from JMRI.
+        if PROPERTY_CHANGE_EVENT.propertyName == 'TrainsListLength': # Fired from JMRI
+        
+            _psLog.debug('PluginListeners.TrainsPropertyChange.PROPERTY_CHANGE_EVENT.TrainsListLength')
+
             removeTrainListener()
             addTrainListener()
 
-            _psLog.debug(logMessage)
-
             return
-        
-        if PROPERTY_CHANGE_EVENT.propertyName == 'opsPatternReport' and PROPERTY_CHANGE_EVENT.newValue == True:
 
-            for subroutine in PSE.getSubroutineDirs():
-                xModule = 'Subroutines_Activated.{}'.format(subroutine)
-                package = __import__(xModule, fromlist=['Controller'], level=-1)
-                package.Controller.opsPreProcess('opsPatternReport')
+        _psLog.debug('PluginListeners.TrainsPropertyChange.TrainsPropertyParser.preProcess')
+        for subroutine in PSE.getSubroutineDirs():
+            xModule = 'Subroutines_Activated.{}'.format(subroutine)
+            package = __import__(xModule, fromlist=['Controller'], level=-1)
+            package.Controller.TrainsPropertyParser(PROPERTY_CHANGE_EVENT).preProcess()
 
-            for subroutine in PSE.getSubroutineDirs():
-                xModule = 'Subroutines_Activated.{}'.format(subroutine)
-                package = __import__(xModule, fromlist=['Controller'], level=-1)
-                package.Controller.opsProcess('opsPatternReport')
+        _psLog.debug('PluginListeners.TrainsPropertyChange.TrainsPropertyParser.process')
+        for subroutine in PSE.getSubroutineDirs():
+            xModule = 'Subroutines_Activated.{}'.format(subroutine)
+            package = __import__(xModule, fromlist=['Controller'], level=-1)
+            package.Controller.TrainsPropertyParser(PROPERTY_CHANGE_EVENT).process()
 
-            for subroutine in PSE.getSubroutineDirs():
-                xModule = 'Subroutines_Activated.{}'.format(subroutine)
-                package = __import__(xModule, fromlist=['Controller'], level=-1)
-                package.Controller.opsPostProcess('opsPatternReport')
-                
-            _psLog.debug(logMessage)
-
-        if PROPERTY_CHANGE_EVENT.propertyName == 'opsSwitchList' and PROPERTY_CHANGE_EVENT.newValue == True:
-
-            for subroutine in PSE.getSubroutineDirs():
-                xModule = 'Subroutines_Activated.{}'.format(subroutine)
-                package = __import__(xModule, fromlist=['Controller'], level=-1)
-                package.Controller.opsPreProcess('opsSwitchList')
-
-            for subroutine in PSE.getSubroutineDirs():
-                xModule = 'Subroutines_Activated.{}'.format(subroutine)
-                package = __import__(xModule, fromlist=['Controller'], level=-1)
-                package.Controller.opsProcess('opsSwitchList')
-
-            for subroutine in PSE.getSubroutineDirs():
-                xModule = 'Subroutines_Activated.{}'.format(subroutine)
-                package = __import__(xModule, fromlist=['Controller'], level=-1)
-                package.Controller.opsPostProcess('opsSwitchList')
-                
-            _psLog.debug(logMessage)
-
-        if PROPERTY_CHANGE_EVENT.propertyName == 'TrainBuilt' and PROPERTY_CHANGE_EVENT.newValue == True:
-
-            for subroutine in PSE.getSubroutineDirs():
-                xModule = 'Subroutines_Activated.{}'.format(subroutine)
-                package = __import__(xModule, fromlist=['Controller'], level=-1)
-                package.Controller.opsPreProcess('TrainBuilt')
-
-            for subroutine in PSE.getSubroutineDirs():
-                xModule = 'Subroutines_Activated.{}'.format(subroutine)
-                package = __import__(xModule, fromlist=['Controller'], level=-1)
-                package.Controller.opsProcess('TrainBuilt')
-
-            for subroutine in PSE.getSubroutineDirs():
-                xModule = 'Subroutines_Activated.{}'.format(subroutine)
-                package = __import__(xModule, fromlist=['Controller'], level=-1)
-                package.Controller.opsPostProcess('TrainBuilt')
-
-            if PSE.readConfigFile()['Main Script']['CP']['ER']:
-                TextReports.printExtendedSwitchLists()
-                TextReports.printExtendedManifest()
-                
-            _psLog.debug(logMessage)
-
-        # if PROPERTY_CHANGE_EVENT.propertyName == 'TrainMoveComplete':
-        #     try:
-        #         toLocation = PROPERTY_CHANGE_EVENT.newValue.toString()
-        #     except AttributeError:
-        #         toLocation = None
-
-        #     configFile = PSE.readConfigFile()
-        #     configFile['Main Script']['CP']['TL'] = toLocation
-        #     PSE.writeConfigFile(configFile)
-        #     print(toLocation)
-
-        #     for subroutine in PSE.getSubroutineDirs():
-        #         xModule = 'Subroutines_Activated.{}'.format(subroutine)
-        #         package = __import__(xModule, fromlist=['Controller'], level=-1)
-        #         package.Controller.opsPreProcess('TrainMoveComplete')
-
-        #     _psLog.debug(logMessage)
-
-        if PROPERTY_CHANGE_EVENT.propertyName == 'TrainLocation':
-
-            fromLocation = PROPERTY_CHANGE_EVENT.oldValue.toString()
-            configFile = PSE.readConfigFile()
-            configFile['Main Script']['CP']['FL'] = fromLocation
-            PSE.writeConfigFile(configFile)
-            
-
-            for subroutine in PSE.getSubroutineDirs():
-                xModule = 'Subroutines_Activated.{}'.format(subroutine)
-                package = __import__(xModule, fromlist=['Controller'], level=-1)
-                package.Controller.opsProcess('TrainLocation')
-
-            _psLog.debug(logMessage)
-
-        return
+        _psLog.debug('PluginListeners.TrainsPropertyChange.TrainsPropertyParser.postProcess')
+        for subroutine in PSE.getSubroutineDirs():
+            xModule = 'Subroutines_Activated.{}'.format(subroutine)
+            package = __import__(xModule, fromlist=['Controller'], level=-1)
+            package.Controller.TrainsPropertyParser(PROPERTY_CHANGE_EVENT).postProcess()
 
 
 class LocationsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
@@ -400,15 +319,6 @@ class LocationsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
                 xModule = 'Subroutines_Activated.{}'.format(subroutine)
                 package = __import__(xModule, fromlist=['Model'], level=-1)
                 package.Model.resetSubroutine()
-
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
-
-        if PROPERTY_CHANGE_EVENT.propertyName == 'opsSetCarsToTrack' and PROPERTY_CHANGE_EVENT.newValue == True:
-
-            for subroutine in PSE.getSubroutineDirs():
-                xModule = 'Subroutines_Activated.{}'.format(subroutine)
-                package = __import__(xModule, fromlist=['Controller'], level=-1)
-                package.Controller.opsPreProcess('opsSetCarsToTrack')
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
             

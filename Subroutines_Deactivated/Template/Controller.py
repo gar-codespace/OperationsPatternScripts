@@ -39,6 +39,31 @@ def getSubroutineDropDownItem():
 
     return menuItem
 
+
+class TrainsPropertyParser:
+
+    def __init__(self, pce):
+
+        self.propertySource = pce.source
+        self.propertyName = pce.propertyName
+        self.oldValue = pce.oldValue
+        self.newValue = pce.newValue
+
+        return
+    
+    def preProcess(self):
+
+        return
+    
+    def process(self):
+
+        return
+    
+    def postProcess(self):
+
+        return
+    
+    
 def opsPreProcess(message=None):
     """
     Extends the json files.

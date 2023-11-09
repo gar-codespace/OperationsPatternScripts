@@ -76,7 +76,7 @@ def resequenceCarsAtLocation(locationName=None):
         reSequence = 6001
         for item in carSeqList:
             item[1].setValue(str(reSequence))
-            # print(reSequence, item[1].toString())
+            print(reSequence, item[1].toString())
             reSequence += 1
 
     PSE.CMX.save()
@@ -239,16 +239,16 @@ def extendSwitchListJson():
 
     return
 
-def extendManifestJson():
+def extendManifestJson(manifestName):
     """
     Extends the JMRI created json manifest.
     """
 
     _psLog.debug('extendManifestJson')
 
-    reportName = 'train-{}.json'.format(PSE.getNewestTrain().toString())
-    PSE.extendManifest(reportName)
-    _modifyAction(reportName)
+    # reportName = 'train-{}.json'.format(trainName)
+    PSE.extendManifest(manifestName)
+    _modifyAction(manifestName)
 
     return
 

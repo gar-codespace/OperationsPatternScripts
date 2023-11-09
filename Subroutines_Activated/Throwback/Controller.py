@@ -36,26 +36,29 @@ def getSubroutineDropDownItem():
 
     return menuItem
 
-def opsPreProcess(message=None):
-    """
-    Extends the json files.
-    """
 
-    return
+class TrainsPropertyParser:
 
-def opsProcess(message=None):
-    """
-    Process the extended json files.
-    """
+    def __init__(self, pce):
 
-    return
+        # self.propertySource = pce.source
+        # self.propertyName = pce.propertyName
+        # self.oldValue = pce.oldValue
+        # self.newValue = pce.newValue
 
-def opsPostProcess(message=None):
-    """
-    Writes the processed json files to text files.
-    """
+        pass
+    
+    def preProcess(self):
 
-    return
+        return
+    
+    def process(self):
+
+        return
+    
+    def postProcess(self):
+
+        return
 
 
 class StartUp:

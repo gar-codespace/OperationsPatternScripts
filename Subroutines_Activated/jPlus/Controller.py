@@ -36,44 +36,48 @@ def getSubroutineDropDownItem():
 
     return menuItem
 
-def opsPreProcess(message=None):
-    """
-    Extends the json files.
-    """
 
-    if message == 'opsPatternReport':
-        Model.modifyPatternReport()
+class TrainsPropertyParser:
 
-    if message == 'opsSwitchList':
-        Model.modifySwitchList()
+    def __init__(self, pce):
 
-    if message == 'TrainBuilt':
-        Model.modifyManifest()
+        self.propertySource = pce.source
+        self.propertyName = pce.propertyName
+        self.oldValue = pce.oldValue
+        self.newValue = pce.newValue
 
-    return
+        return
+    
+    def preProcess(self):
 
-def opsProcess(message=None):
-    """
-    Process the extended json files.
-    """
+        if self.propertyName == 'opsPatternReport':
+            Model.modifyPatternReport()
 
-    return
+        if self.propertyName == 'opsSwitchList':
+            Model.modifySwitchList()
 
-def opsPostProcess(message=None):
-    """
-    Writes the processed json files to text files.
-    """
+        if self.propertyName == 'TrainBuilt':
+            manifestName = 'train-{}.json'.format(self.propertySource.toString())
+            Model.modifyManifest(manifestName)
 
-    if message == 'TrainBuilt':
-        train = PSE.getNewestTrain()
-        manifest = PSE.getTrainManifest(train)
+        return
+    
+    def process(self):
 
-        textManifest = TextReports.opsJmriManifest(manifest)
-        manifestName = 'ops train ({}).txt'.format(train.toString())
-        manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', manifestName)
-        PSE.genericWriteReport(manifestPath, textManifest)
+        return
+    
+    def postProcess(self):
 
-    return
+        if self.propertyName == 'TrainBuilt':
+            # train = PSE.getNewestTrain()
+            manifest = PSE.getTrainManifest(self.propertySource)
+
+            textManifest = TextReports.opsJmriManifest(manifest)
+            manifestName = 'ops train ({}).txt'.format(self.propertySource.toString())
+            manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', manifestName)
+            PSE.genericWriteReport(manifestPath, textManifest)
+
+        return
 
 
 class StartUp:

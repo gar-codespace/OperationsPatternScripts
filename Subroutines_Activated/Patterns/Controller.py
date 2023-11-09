@@ -40,37 +40,41 @@ def getSubroutineDropDownItem():
 
     return menuItem
 
-def opsPreProcess(message=None):
-    """
-    Extends the json files.
-    """
 
-    if message == 'TrainBuilt':
-        Model.extendManifestJson()
+class TrainsPropertyParser:
 
-    return
+    def __init__(self, pce):
 
-def opsProcess(message=None):
-    """
-    Process the extended json files.
-    """
+        self.propertySource = pce.source
+        self.propertyName = pce.propertyName
+        self.oldValue = pce.oldValue
+        self.newValue = pce.newValue
 
-    return
+        return
+    
+    def preProcess(self):
 
-def opsPostProcess(message=None):
-    """
-    Writes the processed json files to text files.
-    """
+        if self.propertyName == 'TrainBuilt':
+            manifestName = 'train-{}.json'.format(self.propertySource.toString())
+            Model.extendManifestJson(manifestName)
 
-    if message == 'opsPatternReport':
-        textPatternReport = TextReports.opsTextPatternReport()
-        targetPath = Model.writePatternReport(textPatternReport, True)
-        PSE.genericDisplayReport(targetPath)
+        return
+    
+    def process(self):
 
-    if message == 'opsSwitchList':
-        SetCarsForm_Controller.opsPostProcess()
+        return
+    
+    def postProcess(self):
 
-    return
+        if self.propertyName == 'opsPatternReport':
+            textPatternReport = TextReports.opsTextPatternReport()
+            targetPath = Model.writePatternReport(textPatternReport, True)
+            PSE.genericDisplayReport(targetPath)
+
+        if self.propertyName == 'opsSwitchList':
+            SetCarsForm_Controller.opsPostProcess()
+
+        return
 
 
 class StartUp:

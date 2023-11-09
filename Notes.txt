@@ -5,7 +5,7 @@ Todo:
   Maybe put Dest and FD standins into TextReports.py?
   Change Patterns back to moving a car on a train?
   Refine Hazardous handling.
-  Maybe have 2 config files, one for users to edit, one for the plugin to manage.
+  set rs to track doesnt work
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.

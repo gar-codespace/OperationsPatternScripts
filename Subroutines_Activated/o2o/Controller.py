@@ -36,28 +36,64 @@ def getSubroutineDropDownItem():
 
     return menuItem
 
-def opsPreProcess(message=None):
-    """
-    Extends the json files.
-    """
 
-    # if message == 'opsPatternReport':
-    #     Model.modifyPatternReport()
+class TrainsPropertyParser:
 
-    # if message == 'opsSwitchList':
-    #     Model.modifySwitchList()
+    def __init__(self, pce):
 
-    if message == 'TrainBuilt':
-        Model.modifyManifest()
+        self.propertySource = pce.source
+        self.propertyName = pce.propertyName
+        self.oldValue = pce.oldValue
+        self.newValue = pce.newValue
 
-    return
+        return
+    
+    def preProcess(self):
 
-def opsProcess(message=None):
-    """
-    Process the extended json files.
-    """
+        if self.propertyName == 'opsPatternReport':
+            manifestName = 'ops-Pattern Report.json'
+            Model.modifyManifest(manifestName)
 
-    return
+        if self.propertyName == 'opsSwitchList':
+            manifestName = 'ops-Switch List.json'
+            Model.modifyManifest(manifestName)
+
+        if self.propertyName == 'TrainBuilt':
+            manifestName = 'train-{}.json'.format(self.propertySource.toString())
+            Model.modifyManifest(manifestName)
+            
+        return
+    
+    def process(self):
+
+        return
+    
+    def postProcess(self):
+
+        tpDirectory = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData', 'Roaming', 'TrainPlayer', 'Reports')
+        if not tpDirectory:
+            _psLog.warning('TrainPlayer Reports destination directory not found')
+            print('TrainPlayer Reports destination directory not found')
+
+            return    
+
+        if self.propertyName == 'TrainBuilt':   
+            # train = PSE.getNewestTrain()
+            workList = PSE.getTrainManifest(self.propertySource)
+
+        elif self.propertyName == 'opsSwitchList':
+            workList = getOpsSwitchList()
+
+        else:
+            return
+
+        o2oWorkEvents = ModelWorkEvents.o2oWorkEvents(workList)
+        outPutName = 'JMRI Report - o2o Workevents.csv'
+        o2oWorkEventPath = PSE.OS_PATH.join(tpDirectory, outPutName)
+        PSE.genericWriteReport(o2oWorkEventPath, o2oWorkEvents)
+
+        return
+
 
 def opsPostProcess(message=None):
     """

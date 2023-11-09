@@ -678,7 +678,7 @@ def findLongestStringLength(list):
 def extendManifest(reportName):
     """
     Adds additional attributes found in the print options dialog.
-    Called by Patterns, jPlus and Scanner
+    Called by Patterns, jPlus, o2o and Scanner
     """
 
     reportPath = OS_PATH.join(PROFILE_PATH, 'operations', 'jsonManifests', reportName)

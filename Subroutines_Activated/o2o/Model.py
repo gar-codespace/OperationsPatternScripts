@@ -39,10 +39,9 @@ def refreshSubroutine():
 """ Routines specific to this subroutine """
 
 
-def modifyManifest():
+def modifyManifest(manifestName):
 
-    reportName = 'train-{}.json'.format(PSE.getNewestTrain().toString())
-    PSE.extendManifest(reportName)
+    PSE.extendManifest(manifestName)
 
     return
 

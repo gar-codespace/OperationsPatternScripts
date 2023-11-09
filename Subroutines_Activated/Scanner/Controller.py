@@ -38,61 +38,63 @@ def getSubroutineDropDownItem():
 
     return menuItem
 
-def opsPreProcess(message=None):
-    """
-    Extends the json files.
-    """
 
-    if message == 'opsSetCarsToTrack':
-        Model.resequenceCarsAtLocation()
+class TrainsPropertyParser:
 
-    if message == 'opsSwitchList':
-        Model.extendSwitchListJson()
+    def __init__(self, pce):
 
-    if message == 'TrainBuilt':
-        Model.extendManifestJson()
+        self.propertySource = pce.source
+        self.propertyName = pce.propertyName
+        self.oldValue = pce.oldValue
+        self.newValue = pce.newValue
 
-    if message == 'TrainMoveComplete':
-        Model.increaseSequenceNumber()
+        return
+    
+    def preProcess(self):
 
-    return
+        if self.propertyName == 'opsSetCarsToTrack':
+            Model.resequenceCarsAtLocation()
 
-def opsProcess(message=None):
-    """
-    Process the extended json files.
-    Note: the pattern report is sorted using user defined criteria.
-    """
+        if self.propertyName == 'opsSwitchList':
+            Model.extendSwitchListJson()
 
-    if message == 'opsSwitchList':
-        switchListName = 'ops-Switch List.json'
-        Model.resequenceManifestJson(switchListName)
+        if self.propertyName == 'TrainBuilt':
+            manifestName = 'train-{}.json'.format(self.propertySource.toString())
+            Model.extendManifestJson(manifestName)
 
-    if message == 'TrainBuilt':
-        trainName = 'train-{}.json'.format(PSE.getNewestTrain().toString())
-        Model.resequenceManifestJson(trainName)
+        # if self.propertyName == 'TrainMoveComplete':
+        #     Model.increaseSequenceNumber()
 
-    if message == 'TrainLocation':
-        trainLocationName = PSE.readConfigFile()['Main Script']['CP']['FL']
-        Model.resequenceCarsAtLocation(trainLocationName)
+        return
+    
+    def process(self):
 
+        if self.propertyName == 'opsSwitchList':
+            switchListName = 'ops-Switch List.json'
+            Model.resequenceManifestJson(switchListName)
 
-    return
+        if self.propertyName == 'TrainBuilt':
+            manifestName = 'train-{}.json'.format(self.propertySource.toString())
+            Model.resequenceManifestJson(manifestName)
 
-def opsPostProcess(message=None):
-    """
-    Writes the processed json files to text files.
-    """
+        # if self.propertyName == 'TrainLocation':
+        #     trainLocationName = PSE.readConfigFile()['Main Script']['CP']['FL']
+        #     Model.resequenceCarsAtLocation(trainLocationName)
 
-    if message == 'TrainBuilt':
-        train = PSE.getNewestTrain()
-        manifest = PSE.getTrainManifest(train)
+        return
+    
+    def postProcess(self):
 
-        textManifest = TextReports.opsJmriManifest(manifest)
-        manifestName = 'ops train ({}).txt'.format(train.toString())
-        manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', manifestName)
-        PSE.genericWriteReport(manifestPath, textManifest)
+        if self.propertyName == 'TrainBuilt':
 
-    return
+            manifest = PSE.getTrainManifest(self.propertySource)
+
+            manifestText = TextReports.opsJmriManifest(manifest)
+            manifestName = 'ops train ({}).txt'.format(self.propertySource.toString())
+            manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', manifestName)
+            PSE.genericWriteReport(manifestPath, manifestText)
+
+        return
 
 
 class StartUp:

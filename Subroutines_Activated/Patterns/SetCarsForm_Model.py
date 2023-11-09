@@ -113,6 +113,9 @@ def moveRollingStock(switchList):
             _psLog.warning('Not found; ' + car['road'] + car['number'])
             continue
 
+        if loco['location']['track']['userName'] == loco['destination']['track']['userName']:
+            continue
+
         setTo = loco['destination']['track']['userName']
         toTrack = toLocation.getTrackByName(setTo, None)
 
@@ -134,10 +137,14 @@ def moveRollingStock(switchList):
             _psLog.warning('Not found; ' + car['road'] + car['number'])
             continue
 
+        if car['location']['track']['userName'] == car['destination']['track']['userName']:
+            continue
+
         setTo = car['destination']['track']['userName']
         toTrack = toLocation.getTrackByName(setTo, None)
 
         setResult = rollingStock.setLocation(toLocation, toTrack)
+        print(setResult)
         if ignoreTrackLength and toTrack.isTypeNameAccepted(car['carType']):
             setResult = rollingStock.setLocation(toLocation, toTrack, True)
 
@@ -152,9 +159,9 @@ def moveRollingStock(switchList):
                 scheduleUpdate(toTrack, rollingStock)
 
     if propertyChangeToggle:
+        PSE.TM.firePropertyChange('opsSetCarsToTrack', False, True)
         PSE.EMX.save()
         PSE.CMX.save()
-        PSE.LM.firePropertyChange('opsSetCarsToTrack', False, True)
 
     _psLog.info('Rolling stock count: {}, processed.'.format(str(setCount)))
 
