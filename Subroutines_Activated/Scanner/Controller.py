@@ -62,8 +62,8 @@ class TrainsPropertyParser:
             manifestName = 'train-{}.json'.format(self.propertySource.toString())
             Model.extendManifestJson(manifestName)
 
-        # if self.propertyName == 'TrainMoveComplete':
-        #     Model.increaseSequenceNumber()
+        if self.propertyName == 'TrainMoveComplete' and self.newValue:
+            Model.increaseSequenceNumber(self.newValue.toString())
 
         return
     
@@ -77,9 +77,8 @@ class TrainsPropertyParser:
             manifestName = 'train-{}.json'.format(self.propertySource.toString())
             Model.resequenceManifestJson(manifestName)
 
-        # if self.propertyName == 'TrainLocation':
-        #     trainLocationName = PSE.readConfigFile()['Main Script']['CP']['FL']
-        #     Model.resequenceCarsAtLocation(trainLocationName)
+        if self.propertyName == 'TrainMoveComplete' and self.oldValue:
+            Model.resequenceCarsAtLocation(self.oldValue.toString())
 
         return
     

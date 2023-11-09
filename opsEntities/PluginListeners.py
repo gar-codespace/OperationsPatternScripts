@@ -259,15 +259,14 @@ class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
 
     def propertyChange(self, PROPERTY_CHANGE_EVENT):
 
-        print(PROPERTY_CHANGE_EVENT.source.toString())
-        print(PROPERTY_CHANGE_EVENT.propertyName)
-        print(PROPERTY_CHANGE_EVENT.oldValue)
-        print(PROPERTY_CHANGE_EVENT.newValue)
+        print(PROPERTY_CHANGE_EVENT.propertyName) # string
+        print(PROPERTY_CHANGE_EVENT.source.toString()) # object
+        print(PROPERTY_CHANGE_EVENT.oldValue) # object
+        print(PROPERTY_CHANGE_EVENT.newValue) # object
 
-        if PROPERTY_CHANGE_EVENT.propertyName == 'TrainsListLength': # Fired from JMRI
+        if PROPERTY_CHANGE_EVENT.propertyName == 'TrainsListLength':
         
             _psLog.debug('PluginListeners.TrainsPropertyChange.PROPERTY_CHANGE_EVENT.TrainsListLength')
-
             removeTrainListener()
             addTrainListener()
 
@@ -290,6 +289,13 @@ class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
             xModule = 'Subroutines_Activated.{}'.format(subroutine)
             package = __import__(xModule, fromlist=['Controller'], level=-1)
             package.Controller.TrainsPropertyParser(PROPERTY_CHANGE_EVENT).postProcess()
+    # Print the extended manifest and switch list
+        if PROPERTY_CHANGE_EVENT.propertyName == 'TrainBuilt' and PROPERTY_CHANGE_EVENT.newValue == True:
+            if PSE.readConfigFile()['Main Script']['CP']['ER']:
+                TextReports.printExtendedSwitchLists()
+                TextReports.printExtendedManifest()
+
+        return
 
 
 class LocationsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
