@@ -63,6 +63,7 @@ class PatternScriptsFrameListener(PSE.JAVA_AWT.event.WindowListener):
         refreshSubroutines()
 
         return
+
     def windowClosed(self, WINDOW_CLOSED):
         return
     def windowIconified(self, WINDOW_ICONIFIED):
@@ -70,6 +71,91 @@ class PatternScriptsFrameListener(PSE.JAVA_AWT.event.WindowListener):
     def windowDeiconified(self, WINDOW_DEICONIFIED):
         return
     def windowDeactivated(self, WINDOW_DEACTIVATED):
+        return
+
+
+class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
+    """
+    Events that are triggered with changes to JMRI Trains.
+    Events that are triggered with changes to OPS switch lists.
+    """
+
+    def __init__(self):
+
+        pass
+
+    def propertyChange(self, PROPERTY_CHANGE_EVENT):
+
+        # print(PROPERTY_CHANGE_EVENT.propertyName) # string
+        # print(PROPERTY_CHANGE_EVENT.source.toString()) # object
+        # print(PROPERTY_CHANGE_EVENT.oldValue) # object
+        # print(PROPERTY_CHANGE_EVENT.newValue) # object
+
+        if PROPERTY_CHANGE_EVENT.propertyName == 'TrainsListLength':
+        
+            _psLog.debug('PluginListeners.TrainsPropertyChange.PROPERTY_CHANGE_EVENT.TrainsListLength')
+            removeTrainListener()
+            addTrainListener()
+
+            return
+
+        _psLog.debug('PluginListeners.TrainsPropertyChange.TrainsPropertyParser.preProcess')
+        for subroutine in PSE.getSubroutineDirs():
+            xModule = 'Subroutines_Activated.{}'.format(subroutine)
+            package = __import__(xModule, fromlist=['Controller'], level=-1)
+            package.Controller.TrainsPropertyParser(PROPERTY_CHANGE_EVENT).preProcess()
+
+        _psLog.debug('PluginListeners.TrainsPropertyChange.TrainsPropertyParser.process')
+        for subroutine in PSE.getSubroutineDirs():
+            xModule = 'Subroutines_Activated.{}'.format(subroutine)
+            package = __import__(xModule, fromlist=['Controller'], level=-1)
+            package.Controller.TrainsPropertyParser(PROPERTY_CHANGE_EVENT).process()
+
+        _psLog.debug('PluginListeners.TrainsPropertyChange.TrainsPropertyParser.postProcess')
+        for subroutine in PSE.getSubroutineDirs():
+            xModule = 'Subroutines_Activated.{}'.format(subroutine)
+            package = __import__(xModule, fromlist=['Controller'], level=-1)
+            package.Controller.TrainsPropertyParser(PROPERTY_CHANGE_EVENT).postProcess()
+    # Print the extended manifest and switch list
+        if PROPERTY_CHANGE_EVENT.propertyName == 'TrainBuilt' and PROPERTY_CHANGE_EVENT.newValue == True:
+            if PSE.readConfigFile()['Main Script']['CP']['ER']:
+                trainName = PROPERTY_CHANGE_EVENT.source.toString()
+                TextReports.printExtendedWorkOrder(trainName)
+                # TextReports.printExtendedManifest(trainName)
+
+        return
+
+
+class LocationsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
+    """
+    Events that are triggered with changes to JMRI Divisions, Locations and Tracks.
+    """
+
+    def __init__(self):
+
+        pass
+    
+    def propertyChange(self, PROPERTY_CHANGE_EVENT):
+
+        jmriProperties = ['divisionsListLength', 'divisionName', 'locationsListLength', 'locationName', 'trackListLength', 'trackName']
+        if PROPERTY_CHANGE_EVENT.propertyName in jmriProperties:
+
+            for subroutine in PSE.getSubroutineDirs():
+                xModule = 'Subroutines_Activated.{}'.format(subroutine)
+                package = __import__(xModule, fromlist=['Model'], level=-1)
+                package.Model.initializeSubroutine()
+
+            _psLog.debug(PROPERTY_CHANGE_EVENT)
+
+        if PROPERTY_CHANGE_EVENT.propertyName == 'opsResetSubroutine':
+        # Fired from OPS
+            for subroutine in PSE.getSubroutineDirs():
+                xModule = 'Subroutines_Activated.{}'.format(subroutine)
+                package = __import__(xModule, fromlist=['Model'], level=-1)
+                package.Model.resetSubroutine()
+
+            _psLog.debug(PROPERTY_CHANGE_EVENT)
+            
         return
 
 
@@ -245,87 +331,3 @@ def removeDivisionsTableListener():
             _psLog.debug('Main Script.Listeners.removeDivisionsTableListener')
 
     return
-
-
-class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
-    """
-    Events that are triggered with changes to JMRI Trains.
-    Events that are triggered with changes to OPS switch lists.
-    """
-
-    def __init__(self):
-
-        pass
-
-    def propertyChange(self, PROPERTY_CHANGE_EVENT):
-
-        print(PROPERTY_CHANGE_EVENT.propertyName) # string
-        print(PROPERTY_CHANGE_EVENT.source.toString()) # object
-        print(PROPERTY_CHANGE_EVENT.oldValue) # object
-        print(PROPERTY_CHANGE_EVENT.newValue) # object
-
-        if PROPERTY_CHANGE_EVENT.propertyName == 'TrainsListLength':
-        
-            _psLog.debug('PluginListeners.TrainsPropertyChange.PROPERTY_CHANGE_EVENT.TrainsListLength')
-            removeTrainListener()
-            addTrainListener()
-
-            return
-
-        _psLog.debug('PluginListeners.TrainsPropertyChange.TrainsPropertyParser.preProcess')
-        for subroutine in PSE.getSubroutineDirs():
-            xModule = 'Subroutines_Activated.{}'.format(subroutine)
-            package = __import__(xModule, fromlist=['Controller'], level=-1)
-            package.Controller.TrainsPropertyParser(PROPERTY_CHANGE_EVENT).preProcess()
-
-        _psLog.debug('PluginListeners.TrainsPropertyChange.TrainsPropertyParser.process')
-        for subroutine in PSE.getSubroutineDirs():
-            xModule = 'Subroutines_Activated.{}'.format(subroutine)
-            package = __import__(xModule, fromlist=['Controller'], level=-1)
-            package.Controller.TrainsPropertyParser(PROPERTY_CHANGE_EVENT).process()
-
-        _psLog.debug('PluginListeners.TrainsPropertyChange.TrainsPropertyParser.postProcess')
-        for subroutine in PSE.getSubroutineDirs():
-            xModule = 'Subroutines_Activated.{}'.format(subroutine)
-            package = __import__(xModule, fromlist=['Controller'], level=-1)
-            package.Controller.TrainsPropertyParser(PROPERTY_CHANGE_EVENT).postProcess()
-    # Print the extended manifest and switch list
-        if PROPERTY_CHANGE_EVENT.propertyName == 'TrainBuilt' and PROPERTY_CHANGE_EVENT.newValue == True:
-            if PSE.readConfigFile()['Main Script']['CP']['ER']:
-                TextReports.printExtendedSwitchLists()
-                TextReports.printExtendedManifest()
-
-        return
-
-
-class LocationsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
-    """
-    Events that are triggered with changes to JMRI Divisions, Locations and Tracks.
-    """
-
-    def __init__(self):
-
-        pass
-    
-    def propertyChange(self, PROPERTY_CHANGE_EVENT):
-
-        jmriProperties = ['divisionsListLength', 'divisionName', 'locationsListLength', 'locationName', 'trackListLength', 'trackName']
-        if PROPERTY_CHANGE_EVENT.propertyName in jmriProperties:
-
-            for subroutine in PSE.getSubroutineDirs():
-                xModule = 'Subroutines_Activated.{}'.format(subroutine)
-                package = __import__(xModule, fromlist=['Model'], level=-1)
-                package.Model.initializeSubroutine()
-
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
-
-        if PROPERTY_CHANGE_EVENT.propertyName == 'opsResetSubroutine':
-        # Fired from OPS
-            for subroutine in PSE.getSubroutineDirs():
-                xModule = 'Subroutines_Activated.{}'.format(subroutine)
-                package = __import__(xModule, fromlist=['Model'], level=-1)
-                package.Model.resetSubroutine()
-
-            _psLog.debug(PROPERTY_CHANGE_EVENT)
-            
-        return

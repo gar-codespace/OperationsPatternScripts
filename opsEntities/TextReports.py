@@ -19,17 +19,18 @@ SCRIPT_REV = 20231001
 
 _psLog = PSE.LOGGING.getLogger('OPS.OE.TextReports')
 
-def printExtendedManifest():
+def printExtendedManifest(trainName):
 
-    train = PSE.getNewestTrain()
-    manifestName = 'ops train ({}).txt'.format(train.toString())
-    manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', manifestName)
-    if PSE.JAVA_IO.File(manifestPath).isFile():
-        PSE.genericDisplayReport(manifestPath)
+
     
     return
 
-def printExtendedSwitchLists():
+def printExtendedWorkOrder(trainName):
+
+    workOrderName = 'ops train ({}).txt'.format(trainName)
+    workOrderPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'switchLists', workOrderName)
+    if PSE.JAVA_IO.File(workOrderPath).isFile():
+        PSE.genericDisplayReport(workOrderPath)
 
     return
 
@@ -163,12 +164,12 @@ def opsTextSwitchList():
 
     return textSwitchList
 
-def opsJmriManifest(manifest):
+def opsJmriWorkOrder(manifest):
     """"
     OPS version of the JMRI generated text manifest.
     """
 
-    _psLog.debug('opsJmriManifest')
+    _psLog.debug('opsJmriWorkOrder')
 
     TRE.makeReportItemWidthMatrix()
     TRE.translateMessageFormat()
@@ -182,75 +183,71 @@ def opsJmriManifest(manifest):
     hcp = PSE.readConfigFile()['Patterns']['US']['HCP']
 
     longestStringLength = PSE.findLongestStringLength((pep, dep, pcp, dcp, mcp, hcp))
-    textManifest = ''
+    textWorkOrder = ''
 # Header
-    textManifest += manifest['railroad'] + '\n'
-    textManifest += '\n'
-    textManifest += TMT.getStringManifestForTrain().format(manifest['userName'], manifest['description']) + '\n'
-    textManifest += '{}\n'.format(PSE.convertIsoToValidTime(manifest['date']))
-    textManifest += '\n'
+    textWorkOrder += manifest['railroad'] + '\n'
+    textWorkOrder += '\n'
+    textWorkOrder += '{} ({}) {}\n'.format(PSE.getBundleItem('Work order for train'), manifest['userName'], manifest['description'])
+    textWorkOrder += '{}\n'.format(PSE.convertIsoToValidTime(manifest['date']))
+    textWorkOrder += '\n'
 # Body
     for location in manifest['locations']:
-        textManifest += TMT.getStringScheduledWork().format(location['userName']) + '\n'
+        textWorkOrder += TMT.getStringScheduledWork().format(location['userName']) + '\n'
     
     # Pick up locos
-        textManifest += '{}:\n'.format(PSE.getBundleItem('Engines'))
+        textWorkOrder += '{}:\n'.format(PSE.getBundleItem('Engines'))
         for loco in location['engines']['add']:
             formatPrefix = pep.ljust(longestStringLength)
             line = TRE.pickupLoco(loco, True, False)
-            textManifest += '{} {}\n'.format(formatPrefix ,line)
+            textWorkOrder += '{} {}\n'.format(formatPrefix ,line)
     # Set out locos
         for loco in location['engines']['remove']:
             formatPrefix = dep.ljust(longestStringLength)
             line = TRE.setoutLoco(loco, True, False)
-            textManifest += '{} {}\n'.format(formatPrefix ,line)
+            textWorkOrder += '{} {}\n'.format(formatPrefix ,line)
 
         if len(location['engines']['add']) + len(location['engines']['remove']) == 0:
-            textManifest += ' {}: {}\n'.format(PSE.getBundleItem('No work at'), location['userName'])
+            textWorkOrder += ' {}: {}\n'.format(PSE.getBundleItem('No work at'), location['userName'])
 
     # Pick up cars
-        textManifest += '{}:\n'.format(PSE.getBundleItem('Cars'))
+        textWorkOrder += '{}:\n'.format(PSE.getBundleItem('Cars'))
         for car in location['cars']['add']:
             if car['isLocal']:
                 continue
             formatPrefix = pcp.ljust(longestStringLength)
             line = TRE.pickupCar(car, True, False)
-            textManifest += '{} {}\n'.format(formatPrefix ,line)
+            textWorkOrder += '{} {}\n'.format(formatPrefix ,line)
     # Move cars
         for car in location['cars']['add']:
             if not car['isLocal']:
                 continue
             formatPrefix = mcp.ljust(longestStringLength)
             line = TRE.localMoveCar(car, True, False)
-            textManifest += '{} {}\n'.format(formatPrefix ,line)
+            textWorkOrder += '{} {}\n'.format(formatPrefix ,line)
     # Set out cars
         for car in location['cars']['remove']:
             if car['isLocal']:
                 continue
             formatPrefix = dcp.ljust(longestStringLength)
             line = TRE.dropCar(car, True, False)
-            textManifest += '{} {}\n'.format(formatPrefix ,line)
+            textWorkOrder += '{} {}\n'.format(formatPrefix ,line)
 
         if len(location['cars']['add']) + len(location['cars']['remove']) == 0:
-            textManifest += ' {}: {}\n'.format(PSE.getBundleItem('No work at'), location['userName'])
+            textWorkOrder += ' {}: {}\n'.format(PSE.getBundleItem('No work at'), location['userName'])
 
         try:
         # Location summary
             td = PSE.JMRI.jmrit.operations.setup.Setup.getDirectionString(location['trainDirection'])
-            textManifest += TMT.getStringTrainDepartsCars().format(location['userName'], td, str(location['cars']['total']), str(location['length']['length']), location['length']['unit'], str(location['weight'])) + '\n'
+            textWorkOrder += TMT.getStringTrainDepartsCars().format(location['userName'], td, str(location['cars']['total']), str(location['length']['length']), location['length']['unit'], str(location['weight'])) + '\n'
         except:
         # Footer
-            textManifest += TMT.getStringTrainTerminates().format(manifest['locations'][-1]['userName']) + '\n'
+            textWorkOrder += TMT.getStringTrainTerminates().format(manifest['locations'][-1]['userName']) + '\n'
 
-        textManifest += '\n'
+        textWorkOrder += '\n'
 
-    return textManifest
+    return textWorkOrder
 
-
-
-
-
-def opsJmriSwitchLists(manifest, typeFlag):
+def opsJmriManifest(manifest):
     """
     OPS version of the JMRI generated text switch list.
     Makes new switch lists from a JMRI train.
@@ -258,73 +255,38 @@ def opsJmriSwitchLists(manifest, typeFlag):
     The name is too similar to the OPS switch list.
     """
 
-    _psLog.debug('opsJmriSwitchLists')
+    _psLog.debug('opsJmriManifest')
 
     TRE.makeReportItemWidthMatrix()
     TRE.translateMessageFormat()
 
-    configFile = PSE.readConfigFile()
-    isSequence, sequenceHash = PSE.getSequenceHash()
+    TMT = PSE.JMRI.jmrit.operations.trains.TrainManifestText()
+    # dep = PSE.JMRI.jmrit.operations.setup.Setup.getDropEnginePrefix()
+    # pcp = PSE.JMRI.jmrit.operations.setup.Setup.getPickupCarPrefix()
+    # dcp = PSE.JMRI.jmrit.operations.setup.Setup.getDropCarPrefix()
+    # mcp = PSE.JMRI.jmrit.operations.setup.Setup.getLocalPrefix()
+    # hcp = PSE.readConfigFile()['Patterns']['US']['HCP']
 
-    SMT = PSE.JMRI.jmrit.operations.trains.TrainSwitchListText()
-    pep = PSE.JMRI.jmrit.operations.setup.Setup.getPickupEnginePrefix()
-    dep = PSE.JMRI.jmrit.operations.setup.Setup.getDropEnginePrefix()
-    pcp = PSE.JMRI.jmrit.operations.setup.Setup.getPickupCarPrefix()
-    dcp = PSE.JMRI.jmrit.operations.setup.Setup.getDropCarPrefix()
-    mcp = PSE.JMRI.jmrit.operations.setup.Setup.getLocalPrefix()
-    hcp = PSE.readConfigFile()['Patterns']['US']['HCP']
-
-    longestStringLength = PSE.findLongestStringLength((pep, dep, pcp, dcp, mcp, hcp))
+    # longestStringLength = PSE.findLongestStringLength((dep, pcp, dcp, mcp, hcp))
 
     for location in manifest['locations']:
     # Header
-        textSwitchList = '{}\n'.format(PSE.getExtendedRailroadName())
-        textSwitchList += '\n'
-        textSwitchList += '{}\n'.format(SMT.getStringSwitchListFor().format(location['userName']))
-        textSwitchList += '{}\n'.format(PSE.convertIsoToValidTime(manifest['date']))
-        textSwitchList += '\n'
-        textSwitchList += '{}\n'.format(SMT.getStringSwitchListByTrack())
+        manifestText = '{}\n'.format(PSE.getExtendedRailroadName())
+        manifestText += '\n'
+        manifestText += TMT.getStringManifestForTrain().format(manifest['userName'], manifest['description']) + '\n'
+        manifestText += '{}\n'.format(PSE.convertIsoToValidTime(manifest['date']))
+        manifestText += '\n'
+        manifestText += '{}\n'.format(SMT.getStringSwitchListByTrack())
 
         trackList = PSE.LM.getLocationByName(location['userName']).getTracksByNameList(None)
         for track in trackList:
-            textSwitchList += '\n'
-            textSwitchList += '{}\n'.format(track.getName())
+            manifestText += '\n'
+            manifestText += '{}\n'.format(track.getName())
         # Pick up Locos
         # Set out locos
         # Pick up cars
-            carList = PSE.CM.getList(track)
-            carSeq = []
-            for car in carList:
-                carSeq.append((car.toString(), sequenceHash['cars'][car.toString()]))
-            carSeq.sort(key=lambda row: row[1])
-            carList = [car[0] for car in carSeq] # strip off the seq number
-            
-            for car in carList:
-                carX = car.split(' ')
-                carObject = PSE.CM.getByRoadAndNumber(carX[0], carX[1])
-                if carObject.getTrainName():
-                     textSwitchList += '{}\n'.format(pcp)
-                     carAttribs = getDetailsForCar(carObject)
-                     rsAttribs = getDetailsForRollingStock(carObject)
-                     carAttribs.update(rsAttribs)
-                else:
-                    roadName = carObject.getRoadName().ljust(PSE.REPORT_ITEM_WIDTH_MATRIX['Road'])
-                    roadNumber = carObject.getNumber().rjust(PSE.REPORT_ITEM_WIDTH_MATRIX['Number'])
-                    formatPrefix = hcp.ljust(longestStringLength)
-                    textSwitchList += '{} {} {}\n'.format(formatPrefix, roadName, roadNumber)
-
         # Set out cars
-            for car in location['cars']['remove']:
-                if car['destination']['track']['userName'] == track.getName():
-                    formatPrefix = dcp.ljust(longestStringLength)
-                    line = PSE.dropCar(car, False, False)
-                    textSwitchList += formatPrefix + ' ' + line + '\n'
 
-        textSwitchList += '\n'
-
-        switchListName = 'location ({}).txt'.format(location['userName'])
-        switchListPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'switchlists', switchListName)
-        PSE.genericWriteReport(switchListPath, textSwitchList)
 
     return
 

@@ -5,7 +5,7 @@ Todo:
   Maybe put Dest and FD standins into TextReports.py?
   Change Patterns back to moving a car on a train?
   Refine Hazardous handling.
-  set rs to track doesnt work
+  Redefine manifest and switch list.
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.
