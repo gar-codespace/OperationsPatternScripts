@@ -43,6 +43,20 @@ def refreshSubroutine():
 
     return
 
+def addSubroutineListeners():
+    """
+    Add any listeners specific to this subroutine.
+    """
+
+    return
+
+def removeSubroutineListeners():
+    """
+    Removes any listeners specific to this subroutine.
+    """
+
+    return
+
 
 """ Routines specific to this subroutine """
 

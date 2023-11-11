@@ -241,7 +241,7 @@ def repaintPatternScriptsFrame():
     frameName = getBundleItem('Pattern Scripts')
 
     for subroutineName in getSubroutineDirs():
-        subroutine = SUBROUTINE_DIR + '.' + subroutineName
+        subroutine = '{}.{}'.format(SUBROUTINE_DIR, subroutineName)
         targetPanel = getComponentByName(frameName, subroutine)
         targetPanel.setVisible(configFile[subroutineName]['SV'])
 

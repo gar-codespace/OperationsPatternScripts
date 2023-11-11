@@ -6,7 +6,7 @@ jPlus
 """
 
 from opsEntities import PSE
-from opsEntities import TextReports
+from Subroutines_Activated.jPlus import SubroutineListeners
 
 SCRIPT_NAME = '{}.{}'.format(PSE.SCRIPT_DIR, __name__)
 SCRIPT_REV = 20231001
@@ -87,13 +87,60 @@ def refreshSubroutine():
     component = PSE.getComponentByName(frame, 'yearModeled')
     component.setText(configFile['jPlus']['LD']['YR'])
 
+    component = PSE.getComponentByName(frame, 'useExtended')
+    component.setSelected(configFile['jPlus']['LD']['EH'])
+
     updateYearModeled()
 
     return
 
+def addSubroutineListeners():
+    """
+    Add any listeners specific to this subroutine.
+    """
+
+    PSE.LM.addPropertyChangeListener(SubroutineListeners.ExtendedAttributesListener())
+
+    return
+
+def removeSubroutineListeners():
+    """
+    Removes any listeners specific to this subroutine.
+    """
+
+    for listener in PSE.LM.getPropertyChangeListeners():
+        if isinstance(listener, PSE.JAVA_BEANS.PropertyChangeListener) and 'ExtendedAttributesListener' in listener.toString():
+            PSE.LM.removePropertyChangeListener(listener)
+
+    return
 
 """ Routines specific to this subroutine """
 
+
+def putExtendedProperties(propertyOldValue):
+    """
+    Another subroutine can send extended details to jPlus.
+    The details are written to the config file and jPlus is updated.
+    """
+
+    configFile = PSE.readConfigFile()
+
+    configFile['jPlus']['LD']['OR'] = propertyOldValue[0]
+    configFile['jPlus']['LD']['TR'] = propertyOldValue[1]
+    configFile['jPlus']['LD']['LO'] = propertyOldValue[2]
+    configFile['jPlus']['LD']['YR'] = propertyOldValue[3]
+    configFile['jPlus']['LD']['EH'] = True
+
+    layoutDetails = {}
+    layoutDetails['OR'] = propertyOldValue[0]
+    layoutDetails['TR'] = propertyOldValue[1]
+    layoutDetails['LO'] = propertyOldValue[2]
+
+    configFile['jPlus']['LD']['JN'] = PSE.makeCompositRailroadName(layoutDetails)
+
+    PSE.writeConfigFile(configFile)
+
+    return
 
 def modifyPatternReport():
 

@@ -35,9 +35,29 @@ def refreshSubroutine():
 
     return
 
+def addSubroutineListeners():
+    """
+    Add any listeners specific to this subroutine.
+    """
+
+    return
+
+def removeSubroutineListeners():
+    """
+    Removes any listeners specific to this subroutine.
+    """
+
+    return
+
 
 """ Routines specific to this subroutine """
 
+
+def getExtendedProperties():
+
+    tpRailroadData = ModelEntities.getTpRailroadJson('tpRailroadData')
+
+    return [tpRailroadData['Extended_operatingRoad'], tpRailroadData['Extended_territory'], tpRailroadData['Extended_location'], tpRailroadData['Extended_year']]
 
 def modifyManifest(manifestName):
 
@@ -213,7 +233,7 @@ def _updateJmriProperties():
     """
     Helper function updates JMRI properties from o2o import detail.
     """
-    _psLog.debug('extendedDetail')
+    _psLog.debug('_updateJmriProperties')
 
     tpRailroadData = ModelEntities.getTpRailroadJson('tpRailroadData')
     OSU = PSE.JMRI.jmrit.operations.setup
@@ -537,78 +557,78 @@ class Initializer:
         return
 
 
-class ExtendedDetails:
-    """
-    Adds the extended details that are part of the Quick Keys export, if used.
-    """
+# class ExtendedDetails:
+#     """
+#     Adds the extended details that are part of the Quick Keys export, if used.
+#     """
 
-    def __init__(self):
+#     def __init__(self):
 
-        self.scriptName = SCRIPT_NAME + '.ExtendedDetails'
+#         self.scriptName = SCRIPT_NAME + '.ExtendedDetails'
 
-        self.configFile =  PSE.readConfigFile()
+#         self.configFile =  PSE.readConfigFile()
 
-        self.tpRailroad = ModelEntities.getTpRailroadJson('tpRailroadData')
+#         self.tpRailroad = ModelEntities.getTpRailroadJson('tpRailroadData')
 
-        print(self.scriptName + ' ' + str(SCRIPT_REV))
+#         print(self.scriptName + ' ' + str(SCRIPT_REV))
 
-        return
+#         return
     
-    def update(self):
-        """
-        Mini controller to update railroad properties.
-        """
+#     def update(self):
+#         """
+#         Mini controller to update railroad properties.
+#         """
 
-        self.o2oDetailsToConFig()
-        self.setRailroadDetails()
+#         # self.o2oDetailsToConFig()
+#         # self.setRailroadDetails()
 
-        _psLog.info('Layout details updated')
+#         _psLog.info('Layout details updated')
 
-        return
+#         return
 
-    def o2oDetailsToConFig(self):
-        """
-        Optional Extended Header data from the TrainPlayer layout are added to the config file.
-        """
+    # def o2oDetailsToConFig(self):
+    #     """
+    #     Optional Extended Header data from the TrainPlayer layout are added to the config file.
+    #     """
 
-        self.configFile['Main Script']['LD'].update({'OR':self.tpRailroad['Extended_operatingRoad']})
-        self.configFile['Main Script']['LD'].update({'TR':self.tpRailroad['Extended_territory']})
-        self.configFile['Main Script']['LD'].update({'LO':self.tpRailroad['Extended_location']})
-        self.configFile['Main Script']['LD'].update({'YR':self.tpRailroad['Extended_year']})
-        self.configFile['Main Script']['LD'].update({'SC':self.tpRailroad['Extended_scale']})
-        self.configFile['Main Script']['LD'].update({'BD':self.tpRailroad['Extended_buildDate']})
-        self.configFile['Main Script']['LD'].update({'LN':self.tpRailroad['Extended_layoutName']})
+    #     self.configFile['Main Script']['LD'].update({'OR':self.tpRailroad['Extended_operatingRoad']})
+    #     self.configFile['Main Script']['LD'].update({'TR':self.tpRailroad['Extended_territory']})
+    #     self.configFile['Main Script']['LD'].update({'LO':self.tpRailroad['Extended_location']})
+    #     self.configFile['Main Script']['LD'].update({'YR':self.tpRailroad['Extended_year']})
+    #     self.configFile['Main Script']['LD'].update({'SC':self.tpRailroad['Extended_scale']})
+    #     self.configFile['Main Script']['LD'].update({'BD':self.tpRailroad['Extended_buildDate']})
+    #     self.configFile['Main Script']['LD'].update({'LN':self.tpRailroad['Extended_layoutName']})
         
-        self.configFile['Main Script']['LD'].update({'JN':PSE.makeCompositRailroadName(self.configFile['Main Script']['LD'])})
+    #     self.configFile['Main Script']['LD'].update({'JN':PSE.makeCompositRailroadName(self.configFile['Main Script']['LD'])})
 
-        PSE.writeConfigFile(self.configFile)
-        self.configFile =  PSE.readConfigFile()
+    #     PSE.writeConfigFile(self.configFile)
+    #     self.configFile =  PSE.readConfigFile()
 
-        return
+    #     return
     
-    def setRailroadDetails(self):
-        """
-        Writes the o2o railroad name, scale and year data from o2o to JMRI settings.
-        """
+    # def setRailroadDetails(self):
+    #     """
+    #     Writes the o2o railroad name, scale and year data from o2o to JMRI settings.
+    #     """
 
-        _psLog.debug('setRailroadDetails')
+    #     _psLog.debug('setRailroadDetails')
 
-        OSU = PSE.JMRI.jmrit.operations.setup
-    # Set the railroad name
-        rrName = self.configFile['Main Script']['LD']['LN']
-        OSU.Setup.setRailroadName(rrName)
-    # Set the year
-        rrYear = self.configFile['Main Script']['LD']['YR']
-        if rrYear:
-            OSU.Setup.setYearModeled(rrYear)
-    # Set the scale
-        rrScale = self.configFile['Main Script']['LD']['SC']
-        if rrScale:
-            OSU.Setup.setScale(self.configFile['Main Script']['SR'][rrScale.upper()])
+    #     OSU = PSE.JMRI.jmrit.operations.setup
+    # # Set the railroad name
+    #     rrName = self.configFile['Main Script']['LD']['LN']
+    #     OSU.Setup.setRailroadName(rrName)
+    # # Set the year
+    #     rrYear = self.configFile['Main Script']['LD']['YR']
+    #     if rrYear:
+    #         OSU.Setup.setYearModeled(rrYear)
+    # # Set the scale
+    #     rrScale = self.configFile['Main Script']['LD']['SC']
+    #     if rrScale:
+    #         OSU.Setup.setScale(self.configFile['Main Script']['SR'][rrScale.upper()])
 
-        PSE.JMRI.jmrit.operations.setup.OperationsSettingsPanel().savePreferences()
+    #     PSE.JMRI.jmrit.operations.setup.OperationsSettingsPanel().savePreferences()
 
-        return
+    #     return
 
 
 class Attributator:

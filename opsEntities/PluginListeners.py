@@ -1,7 +1,7 @@
 """
 'Plugin' or 'Global' level listeners.
 Listeners for OPS interoperability.
-Listeners for JMRI events.
+Listeners for JMRI events that more than one subroutine needs to listen for.
 """
 
 from opsEntities import PSE
@@ -35,6 +35,7 @@ class PatternScriptsFrameListener(PSE.JAVA_AWT.event.WindowListener):
             xModule = 'Subroutines_Activated.{}'.format(subroutine)
             package = __import__(xModule, fromlist=['Model'], level=-1)
             package.Model.initializeSubroutine()
+            package.Model.addSubroutineListeners()
 
         return
 
@@ -46,11 +47,16 @@ class PatternScriptsFrameListener(PSE.JAVA_AWT.event.WindowListener):
 
         _psLog.debug(WINDOW_CLOSING)
 
+        for subroutine in PSE.getSubroutineDirs():
+            xModule = 'Subroutines_Activated.{}'.format(subroutine)
+            package = __import__(xModule, fromlist=['Model'], level=-1)
+            package.Model.removeSubroutineListeners()
+
         removeSubroutineListeners()
         
         PSE.updateWindowParams(WINDOW_CLOSING.getSource())
         PSE.removePSPropertyListeners()
-        PSE.removePSWindowListeners()
+        # PSE.removePSWindowListeners()
 
         PSE.getPsButton().setEnabled(True)
             
@@ -148,18 +154,30 @@ class LocationsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
             _psLog.debug(PROPERTY_CHANGE_EVENT)
 
         if PROPERTY_CHANGE_EVENT.propertyName == 'opsResetSubroutine':
-        # Fired from OPS
+
             for subroutine in PSE.getSubroutineDirs():
                 xModule = 'Subroutines_Activated.{}'.format(subroutine)
                 package = __import__(xModule, fromlist=['Model'], level=-1)
                 package.Model.resetSubroutine()
 
             _psLog.debug(PROPERTY_CHANGE_EVENT)
-            
+
+        if PROPERTY_CHANGE_EVENT.propertyName == 'opsRefreshSubroutine':
+
+            for subroutine in PSE.getSubroutineDirs():
+                xModule = 'Subroutines_Activated.{}'.format(subroutine)
+                package = __import__(xModule, fromlist=['Model'], level=-1)
+                package.Model.refreshSubroutine()
+
+            _psLog.debug(PROPERTY_CHANGE_EVENT)
+ 
         return
 
 
 def refreshSubroutines():
+    """
+    Called by window activated.
+    """
 
     for subroutine in PSE.getSubroutineDirs():
         xModule = 'Subroutines_Activated.{}'.format(subroutine)

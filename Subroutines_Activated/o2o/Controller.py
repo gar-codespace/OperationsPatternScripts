@@ -93,36 +93,6 @@ class TrainsPropertyParser:
 
         return
 
-
-# def opsPostProcess(message=None):
-#     """
-#     Writes the processed json files to text files.
-#     """
-
-#     tpDirectory = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData', 'Roaming', 'TrainPlayer', 'Reports')
-#     if not tpDirectory:
-#         _psLog.warning('TrainPlayer Reports destination directory not found')
-#         print('TrainPlayer Reports destination directory not found')
-
-#         return    
-
-#     if message == 'TrainBuilt':   
-#         train = PSE.getNewestTrain()
-#         workList = PSE.getTrainManifest(train.toString())
-
-#     elif message == 'opsSwitchList':   
-#         workList = getOpsSwitchList()
-
-#     else:
-#         return
-
-#     o2oWorkEvents = ModelWorkEvents.o2oWorkEvents(workList)
-#     outPutName = 'JMRI Report - o2o Workevents.csv'
-#     o2oWorkEventPath = PSE.OS_PATH.join(tpDirectory, outPutName)
-#     PSE.genericWriteReport(o2oWorkEventPath, o2oWorkEvents)
-
-#     return
-
 def getOpsSwitchList():
 
     trainName = 'ops-Switch List.json'
@@ -223,7 +193,6 @@ class StartUp:
         Model.updateJmriLocations()
 
         PSE.LM.firePropertyChange('opsResetSubroutine', False, True)
-        # PSE.LM.firePropertyChange('opsRefreshSubroutine', False, True)
 
         print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
 
@@ -245,7 +214,6 @@ class StartUp:
         Model.updateJmriTracks()
 
         PSE.LM.firePropertyChange('opsResetSubroutine', False, True)
-        # PSE.LM.firePropertyChange('opsRefreshSubroutine', False, True)
 
         print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
 
@@ -282,7 +250,8 @@ class StartUp:
         
         Model._updateJmriProperties()
 
-        PSE.LM.firePropertyChange('opsRefreshSubroutine', False, True)
+        extendedProperties = Model.getExtendedProperties()
+        PSE.LM.firePropertyChange('opsExtendedProperties', extendedProperties, True)
 
         print('{} rev:{}'.format(SCRIPT_NAME, SCRIPT_REV))
 
