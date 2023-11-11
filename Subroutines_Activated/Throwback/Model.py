@@ -124,7 +124,7 @@ def makeCommit(displayWidgets):
             roster.save()
             copyFrom = PSE.JAVA_IO.File(targetFile).toPath()
 
-            fileName = ts + '.' + xml[:1] + '.xml.o2o'
+            fileName = '{}.{}.xml'.format(ts, xml[:1])
             targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', fileName)
             copyTo = PSE.JAVA_IO.File(targetFile).toPath()
 
@@ -132,17 +132,13 @@ def makeCommit(displayWidgets):
             PSE.JAVA_IO.File(targetFile).setReadOnly()
 
 # Save the extended data as well
-    # fileName = ts + '.D.json.o2o'
-    # targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', fileName)
-    # try:
-    #     PSE.genericWriteReport(targetFile, PSE.dumpJson(configFile['jPlus']['LD']))
-    # except:
-    #     pass
-
-# Save the commit name
-    fileName = ts + '.' + note + '.txt.o2o'
+    fileName = '{}.D.json'.format(ts)
     targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', fileName)
-    PSE.genericWriteReport(targetFile, 'note')
+    try:
+        extendedData = PSE.dumpJson(configFile['jPlus']['LD'])
+        PSE.genericWriteReport(targetFile, extendedData)
+    except:
+        pass
 
     print('Commit made at: ' + ts)
 
@@ -163,53 +159,57 @@ def throwbackCommit(displayWidgets):
     for widget in displayWidgets:
         if widget.getName() == 'lCheckBox' and widget.selected:
             PSE.LM.dispose()
-            roster = throwbackRestorePoint[0] + '.L.xml.o2o'
+            roster = '{}.L.xml'.format(throwbackRestorePoint[0])
             targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
             PSE.LMX.readFile(targetFile)
             PSE.LMX.writeOperationsFile()
-            _psLog.info('Throwback: ' + widget.getText() + ' to ' + throwbackRestorePoint[1])
-
-    # Restore the extended data as well
-        # fileName = throwbackRestorePoint[0] + '.D.json.o2o'
-        # targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', fileName)
-        # configFile['Main Script'].update({'LD':PSE.loadJson(PSE.genericReadReport(targetFile))})
-        # PSE.writeConfigFile(configFile)
+            _psLog.info('Throwback: {} to commit: {}'.format(widget.getText(), throwbackRestorePoint[1]))
 
     for widget in displayWidgets:
         if widget.getName() == 'rCheckBox' and widget.selected:
             PSE.RM.dispose()
-            roster = throwbackRestorePoint[0] + '.R.xml.o2o'
+            roster = '{}.R.xml'.format(throwbackRestorePoint[0])
             targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
             PSE.RMX.readFile(targetFile)
             PSE.RMX.writeOperationsFile()
-            _psLog.info('Throwback: ' + widget.getText() + ' to ' + throwbackRestorePoint[1])
+            _psLog.info('Throwback: {} to commit: {}'.format(widget.getText(), throwbackRestorePoint[1]))
 
     for widget in displayWidgets:
         if widget.getName() == 'tCheckBox' and widget.selected:
             PSE.TM.dispose()
-            roster = throwbackRestorePoint[0] + '.T.xml.o2o'
+            roster = '{}.T.xml'.format(throwbackRestorePoint[0])
             targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
             PSE.TMX.readFile(targetFile)
             PSE.TMX.writeOperationsFile()
-            _psLog.info('Throwback: ' + widget.getText() + ' to ' + throwbackRestorePoint[1])
+            _psLog.info('Throwback: {} to commit: {}'.format(widget.getText(), throwbackRestorePoint[1]))
 
     for widget in displayWidgets:
         if widget.getName() == 'cCheckBox' and widget.selected:
             PSE.CM.dispose()
-            roster = throwbackRestorePoint[0] + '.C.xml.o2o'
+            roster = '{}.C.xml'.format(throwbackRestorePoint[0])
             targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
             PSE.CMX.readFile(targetFile)
             PSE.CMX.writeOperationsFile()
-            _psLog.info('Throwback: ' + widget.getText() + ' to ' + throwbackRestorePoint[1])
+            _psLog.info('Throwback: {} to commit: {}'.format(widget.getText(), throwbackRestorePoint[1]))
 
     for widget in displayWidgets:
         if widget.getName() == 'eCheckBox' and widget.selected:
             PSE.EM.dispose()
-            roster = throwbackRestorePoint[0] + '.E.xml.o2o'
+            roster = '{}.E.xml'.format(throwbackRestorePoint[0])
             targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', roster)
             PSE.EMX.readFile(targetFile)
             PSE.EMX.writeOperationsFile()
-            _psLog.info('Throwback: ' + widget.getText() + ' to ' + throwbackRestorePoint[1])
+            _psLog.info('Throwback: {} to commit: {}'.format(widget.getText(), throwbackRestorePoint[1]))
+
+    # Restore the extended data as well
+        fileName = '{}.D.json'.format(throwbackRestorePoint[0])
+        targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', fileName)
+        try:
+            configFile['jPlus'].update({'LD':PSE.loadJson(PSE.genericReadReport(targetFile))})
+        except:
+            pass
+
+        PSE.writeConfigFile(configFile)
 
     return
 

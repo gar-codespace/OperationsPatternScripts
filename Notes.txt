@@ -3,7 +3,6 @@ Todo:
   Maybe put Dest and FD standins into TextReports.py?
   Change Patterns back to moving a car on a train?
   Refine Hazardous handling.
-  Will ThrowBack save extended data?
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.
@@ -170,6 +169,7 @@ Tested Items:
     Set checkbox default to False OK.
     Makes and restores the extended data for jPlus OK.
     If there are commits, they will be restored when restart from default is selected OK.
+    Saves and restores extended data from jPlus OK.
 
 Catches Items:
   Catches pattern report button press no tracks selected OK.
