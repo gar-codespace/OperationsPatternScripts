@@ -19,9 +19,12 @@ SCRIPT_REV = 20231001
 
 _psLog = PSE.LOGGING.getLogger('OPS.OE.TextReports')
 
-def printExtendedManifest(trainName):
+def printExtendedTrainList(trainName):
 
-
+    trainListName = 'ops train ({}).txt'.format(trainName)
+    trainListPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', trainListName)
+    if PSE.JAVA_IO.File(trainListPath).isFile():
+        PSE.genericDisplayReport(trainListPath)
     
     return
 
@@ -247,48 +250,56 @@ def opsJmriWorkOrder(manifest):
 
     return textWorkOrder
 
-def opsJmriManifest(manifest):
+def opsTrainList(manifest):
     """
-    OPS version of the JMRI generated text switch list.
-    Makes new switch lists from a JMRI train.
-    This one is still under construction.
-    The name is too similar to the OPS switch list.
+    Makes an OPS train list text report.
     """
 
-    _psLog.debug('opsJmriManifest')
+    _psLog.debug('opsTrainList')
 
     TRE.makeReportItemWidthMatrix()
     TRE.translateMessageFormat()
-
     TMT = PSE.JMRI.jmrit.operations.trains.TrainManifestText()
-    # dep = PSE.JMRI.jmrit.operations.setup.Setup.getDropEnginePrefix()
-    # pcp = PSE.JMRI.jmrit.operations.setup.Setup.getPickupCarPrefix()
-    # dcp = PSE.JMRI.jmrit.operations.setup.Setup.getDropCarPrefix()
-    # mcp = PSE.JMRI.jmrit.operations.setup.Setup.getLocalPrefix()
-    # hcp = PSE.readConfigFile()['Patterns']['US']['HCP']
 
-    # longestStringLength = PSE.findLongestStringLength((dep, pcp, dcp, mcp, hcp))
+# Header
+    trainListText = '{}\n'.format(manifest['railroad'])
+    trainListText += '\n'
+    trainListText += '{} ({}) {}\n'.format(PSE.getBundleItem('Train list for train'), manifest['userName'], manifest['description'])
+    trainListText += '{}\n'.format(PSE.convertIsoToValidTime(manifest['date']))
+    trainListText += '\n'
 
+# Body
     for location in manifest['locations']:
-    # Header
-        manifestText = '{}\n'.format(PSE.getExtendedRailroadName())
-        manifestText += '\n'
-        manifestText += TMT.getStringManifestForTrain().format(manifest['userName'], manifest['description']) + '\n'
-        manifestText += '{}\n'.format(PSE.convertIsoToValidTime(manifest['date']))
-        manifestText += '\n'
-        manifestText += '{}\n'.format(SMT.getStringSwitchListByTrack())
+        trainListText += '{}: {}\n'.format(PSE.getBundleItem('Train consist at'), location['userName'])
 
-        trackList = PSE.LM.getLocationByName(location['userName']).getTracksByNameList(None)
-        for track in trackList:
-            manifestText += '\n'
-            manifestText += '{}\n'.format(track.getName())
-        # Pick up Locos
-        # Set out locos
-        # Pick up cars
-        # Set out cars
+    # Pick up locos
+        trainListText += '{}:\n'.format(PSE.getBundleItem('Engines'))
+        if not location['engines']['add']:
+            trainListText += ' {}\n'.format(PSE.getBundleItem('None'))
+        for loco in location['engines']['add']:
+            line = TRE.pickupLoco(loco, True, False)
+            trainListText += ' {}\n'.format(line)
+    # Pick up cars
+        trainListText += '{}:\n'.format(PSE.getBundleItem('Cars'))
+        if not location['cars']['add']:
+            trainListText += ' {}\n'.format(PSE.getBundleItem('None'))
+        for car in location['cars']['add']:
+            if car['isLocal']:
+                continue
+            line = TRE.pickupCar(car, True, False)
+            formattedSequence = '{:02d}'.format(int(car['sequence']) - 6000)
+            trainListText += ' {} {}\n'.format(formattedSequence, line)
+
+        try: # Location summary
+            td = PSE.JMRI.jmrit.operations.setup.Setup.getDirectionString(location['trainDirection'])
+            trainListText += TMT.getStringTrainDepartsCars().format(location['userName'], td, str(location['cars']['total']), str(location['length']['length']), location['length']['unit'], str(location['weight'])) + '\n\n'
+        except: # Terminates
+            trainListText += TMT.getStringTrainTerminates().format(manifest['locations'][-1]['userName']) + '\n'
+            return trainListText
 
 
-    return
+
+    return trainListText
 
 def getDetailsForRollingStock(rs):
 

@@ -425,25 +425,6 @@ def getAllDivisionNames():
 
     return divisionNames
 
-# def getLocationNamesByDivision(divisionName):
-#     """
-#     Returned list is sorted.
-#     """
-
-#     locationsByDivision = []
-#     # divisionName = readConfigFile()['Patterns']['PD']
-
-#     if divisionName == None:
-#         for location in LM.getList():
-#             if not location.getDivisionName():
-#                 locationsByDivision.append(location.getName())
-#     else:
-#         for location in LM.getList():
-#             if location.getDivisionName() == divisionName:
-#                 locationsByDivision.append(location.getName())
-
-#     return sorted(locationsByDivision)
-
 def getAllLocationNames():
     """
     JMRI sorts the list, returns list of location names.
@@ -454,38 +435,6 @@ def getAllLocationNames():
         locationNames.append(unicode(item.getName(), ENCODING))
 
     return locationNames
-
-# def getAllTracks():
-#     """
-#     All track objects for all locations.
-#     Called by:
-#     o2oSubroutine.Model.RollingStockulator.checkTracks
-#     o2oSubroutine.Model.RollingStockulator.getAllSpurs
-#     """
-
-#     trackList = []
-#     for location in LM.getList():
-#         trackList += location.getTracksByNameList(None)
-
-#     return trackList
-
-# def getOpsProSettingsItems():
-#     """
-#     From JMRI settings, get railroad name, year modeled, and scale.
-#     """
-
-#     items = {}
-#     scaleRubric = readConfigFile('Main Script')['SR']
-#     scaleRubric = {sIndex:sScale for sScale, sIndex in scaleRubric.items()}
-
-#     OSU = JMRI.jmrit.operations.setup
-#     scale = scaleRubric[OSU.Setup.getScale()]
-
-#     items['YR'] = OSU.Setup.getYearModeled()
-#     items['LN'] = OSU.Setup.getRailroadName()
-#     items['SC'] = scale
-
-#     return items
 
 def makeCompositRailroadName(layoutDetails):
     """
@@ -508,28 +457,6 @@ def makeCompositRailroadName(layoutDetails):
 
     return a + b + c
 
-# def getNewestTrain():
-#     """
-#     If more than 1 train is built, pick the newest one.
-#     Returns a train object.
-#     """
-
-#     _psLog.debug('findNewestTrain')
-
-#     if not TM.isAnyTrainBuilt():
-#         return None
-
-#     newestBuildTime = ''
-#     for train in [train for train in TM.getTrainsByStatusList() if train.isBuilt()]:
-#         trainManifest = JMRI.jmrit.operations.trains.JsonManifest(train).getFile()
-#         trainManifest = JMRI.util.FileUtil.readFile(trainManifest)
-#         testDate = loadJson(trainManifest)['date']
-#         if testDate > newestBuildTime:
-#             newestBuildTime = testDate
-#             newestTrain = train
-
-#     return newestTrain
-
 def getTrainManifest(trainName):
 
     trainName = 'train-{}.json'.format(trainName)
@@ -538,35 +465,68 @@ def getTrainManifest(trainName):
 
     return manifest
 
-# def saveManifest(manifest, train):
+def getOpsTrainList(jmriManifest):
+    """
+    Makes an OPS train list from an extended JMRI manifest.
+    Formatted to JMRI manifest standard.
+    """
 
-#     trainName = 'train-{}.json'.format(train.toString())
-#     manifestPath = OS_PATH.join(PROFILE_PATH, 'operations', 'jsonManifests', trainName)
-#     genericWriteReport(manifestPath, dumpJson(manifest))
+    locosOnTrain = [] # A list of engine objects that carries over from location to location
+    carsOnTrain = [] # A list of car objects that carries over from location to location
 
-#     return
+    for location in jmriManifest['locations']:
+    # Engines
+        combinedList = [] # A list of car objects
+        pickUp = [] # A list of car objects
+        setOut = [] # A list of strings (car name)
+        for loco in location['engines']['add']:
+            pickUp.append(loco)
+        for loco in location['engines']['remove']:
+            setOut.append(loco['name'])
 
-# def getOpsSwitchList():
+        combinedList = locosOnTrain + pickUp
+        locosOnTrain = []
 
-#     trainName = '{}.json'.format(getBundleItem('ops-Switch List'))
-#     manifestPath = OS_PATH.join(PROFILE_PATH, 'operations', 'jsonManifests', trainName)
-#     manifest = loadJson(genericReadReport(manifestPath))
+        for loco in combinedList:            
+            if loco['name'] not in setOut:
+                locosOnTrain.append(loco)
 
-#     return manifest
+        location['engines']['add'] = locosOnTrain
+    # Cars
+        combinedList = [] # A list of car objects
+        pickUp = [] # A list of car objects
+        setOut = [] # A list of strings (car name)
+        for car in location['cars']['add']:
+            if car['isLocal']:
+                continue
+            newSeq = str(int(car['sequence']) - 1000) # Head end pick up
+            car.update({'sequence':newSeq})
+            pickUp.append(car)
+        for car in location['cars']['remove']:
+            if car['isLocal']:
+                continue
+            setOut.append(car['name'])
+
+        combinedList = carsOnTrain + pickUp
+        carsOnTrain = []
+
+        for car in combinedList:            
+            if car['name'] not in setOut:
+                carsOnTrain.append(car)
+
+        carsOnTrain.sort(key=lambda row: row['sequence'])
+        newSeq = 6001
+        for car in carsOnTrain:
+            car.update({'sequence':str(newSeq)})
+            newSeq += 1
+
+        location['cars']['add'] = carsOnTrain
+
+    return jmriManifest
 
 
 """Formatting Functions"""
 
-
-# def isoValidTime(timeStamp):
-#     """
-#     Input the JMRI generated iso time stamp.
-#     Return format: Valid Oct 08, 1915, 11:11
-#     """
-
-#     valid = getBundleItem('Valid') + ' ' + JMRI.jmrit.operations.trains.TrainCommon.getDate(True)
-
-#     return valid
 
 def convertIsoToValidTime(isoDate):
     """

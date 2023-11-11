@@ -6,6 +6,7 @@ Todo:
   Change Patterns back to moving a car on a train?
   Refine Hazardous handling.
   Redefine manifest and switch list.
+  Pressing Train/Reset does something to the manifests
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.

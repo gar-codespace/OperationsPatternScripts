@@ -114,6 +114,8 @@
   "Track length:{},  Equipment length:{},  Available:{}": "Track length:{},  Equipment length:{},  Available:{}", 
   "Track:": "Track:", 
   "Tracks at {}": "Tracks at {}", 
+  "Train consist at": "Train consist at", 
+  "Train list for train": "Train list for train", 
   "TrainPlayer layout not imported to JMRI.": "TrainPlayer layout not imported to JMRI.", 
   "Trains": "Trains", 
   "Translate Plugin": "Translate Plugin", 

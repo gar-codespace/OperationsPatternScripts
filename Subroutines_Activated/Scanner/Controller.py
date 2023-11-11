@@ -87,8 +87,12 @@ class TrainsPropertyParser:
         if self.propertyName == 'TrainBuilt':
 
             jmriManifest = PSE.getTrainManifest(self.propertySource.toString())
-        # Make the OPS manifest
-
+        # Make the OPS train list
+            opsTrainList = PSE.getOpsTrainList(jmriManifest)
+            trainListText = TextReports.opsTrainList(opsTrainList)
+            trainListName = 'ops train ({}).txt'.format(self.propertySource.toString())
+            trainListPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', trainListName)
+            PSE.genericWriteReport(trainListPath, trainListText)
         # Make the OPS work order
             workOrderText = TextReports.opsJmriWorkOrder(jmriManifest)
             workOrderName = 'ops train ({}).txt'.format(self.propertySource.toString())

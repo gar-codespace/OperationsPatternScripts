@@ -22,6 +22,8 @@ Tools
 Total cars:{},  Loads:{},  Empties:{}
 Track length:{},  Equipment length:{},  Available:{}
 Track Length:
+Train consist at
+Train list for train
 Translate Plugin
 Valid
 View Log File
