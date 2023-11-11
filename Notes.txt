@@ -1,12 +1,9 @@
 Todo:
   How to publish DeepL?
-  Try to add sequence to the car xml:
-    https://webserver.jmri.org/JavaDoc/doc/jmri/jmrit/operations/rollingstock/RollingStockAttribute.html#store(org.jdom2.Element,java.lang.String,java.lang.String)
   Maybe put Dest and FD standins into TextReports.py?
   Change Patterns back to moving a car on a train?
   Refine Hazardous handling.
-  Redefine manifest and switch list.
-  Check that ExtendedAttributesListener doesn't load each time the ops window opens
+  Will ThrowBack save extended data?
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.

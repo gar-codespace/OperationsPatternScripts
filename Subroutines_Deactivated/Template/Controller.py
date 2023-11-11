@@ -41,13 +41,17 @@ def getSubroutineDropDownItem():
 
 
 class TrainsPropertyParser:
+    """
+    What get called when any of three listeners are fired:
+    preProcess, process, postProcess
+    """
 
     def __init__(self, pce):
 
-        self.propertySource = pce.source
-        self.propertyName = pce.propertyName
-        self.oldValue = pce.oldValue
-        self.newValue = pce.newValue
+        # self.propertySource = pce.source
+        # self.propertyName = pce.propertyName
+        # self.oldValue = pce.oldValue
+        # self.newValue = pce.newValue
 
         return
     

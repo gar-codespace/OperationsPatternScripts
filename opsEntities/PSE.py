@@ -616,14 +616,6 @@ def isoTimeStamp():
 
     return JMRI.jmrit.operations.trains.TrainCommon.getISO8601Date(bool)
 
-# def timeStamp():
-#     """
-#     Returns the time in format: YYYY.MO.DY.24.MN.SC
-#     Used by Throwback.
-#     """
-
-#     return TIME.strftime('%Y.%m.%d.%H.%M.%S', getTime())
-
 def findLongestStringLength(list):
     """
     list is a list or tuple of strings.
