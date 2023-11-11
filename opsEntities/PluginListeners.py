@@ -120,8 +120,8 @@ class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
         if PROPERTY_CHANGE_EVENT.propertyName == 'TrainBuilt' and PROPERTY_CHANGE_EVENT.newValue == True:
             if PSE.readConfigFile()['Main Script']['CP']['ER']:
                 trainName = PROPERTY_CHANGE_EVENT.source.toString()
-                # TextReports.printExtendedWorkOrder(trainName)
                 TextReports.printExtendedTrainList(trainName)
+                TextReports.printExtendedWorkOrder(trainName)
 
         return
 

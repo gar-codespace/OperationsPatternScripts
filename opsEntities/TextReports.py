@@ -69,22 +69,22 @@ def opsTextPatternReport():
         textPatternReport += PSE.getBundleItem('List of inventory at {}').format(location['userName']) + '\n'
     # Engines
         textPatternReport += '{}:\n'.format(PSE.getBundleItem('Engines'))
+        if not location['engines']['add']:
+            textPatternReport += ' {}\n'.format(PSE.getBundleItem('None'))
         for loco in location['engines']['add']:
             formatPrefix = ' [{}] '.format('  ')
             line = TRE.pickupLoco(loco, True, False)
             textPatternReport += '{} {}\n'.format(formatPrefix ,line)
-        if len(location['engines']['add']) == 0:
-            textPatternReport += ' {}: {}\n\n'.format(PSE.getBundleItem('No engines at'), location['userName'])
     # Cars
         textPatternReport += '{}:\n'.format(PSE.getBundleItem('Cars'))
+        if not location['cars']['add']:
+            textPatternReport += ' {}\n'.format(PSE.getBundleItem('None'))
         for car in location['cars']['add']:
             carLength += int(car['length'])
             fdTally.append(car['finalDestination']['userName'])
             formatPrefix = ' [{}] '.format('  ')
             line = TRE.localMoveCar(car, True, False)
             textPatternReport += formatPrefix + ' ' + line + '\n'
-        if len(location['cars']['add']) == 0:
-            textPatternReport += ' {}: {}\n\n'.format(PSE.getBundleItem('No cars at'), location['userName'])
 
         summaryText = PSE.getBundleItem('Total cars:{},  Loads:{},  Empties:{}')
         textPatternReport += summaryText.format(location['total'], location['loads'], location['empties']) + '\n'
@@ -139,6 +139,8 @@ def opsTextSwitchList():
         textSwitchList += PSE.getBundleItem('List of inventory at {}').format(location['userName']) + '\n'
     # Locos
         textSwitchList += '{}:\n'.format(PSE.getBundleItem('Engines'))
+        if not location['engines']['add']:
+            textSwitchList += ' {}\n'.format(PSE.getBundleItem('None'))
         for loco in location['engines']['add']:
             currentTrack = loco['location']['track']['userName']
             destTrack = loco['destination']['track']['userName']
@@ -151,6 +153,8 @@ def opsTextSwitchList():
             textSwitchList += '{} {} {}\n'.format(formatPrefix, line, loco['destination']['track']['userName'])
     # Cars
         textSwitchList += '{}:\n'.format(PSE.getBundleItem('Cars'))
+        if not location['cars']['add']:
+            textSwitchList += ' {}\n'.format(PSE.getBundleItem('None'))
         for car in location['cars']['add']:
             currentTrack = car['location']['track']['userName']
             destTrack = car['destination']['track']['userName']

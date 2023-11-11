@@ -84,20 +84,20 @@ class TrainsPropertyParser:
     
     def postProcess(self):
 
-        if self.propertyName == 'TrainBuilt':
+        if self.propertyName == 'TrainBuilt' and self.newValue == True:
 
             jmriManifest = PSE.getTrainManifest(self.propertySource.toString())
+        # Make the OPS work order
+            workOrderText = TextReports.opsJmriWorkOrder(jmriManifest)
+            workOrderName = 'ops train ({}).txt'.format(self.propertySource.toString())
+            workOrderPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'switchLists', workOrderName)
+            PSE.genericWriteReport(workOrderPath, workOrderText)
         # Make the OPS train list
             opsTrainList = PSE.getOpsTrainList(jmriManifest)
             trainListText = TextReports.opsTrainList(opsTrainList)
             trainListName = 'ops train ({}).txt'.format(self.propertySource.toString())
             trainListPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', trainListName)
             PSE.genericWriteReport(trainListPath, trainListText)
-        # Make the OPS work order
-            workOrderText = TextReports.opsJmriWorkOrder(jmriManifest)
-            workOrderName = 'ops train ({}).txt'.format(self.propertySource.toString())
-            workOrderPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'switchLists', workOrderName)
-            PSE.genericWriteReport(workOrderPath, workOrderText)
 
         return
 

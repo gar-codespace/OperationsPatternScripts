@@ -471,10 +471,12 @@ def getOpsTrainList(jmriManifest):
     Formatted to JMRI manifest standard.
     """
 
+    newManifest = jmriManifest
+
     locosOnTrain = [] # A list of engine objects that carries over from location to location
     carsOnTrain = [] # A list of car objects that carries over from location to location
 
-    for location in jmriManifest['locations']:
+    for location in newManifest['locations']:
     # Engines
         combinedList = [] # A list of car objects
         pickUp = [] # A list of car objects
@@ -522,7 +524,7 @@ def getOpsTrainList(jmriManifest):
 
         location['cars']['add'] = carsOnTrain
 
-    return jmriManifest
+    return newManifest
 
 
 """Formatting Functions"""
