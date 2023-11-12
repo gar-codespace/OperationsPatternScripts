@@ -133,7 +133,7 @@ def applyRfidData():
 
     return
 
-def scannerComboUpdater(selected=None):
+def scannerComboUpdater():
     """
     Updates the contents of the scanners combo box.
     """
@@ -143,13 +143,15 @@ def scannerComboUpdater(selected=None):
     frameName = PSE.getBundleItem('Pattern Scripts')
     frame = PSE.JMRI.util.JmriJFrame.getFrame(frameName)
     component = PSE.getComponentByName(frame, 'sScanner')
-    component.removeAllItems()
 
+    selectedItem = component.getSelectedItem()
+
+    component.removeAllItems()
     pulldownList = _updateScannerList()
     for scanName in pulldownList:
         component.addItem(scanName)
 
-    component.setSelectedItem(selected)
+    component.setSelectedItem(selectedItem)
     
     return
 
@@ -213,21 +215,29 @@ def applyScanReport(scannerReportPath):
     if scanDirection == 'W':
         scannerReport.reverse()
 
+    e = 0
+    c = 0
     for item in scannerReport:
-        try:
-            rs = PSE.EM.getByRfid('ID' + item)
+        rs = PSE.EM.getByRfid('ID' + item)
+        if rs:
             rs.setValue(str(locoSequence))
             locoSequence += 1
-        except:
-            rs = PSE.CM.getByRfid('ID' + item)
+            e += 1
+        rs = PSE.CM.getByRfid('ID' + item)
+        if rs:
             rs.setValue(str(carSequence))
             carSequence += 1
+            c += 1
 
     PSE.EMX.save()
     PSE.CMX.save()
 
-    _psLog.debug('applyScanReport for scanner: ' + scannerName)
-    print('applyScanReport for scanner: ' + scannerName)
+    _psLog.info('applyScanReport for scanner: {}'.format(scannerName))
+    _psLog.info('Number of engines sequenced: {}'.format(e))
+    _psLog.info('Number of cars sequenced: {}'.format(c))
+    print('applyScanReport for scanner: {}'.format(scannerName))
+    print('Number of engines sequenced: {}'.format(e))
+    print('Number of cars sequenced: {}'.format(c))
 
     return
 

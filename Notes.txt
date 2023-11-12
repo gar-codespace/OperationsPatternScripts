@@ -3,6 +3,8 @@ Todo:
   Maybe put Dest and FD standins into TextReports.py?
   Change Patterns back to moving a car on a train?
   Refine Hazardous handling.
+  ThrowBack not rebuilding fron restart default
+  Editibg division name doesn't update Patterns
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.
