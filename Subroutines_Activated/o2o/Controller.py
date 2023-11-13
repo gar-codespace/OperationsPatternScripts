@@ -56,16 +56,15 @@ class TrainsPropertyParser:
 
         if self.propertyName == 'opsPatternReport':
             manifestName = 'ops-Pattern Report.json'
-            Model.modifyManifest(manifestName)
+            PSE.extendManifest(manifestName)
 
         if self.propertyName == 'opsSwitchList':
             manifestName = 'ops-Switch List.json'
-            Model.modifyManifest(manifestName)
+            PSE.extendManifest(manifestName)
 
         if self.propertyName == 'TrainBuilt' and self.newValue == True:
             if PSE.readConfigFile()['Main Script']['CP']['ER']:
                 manifestName = 'train-{}.json'.format(self.propertySource.toString())
-                Model.modifyManifest(manifestName)
                 PSE.extendManifest(manifestName)
 
         return

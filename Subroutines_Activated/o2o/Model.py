@@ -59,12 +59,6 @@ def getExtendedProperties():
 
     return [tpRailroadData['Extended_operatingRoad'], tpRailroadData['Extended_territory'], tpRailroadData['Extended_location'], tpRailroadData['Extended_year']]
 
-def modifyManifest(manifestName):
-
-    PSE.extendManifest(manifestName)
-
-    return
-
 def resetBuiltTrains():
     """
     Resets all the trains that are built.
