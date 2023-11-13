@@ -62,10 +62,12 @@ class TrainsPropertyParser:
             manifestName = 'ops-Switch List.json'
             Model.modifyManifest(manifestName)
 
-        if self.propertyName == 'TrainBuilt':
-            manifestName = 'train-{}.json'.format(self.propertySource.toString())
-            Model.modifyManifest(manifestName)
-            
+        if self.propertyName == 'TrainBuilt' and self.newValue == True:
+            if PSE.readConfigFile()['Main Script']['CP']['ER']:
+                manifestName = 'train-{}.json'.format(self.propertySource.toString())
+                Model.modifyManifest(manifestName)
+                PSE.extendManifest(manifestName)
+
         return
     
     def process(self):
@@ -73,6 +75,9 @@ class TrainsPropertyParser:
         return
     
     def postProcess(self):
+        """
+        Makes an o2o formatted work list.
+        """
 
         tpDirectory = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData', 'Roaming', 'TrainPlayer', 'Reports')
         if not tpDirectory:
@@ -81,7 +86,7 @@ class TrainsPropertyParser:
 
             return    
 
-        if self.propertyName == 'TrainBuilt':
+        if self.propertyName == 'TrainBuilt' and self.newValue == True:
             workList = PSE.getTrainManifest(self.propertySource.toString())
 
         elif self.propertyName == 'opsSwitchList':
