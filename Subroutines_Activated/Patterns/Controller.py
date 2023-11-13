@@ -58,9 +58,10 @@ class TrainsPropertyParser:
     
     def preProcess(self):
 
-        if self.propertyName == 'TrainBuilt':
-            manifestName = 'train-{}.json'.format(self.propertySource.toString())
-            Model.extendManifestJson(manifestName)
+        if self.propertyName == 'TrainBuilt' and self.newValue == True:
+            if PSE.readConfigFile()['Main Script']['CP']['ER']:
+                manifestName = 'train-{}.json'.format(self.propertySource.toString())
+                PSE.extendManifest(manifestName)
 
         return
     

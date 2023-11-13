@@ -436,6 +436,20 @@ def getAllLocationNames():
 
     return locationNames
 
+def getSortList(rsSort):
+    """
+    Returns PSE.readConfigFile()['Patterns']['US'][rsSort] as a sorted list.
+    """
+
+    try:
+        sortList = [(a, b) for a, b in readConfigFile()['Patterns']['US'][rsSort].items() if b != 0]
+        sortList.sort(key=lambda row: row[1])
+        sortList = [item[0] for item in sortList]
+    except:
+        sortList = None
+
+    return sortList
+
 def getTrainManifest(trainName):
 
     trainName = 'train-{}.json'.format(trainName)

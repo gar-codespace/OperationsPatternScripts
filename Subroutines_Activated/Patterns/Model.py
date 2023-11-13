@@ -144,12 +144,6 @@ def locComboSelected(EVENT):
 """ Routines specific to this subroutine """
 
 
-def extendManifestJson(manifestName):
-
-    PSE.extendManifest(manifestName)
-
-    return
-
 def makeJsonTrackPattern(selectedTracks):
     """
     This track pattern json file mimics the JMRI manifest json.

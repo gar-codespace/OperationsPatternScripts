@@ -7,9 +7,11 @@ at
 Available:
 Cancel
 Cars at {}
+Cars sorted by
 Division:
 Do Not Apply Schedule
 Empty
+Engines sorted by
 Eqpt. Length:
 FAIL: CreateSetCarsForm.quickCheck.formIsValid
 FAIL: CreateSetCarsFormGui.quickCheck.formIsValid

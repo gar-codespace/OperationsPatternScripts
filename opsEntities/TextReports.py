@@ -70,10 +70,16 @@ def opsTextPatternReport():
 
     textPatternReport = ''
 # Header
+
+
+    
     textPatternReport += report['railroad'] + '\n'
     textPatternReport += '\n'
     textPatternReport += PSE.getBundleItem('Pattern Report for location ({})').format(report['userName']) + '\n'
     textPatternReport += PSE.convertIsoToValidTime(report['date']) + '\n'
+    textPatternReport += '\n'
+    textPatternReport += '{}: {}\n'.format(PSE.getBundleItem('Engines sorted by'), ', '.join(PSE.getSortList('SL')))
+    textPatternReport += '{}: {}\n'.format(PSE.getBundleItem('Cars sorted by'), ', '.join(PSE.getSortList('SC')))
     textPatternReport += '\n'
     fdTally = []
 # Body

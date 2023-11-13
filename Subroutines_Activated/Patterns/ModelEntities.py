@@ -220,25 +220,13 @@ class ParseRollingStock:
         Sort order of PSE.readConfigFile('US')['SL'] is top down
         """
 
-    # Process the sort list
-        try:
-            sortRS = self.configFile['Patterns']['US']['SL']
-            sortRS.items().sort(key=lambda row: row[1])
-        except:
-            print('Engine list not sorted')
-            return
-        
-        sortList = []
-        for sortKey, include in sortRS.items():
-            if include != 0:
-                sortList.append(sortKey)
-
+        sortList = PSE.getSortList('SL')
         if not sortList:
-            print('Engine list not sorted')
+            print('Car list not sorted')
             return
 
     # Sort the loco list
-        for sortKey in sortList:
+        for sortKey in PSE.getSortList('SL'):
             sortKey = sortKey.split()
             try:
                 self.locoDetails.sort(key=lambda row: row[sortKey[0]][sortKey[1]])
@@ -254,19 +242,7 @@ class ParseRollingStock:
         A value of 0 in self.configFile['Patterns']['US']['SC'] means the item is excluded
         """
 
-    # Process the sort list
-        try:
-            sortRS = self.configFile['Patterns']['US']['SC']
-            sortRS.items().sort(key=lambda row: row[1])
-        except:
-            print('Car list not sorted')
-            return
-        
-        sortList = []
-        for sortKey, include in sortRS.items():
-            if include != 0:
-                sortList.append(sortKey)
-
+        sortList = PSE.getSortList('SC')
         if not sortList:
             print('Car list not sorted')
             return
