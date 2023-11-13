@@ -45,14 +45,18 @@ class TrainsPropertyParser:
     
     def __init__(self, pce):
 
-        # self.propertySource = pce.source
-        # self.propertyName = pce.propertyName
+        self.propertySource = pce.source
+        self.propertyName = pce.propertyName
         # self.oldValue = pce.oldValue
-        # self.newValue = pce.newValue
+        self.newValue = pce.newValue
 
         pass
     
     def preProcess(self):
+        if self.propertyName == 'TrainBuilt' and self.newValue == True:
+            if PSE.readConfigFile()['Main Script']['CP']['ER']:
+                manifestName = 'train-{}.json'.format(self.propertySource.toString())
+                PSE.extendManifest(manifestName)
 
         return
     
