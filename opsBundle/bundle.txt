@@ -1,16 +1,21 @@
 Cars
 Edit Config File
+Empty
 Engines
+Extended reports off
+Extended reports on
 Final Destination Totals:
 GitHub Web Page
 Help
 Hide
 Hold
 List of inventory at {}
+Load
 No engines at
 No cars at
 No work at
 None
+Occupied
 Operations Folder
 Pattern Scripts
 Pattern Report for location ({})
@@ -25,6 +30,7 @@ Track Length:
 Train consist at
 Train list for train
 Translate Plugin
+Unknown
 Valid
 View Log File
 Window Help...

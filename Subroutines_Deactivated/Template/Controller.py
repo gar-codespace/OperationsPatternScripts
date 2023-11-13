@@ -10,6 +10,7 @@ Replace this text with a description of what this subroutine does.
 """
 
 from opsEntities import PSE
+from opsEntities import TextReports
 from Subroutines_Activated.Template import Model
 from Subroutines_Activated.Template import View
 
@@ -48,14 +49,19 @@ class TrainsPropertyParser:
 
     def __init__(self, pce):
 
-        # self.propertySource = pce.source
-        # self.propertyName = pce.propertyName
-        # self.oldValue = pce.oldValue
-        # self.newValue = pce.newValue
+        self.propertySource = pce.source
+        self.propertyName = pce.propertyName
+        self.oldValue = pce.oldValue
+        self.newValue = pce.newValue
 
         return
     
     def preProcess(self):
+
+        if self.propertyName == 'TrainBuilt' and self.newValue == True:
+            if PSE.readConfigFile()['Main Script']['CP']['ER']:
+                manifestName = 'train-{}.json'.format(self.propertySource.toString())
+                PSE.extendManifest(manifestName)
 
         return
     

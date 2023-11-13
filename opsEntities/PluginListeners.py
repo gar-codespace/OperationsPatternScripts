@@ -122,7 +122,7 @@ class TrainsPropertyChange(PSE.JAVA_BEANS.PropertyChangeListener):
             xModule = 'Subroutines_Activated.{}'.format(subroutine)
             package = __import__(xModule, fromlist=['Controller'], level=-1)
             package.Controller.TrainsPropertyParser(PROPERTY_CHANGE_EVENT).postProcess()
-    # Print the extended manifest and switch list
+
         if PROPERTY_CHANGE_EVENT.propertyName == 'TrainBuilt' and PROPERTY_CHANGE_EVENT.newValue == True:
             if PSE.readConfigFile()['Main Script']['CP']['ER']:
                 trainName = PROPERTY_CHANGE_EVENT.source.toString()

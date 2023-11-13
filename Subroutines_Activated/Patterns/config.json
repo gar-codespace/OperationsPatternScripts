@@ -19,7 +19,6 @@
     "PH" : 16,
     "RF" : 8,
     "US" : {
-      "HCP" : " [ ] Hold",
       "DS" : "Not Assigned",
       "DT" : "Not Scheduled",
       "FD" : "Unconsigned",

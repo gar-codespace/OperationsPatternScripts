@@ -34,8 +34,29 @@ def dropDownMenuItem(EVENT):
         _psLog.info('Show ' + subroutineName)
 
     EVENT.getSource().setText(menuText)
-    PSE.writeConfigFile(configFile)
 
+    PSE.writeConfigFile(configFile)
+    PSE.repaintPatternScriptsFrame()
+
+    return
+
+def erItemSelected(TRANSLATE_PLUGIN_EVENT):
+    """
+    Pattern Scripts/Tools/Extended reports on.
+    """
+
+    _psLog.debug(TRANSLATE_PLUGIN_EVENT)
+
+    configFile = PSE.readConfigFile()
+
+    menuText = PSE.getBundleItem('Extended reports on')
+    if not configFile['Main Script']['CP']['ER']:
+        menuText = PSE.getBundleItem('Extended reports off')
+    TRANSLATE_PLUGIN_EVENT.getSource().setText(menuText)
+    
+    configFile['Main Script']['CP']['ER'] = not configFile['Main Script']['CP']['ER']
+
+    PSE.writeConfigFile(configFile)
     PSE.repaintPatternScriptsFrame()
 
     return

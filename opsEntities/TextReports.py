@@ -20,20 +20,33 @@ SCRIPT_REV = 20231001
 _psLog = PSE.LOGGING.getLogger('OPS.OE.TextReports')
 
 def printExtendedTrainList(trainName):
+    """
+    Break this into two functions.
+    """
 
-    trainListName = 'ops train ({}).txt'.format(trainName)
+    trainListName = 'train list ({}).txt'.format(trainName)
     trainListPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', trainListName)
-    if PSE.JAVA_IO.File(trainListPath).isFile():
-        PSE.genericDisplayReport(trainListPath)
-    
+
+    jmriManifest = PSE.getTrainManifest(trainName)
+    trainList = PSE.getOpsTrainList(jmriManifest)
+    trainListText = opsTrainList(trainList)
+    PSE.genericWriteReport(trainListPath, trainListText)
+    PSE.genericDisplayReport(trainListPath)
+
     return
 
 def printExtendedWorkOrder(trainName):
-
-    workOrderName = 'ops train ({}).txt'.format(trainName)
+    """
+    Break this into two functions.
+    """
+    
+    workOrderName = 'work order ({}).txt'.format(trainName)
     workOrderPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'switchLists', workOrderName)
-    if PSE.JAVA_IO.File(workOrderPath).isFile():
-        PSE.genericDisplayReport(workOrderPath)
+
+    jmriManifest = PSE.getTrainManifest(trainName)
+    workOrderText = opsJmriWorkOrder(jmriManifest)
+    PSE.genericWriteReport(workOrderPath, workOrderText)
+    PSE.genericDisplayReport(workOrderPath)
 
     return
 
@@ -119,7 +132,7 @@ def opsTextSwitchList():
 
     location = configFile['Patterns']['PL']
     mcp = PSE.JMRI.jmrit.operations.setup.Setup.getLocalPrefix()
-    hcp = configFile['Patterns']['US']['HCP']
+    hcp = configFile['Main Script']['US']['HCP']
     longestStringLength = PSE.findLongestStringLength((mcp, hcp))
 
     reportName = PSE.getBundleItem('ops-Switch List') + '.json'
@@ -187,7 +200,7 @@ def opsJmriWorkOrder(manifest):
     pcp = PSE.JMRI.jmrit.operations.setup.Setup.getPickupCarPrefix()
     dcp = PSE.JMRI.jmrit.operations.setup.Setup.getDropCarPrefix()
     mcp = PSE.JMRI.jmrit.operations.setup.Setup.getLocalPrefix()
-    hcp = PSE.readConfigFile()['Patterns']['US']['HCP']
+    hcp = PSE.readConfigFile()['Main Script']['US']['HCP']
 
     longestStringLength = PSE.findLongestStringLength((pep, dep, pcp, dcp, mcp, hcp))
     textWorkOrder = ''

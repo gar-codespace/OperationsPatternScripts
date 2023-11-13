@@ -88,6 +88,16 @@ class PluginGUI:
             # menuItem.addActionListener(Listeners.dropDownMneuItem)
             toolsMenu.add(menuItem)
 
+        menuText = PSE.getBundleItem('Extended reports on')
+        if PSE.readConfigFile()['Main Script']['CP']['ER']:
+            menuText = PSE.getBundleItem('Extended reports off')
+            
+        self.itemText = menuText
+        self.itemName =  'erItemSelected'
+        ptMenuItem = self._makeMenuItem()
+        self.psPluginMenuItems.append(ptMenuItem)
+        toolsMenu.add(ptMenuItem)
+
         self.itemText = PSE.getBundleItem('Translate Plugin')
         self.itemName =  'ptItemSelected'
         ptMenuItem = self._makeMenuItem()

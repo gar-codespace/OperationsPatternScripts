@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<title>Pattern Scripts Help</title>
+<meta charset="utf-8">
+<meta name="AUTHOR" content="Greg Ritacco">
+<meta name="PROJECT" content="Pattern scripts for JMRI">
+<meta name="VERSION" content="2.0.0">
+<style>
+  html * {
+    font-family: verdana;
+  }
+  h1 {
+    margin-left: 10px;
+  }
+  h2 {
+    margin-left: 10px;
+  }
+  h3 {
+    margin-left: 20px;
+  }
+  h4 {
+    margin-left: 30px;
+  }
+  p {
+    margin-left: 30px;
+  }
+  img {
+    margin-left: 30px;
+  }
+  pre {
+    margin-left: 30px;
+  }
+</style>
+</head>
+<body>
+<h1>Help Page - Pattern Scripts plugin for JMRI</h1>
+<p>The Pattern Scripts plugin for JMRI is a suite of subroutines for JMRI Operations Pro. The use of this plugin is documented in the following list of YouTube videos. The videos are recorded in the English language.</p>
+<h3>Pattern Scripts plugin - Video Documentation</h3>
+<p><A HREF="https://youtu.be/vFeCn1d2YfI">An overview of this plugin</A></p>
+<p><A HREF="https://youtu.be/Sl9yBQaRpeY">How to add this plugin to JMRI</A></p>
+<p><A HREF="https://youtu.be/6G7xkRJTczo">How to translate this plugin</A></p>
+<p><A HREF="https://youtu.be/GjPtXk3oKmc">How to set up this plugin</A></p>
+<p><A HREF="https://youtu.be/DK6O9AQmqXo">How to modify this plugin</A></p>
+<h3>Subroutines - Video Documentation</h3>
+<p><A HREF="https://youtu.be/rlUfoSesnQo">The o2o subroutine - Use JMRI with TrainPlayer© model railroad software</A></p>
+<p>The Patterns subroutine - Overview</p>
+<p><A HREF="https://youtu.be/2Tv6sUMDD_Y">The Patterns subroutine - Demonstration at industry</A></p>
+<p><A HREF="https://youtu.be/IdXvxyo-E3Y">The Patterns subroutine - Demonstration at a yard</A></p>
+<p><A HREF="https://youtu.be/5YleSgJGN9k">The Throwback subroutine - Run what-if scenarios with convenient return-to points</A></p>
+<h2>Pattern Scripts plugin</h2>
+<h3>Introduction</h3>
+<p>The Pattern Scripts plugin can be thought of as a framework for hosting subroutines (or scripts) for JMRI Operations Pro that require a user interface. This plugin comes with four subroutines; jPlus, Patterns, o2o and Throwback. A template is also included to serve as scaffolding for someone wishing to add their own subroutine.</p>
+<p>Subroutines may be added or removed individually as needed.</p>
+<p>Additionally, each subroutine can be shown or hidden as needed, fron the Tools menu pulldown.</p>
+<p>Each of the subroutines' features are only available when the plugin is running and the subroutine has been included. For example, extended railroad details will only appear in reports when the Pattern Scripts plugin has been started, and jPlus has been included. To deactivate the plugins features, close (not hide) the window.</p>
+<h3>Organization</h3>
+<p>The following chart shows the code structure of this plugin.</P>
+<img src="./img/Code_Structure.png" alt="<Code Structure Image>">
+<h3>Plugin Layout</h3>
+<p>OperationsPatternScripts.MainScript.View.makePatternScriptsWindow()</p>
+<img src="./img/Plugin_Layout.png" alt="<Plugin Layout Image>">
+<h3>configFile.json</h3>
+<p>Each JMRI profile gets its own configuration file, which is named configFile.json. It is found in the operations folder, and is used to provide custom settings for each profile and record user inputs.</p>
+<p>Select Tools/Edit Config File. The values that are user editable are in subsections labeled "US" for User Settings. Other values should not be edited. If a mistake is made editing the configFile, the plugin will delete the file and provide a new one to start over using default values. Worst case, the plugin may crash. If that should happed select Tools/Restart From Default.</p>
+<h4>User Settings for the Main Script section of configFile.json</h4>
+<pre>
+  The following are user editable values for the plugin.
+  For colors, any of the A, B, G, R values can be changed, between 0 and 255.
+  Also, new colors may be added.
+
+  "US" : {
+    "OC" : true, <font color="DarkRed">Open Console. Opens the system console when the plugin starts.</font>
+    "CD": { <font color="DarkRed">Color Definitions, a set of predefined colors.</font>
+        "BLANCH": { <font color="DarkRed">The name of the color.</font>
+          "A": 210, <font color="DarkRed">The alpha (transparency) value.</font>
+          "B": 255, <font color="DarkRed">The blue component value.</font>
+          "D": "Lighten a bit", <font color="DarkRed">A description of the color.</font>
+          "G": 255, <font color="DarkRed">The green component value.</font>
+          "R": 255 <font color="DarkRed">The red component value.</font>
+        },
+        "GLOOM": {
+          "A": 10,
+          "B": 0,
+          "D": "Darken a bit",
+          "G": 0,
+          "R": 0
+        },
+        "DUST": {
+          "A": 255,
+          "B": 218,
+          "D": "Light tan",
+          "G": 242,
+          "R": 252
+        },
+        "FADED": {
+          "A": 255,
+          "B": 245,
+          "D": "Light purple",
+          "G": 225,
+          "R": 237
+        },
+        "LICHEN": {
+          "A": 255,
+          "B": 244,
+          "D": "Light green",
+          "G": 255,
+          "R": 236
+        },
+        "PALE": {
+          "A": 255,
+          "B": 250,
+          "D": "Light blue",
+          "G": 243,
+          "R": 237
+        },
+        "RASH": {
+          "A": 255,
+          "B": 224,
+          "D": "Light red",
+          "G": 208,
+          "R": 240
+        },
+        "colorA" : "DUST", <font color="DarkRed">The name of the color to be used when colorA is called.</font>
+        "colorB" : "FADED", <font color="DarkRed">The name of the color to be used when colorB is called.</font>
+        "colorC" : "RASH" <font color="DarkRed">The name of the color to be used when colorC is called.</font>
+      }
+    },
+</pre>
+<!-- o2o help section html -->
+<h2>o2o Subroutine</h2>
+<h3>Description</h3>
+<p>The ops to ops (o2o) subroutine is a group of utilities that are designed to be the glue that allows JMRI Operations Pro to be the operations engine for TrainPlayer©. The idea is to expand the capability of TrainPlayer©'s Advanced Ops feature to include the flexibility of Operations Pro, while also eleminating the tedium of keeping two data sets synchronised.</p>
+<p>o2o will automatically export a built train or switchlist to TrainPlayer when the Pattern Scripts window is open and the o2o subroutine is included. To disable o2o export, Remove o2o from the Pattern Scripts window or close (not hide) the Pattern Scripts window.</p>
+<h3>How to use this subroutine</h3>
+<p>Before any of these buttons are pressed, export your layout from TrainPlayer. The QuickKeys for TrainPlayer subroutines have to be added to TrainPlayer before your TrainPlayer layout can be exported. Refer to the Quick Keys documentation.</p>
+<p><A HREF="https://github.com/gar-codespace/QuickKeys-for-TrainPlayer">The Quick Keys page on GitHub</A></p>
+<h4>Initialize Railroad</h4>
+<p>Pressing this button initializes the Locations, Cars, and Engines data sets so a new JMRI railroad can be built from the TrainPlayer export. The Routes and Trains XML files are backed up.</p>
+<h4>Import Locations</h4>
+<p>Pressing this button builds a whole new JMRI railroad from the TrainPlayer export data. If you are using jPlus, the extended data you entered into the TrainPlayer layout will be added.</p>
+<p>Additionally, when making any subsequent changes to the Locations panel of TrainPlayer's Advanced Ops window, re-export your TrainPlayer layout and press this button to update your JMRI data.</p>
+<p>Pressing Import Locations also imports/updates Industries and Cars.</p>
+<h4>Import Industries</h4>
+<p>Press this button when you have made changes to TrainPlayers Advanced Ops Industries panel, This will update your spurs and their schedules. Any changes you have made to your rolling stock are also updated.</p>
+<p>Pressing Import Industries also imports/updates Cars.</p>
+<h4>Import Cars</h4>
+<p>Press this button when you have made changes to the rolling stock on your TrainPlayer layout.</p>
+<h3>Who does what</h3>
+<p>One of the primary purposes of o2o is to eliminate duplication between your TrainPlayer and JMRI layouts. As much as possible, layout maintenance is done on your TrainPlayer layout and the changes are then pushed to your JMRI layout.</p>
+<p>The table below shows which program manages which elements of your layout.</p>
+<img src="../Subroutines/o2o/img/Who_Does_What.png" alt="<Who Does What Image>">
+<p>Use TrainPlayer to manage Layout Details, Cars, Engines, Schedules, and Locations.</p>
+<p>Use TrainPlayer to define Divisions and Tracks, and use JMRI to implement the details.</p>
+<p>Use JMRI to manage all aspects of Routes and Trains.</p>
+<p>As your JMRI layout becomes more nuanced, data set management will by necessity become increasingly shared (but not duplicated) between the two programs.</p>
+<h3>Subroutine Panel</h3>
+<p>Subroutines.o2o.View.ManageGui</p>
+<img src="../Subroutines/o2o/img/o2o_Subroutine.png" alt="<o2o Subroutine Image>">
+<h4>User Settings for the o2o section of configFile.json</h4>
+<pre>
+  The o2o section of the configuration file has the following user editable settings.
+  The TrainPlayer car code lists are grouped by types of equipment, based on default TrainPlayer values.
+  Any car code not listed is considered a manifest freight car.
+  Custom car codes added to TrainPlayer would also be added here.
+
+  "US" : {
+    "XE" : [ <font color="DarkRed">List of TrainPlayer car codes for engines.</font>
+      "E",
+      "ES",
+      "ED",
+      "EE",
+      "ET"
+    ],
+    "XP" : [ <font color="DarkRed">List of TrainPlayer car codes for passenger cars.</font>
+      "EP",
+      "CA",
+      "CS",
+      "D",
+      "DA",
+      "DB",
+      "DC",
+      "DL",
+      "DO",
+      "DP",
+      "DPA",
+      "P",
+      "PA",
+      "PAS",
+      "PB",
+      "PBC",
+      "PBO",
+      "PC",
+      "PL",
+      "PO",
+      "PS",
+      "PSA"
+    ],
+    "XX" : [ <font color="DarkRed">List of TrainPlayer car codes for baggage mail cars.</font>
+      "B",
+      "BE",
+      "BH",
+      "BM",
+      "BMR",
+      "BMT",
+      "BP",
+      "BR",
+      "BX",
+      "MA",
+      "MB",
+      "MR"
+    ],
+    "XC" : [ <font color="DarkRed">List of TrainPlayer car codes for cabeese.</font>
+      "N",
+      "NM",
+      "NE"
+    ],
+    "XM" : [ <font color="DarkRed">List of TrainPlayer car codes for MOW equipment.</font>
+      "M",
+      "MWB",
+      "MWC",
+      "MWD",
+      "MWG",
+      "MWF",
+      "MWK",
+      "MWR",
+      "MWX"
+    ]
+  },
+</pre>
+
+</body>
+</html>
+<!-- Template help section html -->
+<h2>Template Subroutine</h2>
+<h3>Description</h3>
+<p>Talk about how amazing this subroutine is.</P>
+<h3>How to use this subroutine</h3>
+<p>Describe this subroutines use.</p>
+<h3>Subroutine Panel</h3>
+<p>Subroutines.Template.View.ManageGui</p>
+<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
+<h4>User Settings for the Template section of configFile.json</h4>
+<pre>
+  Put any user editable settings here.
+  
+  "US" : {
+        
+  }
+</pre>
+<!-- Template help section html -->
+<h2>Template Subroutine</h2>
+<h3>Description</h3>
+<p>Talk about how amazing this subroutine is.</P>
+<h3>How to use this subroutine</h3>
+<p>Describe this subroutines use.</p>
+<h3>Subroutine Panel</h3>
+<p>Subroutines.Template.View.ManageGui</p>
+<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
+<h4>User Settings for the Template section of configFile.json</h4>
+<pre>
+  Put any user editable settings here.
+  
+  "US" : {
+        
+  }
+</pre>
+<!-- Template help section html -->
+<h2>Template Subroutine</h2>
+<h3>Description</h3>
+<p>Talk about how amazing this subroutine is.</P>
+<h3>How to use this subroutine</h3>
+<p>Describe this subroutines use.</p>
+<h3>Subroutine Panel</h3>
+<p>Subroutines.Template.View.ManageGui</p>
+<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
+<h4>User Settings for the Template section of configFile.json</h4>
+<pre>
+  Put any user editable settings here.
+  
+  "US" : {
+        
+  }
+</pre>
+<!-- Template help section html -->
+<h2>Template Subroutine</h2>
+<h3>Description</h3>
+<p>Talk about how amazing this subroutine is.</P>
+<h3>How to use this subroutine</h3>
+<p>Describe this subroutines use.</p>
+<h3>Subroutine Panel</h3>
+<p>Subroutines.Template.View.ManageGui</p>
+<img src="../Subroutines/Template/img/Template_Subroutine.png" alt="<Template Subroutine Image>">
+<h4>User Settings for the Template section of configFile.json</h4>
+<pre>
+  Put any user editable settings here.
+  
+  "US" : {
+        
+  }
+</pre>

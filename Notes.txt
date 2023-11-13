@@ -4,7 +4,9 @@ Todo:
   Change Patterns back to moving a car on a train?
   Refine Hazardous handling.
   ThrowBack not rebuilding fron restart default
-  Editibg division name doesn't update Patterns
+  Editing division name doesn't update Patterns
+  Get train list and work order to work with any subroutine
+  Break out printExtendedTrainList and printExtendedWorkOrder.
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.
