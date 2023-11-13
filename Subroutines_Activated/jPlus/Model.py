@@ -215,7 +215,7 @@ def compositeRailroadName():
     configFile = PSE.readConfigFile()
 
     layoutDetails = configFile['jPlus']['LD']
-    compositeRailroadName = PSE.makeCompositRailroadName(layoutDetails)
+    compositeRailroadName = makeCompositRailroadName(layoutDetails)
 
     configFile['jPlus']['LD'].update({'JN':compositeRailroadName})
     configFile['jPlus']['LD'].update({'EH':True})
@@ -223,6 +223,27 @@ def compositeRailroadName():
     PSE.writeConfigFile(configFile)
 
     return
+
+def makeCompositRailroadName(layoutDetails):
+    """
+    Uses configFile['Main Script']['LD'] data to make a composite name for use by OPS subroutines.
+    """
+
+    _psLog.debug('makeCompositRailroadName')
+
+    a = ''
+    if layoutDetails['OR']:
+        a = '{}\n'.format(layoutDetails['OR'])
+
+    b = ''
+    if layoutDetails['TR']:
+        b = '{}\n'.format(layoutDetails['TR'])
+
+    c = ''
+    if layoutDetails['LO']:
+        c = layoutDetails['LO']
+
+    return a + b + c
 
 def updateYearModeled():
     """

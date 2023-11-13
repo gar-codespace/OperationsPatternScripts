@@ -60,10 +60,10 @@ class TrainsPropertyParser:
         if self.propertyName == 'opsSwitchList':
             Model.modifySwitchList()
 
-        if self.propertyName == 'TrainBuilt':
-            manifestName = 'train-{}.json'.format(self.propertySource.toString())
-            Model.modifyManifest(manifestName)
-
+        if self.propertyName == 'TrainBuilt' and self.newValue == True:
+            if PSE.readConfigFile()['Main Script']['CP']['ER']:
+                manifestName = 'train-{}.json'.format(self.propertySource.toString())
+                Model.modifyManifest(manifestName)
         return
     
     def process(self):
@@ -71,21 +71,6 @@ class TrainsPropertyParser:
         return
     
     def postProcess(self):
-
-        if self.propertyName == 'TrainBuilt':
-
-            jmriManifest = PSE.getTrainManifest(self.propertySource.toString())
-        # Make the OPS work order
-            workOrderText = TextReports.opsJmriWorkOrder(jmriManifest)
-            workOrderName = 'ops train ({}).txt'.format(self.propertySource.toString())
-            workOrderPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'switchLists', workOrderName)
-            PSE.genericWriteReport(workOrderPath, workOrderText)
-        # Make the OPS train list
-            opsTrainList = PSE.getOpsTrainList(jmriManifest)
-            trainListText = TextReports.opsTrainList(opsTrainList)
-            trainListName = 'ops train ({}).txt'.format(self.propertySource.toString())
-            trainListPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', trainListName)
-            PSE.genericWriteReport(trainListPath, trainListText)
 
         return
 

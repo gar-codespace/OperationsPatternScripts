@@ -436,27 +436,6 @@ def getAllLocationNames():
 
     return locationNames
 
-def makeCompositRailroadName(layoutDetails):
-    """
-    Uses configFile['Main Script']['LD'] data to make a composite name for use by OPS subroutines.
-    """
-
-    _psLog.debug('PSE.makeCompositRailroadName')
-
-    a = ''
-    if layoutDetails['OR']:
-        a = layoutDetails['OR'] + '\n'
-
-    b = ''
-    if layoutDetails['TR']:
-        b = layoutDetails['TR'] + '\n'
-
-    c = ''
-    if layoutDetails['LO']:
-        c = layoutDetails['LO']
-
-    return a + b + c
-
 def getTrainManifest(trainName):
 
     trainName = 'train-{}.json'.format(trainName)
