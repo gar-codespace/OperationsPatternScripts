@@ -71,6 +71,8 @@ def makePsPlugin():
     """
 
     configFile = PSE.readConfigFile()
+    configFile['Main Script'].update({'SL':PSE.getSubroutineDirs()})
+    PSE.writeConfigFile(configFile)
 
     view = View()
     psFrame = view.getThePlugin()
@@ -82,11 +84,7 @@ def makePsPlugin():
     for menuItem in view.getSubroutineMenuItems():
         menuItem.addActionListener(MainScriptListeners.dropDownMenuItem)
 
-    configFile['Main Script'].update({'SL':PSE.getSubroutineDirs()})
-    PSE.writeConfigFile(configFile)
-
-    psFrame.addWindowListener(PluginListeners.PatternScriptsFrameListener())
-    
+    psFrame.addWindowListener(PluginListeners.PatternScriptsFrameListener())  
     psFrame.setVisible(True)
 
     return

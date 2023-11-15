@@ -16,8 +16,8 @@ class subroutineGui:
     def __init__(self):
 
         self.controlWidgets = []
-        self.displayWidgets = []
-        self.configFile = PSE.readConfigFile()
+        self.checkBoxWidgets = []
+        self.displayWidgets = {}
 
         return
 
@@ -37,21 +37,20 @@ class subroutineGui:
         Make the GUI here.
         """
 
-        snapShot = self.configFile['Throwback']['SS']
-
-        lastSnapShot = snapShot[-1]
+        throwbackCommits = PSE.readConfigFile()['Throwback']['TC']
+        lastCommit = throwbackCommits[-1]
 
     # Selection
         selectionFrame = PSE.JAVX_SWING.JPanel()
         selectionFrame.setName('selectionFrame')
         selectionFrame.setLayout(PSE.JAVX_SWING.BoxLayout(selectionFrame, PSE.JAVX_SWING.BoxLayout.PAGE_AXIS))
-        # selectionFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Total Commits') + ' - ' + str(len(snapShot) - 1))
-        selectionFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder('{} - {}'.format(PSE.getBundleItem('Total Commits'), len(snapShot) - 1))
+        selectionFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder('{} - {}'.format(PSE.getBundleItem('Total Commits'), len(throwbackCommits) - 1))
 
         tbText = PSE.JAVX_SWING.JTextField(20)
-        tbText.setText(lastSnapShot[1])
+        tbText.setText(lastCommit[1])
         tbText.setName('tbText')
-        self.displayWidgets.append(tbText)
+        # self.displayWidgets.append(tbText)
+        self.displayWidgets['tbText'] = tbText
 
         inputRow = PSE.JAVX_SWING.JPanel()
         inputRow.setName('inputRow')
@@ -104,13 +103,15 @@ class subroutineGui:
         pvButton.setName('previous')
         self.controlWidgets.append(pvButton)
 
-        timeStamp = PSE.JAVX_SWING.JLabel(lastSnapShot[0])
+        timeStamp = PSE.JAVX_SWING.JLabel(lastCommit[0])
         timeStamp.setName('timeStamp')
-        self.displayWidgets.append(timeStamp)
+        # self.displayWidgets.append(timeStamp)
+        self.displayWidgets['timeStamp'] = timeStamp
 
-        commitName = PSE.JAVX_SWING.JLabel(lastSnapShot[1])
+        commitName = PSE.JAVX_SWING.JLabel(lastCommit[1])
         commitName.setName('commitName')
-        self.displayWidgets.append(commitName)
+        # self.displayWidgets.append(commitName)
+        self.displayWidgets['commitName'] = commitName
 
         nxButton = PSE.JAVX_SWING.JButton()
         nxButton.setText(PSE.getBundleItem('Next'))
@@ -132,31 +133,31 @@ class subroutineGui:
         carsCheckBox.setText(PSE.getBundleItem('Cars'))
         carsCheckBox.setSelected(False)
         carsCheckBox.setName('cCheckBox')
-        self.displayWidgets.append(carsCheckBox)
+        self.checkBoxWidgets.append(carsCheckBox)
 
         locosCheckBox = PSE.JAVX_SWING.JCheckBox()
         locosCheckBox.setText(PSE.getBundleItem('Engines'))
         locosCheckBox.setSelected(False)
         locosCheckBox.setName('eCheckBox')
-        self.displayWidgets.append(locosCheckBox)
+        self.checkBoxWidgets.append(locosCheckBox)
 
         locationsCheckBox = PSE.JAVX_SWING.JCheckBox()
         locationsCheckBox.setText(PSE.getBundleItem('Locations'))
         locationsCheckBox.setSelected(False)
         locationsCheckBox.setName('lCheckBox')
-        self.displayWidgets.append(locationsCheckBox)
+        self.checkBoxWidgets.append(locationsCheckBox)
 
         routesCheckBox = PSE.JAVX_SWING.JCheckBox()
         routesCheckBox.setText(PSE.getBundleItem('Routes'))
         routesCheckBox.setSelected(False)
         routesCheckBox.setName('rCheckBox')
-        self.displayWidgets.append(routesCheckBox)
+        self.checkBoxWidgets.append(routesCheckBox)
 
         trainsCheckBox = PSE.JAVX_SWING.JCheckBox()
         trainsCheckBox.setText(PSE.getBundleItem('Trains'))
         trainsCheckBox.setSelected(False)
         trainsCheckBox.setName('tCheckBox')
-        self.displayWidgets.append(trainsCheckBox)
+        self.checkBoxWidgets.append(trainsCheckBox)
 
         checkboxRow.add(carsCheckBox)
         checkboxRow.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(10,0)))
@@ -200,5 +201,6 @@ class subroutineGui:
         widgets = {}
         widgets['control'] = self.controlWidgets
         widgets['display'] = self.displayWidgets
+        widgets['checkBox'] = self.checkBoxWidgets
 
         return widgets

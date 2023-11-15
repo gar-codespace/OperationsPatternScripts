@@ -39,7 +39,7 @@ def getSubroutineDropDownItem():
 
 class TrainsPropertyParser:
     """
-    What get called when any of three listeners are fired:
+    What gets called when any of three listeners are fired:
     preProcess, process, postProcess
     """
     
@@ -114,20 +114,18 @@ class StartUp:
 
     def commit(self, EVENT):
         """
-        Makes a throwback set point.
+        Makes a throwback commit TC.
         """
 
         _psLog.debug(EVENT)
 
-        Model.makeCommit(self.widgets['display'])
-        Model.countCommits()
-        lastSS = PSE.readConfigFile('Throwback')['SS']
+        commitName = self.widgets['display']['tbText'].getText()
+        Model.makeCommit(commitName)
 
-        for widget in self.widgets['display']:
-            if widget.getName() == 'timeStamp':
-                widget.setText(lastSS[-1][0])
-            if widget.getName() == 'commitName':
-                widget.setText(lastSS[-1][1])
+        Model.countCommits()
+        lastTC = PSE.readConfigFile('Throwback')['TC'][-1]
+        self.widgets['display']['timeStamp'].setText(lastTC[0])
+        self.widgets['display']['commitName'].setText(lastTC[1])
 
         return
 
@@ -138,13 +136,9 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        previousSS = Model.previousCommit()
-
-        for widget in self.widgets['display']:
-            if widget.getName() == 'timeStamp':
-                widget.setText(previousSS[0])
-            if widget.getName() == 'commitName':
-                widget.setText(previousSS[1])
+        previousTC = Model.previousCommit()
+        self.widgets['display']['timeStamp'].setText(previousTC[0])
+        self.widgets['display']['commitName'].setText(previousTC[1])
 
         return
 
@@ -155,13 +149,9 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        nextSS = Model.nextCommit()
-
-        for widget in self.widgets['display']:
-            if widget.getName() == 'timeStamp':
-                widget.setText(nextSS[0])
-            if widget.getName() == 'commitName':
-                widget.setText(nextSS[1])
+        nextTC = Model.nextCommit()
+        self.widgets['display']['timeStamp'].setText(nextTC[0])
+        self.widgets['display']['commitName'].setText(nextTC[1])
 
         return
 
@@ -172,7 +162,7 @@ class StartUp:
 
         _psLog.debug(EVENT)
 
-        Model.throwbackCommit(self.widgets['display'])
+        Model.throwbackCommit(self.widgets['checkBox'])
 
         PSE.LM.firePropertyChange('opsRefreshSubroutine', False, True)
 
@@ -188,7 +178,7 @@ class StartUp:
 
     def reset(self, EVENT):
         """
-        Reset throwback.
+        Reset throwback commits.
         """
 
         firstPress = PSE.getBundleItem('Delete All Commits')

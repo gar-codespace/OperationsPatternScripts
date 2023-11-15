@@ -12,7 +12,7 @@ SCRIPT_REV = 20231001
 
 _psLog = PSE.LOGGING.getLogger('OPS.TB.Model')
 
-SNAP_SHOT_INDEX = 0
+TC_INDEX = 1
 
 
 """ Routines called by the plugin listeners """
@@ -23,7 +23,7 @@ def resetConfigFileItems():
     return
 
 def initializeSubroutine():
-    
+
     return
 
 def resetSubroutine():
@@ -67,33 +67,25 @@ def createFolder():
     return
 
 def previousCommit():
+    """
+    There is at least 1 throwback commit.
+    """
 
-    snapShots = PSE.readConfigFile('Throwback')['SS']
-    numberOfEntries = len(snapShots)
-    if numberOfEntries == 1:
-        minimum = 0
-    else:
-        minimum = 1
+    global TC_INDEX
+    TC_INDEX -= 1
+    TC_INDEX = max(0, TC_INDEX)
 
-    global SNAP_SHOT_INDEX
-    SNAP_SHOT_INDEX -= 1
-
-    if SNAP_SHOT_INDEX < 1:
-        SNAP_SHOT_INDEX = minimum
-
-    return snapShots[SNAP_SHOT_INDEX]
+    return PSE.readConfigFile('Throwback')['TC'][TC_INDEX]
 
 def nextCommit():
 
-    snapShots = PSE.readConfigFile('Throwback')['SS']
-    numberOfEntries = len(snapShots)
+    tc = PSE.readConfigFile('Throwback')['TC']
 
-    global SNAP_SHOT_INDEX
-    SNAP_SHOT_INDEX += 1
-    if SNAP_SHOT_INDEX >= numberOfEntries:
-        SNAP_SHOT_INDEX = numberOfEntries - 1
+    global TC_INDEX
+    TC_INDEX += 1
+    TC_INDEX = min(len(tc) - 1, TC_INDEX)
 
-    return snapShots[SNAP_SHOT_INDEX]
+    return tc[TC_INDEX]
 
 def stampTime():
     """
@@ -102,20 +94,14 @@ def stampTime():
 
     return PSE.TIME.strftime('%Y.%m.%d.%H.%M.%S', PSE._getTime())
 
-def makeCommit(displayWidgets):
+def makeCommit(commitName):
 
     configFile = PSE.readConfigFile()
     ts = stampTime()
-
-    for widget in displayWidgets:
-        if widget.getClass() == PSE.JAVX_SWING.JTextField:
-            note = widget.getText()
-
-    configFile['Throwback']['SS'].append([ts, note])
+    configFile['Throwback']['TC'].append([ts, commitName])
     PSE.writeConfigFile(configFile)
 
     xmlList = ['CMX', 'EMX', 'LMX', 'RMX', 'TMX']
-
     for xml in xmlList:
         roster = getattr(PSE, xml)
         fileName = roster.getOperationsFileName()
@@ -130,6 +116,11 @@ def makeCommit(displayWidgets):
 
             PSE.JAVA_NIO.Files.copy(copyFrom, copyTo, PSE.JAVA_NIO.StandardCopyOption.REPLACE_EXISTING)
             PSE.JAVA_IO.File(targetFile).setReadOnly()
+
+# Save the commit name
+    fileName = '{}.A.txt'.format(ts)
+    targetFile = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback', fileName)
+    PSE.genericWriteReport(targetFile, commitName)
 
 # Save the extended data as well
     fileName = '{}.D.json'.format(ts)
@@ -154,7 +145,7 @@ def throwbackCommit(displayWidgets):
 
     configFile = PSE.readConfigFile()
 
-    throwbackRestorePoint = configFile['Throwback']['SS'][SNAP_SHOT_INDEX]
+    throwbackRestorePoint = configFile['Throwback']['TC'][TC_INDEX]
 
     for widget in displayWidgets:
         if widget.getName() == 'lCheckBox' and widget.selected:
@@ -228,7 +219,7 @@ def resetThrowBack():
     component.setText('')
 
     configFile = PSE.readConfigFile()
-    configFile['Throwback'].update({'SS':[['', '']]})
+    configFile['Throwback'].update({'TC':[['', '']]})
     PSE.writeConfigFile(configFile)
 
     filePath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'throwback')
@@ -243,18 +234,18 @@ def validateCommits():
     """
     Mini controller.
     """
+    # countCommits()
+    # if TC_INDEX <= 0:
+    commits = getCommits()
+    updateThrowbackConfig(commits)
     countCommits()
-    if SNAP_SHOT_INDEX <= 0:
-        commits = getCommits()
-        updateThrowbackConfig(commits)
-        countCommits()
 
     return
 
 def countCommits():
 
-    global SNAP_SHOT_INDEX
-    SNAP_SHOT_INDEX = len(PSE.readConfigFile('Throwback')['SS']) - 1
+    global TC_INDEX
+    TC_INDEX = len(PSE.readConfigFile('Throwback')['TC']) - 1
 
     return
 
@@ -269,17 +260,18 @@ def getCommits():
     for file in PSE.JAVA_IO.File(targetDirectory).listFiles():
         splitName = file.getName().split('.')
 
-        if splitName[7] == 'txt':
-            name = splitName[6]
+        if splitName[-1] == 'txt':
+            name = PSE.genericReadReport(file.toString())
             timestamp = '.'.join(splitName[:6])
             commits.append([timestamp, name])
 
     return commits
 
 def updateThrowbackConfig(commits):
+    
 
     configFile = PSE.readConfigFile()
-    configFile['Throwback'].update({'SS':commits})
+    configFile['Throwback'].update({'TC':commits})
     PSE.writeConfigFile(configFile)
 
     return

@@ -39,7 +39,7 @@ def getSubroutineDropDownItem():
 
 class TrainsPropertyParser:
     """
-    What get called when any of three listeners are fired:
+    What gets called when any of three listeners are fired:
     preProcess, process, postProcess
     """
     
