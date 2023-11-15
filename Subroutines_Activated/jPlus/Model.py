@@ -137,7 +137,7 @@ def putExtendedProperties(propertyOldValue):
     layoutDetails['TR'] = propertyOldValue[1]
     layoutDetails['LO'] = propertyOldValue[2]
 
-    configFile['jPlus']['LD']['JN'] = PSE.makeCompositRailroadName(layoutDetails)
+    configFile['jPlus']['LD']['JN'] = makeCompositRailroadName(layoutDetails)
 
     PSE.writeConfigFile(configFile)
 

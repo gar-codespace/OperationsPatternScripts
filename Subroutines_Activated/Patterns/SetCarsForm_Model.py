@@ -144,7 +144,6 @@ def moveRollingStock(switchList):
         toTrack = toLocation.getTrackByName(setTo, None)
 
         setResult = rollingStock.setLocation(toLocation, toTrack)
-        print(setResult)
         if ignoreTrackLength and toTrack.isTypeNameAccepted(car['carType']):
             setResult = rollingStock.setLocation(toLocation, toTrack, True)
 

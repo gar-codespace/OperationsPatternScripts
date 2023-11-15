@@ -5,6 +5,7 @@ Todo:
   Refine Hazardous handling.
   Editing division name doesn't update Patterns
   Break out printExtendedTrainList and printExtendedWorkOrder.
+  Fix: extended header in reports when no jPlus is used.
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.
