@@ -73,7 +73,7 @@ class TrainsPropertyParser:
     def process(self):
 
         if self.propertyName == 'opsSwitchList':
-            switchListName = 'ops-Switch List.json'
+            switchListName = 'switch list-OPS.json'
             Model.resequenceManifestJson(switchListName)
 
         if self.propertyName == 'TrainBuilt' and self.newValue == True:

@@ -256,7 +256,7 @@ def extendSwitchListJson():
 
     _psLog.debug('extendSwitchListJson')
 
-    reportName = 'ops-Switch List.json'
+    reportName = 'switch list-OPS.json'
     _modifyAction(reportName)
 
     return

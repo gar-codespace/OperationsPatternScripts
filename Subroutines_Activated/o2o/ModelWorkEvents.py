@@ -65,7 +65,7 @@ def _makeLine(rs):
 def convertOpsSwitchList():
     """
     Mini controller.
-    Converts the Patterns ops-Switch List.json into an o2o work events file.
+    Converts the Patterns switch list-OPS.json into an o2o work events file.
     Called by: Listeners - PROPERTY_CHANGE_EVENT.propertyName == 'patternsSwitchList' 
     """
 
@@ -88,7 +88,7 @@ class opsSwitchListConversion:
 
     def __init__(self):
 
-        self.inputFileName = 'ops-Switch List.json'
+        self.inputFileName = 'switch list-OPS.json'
         self.inputTargetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', self.inputFileName)
 
         self.opsSwitchList = {}
@@ -104,7 +104,7 @@ class opsSwitchListConversion:
     def validate(self):
 
         if not PSE.JAVA_IO.File(self.inputTargetPath).isFile():
-            print('ALERT: not found-ops-Switch List.json')
+            print('ALERT: not found-switch list-OPS.json')
             self.validationResult = False
 
         return self.validationResult

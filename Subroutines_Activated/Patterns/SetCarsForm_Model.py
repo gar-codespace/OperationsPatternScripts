@@ -15,11 +15,11 @@ _psLog = PSE.LOGGING.getLogger('OPS.PT.ModelSetCarsForm')
 
 def appendSwitchList(mergedForm):
     """
-    Appends switch lists into one form to make the ops-Switch List file.
+    Appends switch lists into one form to make the switch list (OPS) file.
     Replaces an existing track.
     """
 
-    fileName = 'ops-Switch List.json'    
+    fileName = 'switch list-OPS.json'    
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
     currentWorkList = PSE.jsonLoadS(PSE.genericReadReport(targetPath))
 

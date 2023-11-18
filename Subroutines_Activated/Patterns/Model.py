@@ -152,7 +152,7 @@ def makeJsonTrackPattern(selectedTracks):
     jsonTrackPattern = makeReportHeader()
     jsonTrackPattern['locations'] = ModelEntities.getDetailsByTrack(selectedTracks, True)
 
-    fileName = 'ops-Pattern Report.json'    
+    fileName = 'pattern report-OPS.json'    
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
     PSE.genericWriteReport(targetPath, PSE.dumpJson(jsonTrackPattern))
 
@@ -278,10 +278,10 @@ def writePatternReport(textPatternReport, flag):
     """
 
     if flag: # Report is a track pattern
-        fileName = 'ops-Pattern Report.txt'
+        fileName = 'pattern report (OPS).txt'
         targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', fileName)
     else: # Report is a switch list
-        fileName = 'ops-Switch List.txt'
+        fileName = 'switch list (OPS).txt'
         targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'switchLists', fileName)  
 
     PSE.genericWriteReport(targetPath, textPatternReport)
@@ -296,7 +296,7 @@ def resetSwitchList():
     workList = makeReportHeader()
     workList['locations'] = []
 
-    fileName = 'ops-Switch List.json'
+    fileName = 'switch list-OPS.json'
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
     workList = PSE.dumpJson(workList)
     PSE.genericWriteReport(targetPath, workList)

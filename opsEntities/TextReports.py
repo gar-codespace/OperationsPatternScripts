@@ -64,7 +64,7 @@ def opsTextPatternReport():
     TRE.makeReportItemWidthMatrix()
     TRE.translateMessageFormat()
 
-    reportName = 'ops-Pattern Report.json'
+    reportName = 'pattern report-OPS.json'
     reportPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
     report = PSE.loadJson(PSE.genericReadReport(reportPath))
 
@@ -141,7 +141,7 @@ def opsTextSwitchList():
     hcp = configFile['Main Script']['US']['HCP']
     longestStringLength = PSE.findLongestStringLength((mcp, hcp))
 
-    reportName = 'ops-Switch List.json'
+    reportName = 'switch list-OPS.json'
     reportPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
     report = PSE.loadJson(PSE.genericReadReport(reportPath))
 

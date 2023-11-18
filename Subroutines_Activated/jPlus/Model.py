@@ -145,14 +145,14 @@ def putExtendedProperties(propertyOldValue):
 
 def modifyPatternReport():
 
-    reportName = 'ops-Pattern Report.json'
+    reportName = 'pattern report-OPS.json'
     _modifyAction(reportName)
 
     return
 
 def modifySwitchList():
 
-    reportName = 'ops-Switch List.json'
+    reportName = 'switch list-OPS.json'
     _modifyAction(reportName)
     
     return
