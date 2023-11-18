@@ -1,6 +1,6 @@
 """
 'Local' level listeners for the Patterns subroutine.
-For OPS interoperability or JMRI events, add a laitener to opsEntities.PluginListeners.
+For OPS interoperability or JMRI events, add a listener to opsEntities.PluginListeners.
 JAVAX action performed methods are in Controller.
 """
 
