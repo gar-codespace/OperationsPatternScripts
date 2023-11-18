@@ -24,7 +24,7 @@ def printExtendedTrainList(trainName):
     Break this into two functions.
     """
 
-    trainListName = 'train list ({}).txt'.format(trainName)
+    trainListName = u'train list ({}).txt'.format(trainName)
     trainListPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', trainListName)
 
     jmriManifest = PSE.getTrainManifest(trainName)
@@ -40,7 +40,7 @@ def printExtendedWorkOrder(trainName):
     Break this into two functions.
     """
     
-    workOrderName = 'work order ({}).txt'.format(trainName)
+    workOrderName = u'work order ({}).txt'.format(trainName)
     workOrderPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'switchLists', workOrderName)
 
     jmriManifest = PSE.getTrainManifest(trainName)
@@ -64,7 +64,7 @@ def opsTextPatternReport():
     TRE.makeReportItemWidthMatrix()
     TRE.translateMessageFormat()
 
-    reportName = PSE.getBundleItem('ops-Pattern Report') + '.json'
+    reportName = 'ops-Pattern Report.json'
     reportPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
     report = PSE.loadJson(PSE.genericReadReport(reportPath))
 
@@ -75,37 +75,37 @@ def opsTextPatternReport():
     
     textPatternReport += report['railroad'] + '\n'
     textPatternReport += '\n'
-    textPatternReport += PSE.getBundleItem('Pattern Report for location ({})').format(report['userName']) + '\n'
-    textPatternReport += PSE.convertIsoToValidTime(report['date']) + '\n'
+    textPatternReport += PSE.getBundleItem(u'Pattern Report for location ({})').format(report[u'userName']) + '\n'
+    textPatternReport += PSE.convertIsoToValidTime(report[u'date']) + '\n'
     textPatternReport += '\n'
-    textPatternReport += '{}: {}\n'.format(PSE.getBundleItem('Engines sorted by'), ', '.join(PSE.getSortList('SL')))
-    textPatternReport += '{}: {}\n'.format(PSE.getBundleItem('Cars sorted by'), ', '.join(PSE.getSortList('SC')))
+    textPatternReport += u'{}: {}\n'.format(PSE.getBundleItem('Engines sorted by'), ', '.join(PSE.getSortList('SL')))
+    textPatternReport += u'{}: {}\n'.format(PSE.getBundleItem('Cars sorted by'), ', '.join(PSE.getSortList('SC')))
     textPatternReport += '\n'
     fdTally = []
 # Body
     for location in report['locations']:
         carLength = 0
-        textPatternReport += PSE.getBundleItem('List of inventory at {}').format(location['userName']) + '\n'
+        textPatternReport += PSE.getBundleItem('List of inventory at {}').format(location[u'userName']) + '\n'
     # Engines
-        textPatternReport += '{}:\n'.format(PSE.getBundleItem('Engines'))
+        textPatternReport += u'{}:\n'.format(PSE.getBundleItem(u'Engines'))
         if not location['engines']['add']:
-            textPatternReport += ' {}\n'.format(PSE.getBundleItem('None'))
+            textPatternReport += u' {}\n'.format(PSE.getBundleItem(u'None'))
         for loco in location['engines']['add']:
-            formatPrefix = ' [{}] '.format('  ')
+            formatPrefix = u' [{}] '.format('  ')
             line = TRE.pickupLoco(loco, True, False)
-            textPatternReport += '{} {}\n'.format(formatPrefix ,line)
+            textPatternReport += u'{} {}\n'.format(formatPrefix ,line)
     # Cars
-        textPatternReport += '{}:\n'.format(PSE.getBundleItem('Cars'))
+        textPatternReport += u'{}:\n'.format(PSE.getBundleItem(u'Cars'))
         if not location['cars']['add']:
-            textPatternReport += ' {}\n'.format(PSE.getBundleItem('None'))
+            textPatternReport += u' {}\n'.format(PSE.getBundleItem(u'None'))
         for car in location['cars']['add']:
             carLength += int(car['length'])
             fdTally.append(car['finalDestination']['userName'])
-            formatPrefix = ' [{}] '.format('  ')
+            formatPrefix = u' [{}] '.format('  ')
             line = TRE.localMoveCar(car, True, False)
             textPatternReport += formatPrefix + ' ' + line + '\n'
 
-        summaryText = PSE.getBundleItem('Total cars:{},  Loads:{},  Empties:{}')
+        summaryText = PSE.getBundleItem(u'Total cars:{},  Loads:{},  Empties:{}')
         textPatternReport += summaryText.format(location['total'], location['loads'], location['empties']) + '\n'
 
         trackLength = location['length']['length']
@@ -115,11 +115,11 @@ def opsTextPatternReport():
 
         textPatternReport += '\n'
 
-    textPatternReport += PSE.getBundleItem('Final Destination Totals:') + '\n'
+    textPatternReport += PSE.getBundleItem(u'Final Destination Totals:') + '\n'
 
     for track, count in sorted(PSE.occuranceTally(fdTally).items()):
         if not track:
-            track = PSE.getBundleItem('None')
+            track = PSE.getBundleItem(u'None')
         textPatternReport += ' ' + track + ' - ' + str(count) + '\n'
 
     return textPatternReport
@@ -136,12 +136,12 @@ def opsTextSwitchList():
 
     configFile = PSE.readConfigFile()
 
-    location = configFile['Patterns']['PL']
-    mcp = PSE.JMRI.jmrit.operations.setup.Setup.getLocalPrefix()
+    location = configFile['Patterns'][u'PL']
+    mcp = unicode(PSE.JMRI.jmrit.operations.setup.Setup.getLocalPrefix(), PSE.ENCODING)
     hcp = configFile['Main Script']['US']['HCP']
     longestStringLength = PSE.findLongestStringLength((mcp, hcp))
 
-    reportName = PSE.getBundleItem('ops-Switch List') + '.json'
+    reportName = 'ops-Switch List.json'
     reportPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
     report = PSE.loadJson(PSE.genericReadReport(reportPath))
 
@@ -150,42 +150,42 @@ def opsTextSwitchList():
 # Header
     textSwitchList += report['railroad'] + '\n'
     textSwitchList += '\n'
-    textSwitchList += PSE.getBundleItem('Switch List for location ({})').format(location) + '\n'
-    textSwitchList += '{}\n'.format(PSE.convertIsoToValidTime(report['date']))
+    textSwitchList += PSE.getBundleItem(u'Switch List for location ({})').format(location) + '\n'
+    textSwitchList += u'{}\n'.format(PSE.convertIsoToValidTime(report[u'date']))
     textSwitchList += '\n'
 # Body
-    for location in report['locations']: # For the OPS switch list, the locations list is a track list.
-        textSwitchList += PSE.getBundleItem('List of inventory at {}').format(location['userName']) + '\n'
+    for location in report[u'locations']: # For the OPS switch list, the locations list is a track list.
+        textSwitchList += PSE.getBundleItem(u'List of inventory at {}').format(location[u'userName']) + '\n'
     # Locos
-        textSwitchList += '{}:\n'.format(PSE.getBundleItem('Engines'))
+        textSwitchList += u'{}:\n'.format(PSE.getBundleItem(u'Engines'))
         if not location['engines']['add']:
-            textSwitchList += ' {}\n'.format(PSE.getBundleItem('None'))
+            textSwitchList += u' {}\n'.format(PSE.getBundleItem(u'None'))
         for loco in location['engines']['add']:
-            currentTrack = loco['location']['track']['userName']
-            destTrack = loco['destination']['track']['userName']
+            currentTrack = loco['location']['track'][u'userName']
+            destTrack = loco['destination']['track'][u'userName']
             if currentTrack == destTrack:
                 formatPrefix = hcp.format(longestStringLength)
             else:
                 formatPrefix = mcp.format(longestStringLength)
 
             line = TRE.setoutLoco(loco, True, False)
-            textSwitchList += '{} {} {}\n'.format(formatPrefix, line, loco['destination']['track']['userName'])
+            textSwitchList += '{} {} {}\n'.format(formatPrefix, line, loco['destination']['track'][u'userName'])
     # Cars
-        textSwitchList += '{}:\n'.format(PSE.getBundleItem('Cars'))
+        textSwitchList += u'{}:\n'.format(PSE.getBundleItem('Cars'))
         if not location['cars']['add']:
-            textSwitchList += ' {}\n'.format(PSE.getBundleItem('None'))
+            textSwitchList += u' {}\n'.format(PSE.getBundleItem(u'None'))
         for car in location['cars']['add']:
-            currentTrack = car['location']['track']['userName']
-            destTrack = car['destination']['track']['userName']
+            currentTrack = car['location']['track'][u'userName']
+            destTrack = car['destination']['track'][u'userName']
             if currentTrack == destTrack:
                 formatPrefix = hcp.ljust(longestStringLength)
-            elif car['trainName']:
+            elif car[u'trainName']:
                 formatPrefix = hcp.ljust(longestStringLength)
             else:
                 formatPrefix = mcp.ljust(longestStringLength)
 
             line = TRE.localMoveCar(car, True, False)
-            textSwitchList += '{} {}\n'.format(formatPrefix, line)
+            textSwitchList += u'{} {}\n'.format(formatPrefix, line)
         textSwitchList += '\n'
 
     return textSwitchList
@@ -211,63 +211,63 @@ def opsJmriWorkOrder(manifest):
     longestStringLength = PSE.findLongestStringLength((pep, dep, pcp, dcp, mcp, hcp))
     textWorkOrder = ''
 # Header
-    textWorkOrder += manifest['railroad'] + '\n'
+    textWorkOrder += manifest[u'railroad'] + '\n'
     textWorkOrder += '\n'
-    textWorkOrder += '{} ({}) {}\n'.format(PSE.getBundleItem('Work order for train'), manifest['userName'], manifest['description'])
-    textWorkOrder += '{}\n'.format(PSE.convertIsoToValidTime(manifest['date']))
+    textWorkOrder += u'{} ({}) {}\n'.format(PSE.getBundleItem(u'Work order for train'), manifest[u'userName'], manifest[u'description'])
+    textWorkOrder += u'{}\n'.format(PSE.convertIsoToValidTime(manifest[u'date']))
     textWorkOrder += '\n'
 # Body
     for location in manifest['locations']:
-        textWorkOrder += TMT.getStringScheduledWork().format(location['userName']) + '\n'
+        textWorkOrder += TMT.getStringScheduledWork().format(location[u'userName']) + '\n'
     
     # Pick up locos
-        textWorkOrder += '{}:\n'.format(PSE.getBundleItem('Engines'))
+        textWorkOrder += u'{}:\n'.format(PSE.getBundleItem(u'Engines'))
         for loco in location['engines']['add']:
             formatPrefix = pep.ljust(longestStringLength)
             line = TRE.pickupLoco(loco, True, False)
-            textWorkOrder += '{} {}\n'.format(formatPrefix ,line)
+            textWorkOrder += u'{} {}\n'.format(formatPrefix ,line)
     # Set out locos
         for loco in location['engines']['remove']:
             formatPrefix = dep.ljust(longestStringLength)
             line = TRE.setoutLoco(loco, True, False)
-            textWorkOrder += '{} {}\n'.format(formatPrefix ,line)
+            textWorkOrder += u'{} {}\n'.format(formatPrefix ,line)
 
         if len(location['engines']['add']) + len(location['engines']['remove']) == 0:
-            textWorkOrder += ' {}: {}\n'.format(PSE.getBundleItem('No work at'), location['userName'])
+            textWorkOrder += u' {}: {}\n'.format(PSE.getBundleItem(u'No work at'), location[u'userName'])
 
     # Pick up cars
-        textWorkOrder += '{}:\n'.format(PSE.getBundleItem('Cars'))
+        textWorkOrder += u'{}:\n'.format(PSE.getBundleItem(u'Cars'))
         for car in location['cars']['add']:
             if car['isLocal']:
                 continue
             formatPrefix = pcp.ljust(longestStringLength)
             line = TRE.pickupCar(car, True, False)
-            textWorkOrder += '{} {}\n'.format(formatPrefix ,line)
+            textWorkOrder += u'{} {}\n'.format(formatPrefix ,line)
     # Move cars
         for car in location['cars']['add']:
             if not car['isLocal']:
                 continue
             formatPrefix = mcp.ljust(longestStringLength)
             line = TRE.localMoveCar(car, True, False)
-            textWorkOrder += '{} {}\n'.format(formatPrefix ,line)
+            textWorkOrder += u'{} {}\n'.format(formatPrefix ,line)
     # Set out cars
         for car in location['cars']['remove']:
             if car['isLocal']:
                 continue
             formatPrefix = dcp.ljust(longestStringLength)
             line = TRE.dropCar(car, True, False)
-            textWorkOrder += '{} {}\n'.format(formatPrefix ,line)
+            textWorkOrder += u'{} {}\n'.format(formatPrefix ,line)
 
         if len(location['cars']['add']) + len(location['cars']['remove']) == 0:
-            textWorkOrder += ' {}: {}\n'.format(PSE.getBundleItem('No work at'), location['userName'])
+            textWorkOrder += u' {}: {}\n'.format(PSE.getBundleItem(u'No work at'), location[u'userName'])
 
         try:
         # Location summary
-            td = PSE.JMRI.jmrit.operations.setup.Setup.getDirectionString(location['trainDirection'])
-            textWorkOrder += TMT.getStringTrainDepartsCars().format(location['userName'], td, str(location['cars']['total']), str(location['length']['length']), location['length']['unit'], str(location['weight'])) + '\n'
+            td = PSE.JMRI.jmrit.operations.setup.Setup.getDirectionString(location[u'trainDirection'])
+            textWorkOrder += TMT.getStringTrainDepartsCars().format(location[u'userName'], td, str(location['cars']['total']), str(location['length']['length']), location['length']['unit'], str(location['weight'])) + '\n'
         except:
         # Footer
-            textWorkOrder += TMT.getStringTrainTerminates().format(manifest['locations'][-1]['userName']) + '\n'
+            textWorkOrder += TMT.getStringTrainTerminates().format(manifest['locations'][-1][u'userName']) + '\n'
 
         textWorkOrder += '\n'
 
@@ -285,39 +285,44 @@ def opsTrainList(manifest):
     TMT = PSE.JMRI.jmrit.operations.trains.TrainManifestText()
 
 # Header
-    trainListText = '{}\n'.format(manifest['railroad'])
+    trainListText = u'{}\n'.format(manifest[u'railroad'])
     trainListText += '\n'
-    trainListText += '{} ({}) {}\n'.format(PSE.getBundleItem('Train list for train'), manifest['userName'], manifest['description'])
-    trainListText += '{}\n'.format(PSE.convertIsoToValidTime(manifest['date']))
+    trainListText += u'{} ({}) {}\n'.format(PSE.getBundleItem(u'Train list for train'), manifest[u'userName'], manifest[u'description'])
+    trainListText += u'{}\n'.format(PSE.convertIsoToValidTime(manifest[u'date']))
     trainListText += '\n'
 
 # Body
     for location in manifest['locations']:
-        trainListText += '{}: {}\n'.format(PSE.getBundleItem('Train consist at'), location['userName'])
+        trainListText += u'{}: {}\n'.format(PSE.getBundleItem(u'Train consist at'), location[u'userName'])
 
     # Pick up locos
-        trainListText += '{}:\n'.format(PSE.getBundleItem('Engines'))
+        trainListText += '{}:\n'.format(PSE.getBundleItem(u'Engines'))
         if not location['engines']['add']:
-            trainListText += ' {}\n'.format(PSE.getBundleItem('None'))
+            trainListText += ' {}\n'.format(PSE.getBundleItem(u'None'))
         for loco in location['engines']['add']:
             line = TRE.pickupLoco(loco, True, False)
-            trainListText += ' {}\n'.format(line)
+            trainListText += u' {}\n'.format(line)
     # Pick up cars
-        trainListText += '{}:\n'.format(PSE.getBundleItem('Cars'))
+        trainListText += u'{}:\n'.format(PSE.getBundleItem(u'Cars'))
         if not location['cars']['add']:
-            trainListText += ' {}\n'.format(PSE.getBundleItem('None'))
+            trainListText += u' {}\n'.format(PSE.getBundleItem(u'None'))
         for car in location['cars']['add']:
             if car['isLocal']:
                 continue
             line = TRE.pickupCar(car, True, False)
-            formattedSequence = '{:02d}'.format(int(car['sequence']) - 6000)
-            trainListText += ' {} {}\n'.format(formattedSequence, line)
+            formattedSequence = u'{:02d}'.format(int(car['sequence']) - 6000)
+            trainListText += u' {} {}\n'.format(formattedSequence, line)
 
         try: # Location summary
-            td = PSE.JMRI.jmrit.operations.setup.Setup.getDirectionString(location['trainDirection'])
+            td = PSE.JMRI.jmrit.operations.setup.Setup.getDirectionString(location[u'trainDirection'])
+            # trainListText += unicode(location['userName'], PSE.ENCODING) + '\n'
+            # trainListText += PSE.getBundleItem(u'Pattern Report for location ({})').format(location[u'userName']) + '\n'
+            # trainListText += unicode(location['userName'], PSE.ENCODING) + '\n'
             trainListText += TMT.getStringTrainDepartsCars().format(location['userName'], td, str(location['cars']['total']), str(location['length']['length']), location['length']['unit'], str(location['weight'])) + '\n\n'
+            # trainListText += u'{}\n\n'.format(TMT.getStringTrainDepartsCars().format(location[u'userName'], td, str(location['cars']['total']), str(location['length']['length']), location['length']['unit'], str(location['weight'])))
+            # u'Train departs {} {} with {} cars, {} {}, {} tons'.format(location[u'userName'], td, str(location['cars']['total']), str(location['length']['length']), location['length']['unit'], str(location['weight']))
         except: # Terminates
-            trainListText += TMT.getStringTrainTerminates().format(manifest['locations'][-1]['userName']) + '\n'
+            trainListText += TMT.getStringTrainTerminates().format(manifest['locations'][-1][u'userName']) + '\n'
             return trainListText
 
 
@@ -341,7 +346,7 @@ def getDetailsForRollingStock(rs):
     rsDetailDict['destination']={'userName':rs.getDestinationName(), 'track':{'userName':rs.getDestinationTrackName()}}
     rsDetailDict['owner'] = rs.getOwnerName()
 # Common items for all OPS RS
-    rsDetailDict['Id'] = '{} {}'.format(rs.getRoadName(), rs.getNumber())
+    rsDetailDict['Id'] = u'{} {}'.format(rs.getRoadName(), rs.getNumber())
     rsDetailDict['train'] = rs.getTrainName()
 
     return rsDetailDict

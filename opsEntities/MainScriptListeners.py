@@ -69,10 +69,13 @@ def ptItemSelected(TRANSLATE_PLUGIN_EVENT):
     _psLog.debug(TRANSLATE_PLUGIN_EVENT)
 
     Bundle.translateBundles()
-    Bundle.translateHelpHtml()
+    # Bundle.translateHelpHtml()
+
+    PSE.closeWindowByName('PatternScriptsFrame')
+    PSE.getPsButton().setEnabled(True)
 
     xModule = PSE.IM('MainScript')
-    xModule.restartThePlugin()
+    xModule.makePsPlugin()
 
     _psLog.info('Pattern Scripts plugin translated')
 

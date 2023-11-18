@@ -28,9 +28,9 @@ def getSubroutineDropDownItem():
 
     configFile = PSE.readConfigFile()
     if configFile[subroutineName]['SV']:
-        menuText = '{} {}'.format(PSE.getBundleItem('Hide'), __package__)
+        menuText = u'{} {}'.format(PSE.getBundleItem('Hide'), __package__)
     else:
-        menuText = '{} {}'.format(PSE.getBundleItem('Show'), __package__)
+        menuText = u'{} {}'.format(PSE.getBundleItem('Show'), __package__)
     menuItem.setName(__package__)
     menuItem.setText(menuText)
 
@@ -54,18 +54,9 @@ class TrainsPropertyParser:
     
     def preProcess(self):
 
-        if self.propertyName == 'opsPatternReport':
-            manifestName = 'ops-Pattern Report.json'
-            PSE.extendManifest(manifestName)
-
-        if self.propertyName == 'opsSwitchList':
-            manifestName = 'ops-Switch List.json'
-            PSE.extendManifest(manifestName)
-
         if self.propertyName == 'TrainBuilt' and self.newValue == True:
             if PSE.readConfigFile()['Main Script']['CP']['ER']:
-                manifestName = 'train-{}.json'.format(self.propertySource.toString())
-                PSE.extendManifest(manifestName)
+                PSE.extendManifest(self.propertySource) # The train object is passed in
 
         return
     
@@ -89,7 +80,7 @@ class TrainsPropertyParser:
             workList = PSE.getTrainManifest(self.propertySource.toString())
 
         elif self.propertyName == 'opsSwitchList':
-            workList = getOpsSwitchList()
+            workList = Model.getOpsSwitchList()
 
         else:
             return
@@ -100,14 +91,6 @@ class TrainsPropertyParser:
         PSE.genericWriteReport(o2oWorkEventPath, o2oWorkEvents)
 
         return
-
-def getOpsSwitchList():
-
-    trainName = 'ops-Switch List.json'
-    manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', trainName)
-    manifest = PSE.loadJson(PSE.genericReadReport(manifestPath))
-
-    return manifest
 
 
 class StartUp:
@@ -274,3 +257,4 @@ class StartUp:
         self.getWidget('initializeJmriRailroad').setText(PSE.getBundleItem('Initialize Railroad'))
 
         return
+    

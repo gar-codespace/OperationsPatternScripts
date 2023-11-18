@@ -19,7 +19,7 @@ def appendSwitchList(mergedForm):
     Replaces an existing track.
     """
 
-    fileName = PSE.getBundleItem('ops-Switch List') + '.json'    
+    fileName = 'ops-Switch List.json'    
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
     currentWorkList = PSE.jsonLoadS(PSE.genericReadReport(targetPath))
 

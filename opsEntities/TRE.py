@@ -103,29 +103,29 @@ def translateCarFormat(car):
                 
     newCarFormat = {}
 
-    newCarFormat['Road'] = car['road']
-    newCarFormat['Number'] = car['number']
-    newCarFormat['Type'] = car['carType']
-    newCarFormat['Length'] = car['length']
-    newCarFormat['Weight'] = car['weightTons']
-    newCarFormat['Load'] = car['load']
-    newCarFormat['Load_Type'] = car['loadType']
-    newCarFormat['Hazardous'] = car['hazardous']
-    newCarFormat['Color'] = car['color']
-    newCarFormat['Kernel'] = car['kernel']
-    newCarFormat['Kernel_Size'] = car['kernelSize']
-    newCarFormat['Owner'] = car['owner']
-    newCarFormat['Division'] = car['division']
-    newCarFormat['Location'] = car['location']['userName']
-    newCarFormat['Track'] = car['location']['track']['userName']
-    newCarFormat['Destination'] = car['destination']['userName']
-    newCarFormat['Dest&Track'] = '{}-{}'.format(car['destination']['userName'], car['destination']['track']['userName'])
-    newCarFormat['Final_Dest'] = car['finalDestination']['userName']
-    newCarFormat['FD&Track'] = '{}-{}'.format(car['finalDestination']['userName'], car['finalDestination']['track']['userName'])
-    newCarFormat['Comment'] = car['comment']
-    newCarFormat['SetOut_Msg'] = car['removeComment']
-    newCarFormat['PickUp_Msg'] = car['addComment']
-    newCarFormat['RWE'] = car['returnWhenEmpty']
+    newCarFormat['Road'] = car[u'road']
+    newCarFormat['Number'] = car[u'number']
+    newCarFormat['Type'] = car[u'carType']
+    newCarFormat['Length'] = car[u'length']
+    newCarFormat['Weight'] = car[u'weightTons']
+    newCarFormat['Load'] = car[u'load']
+    newCarFormat['Load_Type'] = car[u'loadType']
+    newCarFormat['Hazardous'] = car[u'hazardous']
+    newCarFormat['Color'] = car[u'color']
+    newCarFormat['Kernel'] = car[u'kernel']
+    newCarFormat['Kernel_Size'] = car[u'kernelSize']
+    newCarFormat['Owner'] = car[u'owner']
+    newCarFormat['Division'] = car[u'division']
+    newCarFormat['Location'] = car['location'][u'userName']
+    newCarFormat['Track'] = car['location']['track'][u'userName']
+    newCarFormat['Destination'] = car['destination'][u'userName']
+    newCarFormat['Dest&Track'] = u'{}-{}'.format(car['destination'][u'userName'], car['destination']['track'][u'userName'])
+    newCarFormat['Final_Dest'] = car['finalDestination'][u'userName']
+    newCarFormat['FD&Track'] = u'{}-{}'.format(car['finalDestination'][u'userName'], car['finalDestination']['track'][u'userName'])
+    newCarFormat['Comment'] = car[u'comment']
+    newCarFormat['SetOut_Msg'] = car[u'removeComment']
+    newCarFormat['PickUp_Msg'] = car[u'addComment']
+    newCarFormat['RWE'] = car[u'returnWhenEmpty']
 
     return newCarFormat
 
@@ -138,19 +138,19 @@ def getShortLoadType(car):
 
     carObject = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
 
-    lt =  PSE.getBundleItem('Unknown').upper()[0]
+    lt =  PSE.getBundleItem(u'Unknown').upper()[0]
     if carObject.getLoadName() == 'E':
-        lt = PSE.getBundleItem('Empty').upper()[0]
+        lt = PSE.getBundleItem(u'Empty').upper()[0]
     if carObject.getLoadName() == 'L':
-        lt = PSE.getBundleItem('Load').upper()[0]
+        lt = PSE.getBundleItem(u'Load').upper()[0]
     if carObject.getLoadType() == 'empty' or carObject.getLoadType() == 'E':
-        lt = PSE.getBundleItem('Empty').upper()[0]
+        lt = PSE.getBundleItem(u'Empty').upper()[0]
 
     if carObject.getLoadType() == 'load' or carObject.getLoadType() == 'L':
-        lt = PSE.getBundleItem('Load').upper()[0]
+        lt = PSE.getBundleItem(u'Load').upper()[0]
 
     if carObject.isCaboose() or carObject.isPassenger():
-        lt = PSE.getBundleItem('Occupied').upper()[0]
+        lt = PSE.getBundleItem(u'Occupied').upper()[0]
 
     return lt
 

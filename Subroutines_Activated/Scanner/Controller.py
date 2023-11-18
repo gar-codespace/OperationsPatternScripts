@@ -8,7 +8,6 @@ Engines will be sequenced in a future revision.
 """
 
 from opsEntities import PSE
-from opsEntities import TextReports
 from Subroutines_Activated.Scanner import SubroutineListeners
 from Subroutines_Activated.Scanner import Model
 from Subroutines_Activated.Scanner import View
@@ -29,9 +28,9 @@ def getSubroutineDropDownItem():
 
     configFile = PSE.readConfigFile()
     if configFile[subroutineName]['SV']:
-        menuText = '{} {}'.format(PSE.getBundleItem('Hide'), __package__)
+        menuText = u'{} {}'.format(PSE.getBundleItem('Hide'), __package__)
     else:
-        menuText = '{} {}'.format(PSE.getBundleItem('Show'), __package__)
+        menuText = u'{} {}'.format(PSE.getBundleItem('Show'), __package__)
 
     menuItem.setName(__package__)
     menuItem.setText(menuText)
@@ -63,8 +62,8 @@ class TrainsPropertyParser:
             Model.extendSwitchListJson()
 
         if self.propertyName == 'TrainBuilt' and self.newValue == True:
-            manifestName = 'train-{}.json'.format(self.propertySource.toString())
-            Model.extendManifestJson(manifestName)
+            if PSE.readConfigFile()['Main Script']['CP']['ER']:
+                Model.modifyManifest(self.propertySource)
 
         if self.propertyName == 'TrainMoveComplete' and self.newValue:
             Model.increaseSequenceNumber(self.newValue.toString())
@@ -78,7 +77,7 @@ class TrainsPropertyParser:
             Model.resequenceManifestJson(switchListName)
 
         if self.propertyName == 'TrainBuilt' and self.newValue == True:
-            manifestName = 'train-{}.json'.format(self.propertySource.toString())
+            manifestName = u'train-{}.json'.format(self.propertySource.toString())
             Model.resequenceManifestJson(manifestName)
 
         if self.propertyName == 'TrainMoveComplete' and self.oldValue:

@@ -282,7 +282,8 @@ def translateBundles():
     if PSE.psLocale()[:2] == 'en':
         return
 
-    fileName = 'plugin.' + PSE.psLocale()[:2] + '.json'
+    # fileName = 'plugin.' + PSE.psLocale()[:2] + '.json'
+    fileName = 'plugin.{}.json'.format(PSE.psLocale()[:2])
     targetFile = PSE.OS_PATH.join(PSE.BUNDLE_DIR, fileName)
 
     allBundles = getAllBundles()
@@ -299,7 +300,7 @@ def translateHelpHtml():
     """
 
     translator = Translator()
-    # translator.setTranslationService()
+    translator.setTranslationService()
     translatedHelpHtml = ''
 
     pPattern = re.compile('(<p>)(.+)(<.+>)') # finds <p>Overview of this plugin</p>
@@ -356,7 +357,7 @@ def batchTranslator(textBundle):
     inputBundle = textBundle.splitlines()
 
     translator = Translator()
-    # translator.setTranslationService()
+    translator.setTranslationService()
     translator.translateItems(inputBundle)
 
     batchTranslation = translator.makeDictionary()
@@ -385,15 +386,15 @@ class Translator:
 
         return
 
-    # def setTranslationService(self):
-    #     """
-    #     Gets the translator from readConfigFile('CP')['TC']
-    #     Example: self.translationService = Translators.UseDeepL()
-    #     """
+    def setTranslationService(self):
+        """
+        Gets the translator from readConfigFile('CP')['TC']
+        Example: self.translationService = Translators.UseDeepL()
+        """
 
-    #     self.translationService = getattr(Translators, self.translatorChoice)()
+        self.translationService = getattr(Translators, self.translatorChoice)()
 
-    #     return
+        return
     
     def testTranslationService(self):
         """
@@ -492,6 +493,7 @@ class MakeBundleItem(PSE.JMRI.jmrit.automat.AbstractAutomaton):
                 print('Exception at: Bundle.handle')
                 _psLog.warning('Not translated: ' + self.item)
             if response:
+                
                 break
             PSE.TIME.sleep(.05)
 

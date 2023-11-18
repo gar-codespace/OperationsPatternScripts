@@ -208,7 +208,7 @@ class ParseRollingStock:
         rsDetailDict['destination'] = {'userName':rs.getDestinationName(), 'track':{'userName':rs.getDestinationTrackName()}}
         rsDetailDict['comment'] = rs.getComment()
     # Additional attribs for OPS
-        rsDetailDict['id'] = '{} {}'.format(rs.getRoadName(), rs.getNumber())
+        rsDetailDict['id'] = u'{} {}'.format(rs.getRoadName(), rs.getNumber())
         rsDetailDict[' '] = ' ' # Catches KeyError - empty box added to getLocalSwitchListMessageFormat
         rsDetailDict['trainName'] = rs.getTrainName()
 

@@ -53,6 +53,14 @@ def removeSubroutineListeners():
 """ Routines specific to this subroutine """
 
 
+def getOpsSwitchList():
+
+    trainName = 'ops-Switch List.json'
+    workListPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', trainName)
+    workList = PSE.loadJson(PSE.genericReadReport(workListPath))
+
+    return workList
+
 def getExtendedProperties():
 
     tpRailroadData = ModelEntities.getTpRailroadJson('tpRailroadData')

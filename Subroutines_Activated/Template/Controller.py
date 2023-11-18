@@ -31,9 +31,9 @@ def getSubroutineDropDownItem():
 
     configFile = PSE.readConfigFile()
     if configFile[subroutineName]['SV']:
-        menuText = PSE.getBundleItem('Hide') + ' ' + __package__
+        menuText = u'{} {}'.format(PSE.getBundleItem('Hide'), __package__)
     else:
-        menuText = PSE.getBundleItem('Show') + ' ' + __package__
+        menuText = u'{} {}'.format(PSE.getBundleItem('Show'), __package__)
 
     menuItem.setName(__package__)
     menuItem.setText(menuText)
@@ -49,19 +49,14 @@ class TrainsPropertyParser:
 
     def __init__(self, pce):
 
-        self.propertySource = pce.source
-        self.propertyName = pce.propertyName
-        self.oldValue = pce.oldValue
-        self.newValue = pce.newValue
+        # self.propertySource = pce.source
+        # self.propertyName = pce.propertyName
+        # self.oldValue = pce.oldValue
+        # self.newValue = pce.newValue
 
         return
     
     def preProcess(self):
-
-        if self.propertyName == 'TrainBuilt' and self.newValue == True:
-            if PSE.readConfigFile()['Main Script']['CP']['ER']:
-                manifestName = 'train-{}.json'.format(self.propertySource.toString())
-                PSE.extendManifest(manifestName)
 
         return
     

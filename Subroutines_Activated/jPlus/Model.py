@@ -145,32 +145,37 @@ def putExtendedProperties(propertyOldValue):
 
 def modifyPatternReport():
 
-    reportName = PSE.getBundleItem('ops-Pattern Report') + '.json'
+    reportName = 'ops-Pattern Report.json'
     _modifyAction(reportName)
 
     return
 
 def modifySwitchList():
 
-    reportName = PSE.getBundleItem('ops-Switch List') + '.json'
+    reportName = 'ops-Switch List.json'
     _modifyAction(reportName)
     
     return
 
-def modifyManifest(manifestName):
+def modifyManifest(propertySource):
 
-    PSE.extendManifest(manifestName)
-    _modifyAction(manifestName)
+    PSE.extendManifest(propertySource)
+    reportName = u'train-{}.json'.format(propertySource.toString())
+    _modifyAction(reportName)
 
     return
 
 def _modifyAction(reportName):
+    """
+    Add the jPlus contribution to any json
+    """
 
     reportPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
     report = PSE.loadJson(PSE.genericReadReport(reportPath))
     report.update({'railroad':_getExtendedRailroadName()})
 
     PSE.genericWriteReport(reportPath, PSE.dumpJson(report))
+
 
     return
 
@@ -233,15 +238,15 @@ def makeCompositRailroadName(layoutDetails):
 
     a = ''
     if layoutDetails['OR']:
-        a = '{}\n'.format(layoutDetails['OR'])
+        a = u'{}\n'.format(layoutDetails[u'OR'])
 
     b = ''
     if layoutDetails['TR']:
-        b = '{}\n'.format(layoutDetails['TR'])
+        b = u'{}\n'.format(layoutDetails[u'TR'])
 
     c = ''
     if layoutDetails['LO']:
-        c = layoutDetails['LO']
+        c = layoutDetails[u'LO']
 
     return a + b + c
 

@@ -17,7 +17,7 @@ from importlib import import_module as IM # Called by the listeners
 import logging as LOGGING
 import apps as APPS
 import time as TIME
-from HTMLParser import HTMLParser as HTML_PARSER
+# from HTMLParser import HTMLParser as HTML_PARSER
 from json import loads as jsonLoadS, dumps as jsonDumpS
 from codecs import open as codecsOpen
 
@@ -241,7 +241,7 @@ def repaintPatternScriptsFrame():
     frameName = getBundleItem('Pattern Scripts')
 
     for subroutineName in getSubroutineDirs():
-        subroutine = '{}.{}'.format(SUBROUTINE_DIR, subroutineName)
+        subroutine = u'{}.{}'.format(SUBROUTINE_DIR, subroutineName)
         targetPanel = getComponentByName(frameName, subroutine)
         targetPanel.setVisible(configFile[subroutineName]['SV'])
 
@@ -313,7 +313,7 @@ def openOutputFrame(message):
     crawler(frame)
     for component in CRAWLER:
         if component.getClass() == JAVX_SWING.JTextArea:
-           component.text += '{}\n'.format(message)
+           component.text += u'{}\n'.format(message)
            break
 
     return
@@ -452,7 +452,7 @@ def getSortList(rsSort):
 
 def getTrainManifest(trainName):
 
-    trainName = 'train-{}.json'.format(trainName)
+    trainName = u'train-{}.json'.format(trainName)
     manifestPath = OS_PATH.join(PROFILE_PATH, 'operations', 'jsonManifests', trainName)
     manifest = loadJson(genericReadReport(manifestPath))
 
@@ -618,23 +618,35 @@ def findLongestStringLength(list):
 
     return longestString
 
-def extendManifest(reportName):
+def extendManifest(trainObject):
     """
     Adds additional attributes found in the print options dialog.
-    Called by Patterns, jPlus, o2o and Scanner
+    Called by all the subroutines.
     """
 
+    reportName = u'train-{}.json'.format(trainObject.toString())
     reportPath = OS_PATH.join(PROFILE_PATH, 'operations', 'jsonManifests', reportName)
     report = loadJson(genericReadReport(reportPath))
+
+    report['userName'] = trainObject.getName()
+    report['description'] = trainObject.getDescription()
+    trainRoute = trainObject.getRoute()
+    routeLocations = trainRoute.getLocationsBySequenceList()
+
+    i = 0
     for location in report['locations']:
-        # Engines
+        location['userName'] = routeLocations[i].toString()
+        i += 1
+
+    # Engines
         for loco in location['engines']['add']:
             locoObject = EM.getByRoadAndNumber(loco['road'], loco['number'])
             loco['dccAddress'] = locoObject.getDccAddress()
+
         for loco in location['engines']['remove']:
             locoObject = EM.getByRoadAndNumber(loco['road'], loco['number'])
             loco['dccAddress'] = locoObject.getDccAddress()
-        # Cars
+    # Cars
         for car in location['cars']['add']:
             carObject = CM.getByRoadAndNumber(car['road'], car['number'])
             kSize = 0

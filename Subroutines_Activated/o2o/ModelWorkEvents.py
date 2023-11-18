@@ -21,22 +21,22 @@ def o2oWorkEvents(manifest):
 
     _psLog.debug('o2oWorkEvents')
 # Header
-    o2oWorkEvents = 'HN,' + manifest['railroad'].replace('\n', ';') + '\n'
-    o2oWorkEvents += 'HT,' + manifest['userName'] + '\n'
-    o2oWorkEvents += 'HD,' + manifest['description'] + '\n'
-    o2oWorkEvents += 'HV,{}\n'.format(PSE.convertIsoToValidTime(manifest['date']))
-    o2oWorkEvents += 'WT,' + str(len(manifest['locations'])) + '\n'
+    o2oWorkEvents = 'HN,' + manifest[u'railroad'].replace('\n', ';') + '\n'
+    o2oWorkEvents += 'HT,' + manifest[u'userName'] + '\n'
+    o2oWorkEvents += 'HD,' + manifest[u'description'] + '\n'
+    o2oWorkEvents += 'HV,{}\n'.format(PSE.convertIsoToValidTime(manifest[u'date']))
+    o2oWorkEvents += 'WT,' + str(len(manifest[u'locations'])) + '\n'
 # Body
     for i, location in enumerate(manifest['locations'], start=1):
-        o2oWorkEvents += 'WE,{},{}\n'.format(str(i), location['userName'])
+        o2oWorkEvents += u'WE,{},{}\n'.format(str(i), location[u'userName'])
         for loco in location['engines']['add']:
-            o2oWorkEvents += 'PL,{}\n'.format(_makeLine(loco))
+            o2oWorkEvents += u'PL,{}\n'.format(_makeLine(loco))
         for loco in location['engines']['remove']:
-            o2oWorkEvents += 'SL,{}\n'.format(_makeLine(loco))
+            o2oWorkEvents += u'SL,{}\n'.format(_makeLine(loco))
         for car in location['cars']['add']:
-            o2oWorkEvents += 'PC,{}\n'.format(_makeLine(car))
+            o2oWorkEvents += u'PC,{}\n'.format(_makeLine(car))
         for car in location['cars']['remove']:
-            o2oWorkEvents += 'SC,{}\n'.format(_makeLine(car))
+            o2oWorkEvents += u'SC,{}\n'.format(_makeLine(car))
         
     return o2oWorkEvents
 
@@ -47,17 +47,17 @@ def _makeLine(rs):
     """
 
     try: # Cars
-        loadName = rs['load']
+        loadName = rs[u'load']
         lt = TRE.getShortLoadType(rs)
     except: # Locos
-        loadName = rs['model']
-        lt = PSE.getBundleItem('Occupied').upper()[0]
+        loadName = rs[u'model']
+        lt = PSE.getBundleItem(u'Occupied').upper()[0]
 
     ID = rs['road'] + ' ' + rs['number']
-    pu = rs['location']['userName'] + ';' + rs['location']['track']['userName']
-    so = rs['destination']['userName'] + ';' + rs['destination']['track']['userName']
+    pu = rs['location'][u'userName'] + ';' + rs['location']['track'][u'userName']
+    so = rs['destination'][u'userName'] + ';' + rs['destination']['track'][u'userName']
 
-    line = '{},{},{},{},{},{},{},{}'.format(ID, rs['road'], rs['number'], rs['carType'], lt, loadName, pu, so)
+    line = u'{},{},{},{},{},{},{},{}'.format(ID, rs[u'road'], rs[u'number'], rs[u'carType'], lt, loadName, pu, so)
 
     return line
 
@@ -88,7 +88,7 @@ class opsSwitchListConversion:
 
     def __init__(self):
 
-        self.inputFileName = PSE.getBundleItem('ops-Switch List') + '.json'
+        self.inputFileName = 'ops-Switch List.json'
         self.inputTargetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', self.inputFileName)
 
         self.opsSwitchList = {}

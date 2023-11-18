@@ -33,7 +33,7 @@ class UseDeepL:
 
         self.BASE_URL = 'https://api-free.deepl.com/v2/translate?'
         self.DOCUMENT_URL = 'https://api-free.deepl.com/v2/document?'
-        self.AUTH_KEY = None
+        self.AUTH_KEY = Keys.DEEPL_KEY
 
         self.SOURCE_LANG = 'en'
 
@@ -96,7 +96,7 @@ class UseDeepL:
     
     def getTheUrl(self, item):
 
-        params = urlencode( (('auth_key', self.AUTH_KEY),
+        params = urlencode( (('auth_key', Keys.DEEPL_KEY),
                                  ('text', item.encode(PSE.ENCODING)),
                                  ('source_lang', self.SOURCE_LANG),
                                  ('target_lang', PSE.psLocale()),

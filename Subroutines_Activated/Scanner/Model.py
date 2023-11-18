@@ -261,20 +261,23 @@ def extendSwitchListJson():
 
     return
 
-def extendManifestJson(manifestName):
+def modifyManifest(propertySource):
     """
     Extends the JMRI created json manifest.
     """
 
-    _psLog.debug('extendManifestJson')
+    _psLog.debug(__name__ + '.modifyManifest')
 
-    # reportName = 'train-{}.json'.format(trainName)
-    PSE.extendManifest(manifestName)
-    _modifyAction(manifestName)
+    PSE.extendManifest(propertySource)
+    reportName = u'train-{}.json'.format(propertySource.toString())
+    _modifyAction(reportName)
 
     return
 
 def _modifyAction(reportName):
+    """
+    Add the Scanner contribution to any manifest.
+    """
 
     reportPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
     report = PSE.loadJson(PSE.genericReadReport(reportPath))

@@ -9,7 +9,6 @@ a modified JMRI switch list set to be created.
 """
 
 from opsEntities import PSE
-from opsEntities import TextReports
 from Subroutines_Activated.jPlus import Model
 from Subroutines_Activated.jPlus import View
 
@@ -27,9 +26,9 @@ def getSubroutineDropDownItem():
 
     configFile = PSE.readConfigFile()
     if configFile[subroutineName]['SV']:
-        menuText = '{} {}'.format(PSE.getBundleItem('Hide'), __package__)
+        menuText = u'{} {}'.format(PSE.getBundleItem('Hide'), __package__)
     else:
-        menuText = '{} {}'.format(PSE.getBundleItem('Show'), __package__)
+        menuText = u'{} {}'.format(PSE.getBundleItem('Show'), __package__)
 
     menuItem.setName(__package__)
     menuItem.setText(menuText)
@@ -45,6 +44,7 @@ class TrainsPropertyParser:
     
     def __init__(self, pce):
 
+        self.pce = pce
         self.propertySource = pce.source
         self.propertyName = pce.propertyName
         self.oldValue = pce.oldValue
@@ -62,8 +62,7 @@ class TrainsPropertyParser:
 
         if self.propertyName == 'TrainBuilt' and self.newValue == True:
             if PSE.readConfigFile()['Main Script']['CP']['ER']:
-                manifestName = 'train-{}.json'.format(self.propertySource.toString())
-                Model.modifyManifest(manifestName)
+                Model.modifyManifest(self.propertySource) # The train object is passed in
         return
     
     def process(self):
