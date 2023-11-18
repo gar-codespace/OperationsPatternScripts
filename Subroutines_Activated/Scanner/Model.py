@@ -54,10 +54,21 @@ def removeSubroutineListeners():
 """ Routines specific to this subroutine """
 
 
+def decreaseSequenceNumber(car):
+
+    if not car:
+        return
+
+    car.setValue(str(int(car.getValue()) - 1000))
+
+    return
+
 def increaseSequenceNumber(locationName):
     """
     For every car at every track for the given location, increase the sequence number by 1000.
     """
+
+    _psLog.debug('increaseSequenceNumber')
 
     if not locationName:
         return
@@ -71,14 +82,16 @@ def increaseSequenceNumber(locationName):
 
     return
 
-def resequenceCarsAtLocation(locationName=None):
+def resequenceCarsAtLocation(locationName):
     """
     Cars are ordered by existing sequence number,
     then given a new 600* sequence number.
     """
 
+    _psLog.debug('resequenceCarsAtLocation')
+
     if not locationName:
-        locationName = PSE.readConfigFile('Patterns')['PL']
+        return
 
     for track in PSE.LM.getLocationByName(locationName).getTracksList():
         carSeqList = []
@@ -92,8 +105,6 @@ def resequenceCarsAtLocation(locationName=None):
             reSequence += 1
 
     PSE.CMX.save()
-
-    _psLog.debug('resequenceCarsAtLocation')
 
     return
 
@@ -160,6 +171,8 @@ def _updateScannerList():
     Gets the file names in the designated scanner path.
     """
 
+    _psLog.debug('_updateScannerList')
+
     configFile = PSE.readConfigFile()
     scannerPath = configFile['Scanner']['US']['SP']
     dirContents = PSE.JAVA_IO.File(scannerPath).list()
@@ -171,9 +184,8 @@ def _updateScannerList():
     return pulldownList
 
 def getScannerReportPath():
-    """
-    Writes the name of the selected scanner report to the config file.
-    """
+
+    _psLog.debug('getScannerReportPath')
 
     configFile = PSE.readConfigFile()
     scannerPath = configFile['Scanner']['US']['SP']
@@ -246,6 +258,8 @@ def recordSelection(comboBox):
     Write the combo box selected item to the configfile.
     """
 
+    _psLog.debug('recordSelection')
+
     configFile = PSE.readConfigFile()
     configFile['Scanner'].update({'SI':comboBox.getSelectedItem()})
     PSE.writeConfigFile(configFile)
@@ -256,6 +270,8 @@ def addSequenceToManifest(reportName):
     """
     Add the sequence attribute to a manifest json.
     """
+
+    _psLog.debug('addSequenceToManifest')
 
     reportPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
     manifest = PSE.loadJson(PSE.genericReadReport(reportPath))
@@ -279,13 +295,14 @@ def resequenceManifestJson(reportName):
     Only sequences cars at this time.
     """
 
+    _psLog.debug('resequenceManifestJson')
+
     reportPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
     manifest = PSE.loadJson(PSE.genericReadReport(reportPath))
 
     for location in manifest['locations']:
         cars = location['cars']['add']
         cars.sort(key=lambda row: row['sequence'])
-        # cars.sort(key=lambda row: row['location']['track']['userName'])
 
         cars = location['cars']['remove']
         cars.sort(key=lambda row: row['sequence'])
@@ -293,39 +310,3 @@ def resequenceManifestJson(reportName):
     PSE.genericWriteReport(reportPath, PSE.dumpJson(manifest))
 
     return
-
-
-# def extendSwitchListJson():
-
-#     _psLog.debug('extendSwitchListJson')
-
-#     reportName = 'switch list-OPS.json'
-#     _modifyAction(reportName)
-
-#     return
-
-# def modifyManifest(propertySource):
-#     """
-#     Extends the JMRI created json manifest.
-#     """
-
-#     _psLog.debug(__name__ + '.modifyManifest')
-
-#     PSE.extendManifest(propertySource)
-#     reportName = u'train-{}.json'.format(propertySource.toString())
-#     _modifyAction(reportName)
-
-#     return
-
-# def _modifyAction(reportName):
-#     """
-#     Add the Scanner contribution to any manifest.
-#     """
-
-#     reportPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
-#     report = PSE.loadJson(PSE.genericReadReport(reportPath))
-#     manifest = _addSequenceToManifest(report)
-
-#     PSE.genericWriteReport(reportPath, PSE.dumpJson(manifest))
-
-#     return

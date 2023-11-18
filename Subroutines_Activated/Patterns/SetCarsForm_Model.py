@@ -101,8 +101,9 @@ def moveRollingStock(switchList):
     applySchedule = configFile['Patterns']['AS']
     toLocation = PSE.LM.getLocationByName(configFile['Patterns']['PL'])
 
-    propertyChangeToggle = False
-    newSequence = 5001
+    # PSE.TM.firePropertyChange('opsSetCarsToTrack', toLocation.toString(), None) # Bump existing cars seq +1000
+    # propertyChangeToggle = False
+    # newSequence = 5001
     setCount = 0
 
     locos = switchList['locations'][0]['engines']['add']
@@ -124,9 +125,6 @@ def moveRollingStock(switchList):
             setResult = rollingStock.setLocation(toLocation, toTrack, True)
 
         if setResult == 'okay':
-            propertyChangeToggle = True
-            rollingStock.setValue(str(newSequence))
-            newSequence += 1
             setCount += 1
         
     cars = switchList['locations'][0]['cars']['add']
@@ -148,19 +146,16 @@ def moveRollingStock(switchList):
             setResult = rollingStock.setLocation(toLocation, toTrack, True)
 
         if setResult == 'okay':
-            propertyChangeToggle = True
-            rollingStock.setValue(str(newSequence))
-            newSequence += 1
+            PSE.TM.firePropertyChange('opsSetCarsToTrack', rollingStock, None)
             setCount += 1
             if toTrack.getTrackType() == 'Spur':
                 rollingStock.setMoves(rollingStock.getMoves() + 1)
             if applySchedule:
                 scheduleUpdate(toTrack, rollingStock)
 
-    if propertyChangeToggle:
-        PSE.TM.firePropertyChange('opsSetCarsToTrack', False, True)
-        PSE.EMX.save()
-        PSE.CMX.save()
+    PSE.TM.firePropertyChange('opsSetCarsToTrack', None, toLocation.toString()) # Resequence location
+    PSE.EMX.save()
+    PSE.CMX.save()
 
     _psLog.info('Rolling stock count: {}, processed.'.format(str(setCount)))
 
