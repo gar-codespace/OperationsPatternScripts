@@ -5,25 +5,25 @@ Todo:
   Refine Hazardous handling.
   Editing division name doesn't update Patterns
   Break out printExtendedTrainList and printExtendedWorkOrder.
-  Fix: extended header in reports when no jPlus is used.
+  Retest StandAloneExport
+  Rebuild CSV pattern report and switch list
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.
   PSE chunkPath.
-  PSE pickupCar, dropCar localCar
+  PSE pickupCar, dropCar, localCar
   
 Comments:
   Schedule does not prevent setting a car to a track.
   Setting JmriJFrame(True, True) has no effect, size and position are manually saved.
   Moved ENCODING value into the config file.
-  Move config file master copy into psEntities to shield it from accidental edit.
   os.path.join() is used to make all paths for better OS compatibility.
   Plugin is Javafied as much as possible.
   _trackNameClickedOn moved to PSE.TRACK_NAME_CLICKED_ON
   o2o importTpRailroad rolled into the jPlus buttons.
   On TrainPlayer side, a check is added to validate locale is in format 'location;track'.
   On TrainPlayer side, a check is added to validate industries has a locale entry.'.
-  Generalized built train listeners into opsEntities.Listeners.
+  Generalized built train listeners into opsEntities.PluginListeners.
   Translate the plugin does not delete the config file.
   o2o Initialize Railroad does not reset Throwback.
   Replace __import__ with importlib.import_module()
@@ -170,7 +170,6 @@ Tested Items:
     Scroll through commits OK.
     Throwbacks one, some, or all xml OK.
     Set checkbox default to False OK.
-    Makes and restores the extended data for jPlus OK.
     If there are commits, they will be restored when restart from default is selected OK.
     Saves and restores extended data from jPlus OK.
 

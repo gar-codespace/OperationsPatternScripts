@@ -1,6 +1,37 @@
 {
   "Main Script" : {
     "US" : {
+      "HCP" : " [ ] Hold",
+      "AW": {
+        " ": 1, 
+        "Color": 6, 
+        "Comment": 15, 
+        "Consist": 8, 
+        "DCC_Address": 10, 
+        "Destination": 15, 
+        "Dest&Track": 27, 
+        "FD&Track": 23, 
+        "Division": 15, 
+        "Final_Dest": 11, 
+        "Hazardous": 10, 
+        "Kernel": 7, 
+        "Kernel_Size": 3, 
+        "Length": 3, 
+        "Load": 12, 
+        "Load_Type": 1, 
+        "Location": 9, 
+        "Number": 5, 
+        "Model": 5, 
+        "Owner": 20, 
+        "PickUp_Msg": 12, 
+        "RWE": 10, 
+        "RWL": 10, 
+        "Road": 4, 
+        "SetOut_Msg": 12, 
+        "Track": 12, 
+        "Type": 3, 
+        "Weight": 7
+        },
       "CD": {
           "BLANCH": {
             "A": 210,
@@ -55,7 +86,8 @@
           "colorB" : "FADED",
           "colorC" : "RASH"
         },
-        "OC" : true
+        "OC" : true,
+        "OT" : false
       },
     "CP" : {
       "TS" : {
@@ -63,9 +95,9 @@
         "UX" : "UseSomethingElse"
       },
       "TC" : "UD",
-      "EH" : false,
       "SE" : "utf-8",
       "ES" : "CA",
+      "ER" : true,
       "EO" : {
         "CA" : "utf-8",
         "CB" : "ascii",
@@ -76,24 +108,15 @@
       "PW" : 1000,
       "PX" : 0,
       "PY" : 0,
-      "RV" : 20230812,
+      "RV" : 20231009,
       "GP" : "https://github.com/gar-codespace/OperationsPatternScripts",
       "EC" : {
         "400" : "400 - Bad Request: Unable to translate the current language.",
         "402" : "402 - Requested page not found",
-        "403" : "403 - Forbidden. The key is invalid."
+        "403" : "403 - Forbidden. The key is invalid.",
+        "456" : "456 - Usage limits exceeded."
       }
       },
-    "LD" : {
-      "OR" : "",
-      "TR" : "",
-      "LO" : "",
-      "YR" : "",
-      "BD" : "",
-      "SC" : "",
-      "LN" : "",
-      "JN" : ""
-    },
     "SR" : {
       "Z" : 1,
       "N" : 2,
@@ -106,7 +129,11 @@
       "ON3" : 9,
       "O" : 10,
       "G" : 11
-    }
+    },
+    "SL" : [
+
+    ]
+
     
   }
 }

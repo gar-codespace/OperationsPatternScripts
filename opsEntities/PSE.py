@@ -628,10 +628,14 @@ def extendManifest(trainObject):
     reportPath = OS_PATH.join(PROFILE_PATH, 'operations', 'jsonManifests', reportName)
     report = loadJson(genericReadReport(reportPath))
 
-    report['userName'] = trainObject.getName()
-    report['description'] = trainObject.getDescription()
     trainRoute = trainObject.getRoute()
     routeLocations = trainRoute.getLocationsBySequenceList()
+    OSU = JMRI.jmrit.operations.setup
+    railroadName = OSU.Setup.getRailroadName()
+    
+    report['railroad'] = railroadName
+    report['userName'] = trainObject.getName()
+    report['description'] = trainObject.getDescription()
 
     i = 0
     for location in report['locations']:
