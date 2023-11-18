@@ -252,82 +252,80 @@ def recordSelection(comboBox):
 
     return
 
-def extendSwitchListJson():
-
-    _psLog.debug('extendSwitchListJson')
-
-    reportName = 'switch list-OPS.json'
-    _modifyAction(reportName)
-
-    return
-
-def modifyManifest(propertySource):
+def addSequenceToManifest(reportName):
     """
-    Extends the JMRI created json manifest.
-    """
-
-    _psLog.debug(__name__ + '.modifyManifest')
-
-    PSE.extendManifest(propertySource)
-    reportName = u'train-{}.json'.format(propertySource.toString())
-    _modifyAction(reportName)
-
-    return
-
-def _modifyAction(reportName):
-    """
-    Add the Scanner contribution to any manifest.
+    Add the sequence attribute to a manifest json.
     """
 
     reportPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
-    report = PSE.loadJson(PSE.genericReadReport(reportPath))
-    manifest = _addSequenceToManifest(report)
-
-    PSE.genericWriteReport(reportPath, PSE.dumpJson(manifest))
-
-    return
-
-def _addSequenceToManifest(manifest):
-    """
-    Add a sequence attribute to a JMRI train manifest json.
-    """
+    manifest = PSE.loadJson(PSE.genericReadReport(reportPath))
 
     for location in manifest['locations']:
         for car in location['cars']['add']:
             carObj = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
-            try:
-                sequence = carObj.getValue()
-            except:
-                sequence = 6000
-            car['sequence'] = sequence
+            car['sequence'] = carObj.getValue()
 
         for car in location['cars']['remove']:
             carObj = PSE.CM.getByRoadAndNumber(car['road'], car['number'])            
-            try:
-                sequence = carObj.getValue()
-            except:
-                sequence = 6000
-            car['sequence'] = sequence
+            car['sequence'] = carObj.getValue()
+    
+    PSE.genericWriteReport(reportPath, PSE.dumpJson(manifest))
+    
+    return
 
-    return manifest
-
-def resequenceManifestJson(jsonFileName):
+def resequenceManifestJson(reportName):
     """
     Resequences an existing json manifest by its sequence value.
     Only sequences cars at this time.
     """
 
-    manifestPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', jsonFileName)
-    manifest = PSE.loadJson(PSE.genericReadReport(manifestPath))
+    reportPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
+    manifest = PSE.loadJson(PSE.genericReadReport(reportPath))
 
     for location in manifest['locations']:
         cars = location['cars']['add']
         cars.sort(key=lambda row: row['sequence'])
-        cars.sort(key=lambda row: row['location']['track']['userName'])
+        # cars.sort(key=lambda row: row['location']['track']['userName'])
 
         cars = location['cars']['remove']
         cars.sort(key=lambda row: row['sequence'])
 
-    PSE.genericWriteReport(manifestPath, PSE.dumpJson(manifest))
+    PSE.genericWriteReport(reportPath, PSE.dumpJson(manifest))
 
     return
+
+
+# def extendSwitchListJson():
+
+#     _psLog.debug('extendSwitchListJson')
+
+#     reportName = 'switch list-OPS.json'
+#     _modifyAction(reportName)
+
+#     return
+
+# def modifyManifest(propertySource):
+#     """
+#     Extends the JMRI created json manifest.
+#     """
+
+#     _psLog.debug(__name__ + '.modifyManifest')
+
+#     PSE.extendManifest(propertySource)
+#     reportName = u'train-{}.json'.format(propertySource.toString())
+#     _modifyAction(reportName)
+
+#     return
+
+# def _modifyAction(reportName):
+#     """
+#     Add the Scanner contribution to any manifest.
+#     """
+
+#     reportPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
+#     report = PSE.loadJson(PSE.genericReadReport(reportPath))
+#     manifest = _addSequenceToManifest(report)
+
+#     PSE.genericWriteReport(reportPath, PSE.dumpJson(manifest))
+
+#     return

@@ -76,7 +76,7 @@ class TrainsPropertyParser:
 
             return    
 
-        if self.propertyName == 'TrainBuilt' and self.newValue == True:
+        if self.propertyName == 'TrainBuilt' and self.newValue:
             workList = PSE.getTrainManifest(self.propertySource.toString())
 
         elif self.propertyName == 'opsSwitchList':

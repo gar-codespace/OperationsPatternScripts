@@ -44,28 +44,34 @@ class TrainsPropertyParser:
     
     def __init__(self, pce):
 
-        self.pce = pce
         self.propertySource = pce.source
         self.propertyName = pce.propertyName
-        self.oldValue = pce.oldValue
+        # self.oldValue = pce.oldValue
         self.newValue = pce.newValue
 
         return
     
     def preProcess(self):
 
-        if self.propertyName == 'opsPatternReport':
-            Model.modifyPatternReport()
-
-        if self.propertyName == 'opsSwitchList':
-            Model.modifySwitchList()
-
-        if self.propertyName == 'TrainBuilt' and self.newValue == True:
+        if self.propertyName == 'TrainBuilt' and self.newValue:
             if PSE.readConfigFile()['Main Script']['CP']['ER']:
-                Model.modifyManifest(self.propertySource) # The train object is passed in
+                PSE.extendManifest(self.propertySource) # The train object is passed in
         return
     
     def process(self):
+
+        if self.propertyName == 'opsSwitchList':
+            manifestName = 'switch list-OPS.json'
+            Model.addExtendedDataToManifest(manifestName)
+
+        if self.propertyName == 'opsPatternReport':
+            manifestName = 'pattern report-OPS.json'
+            Model.addExtendedDataToManifest(manifestName)
+
+        if self.propertyName == 'TrainBuilt' and self.newValue:
+            if PSE.readConfigFile()['Main Script']['CP']['ER']:
+                manifestName = u'train-{}.json'.format(self.propertySource.toString())
+                Model.addExtendedDataToManifest(manifestName)
 
         return
     

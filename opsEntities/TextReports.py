@@ -169,7 +169,7 @@ def opsTextSwitchList():
                 formatPrefix = mcp.format(longestStringLength)
 
             line = TRE.setoutLoco(loco, True, False)
-            textSwitchList += '{} {} {}\n'.format(formatPrefix, line, loco['destination']['track'][u'userName'])
+            textSwitchList += u'{} {} {}\n'.format(formatPrefix, line, loco['destination']['track'][u'userName'])
     # Cars
         textSwitchList += u'{}:\n'.format(PSE.getBundleItem('Cars'))
         if not location['cars']['add']:

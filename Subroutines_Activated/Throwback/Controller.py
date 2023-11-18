@@ -54,7 +54,7 @@ class TrainsPropertyParser:
     
     def preProcess(self):
 
-        if self.propertyName == 'TrainBuilt' and self.newValue == True:
+        if self.propertyName == 'TrainBuilt' and self.newValue:
             if PSE.readConfigFile()['Main Script']['CP']['ER']:
                 PSE.extendManifest(self.propertySource)
 

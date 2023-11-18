@@ -58,12 +58,12 @@ class TrainsPropertyParser:
         if self.propertyName == 'opsSetCarsToTrack':
             Model.resequenceCarsAtLocation()
 
-        if self.propertyName == 'opsSwitchList':
-            Model.extendSwitchListJson()
+        # if self.propertyName == 'opsSwitchList':
+        #     Model.extendSwitchListJson()
 
-        if self.propertyName == 'TrainBuilt' and self.newValue == True:
+        if self.propertyName == 'TrainBuilt' and self.newValue:
             if PSE.readConfigFile()['Main Script']['CP']['ER']:
-                Model.modifyManifest(self.propertySource)
+                PSE.extendManifest(self.propertySource) # The train object is passed in
 
         if self.propertyName == 'TrainMoveComplete' and self.newValue:
             Model.increaseSequenceNumber(self.newValue.toString())
@@ -74,18 +74,31 @@ class TrainsPropertyParser:
 
         if self.propertyName == 'opsSwitchList':
             switchListName = 'switch list-OPS.json'
-            Model.resequenceManifestJson(switchListName)
+            Model.addSequenceToManifest(switchListName)
 
-        if self.propertyName == 'TrainBuilt' and self.newValue == True:
-            manifestName = u'train-{}.json'.format(self.propertySource.toString())
-            Model.resequenceManifestJson(manifestName)
+        if self.propertyName == 'TrainBuilt' and self.newValue:
+            if PSE.readConfigFile()['Main Script']['CP']['ER']:
+                manifestName = u'train-{}.json'.format(self.propertySource.toString())
+                Model.addSequenceToManifest(manifestName)
 
-        if self.propertyName == 'TrainMoveComplete' and self.oldValue:
-            Model.resequenceCarsAtLocation(self.oldValue.toString())
+        # if self.propertyName == 'TrainMoveComplete' and self.oldValue:
+        #     Model.resequenceCarsAtLocation(self.oldValue.toString())
 
         return
     
     def postProcess(self):
+
+        if self.propertyName == 'opsSwitchList':
+            switchListName = 'switch list-OPS.json'
+            Model.resequenceManifestJson(switchListName)
+
+        if self.propertyName == 'TrainBuilt' and self.newValue:
+            if PSE.readConfigFile()['Main Script']['CP']['ER']:
+                manifestName = u'train-{}.json'.format(self.propertySource.toString())
+                Model.resequenceManifestJson(manifestName)
+
+        # if self.propertyName == 'TrainMoveComplete' and self.oldValue:
+        #     Model.resequenceCarsAtLocation(self.oldValue.toString())
 
         return
 

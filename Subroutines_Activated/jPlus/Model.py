@@ -143,29 +143,7 @@ def putExtendedProperties(propertyOldValue):
 
     return
 
-def modifyPatternReport():
-
-    reportName = 'pattern report-OPS.json'
-    _modifyAction(reportName)
-
-    return
-
-def modifySwitchList():
-
-    reportName = 'switch list-OPS.json'
-    _modifyAction(reportName)
-    
-    return
-
-def modifyManifest(propertySource):
-
-    PSE.extendManifest(propertySource)
-    reportName = u'train-{}.json'.format(propertySource.toString())
-    _modifyAction(reportName)
-
-    return
-
-def _modifyAction(reportName):
+def addExtendedDataToManifest(reportName):
     """
     Add the jPlus contribution to any json
     """
@@ -175,7 +153,6 @@ def _modifyAction(reportName):
     report.update({'railroad':_getExtendedRailroadName()})
 
     PSE.genericWriteReport(reportPath, PSE.dumpJson(report))
-
 
     return
 
