@@ -71,7 +71,10 @@ def makePsPlugin():
     """
 
     configFile = PSE.readConfigFile()
-    configFile['Main Script'].update({'SL':PSE.getSubroutineDirs()})
+    subroutineDirs = PSE.getSubroutineDirs()
+    configFile['Main Script'].update({'SL':subroutineDirs})
+    if len(subroutineDirs) == 0: # Catches all subroutines deactivated
+        configFile['Main Script']['CP'].update({'ER':False})
     PSE.writeConfigFile(configFile)
 
     view = View()

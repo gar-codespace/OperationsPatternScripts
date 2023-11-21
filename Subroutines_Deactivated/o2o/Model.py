@@ -1798,8 +1798,7 @@ class RollingStockulator:
                     litmus = 1
 
             if litmus == 0:
-                # PSE.openOutputFrame(PSE.getBundleItem('ALERT: Schedule item not found for car:') + ' ' + car.getRoadName() + ' ' + car.getNumber() + ' ' + car.getTrackName())
-                PSE.openOutputFrame('{} {} {} {}'.format('ALERT: Schedule item not found for car:'), car.getRoadName(), car.getNumber(), car.getTrackName())
+                PSE.openOutputFrame('{} {} {} {}'.format('ALERT: Schedule item not found for car:', car.getRoadName(), car.getNumber(), car.getTrackName()))
                 PSE.openOutputFrame(PSE.getBundleItem('Track does not serve this car type'))
 
         return

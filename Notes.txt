@@ -7,6 +7,8 @@ Todo:
   Break out printExtendedTrainList and printExtendedWorkOrder.
   Retest StandAloneExport
   Rebuild CSV pattern report and switch list
+  Console window popup try to build train when using Scanner but cars have no sequence.
+  Closing the OPS window should also close the set cars windows.
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.
@@ -172,6 +174,9 @@ Tested Items:
     Set checkbox default to False OK.
     If there are commits, they will be restored when restart from default is selected OK.
     Saves and restores extended data from jPlus OK.
+
+  Scanner
+  With Scanner active, Options/Value Fields and Tag Fields get selected OK.
 
 Catches Items:
   Catches pattern report button press no tracks selected OK.

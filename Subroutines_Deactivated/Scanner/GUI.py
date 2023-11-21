@@ -19,7 +19,7 @@ class subroutineGui:
         """
 
         self.qrCodeButton = PSE.JAVX_SWING.JButton()
-        self.qrCodeButton.setText(PSE.getBundleItem('Generate'))
+        self.qrCodeButton.setText(PSE.getBundleItem('Initialize'))
         self.qrCodeButton.setName('self.qrCodeButton')
 
     # The Scanner combo box content is managed by the Controller
@@ -52,7 +52,7 @@ class subroutineGui:
     # Scan QR code
         qrFrame = PSE.JAVX_SWING.JPanel()
         qrFrame.setName('qrFrame')
-        qrFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Generate QR codes'))
+        qrFrame.border = PSE.JAVX_SWING.BorderFactory.createTitledBorder(PSE.getBundleItem('Sequence Rolling Stock'))
 
         qrFrame.add(PSE.JAVX_SWING.Box.createRigidArea(PSE.JAVA_AWT.Dimension(20,0)))
         qrFrame.add(self.qrCodeButton)

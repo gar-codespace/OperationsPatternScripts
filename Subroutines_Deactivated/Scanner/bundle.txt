@@ -1,9 +1,10 @@
 Scanner
 Scanner Subroutine
-Generate QR codes
-Generate
+Apply
 Apply scanner data
 Division:
+Generate
+Initialize
 Location:
 Scanner:
-Apply
+Sequence Rolling Stock

@@ -132,6 +132,10 @@ class StartUp:
         Run these tasks when this subroutine is started.
         No GUI items as the GUI is not built yet.
         """
+
+        OSU = PSE.JMRI.jmrit.operations.setup
+        OSU.Setup.setRfidEnabled(True)
+        OSU.Setup.setValueEnabled(True)
         
         return
         

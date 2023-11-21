@@ -48,7 +48,8 @@ class PluginGUI:
         The subroutines are added to self.subroutinePanel.
         """
 
-        for subroutine in PSE.getSubroutineDirs():
+        # for subroutine in PSE.getSubroutineDirs():
+        for subroutine in self.configFile['Main Script']['SL']:
 
             subroutineName = PSE.SUBROUTINE_DIR + '.' + subroutine + '.Controller'
             package = PSE.IM(subroutineName)
@@ -82,21 +83,23 @@ class PluginGUI:
         toolsMenu.add(PSE.JMRI.jmrit.operations.setup.PrintOptionAction())
         toolsMenu.add(PSE.JMRI.jmrit.operations.setup.BuildReportOptionAction())
 
-        for self.subroutineName in PSE.getSubroutineDirs():
+        # for self.subroutineName in PSE.getSubroutineDirs():
+        for self.subroutineName in self.configFile['Main Script']['SL']:
             menuItem = self._getSubroutineDropDownItem()
             self.psPluginSubroutineMenuItems.append(menuItem)
             # menuItem.addActionListener(Listeners.dropDownMneuItem)
             toolsMenu.add(menuItem)
 
-        menuText = PSE.getBundleItem('Extended reports on')
-        if PSE.readConfigFile()['Main Script']['CP']['ER']:
-            menuText = PSE.getBundleItem('Extended reports off')
-            
-        self.itemText = menuText
-        self.itemName =  'erItemSelected'
-        ptMenuItem = self._makeMenuItem()
-        self.psPluginMenuItems.append(ptMenuItem)
-        toolsMenu.add(ptMenuItem)
+        if len(self.configFile['Main Script']['SL']) != 0: # Catches all subroutines deactivated
+            menuText = PSE.getBundleItem('Extended reports on')
+            if PSE.readConfigFile()['Main Script']['CP']['ER']:
+                menuText = PSE.getBundleItem('Extended reports off')
+                
+            self.itemText = menuText
+            self.itemName =  'erItemSelected'
+            ptMenuItem = self._makeMenuItem()
+            self.psPluginMenuItems.append(ptMenuItem)
+            toolsMenu.add(ptMenuItem)
 
         self.itemText = PSE.getBundleItem('Translate Plugin')
         self.itemName =  'ptItemSelected'
