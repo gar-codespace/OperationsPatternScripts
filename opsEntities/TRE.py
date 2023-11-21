@@ -168,17 +168,19 @@ def pickupLoco(loco, manifest, twoCol):
     messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getPickupEngineMessageFormat()
 
     for messageItem in messageFormat:
+        if 'Tab' in messageItem:
+            continue
+        if ' ' in messageItem:
+            continue
         lineItem = carItems[PSE.ROSETTA[messageItem]]
         lineWidth = PSE.REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
 
-        if 'Tab' in messageItem:
-            continue
     # Special case handling for loco number
         if PSE.ROSETTA[messageItem] == 'Number':
             line += lineItem.rjust(lineWidth) + ' '
             continue
 
-        rowItem = lineItem.ljust(lineWidth)[:lineWidth]
+        rowItem = str(lineItem).ljust(lineWidth)[:lineWidth]
         line += rowItem
 
     return line
@@ -195,17 +197,19 @@ def setoutLoco(loco, manifest, twoCol):
     messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
 
     for messageItem in messageFormat:
+        if 'Tab' in messageItem:
+            continue
+        if messageItem == ' ':
+            continue
         lineItem = carItems[PSE.ROSETTA[messageItem]]
         lineWidth = PSE.REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
 
-        if 'Tab' in messageItem:
-            continue
     # Special case handling for loco number
         if PSE.ROSETTA[messageItem] == 'Number':
             line += lineItem.rjust(lineWidth) + ' '
             continue
 
-        rowItem = lineItem.ljust(lineWidth)[:lineWidth]
+        rowItem = str(lineItem).ljust(lineWidth)[:lineWidth]
         line += rowItem
 
     return line
@@ -226,11 +230,13 @@ def pickupCar(car, manifest, twoCol):
         messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getPickupSwitchListMessageFormat()
 
     for messageItem in messageFormat:
+        if 'Tab' in messageItem:
+            continue
+        if messageItem == ' ':
+            continue
         lineItem = carItems[PSE.ROSETTA[messageItem]]
         lineWidth = PSE.REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
 
-        if 'Tab' in messageItem:
-            continue
     # Special case handling for car load type
         if PSE.ROSETTA[messageItem] == 'Load_Type':
             line += getShortLoadType(car).ljust(1) + ' '
@@ -247,7 +253,7 @@ def pickupCar(car, manifest, twoCol):
             lineItem = ' '
             lineWidth = 2
 
-        rowItem = lineItem.ljust(lineWidth)[:lineWidth]
+        rowItem = str(lineItem).ljust(lineWidth)[:lineWidth]
         line += rowItem
 
     return line
@@ -267,11 +273,13 @@ def dropCar(car, manifest, twoCol):
         messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getDropSwitchListMessageFormat()
 
     for messageItem in messageFormat:
+        if 'Tab' in messageItem:
+            continue
+        if messageItem == ' ':
+            continue
         lineItem = carItems[PSE.ROSETTA[messageItem]]
         lineWidth = PSE.REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
 
-        if 'Tab' in messageItem:
-            continue
     # Special case handling for car load type
         if PSE.ROSETTA[messageItem] == 'Load_Type':
             line += getShortLoadType(car).ljust(1) + ' '
@@ -288,7 +296,7 @@ def dropCar(car, manifest, twoCol):
             lineItem = ' '
             lineWidth = 2
 
-        rowItem = lineItem.ljust(lineWidth)[:lineWidth]
+        rowItem = str(lineItem).ljust(lineWidth)[:lineWidth]
         line += rowItem
 
     return line
@@ -308,11 +316,13 @@ def localMoveCar(car, manifest, twoCol):
         messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
 
     for messageItem in messageFormat:
+        if 'Tab' in messageItem:
+            continue
+        if messageItem == ' ':
+            continue
         lineItem = carItems[PSE.ROSETTA[messageItem]]
         lineWidth = PSE.REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
 
-        if 'Tab' in messageItem:
-            continue
     # Special case handling for car load type
         if PSE.ROSETTA[messageItem] == 'Load_Type':
             line += getShortLoadType(car).ljust(1) + ' '
@@ -329,7 +339,7 @@ def localMoveCar(car, manifest, twoCol):
             lineItem = ' '
             lineWidth = 2
 
-        rowItem = lineItem.ljust(lineWidth)[:lineWidth]
+        rowItem = str(lineItem).ljust(lineWidth)[:lineWidth]
         line += rowItem
 
     return line

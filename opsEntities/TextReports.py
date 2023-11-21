@@ -24,6 +24,8 @@ def printExtendedTrainList(trainName):
     Break this into two functions.
     """
 
+    _psLog.debug('printExtendedTrainList')
+
     trainListName = u'train list ({}).txt'.format(trainName)
     trainListPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', trainListName)
 
@@ -33,12 +35,16 @@ def printExtendedTrainList(trainName):
     PSE.genericWriteReport(trainListPath, trainListText)
     PSE.genericDisplayReport(trainListPath)
 
+    print('{} rev:{}'.format(SCRIPT_NAME, 'printExtendedTrainList'))
+
     return
 
 def printExtendedWorkOrder(trainName):
     """
     Break this into two functions.
     """
+
+    _psLog.debug('printExtendedWorkOrder')
     
     workOrderName = u'work order ({}).txt'.format(trainName)
     workOrderPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'switchLists', workOrderName)
@@ -47,6 +53,8 @@ def printExtendedWorkOrder(trainName):
     workOrderText = opsJmriWorkOrder(jmriManifest)
     PSE.genericWriteReport(workOrderPath, workOrderText)
     PSE.genericDisplayReport(workOrderPath)
+
+    print('{} rev:{}'.format(SCRIPT_NAME, 'printExtendedWorkOrder'))
 
     return
 

@@ -108,6 +108,25 @@ def resequenceCarsAtLocation(locationName):
 
     return
 
+def validateSequenceEntries():
+
+    _psLog.debug('validateSequenceEntries')
+
+    for car in PSE.CM.getList():
+        if not car.getValue():
+            car.setValue('6000')
+
+    for loco in PSE.EM.getList():
+        if not loco.getValue():
+            loco.setValue('6000')
+
+    PSE.CMX.save()
+    PSE.EMX.save()
+
+    _psLog.info('Sequence entries validated')
+
+    return
+
 def applyRfidData():
     """
     Not the real function that goes here.

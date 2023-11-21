@@ -133,6 +133,8 @@ class StartUp:
         No GUI items as the GUI is not built yet.
         """
 
+        Model.validateSequenceEntries()
+
         OSU = PSE.JMRI.jmrit.operations.setup
         OSU.Setup.setRfidEnabled(True)
         OSU.Setup.setValueEnabled(True)
