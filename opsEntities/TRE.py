@@ -154,8 +154,6 @@ def getShortLoadType(car):
 
     return lt
 
-
-
 def pickupLoco(loco, manifest, twoCol):
     """
     Based on the JMRI version.
@@ -168,20 +166,17 @@ def pickupLoco(loco, manifest, twoCol):
     messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getPickupEngineMessageFormat()
 
     for messageItem in messageFormat:
-        if 'Tab' in messageItem:
+        if 'Tab' in messageItem or messageItem == ' ':
             continue
-        if ' ' in messageItem:
-            continue
+
         lineItem = carItems[PSE.ROSETTA[messageItem]]
-        lineWidth = PSE.REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
+        lineWidth = PSE.REPORT_ITEM_WIDTH_MATRIX[messageItem]
 
     # Special case handling for loco number
         if PSE.ROSETTA[messageItem] == 'Number':
-            line += lineItem.rjust(lineWidth) + ' '
-            continue
+            lineItem = lineItem.rjust(lineWidth)
 
-        rowItem = str(lineItem).ljust(lineWidth)[:lineWidth]
-        line += rowItem
+        line += '{} '.format(lineItem.ljust(lineWidth)[:lineWidth])
 
     return line
 
@@ -197,23 +192,19 @@ def setoutLoco(loco, manifest, twoCol):
     messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getDropEngineMessageFormat()
 
     for messageItem in messageFormat:
-        if 'Tab' in messageItem:
+        if 'Tab' in messageItem or messageItem == ' ':
             continue
-        if messageItem == ' ':
-            continue
+
         lineItem = carItems[PSE.ROSETTA[messageItem]]
-        lineWidth = PSE.REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
+        lineWidth = PSE.REPORT_ITEM_WIDTH_MATRIX[messageItem]
 
     # Special case handling for loco number
         if PSE.ROSETTA[messageItem] == 'Number':
-            line += lineItem.rjust(lineWidth) + ' '
-            continue
+            lineItem = lineItem.rjust(lineWidth)
 
-        rowItem = str(lineItem).ljust(lineWidth)[:lineWidth]
-        line += rowItem
+        line += '{} '.format(lineItem.ljust(lineWidth)[:lineWidth])
 
     return line
-
 
 def pickupCar(car, manifest, twoCol):
     """
@@ -230,31 +221,29 @@ def pickupCar(car, manifest, twoCol):
         messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getPickupSwitchListMessageFormat()
 
     for messageItem in messageFormat:
-        if 'Tab' in messageItem:
+
+        if 'Tab' in messageItem or messageItem == ' ':
             continue
-        if messageItem == ' ':
-            continue
+
         lineItem = carItems[PSE.ROSETTA[messageItem]]
-        lineWidth = PSE.REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
+        lineWidth = PSE.REPORT_ITEM_WIDTH_MATRIX[messageItem]
 
     # Special case handling for car load type
         if PSE.ROSETTA[messageItem] == 'Load_Type':
-            line += getShortLoadType(car).ljust(1) + ' '
-            continue
+            lineItem = getShortLoadType(car).ljust(1)
+            lineWidth = 1
     # Special case handling for car number
         if PSE.ROSETTA[messageItem] == 'Number':
-            line += lineItem.rjust(lineWidth) + ' '
-            continue
+            lineItem = lineItem.rjust(lineWidth)
     # Special case handling for the hazardous flag
         if PSE.ROSETTA[messageItem] == 'Hazardous' and car['hazardous']:
             lineItem = messageItem[0].upper()
-            lineWidth = 2
+            lineWidth = 1
         elif PSE.ROSETTA[messageItem] == 'Hazardous' and not car['hazardous']:
             lineItem = ' '
-            lineWidth = 2
+            lineWidth = 1
 
-        rowItem = str(lineItem).ljust(lineWidth)[:lineWidth]
-        line += rowItem
+        line += '{} '.format(lineItem.ljust(lineWidth)[:lineWidth])
 
     return line
 
@@ -273,31 +262,29 @@ def dropCar(car, manifest, twoCol):
         messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getDropSwitchListMessageFormat()
 
     for messageItem in messageFormat:
-        if 'Tab' in messageItem:
+
+        if 'Tab' in messageItem or messageItem == ' ':
             continue
-        if messageItem == ' ':
-            continue
+
         lineItem = carItems[PSE.ROSETTA[messageItem]]
-        lineWidth = PSE.REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
+        lineWidth = PSE.REPORT_ITEM_WIDTH_MATRIX[messageItem]
 
     # Special case handling for car load type
         if PSE.ROSETTA[messageItem] == 'Load_Type':
-            line += getShortLoadType(car).ljust(1) + ' '
-            continue
+            lineItem = getShortLoadType(car).ljust(1)
+            lineWidth = 1
     # Special case handling for car number
         if PSE.ROSETTA[messageItem] == 'Number':
-            line += lineItem.rjust(lineWidth) + ' '
-            continue
+            lineItem = lineItem.rjust(lineWidth)
     # Special case handling for the hazardous flag
         if PSE.ROSETTA[messageItem] == 'Hazardous' and car['hazardous']:
             lineItem = messageItem[0].upper()
-            lineWidth = 2
+            lineWidth = 1
         elif PSE.ROSETTA[messageItem] == 'Hazardous' and not car['hazardous']:
             lineItem = ' '
-            lineWidth = 2
+            lineWidth = 1
 
-        rowItem = str(lineItem).ljust(lineWidth)[:lineWidth]
-        line += rowItem
+        line += '{} '.format(lineItem.ljust(lineWidth)[:lineWidth])
 
     return line
 
@@ -316,32 +303,90 @@ def localMoveCar(car, manifest, twoCol):
         messageFormat = PSE.JMRI.jmrit.operations.setup.Setup.getLocalSwitchListMessageFormat()
 
     for messageItem in messageFormat:
-        if 'Tab' in messageItem:
+
+        if 'Tab' in messageItem or messageItem == ' ':
             continue
-        if messageItem == ' ':
-            continue
+
         lineItem = carItems[PSE.ROSETTA[messageItem]]
-        lineWidth = PSE.REPORT_ITEM_WIDTH_MATRIX[messageItem] + 1
+        lineWidth = PSE.REPORT_ITEM_WIDTH_MATRIX[messageItem]
 
     # Special case handling for car load type
         if PSE.ROSETTA[messageItem] == 'Load_Type':
-            line += getShortLoadType(car).ljust(1) + ' '
-            continue
+            lineItem = getShortLoadType(car).ljust(1)
+            lineWidth = 1
     # Special case handling for car number
         if PSE.ROSETTA[messageItem] == 'Number':
-            line += lineItem.rjust(lineWidth) + ' '
-            continue
+            lineItem = lineItem.rjust(lineWidth)
     # Special case handling for the hazardous flag
         if PSE.ROSETTA[messageItem] == 'Hazardous' and car['hazardous']:
             lineItem = messageItem[0].upper()
-            lineWidth = 2
+            lineWidth = 1
         elif PSE.ROSETTA[messageItem] == 'Hazardous' and not car['hazardous']:
             lineItem = ' '
-            lineWidth = 2
+            lineWidth = 1
 
-        rowItem = str(lineItem).ljust(lineWidth)[:lineWidth]
-        line += rowItem
+        line += '{} '.format(lineItem.ljust(lineWidth)[:lineWidth])
 
     return line
 
 
+def getOpsTrainList(jmriManifest):
+    """
+    Makes an OPS train list from an extended JMRI manifest.
+    Formatted to JMRI manifest standard.
+    """
+
+    trainList = jmriManifest
+
+    locosOnTrain = [] # A list of engine objects that carries over from location to location
+    carsOnTrain = [] # A list of car objects that carries over from location to location
+
+    for location in trainList['locations']:
+    # Engines
+        combinedList = [] # A list of car objects
+        pickUp = [] # A list of car objects
+        setOut = [] # A list of strings (car name)
+        for loco in location['engines']['add']:
+            pickUp.append(loco)
+        for loco in location['engines']['remove']:
+            setOut.append(loco['name'])
+
+        combinedList = locosOnTrain + pickUp
+        locosOnTrain = []
+
+        for loco in combinedList:            
+            if loco['name'] not in setOut:
+                locosOnTrain.append(loco)
+
+        location['engines']['add'] = locosOnTrain
+    # Cars
+        combinedList = [] # A list of car objects
+        pickUp = [] # A list of car objects
+        setOut = [] # A list of strings (car name)
+        for car in location['cars']['add']:
+            if car['isLocal']:
+                continue
+            newSeq = str(int(car['sequence']) - 1000) # Head end pick up
+            car.update({'sequence':newSeq})
+            pickUp.append(car)
+        for car in location['cars']['remove']:
+            if car['isLocal']:
+                continue
+            setOut.append(car['name'])
+
+        combinedList = carsOnTrain + pickUp
+        carsOnTrain = []
+
+        for car in combinedList:            
+            if car['name'] not in setOut:
+                carsOnTrain.append(car)
+
+        carsOnTrain.sort(key=lambda row: row['sequence'])
+        newSeq = 6001
+        for car in carsOnTrain:
+            car.update({'sequence':str(newSeq)})
+            newSeq += 1
+
+        location['cars']['add'] = carsOnTrain
+
+    return trainList

@@ -42,7 +42,6 @@ Single
 + Switch List
 There are no tracks for this selection
 There are no yard tracks for this location
-Track Inquiry
 Track List:
 Track Totals for Cars:
 Track:

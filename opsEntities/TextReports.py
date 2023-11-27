@@ -5,10 +5,10 @@
 Unified report formatting for all OPS generated reports.
 The idea is to have all the JMRI and OPS text reports share a similar look.
 All the reports are built from a json file, formatted like JMRI manifest.json.
-    -Creates an OPS version of a JMRI train manifest, formatted on the JMRI model.
-    -Creates an OPS version of the JMRI train switch list, formatted on the JMRI model.(Not yet)
-    -Creates the OPS Pattern Report, formatted on the JMRI model.
-    -Creates the OPS Switch List, formatted on the JMRI model.
+    -Creates an OPS Train List, similar to a JMRI Manifest.
+    -Creates an OPS Work Order, similar to the JMRI switch lists generated from a JMRI manifest.
+    -Creates an OPS Pattern Report, formatted on the JMRI model.
+    -Creates an OPS Switch List, formatted on the JMRI model.
 """
 
 from opsEntities import TRE
@@ -20,9 +20,6 @@ SCRIPT_REV = 20231001
 _psLog = PSE.LOGGING.getLogger('OPS.OE.TextReports')
 
 def printExtendedTrainList(trainName):
-    """
-    Break this into two functions.
-    """
 
     _psLog.debug('printExtendedTrainList')
 
@@ -30,7 +27,7 @@ def printExtendedTrainList(trainName):
     trainListPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', trainListName)
 
     jmriManifest = PSE.getTrainManifest(trainName)
-    trainList = PSE.getOpsTrainList(jmriManifest)
+    trainList = TRE.getOpsTrainList(jmriManifest)
     trainListText = opsTrainList(trainList)
     PSE.genericWriteReport(trainListPath, trainListText)
     PSE.genericDisplayReport(trainListPath)
@@ -40,9 +37,6 @@ def printExtendedTrainList(trainName):
     return
 
 def printExtendedWorkOrder(trainName):
-    """
-    Break this into two functions.
-    """
 
     _psLog.debug('printExtendedWorkOrder')
     

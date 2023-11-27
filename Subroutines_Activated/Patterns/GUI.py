@@ -47,7 +47,7 @@ class subroutineGui:
         self.yardTracksOnly.setName('ytoCheckBox')
 
         self.ypButton = PSE.JAVX_SWING.JButton()
-        self.ypButton.setText(PSE.getBundleItem('Track Inquiry'))
+        self.ypButton.setText(PSE.getBundleItem('Pattern Report'))
         self.ypButton.setName('ypButton')
 
         self.scButton = PSE.JAVX_SWING.JButton()

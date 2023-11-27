@@ -3,16 +3,14 @@ Todo:
   Maybe put Dest and FD standins into TextReports.py?
   Change Patterns back to moving a car on a train?
   Editing division name doesn't update Patterns
-  Break out printExtendedTrainList and printExtendedWorkOrder.
   Retest StandAloneExport
   Rebuild CSV pattern report and switch list
   Console window popup try to build train when using Scanner but cars have no sequence.
-  OPS is not setting the pickup and setout engine format.
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.
   PSE chunkPath.
-  PSE pickupCar, dropCar, localCar
+  TRE pickupCar, dropCar, localCar
   
 Comments:
   Schedule does not prevent setting a car to a track.
