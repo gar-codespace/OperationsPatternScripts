@@ -22,7 +22,8 @@ PSE.JMRI = jmri
 PSE.SYS = sys
 PSE.OS_PATH = OS_PATH
 
-from Subroutines_Activated.o2o import Listeners
+# from Subroutines_Activated.o2o import SubroutineListeners
+from opsEntities import PluginListeners
 from opsBundle import Bundle
 
 Bundle.BUNDLE_DIR = PSE.OS_PATH.join(PLUGIN_ROOT, 'opsBundle')
@@ -52,8 +53,8 @@ class StandAloneExport(jmri.jmrit.automat.AbstractAutomaton):
         self.psLog = PSE.LOGGING.getLogger('OPS.StandAloneExport')
         self.logger.initialLogMessage(self.psLog)
 
-        Listeners.addTrainsTableListener()
-        Listeners.addTrainsListener()
+        PluginListeners.addTrainsTableListener()
+        PluginListeners.addTrainListener()
 
         PSE.openSystemConsole()
         PSE.JMRI.jmrit.operations.trains.TrainsTableFrame()

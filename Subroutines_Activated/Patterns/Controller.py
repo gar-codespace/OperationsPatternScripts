@@ -148,7 +148,7 @@ class StartUp:
 
         Model.makeJsonTrackPattern(selectedTracks) # Write to a file
 
-        # Add CSV report maker
+        Model.patternReportAsCsv()
 
         PSE.TM.firePropertyChange('opsPatternReport', False, True)
 
