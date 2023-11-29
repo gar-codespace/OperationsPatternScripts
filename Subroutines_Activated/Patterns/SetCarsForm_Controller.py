@@ -44,6 +44,7 @@ def opsPostProcess(message=None):
     textSwitchList = TextReports.opsTextSwitchList()
     targetPath = Model.writePatternReport(textSwitchList, False)
     PSE.genericDisplayReport(targetPath)
+    SetCarsForm_Model.switchListAsCsv()
 
     return
 

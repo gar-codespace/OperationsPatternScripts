@@ -53,7 +53,7 @@ def printExtendedWorkOrder(trainName):
     return
 
 
-""" Text report functions """
+""" Text report generators """
 
 
 def opsTextPatternReport():
@@ -71,10 +71,7 @@ def opsTextPatternReport():
     report = PSE.loadJson(PSE.genericReadReport(reportPath))
 
     textPatternReport = ''
-# Header
-
-
-    
+# Header    
     textPatternReport += report['railroad'] + '\n'
     textPatternReport += '\n'
     textPatternReport += PSE.getBundleItem(u'Pattern Report for location ({})').format(report[u'userName']) + '\n'
@@ -378,3 +375,89 @@ def getDetailsForCar(carObject):
     carDetailDict['finalDestination']={'userName':carObject.getFinalDestinationName(), 'track':{'userName':carObject.getFinalDestinationTrackName()}}
 
     return carDetailDict
+
+def opsCsvGenericReport(trackPattern):
+    """
+    Makes both the Pattern Report and Switch List csv reports
+    The tab substitution for the railroad entry is added to keep the j Pluse extended data intact.
+    CSV writer does not support utf-8.
+    Called by:
+    Model.writepatternReportCsv
+    """
+
+    railroadName = trackPattern['railroad'].replace('\n', '\t')
+# Header
+    patternReportCsv  = 'Operator,Description,Parameters\n'
+    patternReportCsv += 'RN,Railroad Name,{}\n'.format(railroadName)
+    patternReportCsv += 'TD,Train Description,{}\n'.format(trackPattern['description'])
+    patternReportCsv += 'VT,Valid,{}\n'.format(trackPattern['date'])
+    patternReportCsv += 'PRNTR,Printer Name,\n'
+# A pattern report has one location
+    for location in trackPattern['locations']:
+        patternReportCsv += 'TN,Track Name,{}\n'.format(location['userName'])
+    # Engines
+        patternReportCsv += 'PE,Pick Up Engines\n'
+        patternReportCsv += 'operator,road,number,type,model,length,weight,consist,color,owner,location,track,destination,destination track,comment\n'
+        for loco in location['engines']['add']:
+            patternReportCsv += 'PE,{}\n'.format(_getEngineAttribs(loco))
+        patternReportCsv += 'SE,Set Out Engines\n'
+        patternReportCsv += 'operator,road,number,type,model,length,weight,consist,color,owner,location,track,destination,destination track,comment\n'
+        for loco in location['engines']['remove']:
+            patternReportCsv +=  'SE,{}\n'.format(_getEngineAttribs(loco))
+    # Cars
+        patternReportCsv += 'PC,Pick Up Cars\n'
+        patternReportCsv += 'operator,road,number,type,length,weight,load,load type,hazardous,color,kernel,kernel size,owner,location,track,destination,destination track,final destination,final destination track,comment,set out message,pick up message,return when empty\n'
+        for car in location['cars']['add']:
+            patternReportCsv += 'PC,{}\n'.format(_getCarAttribs(car))
+        patternReportCsv += 'SC,Set Out Cars\n'
+        patternReportCsv += 'operator,road,number,type,length,weight,load,load type,hazardous,color,kernel,kernel size,owner,location,track,destination,destination track,final destination,final destination track,comment,set out message,pick up message,return when empty\n'
+        for car in location['cars']['remove']:
+            patternReportCsv += 'SC,{}\n'.format(_getCarAttribs(car))
+
+    return patternReportCsv
+
+def _getEngineAttribs(loco):
+
+    engineAttribs  = '{},'.format(loco['road'])
+    engineAttribs += '{},'.format(loco['number'])
+    engineAttribs += '{},'.format(loco['carType'])
+    engineAttribs += '{},'.format(loco['model'])
+    engineAttribs += '{},'.format(loco['length'])
+    engineAttribs += '{},'.format(loco['weight'])
+    engineAttribs += '{},'.format(loco['consist'])
+    engineAttribs += '{},'.format(loco['color'])
+    engineAttribs += '{},'.format(loco['owner'])
+    engineAttribs += '{},'.format(loco['location']['userName'])
+    engineAttribs += '{},'.format(loco['location']['track']['userName'])
+    engineAttribs += '{},'.format(loco['destination']['userName'])
+    engineAttribs += '{},'.format(loco['destination']['track']['userName'])
+    engineAttribs += '{},'.format(loco['comment'])
+
+    return engineAttribs
+
+def _getCarAttribs(car):
+
+    carAttribs  = '{},'.format(car['road'])
+    carAttribs += '{},'.format(car['number'])
+    carAttribs += '{},'.format(car['carType'])
+    carAttribs += '{},'.format(car['length'])
+    carAttribs += '{},'.format(car['weight'])
+    carAttribs += '{},'.format(car['load'])
+    carAttribs += '{},'.format(car['loadType'])
+    carAttribs += '{},'.format(car['hazardous'])
+    carAttribs += '{},'.format(car['color'])
+    carAttribs += '{},'.format(car['kernel'])
+    carAttribs += '{},'.format(car['kernelSize'])
+    carAttribs += '{},'.format(car['owner'])
+    carAttribs += '{},'.format(car['location']['userName'])
+    carAttribs += '{},'.format(car['location']['track']['userName'])
+    carAttribs += '{},'.format(car['destination']['userName'])
+    carAttribs += '{},'.format(car['destination']['track']['userName'])
+    carAttribs += '{},'.format(car['finalDestination']['userName'])
+    carAttribs += '{},'.format(car['finalDestination']['track']['userName'])
+    carAttribs += '{},'.format(car['comment'])
+    carAttribs += '{},'.format(car['removeComment'])
+    carAttribs += '{},'.format(car['addComment'])
+    carAttribs += '{},'.format(car['returnWhenEmpty'])
+
+    return carAttribs

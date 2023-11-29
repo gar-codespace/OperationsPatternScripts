@@ -6,6 +6,7 @@ Todo:
   Retest StandAloneExport
   Rebuild CSV pattern report and switch list
   Console window popup try to build train when using Scanner but cars have no sequence.
+  Put all reportName = 'pattern report-OPS' and similar into config file settings.
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.

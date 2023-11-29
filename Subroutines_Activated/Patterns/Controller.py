@@ -74,6 +74,7 @@ class TrainsPropertyParser:
             textPatternReport = TextReports.opsTextPatternReport()
             targetPath = Model.writePatternReport(textPatternReport, True)
             PSE.genericDisplayReport(targetPath)
+            Model.patternReportAsCsv()
 
         if self.propertyName == 'opsSwitchList':
             SetCarsForm_Controller.opsPostProcess()
@@ -147,8 +148,6 @@ class StartUp:
         selectedTracks.sort()
 
         Model.makeJsonTrackPattern(selectedTracks) # Write to a file
-
-        Model.patternReportAsCsv()
 
         PSE.TM.firePropertyChange('opsPatternReport', False, True)
 

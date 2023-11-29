@@ -6,6 +6,7 @@ Methods for the Set Cars Form for Track X form
 """
 
 from opsEntities import PSE
+from opsEntities import TextReports
 from Subroutines_Activated.Patterns import ModelEntities
 
 SCRIPT_NAME = '{}.{}'.format(PSE.SCRIPT_DIR, __name__)
@@ -181,5 +182,29 @@ def scheduleUpdate(toTrack, rollingStock):
     rollingStock.setLoadName(schedule.getItemByType(carType).getShipLoadName())
     rollingStock.setDestination(schedule.getItemByType(carType).getDestination(), schedule.getItemByType(carType).getDestinationTrack(), True) # force set dest
     schedule.getItemByType(carType).setHits(schedule.getItemByType(carType).getHits() + 1)
+
+    return
+
+def switchListAsCsv():
+    """
+    switch list-OPS.json is written as a CSV file
+    """
+
+    _psLog.debug('switchListAsCsv')
+
+    if not PSE.JMRI.jmrit.operations.setup.Setup.isGenerateCsvManifestEnabled():
+        return
+#  Get json data
+    reportName = 'switch list-OPS'
+
+    fileName = '{}.json'.format(reportName)
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+    patternReport = PSE.loadJson(PSE.genericReadReport(targetPath))
+# Process json data into CSV
+    patternReportCsv = TextReports.opsCsvGenericReport(patternReport)
+# Write CSV data
+    fileName = '{}.csv'.format(reportName)
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'csvSwitchLists', fileName)
+    PSE.genericWriteReport(targetPath, patternReportCsv)
 
     return

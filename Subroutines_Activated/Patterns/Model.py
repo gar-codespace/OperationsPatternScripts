@@ -8,6 +8,7 @@ Patterns
 from copy import deepcopy
 
 from opsEntities import PSE
+from opsEntities import TextReports
 from Subroutines_Activated.Patterns import ModelEntities
 
 SCRIPT_NAME = '{}.{}'.format(PSE.SCRIPT_DIR, __name__)
@@ -303,19 +304,9 @@ def resetSwitchList():
 
     return targetPath
 
-def getReport(reportName):
-    
-    fileName = reportName + '.json'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
-    report = PSE.genericReadReport(targetPath)
-
-    return PSE.loadJson(report)
-
 def patternReportAsCsv():
     """
-    ops-pattern-report.json is written as a CSV file
-    Called by:
-    Controller.StartUp.trackPatternButton
+    pattern report-OPS.json is written as a CSV file
     """
 
     _psLog.debug('patternReportAsCsv')
@@ -329,93 +320,10 @@ def patternReportAsCsv():
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
     patternReport = PSE.loadJson(PSE.genericReadReport(targetPath))
 # Process json data into CSV
-    patternReportCsv = makePatternReportCsv(patternReport)
+    patternReportCsv = TextReports.opsCsvGenericReport(patternReport)
 # Write CSV data
     fileName = '{}.csv'.format(reportName)
     targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'csvManifests', fileName)
     PSE.genericWriteReport(targetPath, patternReportCsv)
 
     return
-
-def makePatternReportCsv(trackPattern):
-    """
-    The double quote for the railroadName entry is added to keep the j Pluse extended data intact.
-    CSV writer does not support utf-8.
-    Called by:
-    Model.writepatternReportCsv
-    """
-
-    patternReportCsv = 'Operator,Description,Parameters\n'
-    patternReportCsv += 'RT,Report Type,{}\n'.format(trackPattern['description'])
-    patternReportCsv += 'RD,Railroad Division,{}\n'.format(trackPattern['division'])
-    patternReportCsv += 'LN,Location Name,{}\n'.format(trackPattern['location'])
-    patternReportCsv += 'PRNTR,Printer Name,\n'
-    patternReportCsv += 'YPC,Yard Pattern Comment,{}\n'.format(trackPattern['trainComment'])
-    patternReportCsv += 'VT,Valid,{}\n'.format(trackPattern['date'])
-    patternReportCsv += 'SE,Set Engines\n'
-    patternReportCsv += 'setTo,Road,Number,Type,Model,Length,Weight,Consist,Owner,Track,Location,Destination,Comment\n'
-
-
-
-
-
-
-    # for track in trackPattern['tracks']:
-    #     try:
-    #         patternReportCsv += 'TN,Track name,' + unicode(track['trackName'], PSE.ENCODING) + '\n'
-    #     except:
-    #         print('Exception at: Patterns.View.makePatternReportCsv')
-            
-    #     for loco in track['locos']:
-    #         patternReportCsv +=  loco['setTo'] + ',' \
-    #                         + loco[PSE.SB.handleGetMessage('Road')] + ',' \
-    #                         + loco[PSE.SB.handleGetMessage('Number')] + ',' \
-    #                         + loco[PSE.SB.handleGetMessage('Type')] + ',' \
-    #                         + loco[PSE.SB.handleGetMessage('Model')] + ',' \
-    #                         + loco[PSE.SB.handleGetMessage('Length')] + ',' \
-    #                         + loco[PSE.SB.handleGetMessage('Division')] + ',' \
-    #                         + loco[PSE.SB.handleGetMessage('Weight')] + ',' \
-    #                         + loco[PSE.SB.handleGetMessage('Consist')] + ',' \
-    #                         + loco[PSE.SB.handleGetMessage('Color')] + ',' \
-    #                         + loco[PSE.SB.handleGetMessage('Owner')] + ',' \
-    #                         + loco[PSE.SB.handleGetMessage('Track')] + ',' \
-    #                         + loco[PSE.SB.handleGetMessage('Location')] + ',' \
-    #                         + loco[PSE.SB.handleGetMessage('Destination')] + ',' \
-    #                         + loco[PSE.SB.handleGetMessage('Comment')] + ',' \
-    #                         + '\n'
-    # patternReportCsv += 'SC,Set Cars\n'
-    # patternReportCsv += 'setTo,Road,Number,Type,Length,Weight,Load,Load_Type,Hazardous,Color,Kernel,Kernel_Size,Owner,Track,Location,Destination,dest&Track,Final_Dest,fd&Track,Comment,Drop_Comment,Pickup_Comment,RWE\n'
-    # for track in trackPattern['tracks']:
-    #     try:
-    #         patternReportCsv += 'TN,Track name,' + unicode(track['trackName'], PSE.ENCODING) + '\n'
-    #     except:
-    #         print('Exception at: Patterns.View.makePatternReportCsv')
-
-    #     for car in track['cars']:
-    #         patternReportCsv +=  car['setTo'] + ',' \
-    #                         + car[PSE.SB.handleGetMessage('Road')] + ',' \
-    #                         + car[PSE.SB.handleGetMessage('Number')] + ',' \
-    #                         + car[PSE.SB.handleGetMessage('Type')] + ',' \
-    #                         + car[PSE.SB.handleGetMessage('Length')] + ',' \
-    #                         + car[PSE.SB.handleGetMessage('Weight')] + ',' \
-    #                         + car[PSE.SB.handleGetMessage('Load')] + ',' \
-    #                         + car[PSE.SB.handleGetMessage('Load_Type')] + ',' \
-    #                         + str(car[PSE.SB.handleGetMessage('Hazardous')]) + ',' \
-    #                         + car[PSE.SB.handleGetMessage('Color')] + ',' \
-    #                         + car[PSE.SB.handleGetMessage('Kernel')] + ',' \
-    #                         + car[PSE.SB.handleGetMessage('Kernel_Size')] + ',' \
-    #                         + car[PSE.SB.handleGetMessage('Owner')] + ',' \
-    #                         + car[PSE.SB.handleGetMessage('Track')] + ',' \
-    #                         + car[PSE.SB.handleGetMessage('Division')] + ',' \
-    #                         + car[PSE.SB.handleGetMessage('Location')] + ',' \
-    #                         + car[PSE.SB.handleGetMessage('Destination')] + ',' \
-    #                         + car[PSE.SB.handleGetMessage('Dest&Track')] + ',' \
-    #                         + car[PSE.SB.handleGetMessage('Final_Dest')] + ',' \
-    #                         + car[PSE.SB.handleGetMessage('FD&Track')] + ',' \
-    #                         + car[PSE.SB.handleGetMessage('Comment')] + ',' \
-    #                         + car[PSE.SB.handleGetMessage('SetOut_Msg')] + ',' \
-    #                         + car[PSE.SB.handleGetMessage('PickUp_Msg')] + ',' \
-    #                         + car[PSE.SB.handleGetMessage('RWE')] \
-    #                         + '\n'
-
-    return patternReportCsv
