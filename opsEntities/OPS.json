@@ -1,6 +1,10 @@
 {
   "Main Script" : {
     "US" : {
+      "OPR" : "pattern report ({}).{}",
+      "OSL" : "switch list ({}).{}",
+      "OTL" : "train list ({}).{}",
+      "OWO" : "work order ({}).{}",
       "HCP" : " [ ] Hold",
       "AW": {
         " ": 1, 
@@ -108,7 +112,7 @@
       "PW" : 1000,
       "PX" : 0,
       "PY" : 0,
-      "RV" : 20231009,
+      "RV" : 20231010,
       "GP" : "https://github.com/gar-codespace/OperationsPatternScripts",
       "EC" : {
         "400" : "400 - Bad Request: Unable to translate the current language.",

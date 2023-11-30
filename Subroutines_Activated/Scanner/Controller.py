@@ -67,8 +67,8 @@ class TrainsPropertyParser:
             Model.decreaseSequenceNumber(self.oldValue) # self.oldValue is the car object
 
         if self.propertyName == 'opsSwitchList':
-            switchListName = 'switch list-OPS.json'
-            Model.addSequenceToManifest(switchListName)
+            reportName = PSE.readConfigFile()['Main Script']['US']['OSL'].format('OPS', 'json')
+            Model.addSequenceToManifest(reportName)
 
         if self.propertyName == 'TrainBuilt' and self.newValue:
             if PSE.readConfigFile()['Main Script']['CP']['ER']:
@@ -87,8 +87,8 @@ class TrainsPropertyParser:
             Model.resequenceCarsAtLocation(self.newValue) # self.newValue is the location name
 
         if self.propertyName == 'opsSwitchList':
-            switchListName = 'switch list-OPS.json'
-            Model.resequenceManifestJson(switchListName)
+            reportName = PSE.readConfigFile()['Main Script']['US']['OSL'].format('OPS', 'json')
+            Model.resequenceManifestJson(reportName)
 
         if self.propertyName == 'TrainBuilt' and self.newValue:
             if PSE.readConfigFile()['Main Script']['CP']['ER']:

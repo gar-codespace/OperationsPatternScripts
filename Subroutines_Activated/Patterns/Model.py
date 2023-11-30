@@ -153,8 +153,8 @@ def makeJsonTrackPattern(selectedTracks):
     jsonTrackPattern = makeReportHeader()
     jsonTrackPattern['locations'] = ModelEntities.getDetailsByTrack(selectedTracks, True)
 
-    fileName = 'pattern report-OPS.json'    
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+    reportName = PSE.readConfigFile()['Main Script']['US']['OPR'].format('OPS', 'json')
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
     PSE.genericWriteReport(targetPath, PSE.dumpJson(jsonTrackPattern))
 
     return jsonTrackPattern
@@ -279,11 +279,11 @@ def writePatternReport(textPatternReport, flag):
     """
 
     if flag: # Report is a track pattern
-        fileName = 'pattern report (OPS).txt'
-        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', fileName)
+        reportName = PSE.readConfigFile()['Main Script']['US']['OPR'].format('OPS', 'txt')
+        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', reportName)
     else: # Report is a switch list
-        fileName = 'switch list (OPS).txt'
-        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'switchLists', fileName)  
+        reportName = PSE.readConfigFile()['Main Script']['US']['OSL'].format('OPS', 'txt')
+        targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'switchLists', reportName)  
 
     PSE.genericWriteReport(targetPath, textPatternReport)
 
@@ -297,8 +297,8 @@ def resetSwitchList():
     workList = makeReportHeader()
     workList['locations'] = []
 
-    fileName = 'switch list-OPS.json'
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+    reportName = PSE.readConfigFile()['Main Script']['US']['OSL'].format('OPS', 'json')
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
     workList = PSE.dumpJson(workList)
     PSE.genericWriteReport(targetPath, workList)
 
@@ -314,16 +314,14 @@ def patternReportAsCsv():
     if not PSE.JMRI.jmrit.operations.setup.Setup.isGenerateCsvManifestEnabled():
         return
 #  Get json data
-    reportName = 'pattern report-OPS'
-
-    fileName = '{}.json'.format(reportName)
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+    reportName = PSE.readConfigFile()['Main Script']['US']['OPR'].format('OPS', 'json')
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
     patternReport = PSE.loadJson(PSE.genericReadReport(targetPath))
 # Process json data into CSV
     patternReportCsv = TextReports.opsCsvGenericReport(patternReport)
 # Write CSV data
-    fileName = '{}.csv'.format(reportName)
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'csvManifests', fileName)
+    reportName = PSE.readConfigFile()['Main Script']['US']['OPR'].format('OPS', 'csv')
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'csvManifests', reportName)
     PSE.genericWriteReport(targetPath, patternReportCsv)
 
     return

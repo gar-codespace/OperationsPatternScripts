@@ -20,8 +20,8 @@ def appendSwitchList(mergedForm):
     Replaces an existing track.
     """
 
-    fileName = 'switch list-OPS.json'    
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+    reportName = PSE.readConfigFile()['Main Script']['US']['OSL'].format('OPS', 'json')
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
     currentWorkList = PSE.jsonLoadS(PSE.genericReadReport(targetPath))
 
     trackLookUp = []
@@ -192,19 +192,20 @@ def switchListAsCsv():
 
     _psLog.debug('switchListAsCsv')
 
-    if not PSE.JMRI.jmrit.operations.setup.Setup.isGenerateCsvManifestEnabled():
+    if not PSE.JMRI.jmrit.operations.setup.Setup.isGenerateCsvSwitchListEnabled():
         return
 #  Get json data
-    reportName = 'switch list-OPS'
+    reportName = PSE.readConfigFile()['Main Script']['US']['OSL']
 
-    fileName = '{}.json'.format(reportName)
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', fileName)
+    reportName = PSE.readConfigFile()['Main Script']['US']['OSL'].format('OPS', 'json')
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
     patternReport = PSE.loadJson(PSE.genericReadReport(targetPath))
 # Process json data into CSV
     patternReportCsv = TextReports.opsCsvGenericReport(patternReport)
 # Write CSV data
-    fileName = '{}.csv'.format(reportName)
-    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'csvSwitchLists', fileName)
+    # fileName = '{}.csv'.format(reportName)
+    reportName = PSE.readConfigFile()['Main Script']['US']['OSL'].format('OPS', 'csv')
+    targetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'csvSwitchLists', reportName)
     PSE.genericWriteReport(targetPath, patternReportCsv)
 
     return

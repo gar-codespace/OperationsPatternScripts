@@ -23,12 +23,12 @@ def printExtendedTrainList(trainName):
 
     _psLog.debug('printExtendedTrainList')
 
-    trainListName = u'train list ({}).txt'.format(trainName)
-    trainListPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', trainListName)
-
     jmriManifest = PSE.getTrainManifest(trainName)
     trainList = TRE.getOpsTrainList(jmriManifest)
     trainListText = opsTrainList(trainList)
+
+    trainListName = PSE.readConfigFile()['Main Script']['US']['OTL'].format(trainName, 'txt')
+    trainListPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'manifests', trainListName)
     PSE.genericWriteReport(trainListPath, trainListText)
     PSE.genericDisplayReport(trainListPath)
 
@@ -39,12 +39,12 @@ def printExtendedTrainList(trainName):
 def printExtendedWorkOrder(trainName):
 
     _psLog.debug('printExtendedWorkOrder')
-    
-    workOrderName = u'work order ({}).txt'.format(trainName)
-    workOrderPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'switchLists', workOrderName)
 
     jmriManifest = PSE.getTrainManifest(trainName)
     workOrderText = opsJmriWorkOrder(jmriManifest)
+
+    workOrderName = PSE.readConfigFile()['Main Script']['US']['OWO'].format(trainName, 'txt')
+    workOrderPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'switchLists', workOrderName)
     PSE.genericWriteReport(workOrderPath, workOrderText)
     PSE.genericDisplayReport(workOrderPath)
 
@@ -66,7 +66,8 @@ def opsTextPatternReport():
     TRE.makeReportItemWidthMatrix()
     TRE.translateMessageFormat()
 
-    reportName = 'pattern report-OPS.json'
+    reportName = PSE.readConfigFile()['Main Script']['US']['OPR'].format('OPS', 'json')
+
     reportPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
     report = PSE.loadJson(PSE.genericReadReport(reportPath))
 
@@ -140,7 +141,7 @@ def opsTextSwitchList():
     hcp = configFile['Main Script']['US']['HCP']
     longestStringLength = PSE.findLongestStringLength((mcp, hcp))
 
-    reportName = 'switch list-OPS.json'
+    reportName = PSE.readConfigFile()['Main Script']['US']['OSL'].format('OPS', 'json')
     reportPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
     report = PSE.loadJson(PSE.genericReadReport(reportPath))
 
@@ -323,8 +324,6 @@ def opsTrainList(manifest):
         except: # Terminates
             trainListText += TMT.getStringTrainTerminates().format(manifest['locations'][-1][u'userName']) + '\n'
             return trainListText
-
-
 
     return trainListText
 

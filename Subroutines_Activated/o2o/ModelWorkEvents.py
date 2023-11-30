@@ -88,7 +88,8 @@ class opsSwitchListConversion:
 
     def __init__(self):
 
-        self.inputFileName = 'switch list-OPS.json'
+        # self.inputFileName = '{}.json'.format(PSE.readConfigFile()['Main Script']['US']['OSL'])
+        self.inputFileName = PSE.readConfigFile()['Main Script']['US']['OSL'].format('OPS', 'json')
         self.inputTargetPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', self.inputFileName)
 
         self.opsSwitchList = {}

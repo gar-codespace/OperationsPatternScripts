@@ -61,12 +61,12 @@ class TrainsPropertyParser:
     def process(self):
 
         if self.propertyName == 'opsSwitchList':
-            manifestName = 'switch list-OPS.json'
-            Model.addExtendedDataToManifest(manifestName)
+            reportName = PSE.readConfigFile()['Main Script']['US']['OSL'].format('OPS', 'json')
+            Model.addExtendedDataToManifest(reportName)
 
         if self.propertyName == 'opsPatternReport':
-            manifestName = 'pattern report-OPS.json'
-            Model.addExtendedDataToManifest(manifestName)
+            reportName = PSE.readConfigFile()['Main Script']['US']['OPR'].format('OPS', 'json')
+            Model.addExtendedDataToManifest(reportName)
 
         if self.propertyName == 'TrainBuilt' and self.newValue:
             if PSE.readConfigFile()['Main Script']['CP']['ER']:

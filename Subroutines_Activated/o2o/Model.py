@@ -55,8 +55,8 @@ def removeSubroutineListeners():
 
 def getOpsSwitchList():
 
-    trainName = 'switch list-OPS.json'
-    workListPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', trainName)
+    reportName = PSE.readConfigFile()['Main Script']['US']['OSL'].format('OPS', 'json')
+    workListPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
     workList = PSE.loadJson(PSE.genericReadReport(workListPath))
 
     return workList
