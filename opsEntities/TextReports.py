@@ -70,9 +70,6 @@ def opsTextPatternReport():
 
     reportPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
     report = PSE.loadJson(PSE.genericReadReport(reportPath))
-    # report = unicode(report, PSE.ENCODING)
-
-    # textPatternReport = unicode('', PSE.ENCODING)
 # Header    
     textPatternReport  = report['railroad'] + '\n'
     textPatternReport += '\n'

@@ -176,7 +176,7 @@ def pickupLoco(loco, manifest, twoCol):
         if PSE.ROSETTA[messageItem] == 'Number':
             lineItem = lineItem.rjust(lineWidth)
 
-        line += '{} '.format(lineItem.ljust(lineWidth)[:lineWidth])
+        line += unicode('{} ', PSE.ENCODING).format(lineItem.ljust(lineWidth)[:lineWidth])
 
     return line
 
@@ -202,7 +202,8 @@ def setoutLoco(loco, manifest, twoCol):
         if PSE.ROSETTA[messageItem] == 'Number':
             lineItem = lineItem.rjust(lineWidth)
 
-        line += '{} '.format(lineItem.ljust(lineWidth)[:lineWidth])
+        line += unicode('{} ', PSE.ENCODING).format(lineItem.ljust(lineWidth)[:lineWidth])
+
 
     return line
 
@@ -243,7 +244,7 @@ def pickupCar(car, manifest, twoCol):
             lineItem = ' '
             lineWidth = 1
 
-        line += '{} '.format(lineItem.ljust(lineWidth)[:lineWidth])
+        line += unicode('{} ', PSE.ENCODING).format(lineItem.ljust(lineWidth)[:lineWidth])
 
     return line
 
