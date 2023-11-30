@@ -100,8 +100,12 @@ def rsItemSelected(RESTART_PLUGIN_EVENT):
     """
 
     _psLog.debug(RESTART_PLUGIN_EVENT)
-
+    
     PSE.closeWindowByName('PatternScriptsFrame')
+    PSE.closeWindowByName('setCarsWindow')
+    PSE.closeWindowByName('popupFrame')
+    PSE.closeWindowByName('TitleOutputFrame')    
+
     PSE.deleteConfigFile()
     PSE.getPsButton().setEnabled(True)
 

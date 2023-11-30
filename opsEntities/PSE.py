@@ -325,7 +325,8 @@ def closeWindowByName(windowName):
 
     for frame in JMRI.util.JmriJFrame.getFrameList():
         if frame.getName() == windowName:
-            frame.setVisible(False)
+            JWE = JAVA_AWT.event.WindowEvent
+            frame.dispatchEvent(JWE(frame, JWE.WINDOW_CLOSING))
             frame.dispose()
 
     return
@@ -349,11 +350,13 @@ def closeWindowByLevel(level=None):
     if level == 3:
         keepTheseWindows = [console, 'PanelPro', patternScripts, routesTable, trainsTable, locationsTable]
     
+    JWE = JAVA_AWT.event.WindowEvent
     for frame in JMRI.util.JmriJFrame.getFrameList():
         if frame.getTitle() in keepTheseWindows:
             continue
         else:
-            frame.setVisible(False)
+            # frame.setVisible(False)
+            frame.dispatchEvent(JWE(frame, JWE.WINDOW_CLOSING))
             frame.dispose()
 
     return
