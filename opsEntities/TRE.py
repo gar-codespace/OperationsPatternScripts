@@ -284,7 +284,7 @@ def dropCar(car, manifest, twoCol):
             lineItem = ' '
             lineWidth = 1
 
-        line += '{} '.format(lineItem.ljust(lineWidth)[:lineWidth])
+        line += unicode('{} ', PSE.ENCODING).format(lineItem.ljust(lineWidth)[:lineWidth])
 
     return line
 
@@ -325,7 +325,7 @@ def localMoveCar(car, manifest, twoCol):
             lineItem = ' '
             lineWidth = 1
 
-        line += '{} '.format(lineItem.ljust(lineWidth)[:lineWidth])
+        line += unicode('{} ', PSE.ENCODING).format(lineItem.ljust(lineWidth)[:lineWidth])
 
     return line
 

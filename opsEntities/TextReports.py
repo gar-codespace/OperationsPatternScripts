@@ -70,10 +70,11 @@ def opsTextPatternReport():
 
     reportPath = PSE.OS_PATH.join(PSE.PROFILE_PATH, 'operations', 'jsonManifests', reportName)
     report = PSE.loadJson(PSE.genericReadReport(reportPath))
+    # report = unicode(report, PSE.ENCODING)
 
-    textPatternReport = ''
+    # textPatternReport = unicode('', PSE.ENCODING)
 # Header    
-    textPatternReport += report['railroad'] + '\n'
+    textPatternReport  = report['railroad'] + '\n'
     textPatternReport += '\n'
     textPatternReport += PSE.getBundleItem(u'Pattern Report for location ({})').format(report[u'userName']) + '\n'
     textPatternReport += PSE.convertIsoToValidTime(report[u'date']) + '\n'
@@ -387,76 +388,76 @@ def opsCsvGenericReport(trackPattern):
     railroadName = trackPattern['railroad'].replace('\n', '\t')
 # Header
     patternReportCsv  = 'Operator,Description,Parameters\n'
-    patternReportCsv += 'RN,Railroad Name,{}\n'.format(railroadName)
-    patternReportCsv += 'TD,Train Description,{}\n'.format(trackPattern['description'])
-    patternReportCsv += 'VT,Valid,{}\n'.format(trackPattern['date'])
+    patternReportCsv += unicode('RN,Railroad Name,{}\n', PSE.ENCODING).format(railroadName)
+    patternReportCsv += unicode('TD,Train Description,{}\n', PSE.ENCODING).format(trackPattern['description'])
+    patternReportCsv += unicode('VT,Valid,{}\n', PSE.ENCODING).format(trackPattern['date'])
     patternReportCsv += 'PRNTR,Printer Name,\n'
 # A pattern report has one location
     for location in trackPattern['locations']:
-        patternReportCsv += 'TN,Track Name,{}\n'.format(location['userName'])
+        patternReportCsv += unicode('TN,Track Name,{}\n', PSE.ENCODING).format(location['userName'])
     # Engines
         patternReportCsv += 'PE,Pick Up Engines\n'
         patternReportCsv += 'operator,road,number,type,model,length,weight,consist,color,owner,location,track,destination,destination track,comment\n'
         for loco in location['engines']['add']:
-            patternReportCsv += 'PE,{}\n'.format(_getEngineAttribs(loco))
+            patternReportCsv += unicode('PE,{}\n', PSE.ENCODING).format(_getEngineAttribs(loco))
         patternReportCsv += 'SE,Set Out Engines\n'
         patternReportCsv += 'operator,road,number,type,model,length,weight,consist,color,owner,location,track,destination,destination track,comment\n'
         for loco in location['engines']['remove']:
-            patternReportCsv +=  'SE,{}\n'.format(_getEngineAttribs(loco))
+            patternReportCsv +=  unicode('SE,{}\n', PSE.ENCODING).format(_getEngineAttribs(loco))
     # Cars
         patternReportCsv += 'PC,Pick Up Cars\n'
         patternReportCsv += 'operator,road,number,type,length,weight,load,load type,hazardous,color,kernel,kernel size,owner,location,track,destination,destination track,final destination,final destination track,comment,set out message,pick up message,return when empty\n'
         for car in location['cars']['add']:
-            patternReportCsv += 'PC,{}\n'.format(_getCarAttribs(car))
+            patternReportCsv += unicode('PC,{}\n', PSE.ENCODING).format(_getCarAttribs(car))
         patternReportCsv += 'SC,Set Out Cars\n'
         patternReportCsv += 'operator,road,number,type,length,weight,load,load type,hazardous,color,kernel,kernel size,owner,location,track,destination,destination track,final destination,final destination track,comment,set out message,pick up message,return when empty\n'
         for car in location['cars']['remove']:
-            patternReportCsv += 'SC,{}\n'.format(_getCarAttribs(car))
+            patternReportCsv += unicode('SC,{}\n', PSE.ENCODING).format(_getCarAttribs(car))
 
     return patternReportCsv
 
 def _getEngineAttribs(loco):
 
-    engineAttribs  = '{},'.format(loco['road'])
-    engineAttribs += '{},'.format(loco['number'])
-    engineAttribs += '{},'.format(loco['carType'])
-    engineAttribs += '{},'.format(loco['model'])
-    engineAttribs += '{},'.format(loco['length'])
-    engineAttribs += '{},'.format(loco['weight'])
-    engineAttribs += '{},'.format(loco['consist'])
-    engineAttribs += '{},'.format(loco['color'])
-    engineAttribs += '{},'.format(loco['owner'])
-    engineAttribs += '{},'.format(loco['location']['userName'])
-    engineAttribs += '{},'.format(loco['location']['track']['userName'])
-    engineAttribs += '{},'.format(loco['destination']['userName'])
-    engineAttribs += '{},'.format(loco['destination']['track']['userName'])
-    engineAttribs += '{},'.format(loco['comment'])
+    engineAttribs  = unicode('{},', PSE.ENCODING).format(loco['road'])
+    engineAttribs += unicode('{},', PSE.ENCODING).format(loco['number'])
+    engineAttribs += unicode('{},', PSE.ENCODING).format(loco['carType'])
+    engineAttribs += unicode('{},', PSE.ENCODING).format(loco['model'])
+    engineAttribs += unicode('{},', PSE.ENCODING).format(loco['length'])
+    engineAttribs += unicode('{},', PSE.ENCODING).format(loco['weight'])
+    engineAttribs += unicode('{},', PSE.ENCODING).format(loco['consist'])
+    engineAttribs += unicode('{},', PSE.ENCODING).format(loco['color'])
+    engineAttribs += unicode('{},', PSE.ENCODING).format(loco['owner'])
+    engineAttribs += unicode('{},', PSE.ENCODING).format(loco['location']['userName'])
+    engineAttribs += unicode('{},', PSE.ENCODING).format(loco['location']['track']['userName'])
+    engineAttribs += unicode('{},', PSE.ENCODING).format(loco['destination']['userName'])
+    engineAttribs += unicode('{},', PSE.ENCODING).format(loco['destination']['track']['userName'])
+    engineAttribs += unicode('{},', PSE.ENCODING).format(loco['comment'])
 
     return engineAttribs
 
 def _getCarAttribs(car):
 
-    carAttribs  = '{},'.format(car['road'])
-    carAttribs += '{},'.format(car['number'])
-    carAttribs += '{},'.format(car['carType'])
-    carAttribs += '{},'.format(car['length'])
-    carAttribs += '{},'.format(car['weight'])
-    carAttribs += '{},'.format(car['load'])
-    carAttribs += '{},'.format(car['loadType'])
-    carAttribs += '{},'.format(car['hazardous'])
-    carAttribs += '{},'.format(car['color'])
-    carAttribs += '{},'.format(car['kernel'])
-    carAttribs += '{},'.format(car['kernelSize'])
-    carAttribs += '{},'.format(car['owner'])
-    carAttribs += '{},'.format(car['location']['userName'])
-    carAttribs += '{},'.format(car['location']['track']['userName'])
-    carAttribs += '{},'.format(car['destination']['userName'])
-    carAttribs += '{},'.format(car['destination']['track']['userName'])
-    carAttribs += '{},'.format(car['finalDestination']['userName'])
-    carAttribs += '{},'.format(car['finalDestination']['track']['userName'])
-    carAttribs += '{},'.format(car['comment'])
-    carAttribs += '{},'.format(car['removeComment'])
-    carAttribs += '{},'.format(car['addComment'])
-    carAttribs += '{},'.format(car['returnWhenEmpty'])
+    carAttribs  = unicode('{},', PSE.ENCODING).format(car['road'])
+    carAttribs += unicode('{},', PSE.ENCODING).format(car['number'])
+    carAttribs += unicode('{},', PSE.ENCODING).format(car['carType'])
+    carAttribs += unicode('{},', PSE.ENCODING).format(car['length'])
+    carAttribs += unicode('{},', PSE.ENCODING).format(car['weight'])
+    carAttribs += unicode('{},', PSE.ENCODING).format(car['load'])
+    carAttribs += unicode('{},', PSE.ENCODING).format(car['loadType'])
+    carAttribs += unicode('{},', PSE.ENCODING).format(car['hazardous'])
+    carAttribs += unicode('{},', PSE.ENCODING).format(car['color'])
+    carAttribs += unicode('{},', PSE.ENCODING).format(car['kernel'])
+    carAttribs += unicode('{},', PSE.ENCODING).format(car['kernelSize'])
+    carAttribs += unicode('{},', PSE.ENCODING).format(car['owner'])
+    carAttribs += unicode('{},', PSE.ENCODING).format(car['location']['userName'])
+    carAttribs += unicode('{},', PSE.ENCODING).format(car['location']['track']['userName'])
+    carAttribs += unicode('{},', PSE.ENCODING).format(car['destination']['userName'])
+    carAttribs += unicode('{},', PSE.ENCODING).format(car['destination']['track']['userName'])
+    carAttribs += unicode('{},', PSE.ENCODING).format(car['finalDestination']['userName'])
+    carAttribs += unicode('{},', PSE.ENCODING).format(car['finalDestination']['track']['userName'])
+    carAttribs += unicode('{},', PSE.ENCODING).format(car['comment'])
+    carAttribs += unicode('{},', PSE.ENCODING).format(car['removeComment'])
+    carAttribs += unicode('{},', PSE.ENCODING).format(car['addComment'])
+    carAttribs += unicode('{},', PSE.ENCODING).format(car['returnWhenEmpty'])
 
     return carAttribs

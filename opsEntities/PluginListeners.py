@@ -58,6 +58,8 @@ class PatternScriptsFrameListener(PSE.JAVA_AWT.event.WindowListener):
         PSE.removePSPropertyListeners()
 
         PSE.closeWindowByName('setCarsWindow')
+        PSE.closeWindowByName('popupFrame')
+        PSE.closeWindowByName('TitleOutputFrame')
 
         PSE.getPsButton().setEnabled(True)
             
