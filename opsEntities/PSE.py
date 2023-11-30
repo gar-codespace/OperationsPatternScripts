@@ -603,7 +603,7 @@ def extendManifest(trainObject):
             car['finalDestination']={'userName':carObject.getFinalDestinationName(), 'track':{'userName':carObject.getFinalDestinationTrackName()}}
             car['loadType'] = carObject.getLoadType()
             car['division'] = LM.getLocationByName(car['location']['userName']).getDivisionName()
-            car['sequence'] = str(6000)
+            car['sequence'] = '6000'
 
         for car in location['cars']['remove']:
             carObject = CM.getByRoadAndNumber(car['road'], car['number'])
@@ -615,7 +615,7 @@ def extendManifest(trainObject):
             car['finalDestination']={'userName':carObject.getFinalDestinationName(), 'track':{'userName':carObject.getFinalDestinationTrackName()}}
             car['loadType'] = carObject.getLoadType()
             car['division'] = LM.getLocationByName(car['location']['userName']).getDivisionName()
-            car['sequence'] = str(6000)
+            car['sequence'] = '6000'
 
     genericWriteReport(reportPath, dumpJson(report))
 

@@ -4,7 +4,6 @@ Todo:
   Change Patterns back to moving a car on a train?
   Retest or scrap StandAloneExport?
   Editing division name doesn't update Patterns
-  Console window popup try to build train when using Scanner but cars have no sequence.
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.

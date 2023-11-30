@@ -298,11 +298,15 @@ def addSequenceToManifest(reportName):
     for location in manifest['locations']:
         for car in location['cars']['add']:
             carObj = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
-            car['sequence'] = carObj.getValue()
+            x = carObj.getValue()
+            if isinstance(int(x), int):
+                car['sequence'] = carObj.getValue()
 
         for car in location['cars']['remove']:
-            carObj = PSE.CM.getByRoadAndNumber(car['road'], car['number'])            
-            car['sequence'] = carObj.getValue()
+            carObj = PSE.CM.getByRoadAndNumber(car['road'], car['number'])
+            x = carObj.getValue()
+            if isinstance(int(x), int):
+                car['sequence'] = carObj.getValue()
     
     PSE.genericWriteReport(reportPath, PSE.dumpJson(manifest))
     
