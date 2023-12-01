@@ -176,7 +176,8 @@ def pickupLoco(loco, manifest, twoCol):
         if PSE.ROSETTA[messageItem] == 'Number':
             lineItem = lineItem.rjust(lineWidth)
 
-        line += unicode('{} ', PSE.ENCODING).format(lineItem.ljust(lineWidth)[:lineWidth])
+        # line += unicode('{} ', PSE.ENCODING).format(lineItem.ljust(lineWidth)[:lineWidth])
+        line += u'{} '.format(lineItem.ljust(lineWidth)[:lineWidth])
 
     return line
 
@@ -202,7 +203,8 @@ def setoutLoco(loco, manifest, twoCol):
         if PSE.ROSETTA[messageItem] == 'Number':
             lineItem = lineItem.rjust(lineWidth)
 
-        line += unicode('{} ', PSE.ENCODING).format(lineItem.ljust(lineWidth)[:lineWidth])
+        # line += unicode('{} ', PSE.ENCODING).format(lineItem.ljust(lineWidth)[:lineWidth])
+        line += u'{} '.format(lineItem.ljust(lineWidth)[:lineWidth])
 
 
     return line
@@ -244,7 +246,8 @@ def pickupCar(car, manifest, twoCol):
             lineItem = ' '
             lineWidth = 1
 
-        line += unicode('{} ', PSE.ENCODING).format(lineItem.ljust(lineWidth)[:lineWidth])
+        # line += unicode('{} ', PSE.ENCODING).format(lineItem.ljust(lineWidth)[:lineWidth])
+        line += u'{} '.format(lineItem.ljust(lineWidth)[:lineWidth])
 
     return line
 
@@ -285,7 +288,8 @@ def dropCar(car, manifest, twoCol):
             lineItem = ' '
             lineWidth = 1
 
-        line += unicode('{} ', PSE.ENCODING).format(lineItem.ljust(lineWidth)[:lineWidth])
+        # line += unicode('{} ', PSE.ENCODING).format(lineItem.ljust(lineWidth)[:lineWidth])
+        line += u'{} '.format(lineItem.ljust(lineWidth)[:lineWidth])
 
     return line
 
@@ -326,7 +330,8 @@ def localMoveCar(car, manifest, twoCol):
             lineItem = ' '
             lineWidth = 1
 
-        line += unicode('{} ', PSE.ENCODING).format(lineItem.ljust(lineWidth)[:lineWidth])
+        # line += unicode('{} ', PSE.ENCODING).format(lineItem.ljust(lineWidth)[:lineWidth])
+        line += u'{} '.format(lineItem.ljust(lineWidth)[:lineWidth])
 
     return line
 

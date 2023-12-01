@@ -581,7 +581,10 @@ def extendManifest(trainObject):
 
     i = 0
     for location in report['locations']:
-        location['userName'] = routeLocations[i].toString()
+        locationName = routeLocations[i].toString()
+        divisionName = LM.getLocationByName(locationName).getDivisionName()
+        location['userName'] = locationName
+        location['division'] = {'userName':divisionName}
         i += 1
 
     # Engines

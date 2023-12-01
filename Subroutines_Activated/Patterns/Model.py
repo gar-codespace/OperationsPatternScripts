@@ -170,12 +170,16 @@ def makeReportHeader():
     configFile = PSE.readConfigFile()
     OSU = PSE.JMRI.jmrit.operations.setup
     
+    locationName = configFile['Patterns']['PL']
+    divisionName = PSE.LM.getLocationByName(locationName).getDivisionName()
     reportHeader = {}
 
     reportHeader['date'] = PSE.isoTimeStamp()
     reportHeader['description'] = configFile['Patterns']['TD']
     reportHeader['railroad'] = OSU.Setup.getRailroadName()
     reportHeader['userName'] = configFile['Patterns']['PL']
+    reportHeader['location'] = {'userName':locationName}
+    reportHeader['division'] = {'userName':divisionName}
 
     return reportHeader
 

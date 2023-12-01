@@ -4,12 +4,12 @@ Empty
 Engines
 Extended reports off
 Extended reports on
-Final Destination Totals:
+Final Destination Totals
 GitHub Web Page
 Help
 Hide
 Hold
-List of inventory at {}
+List of inventory at
 Load
 No engines at
 No cars at
@@ -18,11 +18,11 @@ None
 Occupied
 Operations Folder
 Pattern Scripts
-Pattern Report for location ({})
+Pattern Report for location
 Restart From Default
 Script Output
 Show
-Switch List for location ({})
+Switch List for location
 Tools
 Total cars:{},  Loads:{},  Empties:{}
 Track length:{},  Equipment length:{},  Available:{}
