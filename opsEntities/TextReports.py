@@ -32,7 +32,7 @@ def printExtendedTrainList(trainName):
     PSE.genericWriteReport(trainListPath, trainListText)
     PSE.genericDisplayReport(trainListPath)
 
-    print('{} rev:{}'.format(SCRIPT_NAME, 'printExtendedTrainList'))
+    print('{}.{}'.format(SCRIPT_NAME, 'printExtendedTrainList'))
 
     return
 
@@ -41,6 +41,7 @@ def printExtendedWorkOrder(trainName):
     _psLog.debug('printExtendedWorkOrder')
 
     jmriManifest = PSE.getTrainManifest(trainName)
+    jmriManifest = TRE.sortWorkOrder(jmriManifest)
     workOrderText = opsJmriWorkOrder(jmriManifest)
 
     workOrderName = PSE.readConfigFile()['Main Script']['US']['OWO'].format(trainName, 'txt')
@@ -48,7 +49,7 @@ def printExtendedWorkOrder(trainName):
     PSE.genericWriteReport(workOrderPath, workOrderText)
     PSE.genericDisplayReport(workOrderPath)
 
-    print('{} rev:{}'.format(SCRIPT_NAME, 'printExtendedWorkOrder'))
+    print('{}.{}'.format(SCRIPT_NAME, 'printExtendedWorkOrder'))
 
     return
 
@@ -112,7 +113,6 @@ def opsTextPatternReport():
 
         textPatternReport += '\n'
 
-    # textPatternReport += PSE.getBundleItem(u'Final Destination Totals:') + '\n'
     textPatternReport += u'{}:\n'.format(PSE.getBundleItem(u'Final Destination Totals'))
 
     for track, count in sorted(PSE.occuranceTally(fdTally).items()):
@@ -134,7 +134,6 @@ def opsTextSwitchList():
 
     configFile = PSE.readConfigFile()
 
-    # location = configFile['Patterns'][u'PL']
     mcp = unicode(PSE.JMRI.jmrit.operations.setup.Setup.getLocalPrefix(), PSE.ENCODING)
     hcp = configFile['Main Script']['US']['HCP']
     longestStringLength = PSE.findLongestStringLength((mcp, hcp))
@@ -148,7 +147,6 @@ def opsTextSwitchList():
 # Header
     textSwitchList += report['railroad'] + '\n'
     textSwitchList += '\n'
-    # textSwitchList += PSE.getBundleItem(u'Switch List for location ({})').format(location) + '\n'
     textSwitchList += u'{}: {} {}\n'.format(PSE.getBundleItem('Switch List for location'), report['location']['userName'], report['division']['userName'])
     textSwitchList += u'{}\n'.format(PSE.convertIsoToValidTime(report[u'date']))
     textSwitchList += '\n'
@@ -314,12 +312,7 @@ def opsTrainList(manifest):
 
         try: # Location summary
             td = PSE.JMRI.jmrit.operations.setup.Setup.getDirectionString(location[u'trainDirection'])
-            # trainListText += unicode(location['userName'], PSE.ENCODING) + '\n'
-            # trainListText += PSE.getBundleItem(u'Pattern Report for location ({})').format(location[u'userName']) + '\n'
-            # trainListText += unicode(location['userName'], PSE.ENCODING) + '\n'
             trainListText += TMT.getStringTrainDepartsCars().format(location['userName'], td, str(location['cars']['total']), str(location['length']['length']), location['length']['unit'], str(location['weight'])) + '\n\n'
-            # trainListText += u'{}\n\n'.format(TMT.getStringTrainDepartsCars().format(location[u'userName'], td, str(location['cars']['total']), str(location['length']['length']), location['length']['unit'], str(location['weight'])))
-            # u'Train departs {} {} with {} cars, {} {}, {} tons'.format(location[u'userName'], td, str(location['cars']['total']), str(location['length']['length']), location['length']['unit'], str(location['weight']))
         except: # Terminates
             trainListText += TMT.getStringTrainTerminates().format(manifest['locations'][-1][u'userName']) + '\n'
             return trainListText

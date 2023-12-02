@@ -143,10 +143,10 @@ def getShortLoadType(car):
         lt = PSE.getBundleItem(u'Empty').upper()[0]
     if carObject.getLoadName() == 'L':
         lt = PSE.getBundleItem(u'Load').upper()[0]
-    if carObject.getLoadType() == 'empty' or carObject.getLoadType() == 'E':
-        lt = PSE.getBundleItem(u'Empty').upper()[0]
 
-    if carObject.getLoadType() == 'load' or carObject.getLoadType() == 'L':
+    if carObject.getLoadType().lower() == 'empty' or carObject.getLoadType() == 'E':
+        lt = PSE.getBundleItem(u'Empty').upper()[0]
+    if carObject.getLoadType().lower() == 'load' or carObject.getLoadType() == 'L':
         lt = PSE.getBundleItem(u'Load').upper()[0]
 
     if carObject.isCaboose() or carObject.isPassenger():
@@ -176,7 +176,6 @@ def pickupLoco(loco, manifest, twoCol):
         if PSE.ROSETTA[messageItem] == 'Number':
             lineItem = lineItem.rjust(lineWidth)
 
-        # line += unicode('{} ', PSE.ENCODING).format(lineItem.ljust(lineWidth)[:lineWidth])
         line += u'{} '.format(lineItem.ljust(lineWidth)[:lineWidth])
 
     return line
@@ -203,9 +202,7 @@ def setoutLoco(loco, manifest, twoCol):
         if PSE.ROSETTA[messageItem] == 'Number':
             lineItem = lineItem.rjust(lineWidth)
 
-        # line += unicode('{} ', PSE.ENCODING).format(lineItem.ljust(lineWidth)[:lineWidth])
         line += u'{} '.format(lineItem.ljust(lineWidth)[:lineWidth])
-
 
     return line
 
@@ -246,7 +243,6 @@ def pickupCar(car, manifest, twoCol):
             lineItem = ' '
             lineWidth = 1
 
-        # line += unicode('{} ', PSE.ENCODING).format(lineItem.ljust(lineWidth)[:lineWidth])
         line += u'{} '.format(lineItem.ljust(lineWidth)[:lineWidth])
 
     return line
@@ -288,7 +284,6 @@ def dropCar(car, manifest, twoCol):
             lineItem = ' '
             lineWidth = 1
 
-        # line += unicode('{} ', PSE.ENCODING).format(lineItem.ljust(lineWidth)[:lineWidth])
         line += u'{} '.format(lineItem.ljust(lineWidth)[:lineWidth])
 
     return line
@@ -330,11 +325,22 @@ def localMoveCar(car, manifest, twoCol):
             lineItem = ' '
             lineWidth = 1
 
-        # line += unicode('{} ', PSE.ENCODING).format(lineItem.ljust(lineWidth)[:lineWidth])
         line += u'{} '.format(lineItem.ljust(lineWidth)[:lineWidth])
 
     return line
 
+def sortWorkOrder(jmriManifest):
+
+    for location in jmriManifest['locations']:
+        # location['engines']['add'].sort(key=lambda row: row['sequence'])
+        # location['engines']['remove'].sort(key=lambda row: row['sequence'])
+
+        location['cars']['add'].sort(key=lambda row: row['sequence'])
+        location['cars']['add'].sort(key=lambda row: row['location']['track']['userName'])
+
+        location['cars']['remove'].sort(key=lambda row: row['sequence'])
+
+    return jmriManifest
 
 def getOpsTrainList(jmriManifest):
     """
