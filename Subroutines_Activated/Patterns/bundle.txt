@@ -49,3 +49,4 @@ Tracks at {}
 Unknown
 Work Location:
 Yard tracks only
+Spur tracks only

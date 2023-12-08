@@ -4,9 +4,8 @@ Todo:
   Change Patterns back to moving a car on a train?
   Retest or scrap StandAloneExport?
   Editing division name doesn't update Patterns
-  Clean up unused items in the bundle files.
-  Fix Patterns/yard track only button.
   Scanner/Initialize validate TP rfid file first.
+  Closing set cars window should close additional.. window
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.

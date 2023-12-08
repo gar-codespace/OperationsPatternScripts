@@ -42,7 +42,7 @@ class subroutineGui:
         self.locationComboBox.setName('jLocations')
 
         self.yardTracksOnly = PSE.JAVX_SWING.JCheckBox()
-        self.yardTracksOnly.setText(PSE.getBundleItem('Yard tracks only') + ' ')
+        self.yardTracksOnly.setText(PSE.getBundleItem('Spur tracks only') + ' ')
         self.yardTracksOnly.setSelected(self.patternsConfigFile['PA'])
         self.yardTracksOnly.setName('ytoCheckBox')
 

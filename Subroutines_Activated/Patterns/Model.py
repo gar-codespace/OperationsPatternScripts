@@ -251,7 +251,8 @@ def getTrackDict():
 
     yardTracksOnlyFlag = None
     if configFile['Patterns']['PA']:
-        yardTracksOnlyFlag = 'Yard'
+        # yardTracksOnlyFlag = 'Yard'
+        yardTracksOnlyFlag = 'Spur'
 
     try:
         trackList = PSE.LM.getLocationByName(configFile['Patterns']['PL']).getTracksByNameList(yardTracksOnlyFlag)
