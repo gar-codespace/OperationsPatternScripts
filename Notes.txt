@@ -5,6 +5,8 @@ Todo:
   Retest or scrap StandAloneExport?
   Editing division name doesn't update Patterns
   Clean up unused items in the bundle files.
+  Fix Patterns/yard track only button.
+  Scanner/Initialize validate TP rfid file first.
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.

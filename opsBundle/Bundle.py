@@ -112,10 +112,8 @@ def setupBundle():
     """
 
 # Plugin bundle stuff
-    
     makeDefaultPluginBundle()
     PSE.BUNDLE = getBundleForLocale()
-
 # Help bundle stuff
     CreateStubFile().make()
     makeDefaultHelpFile() # Default help file is in english
@@ -212,9 +210,10 @@ def makeDefaultHelpFile():
         targetPath = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'Subroutines_Activated', sub, 'help.html')
         subroutineBundle = PSE.genericReadReport(targetPath)
         helpHtml += subroutineBundle
-
     helpHtml += '\n</body>\n</html>\n'
+
     helpFileLocation = PSE.OS_PATH.join(PSE.PLUGIN_ROOT, 'opsSupport', 'Help.en.html')
+    # PSE.JAVA_IO.File(helpFileLocation).delete()
     PSE.genericWriteReport(helpFileLocation, helpHtml)
 
     return
@@ -282,7 +281,6 @@ def translateBundles():
     if PSE.psLocale()[:2] == 'en':
         return
 
-    # fileName = 'plugin.' + PSE.psLocale()[:2] + '.json'
     fileName = 'plugin.{}.json'.format(PSE.psLocale()[:2])
     targetFile = PSE.OS_PATH.join(PSE.BUNDLE_DIR, fileName)
 
@@ -312,8 +310,6 @@ def translateHelpHtml():
     baseHelpHtml = PSE.genericReadReport(templateFileLocation)
     i = 0
     for line in baseHelpHtml.splitlines():
-        # if i == 5:
-        #     break
         tLine = ''
         if pPattern.match(line) != None:
             search = pPattern.match(line)

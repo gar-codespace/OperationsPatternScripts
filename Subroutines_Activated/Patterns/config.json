@@ -25,7 +25,9 @@
       "FT" : "No Waybill",
       "EH" : "Available",
       "SL": {
-        "model":1
+        "model":1,
+        "destination userName":0,
+        "road":0
       },
       "SC" : {
         "destination userName":0,

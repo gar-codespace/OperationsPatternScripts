@@ -9,7 +9,7 @@
   "ALERT: Schedule item not found for car:": "ALERT: Tidsplanelement ikke fundet til bil:", 
   "ALERT: import error, Rolling Stock not imported.": "ALERT: importfejl, rullende materiel ikke importeret.", 
   "ALERT: rolling stock skipped, parsing error.": "ALERT: rullende materiel sprunget over, parsingfejl.", 
-  "ALERT: staging and non staging tracks at:": "ALARM: Staging og ikke staging spor ved:", 
+  "ALERT: staging and non staging tracks at:": "ALARM: Staging og non staging spor ved:", 
   "Action": "Handling", 
   "Add New Commit": "Tilf\u00f8j ny forpligtelse", 
   "Additional Choices": "Yderligere valgmuligheder", 
