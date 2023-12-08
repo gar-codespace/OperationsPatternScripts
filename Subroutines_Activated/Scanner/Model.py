@@ -22,7 +22,8 @@ def resetConfigFileItems():
 
 def initializeSubroutine():
 
-    scannerComboUpdater()
+    if _validateScannerLocation():
+        scannerComboUpdater()
     
     return
 
@@ -32,7 +33,8 @@ def resetSubroutine():
 
 def refreshSubroutine():
 
-    scannerComboUpdater()
+    if _validateScannerLocation():
+        scannerComboUpdater()
 
     return
 
@@ -184,6 +186,20 @@ def scannerComboUpdater():
     component.setSelectedItem(selectedItem)
     
     return
+
+def _validateScannerLocation():
+
+    _psLog.debug('_validateScannerLocation')
+
+    result = True
+    configFile = PSE.readConfigFile()
+    scannerPath = configFile['Scanner']['US']['SP']
+    if not PSE.JAVA_IO.File(scannerPath).isDirectory():
+        message = '{}:\n{}'
+        PSE.openOutputFrame(message.format(PSE.getBundleItem('ALERT: Scanner directory not found'), scannerPath))
+        result = False
+
+    return result
 
 def _updateScannerList():
     """

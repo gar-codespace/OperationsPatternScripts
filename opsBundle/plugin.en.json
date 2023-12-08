@@ -6,6 +6,7 @@
   "ALERT: Not a spur track:": "ALERT: Not a spur track:", 
   "ALERT: Not a valid locale:": "ALERT: Not a valid locale:", 
   "ALERT: Not a valid location:": "ALERT: Not a valid location:", 
+  "ALERT: Scanner directory not found": "ALERT: Scanner directory not found", 
   "ALERT: Schedule item not found for car:": "ALERT: Schedule item not found for car:", 
   "ALERT: import error, Rolling Stock not imported.": "ALERT: import error, Rolling Stock not imported.", 
   "ALERT: rolling stock skipped, parsing error.": "ALERT: rolling stock skipped, parsing error.", 

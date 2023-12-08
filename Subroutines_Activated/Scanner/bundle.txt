@@ -1,5 +1,6 @@
 Scanner
 Scanner Subroutine
+ALERT: Scanner directory not found
 Apply
 Apply scanner data
 Division:
