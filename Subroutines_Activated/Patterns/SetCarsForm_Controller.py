@@ -163,8 +163,6 @@ class CreateSetCarsFrame:
         mergedForm = SetCarsForm_Model.mergeSetCarsForm(self.setCarsData, userInputList)
         SetCarsForm_Model.appendSwitchList(mergedForm) # Write to a file
 
-        # Make a CSV switch list
-
         PSE.TM.firePropertyChange('opsSwitchList', False, True)
 
         MOUSE_CLICKED.getSource().setBackground(PSE.JAVA_AWT.Color.GREEN)

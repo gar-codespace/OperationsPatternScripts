@@ -211,6 +211,7 @@ def opsJmriWorkOrder(manifest):
     textWorkOrder += '\n'
     textWorkOrder += u'{} ({}) {}\n'.format(PSE.getBundleItem(u'Work order for train'), manifest[u'userName'], manifest[u'description'])
     textWorkOrder += u'{}\n'.format(PSE.convertIsoToValidTime(manifest[u'date']))
+    textWorkOrder += u'{}\n'.format(manifest['comment'])
     textWorkOrder += '\n'
 # Body
     for location in manifest['locations']:
@@ -235,25 +236,38 @@ def opsJmriWorkOrder(manifest):
     # Pick up cars
         textWorkOrder += u'{}:\n'.format(PSE.getBundleItem(u'Cars'))
         for car in location['cars']['add']:
-            if car['isLocal']:
+            if car['isLocal'] or car['caboose']:
                 continue
             formatPrefix = pcp.ljust(longestStringLength)
             line = TRE.pickupCar(car, True, False)
             textWorkOrder += u'{} {}\n'.format(formatPrefix ,line)
     # Move cars
         for car in location['cars']['add']:
-            if not car['isLocal']:
+            if not car['isLocal'] or car['caboose']:
                 continue
             formatPrefix = mcp.ljust(longestStringLength)
             line = TRE.localMoveCar(car, True, False)
             textWorkOrder += u'{} {}\n'.format(formatPrefix ,line)
     # Set out cars
         for car in location['cars']['remove']:
-            if car['isLocal']:
+            if car['isLocal'] or car['caboose']:
                 continue
             formatPrefix = dcp.ljust(longestStringLength)
             line = TRE.dropCar(car, True, False)
             textWorkOrder += u'{} {}\n'.format(formatPrefix ,line)
+    # Pick up caboose
+        textWorkOrder += u'{}:\n'.format(PSE.getBundleItem(u'Caboose'))
+        for car in location['cars']['add']:
+            if car['caboose']:
+                formatPrefix = pcp.ljust(longestStringLength)
+                line = TRE.pickupCar(car, True, False)
+                textWorkOrder += u'{} {}\n'.format(formatPrefix ,line)
+    # Set out caboose
+        for car in location['cars']['remove']:
+            if car['caboose']:
+                formatPrefix = dcp.ljust(longestStringLength)
+                line = TRE.dropCar(car, True, False)
+                textWorkOrder += u'{} {}\n'.format(formatPrefix ,line)
 
         if len(location['cars']['add']) + len(location['cars']['remove']) == 0:
             textWorkOrder += u' {}: {}\n'.format(PSE.getBundleItem(u'No work at'), location[u'userName'])
@@ -286,6 +300,7 @@ def opsTrainList(manifest):
     trainListText += '\n'
     trainListText += u'{} ({}) {}\n'.format(PSE.getBundleItem(u'Train list for train'), manifest[u'userName'], manifest[u'description'])
     trainListText += u'{}\n'.format(PSE.convertIsoToValidTime(manifest[u'date']))
+    trainListText += u'{}\n'.format(manifest['comment'])
     trainListText += '\n'
 
 # Body
@@ -304,11 +319,17 @@ def opsTrainList(manifest):
         if not location['cars']['add']:
             trainListText += u' {}\n'.format(PSE.getBundleItem(u'None'))
         for car in location['cars']['add']:
-            if car['isLocal']:
+            if car['isLocal'] or car['caboose']:
                 continue
             line = TRE.pickupCar(car, True, False)
             formattedSequence = u'{:02d}'.format(int(car['sequence']) - 6000)
             trainListText += u' {} {}\n'.format(formattedSequence, line)
+    # Pick up caboose
+        trainListText += u'{}:\n'.format(PSE.getBundleItem(u'Caboose'))
+        for car in location['cars']['add']:
+            if car['caboose']:
+                line = TRE.pickupCar(car, True, False)
+                trainListText += u' {}\n'.format(line)
 
         try: # Location summary
             td = PSE.JMRI.jmrit.operations.setup.Setup.getDirectionString(location[u'trainDirection'])

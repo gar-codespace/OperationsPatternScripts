@@ -150,7 +150,6 @@ def getBundleForLocale():
     Called by:
     Main.Controller.buildThePlugin
     Main.Controller.ptItemSelected
-    BuiltTrainExport
     """
 
     bundleFileLocation = PSE.OS_PATH.join(PSE.BUNDLE_DIR, 'plugin.en.json')

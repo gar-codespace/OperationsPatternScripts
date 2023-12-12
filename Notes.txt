@@ -2,10 +2,10 @@ Todo:
   How to publish DeepL?
   Maybe put Dest and FD standins into TextReports.py?
   Change Patterns back to moving a car on a train?
+  Closing set cars window should close additional.. window
   Retest or scrap StandAloneExport?
   Editing division name doesn't update Patterns
   Scanner/Initialize validate TP rfid file first.
-  Closing set cars window should close additional.. window
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.

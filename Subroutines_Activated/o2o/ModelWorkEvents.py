@@ -2,7 +2,7 @@
 # © 2023 Greg Ritacco
 
 """
-Creates the TrainPlayer JMRI Report - o2o Workevents.csv file from either PatternTracksSubroutine or BuiltTrainExport
+Creates the TrainPlayer JMRI Report - o2o Workevents.csv file.
 """
 
 from opsEntities import PSE
@@ -37,6 +37,8 @@ def o2oWorkEvents(manifest):
             o2oWorkEvents += u'PC,{}\n'.format(_makeLine(car))
         for car in location['cars']['remove']:
             o2oWorkEvents += u'SC,{}\n'.format(_makeLine(car))
+
+    print(SCRIPT_NAME + '.o2oWorkEvents')
         
     return o2oWorkEvents
 

@@ -578,6 +578,7 @@ def extendManifest(trainObject):
     report['railroad'] = railroadName
     report['userName'] = trainObject.getName()
     report['description'] = trainObject.getDescription()
+    report['comment'] = trainObject.getComment()
 
     i = 0
     for location in report['locations']:
