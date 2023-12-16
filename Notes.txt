@@ -6,6 +6,7 @@ Todo:
   Retest or scrap StandAloneExport?
   Editing division name doesn't update Patterns
   Scanner/Initialize validate TP rfid file first.
+  Add train comment to o2o work events.
 
 Duplicate code:
   o2o.ScheduleAuteur symetric and asymetric.

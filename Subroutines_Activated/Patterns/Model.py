@@ -176,6 +176,7 @@ def makeReportHeader():
 
     reportHeader['date'] = PSE.isoTimeStamp()
     reportHeader['description'] = configFile['Patterns']['TD']
+    reportHeader['comment'] = ''
     reportHeader['railroad'] = OSU.Setup.getRailroadName()
     reportHeader['userName'] = configFile['Patterns']['PL']
     reportHeader['location'] = {'userName':locationName}
