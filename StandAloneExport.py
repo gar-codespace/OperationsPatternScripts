@@ -1,6 +1,11 @@
 """
 Exports a JMRI manifest into a TrainPlayer Quick Keys compatable csv.
+Creates a Train List and Work Order for a built train.
 Called by o2o listeners attached to each train via the Train Manager.
+
+To use, Edit/Preferences.../Start Up
+select Add/Run Script
+Navigate to and select StandAloneExport.py
 """
 
 import jmri
@@ -22,11 +27,8 @@ PSE.JMRI = jmri
 PSE.SYS = sys
 PSE.OS_PATH = OS_PATH
 
-# from Subroutines_Activated.o2o import SubroutineListeners
 from opsEntities import PluginListeners
 from opsBundle import Bundle
-
-Bundle.BUNDLE_DIR = PSE.OS_PATH.join(PLUGIN_ROOT, 'opsBundle')
 
 PSE.PLUGIN_ROOT = PLUGIN_ROOT
 PSE.BUNDLE = Bundle.getBundleForLocale()
@@ -52,6 +54,8 @@ class StandAloneExport(jmri.jmrit.automat.AbstractAutomaton):
 
         self.psLog = PSE.LOGGING.getLogger('OPS.StandAloneExport')
         self.logger.initialLogMessage(self.psLog)
+
+        PSE.makeReportFolders()
 
         PluginListeners.addTrainsTableListener()
         PluginListeners.addTrainListener()

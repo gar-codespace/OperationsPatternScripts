@@ -70,13 +70,13 @@ class TrainsPropertyParser:
         """
 
         tpDirectory = PSE.OS_PATH.join(PSE.JMRI.util.FileUtil.getHomePath(), 'AppData', 'Roaming', 'TrainPlayer', 'Reports')
-        if not tpDirectory:
+        if not PSE.JAVA_IO.File(tpDirectory).isDirectory():
             _psLog.warning('TrainPlayer Reports destination directory not found')
             print('TrainPlayer Reports destination directory not found')
 
-            return    
+            return
 
-        if self.propertyName == 'TrainBuilt' and self.newValue:
+        if self.propertyName == 'TrainBuilt' and self.newValue == True:
             workList = PSE.getTrainManifest(self.propertySource.toString())
 
         elif self.propertyName == 'opsSwitchList':

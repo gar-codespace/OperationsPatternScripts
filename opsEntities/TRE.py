@@ -54,7 +54,11 @@ def translateMessageFormat():
     rosetta[PSE.SB.handleGetMessage('Tab3')] = 'Tab3'
 # Locos
     rosetta[PSE.SB.handleGetMessage('Model')] = 'Model'
-    rosetta[PSE.SB.handleGetMessage('DCC_Address')] = 'DCC_Address'
+    try:
+        rosetta[PSE.SB.handleGetMessage('DCC_Address')] = 'DCC_Address'
+    except:
+        # Not in JMRI v4
+        rosetta['DCC_Address'] = 'DCC_Address'
     rosetta[PSE.SB.handleGetMessage('Consist')] = 'Consist'
 # Cars
     rosetta[PSE.SB.handleGetMessage('Load_Type')] = 'Load_Type'
@@ -170,6 +174,8 @@ def pickupLoco(loco, manifest, twoCol):
             continue
 
         lineItem = carItems[PSE.ROSETTA[messageItem]]
+        if not lineItem: # JMRI v4 accomodation
+            lineItem = ' '
         lineWidth = PSE.REPORT_ITEM_WIDTH_MATRIX[messageItem]
 
     # Special case handling for loco number
@@ -196,6 +202,8 @@ def setoutLoco(loco, manifest, twoCol):
             continue
 
         lineItem = carItems[PSE.ROSETTA[messageItem]]
+        if not lineItem: # JMRI v4 accomodation
+            lineItem = ' '
         lineWidth = PSE.REPORT_ITEM_WIDTH_MATRIX[messageItem]
 
     # Special case handling for loco number

@@ -202,7 +202,10 @@ class ParseRollingStock:
         rsDetailDict['weight'] = rs.getWeight()
         rsDetailDict['weightTons'] = rs.getAdjustedWeightTons()
         rsDetailDict['color'] = rs.getColor()
-        rsDetailDict['owner'] = rs.getOwnerName()
+        try:
+            rsDetailDict['owner'] = rs.getOwner() # JMRI v4
+        except:
+            rsDetailDict['owner'] = rs.getOwnerName() # JMRI v5
         rsDetailDict['division'] = rs.getDivisionName()
         rsDetailDict['location'] = {'userName':rs.getLocationName(), 'track':{'userName':rs.getTrackName()}}
         rsDetailDict['destination'] = {'userName':rs.getDestinationName(), 'track':{'userName':rs.getDestinationTrackName()}}

@@ -608,6 +608,7 @@ def extendManifest(trainObject):
             car['loadType'] = carObject.getLoadType()
             car['division'] = LM.getLocationByName(car['location']['userName']).getDivisionName()
             car['sequence'] = '6000'
+            addIsLocal(car)
 
         for car in location['cars']['remove']:
             carObject = CM.getByRoadAndNumber(car['road'], car['number'])
@@ -620,10 +621,23 @@ def extendManifest(trainObject):
             car['loadType'] = carObject.getLoadType()
             car['division'] = LM.getLocationByName(car['location']['userName']).getDivisionName()
             car['sequence'] = '6000'
+            addIsLocal(car)
 
     genericWriteReport(reportPath, dumpJson(report))
 
     return
+
+def addIsLocal(rs):
+    """
+    Adds an isLocal entry if it is missing to be JMRI v4 compatable.
+    """
+
+    try:
+        x = rs['isLocal']
+    except:
+        rs['isLocal'] = False
+
+    return rs
 
 
 """File Handling Functions"""

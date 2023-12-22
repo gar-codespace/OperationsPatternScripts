@@ -3,8 +3,9 @@
 
 """
 Scanner subroutine.
+This is a prototype, expect some bugs.
 Only cars are sequenced.
-Engines will be sequenced in a future revision.
+Engines will be sequenced in a future revision maybe.
 """
 
 from opsEntities import PSE
