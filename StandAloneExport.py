@@ -12,6 +12,7 @@ import jmri
 import sys
 from os import path as OS_PATH
 
+
 SCRIPT_NAME ='OperationsPatternScripts.StandAloneExport'
 SCRIPT_REV = 20231001
 SCRIPT_DIR = 'OperationsPatternScripts'
