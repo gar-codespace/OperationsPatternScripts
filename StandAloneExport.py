@@ -41,7 +41,6 @@ encodingSelection = configFile['Main Script']['CP']['ES']
 PSE.ENCODING = configFile['Main Script']['CP']['EO'][encodingSelection]
 
 
-
 class StandAloneExport(jmri.jmrit.automat.AbstractAutomaton):
 
     def init(self):
